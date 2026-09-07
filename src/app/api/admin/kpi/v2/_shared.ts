@@ -2,9 +2,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { calculateCommunityContinuity, calculateFormalOpenStatus, calculateFormalRetention } from "@/utils/kpiFormalOpen";
 
+import { unionTutorialCompletions, TUTORIAL_UNION_AUTHORITY, type TutorialSubject } from "@/utils/kpiTutorialCompletion";
+
 export const TIMEZONE = "Asia/Tokyo";
 export const DEFINITION_VERSION = "kpi-v2-20260906";
-const PRODUCTION_MEASUREMENT_STARTED_AT = "2026-09-07T12:33:06+09:00";
 export type MetricStatus = "PASS" | "FAIL" | "NOT_READY" | "UNAVAILABLE";
 
 type Period = { subject_id: string; classification: string; valid_from: string; valid_to: string | null };
@@ -156,31 +157,49 @@ export async function acquisition(service: SupabaseClient, range: NonNullable<Re
   };
 }
 
+async function tutorialCompletions(service: SupabaseClient, subjects: TutorialSubject[], periods: Period[]) {
+  const facts: { subject_id: string; completed_at: string }[] = [];
+  const mypage: { subject_id: string; completed_at: string }[] = [];
+  const milestones: { user_id: string; first_occurred_at: string }[] = [];
+  // Bound IN lists and paginate each source; the REST row limit must not truncate UU.
+  for (let offset = 0; offset < subjects.length; offset += 200) {
+    const batch = subjects.slice(offset, offset + 200);
+    const ids = batch.map((row) => row.subject_id);
+    const userIds = batch.map((row) => row.source_user_id).filter((id): id is string => !!id);
+    const [batchFacts, batchMyPage, batchMilestones] = await Promise.all([
+      fetchAll<any>((from, to) => service.from("kpi_tutorial_completion_facts").select("subject_id,completed_at").in("subject_id", ids).order("subject_id").range(from, to)),
+      fetchAll<any>((from, to) => service.from("kpi_canonical_tutorial_completions_v1").select("subject_id,completed_at").in("subject_id", ids).order("subject_id").range(from, to)),
+      userIds.length ? fetchAll<any>((from, to) => service.from("user_funnel_milestones").select("user_id,first_occurred_at").eq("milestone", "tutorial_complete").in("user_id", userIds).order("user_id").range(from, to)) : Promise.resolve([]),
+    ]);
+    facts.push(...batchFacts); mypage.push(...batchMyPage); milestones.push(...batchMilestones);
+  }
+  return unionTutorialCompletions(subjects, facts, milestones, mypage, (id, at) => excluded(periods, id, at));
+}
+
+async function tutorialCompletionsInPeriod(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>, periods: Period[]) {
+  const subjects = await fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,source_user_id,registered_at")
+    .lt("registered_at", range.toAt).order("subject_id").range(from, to));
+  const completions = await tutorialCompletions(service, subjects, periods);
+  // Choose first completion before filtering its date: later duplicate MyPage evidence cannot re-cohort a user.
+  return completions.filter((row) => Date.parse(row.completed_at) >= Date.parse(range.fromAt) && Date.parse(row.completed_at) < Date.parse(range.toAt));
+}
+
 export async function tutorial(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {
-  const measurementStartedAt = process.env.NEXT_PUBLIC_KPI_DATA_ENV === "production"
-    ? PRODUCTION_MEASUREMENT_STARTED_AT
-    : range.fromAt;
-  const measurableFrom = Date.parse(measurementStartedAt) > Date.parse(range.fromAt) ? measurementStartedAt : range.fromAt;
-  const subjectData = await fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,registered_at")
-    .gte("registered_at", measurableFrom).lt("registered_at", range.toAt).range(from, to));
+  const subjectData = await fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,source_user_id,registered_at")
+    .gte("registered_at", range.fromAt).lt("registered_at", range.toAt).range(from, to));
   const periods = await exclusions(service);
   const subjects = subjectData.filter((row) => !excluded(periods, row.subject_id, row.registered_at));
   const ids = subjects.map((row) => row.subject_id);
-  const { data: completionData } = ids.length
-    ? await service.from("kpi_canonical_tutorial_completions_v1").select("subject_id,completed_at").in("subject_id", ids)
-    : { data: [] as any[] };
-  const completed = new Set(((completionData || []) as any[]).map((row) => row.subject_id));
+  const completed = await tutorialCompletions(service, subjects, periods);
   const { data: factData } = ids.length
     ? await service.from("kpi_tutorial_journey_facts").select("subject_id,fact_type,occurred_at").in("subject_id", ids)
     : { data: [] as any[] };
   const canonicalMeasured = ((factData || []) as any[]).some((row) => row.fact_type === "FIRST_MYPAGE_ACCESS_CONFIRMED");
-  const canonicalMetric = canonicalMeasured
-    ? metric("tutorial.canonical_complete_rate", completed.size, ids.length, 0.6, { coverage: { mode: "forward_only", measured_from: measurementStartedAt } })
-    : metric("tutorial.canonical_complete_rate", null, ids.length, 0.6, { observationStatus: "incomplete", reason: "measurement_not_started", coverage: { mode: "forward_only", measured_from: measurementStartedAt } });
+  const canonicalMetric = { ...metric("tutorial.completion_union_rate", completed.length, ids.length, 0.6), ...TUTORIAL_UNION_AUTHORITY };
   const factTypes = ["TUTORIAL_GACHA_COMPLETED", "TUTORIAL_BATTLE_COMPLETED", "AUTH_CHOICE_SELECTED", "AUTH_CHOICE_RESOLVED", "FIRST_MYPAGE_ACCESS_CONFIRMED"];
   return {
     metric: canonicalMetric,
-    measurement_status: canonicalMeasured ? "MEASURED" : "NOT_MEASURED",
+    measurement_status: "MEASURED",
     strong_target: 0.7,
     steps: [
       { fact_type: "GAME_START", subjects: ids.length, observation_status: "complete" },
@@ -195,11 +214,8 @@ export async function tutorial(service: SupabaseClient, range: NonNullable<Retur
 }
 
 export async function postTutorial(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {
-  const { data: completionData, error: completionError } = await service.from("kpi_canonical_tutorial_completions_v1")
-    .select("subject_id,completed_at").gte("completed_at", range.fromAt).lt("completed_at", range.toAt).limit(100000);
-  if (completionError) throw completionError;
   const periods = await exclusions(service);
-  const completions = ((completionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.completed_at));
+  const completions = await tutorialCompletionsInPeriod(service, range, periods);
   const subjectIds = completions.map((row) => row.subject_id);
   if (!subjectIds.length) return {
     cohort: 0,
@@ -218,7 +234,7 @@ export async function postTutorial(service: SupabaseClient, range: NonNullable<R
   if (gachaError) throw gachaError;
   if (milestoneError) throw milestoneError;
   const completedAt = new Map(completions.map((row) => [row.subject_id, row.completed_at]));
-  const afterCompletion = (subjectId: string, at: string) => !!completedAt.get(subjectId) && Date.parse(at) >= Date.parse(completedAt.get(subjectId));
+  const afterCompletion = (subjectId: string, at: string) => !!completedAt.get(subjectId) && Date.parse(at) >= Date.parse(completedAt.get(subjectId) || "");
   const gachaCount = (gachaId: string) => new Set(((gachaData || []) as any[])
     .filter((row) => row.gacha_id === gachaId && afterCompletion(row.subject_id, row.completed_at)).map((row) => row.subject_id)).size;
   const milestoneCount = (milestone: string) => new Set(((milestoneData || []) as any[]).filter((row) => {
@@ -239,11 +255,9 @@ export async function postTutorial(service: SupabaseClient, range: NonNullable<R
 }
 
 export async function guild(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {
-  const { data: completionData } = await service.from("kpi_canonical_tutorial_completions_v1")
-    .select("subject_id,completed_at").gte("completed_at", range.fromAt).lt("completed_at", range.toAt).limit(100000);
   const periods = await exclusions(service);
-  const tutorialSubjects = new Set(((completionData || []) as any[])
-    .filter((row) => !excluded(periods, row.subject_id, row.completed_at)).map((row) => row.subject_id));
+  const completions = await tutorialCompletionsInPeriod(service, range, periods);
+  const tutorialSubjects = new Set(completions.map((row) => row.subject_id));
   const ids = [...tutorialSubjects];
   const { data: conversionData } = ids.length
     ? await service.from("kpi_guild_conversion_facts").select("subject_id,conversion_type,membership_period_id,occurred_at").in("subject_id", ids)
@@ -301,24 +315,14 @@ export async function retention(service: SupabaseClient, range: NonNullable<Retu
 export async function dailyOverview(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {
   const [retentionResult, subjectData, periods] = await Promise.all([
     retention(service, range),
-    fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,registered_at")
+    fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,source_user_id,registered_at")
       .gte("registered_at", range.fromAt).lt("registered_at", range.toAt).range(from, to)),
     exclusions(service),
   ]);
   const subjects = subjectData.filter((row) => !excluded(periods, row.subject_id, row.registered_at));
   const subjectIds = subjects.map((row) => row.subject_id);
-  const [{ data: completionData, error: completionError }, { data: legacyData, error: legacyError }, { data: subjectLinks, error: subjectLinkError }] = subjectIds.length
-    ? await Promise.all([
-      service.from("kpi_canonical_tutorial_completions_v1").select("subject_id,completed_at").in("subject_id", subjectIds),
-      service.from("kpi_tutorial_completion_facts").select("subject_id,completed_at").in("subject_id", subjectIds),
-      service.from("kpi_subjects").select("subject_id,source_user_id").in("subject_id", subjectIds),
-    ])
-    : [{ data: [] as any[], error: null }, { data: [] as any[], error: null }, { data: [] as any[], error: null }];
-  if (completionError) throw completionError;
-  if (legacyError) throw legacyError;
-  if (subjectLinkError) throw subjectLinkError;
-  const completions = ((completionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.completed_at));
-  const legacyCompletions = ((legacyData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.completed_at));
+  const subjectLinks = subjects;
+  const completions = await tutorialCompletions(service, subjectLinks || [], periods);
   const [{ data: membershipData, error: membershipError }, { data: conversionData, error: conversionError }] = subjectIds.length
     ? await Promise.all([
       service.from("kpi_guild_membership_periods").select("id,subject_id,guild_id,joined_at,left_at").in("subject_id", subjectIds),
@@ -344,7 +348,6 @@ export async function dailyOverview(service: SupabaseClient, range: NonNullable<
   const activations = ((activationData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
   const subjectBySource = new Map(((subjectLinks || []) as any[]).filter((row) => row.source_user_id).map((row) => [row.source_user_id, row.subject_id]));
   const retentionByDate = new Map(retentionResult.cohorts.map((cohort) => [cohort.cohort_date, cohort]));
-  const measurementDate = jstDate(PRODUCTION_MEASUREMENT_STARTED_AT);
   const dates: string[] = [];
   for (let date = range.to; date >= range.from; date = addDays(date, -1)) dates.push(date);
   return {
@@ -354,19 +357,12 @@ export async function dailyOverview(service: SupabaseClient, range: NonNullable<
       const cohort = retentionByDate.get(date);
       const cohortSubjects = subjects.filter((row) => jstDate(row.registered_at) === date);
       const cohortIds = new Set(cohortSubjects.map((row) => row.subject_id));
-      const canonicalForCohort = completions.filter((row) => cohortIds.has(row.subject_id));
-      const legacyForCohort = legacyCompletions.filter((row) => cohortIds.has(row.subject_id));
-      const useCanonical = canonicalForCohort.length > 0;
-      const mayUseLegacy = date <= measurementDate && legacyForCohort.length > 0;
-      const selectedCompletions = useCanonical ? canonicalForCohort : mayUseLegacy ? legacyForCohort : [];
-      const tutorialAuthority = useCanonical ? "canonical" : mayUseLegacy ? "legacy" : "unavailable";
+      const selectedCompletions = completions.filter((row) => cohortIds.has(row.subject_id));
       const completedSubjects = new Set(selectedCompletions.map((row) => row.subject_id));
-      const tutorialMetric = tutorialAuthority !== "unavailable"
-        ? { ...metric(useCanonical ? "tutorial.canonical_complete_rate" : "tutorial.legacy_complete_rate", completedSubjects.size, cohortIds.size, .6), authority: tutorialAuthority, authority_label: useCanonical ? "Canonical" : "旧Tutorial Complete" }
-        : { ...metric("tutorial.canonical_complete_rate", null, cohortIds.size, .6, { observationStatus: "incomplete", reason: "measurement_not_started" }), authority: tutorialAuthority, authority_label: null };
+      const tutorialMetric = { ...metric("tutorial.completion_union_rate", completedSubjects.size, cohortIds.size, .6), ...TUTORIAL_UNION_AUTHORITY };
       const completionAt = new Map(selectedCompletions.map((row) => [row.subject_id, row.completed_at]));
       const dateMemberships = memberships.filter((row) => completedSubjects.has(row.subject_id)
-        && Date.parse(row.joined_at) >= Date.parse(completionAt.get(row.subject_id)));
+        && Date.parse(row.joined_at) >= Date.parse(completionAt.get(row.subject_id) || ""));
       const conversionSubjects = new Set(dateMemberships.map((row) => row.subject_id));
       const conversionPeriods = new Set(dateMemberships.map((row) => row.id));
       const typedConversions = conversions.filter((row) => conversionPeriods.has(row.membership_period_id));

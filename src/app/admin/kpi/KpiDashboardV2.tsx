@@ -11,7 +11,7 @@ const labels: Record<string, string> = {
   TITLE_ARRIVED: "Title Arrival", TAP_TO_START: "TAP TO START", WORLD_INTRO_STARTED: "World Intro開始",
   WORLD_INTRO_COMPLETED: "World Intro完了", NAME_COMPLETED: "Name Complete", GAME_START_BOUND: "Game Start",
   GAME_START: "Game Start", TUTORIAL_GACHA_COMPLETED: "Tutorial Gacha", TUTORIAL_BATTLE_COMPLETED: "Tutorial Battle",
-  AUTH_CHOICE_SELECTED: "Auth Choice", AUTH_CHOICE_RESOLVED: "Auth Resolved", FIRST_MYPAGE_ACCESS_CONFIRMED: "Canonical Tutorial Complete",
+  AUTH_CHOICE_SELECTED: "Auth Choice", AUTH_CHOICE_RESOLVED: "Auth Resolved", FIRST_MYPAGE_ACCESS_CONFIRMED: "MyPage到達確認",
 };
 const dataEnvironment = process.env.NEXT_PUBLIC_KPI_DATA_ENV === "production" ? "Production" : "Preview";
 
@@ -108,7 +108,7 @@ export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
     <Section eyebrow="02 / CURRENT RELEASE GATE" title="Current Release Gate"><div className="v2-card-grid">
       <MetricCard label="Marketing" metric={marketingGateMetric} format="yen" definition="CPC ≤ ¥28.5 AND Clicks ≥ 350 / JST day" />
       <MetricCard label="Acquisition" metric={validation?.acquisition} definition="Game Start bound journey / Title Arrival journey" />
-      <MetricCard label="Tutorial" metric={validation?.tutorial} definition="FIRST_MYPAGE_ACCESS_CONFIRMED UU / Game Start UU" />
+      <MetricCard label="Tutorial" metric={validation?.tutorial} definition="既存完了・MyPage到達の重複除外UU / Game Start UU" />
       <MetricCard label="Activation" metric={validation?.guild_chat_activation} definition="Guild Chat activated subject / Guild Conversion subject" />
       <MetricCard label="Retention D1" metric={retentionSummary} definition="Latest 3 mature cohorts · UU weighted" />
       <MetricCard label="Community" metric={communityMetric} definition="Effective Active Guild ≥18 / 3 consecutive completed JST days" />

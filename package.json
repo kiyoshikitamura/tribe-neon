@@ -173,7 +173,8 @@
     "verify:preopen-human-acceptance": "npm run verify:quest-battle-result-liveness && npm run verify:dm-inbox-thread && npm run verify:home-character-dialogue && npm run verify:async-transition-acceptance && npm run verify:ranking-reward-regression",
     "verify:preopen-reward-addendum": "node scripts/verify_preopen_reward_addendum_contract.mjs",
     "audit:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs --allow-known-blockers",
-    "verify:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs"
+    "verify:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs",
+    "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

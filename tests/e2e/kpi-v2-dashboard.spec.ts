@@ -10,7 +10,7 @@ const fixtures: Record<string, unknown> = {
   daily: { timezone:"Asia/Tokyo", rows:Array.from({ length:30 }, (_, index) => ({
     date:fixtureDate(index),
     new_users:index === 0 ? 20 : Math.max(0, 12-index),
-    tutorial:index === 0 ? { ...metric("tutorial.canonical_complete_rate",14,20,.7,.6,"PASS"), authority:"canonical", authority_label:"Canonical" } : index === 1 ? { ...metric("tutorial.legacy_complete_rate",6,10,.6,.6,"PASS"), authority:"legacy", authority_label:"旧Tutorial Complete" } : metric("tutorial.canonical_complete_rate", null, 0, null, .6, "NOT_READY"),
+    tutorial:index === 0 ? { ...metric("tutorial.canonical_complete_rate",14,20,.7,.6,"PASS"), authority:"tutorial_completion_union_v1", authority_label:"統合計測（既存完了＋MyPage・重複除外）" } : index === 1 ? { ...metric("tutorial.legacy_complete_rate",6,10,.6,.6,"PASS"), authority:"legacy", authority_label:"旧Tutorial Complete" } : metric("tutorial.canonical_complete_rate", null, 0, null, .6, "NOT_READY"),
     guild:{ ...metric("guild.conversion_rate", index === 0 ? 7 : null, index === 0 ? 14 : 0, index === 0 ? .5 : null, .4, index === 0 ? "PASS" : "NOT_READY"), authority:"canonical", create:index === 0 ? 2 : null, join:index === 0 ? 5 : null },
     chat:{ ...metric("guild.chat_activation_rate", index === 0 ? 3 : null, index === 0 ? 7 : 0, index === 0 ? .429 : null, .3, index === 0 ? "PASS" : "NOT_READY"), authority:"canonical" },
     retention:[1,2,3,4,5].map((day) => ({ day, ...metric(`retention.d${day}`, day <= index ? 4 : null, day <= index ? 10 : null, day <= index ? .4 : null, [0,.38,.3,.26,.23,.21][day], day <= index ? "PASS" : "NOT_READY") })),
@@ -60,6 +60,7 @@ for (const viewport of [{ width:390, height:844 }, { width:412, height:915 }]) {
     await expect(mobile.getByText("Guild").first()).toBeVisible();
     await expect(mobile.getByText("Chat").first()).toBeVisible();
     await expect(mobile.getByText("14 / 20人").first()).toBeVisible();
+    await expect(mobile.getByText("統合計測（既存完了＋MyPage・重複除外）").first()).toBeVisible();
     await expect(mobile.getByText("7 / 14人").first()).toBeVisible();
     await expect(mobile.getByText("3 / 7人").first()).toBeVisible();
     await expect(mobile.getByText("D5").first()).toBeVisible();
@@ -87,7 +88,7 @@ test("KPI daily desktop table and automatic error state", async ({ page }) => {
   await expect(page.locator(".daily-desktop tbody tr")).toHaveCount(30);
   await expect(page.locator(".daily-desktop tbody tr").first()).toContainText("2026-09-06");
   await expect(page.locator(".daily-desktop tbody tr").first()).toContainText("14 / 20人");
-  await expect(page.locator(".daily-desktop tbody tr").nth(1)).toContainText("旧計測");
+  await expect(page.locator(".daily-desktop tbody tr").nth(1)).toContainText("旧Tutorial Complete");
   await expect(page.getByText("表示条件")).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

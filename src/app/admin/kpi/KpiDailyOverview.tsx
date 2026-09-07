@@ -16,7 +16,7 @@ function Rate({ metric }: { metric?: Metric }) {
   return <span className="daily-rate">
     {hasCounts && <strong>{metric.numerator!.toLocaleString("ja-JP")} / {metric.denominator!.toLocaleString("ja-JP")}人</strong>}
     <b>{percent(metric)}</b>
-    {metric?.authority === "legacy" && <small>旧計測</small>}
+    {metric?.authority_label && <small>{metric.authority_label}</small>}
     {state(metric) && <small>{state(metric)}</small>}
   </span>;
 }
