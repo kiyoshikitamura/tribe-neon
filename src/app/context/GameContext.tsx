@@ -102,6 +102,7 @@ import { useCharacterProgression } from "./hooks/useCharacterProgression";
 import { shouldRevalidateAuthSession } from "@/utils/auth_session_events";
 import { getJstDateString } from "@/utils/jst_date";
 import { clearLegalSettingsReturn, hasPendingLegalSettingsReturn, isLegalSettingsReturnRequested } from "@/utils/legalSettingsReturn";
+import { bindAcquisitionSubject } from "@/utils/acquisitionAttribution";
 
 export const GameContext = createContext<any>(null);
 
@@ -933,6 +934,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       if (onboardingCheckRef.current.get(userId) === checkPromise) onboardingCheckRef.current.delete(userId);
     }
   };
+
+  useEffect(() => {
+    if (session?.user?.id && onboardingState?.has_profile) void bindAcquisitionSubject();
+  }, [onboardingState?.has_profile, session?.user?.id]);
 
   const retryAuthenticatedProjection = async () => {
     const userId = session?.user?.id;
