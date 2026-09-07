@@ -123,6 +123,7 @@
     "verify:x-oauth-guard": "node --experimental-strip-types scripts/verify_browser_detection.mjs",
     "verify:crawler-metadata": "node scripts/verify_crawler_metadata.mjs",
     "verify:acquisition-attribution": "node --experimental-strip-types scripts/verify_acquisition_attribution.mjs",
+    "verify:acquisition-attribution:preview": "node scripts/verify_acquisition_attribution_preview.mjs",
     "verify:m9:tutorial-growth:development": "node --env-file=.env.development.local scripts/verify_m9_tutorial_growth_db.mjs",
     "verify:m9:first-session-performance:preview": "node --env-file=.env.preview.local scripts/verify_m9_first_session_performance_preview.mjs",
     "verify:m9x-spec": "node scripts/verify_m9x_spec_compliance.mjs",
