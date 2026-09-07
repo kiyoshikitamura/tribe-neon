@@ -2,7 +2,7 @@
 TASK ID: RAID-C-01
 OWNER: raid_c_readiness
 PRIORITY: P1
-STATUS: READY
+STATUS: VALIDATED
 SCOPE: tests/raid-room/、docs/development/raid_room_validation.md
 総合力境界の独立テストと後続Preview/実機検証手順。A/Bの成果到着後、対象テストを実行。
 DO NOT TOUCH: 上記以外のファイル、既存戦闘/Replay/報酬/マスター、Migration、認証、GameContext、package/lock/CI、環境設定、Production。GitHub書込みは親が統合する。
@@ -13,3 +13,6 @@ EXPECTED OUTPUT: 指定範囲の実ファイルとProtocol準拠Completion Repor
 BRANCH: codex/raid-room-rescue-20260908（親管理、Workerは共有refを更新しない）
 COMMIT: 基準 b08e396e657615afd6dfddc05bbec37d21561a25、成果SHAは親記録
 BLOCKERS: 全機能の構造未確認はspec参照。今回の純粋関数/DTO/検証準備の開始を妨げない。Production/Preview環境操作は今回対象外。
+
+
+親レビュー: 担当範囲・差分・保護領域を確認。対象26テストPASS、TypeScript strict PASS。全体build・実画面・DB接続は未検証。新レイド全体の完了ではない。

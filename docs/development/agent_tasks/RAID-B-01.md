@@ -2,7 +2,7 @@
 TASK ID: RAID-B-01
 OWNER: raid_b_readiness
 PRIORITY: P1
-STATUS: READY
+STATUS: VALIDATED
 SCOPE: src/domain/raidRoomPresentation.ts
 Aの型から難度名・参加制限/推奨表示・参加不可理由を作る純粋な表示関数。後続Room UIが利用可能な境界を作る。
 DO NOT TOUCH: 上記以外のファイル、既存戦闘/Replay/報酬/マスター、Migration、認証、GameContext、package/lock/CI、環境設定、Production。GitHub書込みは親が統合する。
@@ -13,3 +13,6 @@ EXPECTED OUTPUT: 指定範囲の実ファイルとProtocol準拠Completion Repor
 BRANCH: codex/raid-room-rescue-20260908（親管理、Workerは共有refを更新しない）
 COMMIT: 基準 b08e396e657615afd6dfddc05bbec37d21561a25、成果SHAは親記録
 BLOCKERS: 全機能の構造未確認はspec参照。今回の純粋関数/DTO/検証準備の開始を妨げない。Production/Preview環境操作は今回対象外。
+
+
+親レビュー: 担当範囲・差分・保護領域を確認。対象26テストPASS、TypeScript strict PASS。全体build・実画面・DB接続は未検証。新レイド全体の完了ではない。

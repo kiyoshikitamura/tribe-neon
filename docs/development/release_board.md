@@ -3,9 +3,9 @@
 親: このチャット。子A/B/Cを排他的ファイル範囲で管理する。初回はA型・条件 → B表示/C検証 → 親レビューの順。
 |Task|Owner|Status|範囲|
 |---|---|---|---|
-|[RAID-A-01](agent_tasks/RAID-A-01.md)|raid_a_readiness|READY|src/domain/raidRoom.ts、docs/development/raid_room_api_contract.md|
-|[RAID-B-01](agent_tasks/RAID-B-01.md)|raid_b_readiness|READY|src/domain/raidRoomPresentation.ts|
-|[RAID-C-01](agent_tasks/RAID-C-01.md)|raid_c_readiness|READY|tests/raid-room/、docs/development/raid_room_validation.md|
+|[RAID-A-01](agent_tasks/RAID-A-01.md)|raid_a_readiness|VALIDATED|src/domain/raidRoom.ts、docs/development/raid_room_api_contract.md|
+|[RAID-B-01](agent_tasks/RAID-B-01.md)|raid_b_readiness|VALIDATED|src/domain/raidRoomPresentation.ts|
+|[RAID-C-01](agent_tasks/RAID-C-01.md)|raid_c_readiness|VALIDATED|tests/raid-room/、docs/development/raid_room_validation.md|
 仕様: [raid_room_rescue_v1.md](../../specs/raid_room_rescue_v1.md)
 全機能の到達順: 共通契約 → Room/参加/戦闘縦通し → 救援/参加者 → 報酬/新旧切替 → Preview複数人検証 → 実機調整 → Release判断。
 既存概算91〜158時間は参考レンジ。自律稼働時間の保証ではない。各縦通し完了時に実績と残作業を更新する。
@@ -141,3 +141,7 @@ Pre-OpenからInvite機能を`OMIT`する。
 `UNASSIGNED`
 
 Main AI Agentがdependency / file overlapを確認してから割り当てること。
+
+
+## Raid初回成果
+A/B/Cの指定範囲は親レビュー済み。対象26テストPASS、strict TypeScript PASS。実画面・DB・Preview接続未実施。次工程はRoomの取得/表示/操作の接続契約と画面。構造条件はspecの未確認事項を照合し、依存する処理だけを保留する。
