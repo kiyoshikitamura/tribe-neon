@@ -104,7 +104,79 @@ export async function initializeAcquisitionAttribution(): Promise<boolean> {
       return null;
     });
   }
-  return Boolean(await initialization);
+  const token = await initialization;
+  if (token) void flushWorldIntroObservations(token);
+  return Boolean(token);
+}
+
+type WorldIntroEvent = "WORLD_INTRO_VIEWED" | "WORLD_INTRO_SKIPPED";
+const worldIntroEvents: WorldIntroEvent[] = ["WORLD_INTRO_VIEWED", "WORLD_INTRO_SKIPPED"];
+const introObservations = new Map<string, Partial<Record<WorldIntroEvent, "pending" | "sent">>>();
+const introWrites = new Map<string, Promise<void>>();
+
+function getIntroObservations(token: string) {
+  let observations = introObservations.get(token);
+  if (!observations) {
+    observations = {};
+    try {
+      const stored = JSON.parse(window.sessionStorage.getItem(`tribe_world_intro_events_v1:${token}`) || "{}");
+      for (const event of worldIntroEvents) {
+        if (stored[event] === "pending" || stored[event] === "sent") observations[event] = stored[event];
+      }
+    } catch { /* 保存不可でも、このページ内の再送を維持する。 */ }
+    introObservations.set(token, observations);
+  }
+  return observations;
+}
+
+function saveIntroObservations(token: string) {
+  try {
+    window.sessionStorage.setItem(`tribe_world_intro_events_v1:${token}`, JSON.stringify(getIntroObservations(token)));
+  } catch { /* 計測の保存失敗で画面遷移を止めない。 */ }
+}
+
+function flushWorldIntroObservations(token: string): Promise<void> {
+  const active = introWrites.get(token);
+  if (active) return active;
+  const write = (async () => {
+    const observations = getIntroObservations(token);
+    for (const event of worldIntroEvents) {
+      if (observations[event] !== "pending") continue;
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        try {
+          const { error } = await supabase.rpc("record_kpi_acquisition_observation_v1", {
+            p_token: token,
+            p_event_type: event,
+            p_idempotency_key: `${event.toLowerCase()}:v1`,
+            p_metadata: {},
+            p_source: SOURCE,
+          });
+          if (error) throw error;
+          observations[event] = "sent";
+          saveIntroObservations(token);
+          break;
+        } catch {
+          if (attempt === 2) {
+            console.warn("World introduction observation pending retry");
+            return;
+          }
+          await new Promise(resolve => window.setTimeout(resolve, 1000 * (attempt + 1)));
+        }
+      }
+    }
+  })().finally(() => introWrites.delete(token));
+  introWrites.set(token, write);
+  return write;
+}
+
+export function recordWorldIntroObservation(event: WorldIntroEvent): void {
+  if (typeof window === "undefined" || usingMockSupabase) return;
+  const token = getOrCreateToken();
+  const observations = getIntroObservations(token);
+  if (!observations[event]) observations[event] = "pending";
+  saveIntroObservations(token);
+  // 既存Landing初期化を再利用。未送信分はreload後の初期化でも再送する。
+  void initializeAcquisitionAttribution();
 }
 
 export async function recordAcquisitionGameStart(): Promise<boolean> {
