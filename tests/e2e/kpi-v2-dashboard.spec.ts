@@ -5,7 +5,16 @@ const metric = (key: string, numerator: number | null, denominator: number | nul
   coverage: { from: "2026-08-08", to: "2026-09-06" }, observation_status: value == null ? "incomplete" : "complete",
   as_of: "2026-09-06T12:00:00+09:00", timezone: "Asia/Tokyo", reason: value == null ? "no_data" : null,
 });
+const fixtureDate = (offset: number) => { const value = new Date("2026-09-06T00:00:00Z"); value.setUTCDate(value.getUTCDate() - offset); return value.toISOString().slice(0, 10); };
 const fixtures: Record<string, unknown> = {
+  daily: { timezone:"Asia/Tokyo", rows:Array.from({ length:30 }, (_, index) => ({
+    date:fixtureDate(index),
+    new_users:index === 0 ? 20 : Math.max(0, 12-index),
+    tutorial:index < 2 ? metric("tutorial.canonical_complete_rate", index === 0 ? 14 : null, 20, index === 0 ? .7 : null, .6, index === 0 ? "PASS" : "NOT_READY") : metric("tutorial.canonical_complete_rate", null, 0, null, .6, "NOT_READY"),
+    guild:metric("guild.conversion_rate", index === 0 ? 7 : null, index === 0 ? 14 : 0, index === 0 ? .5 : null, .4, index === 0 ? "PASS" : "NOT_READY"),
+    chat:metric("guild.chat_activation_rate", index === 0 ? 3 : null, index === 0 ? 7 : 0, index === 0 ? .429 : null, .3, index === 0 ? "PASS" : "NOT_READY"),
+    retention:[1,2,3,4,5].map((day) => ({ day, ...metric(`retention.d${day}`, day <= index ? 4 : null, day <= index ? 10 : null, day <= index ? .4 : null, [0,.38,.3,.26,.23,.21][day], day <= index ? "PASS" : "NOT_READY") })),
+  })) },
   validation: {
     acquisition: metric("acquisition.game_start_rate", 84, 100, .84, .8), tutorial: metric("tutorial.canonical_complete_rate", 62, 84, .738, .6),
     guild_conversion: metric("guild.conversion_rate", 30, 62, .484, .4), guild_chat_activation: metric("guild.chat_activation_rate", 11, 30, .367, .3),
@@ -42,22 +51,34 @@ test.beforeEach(async ({ page }) => {
 });
 
 for (const viewport of [{ width:390, height:844 }, { width:412, height:915 }]) {
-  test(`KPI V2 mobile ${viewport.width}px`, async ({ page }) => {
+  test(`KPI daily mobile ${viewport.width}px scroll and detail`, async ({ page }) => {
     await page.setViewportSize(viewport); await mockApi(page); await page.goto("/admin/kpi");
-    await expect(page.getByRole("heading", { name:"Validation Status" })).toBeVisible();
-    await expect(page.getByText("SKILL_NORMAL", { exact:true })).toBeVisible();
-    await expect(page.getByText("GO", { exact:true }).first()).toBeVisible();
-    await expect(page.getByText(/とても長いキャンペーン名称/)).toBeVisible();
+    await expect(page.getByRole("heading", { name:"日次KPI" })).toBeVisible();
+    const mobile = page.locator(".daily-mobile");
+    await expect(mobile.getByText("新規ユーザー").first()).toBeVisible();
+    await expect(mobile.getByText("Tutorial").first()).toBeVisible();
+    await expect(mobile.getByText("Guild").first()).toBeVisible();
+    await expect(mobile.getByText("Chat").first()).toBeVisible();
+    await expect(mobile.getByText("D5").first()).toBeVisible();
+    await expect(page.getByText("FROM")).toHaveCount(0);
+    const shell = page.locator(".kpi-shell");
+    await shell.evaluate((node) => { node.scrollTop = node.scrollHeight; });
+    expect(await shell.evaluate((node) => node.scrollTop > 0 && Math.ceil(node.scrollTop + node.clientHeight) >= node.scrollHeight)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.getByRole("link", { name:"2026-09-06 の詳細" }).click();
+    await expect(page).toHaveURL(/\/admin\/kpi\/day\/2026-09-06$/);
+    await expect(page.getByRole("heading", { name:"2026-09-06 JST" })).toBeVisible();
+    await expect(page.getByText("84 / 100").first()).toBeVisible();
     const retention = page.locator(".v2-retention-scroll");
     expect(await retention.evaluate((node) => node.scrollWidth > node.clientWidth)).toBe(true);
   });
 }
 
-test("KPI V2 empty and partial API error states", async ({ page }) => {
-  await page.setViewportSize({ width:1440, height:900 }); await mockApi(page, { empty:true, fail:"community" }); await page.goto("/admin/kpi");
-  await expect(page.locator(".v2-alert")).toContainText("community");
-  await expect(page.getByText(/Marketing source dataがありません/)).toBeVisible();
-  await expect(page.getByRole("heading", { name:"Formal Open Readiness" })).toBeVisible();
+test("KPI daily desktop table and automatic error state", async ({ page }) => {
+  await page.setViewportSize({ width:1440, height:900 }); await mockApi(page); await page.goto("/admin/kpi");
+  await expect(page.locator(".daily-desktop table")).toBeVisible();
+  await expect(page.locator(".daily-desktop tbody tr")).toHaveCount(30);
+  await expect(page.locator(".daily-desktop tbody tr").first()).toContainText("2026-09-06");
+  await expect(page.getByText("表示条件")).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

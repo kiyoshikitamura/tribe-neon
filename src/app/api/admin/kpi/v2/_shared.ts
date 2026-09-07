@@ -4,6 +4,7 @@ import { calculateCommunityContinuity, calculateFormalOpenStatus, calculateForma
 
 export const TIMEZONE = "Asia/Tokyo";
 export const DEFINITION_VERSION = "kpi-v2-20260906";
+const PRODUCTION_MEASUREMENT_STARTED_AT = "2026-09-07T12:33:06+09:00";
 export type MetricStatus = "PASS" | "FAIL" | "NOT_READY" | "UNAVAILABLE";
 
 type Period = { subject_id: string; classification: string; valid_from: string; valid_to: string | null };
@@ -89,7 +90,7 @@ export function metric(metricKey: string, numerator: number | null, denominator:
     metric_key: metricKey, definition_version: DEFINITION_VERSION, numerator, denominator, value, target,
     status, coverage: options.coverage ?? null, observation_status: options.observationStatus || "complete",
     as_of: options.asOf || new Date().toISOString(), timezone: TIMEZONE,
-    reason: denominator === 0 ? "zero_denominator" : options.reason || null,
+    reason: denominator === 0 ? options.reason || "zero_denominator" : options.reason || null,
   };
 }
 
@@ -110,7 +111,12 @@ export async function acquisition(service: SupabaseClient, range: NonNullable<Re
     .select("journey_id,occurred_at").eq("event_type", "TITLE_ARRIVED")
     .gte("occurred_at", range.fromAt).lt("occurred_at", range.toAt).range(from, to));
   const ids = [...new Set(titleRows.map((row) => row.journey_id))];
-  if (!ids.length) return { metric: metric("acquisition.game_start_rate", 0, 0, 0.8), journeys: { started_at: null, last_fact_at: null, bound: 0, unbound: 0 }, steps: ["TITLE_ARRIVED", "TAP_TO_START", "WORLD_INTRO_STARTED", "WORLD_INTRO_COMPLETED", "NAME_COMPLETED", "GAME_START_BOUND"].map((event_type) => ({ event_type, journeys: 0 })) };
+  if (!ids.length) return {
+    metric: metric("acquisition.game_start_rate", null, 0, 0.8, { observationStatus: "incomplete", reason: "measurement_not_started" }),
+    measurement_status: "NOT_MEASURED",
+    journeys: { started_at: null, last_fact_at: null, bound: 0, unbound: 0 },
+    steps: ["TITLE_ARRIVED", "TAP_TO_START", "WORLD_INTRO_STARTED", "WORLD_INTRO_COMPLETED", "NAME_COMPLETED", "GAME_START_BOUND"].map((event_type) => ({ event_type, journeys: null })),
+  };
   const [{ data: journeys }, { data: bindings }, { data: allFacts }] = await Promise.all([
     service.from("kpi_acquisition_journeys").select("journey_id,started_at,source").in("journey_id", ids),
     service.from("kpi_acquisition_subject_bindings").select("journey_id,subject_id,bound_at").in("journey_id", ids),
@@ -151,8 +157,12 @@ export async function acquisition(service: SupabaseClient, range: NonNullable<Re
 }
 
 export async function tutorial(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {
+  const measurementStartedAt = process.env.NEXT_PUBLIC_KPI_DATA_ENV === "production"
+    ? PRODUCTION_MEASUREMENT_STARTED_AT
+    : range.fromAt;
+  const measurableFrom = Date.parse(measurementStartedAt) > Date.parse(range.fromAt) ? measurementStartedAt : range.fromAt;
   const subjectData = await fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,registered_at")
-    .gte("registered_at", range.fromAt).lt("registered_at", range.toAt).range(from, to));
+    .gte("registered_at", measurableFrom).lt("registered_at", range.toAt).range(from, to));
   const periods = await exclusions(service);
   const subjects = subjectData.filter((row) => !excluded(periods, row.subject_id, row.registered_at));
   const ids = subjects.map((row) => row.subject_id);
@@ -163,16 +173,22 @@ export async function tutorial(service: SupabaseClient, range: NonNullable<Retur
   const { data: factData } = ids.length
     ? await service.from("kpi_tutorial_journey_facts").select("subject_id,fact_type,occurred_at").in("subject_id", ids)
     : { data: [] as any[] };
+  const canonicalMeasured = ((factData || []) as any[]).some((row) => row.fact_type === "FIRST_MYPAGE_ACCESS_CONFIRMED");
+  const canonicalMetric = canonicalMeasured
+    ? metric("tutorial.canonical_complete_rate", completed.size, ids.length, 0.6, { coverage: { mode: "forward_only", measured_from: measurementStartedAt } })
+    : metric("tutorial.canonical_complete_rate", null, ids.length, 0.6, { observationStatus: "incomplete", reason: "measurement_not_started", coverage: { mode: "forward_only", measured_from: measurementStartedAt } });
   const factTypes = ["TUTORIAL_GACHA_COMPLETED", "TUTORIAL_BATTLE_COMPLETED", "AUTH_CHOICE_SELECTED", "AUTH_CHOICE_RESOLVED", "FIRST_MYPAGE_ACCESS_CONFIRMED"];
   return {
-    metric: metric("tutorial.canonical_complete_rate", completed.size, ids.length, 0.6),
+    metric: canonicalMetric,
+    measurement_status: canonicalMeasured ? "MEASURED" : "NOT_MEASURED",
     strong_target: 0.7,
     steps: [
       { fact_type: "GAME_START", subjects: ids.length, observation_status: "complete" },
       ...factTypes.map((factType) => ({
         fact_type: factType,
-        subjects: new Set(((factData || []) as any[]).filter((row) => row.fact_type === factType && !excluded(periods, row.subject_id, row.occurred_at)).map((row) => row.subject_id)).size,
-        observation_status: factType === "FIRST_MYPAGE_ACCESS_CONFIRMED" ? "complete" : "partial",
+        subjects: factType === "FIRST_MYPAGE_ACCESS_CONFIRMED" && !canonicalMeasured ? null : new Set(((factData || []) as any[]).filter((row) => row.fact_type === factType && !excluded(periods, row.subject_id, row.occurred_at)).map((row) => row.subject_id)).size,
+        observation_status: factType === "FIRST_MYPAGE_ACCESS_CONFIRMED" ? (canonicalMeasured ? "complete" : "incomplete") : "partial",
+        reason: factType === "FIRST_MYPAGE_ACCESS_CONFIRMED" && !canonicalMeasured ? "measurement_not_started" : null,
       })),
     ],
   };
@@ -280,6 +296,66 @@ export async function retention(service: SupabaseClient, range: NonNullable<Retu
     .gte("occurred_at", range.fromAt).lt("occurred_at", range.toAt);
   if (transitionError) throw transitionError;
   return { cohorts, formal_open: calculateFormalRetention(cohorts), identity: "subject_id", account_switch_diagnostic_count: transitionCount || 0 };
+}
+
+export async function dailyOverview(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {
+  const [retentionResult, subjectData, periods] = await Promise.all([
+    retention(service, range),
+    fetchAll<any>((from, to) => service.from("kpi_subjects").select("subject_id,registered_at")
+      .gte("registered_at", range.fromAt).lt("registered_at", range.toAt).range(from, to)),
+    exclusions(service),
+  ]);
+  const subjects = subjectData.filter((row) => !excluded(periods, row.subject_id, row.registered_at));
+  const subjectIds = subjects.map((row) => row.subject_id);
+  const { data: completionData, error: completionError } = subjectIds.length
+    ? await service.from("kpi_canonical_tutorial_completions_v1").select("subject_id,completed_at").in("subject_id", subjectIds)
+    : { data: [] as any[], error: null };
+  if (completionError) throw completionError;
+  const completions = ((completionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.completed_at));
+  const completionIds = completions.map((row) => row.subject_id);
+  const { data: conversionData, error: conversionError } = completionIds.length
+    ? await service.from("kpi_guild_conversion_facts").select("subject_id,conversion_type,membership_period_id,occurred_at").in("subject_id", completionIds)
+    : { data: [] as any[], error: null };
+  if (conversionError) throw conversionError;
+  const conversions = ((conversionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
+  const membershipPeriodIds = [...new Set(conversions.map((row) => row.membership_period_id))];
+  const { data: activationData, error: activationError } = membershipPeriodIds.length
+    ? await service.from("kpi_guild_chat_activation_facts").select("subject_id,membership_period_id,occurred_at").in("membership_period_id", membershipPeriodIds)
+    : { data: [] as any[], error: null };
+  if (activationError) throw activationError;
+  const activations = ((activationData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
+  const retentionByDate = new Map(retentionResult.cohorts.map((cohort) => [cohort.cohort_date, cohort]));
+  const measurementDate = jstDate(PRODUCTION_MEASUREMENT_STARTED_AT);
+  const canonicalObserved = completions.length > 0;
+  const dates: string[] = [];
+  for (let date = range.to; date >= range.from; date = addDays(date, -1)) dates.push(date);
+  return {
+    definition_version: DEFINITION_VERSION,
+    timezone: TIMEZONE,
+    rows: dates.map((date) => {
+      const cohort = retentionByDate.get(date);
+      const cohortSubjects = subjects.filter((row) => jstDate(row.registered_at) === date);
+      const cohortIds = new Set(cohortSubjects.map((row) => row.subject_id));
+      const completedSubjects = new Set(completions.filter((row) => cohortIds.has(row.subject_id)).map((row) => row.subject_id));
+      const tutorialMeasured = process.env.NEXT_PUBLIC_KPI_DATA_ENV !== "production" || date >= measurementDate;
+      const tutorialMetric = tutorialMeasured && canonicalObserved
+        ? metric("tutorial.canonical_complete_rate", completedSubjects.size, cohortIds.size, .6)
+        : metric("tutorial.canonical_complete_rate", null, cohortIds.size, .6, { observationStatus: "incomplete", reason: "measurement_not_started" });
+      const completionSubjectsForDate = new Set(completions.filter((row) => jstDate(row.completed_at) === date).map((row) => row.subject_id));
+      const dateConversions = conversions.filter((row) => completionSubjectsForDate.has(row.subject_id));
+      const conversionSubjects = new Set(dateConversions.map((row) => row.subject_id));
+      const conversionPeriods = new Set(dateConversions.map((row) => row.membership_period_id));
+      const activationSubjects = new Set(activations.filter((row) => conversionPeriods.has(row.membership_period_id)).map((row) => row.subject_id));
+      return {
+        date,
+        new_users: cohortSubjects.length,
+        tutorial: tutorialMetric,
+        guild: metric("guild.conversion_rate", conversionSubjects.size, completionSubjectsForDate.size, .4),
+        chat: metric("guild.chat_activation_rate", activationSubjects.size, conversionSubjects.size, .3),
+        retention: cohort?.days || [1, 2, 3, 4, 5].map((day) => ({ day, ...metric(`retention.d${day}`, null, null, [0, .38, .30, .26, .23, .21][day], { observationStatus: "incomplete", reason: "no_cohort" }) })),
+      };
+    }),
+  };
 }
 
 export async function community(service: SupabaseClient, range: NonNullable<ReturnType<typeof rangeFrom>>) {

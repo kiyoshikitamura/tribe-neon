@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 type Status = "PASS" | "FAIL" | "NOT_READY" | "UNAVAILABLE";
 type Metric = { metric_key: string; numerator: number | null; denominator: number | null; value: number | null; target: number | null; status: Status; coverage?: unknown; observation_status?: string; as_of?: string; reason?: string | null };
@@ -26,10 +27,12 @@ function statusClass(status?: string) { return `is-${(status === "GO" ? "PASS" :
 function StatusBadge({ status }: { status?: string }) { return <span className={`v2-status ${statusClass(status)}`}>{readable(status)}</span>; }
 function MetricCard({ label, metric, definition, format = "percent" }: { label: string; metric?: Metric; definition: string; format?: "percent" | "yen" | "number" }) {
   const formatted = (value: number | null | undefined) => value == null ? "—" : format === "yen" ? yen(value) : format === "number" ? n(value, 1) : pct(value);
+  const notMeasured = metric?.reason === "measurement_not_started";
   return <article className="v2-metric-card">
     <div className="v2-card-head"><h3>{label}</h3><StatusBadge status={metric?.status} /></div>
-    <strong className="v2-card-value">{formatted(metric?.value)}</strong>
-    <dl><div><dt>Target</dt><dd>{formatted(metric?.target)}</dd></div><div><dt>N / D</dt><dd>{n(metric?.numerator)} / {n(metric?.denominator)}</dd></div><div><dt>Coverage</dt><dd>{metric?.observation_status || "—"}</dd></div></dl>
+    <span className="v2-card-caption">実績</span><strong className="v2-card-value">{formatted(metric?.value)}</strong>
+    {notMeasured && <em className="v2-measurement-note">計測開始前 / データ不足</em>}
+    <dl><div><dt>目標</dt><dd>{formatted(metric?.target)}</dd></div><div><dt>N / D</dt><dd>{n(metric?.numerator)} / {n(metric?.denominator)}</dd></div><div><dt>Coverage</dt><dd>{metric?.observation_status || "—"}</dd></div></dl>
     <p>{definition}</p><small>as of {when(metric?.as_of)} · JST</small>
   </article>;
 }
@@ -37,10 +40,10 @@ function Section({ id, eyebrow, title, children }: { id?: string; eyebrow: strin
   return <section id={id} className="v2-section"><header><span>{eyebrow}</span><h2>{title}</h2></header>{children}</section>;
 }
 
-export default function KpiDashboardV2() {
+export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
   const today = useMemo(() => jstToday(), []);
-  const [from, setFrom] = useState(addDays(today, -29));
-  const [to, setTo] = useState(today);
+  const [from, setFrom] = useState(fixedDate || addDays(today, -29));
+  const [to, setTo] = useState(fixedDate || today);
   const [grain, setGrain] = useState("CAMPAIGN");
   const [data, setData] = useState<Bundle | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -83,8 +86,8 @@ export default function KpiDashboardV2() {
   const retentionSummary: Metric | undefined = formalRetention.d1;
   const communityMetric: Metric = { metric_key: "community.effective_active_guild_continuity", numerator: communityContinuity?.current_consecutive_days ?? null, denominator: 3, value: communityContinuity?.current_consecutive_days == null ? null : communityContinuity.current_consecutive_days / 3, target: 1, status: communityContinuity?.status || "NOT_READY", as_of: latestCommunity?.date, observation_status: communityContinuity?.status === "NOT_READY" ? "incomplete" : "complete" };
   return <main className="kpi-shell v2-shell">
-    <header className="kpi-header"><div><span className="kpi-kicker">TRIBE NEON / KPI DASHBOARD V2</span><h1>Validation Room</h1><p>Canonical Authorityによるread-only decision support</p></div><div className="kpi-header-meta"><strong><span className="kpi-live-dot" /> {dataEnvironment} DB</strong><small>JST · refresh操作なし</small></div></header>
-    <section className="v2-toolbar"><label>FROM<input type="date" value={from} max={to} onChange={(e) => setFrom(e.target.value)} /></label><label>TO<input type="date" value={to} min={from} onChange={(e) => setTo(e.target.value)} /></label><label>MARKETING GRAIN<select value={grain} onChange={(e) => setGrain(e.target.value)}><option value="CAMPAIGN">Campaign</option><option value="LINE_ITEM">Line item</option><option value="CREATIVE">Creative</option><option value="ACCOUNT">Account</option></select></label><button type="button" onClick={() => void load()} disabled={loading}>{loading ? "Loading…" : "再読込"}</button></section>
+    <header className="kpi-header"><div><span className="kpi-kicker">TRIBE NEON / KPI DASHBOARD V2</span><h1>{fixedDate ? `${fixedDate} JST` : "Validation Room"}</h1><p>Canonical Authorityによるread-only detail</p></div><div className="kpi-header-meta">{fixedDate && <Link className="v2-back" href="/admin/kpi">← 日次一覧</Link>}<strong><span className="kpi-live-dot" /> {dataEnvironment} DB</strong><small>JST · 自動読込</small></div></header>
+    {!fixedDate && <details className="v2-filters"><summary>表示条件</summary><section className="v2-toolbar"><label>FROM<input type="date" value={from} max={to} onChange={(e) => setFrom(e.target.value)} /></label><label>TO<input type="date" value={to} min={from} onChange={(e) => setTo(e.target.value)} /></label><label>MARKETING GRAIN<select value={grain} onChange={(e) => setGrain(e.target.value)}><option value="CAMPAIGN">Campaign</option><option value="LINE_ITEM">Line item</option><option value="CREATIVE">Creative</option><option value="ACCOUNT">Account</option></select></label><button type="button" onClick={() => void load()} disabled={loading}>{loading ? "Loading…" : "再読込"}</button></section></details>}
     {errors.length > 0 && <div className="v2-alert" role="alert"><strong>一部Authorityを取得できません</strong><span>{errors.join(" / ")}</span><button type="button" onClick={() => void load()}>再試行</button></div>}
     {loading && !data && <div className="v2-loading" aria-live="polite"><span />Canonical KPIを読み込んでいます…</div>}
 
@@ -98,7 +101,7 @@ export default function KpiDashboardV2() {
       <MetricCard label="Community" metric={communityMetric} definition="Effective Active Guild ≥18 / 3 consecutive completed JST days" />
     </div></Section>
     <Section eyebrow="03 / MARKETING" title="Marketing"><div className="v2-stat-grid">{[["Spend", yen(marketingRows.length ? marketingTotals.spend : null)], ["Impressions", n(marketingRows.length ? marketingTotals.impressions : null)], ["Clicks", n(marketingRows.length ? marketingTotals.clicks : null)], ["CTR", pct(marketingDerived.ctr)], ["CPC", yen(marketingDerived.cpc)], ["CPM", yen(marketingDerived.cpm)]].map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}</div><div className="v2-note-grid"><p><b>GATE</b> CPC ≤ ¥28.5 + Clicks ≥ 350/day</p><p><b>TARGET</b> CPC ≤ ¥20 · CTR ≈ 0.7%</p><p><b>STRONG</b> CPC ≤ ¥15 · CTR 0.8–1.0% · Clicks 400–500/day</p></div>{marketingRows.length > 0 && <div className="v2-marketing-list">{marketingRows.slice(0, 20).map((row: any) => <article key={row.id || `${row.report_date_jst}-${row.external_key}`}><div><strong>{row.campaign_name || row.campaign_key || "Campaign"}</strong><small>{row.report_date_jst} · {row.reporting_grain}</small></div><span>{yen(Number(row.spend))}</span><span>{n(Number(row.clicks))} clicks</span><span>{row.cpc == null ? "CPC —" : `CPC ${yen(Number(row.cpc))}`}</span></article>)}</div>}{!marketingRows.length && <p className="v2-empty"><StatusBadge status="NOT_READY" /> Marketing source dataがありません。0として判定しません。</p>}</Section>
-    <Section eyebrow="04 / ACQUISITION" title="Acquisition Funnel"><div className="v2-funnel">{(data?.acquisition?.steps || []).map((step: any, index: number, all: any[]) => { const first = all[0]?.journeys || 0; const previous = all[index - 1]?.journeys; return <article key={step.event_type}><span>{index + 1}</span><div><h3>{labels[step.event_type]}</h3><strong>{n(step.journeys)}</strong><small>Prev {previous == null || previous === 0 ? "—" : pct(step.journeys / previous)} · Title {first === 0 ? "—" : pct(step.journeys / first)}</small></div></article>; })}</div><p className="v2-definition">Primary Gate: bound Game Start journeys / TITLE_ARRIVED journeys ≥ 80%。X ClickはMarketing Authorityとして分離。</p></Section>
+    <Section eyebrow="04 / ACQUISITION" title="Acquisition Funnel"><div className="v2-funnel">{(data?.acquisition?.steps || []).map((step: any, index: number, all: any[]) => { const first = all[0]?.journeys; const previous = all[index - 1]?.journeys; return <article key={step.event_type}><span>{index + 1}</span><div><h3>{labels[step.event_type]}</h3><strong>{n(step.journeys)}</strong><small>Prev {previous == null || previous === 0 ? "—" : pct(step.journeys / previous)} · Title {first == null || first === 0 ? "—" : pct(step.journeys / first)}</small></div></article>; })}</div>{data?.acquisition?.measurement_status === "NOT_MEASURED" && <p className="v2-measurement-note">計測開始前 / データ不足</p>}<p className="v2-definition">Primary Gate: bound Game Start journeys / TITLE_ARRIVED journeys ≥ 80%。X ClickはMarketing Authorityとして分離。</p></Section>
     <Section eyebrow="05 / TUTORIAL" title="Tutorial Funnel"><div className="v2-funnel">{(data?.tutorial?.steps || []).map((step: any, index: number) => <article key={step.fact_type} className={step.observation_status === "partial" ? "is-partial" : ""}><span>{index + 1}</span><div><h3>{labels[step.fact_type]}</h3><strong>{n(step.subjects)}</strong><small>{step.observation_status === "partial" ? "PARTIAL COVERAGE" : "Canonical Authority"}</small></div></article>)}</div><p className="v2-definition">Canonical completeはFIRST_MYPAGE_ACCESS_CONFIRMEDのみ。legacy COMPLETEはnumeratorに含みません。Gate 60% / Strong 70%。</p></Section>
     <Section eyebrow="06 / POST TUTORIAL" title="Post Tutorial Activation"><div className="v2-stat-grid">{(data?.postTutorial?.metrics || []).map((item: any) => <article key={item.key}><span>{item.label || item.key}</span><strong>{n(item.uu)} UU</strong><small>{item.key === "SKILL_NORMAL" || item.key === "EQUIP_NORMAL" ? item.key : item.observation_status === "unavailable" ? "AUTHORITY UNAVAILABLE" : "First use after tutorial"}</small></article>)}</div></Section>
     <Section eyebrow="07 / GUILD" title="Guild Funnel"><div className="v2-guild-flow"><article><span>Tutorial Complete</span><strong>{n(data?.guild?.conversion?.denominator)}</strong></article><i>→</i><article><span>Guild Conversion</span><strong>{n(data?.guild?.conversion?.numerator)}</strong><small>CREATE {n(data?.guild?.create)} / JOIN {n(data?.guild?.join)}</small></article><i>→</i><article><span>Chat Activation</span><strong>{n(data?.guild?.chat_activation?.numerator)}</strong><small>{pct(data?.guild?.chat_activation?.value)} · PASS 30%</small></article></div></Section>
