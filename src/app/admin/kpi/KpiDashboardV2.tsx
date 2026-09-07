@@ -5,7 +5,7 @@ import Link from "next/link";
 
 type Status = "PASS" | "FAIL" | "NOT_READY" | "UNAVAILABLE";
 type Metric = { metric_key: string; numerator: number | null; denominator: number | null; value: number | null; target: number | null; status: Status; coverage?: unknown; observation_status?: string; as_of?: string; reason?: string | null };
-type Bundle = { validation: any; acquisition: any; tutorial: any; guild: any; retention: any; community: any; marketing: any; postTutorial: any };
+type Bundle = { validation: any; acquisition: any; tutorial: any; guild: any; retention: any; community: any; marketing: any; postTutorial: any; daily: any };
 
 const labels: Record<string, string> = {
   TITLE_ARRIVED: "Title Arrival", TAP_TO_START: "TAP TO START", WORLD_INTRO_STARTED: "World Intro開始",
@@ -40,6 +40,16 @@ function Section({ id, eyebrow, title, children }: { id?: string; eyebrow: strin
   return <section id={id} className="v2-section"><header><span>{eyebrow}</span><h2>{title}</h2></header>{children}</section>;
 }
 
+function DailyActualSummary({ row }: { row?: any }) {
+  const actual = (label: string, metric?: any, detail?: React.ReactNode) => <article><span>{label}</span><strong className="actual-pair">{metric?.numerator == null || metric?.denominator == null || metric.denominator === 0 ? "—" : `${n(metric.numerator)} / ${n(metric.denominator)}人`}</strong><b className="actual-rate">{pct(metric?.value)}</b>{detail}<small className="actual-authority">計測方式：{metric?.authority_label || (metric?.authority === "canonical" ? "Canonical" : metric?.authority === "membership_periods" ? "Guild Membership" : metric?.authority?.includes("legacy") ? "旧計測" : "—")}</small></article>;
+  return <section className="v2-section daily-actual-summary"><header><span>DAILY ACTUALS</span><h2>日次実数</h2></header><div className="v2-stat-grid">
+    <article><span>新規ユーザー</span><strong className="actual-pair">{row ? `${n(row.new_users)}人` : "—"}</strong><small className="actual-authority">計測方式：kpi_subjects</small></article>
+    {actual("チュートリアル突破", row?.tutorial)}
+    {actual("ギルド設立・加入", row?.guild, row?.guild?.create != null && row?.guild?.join != null ? <small>設立 {n(row.guild.create)}人 · 加入 {n(row.guild.join)}人</small> : null)}
+    {actual("ギルドチャット", row?.chat)}
+  </div></section>;
+}
+
 export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
   const today = useMemo(() => jstToday(), []);
   const [from, setFrom] = useState(fixedDate || addDays(today, -29));
@@ -56,6 +66,7 @@ export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
       ["tutorial", `/api/admin/kpi/v2/tutorial?${base}`], ["guild", `/api/admin/kpi/v2/guild?${base}`],
       ["retention", `/api/admin/kpi/v2/retention?${base}`], ["community", `/api/admin/kpi/v2/community?${base}`],
       ["marketing", `/api/admin/kpi/v2/marketing?${base}&grain=${grain}`], ["postTutorial", `/api/admin/kpi/v2/post-tutorial?${base}`],
+      ["daily", `/api/admin/kpi/v2/daily?${base}`],
     ];
     const entries = await Promise.all(routes.map(async ([key, url]) => {
       try { const response = await fetch(url, { cache: "no-store" }); const body = await response.json(); if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`); return [key, body, null] as const; }
@@ -90,6 +101,8 @@ export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
     {!fixedDate && <details className="v2-filters"><summary>表示条件</summary><section className="v2-toolbar"><label>FROM<input type="date" value={from} max={to} onChange={(e) => setFrom(e.target.value)} /></label><label>TO<input type="date" value={to} min={from} onChange={(e) => setTo(e.target.value)} /></label><label>MARKETING GRAIN<select value={grain} onChange={(e) => setGrain(e.target.value)}><option value="CAMPAIGN">Campaign</option><option value="LINE_ITEM">Line item</option><option value="CREATIVE">Creative</option><option value="ACCOUNT">Account</option></select></label><button type="button" onClick={() => void load()} disabled={loading}>{loading ? "Loading…" : "再読込"}</button></section></details>}
     {errors.length > 0 && <div className="v2-alert" role="alert"><strong>一部Authorityを取得できません</strong><span>{errors.join(" / ")}</span><button type="button" onClick={() => void load()}>再試行</button></div>}
     {loading && !data && <div className="v2-loading" aria-live="polite"><span />Canonical KPIを読み込んでいます…</div>}
+
+    {fixedDate && <DailyActualSummary row={data?.daily?.rows?.find((row: any) => row.date === fixedDate)} />}
 
     <Section eyebrow="01 / VALIDATION STATUS" title="Validation Status"><div className="v2-phase-grid">{phases.map((phase) => <article key={phase.label}><StatusBadge status={phase.status} /><h3>{phase.label}</h3><p>{phase.note}</p></article>)}</div></Section>
     <Section eyebrow="02 / CURRENT RELEASE GATE" title="Current Release Gate"><div className="v2-card-grid">

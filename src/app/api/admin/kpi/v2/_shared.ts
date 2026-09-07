@@ -307,26 +307,44 @@ export async function dailyOverview(service: SupabaseClient, range: NonNullable<
   ]);
   const subjects = subjectData.filter((row) => !excluded(periods, row.subject_id, row.registered_at));
   const subjectIds = subjects.map((row) => row.subject_id);
-  const { data: completionData, error: completionError } = subjectIds.length
-    ? await service.from("kpi_canonical_tutorial_completions_v1").select("subject_id,completed_at").in("subject_id", subjectIds)
-    : { data: [] as any[], error: null };
+  const [{ data: completionData, error: completionError }, { data: legacyData, error: legacyError }, { data: subjectLinks, error: subjectLinkError }] = subjectIds.length
+    ? await Promise.all([
+      service.from("kpi_canonical_tutorial_completions_v1").select("subject_id,completed_at").in("subject_id", subjectIds),
+      service.from("kpi_tutorial_completion_facts").select("subject_id,completed_at").in("subject_id", subjectIds),
+      service.from("kpi_subjects").select("subject_id,source_user_id").in("subject_id", subjectIds),
+    ])
+    : [{ data: [] as any[], error: null }, { data: [] as any[], error: null }, { data: [] as any[], error: null }];
   if (completionError) throw completionError;
+  if (legacyError) throw legacyError;
+  if (subjectLinkError) throw subjectLinkError;
   const completions = ((completionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.completed_at));
-  const completionIds = completions.map((row) => row.subject_id);
-  const { data: conversionData, error: conversionError } = completionIds.length
-    ? await service.from("kpi_guild_conversion_facts").select("subject_id,conversion_type,membership_period_id,occurred_at").in("subject_id", completionIds)
-    : { data: [] as any[], error: null };
+  const legacyCompletions = ((legacyData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.completed_at));
+  const [{ data: membershipData, error: membershipError }, { data: conversionData, error: conversionError }] = subjectIds.length
+    ? await Promise.all([
+      service.from("kpi_guild_membership_periods").select("id,subject_id,guild_id,joined_at,left_at").in("subject_id", subjectIds),
+      service.from("kpi_guild_conversion_facts").select("subject_id,conversion_type,membership_period_id,occurred_at").in("subject_id", subjectIds),
+    ])
+    : [{ data: [] as any[], error: null }, { data: [] as any[], error: null }];
+  if (membershipError) throw membershipError;
   if (conversionError) throw conversionError;
+  const memberships = (membershipData || []) as any[];
   const conversions = ((conversionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
-  const membershipPeriodIds = [...new Set(conversions.map((row) => row.membership_period_id))];
-  const { data: activationData, error: activationError } = membershipPeriodIds.length
-    ? await service.from("kpi_guild_chat_activation_facts").select("subject_id,membership_period_id,occurred_at").in("membership_period_id", membershipPeriodIds)
-    : { data: [] as any[], error: null };
+  const membershipPeriodIds = memberships.map((row) => row.id);
+  const sourceUserIds = ((subjectLinks || []) as any[]).map((row) => row.source_user_id).filter(Boolean);
+  const [{ data: activationData, error: activationError }, rawPosts] = await Promise.all([
+    membershipPeriodIds.length
+      ? service.from("kpi_guild_chat_activation_facts").select("subject_id,membership_period_id,occurred_at").in("membership_period_id", membershipPeriodIds)
+      : Promise.resolve({ data: [] as any[], error: null }),
+    sourceUserIds.length
+      ? fetchAll<any>((from, to) => service.from("board_posts").select("id,user_id,target_id,created_at,is_system")
+        .eq("target_type", "GUILD").eq("is_system", false).in("user_id", sourceUserIds).range(from, to))
+      : Promise.resolve([] as any[]),
+  ]);
   if (activationError) throw activationError;
   const activations = ((activationData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
+  const subjectBySource = new Map(((subjectLinks || []) as any[]).filter((row) => row.source_user_id).map((row) => [row.source_user_id, row.subject_id]));
   const retentionByDate = new Map(retentionResult.cohorts.map((cohort) => [cohort.cohort_date, cohort]));
   const measurementDate = jstDate(PRODUCTION_MEASUREMENT_STARTED_AT);
-  const canonicalObserved = completions.length > 0;
   const dates: string[] = [];
   for (let date = range.to; date >= range.from; date = addDays(date, -1)) dates.push(date);
   return {
@@ -336,22 +354,44 @@ export async function dailyOverview(service: SupabaseClient, range: NonNullable<
       const cohort = retentionByDate.get(date);
       const cohortSubjects = subjects.filter((row) => jstDate(row.registered_at) === date);
       const cohortIds = new Set(cohortSubjects.map((row) => row.subject_id));
-      const completedSubjects = new Set(completions.filter((row) => cohortIds.has(row.subject_id)).map((row) => row.subject_id));
-      const tutorialMeasured = process.env.NEXT_PUBLIC_KPI_DATA_ENV !== "production" || date >= measurementDate;
-      const tutorialMetric = tutorialMeasured && canonicalObserved
-        ? metric("tutorial.canonical_complete_rate", completedSubjects.size, cohortIds.size, .6)
-        : metric("tutorial.canonical_complete_rate", null, cohortIds.size, .6, { observationStatus: "incomplete", reason: "measurement_not_started" });
-      const completionSubjectsForDate = new Set(completions.filter((row) => jstDate(row.completed_at) === date).map((row) => row.subject_id));
-      const dateConversions = conversions.filter((row) => completionSubjectsForDate.has(row.subject_id));
-      const conversionSubjects = new Set(dateConversions.map((row) => row.subject_id));
-      const conversionPeriods = new Set(dateConversions.map((row) => row.membership_period_id));
-      const activationSubjects = new Set(activations.filter((row) => conversionPeriods.has(row.membership_period_id)).map((row) => row.subject_id));
+      const canonicalForCohort = completions.filter((row) => cohortIds.has(row.subject_id));
+      const legacyForCohort = legacyCompletions.filter((row) => cohortIds.has(row.subject_id));
+      const useCanonical = canonicalForCohort.length > 0;
+      const mayUseLegacy = date <= measurementDate && legacyForCohort.length > 0;
+      const selectedCompletions = useCanonical ? canonicalForCohort : mayUseLegacy ? legacyForCohort : [];
+      const tutorialAuthority = useCanonical ? "canonical" : mayUseLegacy ? "legacy" : "unavailable";
+      const completedSubjects = new Set(selectedCompletions.map((row) => row.subject_id));
+      const tutorialMetric = tutorialAuthority !== "unavailable"
+        ? { ...metric(useCanonical ? "tutorial.canonical_complete_rate" : "tutorial.legacy_complete_rate", completedSubjects.size, cohortIds.size, .6), authority: tutorialAuthority, authority_label: useCanonical ? "Canonical" : "旧Tutorial Complete" }
+        : { ...metric("tutorial.canonical_complete_rate", null, cohortIds.size, .6, { observationStatus: "incomplete", reason: "measurement_not_started" }), authority: tutorialAuthority, authority_label: null };
+      const completionAt = new Map(selectedCompletions.map((row) => [row.subject_id, row.completed_at]));
+      const dateMemberships = memberships.filter((row) => completedSubjects.has(row.subject_id)
+        && Date.parse(row.joined_at) >= Date.parse(completionAt.get(row.subject_id)));
+      const conversionSubjects = new Set(dateMemberships.map((row) => row.subject_id));
+      const conversionPeriods = new Set(dateMemberships.map((row) => row.id));
+      const typedConversions = conversions.filter((row) => conversionPeriods.has(row.membership_period_id));
+      const rawActivatedSubjects = new Set(rawPosts.filter((post) => {
+        const subjectId = subjectBySource.get(post.user_id);
+        if (!subjectId || !conversionSubjects.has(subjectId)) return false;
+        return dateMemberships.some((membership) => membership.subject_id === subjectId
+          && membership.guild_id === post.target_id
+          && Date.parse(post.created_at) >= Date.parse(membership.joined_at)
+          && (!membership.left_at || Date.parse(post.created_at) < Date.parse(membership.left_at)));
+      }).map((post) => subjectBySource.get(post.user_id)));
+      const activationSubjects = new Set([
+        ...activations.filter((row) => conversionPeriods.has(row.membership_period_id)).map((row) => row.subject_id),
+        ...rawActivatedSubjects,
+      ]);
+      const guildAuthority = typedConversions.length === dateMemberships.length && dateMemberships.length > 0 ? "canonical" : "membership_periods";
+      const chatAuthority = activations.some((row) => conversionPeriods.has(row.membership_period_id)) ? "canonical_and_legacy" : "legacy_surviving_posts";
       return {
         date,
         new_users: cohortSubjects.length,
         tutorial: tutorialMetric,
-        guild: metric("guild.conversion_rate", conversionSubjects.size, completionSubjectsForDate.size, .4),
-        chat: metric("guild.chat_activation_rate", activationSubjects.size, conversionSubjects.size, .3),
+        guild: { ...metric("guild.conversion_rate", conversionSubjects.size, completedSubjects.size, .4), authority: guildAuthority,
+          create: guildAuthority === "canonical" ? new Set(typedConversions.filter((row) => row.conversion_type === "CREATE").map((row) => row.subject_id)).size : null,
+          join: guildAuthority === "canonical" ? new Set(typedConversions.filter((row) => row.conversion_type === "JOIN").map((row) => row.subject_id)).size : null },
+        chat: { ...metric("guild.chat_activation_rate", activationSubjects.size, conversionSubjects.size, .3), authority: chatAuthority },
         retention: cohort?.days || [1, 2, 3, 4, 5].map((day) => ({ day, ...metric(`retention.d${day}`, null, null, [0, .38, .30, .26, .23, .21][day], { observationStatus: "incomplete", reason: "no_cohort" }) })),
       };
     }),
