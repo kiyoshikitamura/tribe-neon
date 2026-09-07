@@ -76,7 +76,7 @@ for (const viewport of [{ width:390, height:844 }, { width:412, height:915 }]) {
     await expect(page.getByText("設立 2人 · 加入 5人")).toBeVisible();
     await expect(page.getByText("計測方式：Canonical").first()).toBeVisible();
     await expect(page.getByText("84 / 100").first()).toBeVisible();
-    const retention = page.locator(".v2-retention-scroll");
+    const retention = page.locator(".v2-retention-scroll").filter({ hasText: "Cohort Date" });
     expect(await retention.evaluate((node) => node.scrollWidth > node.clientWidth)).toBe(true);
   });
 }
