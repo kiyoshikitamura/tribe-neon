@@ -9,6 +9,13 @@ const METADATA_KEY = "tribe_acquisition_landing_metadata_v1";
 const GAME_START_KEY = "tribe_acquisition_game_start_v1";
 const SOURCE = "web_v1";
 
+export type AcquisitionObservation =
+  | "TITLE_ARRIVED"
+  | "TAP_TO_START"
+  | "WORLD_INTRO_STARTED"
+  | "WORLD_INTRO_COMPLETED"
+  | "NAME_COMPLETED";
+
 let initialization: Promise<string | null> | null = null;
 let memoryToken: string | null = null;
 let memoryMetadata: AcquisitionLandingMetadata | null = null;
@@ -114,6 +121,28 @@ export async function recordAcquisitionGameStart(): Promise<boolean> {
   });
   if (error) {
     console.warn("Acquisition Game Start capture failed:", error);
+    return false;
+  }
+  return true;
+}
+
+export async function recordAcquisitionObservation(
+  eventType: AcquisitionObservation,
+): Promise<boolean> {
+  if (eventType === "TITLE_ARRIVED") return initializeAcquisitionAttribution();
+  if (eventType === "TAP_TO_START") return recordAcquisitionGameStart();
+  if (typeof window === "undefined" || usingMockSupabase) return false;
+  if (!await initializeAcquisitionAttribution()) return false;
+  const token = getOrCreateToken();
+  const { error } = await supabase.rpc("record_kpi_acquisition_observation_v1", {
+    p_token: token,
+    p_event_type: eventType,
+    p_idempotency_key: `${eventType.toLowerCase()}:v1`,
+    p_metadata: {},
+    p_source: SOURCE,
+  });
+  if (error) {
+    console.warn(`Acquisition ${eventType} capture failed:`, error);
     return false;
   }
   return true;

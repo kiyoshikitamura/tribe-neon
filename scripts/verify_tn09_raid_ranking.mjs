@@ -73,6 +73,7 @@ for (const contract of [
 ]) assert.ok(emergencyRollback.includes(contract), contract);
 const dialog = fs.readFileSync("src/app/components/ranking/RankingRewardDialog.tsx", "utf8");
 assert.ok(dialog.includes("CanonicalDialog"));
-assert.ok(dialog.includes("報酬定義なし"));
+assert.ok(dialog.includes("このランキングのデイリー報酬はありません"));
+assert.ok(dialog.includes("このランキングのシーズン報酬はありません"));
 assert.ok(!dialog.includes("SPECIAL_TICKET_RANDOM\", 2"));
 console.log("TN-09 Raid ranking verification passed.");

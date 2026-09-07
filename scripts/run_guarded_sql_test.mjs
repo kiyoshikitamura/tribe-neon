@@ -11,6 +11,9 @@ const file = fileIndex >= 0 ? process.argv[fileIndex + 1] : "";
 const testRoot = resolve("supabase/tests");
 const sqlPath = resolve(file);
 if (!environment || !file || relative(testRoot, sqlPath).startsWith("..")) throw new Error("Only SQL files inside supabase/tests may be executed.");
+if (environment === "production") {
+  throw new Error("ProductionではSQL testを実行できません。catalog監査はread-only postflightを使用してください。");
+}
 
 const sql = await readFile(sqlPath, "utf8");
 if (!/^\s*begin\s*;/i.test(sql) || !/rollback\s*;\s*$/i.test(sql)) throw new Error("Guarded SQL tests must begin a transaction and end with ROLLBACK.");

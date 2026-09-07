@@ -4,6 +4,7 @@ import "./TitleView.css";
 import { markTitleAssetReady } from "../lib/screenAssets";
 import ConfirmDialog from "./ui/ConfirmDialog";
 import TitleLegalFooter from "./TitleLegalFooter";
+import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
 
 export default function TitleView() {
   const { showTitleView, setShowTitleView, authLoading, setupLoading, resumeLoading, resumeCurrentSession, session, onboardingState, errorMessage, playBgm, playCyberSe, handleFirstUserInteraction, handleStartNewGame, handleLogout, confirmDialogConfig } = useGame();
@@ -32,6 +33,7 @@ export default function TitleView() {
   useEffect(() => {
     if (showTitleView) {
       markTitleAssetReady();
+      void recordAcquisitionObservation("TITLE_ARRIVED");
       setEntryActivated(false);
       setIsGameStartTransition(false);
       gameStartRef.current = false;
@@ -45,6 +47,7 @@ export default function TitleView() {
     handleFirstUserInteraction();
     playBgm("TITLE");
     playCyberSe("click");
+    void recordAcquisitionObservation("TAP_TO_START");
     setEntryActivated(true);
   };
 

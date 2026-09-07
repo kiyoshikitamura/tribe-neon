@@ -46,4 +46,21 @@ assert.doesNotMatch(migration, /create\s+table/i);
 assert.doesNotMatch(migration, /create\s+or\s+replace\s+function/i);
 assert.doesNotMatch(migration, /rename\s+column/i);
 
+const dashboardApi = await readFile(
+  new URL("../src/app/api/admin/kpi/v2/_shared.ts", import.meta.url),
+  "utf8",
+);
+const dashboard = await readFile(
+  new URL("../src/app/admin/kpi/KpiDashboardV2.tsx", import.meta.url),
+  "utf8",
+);
+for (const field of [
+  "source", "campaign", "creative", "landing", "game_start", "tutorial_complete",
+  "guild_join", "guild_chat_activation", "cohort_not_mature",
+]) assert.match(dashboardApi, new RegExp(field));
+assert.match(dashboardApi, /\[1, 2, 3, 4, 5, 6, 7\]/);
+assert.match(dashboard, /Source \/ Campaign \/ Creative/);
+assert.match(dashboard, /\[1,2,3,4,5,6,7\]/);
+assert.match(dashboard, /observation_status === "incomplete" \? <b>—<\/b>/);
+
 console.log("Acquisition attribution contract: PASS");

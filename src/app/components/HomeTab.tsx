@@ -10,6 +10,7 @@ import { isDestinationAvailable } from "@/domain/operations/operations";
 import { resolvePresentableAssetUrl } from "@/utils/assetPresentation";
 import { getJstDateString } from "@/utils/jst_date";
 import { normalizeRecentActivities, RECENT_ACTIVITY_WINDOW_MS } from "@/domain/social/recentActivity";
+import { bindCurrentAcquisitionJourney, confirmCanonicalFirstMyPage } from "@/utils/kpiInstrumentation";
 import CharacterPresentation from "./character/CharacterPresentation";
 import UserIdentityRow from "./profile/UserIdentityRow";
 import CanonicalDialog from "./ui/CanonicalDialog";
@@ -169,6 +170,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const lastCtaImpression = useRef<string | null>(null);
   const lastBannerImpression = useRef<string | null>(null);
   const bannerAuthorityKeyRef = useRef("");
+  const canonicalMyPageAttemptRef = useRef("");
   // Do not render a guessed banner set before the server event authority has
   // answered. This prevents a normal banner from flashing during the campaign.
   const [banners, setBanners] = useState<HomeBanner[]>(() => qaState?.bannerAuthority === "normal"
@@ -184,6 +186,20 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     [banners, isRaidActive],
   );
   const activeBannerIndex = visibleBanners.length ? bannerIndex % visibleBanners.length : 0;
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+    const tutorialEnded = onboardingState?.tutorial_step === "COMPLETE"
+      || onboardingState?.tutorial_step === "AUTHENTICATION";
+    if (!userId || !tutorialEnded || !identityLeaderAuthorityReady || !guildMembershipAuthorityReady) return;
+    // Retry only a binding explicitly armed by initialize_current_player.
+    void bindCurrentAcquisitionJourney();
+    if (canonicalMyPageAttemptRef.current === userId) return;
+    canonicalMyPageAttemptRef.current = userId;
+    void confirmCanonicalFirstMyPage(userId).then((confirmed) => {
+      if (!confirmed && canonicalMyPageAttemptRef.current === userId) canonicalMyPageAttemptRef.current = "";
+    });
+  }, [guildMembershipAuthorityReady, identityLeaderAuthorityReady, onboardingState?.tutorial_step, session?.user?.id]);
 
   const openBanner = (destination: string | null) => {
     if (!destination) return;

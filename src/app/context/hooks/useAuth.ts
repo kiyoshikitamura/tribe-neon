@@ -5,7 +5,7 @@ import { supabase, usingMockSupabase } from "@/utils/supabase";
 import { getExternalBrowserUrl, getOAuthCallbackUrl, isXInAppBrowser } from "@/utils/browserDetection";
 import { beginActionPerformance } from "@/utils/actionPerformance";
 import { clearHomeResumeSnapshot } from "@/app/lib/homeResumePresentation";
-import { bindAcquisitionSubject, recordAcquisitionGameStart } from "@/utils/acquisitionAttribution";
+import { bindCurrentAcquisitionJourney } from "@/utils/kpiInstrumentation";
 
 export const EXISTING_GOOGLE_LOGIN_INTENT_KEY = "tribe_existing_google_login_intent";
 
@@ -146,7 +146,6 @@ export function useAuth(
     setErrorMessage(null);
     playCyberSe("click");
     try {
-      void recordAcquisitionGameStart();
       localStorage.removeItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY);
       const { data, error } = await supabase.auth.signInAnonymously();
       if (error || !data.session) throw error || new Error("匿名セッションを作成できませんでした。");
@@ -253,7 +252,9 @@ export function useAuth(
       if (data?.status !== "success" && data?.status !== "already_initialized") {
         throw new Error("Unexpected initialization response");
       }
-      void bindAcquisitionSubject();
+      // Game Start remains initialize_current_player + kpi_subjects.registered_at.
+      // Telemetry follows the authoritative success and never rolls gameplay back.
+      void bindCurrentAcquisitionJourney(true);
       setErrorMessage(null);
       actionPerformance.mark("response");
       const tutorialStep = typeof data?.tutorial_step === "string" ? data.tutorial_step : "WORLD_INTRO";

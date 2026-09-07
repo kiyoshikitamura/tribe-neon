@@ -7,6 +7,7 @@ import { getExternalBrowserUrl, getOAuthCallbackUrl, isXInAppBrowser } from "@/u
 import { useGame } from "../context/GameContext";
 import { EXISTING_GOOGLE_LOGIN_INTENT_KEY } from "../context/hooks/useAuth";
 import ExternalBrowserGooglePrompt from "./ExternalBrowserGooglePrompt";
+import { commitAccountSwitchIdentityTransition, prepareAccountSwitchIdentityTransition, recordSameSubjectIdentityTransition } from "@/utils/kpiInstrumentation";
 
 const AUTH_INTENT_KEY = "tribe_onboarding_auth_intent";
 const AUTH_INTENT_MAX_AGE_MS = 30 * 60 * 1000;
@@ -131,6 +132,8 @@ export default function AccountAuthenticationModal() {
       setError(progressError.message);
       return false;
     }
+    const { data: currentSession } = await supabase.auth.getSession();
+    if (currentSession.session?.access_token) void recordSameSubjectIdentityTransition(currentSession.session.access_token);
     if (method === "GOOGLE") window.localStorage.removeItem(AUTH_INTENT_KEY);
     if (method === "EMAIL") window.localStorage.removeItem(EMAIL_ONBOARDING_INTENT_KEY);
     setNotice(null);
@@ -237,7 +240,8 @@ export default function AccountAuthenticationModal() {
       access_token: existingEmailSession.access_token,
       refresh_token: existingEmailSession.refresh_token,
     });
-    if (sessionError || !destinationUserId || destinationSessionResult.session?.user?.id !== destinationUserId) {
+    const destinationSession = destinationSessionResult.session;
+    if (sessionError || !destinationUserId || !destinationSession || destinationSession.user?.id !== destinationUserId) {
       await supabase.auth.setSession({
         access_token: anonymousSession.access_token,
         refresh_token: anonymousSession.refresh_token,
@@ -246,6 +250,11 @@ export default function AccountAuthenticationModal() {
       endWorking();
       return;
     }
+
+    const transitionEvidence = await prepareAccountSwitchIdentityTransition(
+      anonymousSession.access_token,
+      destinationSession.access_token,
+    );
 
     const { data: discardResult, error: discardError } = await discardAnonymousAccountForSwitch(anonymousSession);
     if (discardError || discardResult?.discardedUserId !== anonymousUserId || discardResult?.gameplayMerged !== false) {
@@ -259,6 +268,7 @@ export default function AccountAuthenticationModal() {
       endWorking();
       return;
     }
+    if (transitionEvidence) void commitAccountSwitchIdentityTransition(transitionEvidence, destinationSession.access_token);
     window.localStorage.removeItem(AUTH_INTENT_KEY);
     window.localStorage.removeItem(EMAIL_ONBOARDING_INTENT_KEY);
     clearAccountSwitchQuery();

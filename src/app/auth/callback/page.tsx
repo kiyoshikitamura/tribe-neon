@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { discardAnonymousAccountForSwitch, supabase } from "@/utils/supabase";
-import { getOAuthReturnUrl } from "@/utils/browserDetection";
+import { consumeRememberedOAuthReturnTo, getOAuthReturnUrl } from "@/utils/browserDetection";
+import { commitAccountSwitchIdentityTransition, prepareAccountSwitchIdentityTransition, recordSameSubjectIdentityTransition } from "@/utils/kpiInstrumentation";
 
 const ONBOARDING_AUTH_INTENT_KEY = "tribe_onboarding_auth_intent";
 const ONBOARDING_AUTH_INTENT_MAX_AGE_MS = 30 * 60 * 1000;
+const AUTH_CALLBACK_TIMEOUT_MS = 15_000;
 
 type GoogleOnboardingIntent = {
   method: "GOOGLE";
@@ -30,18 +32,38 @@ function readGoogleOnboardingIntent(): { present: boolean; intent: GoogleOnboard
   }
 }
 
+async function withAuthCallbackTimeout<T>(operation: Promise<T>): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error("Googleログインの確認がタイムアウトしました。もう一度お試しください。")), AUTH_CALLBACK_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 export default function AuthCallbackPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
     let redirected = false;
-    let callbackExchangeStarted = false;
 
     const returnToApp = (accountSwitch?: "google", accountSwitchError?: string) => {
       if (!active || redirected) return;
       redirected = true;
-      const destination = new URL(getOAuthReturnUrl());
+      const callbackUrl = new URL(window.location.href);
+      const rememberedReturnTo = consumeRememberedOAuthReturnTo();
+      const destination = new URL(
+        !callbackUrl.searchParams.has("return_to") && rememberedReturnTo
+          ? rememberedReturnTo
+          : getOAuthReturnUrl(),
+        callbackUrl.origin,
+      );
       if (accountSwitch) destination.searchParams.set("account_switch", accountSwitch);
       if (accountSwitchError) destination.searchParams.set("account_switch_error", accountSwitchError);
       window.location.replace(destination.toString());
@@ -67,12 +89,11 @@ export default function AuthCallbackPage() {
 
       const code = callbackUrl.searchParams.get("code");
       if (code) {
-        callbackExchangeStarted = true;
         // linkIdentity can return a session for an already-linked Google
         // account. Preserve the anonymous tutorial session in memory so that
         // this collision can be presented as an explicit choice instead of
         // silently replacing the player at the title screen.
-        const { data: beforeExchange } = await supabase.auth.getSession();
+        const { data: beforeExchange } = await withAuthCallbackTimeout(supabase.auth.getSession());
         let loginIntent: { method?: string; sourceUserId?: string } | null = null;
         try {
           loginIntent = JSON.parse(window.localStorage.getItem("tribe_existing_google_login_intent") || "null");
@@ -91,7 +112,9 @@ export default function AuthCallbackPage() {
           setError("Google連携を開始したゲームデータのセッションを確認できませんでした。データ保護のため連携を中止しました。「はじめから」は押さず、サポートへお問い合わせください。");
           return;
         }
-        const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        const { data: exchangeData, error: exchangeError } = await withAuthCallbackTimeout(
+          supabase.auth.exchangeCodeForSession(code),
+        );
         if (exchangeError) {
           setError(exchangeError.message);
           return;
@@ -116,6 +139,10 @@ export default function AuthCallbackPage() {
             returnToApp(undefined, "NO_EXISTING_GAME_DATA");
             return;
           }
+          const transitionEvidence = await prepareAccountSwitchIdentityTransition(
+            tutorialSession.access_token,
+            exchangeData.session.access_token,
+          );
           const { data: discarded, error: discardError } = await discardAnonymousAccountForSwitch(tutorialSession);
           if (discardError || discarded?.discardedUserId !== tutorialSession.user.id || discarded?.gameplayMerged !== false) {
             await supabase.auth.setSession({
@@ -126,6 +153,7 @@ export default function AuthCallbackPage() {
             returnToApp(undefined, "ANONYMOUS_DISCARD_FAILED");
             return;
           }
+          if (transitionEvidence) void commitAccountSwitchIdentityTransition(transitionEvidence, exchangeData.session.access_token);
           returnToApp();
           return;
         }
@@ -153,29 +181,34 @@ export default function AuthCallbackPage() {
           returnToApp("google");
           return;
         }
+        if (onboardingIntent && exchangeData.session.user.id === onboardingIntent.userId) {
+          void recordSameSubjectIdentityTransition(exchangeData.session.access_token);
+        }
         returnToApp();
         return;
       }
 
-      const { data, error: sessionError } = await supabase.auth.getSession();
+      const { data, error: sessionError } = await withAuthCallbackTimeout(supabase.auth.getSession());
       if (sessionError) {
         setError(sessionError.message);
         return;
       }
-      if (data.session) returnToApp();
+      if (data.session) {
+        returnToApp();
+        return;
+      }
+      setError("Googleログイン後のセッションを確認できませんでした。もう一度お試しください。");
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // INITIAL_SESSION can be the account that existed before Google OAuth.
-      // Returning on that event races the PKCE code exchange and can restore
-      // the wrong player. Only an actual callback sign-in may complete here.
-      if (!callbackExchangeStarted && event === "SIGNED_IN" && session) returnToApp();
+    void completeCallback().catch((callbackError: unknown) => {
+      if (!active) return;
+      setError(callbackError instanceof Error
+        ? callbackError.message
+        : "Googleログインの完了処理に失敗しました。もう一度お試しください。");
     });
-    void completeCallback();
 
     return () => {
       active = false;
-      subscription.unsubscribe();
     };
   }, []);
 

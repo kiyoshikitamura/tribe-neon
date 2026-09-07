@@ -7,6 +7,7 @@ import TypewriterText from "./tutorial/TypewriterText";
 import { userFacingErrorMessage } from "../lib/userFacingError";
 import "./SetupView.css";
 import { featureUiExposure } from "@/domain/operations/operations";
+import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
 
 type EntryPresentationState = "WORLD_INFORMATION" | "WORLD_TO_AGEHA" | "AGEHA_INTRO" | "NAME_INPUT";
 
@@ -32,6 +33,7 @@ export default function SetupView() {
   useEffect(() => {
     const stored = window.sessionStorage.getItem(entryStateKey(session?.user?.id));
     if (stored === "AGEHA_INTRO" || stored === "NAME_INPUT") setPresentationState(stored);
+    void recordAcquisitionObservation("WORLD_INTRO_STARTED");
   }, [session?.user?.id]);
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function SetupView() {
             {WORLD_STAGES.map((_, index) => <i key={index} className={index <= worldStage ? "is-active" : ""} />)}
           </div>
           {worldStage === WORLD_STAGES.length - 1 && worldStageComplete && (
-            <button className="setup-world-tap" onClick={() => { handleFirstUserInteraction(); setPresentationState("WORLD_TO_AGEHA"); }}>
+            <button className="setup-world-tap" onClick={() => { handleFirstUserInteraction(); void recordAcquisitionObservation("WORLD_INTRO_COMPLETED"); setPresentationState("WORLD_TO_AGEHA"); }}>
               TAP TO CONTINUE <span aria-hidden="true">⌄</span>
             </button>
           )}
