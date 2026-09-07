@@ -1,3 +1,19 @@
+# Raid Room V1 — 現在の開発作業
+基準: b08e396e657615afd6dfddc05bbec37d21561a25 / branch: codex/raid-room-rescue-20260908
+親: このチャット。子A/B/Cを排他的ファイル範囲で管理する。初回はA型・条件 → B表示/C検証 → 親レビューの順。
+|Task|Owner|Status|範囲|
+|---|---|---|---|
+|[RAID-A-01](agent_tasks/RAID-A-01.md)|raid_a_readiness|READY|src/domain/raidRoom.ts、docs/development/raid_room_api_contract.md|
+|[RAID-B-01](agent_tasks/RAID-B-01.md)|raid_b_readiness|READY|src/domain/raidRoomPresentation.ts|
+|[RAID-C-01](agent_tasks/RAID-C-01.md)|raid_c_readiness|READY|tests/raid-room/、docs/development/raid_room_validation.md|
+仕様: [raid_room_rescue_v1.md](../../specs/raid_room_rescue_v1.md)
+全機能の到達順: 共通契約 → Room/参加/戦闘縦通し → 救援/参加者 → 報酬/新旧切替 → Preview複数人検証 → 実機調整 → Release判断。
+既存概算91〜158時間は参考レンジ。自律稼働時間の保証ではない。各縦通し完了時に実績と残作業を更新する。
+初回Task完了を新Raid実装完了やHuman PASSと扱わない。
+以下は固定SHAに残る2026-09-02の履歴。現在の既存製品の状態を再判定したものではなく、新Raidの開始阻害条件へ自動転用しない。
+
+---
+
 # Release Board
 
 ## RELEASE GATE
