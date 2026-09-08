@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {spawnSync} from 'node:child_process';
-const dir='docs/development/evidence/raid-room-connection-20260908';
+const dir=process.env.RAID_EVIDENCE_DIR || 'docs/development/evidence/raid-room-connection-20260908';
 fs.mkdirSync(dir,{recursive:true});
 const tests=fs.readdirSync('tests/raid-room').filter(x=>x.endsWith('.test.mjs')).map(x=>'tests/raid-room/'+x);
 const runs=[['room-contracts',['--test',...tests]],...['verify_canonical_battle_runtime','verify_battle_full_skill_load_fixture','audit_battle_ai_full_skill_load','verify_battle_presentation_contract','verify_battle_mvp_result'].map(x=>[x,['--experimental-strip-types',`scripts/${x}.mjs`]]),...fs.readdirSync('tests/raid-room').filter(x=>/^run-.*-tests.mjs$/.test(x)).map(x=>[x,['tests/raid-room/'+x]])];

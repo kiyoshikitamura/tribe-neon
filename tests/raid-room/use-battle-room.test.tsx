@@ -45,3 +45,25 @@ test('実useBattle local消失はserver開始記録から同Replay復帰、start
 test('実useBattle server一覧空は自動出撃せずflag false旧bootを維持',async()=>{const x=setup();await act(async()=>{assert.equal(await x.hook.result.current.resumePendingRaidRoomBattle(),false)});assert.equal(x.calls.length,0);await act(async()=>{assert.equal(await x.hook.result.current.resumePendingRaidRoomBattle(true),false)});assert.equal(count(x.calls,'list_raid_room_battle_recoveries_v1'),1);assert.equal(count(x.calls,'start_raid_room_battle_v1'),0);assert.equal(count(x.calls,'resolve-battle'),0);});
 test('実useBattle ack失敗はlocal復帰情報を保持',async()=>{const x=setup(),client=(globalThis as any).__raidClient,original=client.rpc;client.rpc=(n:string,p:any)=>n==='acknowledge_raid_room_battle_recovery_v1'?Promise.resolve({data:null,error:{message:'offline'}}):original(n,p);await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing)});await act(async()=>{await x.hook.result.current.confirmPreparedRaidBattle()});assert.equal(count(x.calls,'resolve-battle'),1);assert.equal(window.localStorage.length,1);});
 test('実useBattle 取消通信失敗は保持して再試行、started復帰/cancelledのみ消去',async()=>{for(const status of ['started','cancelled']){window.localStorage.clear();const first=setup(0,1);await act(async()=>{await first.hook.result.current.prepareRaidRoomBattle(briefing)});await act(async()=>{await first.hook.result.current.confirmPreparedRaidBattle()});first.hook.unmount();const x=setup(),client=(globalThis as any).__raidClient,original=client.rpc;let cancelFailures=1;client.rpc=(n:string,p:any)=>n==='get_raid_room_battle_start_receipt_v1'?Promise.resolve({data:null,error:{message:'denied'}}):n==='cancel_raid_room_battle_request_v1'?(x.calls.push([n,p]),Promise.resolve(cancelFailures-->0?{data:null,error:{message:'offline'}}:{data:{status,receipt:x.receipt},error:null})):original(n,p);await act(async()=>{await x.hook.result.current.resumePendingRaidRoomBattle()});assert.equal(window.localStorage.length,1);const dialog=x.calls.filter(c=>c[0]==='dialog').at(-1)?.[1];assert.ok(dialog);await act(async()=>{await assert.rejects(()=>dialog.onConfirm(),/offline/)});assert.equal(window.localStorage.length,1);assert.equal(count(x.calls,'resolve-battle'),0);await act(async()=>{await dialog.onConfirm()});assert.equal(count(x.calls,'start_raid_room_battle_v1'),0);assert.equal(count(x.calls,'resolve-battle'),status==='started'?1:0);assert.equal(window.localStorage.length,0);x.hook.unmount();}});
+
+test('復帰済みRoomはpending開始なしで再生を許可し追加RPCなし',async()=>{
+ const x=setup(),client=(globalThis as any).__raidClient,original=client.rpc;
+ client.rpc=(n:string,p:any)=>n==='list_raid_room_battle_recoveries_v1'?Promise.resolve({data:[{requestId:'request',roomId:'room',payload:{p_room_id:'room',p_request_id:'request',p_character_ids:['c'],p_tactic:'BALANCED'},receipt:x.receipt}],error:null}):original(n,p);
+ await act(async()=>{await x.hook.result.current.resumePendingRaidRoomBattle(true)});
+ const before=x.calls.length;
+ await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+ assert.equal(x.calls.length,before);assert.equal(count(x.calls,'start_raid_room_battle_v1'),0);
+});
+
+test('互換table不在でもRoom RESULT確認後にackし、失敗時は結果を保持',async()=>{
+ const x=setup(),client=(globalThis as any).__raidClient,originalFrom=client.from,originalRpc=client.rpc;
+ client.from=(name:string)=>{const chain=originalFrom(name);if(name==='battle_sessions')chain.maybeSingle=async()=>({data:null,error:{code:'PGRST205',message:'missing retired table'}});return chain;};
+ await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing)});
+ await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+ assert.equal(count(x.calls,'acknowledge_raid_room_battle_recovery_v1'),0);assert.equal(window.localStorage.length,1);
+ await act(async()=>{await x.hook.result.current.endBattleSession('DEFEAT')});assert.equal(x.hook.result.current.battleState,'RESULT');
+ client.rpc=(n:string,p:any)=>n==='acknowledge_raid_room_battle_recovery_v1'?Promise.resolve({data:null,error:{message:'offline'}}):originalRpc(n,p);
+ await act(async()=>{await x.hook.result.current.completeBattleResult()});assert.equal(x.hook.result.current.battleState,'RESULT');assert.equal(window.localStorage.length,1);
+ client.rpc=originalRpc;
+ await act(async()=>{await x.hook.result.current.completeBattleResult()});assert.equal(x.hook.result.current.battleState,null);assert.equal(window.localStorage.length,0);assert.equal(count(x.calls,'start_raid_room_battle_v1'),1);assert.equal(count(x.calls,'resolve-battle'),1);
+});

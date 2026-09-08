@@ -2157,6 +2157,10 @@ export function useBattle(options: UseBattleOptions) {
   };
 
   const confirmPreparedRaidBattle = async () => {
+    if (battleStartInFlightRef.current) return false;
+    // A recovered Room replay is already committed and has no pending start.
+    // Confirm playback without creating or resolving another battle.
+    if (raidCommitSucceededRef.current && roomPresentationUserRef.current === session?.user?.id) return true;
     const pending = pendingRaidStartRef.current;
     if (!pending || battleStartInFlightRef.current) return false;
     battleStartInFlightRef.current = true;
@@ -3392,9 +3396,25 @@ export function useBattle(options: UseBattleOptions) {
     await syncBootstrapData(session.user.id);
   };
 
-  const completeBattleResult = () => {
-    roomPresentationUserRef.current = null;
+  const completeBattleResult = async () => {
     if (battleState !== "RESULT") return;
+    const resultUserId = session?.user?.id;
+    const attempt = roomAttemptRef.current;
+    if (resultUserId && roomPresentationUserRef.current === resultUserId && attempt) {
+      // The authoritative Room request also supports deployments without the
+      // retired battle_sessions table. Acknowledge only after Result was shown.
+      try {
+        const ack = await supabase.rpc("acknowledge_raid_room_battle_recovery_v1", { p_request_id: attempt.requestId() });
+        if (roomUserRef.current !== resultUserId) return;
+        if (ack.error || ack.data?.status !== "acknowledged" || ack.data.requestId !== attempt.requestId()) throw new Error("出撃結果の確認記録を保存できませんでした。");
+        attempt.clear();
+        roomAttemptRef.current = null;
+      } catch (error) {
+        if (roomUserRef.current === resultUserId) setErrorMessage("結果の確認記録を保存できませんでした。同じ結果からもう一度戻ってください。");
+        return;
+      }
+    }
+    roomPresentationUserRef.current = null;
     const destination = battleModeResultDetail?.destination;
     setBattleState(null);
     setBattleMode(null);
