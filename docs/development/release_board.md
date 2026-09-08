@@ -1,3 +1,6 @@
+# Raid第3工程 — VALIDATED
+A-03: Room台帳/参照RPC、B-03: 実RPC adapter/画面接続、C-03: SQL/adapter検証。親が全体typecheckと統合を担当。作業ルートはraid-room-repoのgit checkoutへ移行。PR #27更新時の完了通知を有効化。未検証を完了通知しない。A/B/C/P-03は親レビュー完了。共通43件、SQL/接続18件（adapter9重複）、全体typecheck、Mock全体build、QA HTTP/SSRがPASS。ブラウザ・実機・実DB適用は未検証。詳細はraid_room_phase3_integration.md。
+
 # Raid第2工程 — VALIDATED
 A-02: Room通信controller / B-02: Room画面 / C-02: 操作・競合テスト。担当契約はagent_tasks/RAID-*-02.md。親は統合とQA導線を担当。共通処理34件・React操作7件と対象strict TypeScriptを検証。開発用 /qa/raid-room を追加、配信URL未発行。実DB接続と本番切替は未実施。
 
