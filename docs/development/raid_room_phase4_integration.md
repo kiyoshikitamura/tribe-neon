@@ -45,3 +45,13 @@ Room生成/参加確定/戦闘接続/救援帰属/報酬・Present/旧ランキ�
 ## 完了通知
 
 既存のPR #27更新通知が有効であることを確認した。親レビューと機械検証を通過したTaskだけVALIDATEDへ変更してPRに記録する。同一タスク・状態の再通知を避ける既存条件を維持。端末へのプッシュ配送は未検証。
+
+## 修正版Previewの追確認（2026-09-08 JST）
+
+対象コードSHA: `1a7b0752b0f056f2216afa820659dc8bedd79400`。GitHubのVercel statusはsuccess、deployment `7DyRRg6RR4UbdcdXzEMda7mbqz7f`。上記PreviewをChromeで再読込して確認した。
+
+- 更新クリック中: DOMのtextContentは空、spinnerあり、aria-labelは「更新」、aria-busy=true、disabled=true。復帰後は一覧2件と更新ボタンを確認。
+- 開催中Roomを開き、サンプル参加を操作。参加中のボタンは文字なし・操作名「参加する」維持・disabledを確認し、その後「戦闘への受け渡し確認」ダイアログへ到達。
+- 実戦闘・報酬付与は発生しないQA fixture。実機・Human PASS、実DB接続完了を意味しない。
+
+B-04の修正版ブラウザ操作確認を追加した記録であり、既報のVALIDATED状態を新しいタスク完了として再計上しない。生成/参加writerの仕様根拠待ちは継続する。
