@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 import { flushSync } from "react-dom";
 import { supabase } from "@/utils/supabase";
+import { loadRaidActivity } from "@/domain/raidRoomActivity";
 import { EMAIL_ONBOARDING_INTENT_KEY, readEmailOnboardingIntent } from "@/utils/authIntents";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { CANONICAL_EQUIPMENT_VIEW } from "@/utils/equipments_master_data";
@@ -199,6 +200,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [userXp, setUserXp] = useState<number>(0);
   const [raidPoints, setRaidPoints] = useState<number>(5);
   const [raidRescueTarget, setRaidRescueTarget] = useState<{ rescueId: string; revision: number } | null>(null);
+  const [roomRaidActiveUntil, setRoomRaidActiveUntil] = useState(0);
+  const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
   const [raidTopRefreshRevision, setRaidTopRefreshRevision] = useState(0);
   const [raidFirstEntryFree, setRaidFirstEntryFree] = useState<boolean>(true);
   const [cash, setCash] = useState<number>(2600);
@@ -1890,28 +1893,43 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         console.warn("Failed to sync GvG states:", err.message);
       }
 
-      const { data: activeRaidData, error: activeRaidError } = await supabase.rpc("get_active_raids");
-      if (activeRaidError) {
-        console.warn("Failed to project active Raid state:", activeRaidError.message);
-        setRaidBossHp(0);
-        setRaidBossMaxHp(0);
-        setRaidBossSecondsLeft(0);
-      } else {
-        const activeRaid = Array.isArray(activeRaidData)
-          ? activeRaidData.find((entry: any) => String(entry.status || "ACTIVE") === "ACTIVE"
-            && Number(entry.currentHp ?? 0) > 0
-            && new Date(entry.expiresAt).getTime() > Date.now())
-          : null;
-        if (activeRaid) {
-          setRaidBossHp(Number(activeRaid.currentHp));
-          setRaidBossMaxHp(Number(activeRaid.maxHp));
-          setRaidBossSecondsLeft(Math.max(0, Math.floor((new Date(activeRaid.expiresAt).getTime() - Date.now()) / 1000)));
-          setRaidBossBaseId(String(activeRaid.baseId || "shinjuku"));
-          setRaidBossName(String(activeRaid.bossName || "Raid Boss"));
+      try {
+        const activity = await loadRaidActivity(supabase, roomUiEnabled);
+        if (activity.mode === "room") {
+          if (currentAuthUserIdRef.current === userId) setRoomRaidActiveUntil(activity.activeUntil);
         } else {
-          setRaidBossHp(0);
-          setRaidBossMaxHp(0);
-          setRaidBossSecondsLeft(0);
+          const { data: activeRaidData, error: activeRaidError } = activity;
+          if (activeRaidError) {
+            console.warn("Failed to project active Raid state:", activeRaidError);
+            setRaidBossHp(0);
+            setRaidBossMaxHp(0);
+            setRaidBossSecondsLeft(0);
+          } else {
+            const activeRaid = Array.isArray(activeRaidData)
+              ? activeRaidData.find((entry: any) => String(entry.status || "ACTIVE") === "ACTIVE"
+                && Number(entry.currentHp ?? 0) > 0
+                && new Date(entry.expiresAt).getTime() > Date.now())
+              : null;
+            if (activeRaid) {
+              setRaidBossHp(Number(activeRaid.currentHp));
+              setRaidBossMaxHp(Number(activeRaid.maxHp));
+              setRaidBossSecondsLeft(Math.max(0, Math.floor((new Date(activeRaid.expiresAt).getTime() - Date.now()) / 1000)));
+              setRaidBossBaseId(String(activeRaid.baseId || "shinjuku"));
+              setRaidBossName(String(activeRaid.bossName || "Raid Boss"));
+            } else {
+              setRaidBossHp(0);
+              setRaidBossMaxHp(0);
+              setRaidBossSecondsLeft(0);
+            }
+          }
+        }
+      } catch (error) {
+        console.warn("Failed to project active Raid state:", error);
+        if (roomUiEnabled) {
+          if (currentAuthUserIdRef.current === userId) setRoomRaidActiveUntil(0);
+        }
+        else {
+          setRaidBossHp(0); setRaidBossMaxHp(0); setRaidBossSecondsLeft(0);
         }
       }
 
@@ -2286,9 +2304,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(recoveryTimer);
   }, [session]);
 
+  // Roomの開催通知は旧戦闘用HP状態と分離する。期限到達で通知を消す。
+  useEffect(() => {
+    setRoomRaidActiveUntil(0);
+  }, [session?.user?.id]);
+  useEffect(() => {
+    if (!roomUiEnabled || roomRaidActiveUntil <= 0) return;
+    const timer = setTimeout(() => setRoomRaidActiveUntil(0), Math.max(0, roomRaidActiveUntil - Date.now()));
+    return () => clearTimeout(timer);
+  }, [roomUiEnabled, roomRaidActiveUntil]);
+
   // ⏱️ レイドボス出現残り時間カウントダウン
   useEffect(() => {
-    if (raidBossSecondsLeft <= 0) return;
+    if (roomUiEnabled || raidBossSecondsLeft <= 0) return;
     const timer = setInterval(() => {
       setRaidBossSecondsLeft(prev => {
         if (prev <= 1) {
@@ -2299,7 +2327,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [raidBossSecondsLeft, session]);
+  }, [roomUiEnabled, raidBossSecondsLeft, session]);
 
   // 💬 チャットフェッチ ＆ Realtime
   useEffect(() => {
@@ -4410,7 +4438,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       : ownedTitles.find((title) => title.id === titleEquipped)?.name || titleEquipped || "称号なし",
     totalPower,
     totalPowerLoading,
-    isRaidActive: raidBossHp > 0 && raidBossSecondsLeft > 0,
+    isRaidActive: roomUiEnabled ? roomRaidActiveUntil > Date.now() : raidBossHp > 0 && raidBossSecondsLeft > 0,
 
     // アバターシステム状態
     setupGender, setSetupGender,

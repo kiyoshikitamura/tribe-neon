@@ -1,3 +1,7 @@
+# 第18工程時点の優先更新
+
+旧生成・respawn・新規開始停止設定(SQL263)、Roomモードでの旧画面/旧bootstrap取得の置換は親レビュー・機械検証済み。初期状態は旧設定true、Room設定false。実運用の停止/切替は未実施。実機用値、独立Preview接続、実Cron・多接続競合・実機受入が残る。Room開催通知は次回bootstrapまで作成/撃破反映が遅れる場合がある。詳細raid_room_phase18_integration.md/raid_room_preview_cutover.md。
+
 # 第16工程時点の優先更新
 
 2026-09-08。討伐報酬の開催中累積raw閾値超過＋CLEAR・本人Room1回・Present表示をSQL262で実装しVALIDATED。下記の「討伐報酬実装」はこの範囲で解消。成功閾値/報酬品目数量、実DB/実Cron/複数接続/実機受入、旧戦闘切替/公開は未完了。SQL262は新UIより先に適用が必要。設定/運用flagsは無効。本番反映済みではない。
