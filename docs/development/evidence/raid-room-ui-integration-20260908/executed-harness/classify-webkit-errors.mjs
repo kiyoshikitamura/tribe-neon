@@ -1,0 +1,4 @@
+import fs from 'node:fs';import{webkit}from'@playwright/test';
+const b=await webkit.launch({headless:true}),page=await b.newPage({viewport:{width:390,height:844}}),out={url:'https://tribe-neon-arnbhwc0s-kiyoshi-kitamura.vercel.app',errors:[],matchingSources:[]};
+page.on('pageerror',e=>out.errors.push({message:e.message,stack:e.stack}));page.on('response',async r=>{if(/javascript/.test(r.headers()['content-type']??'')){try{const s=await r.text(),at=s.indexOf('storage.persisted');if(at>=0)out.matchingSources.push({url:r.url(),excerpt:s.slice(Math.max(0,at-100),at+150)});}catch{}}});
+await page.goto(out.url,{waitUntil:'networkidle'});await page.waitForTimeout(8000);fs.writeFileSync('docs/development/evidence/raid-room-ui-integration-20260908/webkit-error-classification.json',JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out));await b.close();

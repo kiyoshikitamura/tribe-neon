@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-08 12:33:20 UTC",
+  "prompt": "Raid UI統合のPreview変更・実疎通が完了し、9/8 21:00–22:00 JSTの予約枠をここで解放します。最終配信SHA 8b7a341569206442b116e466e5ee4fed71f37ae3、固定URL https://tribe-neon-arnbhwc0s-kiyoshi-kitamura.vercel.app、dpl_7JJ87VBsfoHkE2Cdjg45EcfTjKMv。型/build、Room110+UI79、既存戦闘5スクリプト、CSS16、Chromium/WebKit実疎通PASS。復帰修正・文言保持、stale参加者IDとRoom帰還、Result背景上書きを修正。共有alias不変、Edge v7/Cron7/既存19ユーザー/共用関数378保持。QA Room c796086c-9596-450c-ba20-1f067c7aff9bで正規5戦・全ack、HP31981746。24時間Room3972a461は全行不変、9/9 19:45監視維持。Production/pushなし。コード・証跡ZIPはユーザーの指示によりPCで受け取り予定。今後の当方作業はローカル証跡commit/ZIPのみです。",
+  "results": [
+    {
+      "threadId": "01a07f0f-3729-7db0-9851-642099bc7264",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a07f0f-3729-7db0-9851-642099bc7264\"}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "threadId": "01a0808c-9a87-7392-8d09-ffe16d1d5b23",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a0808c-9a87-7392-8d09-ffe16d1d5b23\"}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "threadId": "6a9f5a51-6144-83e9-9051-37fd12bd587a",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"6a9f5a51-6144-83e9-9051-37fd12bd587a\"}"
+          }
+        ],
+        "isError": false
+      }
+    }
+  ]
+}

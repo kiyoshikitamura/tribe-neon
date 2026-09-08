@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "sourceSha": "8b7a341569206442b116e466e5ee4fed71f37ae3",
+  "results": [
+    {
+      "name": "live-ui-final-chromium",
+      "status": "PASS",
+      "replayId": "1e956d8c-705c-49db-8b6e-fbfb9c2cb172",
+      "requestId": "14e591a0-9917-42d3-88cd-1e3b968fb7c6",
+      "acknowledgedAt": "2026-09-08T12:28:23.739931+00:00",
+      "startCalls": 1,
+      "resultTextMatches": true,
+      "roomReturnAndReward": true,
+      "backgroundImage": true,
+      "pageErrors": 0,
+      "previewFeedbackErrorsOnly": false
+    },
+    {
+      "name": "live-ui-integrated-webkit",
+      "status": "PASS",
+      "replayId": "374b0adb-241d-428f-86bb-c137fb935fcc",
+      "requestId": "e9e78bb8-65f0-41d0-b47d-38311c6c0de9",
+      "acknowledgedAt": "2026-09-08T12:30:37.489487+00:00",
+      "startCalls": 1,
+      "resultTextMatches": true,
+      "roomReturnAndReward": true,
+      "backgroundImage": true,
+      "pageErrors": 3,
+      "previewFeedbackErrorsOnly": true
+    }
+  ],
+  "starts": 5,
+  "acknowledged": 5,
+  "qaMembers": 2,
+  "hpBefore": 32000000,
+  "hpAfter": 31981746,
+  "oldPresentsClaimed": 4,
+  "flagsAndRulesUnchanged": true,
+  "expiryRoomUnchanged": true,
+  "originalUsersUnchanged": true
+}
