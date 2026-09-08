@@ -1010,6 +1010,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setErrorMessage,
     addGuildXpAndContributionByAction,
     setConfirmDialogConfig,
+    setGlobalInteractionBlocking,
     patrolNpcs,
     patrol: activePatrols.find((entry: any) => entry.has_battle_event && !entry.battle_resolved),
     tutorialStep: onboardingState?.tutorial_step,

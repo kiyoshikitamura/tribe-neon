@@ -195,6 +195,7 @@ export function useBattle(options: UseBattleOptions) {
     setErrorMessage,
     addGuildXpAndContributionByAction,
     setConfirmDialogConfig,
+    setGlobalInteractionBlocking,
     patrolNpcs = [],
     patrol,
     tutorialStep,
@@ -227,12 +228,14 @@ export function useBattle(options: UseBattleOptions) {
   const roomAttemptRef = useRef<ReturnType<typeof createRaidRoomBattleAttempt> | null>(null);
   const roomUserRef = useRef(session?.user?.id);
   roomUserRef.current = session?.user?.id;
+  const roomCancelBlockingRef = useRef(false);
   const roomRecoveryRef = useRef<Promise<boolean> | null>(null);
   const roomPresentationUserRef = useRef<string | null>(null);
   const previousRoomUserRef = useRef(session?.user?.id);
   useEffect(() => {
     if (previousRoomUserRef.current === session?.user?.id) return;
     previousRoomUserRef.current = session?.user?.id;
+    if (roomCancelBlockingRef.current) { roomCancelBlockingRef.current = false; setGlobalInteractionBlocking?.(false); }
     roomAttemptRef.current = null;
     pendingRaidStartRef.current = null;
     raidCommitSucceededRef.current = false;
@@ -1650,7 +1653,15 @@ export function useBattle(options: UseBattleOptions) {
     if (!patrolPresentationEntered) setBattleState("SETUP");
     setBattleLoading(false);
     if (roomBriefing && roomCompatibilitySaved && raidCommitSucceededRef.current) {
-      try { roomAttemptRef.current?.clear(); } catch (error) {
+      try {
+        const attempt = roomAttemptRef.current;
+        if (attempt) {
+          const ack = await supabase.rpc("acknowledge_raid_room_battle_recovery_v1", { p_request_id: attempt.requestId() });
+          if (staleRoomUser()) return;
+          if (ack.error || ack.data?.status !== "acknowledged" || ack.data.requestId !== attempt.requestId()) throw new Error("出撃結果の確認記録を保存できませんでした。");
+          attempt.clear();
+        }
+      } catch (error) {
         // 保存済み結果は表示できる。削除失敗でも次回は同じサーバーReplayのみ再確認する。
         console.warn("Failed to clear saved Room request:", error);
       }
@@ -1691,30 +1702,28 @@ export function useBattle(options: UseBattleOptions) {
   };
 
   /** trueは未確定Roomを処理/保留した意味。旧セッション復帰と混在させない。 */
-  const resumePendingRaidRoomBattle = async (): Promise<boolean> => {
+  const resumePendingRaidRoomBattle = async (forceServerLookup = false): Promise<boolean> => {
     const userId = session?.user?.id;
     if (!userId || roomUserRef.current !== userId) return false;
     if (roomPresentationUserRef.current === userId) return true;
     if (roomRecoveryRef.current) return roomRecoveryRef.current;
-    let record;
-    try { record = readRaidRoomPending(userId); } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "出撃の保存情報を確認できませんでした。");
-      return true;
-    }
-    if (!record) return false;
+    let record: ReturnType<typeof readRaidRoomPending> = null;
+    let storageError: unknown = null;
+    try { record = readRaidRoomPending(userId); } catch (error) { storageError = error; }
+    if (!record && !storageError && !forceServerLookup && process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED !== "true") return false;
     if (battleStartInFlightRef.current || battleState !== null) return true;
-    const payload = record.payload;
     const recovery = (async () => {
       battleStartInFlightRef.current = true;
       setBattleLoading(true);
-      try {
-        const attempt = createPersistentRoomAttempt(payload.p_room_id, userId, payload);
-        roomAttemptRef.current = attempt;
-        const receipt = await attempt.recover(supabase);
-        if (roomUserRef.current !== userId) return true;
+      let payload = record?.payload;
+      let receiptAccepted = false;
+      const displayReceipt = async (attempt: ReturnType<typeof createRaidRoomBattleAttempt>, receipt: any) => {
+        if (roomUserRef.current !== userId) return;
         if (receipt.error) throw new Error(receipt.error.message || "出撃を再確認できませんでした。");
+        receiptAccepted = true;
+        roomAttemptRef.current = attempt;
         const { data: briefing, error } = await supabase.rpc("get_raid_room_briefing_v1", { p_room_id: receipt.data.room_id });
-        if (roomUserRef.current !== userId) return true;
+        if (roomUserRef.current !== userId) return;
         if (error || briefing?.roomId !== receipt.data.room_id) throw new Error("レイド情報を再確認できませんでした。");
         const args = ["RAID", briefing.bossName || "レイド", briefing.raidBossInstanceId,
           undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, false, briefing];
@@ -1722,8 +1731,75 @@ export function useBattle(options: UseBattleOptions) {
         raidCommitSucceededRef.current = false;
         await startCardBattleInternal(...preparedBattleArgs(args, false));
         if (roomUserRef.current === userId && raidCommitSucceededRef.current) pendingRaidStartRef.current = null;
+      };
+      try {
+        if (!payload) {
+          const response = await supabase.rpc("list_raid_room_battle_recoveries_v1", { p_limit: 1 });
+          if (roomUserRef.current !== userId) return true;
+          if (response.error || !Array.isArray(response.data)) throw new Error("出撃履歴を確認できませんでした。");
+          if (response.data.length === 0) {
+            if (storageError) throw storageError;
+            return false;
+          }
+          const saved = response.data[0];
+          const p = saved?.payload;
+          if (!p || saved.requestId !== p.p_request_id || saved.roomId !== p.p_room_id
+            || typeof p.p_room_id !== "string" || !p.p_room_id || typeof p.p_request_id !== "string" || !p.p_request_id
+            || typeof p.p_tactic !== "string" || !p.p_tactic || !Array.isArray(p.p_character_ids)
+            || !p.p_character_ids.length || p.p_character_ids.length > 5
+            || p.p_character_ids.some((id: unknown) => typeof id !== "string" || !id)
+            || new Set(p.p_character_ids).size !== p.p_character_ids.length) throw new Error("出撃履歴を確認できませんでした。");
+          payload = p;
+          const attempt = createPersistentRoomAttempt(p.p_room_id, userId, p);
+          // サーバーにある開始済み記録だけを採用。空の一覧・壊れた保存情報から開始は作らない。
+          await displayReceipt(attempt, attempt.acceptRecovery(saved.receipt));
+        } else {
+          const attempt = createPersistentRoomAttempt(payload.p_room_id, userId, payload);
+          roomAttemptRef.current = attempt;
+          await displayReceipt(attempt, await attempt.recover(supabase));
+        }
       } catch (error) {
-        if (roomUserRef.current === userId) setErrorMessage(error instanceof Error ? error.message : "出撃を再確認できませんでした。");
+        if (roomUserRef.current === userId) {
+          setErrorMessage(error instanceof Error ? error.message : "出撃を再確認できませんでした。");
+          // 有効なローカル要求だけが取消対象。開始済みなら取消せず同じ結果へ戻す。
+          if (record && !receiptAccepted && setConfirmDialogConfig) {
+            const localPayload = record.payload;
+            setConfirmDialogConfig({ isOpen: true, title: "出撃を確認できませんでした",
+              message: "未開始の出撃を取り消しますか？ すでに開始している場合は、その戦闘を再開します。",
+              confirmText: "未開始の出撃を取消", cancelText: "戻る", confirmPendingText: "",
+              onCancel: () => { if (roomUserRef.current === userId) setConfirmDialogConfig(null); },
+              onConfirm: async () => {
+                if (roomUserRef.current !== userId || battleStartInFlightRef.current) return;
+                battleStartInFlightRef.current = true;
+                roomCancelBlockingRef.current = true;
+                setGlobalInteractionBlocking?.(true);
+                setBattleLoading(true);
+                try {
+                  const cancelled = await supabase.rpc("cancel_raid_room_battle_request_v1", { p_request_id: localPayload.p_request_id });
+                  if (roomUserRef.current !== userId) return;
+                  if (cancelled.error) throw new Error(cancelled.error.message || "出撃を取り消せませんでした。");
+                  if (cancelled.data?.status === "started") {
+                    const attempt = createPersistentRoomAttempt(localPayload.p_room_id, userId, localPayload);
+                    await displayReceipt(attempt, attempt.acceptRecovery(cancelled.data.receipt));
+                  } else if (cancelled.data?.status === "cancelled") {
+                    clearRaidRoomPending(userId, localPayload.p_request_id);
+                    roomAttemptRef.current = null;
+                    pendingRaidStartRef.current = null;
+                  } else throw new Error("出撃の取消結果を確認できませんでした。");
+                  if (roomUserRef.current === userId) {
+                    if (cancelled.data?.status === "cancelled" || raidCommitSucceededRef.current) setErrorMessage(null);
+                    setConfirmDialogConfig(null);
+                  }
+                } catch (cancelError) {
+                  if (roomUserRef.current === userId) setErrorMessage(cancelError instanceof Error ? cancelError.message : "出撃を取り消せませんでした。");
+                  throw cancelError;
+                } finally {
+                  if (roomUserRef.current === userId) { roomCancelBlockingRef.current = false; setGlobalInteractionBlocking?.(false); battleStartInFlightRef.current = false; setBattleLoading(false); }
+                }
+              },
+            });
+          }
+        }
       } finally {
         if (roomUserRef.current === userId) { battleStartInFlightRef.current = false; setBattleLoading(false); }
       }
@@ -1736,7 +1812,7 @@ export function useBattle(options: UseBattleOptions) {
   const prepareRaidRoomBattle = async (briefing: RaidRoomBriefing, presentation?: Partial<BattlePresentationContext>) => {
     const preparingUserId = session?.user?.id;
     if (!preparingUserId || roomUserRef.current !== preparingUserId) return;
-    if (await resumePendingRaidRoomBattle()) return;
+    if (await resumePendingRaidRoomBattle(true)) return;
     const { data, error } = await supabase.rpc("get_raid_room_briefing_v1", { p_room_id: briefing.roomId });
     if (roomUserRef.current !== preparingUserId) return;
     if (error || data?.roomId !== briefing.roomId || data?.membershipStatus !== "joined" || !data?.battleStartEnabled) {

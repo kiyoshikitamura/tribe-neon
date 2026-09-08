@@ -1,3 +1,7 @@
+# Raid第11工程 — VALIDATED
+
+A: 未確認開始の一覧/ack/未開始取消、B: 保存消失からの復帰/取消導線、C: 実SQL/実hook検証、P: 親レビュー/統合。RAID-A/B/C/P-11。親検証: SQL11件、共通71件、React20件、実useBattle17件、全体型/Mock build PASS。実DB/Deploy/運用有効化なし。救援/報酬/ランキング接続、破損localの未知要求解除、実DB/多接続/実機は残件。詳細raid_room_phase11_integration.md。
+
 # Raid第10工程 — VALIDATED
 
 A: 期限batch/Cron・本人開始receipt参照、B: 再読込時の未確定戦闘復帰、C: SQL/復帰回帰検証、P: 親レビュー・統合。担当契約 RAID-A/B/C/P-10。親検証: SQL13件、共通71件（pending8含む）、React20件、実useBattle13件、全体Mock build・型検証PASS。運用設定false、実DB/Deploy未実施。実Cron/実機・救援/報酬/ランキング切替・記録消失や復帰拒否時の取消導線は残件。詳細raid_room_phase10_integration.md。

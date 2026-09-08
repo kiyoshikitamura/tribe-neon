@@ -23,6 +23,8 @@ export function createRaidRoomBattleAttempt(roomId: string, requestId = crypto.r
   };
   const attempt = {
     savedReceipt: () => receipt,
+    requestId: () => requestId,
+    acceptRecovery: (value: any) => { options.assertCurrent?.(); recovered = true; return accept(value); },
     isRecovered: () => recovered,
     characters: () => payload ? [...payload.p_character_ids] : null,
     hasSubmitted: () => uncertain || receipt !== null,
