@@ -4,6 +4,8 @@ import React, { createContext, useContext, useState, useEffect, useRef, useCallb
 import { flushSync } from "react-dom";
 import { supabase } from "@/utils/supabase";
 import { loadRaidActivity } from "@/domain/raidRoomActivity";
+import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
+import { useRaidRoomActivity } from "./hooks/useRaidRoomActivity";
 import { EMAIL_ONBOARDING_INTENT_KEY, readEmailOnboardingIntent } from "@/utils/authIntents";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { CANONICAL_EQUIPMENT_VIEW } from "@/utils/equipments_master_data";
@@ -200,8 +202,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [userXp, setUserXp] = useState<number>(0);
   const [raidPoints, setRaidPoints] = useState<number>(5);
   const [raidRescueTarget, setRaidRescueTarget] = useState<{ rescueId: string; revision: number } | null>(null);
-  const [roomRaidActiveUntil, setRoomRaidActiveUntil] = useState(0);
   const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
+  const roomActivity = useRaidRoomActivity(session?.user?.id, roomUiEnabled);
+  const roomActivityRef = useRef(roomActivity);
+  roomActivityRef.current = roomActivity;
   const [raidTopRefreshRevision, setRaidTopRefreshRevision] = useState(0);
   const [raidFirstEntryFree, setRaidFirstEntryFree] = useState<boolean>(true);
   const [cash, setCash] = useState<number>(2600);
@@ -1894,10 +1898,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        const activity = await loadRaidActivity(supabase, roomUiEnabled);
-        if (activity.mode === "room") {
-          if (currentAuthUserIdRef.current === userId) setRoomRaidActiveUntil(activity.activeUntil);
+        if (roomUiEnabled) {
+          if (currentAuthUserIdRef.current === userId) {
+            await roomActivityRef.current.tracker.observeTransport(createRaidRoomRpcTransport(supabase)).listRooms();
+          }
         } else {
+          const activity = await loadRaidActivity(supabase, false);
+          if (activity.mode !== "legacy") throw new Error("Unexpected Raid mode");
           const { data: activeRaidData, error: activeRaidError } = activity;
           if (activeRaidError) {
             console.warn("Failed to project active Raid state:", activeRaidError);
@@ -1925,10 +1932,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.warn("Failed to project active Raid state:", error);
-        if (roomUiEnabled) {
-          if (currentAuthUserIdRef.current === userId) setRoomRaidActiveUntil(0);
-        }
-        else {
+        if (!roomUiEnabled) {
           setRaidBossHp(0); setRaidBossMaxHp(0); setRaidBossSecondsLeft(0);
         }
       }
@@ -2303,16 +2307,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     return () => clearInterval(recoveryTimer);
   }, [session]);
-
-  // Roomの開催通知は旧戦闘用HP状態と分離する。期限到達で通知を消す。
-  useEffect(() => {
-    setRoomRaidActiveUntil(0);
-  }, [session?.user?.id]);
-  useEffect(() => {
-    if (!roomUiEnabled || roomRaidActiveUntil <= 0) return;
-    const timer = setTimeout(() => setRoomRaidActiveUntil(0), Math.max(0, roomRaidActiveUntil - Date.now()));
-    return () => clearTimeout(timer);
-  }, [roomUiEnabled, roomRaidActiveUntil]);
 
   // ⏱️ レイドボス出現残り時間カウントダウン
   useEffect(() => {
@@ -4438,7 +4432,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       : ownedTitles.find((title) => title.id === titleEquipped)?.name || titleEquipped || "称号なし",
     totalPower,
     totalPowerLoading,
-    isRaidActive: roomUiEnabled ? roomRaidActiveUntil > Date.now() : raidBossHp > 0 && raidBossSecondsLeft > 0,
+    isRaidActive: roomUiEnabled ? roomActivity.isActive : raidBossHp > 0 && raidBossSecondsLeft > 0,
 
     // アバターシステム状態
     setupGender, setSetupGender,
@@ -4667,7 +4661,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     activeBanners, setActiveBanners,
     userItems, setUserItems,
     inventoryProjectionOwnerUserId,
-    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision, raidRescueTarget, openRaidRescue,
+    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision, raidRescueTarget, openRaidRescue, raidRoomActivityTracker: roomActivity.tracker,
     monthlyPassActive, setMonthlyPassActive,
     monthlyPassClaimedToday, setMonthlyPassClaimedToday,
     handlePurchaseMonthlyPass, handleClaimDailyPassReward,

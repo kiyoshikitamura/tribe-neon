@@ -1,3 +1,7 @@
+# 第19工程時点の優先更新
+
+SQL250〜263の同一fixture統合検証6件PASS。Room作成/一覧・詳細更新/戦闘帰還の開催通知同期は機械検証済み。Guild紹介/詳細の新Roomログ参照は既存SQLで対象と確認。詳細raid_room_phase19_integration.md。実環境のPreview接続、設定値投入、実Cron/多接続/実機、運用切替は引き続き未実施。
+
 # 第18工程時点の優先更新
 
 旧生成・respawn・新規開始停止設定(SQL263)、Roomモードでの旧画面/旧bootstrap取得の置換は親レビュー・機械検証済み。初期状態は旧設定true、Room設定false。実運用の停止/切替は未実施。実機用値、独立Preview接続、実Cron・多接続競合・実機受入が残る。Room開催通知は次回bootstrapまで作成/撃破反映が遅れる場合がある。詳細raid_room_phase18_integration.md/raid_room_preview_cutover.md。

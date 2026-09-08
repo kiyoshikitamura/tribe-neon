@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { RaidRoomActivityTracker } from '../../../domain/raidRoomActivitySync';
 import { createRaidRoomController } from '../../../domain/raidRoomClient';
 import { createRaidRoomRpcTransport, type RaidRoomRpcAuthorities, type RaidRoomRpcClient } from '../../../domain/raidRoomRpcTransport';
 import { createRaidRoomRescueClient } from '../../../domain/raidRoomRescue';
@@ -18,10 +19,12 @@ export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps
   onOpenPresents?: () => void | Promise<void>;
   rescueId?: string | null;
   userId?: string;
+  activityTracker?: RaidRoomActivityTracker;
+  refreshRevision?: number;
 }
 
 /** 接続元の認証client・画面遷移・全体操作blockを受け取る。既存GameContextを変更しない。 */
-export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, ...browserProps }: RaidRoomConnectedBrowserProps) {
+export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, activityTracker, refreshRevision, ...browserProps }: RaidRoomConnectedBrowserProps) {
   const enableRescue = authorities?.enableRescue;
   const rewardClient = useMemo(() => createRaidRoomRescueRewardClient(rpcClient), [rpcClient]);
   const clearRewardClient = useMemo(() => createRaidRoomClearRewardClient(rpcClient), [rpcClient]);
@@ -32,10 +35,18 @@ export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescu
   const enableCreation = authorities?.enableCreation;
   const getRewards = authorities?.getRewards;
   const joinRoom = authorities?.joinRoom;
-  const connection = useMemo(() => ({
-    controller: createRaidRoomController(createRaidRoomRpcTransport(rpcClient, { getRewards, joinRoom, enableCreation, enableParticipation, enableRescue })),
-    mounts: 0,
-  }), [rpcClient, getRewards, joinRoom, enableCreation, enableParticipation, enableRescue]);
+  const connection = useMemo(() => {
+    const transport = createRaidRoomRpcTransport(rpcClient, { getRewards, joinRoom, enableCreation, enableParticipation, enableRescue });
+    return { controller: createRaidRoomController(activityTracker ? activityTracker.observeTransport(transport) : transport), mounts: 0 };
+  }, [rpcClient, getRewards, joinRoom, enableCreation, enableParticipation, enableRescue, activityTracker, userId]);
+  const previousRefresh = useRef(refreshRevision);
+  useEffect(() => {
+    if (previousRefresh.current === refreshRevision) return;
+    previousRefresh.current = refreshRevision;
+    // 戦闘終了/復帰イベント時だけ参照し直す。通常の一覧取得と同じ通知経路を使う。
+    void connection.controller.loadRooms();
+    void connection.controller.refreshRoom();
+  }, [connection, refreshRevision]);
   useEffect(() => {
     connection.mounts++;
     return () => {

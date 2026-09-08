@@ -26,7 +26,7 @@ export default function RaidTab() {
   const {
     startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, userLevel, raidPoints, raidFirstEntryFree,
     setRaidPoints, setRaidFirstEntryFree, userGuildMember, fetchGuildDetail, session, syncBootstrapData,
-    raidTopRefreshRevision, raidRescueTarget, setShowInboxPanel, setInboxPanelTab, setPresents, setPresentsPrefetched,
+    raidTopRefreshRevision, raidRoomActivityTracker, raidRescueTarget, setShowInboxPanel, setInboxPanelTab, setPresents, setPresentsPrefetched,
   } = useGame();
   const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
   const presentOwnerRef = React.useRef(session?.user?.id);
@@ -175,6 +175,7 @@ export default function RaidTab() {
       {roomUiEnabled && <RaidRoomConnectedBrowser
         key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId} userId={session?.user?.id}
         rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
+        activityTracker={raidRoomActivityTracker} refreshRevision={raidTopRefreshRevision}
         onOpenPresents={openRescuePresents}
         setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
         onBattleReady={() => { throw new Error("出撃準備から開始してください。"); }} />}

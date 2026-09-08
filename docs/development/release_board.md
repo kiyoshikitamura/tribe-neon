@@ -1,3 +1,7 @@
+# Raid第19工程 — VALIDATED
+
+RAID-A/B/C/P-19。A: SQL250〜263統合fixture、B: 開催通知更新、C: 通知/画面検証、親: レビュー・全体検証・残件整理。親レビュー・SQL統合6/通知13/切替3/Room28/戦闘hook17、全体型・Mock build PASS。実DB/Deploy/運用切替なし。詳細raid_room_phase19_integration.md。
+
 # Raid第18工程 — VALIDATED
 
 旧Raid生成・新規開始の停止設定、Room方式での旧画面/起動時取得の置換。RAID-A/B/C/P-18。AはSQL263、Bは画面/共有状態、Cは独立検証、親はレビュー・統合を専有。初期値で旧運用を維持し、開始済み確定/Present受取を保持する。親レビュー・SQL11/Activity4/切替画面3/既存Room画面28/戦闘hook17、全体型・Mock build PASS。実DB・Deploy・運用切替は未実施。詳細raid_room_phase18_integration.md。
