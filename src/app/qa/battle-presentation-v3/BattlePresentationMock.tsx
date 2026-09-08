@@ -118,7 +118,7 @@ export default function BattlePresentationMock() {
     const health=enemy ? hp[index] : index===0 ? allyHp : 2400;
     const affected=showImpact && (allyTarget ? !enemy&&index===0 : enemy&&index===target);
     return <div key={`${enemy}-${c.id}`} className={`bm-unit ${enemy?"enemy":"ally"} ${!enemy&&index===0&&busy?"acting":""} ${affected?"affected":""} ${health===0?"defeated":""}`} data-unit={`${enemy?"enemy":"ally"}-${index}`} data-positive={allyTarget} data-has-status={Boolean((statuses[`${enemy?"enemy":"ally"}-${index}`]||[]).length)}>
-      <div className="bm-face"><img src={asset(c)} alt={c.jpName}/></div>
+      <div className="bm-face" data-character={c.name}><img src={asset(c)} alt={c.jpName}/></div>
       <div className="bm-unit-info"><strong>{c.jpName}</strong><img className="bm-badge" src={getRarityBadgeAsset(c.rarity)} alt={c.rarity}/><img className="bm-attribute" src={getAttributeBadgeAsset(c.alignment)!} alt={`属性：${getAttributeLabel(c.alignment)}`}/><div className="bm-hp" role="progressbar" aria-label={`${c.jpName} HP`} aria-valuenow={health} aria-valuemin={0} aria-valuemax={2400}><i style={{width:`${health/24}%`}}/></div><small>{health.toLocaleString()} / 2,400</small></div>
       {health>0&&<StatusBadges items={statuses[`${enemy?"enemy":"ally"}-${index}`]||[]} onOpen={()=>setDetails(`${enemy?"enemy":"ally"}-${index}`)}/>}
       {health===0&&<b className="bm-ko">撃破</b>}
@@ -143,7 +143,7 @@ export default function BattlePresentationMock() {
     <div className="bm-event" aria-live="polite">{phase==="idle"?"操作パネルから演出を再生":phase==="actor"?`${actor.jpName} → ${allyTarget?actor.jpName:opponents[target].jpName} / ${skillName}`:stateAction?kind==="cleanse"?`${removed}件の弱体を解除`: `${skillName} 付与`:kind==="heal"?`${amount.toLocaleString()} 回復`:`${amount.toLocaleString()} ダメージ${hp[target]===0?"・撃破":""}`}</div>
     {phase==="actor"&&kind!=="normal"&&kind!=="dot"&&<section className={`bm-announcement ${tier===3?"fullscreen":"near-actor"}`} aria-label="スキル演出">
       {tier===3&&<img className="bm-full-character" src={asset(actor)} alt=""/>}
-      <div className="bm-announcement-copy">{tier<3&&<div className="bm-speaker-face"><img src={asset(actor)} alt={actor.jpName}/></div>}<small>{actor.rarity} / {actor.jpName}</small><p>{quote}</p><h2>{skillName}</h2><span>SKILL {skillRarity}</span></div>
+      <div className="bm-announcement-copy">{tier<3&&<div className="bm-speaker-face" data-character={actor.name}><img src={asset(actor)} alt={actor.jpName}/></div>}<small>{actor.rarity} / {actor.jpName}</small><p>{quote}</p><h2>{skillName}</h2><span>SKILL {skillRarity}</span></div>
       {tier===3&&<button className="bm-cutin-skip" onClick={()=>{run.current++;setSequence(-1);setPhase("mvp");}}>SKIP</button>}
     </section>}
     <section className="bm-controls" aria-label="モック操作"><div className="bm-selection"><label>発動キャラ<select disabled={busy} value={actor.id} onChange={e=>{setActor(CHARACTERS_MASTER.find(c=>c.id===e.target.value)!);setStatuses({});}}>{CHARACTERS_MASTER.map(c=><option key={c.id} value={c.id}>{c.rarity} {c.jpName}</option>)}</select></label><button disabled={busy} onClick={()=>setSpeed(s=>s===1?2:1)}>×{speed}</button><button onClick={()=>{setMuted(m=>!m);void audio.unlockAudio();}}>SE {muted?"OFF":"ON"}</button></div>

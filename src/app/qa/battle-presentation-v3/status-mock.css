@@ -14,6 +14,10 @@
 @media(max-height:650px){.bm-root .bm-unit{height:76px;margin-bottom:3px}.bm-root .bm-face{height:49px}.bm-root .bm-unit-info{padding-top:1px}.bm-root .bm-unit-info>strong{font-size:10px;margin-bottom:16px}.bm-badge{top:11px}.bm-attribute{top:14px}.bm-hp{height:4px}.bm-root .bs-badges button{height:25px;min-height:25px}.bs-badges{height:25px;bottom:1px}.fullscreen p{font-size:20px}.fullscreen h2{font-size:25px}.bm-announcement.near-actor{top:140px}.bm-announcement.near-actor p{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.bm-announcement,.bm-full-character,.bm-special-stroke{animation:none!important}}
 
+/* Asset-specific transparent top margin: keep Koharu's eyes at the shared height. */
+.bm-face[data-character=koharu] img,.bm-speaker-face[data-character=koharu] img{transform:translateY(-18%) scale(2.65)}
+.bm-root .bm-full-character{opacity:1;animation-name:bm-solid-enter}.bm-root .bm-announcement.fullscreen{animation-name:bm-solid-enter}
+@keyframes bm-solid-enter{from{transform:translateX(-12px)}to{transform:none}}
 /* Stable portraits; the impact texture carries hit motion instead of moving UI. */
 .bm-root .bm-unit.acting{transform:none}.bm-root.bm-phase-impact .bm-unit.affected .bm-face{animation:none}
 /* Keep the live battlefield behind the speaker; shadows are local and translucent. */
