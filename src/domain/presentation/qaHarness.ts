@@ -2,6 +2,7 @@ export const QA_PRESENTATION_SCENARIOS = [
   ["world-introduction", "World Introduction"],
   ["name-input-error", "Name duplicate → retry"],
   ["gacha-page", "Gacha Page"],
+  ["gacha-character-v3", "Gacha Character / Rich reveal"],
   ["gacha-production", "Gacha Production / 6 surfaces"],
   ["gacha-asset-transition", "Gacha Skill / Equipment transition"],
   ["gacha-authority-loading", "Gacha / Daily authority loading"],

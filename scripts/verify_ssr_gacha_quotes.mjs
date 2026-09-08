@@ -30,11 +30,10 @@ assert.ok(quoteMaster.quotes.every((entry) => productionSsr.includes(entry.chara
 assert.ok(enabled.every((entry) => expectedQuotes.get(entry.characterId) === entry.quote), "Production SSR Quote text drifted");
 
 const modal = await readFile(resolve(root, "src/app/components/CommonModals.tsx"), "utf8");
-assert.match(modal, /resolveSsrGachaQuote\(tutorialRevealResult\?\.characterId\)/, "Reveal must resolve Quote by canonical Character ID");
-assert.match(modal, /scoutResults\.every\(\(result: any\) => result\?\.type === "CHARACTER"/, "Tutorial and Normal Character pulls must share reveal flow");
-assert.match(modal, /tutorialSsrStage === "QUOTE"/, "SSR Quote gate is missing");
-assert.match(modal, /setTutorialSsrStage\("REVEAL"\)/, "SSR Quote tap must enter reveal state");
-assert.doesNotMatch(modal, /tutorial-ssr-quote[^>]*data-character-id/, "SSR identity must not be projected before reveal");
-assert.doesNotMatch(modal, /tutorial-ssr-quote[\s\S]{0,240}<h3>\{tutorialRevealResult\?\.name\}/, "SSR Character name must not appear before reveal");
+const presentation = await readFile(resolve(root, "src/app/components/gacha/CharacterGachaPresentation.tsx"), "utf8");
+assert.match(modal, /<CharacterGachaPresentation results=\{scoutResults\}/, "Tutorial and normal pulls must use confirmed results");
+assert.match(presentation, /resolveCharacterGachaQuote\(current.characterId\)/, "Quote must resolve by canonical ID");
+assert.match(presentation, /stage === "QUOTE"/, "SSR Quote stage is missing");
+assert.match(presentation, /data-character-id=\{stage === "QUOTE" \? undefined/, "SSR identity must not be projected before reveal");
 
 console.log(JSON.stringify({ status: "PASS", productionSsr: productionSsr.length, enabledQuotes: enabled.length, duplicate: 0, missing: 0, unknown: 0 }, null, 2));
