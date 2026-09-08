@@ -24,12 +24,12 @@ const completeCommonOpening = async (page: Page) => {
   await expect(page.locator('[data-gacha-transition-state="show_results"]')).toBeVisible();
 };
 
-test("character opening fan and SKIP remain safe at iPhone 14 geometry", async ({ page }) => {
+test("character arrival and SKIP remain safe at iPhone 14 geometry", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const fixture = await openTransitionFixture(page, { delay: 500 });
   await page.locator('[data-gacha-category="CHARACTER"]').click();
   await page.getByRole("button", { name: "10回 10,000キャッシュ" }).click();
-  await expect(page.locator(".cg-card-back")).toHaveCount(10);
+  await expect(page.locator(".cg-approach img")).toHaveCount(3);
   const skip = page.getByRole("button", { name: "SKIP", exact: true });
   await expect(skip).toBeVisible();
   const rect = await skip.boundingBox();

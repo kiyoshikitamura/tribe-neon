@@ -154,7 +154,7 @@ async function revealTutorialTenPull(page: import("@playwright/test").Page, capt
     await expect(reveal).not.toContainText(/SPD|LUK|戦闘力/);
     await expect(reveal.locator("blockquote")).not.toBeEmpty();
     await expect(reveal.locator(".cg-rarity-line>span")).not.toBeEmpty();
-    await expect(reveal.locator(".character-presentation-background")).toHaveAttribute("src", /bg_street_/);
+    await expect(page.locator(".cg-city")).toHaveAttribute("src", /bg_street_/);
     if (await reveal.getAttribute("data-presentation-state") === "SSR_REVEAL") ssrCount += 1;
     if (index === 9) finalCharacterId = await reveal.getAttribute("data-character-id");
     if (captureVisuals && index === 9) await page.screenshot({ path: test.info().outputPath("G4-rarity-SSR.png") });
@@ -475,7 +475,7 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
           const frameRect = card.querySelector(".character-presentation")?.getBoundingClientRect();
           return frameRect ? {
             widthDelta: Math.abs(frameRect.width - cardRect.width),
-            heightDelta: Math.abs(frameRect.height + 30 - cardRect.height),
+            heightDelta: Math.max(0, frameRect.height - cardRect.height),
           } : null;
         }),
       };

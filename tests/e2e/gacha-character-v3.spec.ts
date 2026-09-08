@@ -4,9 +4,10 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }
   test(`rich gacha: result order, detail, tutorial CTA, replay ${viewport.width}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto("/qa/presentation?scenario=gacha-character-v3");
-    const shell = page.locator('[data-gacha-presentation="v3"]');
+    const shell = page.locator('[data-gacha-presentation="arrival"]');
     await expect(shell).toHaveAttribute("data-stage", "OPENING");
-    await expect(page.locator(".cg-card-back")).toHaveCount(10);
+    await expect(page.locator(".cg-card-back")).toHaveCount(0);
+    await expect(page.locator(".cg-approach img")).toHaveCount(3);
     await page.getByRole("button", { name: "SKIP", exact: true }).click();
     await expect(shell).toHaveAttribute("data-stage", "SUMMARY");
     const cards = page.locator(".cg-mini");
@@ -79,4 +80,36 @@ test("reduced motion and keyboard keep controls reachable", async ({ page }) => 
   await page.getByRole("button", { name: "編成へ進む" }).focus();
   await page.keyboard.press("Tab");
   await expect(page.locator(".cg-mini")).toBeFocused();
+});
+
+test("cold images gate the entire scene and arrival animation", async ({ page }) => {
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  await page.route("**/characters/**", async (route) => { await gate; await route.continue(); });
+  await page.goto("/qa/presentation?scenario=gacha-character-v3", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("status")).toHaveText("仲間を迎える準備中…");
+  await expect(page.locator(".cg-city, .cg-approach, .cg-reveal")).toHaveCount(0);
+  release();
+  await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "OPENING");
+  expect(await page.locator(".cg-approach img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  await page.getByRole("button", { name: "SKIP", exact: true }).click();
+  await expect(page.locator(".cg-summary")).toBeVisible();
+  expect(await page.locator(".cg-summary img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  await expect(page.locator(".cg-mini")).toHaveCount(10);
+});
+
+test("background failure supports image-only retry and text results", async ({ page }) => {
+  await page.route("**/gacha/arrival/tokyo-alley.webp", (route) => route.abort());
+  await page.goto("/qa/presentation?scenario=gacha-character-v3");
+  await expect(page.getByRole("status")).toHaveText("画像を読み込めませんでした");
+  await expect(page.locator(".cg-city")).toHaveCount(0);
+  await page.unroute("**/gacha/arrival/tokyo-alley.webp");
+  await page.getByRole("button", { name: "画像を再読み込み" }).click();
+  await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "OPENING");
+  await page.route("**/gacha/arrival/tokyo-alley.webp", (route) => route.abort());
+  await page.reload();
+  await page.getByRole("button", { name: "獲得結果を文字で確認" }).click();
+  await expect(page.locator(".cg-loading li")).toHaveCount(10);
+  await page.getByRole("button", { name: "編成へ進む" }).click();
+  await expect(page.locator("[data-gacha-v3-fixture]")).toHaveAttribute("data-destination", "character");
 });

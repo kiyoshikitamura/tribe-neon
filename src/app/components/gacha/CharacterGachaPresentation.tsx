@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import CharacterPresentation from "../character/CharacterPresentation";
+import React, { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useScreenReadiness } from "../../hooks/useScreenReadiness";
+import { getCharacterPresentationMetadata } from "../character/characterPresentationMetadata";
+import "../character/CharacterPresentation.css";
 import OutlawButton from "../ui/OutlawButton";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
@@ -32,8 +34,43 @@ const town = (result: CharacterGachaResult) => getCharacterLocationBackground(CH
 const outcome = (result: CharacterGachaResult) => result.convertReward === "新規獲得" ? "NEW" : result.convertReward || "獲得";
 const number = (value: number | undefined) => typeof value === "number" && Number.isFinite(value) ? value.toLocaleString("ja-JP") : "—";
 
-/** 確定済み結果だけを表示する。抽選・所持更新・チュートリアル進行は呼び出し元の責務。 */
-export default function CharacterGachaPresentation({ results, tutorial, onReveal, onClose, playSound }: Props) {
+const ARRIVAL_BACKGROUND = "/gacha/arrival/tokyo-alley.webp";
+
+// 全画面のデコード完了後にのみ描画。子要素ごとの非同期表示を作らない。
+function StandingArt({ result, variant = "reveal", background = false }: { result: CharacterGachaResult; variant?: "reveal" | "gacha-result-compact"; background?: boolean }) {
+  const framing = getCharacterPresentationMetadata(result.imageUrl);
+  return <figure className={`character-presentation character-presentation-${variant} cg-standing`} style={{
+    "--character-compact-x": `${framing.compactX}%`,
+    "--character-compact-y": `${framing.compactY}%`,
+    "--character-compact-scale": framing.compactScale,
+  } as React.CSSProperties}>
+    <div className="character-presentation-art">
+      {background && <img className="character-presentation-background" src={town(result)} alt="" />}
+      <img className="character-presentation-character" src={result.imageUrl} alt={result.name} />
+    </div>
+  </figure>;
+}
+
+/** 抽選結果・報酬更新は呼び出し元で確定。再試行は画像取得のみ。 */
+export default function CharacterGachaPresentation(props: Props) {
+  const [textOnly, setTextOnly] = useState(false);
+  const readiness = useScreenReadiness({ assets: [
+    { src: ARRIVAL_BACKGROUND },
+    ...props.results.flatMap((result) => [{ src: result.imageUrl }, { src: town(result) }]),
+  ] });
+  if (textOnly) return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="獲得結果">
+    <h2>獲得結果</h2><ol>{props.results.map((result, index) => <li key={index}>{result.rarity} {result.name} / {outcome(result)}</li>)}</ol>
+    <OutlawButton onClick={props.onClose}>{props.tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
+  </section></div>;
+  if (readiness.status !== "ready") return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="ガチャ演出の準備">
+    <p role="status">{readiness.status === "error" ? "画像を読み込めませんでした" : "仲間を迎える準備中…"}</p>
+    {readiness.status === "error" && <OutlawButton onClick={readiness.retry}>画像を再読み込み</OutlawButton>}
+    <button type="button" onClick={() => { props.onReveal(); setTextOnly(true); }}>獲得結果を文字で確認</button>
+  </section></div>;
+  return <ReadyCharacterGacha {...props} onTextOnly={() => { props.onReveal(); setTextOnly(true); }} />;
+}
+
+function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, onTextOnly }: Props & { onTextOnly: () => void }) {
   const [stage, setStage] = useState<Stage>("OPENING");
   const [index, setIndex] = useState(0);
   const [reviewing, setReviewing] = useState(false);
@@ -49,6 +86,28 @@ export default function CharacterGachaPresentation({ results, tutorial, onReveal
   const quote = current ? resolveCharacterGachaQuote(current.characterId) || "" : "";
   const highest = results.reduce((best, result) => (rank[result.rarity.toUpperCase()] ?? 0) > (rank[best] ?? 0) ? result.rarity.toUpperCase() : best, "N");
 
+  const sceneKey = stage === "OPENING" || stage === "BURST" ? "opening" : stage === "SUMMARY" ? "summary" : stage === "QUOTE" ? `quote-${index}` : `person-${index}`;
+  const [decodedScene, setDecodedScene] = useState("");
+  const [failedScene, setFailedScene] = useState("");
+  const [imageRetry, setImageRetry] = useState(0);
+  const sceneReady = decodedScene === `${sceneKey}-${imageRetry}`;
+
+  // キャッシュの有無に関係なく、実際に表示するDOM画像のデコードまで待つ。
+  useLayoutEffect(() => {
+    let cancelled = false;
+    const key = `${sceneKey}-${imageRetry}`;
+    const images = Array.from(shell.current?.querySelectorAll<HTMLImageElement>("img") || []);
+    const timer = window.setTimeout(() => { if (!cancelled) setFailedScene(key); }, 12000);
+    if (imageRetry) images.forEach((image) => { image.src = image.src; });
+    void Promise.all(images.map(async (image) => {
+      await image.decode();
+      if (!image.naturalWidth) throw new Error("Image unavailable");
+    })).then(() => {
+      if (!cancelled) { window.clearTimeout(timer); setDecodedScene(key); }
+    }).catch(() => { if (!cancelled) { window.clearTimeout(timer); setFailedScene(key); } });
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [sceneKey, imageRetry]);
+
   useEffect(() => {
     const originalFocus = document.activeElement as HTMLElement | null;
     const originalOverflow = document.body.style.overflow;
@@ -57,34 +116,34 @@ export default function CharacterGachaPresentation({ results, tutorial, onReveal
     return () => { document.body.style.overflow = originalOverflow; originalFocus?.focus(); };
   }, []);
 
-  useEffect(() => { shell.current?.focus({ preventScroll: true }); }, [stage]);
+  useEffect(() => { if (sceneReady) shell.current?.focus({ preventScroll: true }); }, [stage, sceneReady]);
   useEffect(() => { if (shell.current) shell.current.scrollTop = 0; }, [index, reviewing]);
 
   useEffect(() => {
-    if (stage !== "BURST") return;
+    if (stage !== "BURST" || !sceneReady) return;
     const timer = window.setTimeout(() => {
       setLetters(0);
       setStage(rarity === "SSR" && quote ? "QUOTE" : "REVEAL");
     }, reducedMotion ? 0 : 620);
     return () => window.clearTimeout(timer);
-  }, [stage, rarity, quote, reducedMotion]);
+  }, [stage, rarity, quote, reducedMotion, sceneReady]);
 
   useEffect(() => {
-    if (stage !== "QUOTE") return;
+    if (stage !== "QUOTE" || !sceneReady) return;
     if (reducedMotion || letters >= quote.length) {
       const timer = window.setTimeout(() => setStage("REVEAL"), reducedMotion ? 0 : 600);
       return () => window.clearTimeout(timer);
     }
     const timer = window.setTimeout(() => setLetters((length) => length + 1), 38);
     return () => window.clearTimeout(timer);
-  }, [stage, letters, quote, reducedMotion]);
+  }, [stage, letters, quote, reducedMotion, sceneReady]);
 
   useEffect(() => {
-    if (stage !== "REVEAL") return;
+    if (stage !== "REVEAL" || !sceneReady) return;
     callbacks.current.playSound(rarity === "SSR" ? "GACHA_SSR" : rarity === "SR" ? "GACHA_SR" : "GACHA_REVEAL");
     const timer = window.setTimeout(() => setStage("SETTLED"), reducedMotion ? 0 : rarity === "SSR" ? 1050 : rarity === "SR" ? 750 : 450);
     return () => window.clearTimeout(timer);
-  }, [stage, rarity, index, reducedMotion]);
+  }, [stage, rarity, index, reducedMotion, sceneReady]);
 
   const announce = () => {
     if (!announced.current) { announced.current = true; callbacks.current.onReveal(); }
@@ -92,6 +151,7 @@ export default function CharacterGachaPresentation({ results, tutorial, onReveal
   const skip = () => { announce(); setReviewing(false); setStage("SUMMARY"); };
   const tap = () => {
     // 同じタップの二重配送・ダブルタップでカードを飛ばさない。
+    if (!sceneReady) return;
     const now = performance.now();
     if (now - lastTap.current < 220) return;
     lastTap.current = now;
@@ -107,7 +167,12 @@ export default function CharacterGachaPresentation({ results, tutorial, onReveal
   const opening = stage === "OPENING" || stage === "BURST";
 
   return <div className="cg-overlay" data-gacha-transition-state={opening ? "ready" : "show_results"}>
-    <div ref={shell} tabIndex={-1} role="dialog" aria-modal="true" aria-label="ガチャ結果" className={`cg-shell cg-${opening ? highest.toLowerCase() : rarity.toLowerCase()} cg-stage-${stage.toLowerCase()}`} data-gacha-presentation="v3" data-stage={stage} onKeyDown={(event) => {
+    {!sceneReady && <section className="cg-loading cg-scene-loading" role="status">
+      <p>{failedScene === `${sceneKey}-${imageRetry}` ? "画像を読み込めませんでした" : "仲間を迎える準備中…"}</p>
+      {failedScene === `${sceneKey}-${imageRetry}` && <button type="button" onClick={() => setImageRetry((value) => value + 1)}>画像を再読み込み</button>}
+      <button type="button" onClick={onTextOnly}>獲得結果を文字で確認</button>
+    </section>}
+    <div ref={shell} aria-hidden={!sceneReady} inert={!sceneReady} tabIndex={-1} role="dialog" aria-modal="true" aria-label="ガチャ結果" className={`cg-shell ${sceneReady ? "" : "cg-waiting"} cg-${opening ? highest.toLowerCase() : rarity.toLowerCase()} cg-stage-${stage.toLowerCase()}`} data-gacha-presentation="arrival" data-stage={stage} onKeyDown={(event) => {
       if (event.key === "Escape" && !opening) { event.preventDefault(); skip(); }
       if (event.key !== "Tab") return;
       const buttons = Array.from(shell.current?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)") || []);
@@ -115,26 +180,27 @@ export default function CharacterGachaPresentation({ results, tutorial, onReveal
       if (event.shiftKey && (document.activeElement === first || document.activeElement === shell.current)) { event.preventDefault(); last?.focus(); }
       else if (!event.shiftKey && (document.activeElement === last || document.activeElement === shell.current)) { event.preventDefault(); first?.focus(); }
     }}>
-      <div className="cg-city" aria-hidden="true" style={{ backgroundImage: `url('${opening || stage === "SUMMARY" || stage === "QUOTE" ? "/bg/bg_street_shibuya.jpg" : town(current)}')` }} />
+      <img className="cg-city" alt="" aria-hidden="true" src={opening || stage === "SUMMARY" || stage === "QUOTE" ? ARRIVAL_BACKGROUND : town(current)} />
       <div className="cg-atmosphere" aria-hidden="true" />
       {stage !== "SUMMARY" && <header className="cg-top"><span>{opening ? `${results.length}連ガチャ` : `${index + 1} / ${results.length}`}</span><button type="button" onClick={skip}>{reviewing ? "一覧へ戻る" : "SKIP"}</button></header>}
       {opening ? <button type="button" className="cg-opening" onClick={tap} disabled={stage === "BURST"} aria-label="ガチャ結果を開く">
-        <img className="cg-logo" src="/branding/tribe-neon-logo.png" alt="TRIBE NEON" />
-        <div className="cg-fan" aria-hidden="true">{results.map((_, i) => <div className="cg-card-back" key={i} style={{ "--fan-angle": `${(i - (results.length - 1) / 2) * (results.length === 1 ? 0 : 6)}deg`, "--fan-offset": `${(i - (results.length - 1) / 2) * 12}px`, "--fan-delay": `${i * 24}ms` } as React.CSSProperties}><div><img src="/branding/tribe-neon-logo.png" alt="" /><span>TRIBE NEON</span></div></div>)}</div>
-        <div className="cg-opening-copy"><strong>TAP TO OPEN</strong><small>タップして仲間を迎える</small></div>
+        <div className="cg-approach" aria-hidden="true">{results.slice(0, 3).map((result, i) => <img key={i} src={result.imageUrl} alt="" style={{ "--person": i } as React.CSSProperties} />)}</div>
+        <div className="cg-headlight" aria-hidden="true" />
+        <div className="cg-opening-copy"><strong>TAP</strong><small>タップして仲間を迎える</small></div>
       </button> : stage === "SUMMARY" ? <section className="cg-summary">
-        <header><small>TRIBE NEON</small><h2>ガチャ結果</h2><p>{tutorial ? "この仲間たちでチームを組もう" : `${results.length}人の獲得結果`}</p></header>
+        <header><small>TRIBE NEON</small><h2>新たな仲間</h2><p>{tutorial ? "この仲間たちでチームを組もう" : `${results.length}人の獲得結果`}</p></header>
+        <div className="cg-group" aria-hidden="true">{Array.from(new Map([...results].sort((a, b) => (rank[b.rarity] || 0) - (rank[a.rarity] || 0)).map((result) => [result.characterId, result])).values()).slice(0, 3).map((result, i) => <img key={result.characterId} src={result.imageUrl} alt="" style={{ "--person": i } as React.CSSProperties} />)}</div>
         <div className={`cg-grid ${results.length === 1 ? "cg-single" : ""}`}>
           {results.map((result, i) => <button type="button" key={`${result.characterId}-${i}`} onClick={() => showDetail(i)} className={`cg-mini cg-${result.rarity.toLowerCase()}`} data-result-index={i} data-character-id={result.characterId} aria-label={`${result.rarity} ${result.name} ${outcome(result)} 詳細を見る`}>
-            <CharacterPresentation src={result.imageUrl} alt={result.name} variant="gacha-result-compact" rarity={result.rarity} backgroundSrc={town(result)} frameKind={false} metadata={false} />
+            <StandingArt result={result} variant="gacha-result-compact" />
             <b className="cg-mini-rarity">{result.rarity}</b><span className="cg-mini-name">{result.name}</span><small className={outcome(result) === "NEW" ? "cg-new" : ""}>{outcome(result)}</small>
           </button>)}
         </div>
-        <p className="cg-summary-hint">カードをタップして詳細を見る</p>
+        <p className="cg-summary-hint">仲間をタップして詳細を見る</p>
         <OutlawButton variant="primary" className="cg-continue" onClick={() => callbacks.current.onClose()}>{tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
       </section> : <button type="button" className={`cg-reveal ${stage === "SETTLED" ? "is-settled" : ""}`} onClick={tap} aria-label={stage === "QUOTE" ? "セリフを表示して登場演出へ" : `${current.name} ${reviewing ? "一覧へ戻る" : "タップして次へ"}`} data-character-id={stage === "QUOTE" ? undefined : current.characterId} data-presentation-state={stage === "QUOTE" ? "SSR_QUOTE" : `${rarity}_REVEAL`}>
         {stage === "QUOTE" ? <div className="cg-quote-intro"><span aria-hidden="true">SSR</span><blockquote aria-label={quote}><span aria-hidden="true">{quote.slice(0, reducedMotion ? quote.length : letters)}</span></blockquote><small>{letters < quote.length ? "タップで全文表示" : "TAP"}</small></div> : <div className="cg-reveal-content" key={index}>
-          <div className="cg-portrait"><CharacterPresentation src={current.imageUrl} alt={current.name} variant="reveal" rarity={rarity} attribute={current.attributeKey} backgroundSrc={town(current)} frameKind={false} metadata={false} /><i className="cg-metal-glint" aria-hidden="true" /></div>
+          <div className="cg-portrait"><StandingArt result={current} /></div>
           <div className="cg-reveal-copy"><div className="cg-rarity-line"><b>{rarity}</b><span className={outcome(current) === "NEW" ? "cg-new" : ""}>{outcome(current)}</span></div>
             <h2>{current.name}</h2><p className="cg-origin">{[current.role, current.attribute].filter(Boolean).join(" / ")}</p>
             {quote && <blockquote>{quote}</blockquote>}
