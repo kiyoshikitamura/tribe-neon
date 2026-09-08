@@ -1,12 +1,21 @@
 /** JSDOM操作テスト。GameContextだけrunnerで差し替え、実共通UIを使用する。 */
 import React from 'react';
-import test from 'node:test';
+import test, { beforeEach, afterEach } from 'node:test';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot } from 'react-dom/client';
 import assert from 'node:assert/strict';
 import { render, fireEvent, waitFor, cleanup, act, within } from '@testing-library/react';
 import OutlawButton from '../../src/app/components/ui/OutlawButton';
 import RaidRoomBrowser from '../../src/app/components/raid/RaidRoomBrowser';
 import { createRaidRoomController, type RaidRoomTransport } from '../../src/domain/raidRoomClient';
+import { getRaidRoomLifecyclePresentation } from '../../src/domain/raidRoomLifecyclePresentation';
 import { roomFixture, participantFixture, rewardFixture, deferred } from './fixtures';
+
+const fixtureNow = Date.parse('2026-09-08T00:00:00Z');
+const originalNow = Date.now;
+let clockNow = fixtureNow;
+beforeEach(() => { clockNow = fixtureNow; Date.now = () => clockNow; });
+afterEach(() => { Date.now = originalNow; });
 
 function harness(overrides: Partial<RaidRoomTransport> = {}, onBattle?: () => void | Promise<void>) {
   const room = roomFixture();
@@ -178,4 +187,106 @@ test('共通ボタンは未指定の既定ラベルと明示ラベルを維持�
     assert.equal(ui.getByRole('button', { name: '明示' }).textContent, '保存待ち');
     assertSpinnerOnly(ui.getByRole('button', { name: '文字なし' }));
   } finally { cleanup(); }
+});
+
+
+test('期限直前・一致・直後と未取得時計を区別し、DTOの状態を書き換えない', () => {
+  const room = roomFixture();
+  const expiry = Date.parse('2026-09-09T00:00:00Z');
+  assert.equal(getRaidRoomLifecyclePresentation(room, fixtureNow).remainingLabel, '残り 24時間0分');
+  assert.equal(getRaidRoomLifecyclePresentation(room, expiry - 1).remainingLabel, '残り 1分');
+  assert.equal(getRaidRoomLifecyclePresentation(room, expiry - 1).blockJoin, false);
+  for (const now of [expiry, expiry + 1]) {
+    const result = getRaidRoomLifecyclePresentation(room, now);
+    assert.equal(result.blockJoin, true);
+    assert.equal(result.stateLabel, '終了状態の確認が必要');
+  }
+  assert.equal(getRaidRoomLifecyclePresentation(room, null).blockJoin, true);
+  assert.deepEqual(room.state, { status: 'available', value: 'active' });
+});
+
+test('古いactive DTOの期限通過後は更新を案内し、参加要求を送信しない', async () => {
+  const h = harness({ getRoom: async () => roomFixture('room-a', { expiresAt: { status: 'available', value: new Date(fixtureNow).toISOString() } }) });
+  try {
+    await openRoom(h);
+    const button = h.ui.getByRole('button', { name: 'Roomを更新してください' });
+    assert.equal((button as HTMLButtonElement).disabled, true);
+    assert.ok(h.ui.getByText('期限を過ぎました。更新してください。'));
+    fireEvent.click(button);
+    assert.equal(h.battles.length, 0);
+    assert.deepEqual(h.controller.getSnapshot().room.data?.state, { status: 'available', value: 'active' });
+  } finally { h.close(); }
+});
+
+test('時計更新前の期限通過でも参加クリック時に再確認し送信を抑止する', async () => {
+  let joins = 0;
+  const h = harness({ joinRoom: async () => { joins++; return { roomId: 'room-a', replayId: 'invalid' }; } });
+  try {
+    await openRoom(h);
+    const button = h.ui.getByRole('button', { name: '参加する' });
+    clockNow = Date.parse('2026-09-09T00:00:00Z');
+    fireEvent.click(button);
+    assert.equal(joins, 0);
+    assert.equal((h.ui.getByRole('button', { name: 'Roomを更新してください' }) as HTMLButtonElement).disabled, true);
+  } finally { h.close(); }
+});
+
+test('画面復帰時に残り時間を更新し期限切れを反映する', async () => {
+  const h = harness();
+  try {
+    await openRoom(h);
+    assert.ok(h.ui.getByText('残り 24時間0分'));
+    clockNow += 3600000;
+    act(() => { document.dispatchEvent(new window.Event('visibilitychange')); });
+    assert.ok(h.ui.getByText('残り 23時間0分'));
+    clockNow += 23 * 3600000;
+    act(() => { document.dispatchEvent(new window.Event('visibilitychange')); });
+    assert.equal((h.ui.getByRole('button', { name: 'Roomを更新してください' }) as HTMLButtonElement).disabled, true);
+  } finally { h.close(); }
+});
+
+test('討伐済み・HP0・状態未知・無効期限を参加許可に変換しない', async () => {
+  const cases = [
+    { state: { status: 'available', value: 'cleared' }, label: 'このRoomは終了しました' },
+    { hp: { status: 'available', value: { current: 0, max: 1000 } }, label: 'Roomを更新してください' },
+    { state: { status: 'unknown' }, label: 'Roomの状態を確認できません' },
+    { expiresAt: { status: 'unknown' }, label: 'Roomの期限を確認できません' },
+    { expiresAt: { status: 'available', value: 'invalid' }, label: 'Roomの期限を確認できません' },
+  ] as const;
+  for (const { label, ...overrides } of cases) {
+    let joins = 0;
+    const h = harness({ getRoom: async () => roomFixture('room-a', overrides), joinRoom: async () => { joins++; return { roomId: 'room-a', replayId: 'invalid' }; } });
+    try {
+      await openRoom(h);
+      const button = h.ui.getByRole('button', { name: label });
+      assert.equal((button as HTMLButtonElement).disabled, true);
+      fireEvent.click(button); assert.equal(joins, 0);
+      if ('hp' in overrides) assert.equal(h.ui.queryByText('討伐済み'), null);
+    } finally { h.close(); }
+  }
+});
+
+test('SSRとhydration間で期限を跨いでも不一致なくマウント後に期限を反映する', async () => {
+  const room = roomFixture();
+  const controller = createRaidRoomController({
+    listRooms: async () => [room], getRoom: async () => room,
+    listParticipants: async () => [], getRewards: async () => [],
+    joinRoom: async () => ({ roomId: 'room-a', replayId: 'unused' }),
+  });
+  await controller.selectRoom('room-a');
+  const component = <RaidRoomBrowser controller={controller} onBattleReady={() => {}} setInteractionBlocking={() => {}} />;
+  const html = renderToString(component);
+  assert.match(html, /残り時間 未確認/);
+  clockNow = Date.parse('2026-09-09T00:00:01Z');
+  assert.equal(renderToString(component), html);
+  const container = document.createElement('div');
+  container.innerHTML = html;
+  document.body.append(container);
+  const errors: unknown[] = [];
+  let root: ReturnType<typeof hydrateRoot> | undefined;
+  try {
+    await act(async () => { root = hydrateRoot(container, component, { onRecoverableError: (error) => errors.push(error) }); });
+    assert.deepEqual(errors, []);
+    assert.match(container.textContent ?? '', /期限を過ぎました/);
+  } finally { act(() => root?.unmount()); container.remove(); controller.dispose(); }
 });

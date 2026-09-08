@@ -23,7 +23,7 @@ HP・敵ステータス・報酬品目と数量は承認済み値と混同せず
 ## 未確認の構造条件
 未決定と断定せず、既存資料・Product Owner決定の所在を親が照合する。依存しない実装は継続する。
 - Roomの生成資格・費用・再生成。
-- 総合力の判定対象編成・判定時点、既存Lv5解放条件の扱い。
+- 総合力の判定時点と、Main Formation・実際の出撃編成が異なる場合の参加下限判定対象。
 - 救援公開先・権限・頻度、救援経由の帰属・集計開始時点。
 - Guild所属を現在／参加時／戦闘Snapshotのどれで表示・判定するか。
 - 報酬の品目・資格・Room/日次境界と既存報酬・ランキングの切替。
@@ -35,10 +35,14 @@ HP・敵ステータス・報酬品目と数量は承認済み値と混同せず
 既存Replayと戦闘エンジンを再利用する。毒がplayerRawDamageに含まれない現状は今回の初回作業で変更しない。過去再計算・遡及付与は別範囲。
 現行HP根拠の不足、毒集計差、本番配信SHA等の監査未確認点は残す。
 
+## 引き継ぐ既存条件（2026-09-08照合）
+- レイド解放はユーザーLv5以上。根拠: `spec_progression.md`「レベルによる機能アンロック」、Migration `20260830000210_canonical_master_freeze_runtime.sql` の `start_raid_battle`。新仕様の「初級は総合力制限なし」はLv制限の撤廃を意味しない。
+- 戦闘の消費はRaid Point 1、ユーザー初回のみ0。上限5、2時間に1回復、日付変更でリセットしない。根拠: `production/gameplay_foundation/user_level_action_resource_foundation_20260822.md`、同Migrationの `start_raid_battle`。旧無料3回・Cash2回・Diamond5回は使わない。Room作成自体の追加費用の有無と混同しない。
+- 代表総合力はMain Formationの最終HP＋ATK＋DEF合計をサーバーで算出する。根拠: `product_decisions.md`「Production Specification Reconciliation（2026-08-17）」。Room参加下限へ接続する際の実出撃編成との差異・判定時点だけを残確認とする。
+
 ## 初回の共通実装契約
 difficulty IDは beginner / intermediate / advanced / expert（内部識別子の実装選択）。
 子Aが新規src/domain/raidRoom.tsに型と純粋な総合力判定を定義し、型確定を子B・Cへ送る。
 総合力チェックは参加可否全体と分ける。初級の総合力制限なしを、RP・Room状態等を含む参加許可と誤認させない。
 未取得・非有限・負数等の不正総合力を中級以上で通さない。推奨値を参加制限に流用しない。
 UI用DTOにはサーバー算出の参加資格と理由を持たせる。報酬資格をブラウザ計算で確定しない。
-

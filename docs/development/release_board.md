@@ -1,3 +1,11 @@
+# Raid第5工程 — VALIDATED
+
+基準SHA: `94ed7cc7bcc4a093a0395d2f027c6c9b06ba0ed1`。2026-09-08、開催数上限は同時開催Room数10/10/10/5、終了は開始から24時間または撃破と確認済み。第4工程以前の「上限集計単位・期限未確認」はこの決定で解消。
+
+A-05: 非公開Room登録・参加台帳更新、開催数・期限・定員のDB整合性。B-05: 残り時間と期限切れ操作抑止。C-05: SQL境界・再送・権限検証。P-05: 親レビュー・仕様照合・統合。公開生成/参加、戦闘・救援・報酬接続と実DB・実機確認は未完了。
+
+親検証: lifecycle SQL19件、既存条件SQL14件、React操作16件、共通43件、全体TypeScript・Mock build PASS。多接続競合・実DB・実機は未検証。詳細: raid_room_phase5_integration.md。
+
 # Raid第4工程 — VALIDATED
 A-04: 非公開サーバー条件判定と設定分離、C-04: SQL/境界/権限検証。B-04: Previewで発見したRaid操作中ラベルの規約修正（共有OutlawButtonはB専有）。親は仕様根拠照合・レビュー・統合を担当。生成/参加writerは構造条件の根拠未確認のため未着手。バランス再検討は行わない。A/B/C/P-04は親レビュー・機械検証済み。条件SQL14件、React操作10件、既存共通43件、全体Mock build/型検証PASS。既存PreviewのサンプルRoom操作をChromeで確認したが、実DB戦闘・報酬・実機Human PASSは未到達。詳細: raid_room_phase4_integration.md。
 
