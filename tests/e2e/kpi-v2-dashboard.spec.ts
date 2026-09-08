@@ -11,6 +11,7 @@ const fixtures: Record<string, unknown> = {
   daily: { timezone:"Asia/Tokyo", rows:Array.from({ length:30 }, (_, index) => ({
     date:fixtureDate(index),
     new_users:index === 0 ? 20 : Math.max(0, 12-index),
+    active_users:index === 0 ? 83 : 12, total_registered:123, monetization:{reason:"payment_closed",payers:null,payer_rate:null,revenue:null,arppu:null,arpu:null},
     tutorial:index === 0 ? { ...metric("tutorial.canonical_complete_rate",14,20,.7,.6,"PASS"), authority:"tutorial_completion_union_v1", authority_label:"統合計測（既存完了＋MyPage・重複除外）" } : index === 1 ? { ...metric("tutorial.legacy_complete_rate",6,10,.6,.6,"PASS"), authority:"legacy", authority_label:"旧Tutorial Complete" } : metric("tutorial.canonical_complete_rate", null, 0, null, .6, "NOT_READY"),
     guild:{ ...metric("guild.conversion_rate", index === 0 ? 7 : null, index === 0 ? 14 : 0, index === 0 ? .5 : null, .4, index === 0 ? "PASS" : "NOT_READY"), authority:"canonical", create:index === 0 ? 2 : null, join:index === 0 ? 5 : null },
     chat:{ ...metric("guild.chat_activation_rate", index === 0 ? 3 : null, index === 0 ? 7 : 0, index === 0 ? .429 : null, .3, index === 0 ? "PASS" : "NOT_READY"), authority:"canonical" },
@@ -57,16 +58,20 @@ for (const viewport of [{ width:390, height:844 }, { width:412, height:915 }]) {
     await page.setViewportSize(viewport); await mockApi(page); await page.goto("/admin/kpi");
     await expect(page.getByRole("heading", { name:"日次KPI" })).toBeVisible();
     const mobile = page.locator(".daily-period-table");
-    await expect(mobile.getByText("新規", { exact:true }).first()).toBeVisible();
-    await expect(mobile.getByText("Tutorial").first()).toBeVisible();
-    await expect(mobile.getByText("Guild").first()).toBeVisible();
-    await expect(mobile.getByText("Chat").first()).toBeVisible();
+    await expect(mobile.getByText("新規ユーザー", { exact:true }).first()).toBeVisible();
+    await expect(mobile.getByText("DAU", {exact:true})).toBeVisible();
+    await expect(mobile.locator(".daily-active-count").first()).toHaveText("83");
+    await mobile.evaluate(node => { node.scrollLeft=350; });
+    await expect(mobile.getByText("Tutorial Complete").first()).toBeVisible();
+    await expect(mobile.getByText("Guild Conversion").first()).toBeVisible();
+    await expect(mobile.getByText("Guild Chat Activation").first()).toBeAttached();
     await expect(mobile.getByText("14 / 20人").first()).toBeVisible();
     await expect(mobile.getByText("統合計測（既存完了＋MyPage・重複除外）").first()).toBeVisible();
     await expect(mobile.getByText("7 / 14人").first()).toBeVisible();
     await expect(mobile.getByText("3 / 7人").first()).toBeVisible();
     await mobile.evaluate((node) => { node.scrollLeft = node.scrollWidth; });
-    await expect(mobile.getByText("D5", { exact:true })).toBeVisible();
+    await expect(mobile.getByText("DARPU", { exact:true })).toBeVisible();
+    await expect(mobile.getByText("D5", { exact:true })).toBeAttached();
     await mobile.evaluate((node) => { node.scrollLeft = 0; });
     await expect(page.getByText("FROM")).toHaveCount(0);
     const shell = mobile;
@@ -103,6 +108,10 @@ for (const width of [390, 412, 1440]) {
     await page.setViewportSize({width,height:900}); await mockApi(page); await page.goto('/admin/kpi');
     await page.getByRole('button',{name:'月次',exact:true}).click();
     await expect(page.getByRole('heading',{name:'月次KPI'})).toBeVisible();
+    await expect(page.getByRole('columnheader',{name:'MAU',exact:true})).toBeAttached();
+    await expect(page.getByRole('columnheader',{name:'累計登録ユーザー',exact:true})).toBeAttached();
+    await expect(page.getByRole('columnheader',{name:'MPU',exact:true})).toBeAttached();
+    await expect(page.getByRole('columnheader',{name:'Effective Active Guild',exact:true})).toBeAttached();
     await expect(page.locator('tbody tr')).toHaveCount(2);
     await expect(page.getByText('当月途中 · 2026-09-06まで')).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -125,4 +134,13 @@ test('KPI monthly errors retry and empty', async ({page}) => {
   await page.unroute('**/api/admin/kpi/v2/**'); await mockApi(page,{empty:true});
   await page.getByRole('button',{name:'再試行'}).click();
   await expect(page.getByText('対象期間がありません。')).toBeVisible();
+});
+
+test('Saved KPI stale and missing values remain explicit', async ({page}) => {
+  await page.route('**/api/admin/kpi/v2/daily',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({updated_at:'2026-09-01T00:00:00Z',stale:true,missing_periods:1,rows:[{date:'2026-09-08',new_users:null,active_users:null,retention:[],saved_status:'not_aggregated'}]})}));
+  await page.goto('/admin/kpi');
+  await expect(page.getByText('更新待ち／遅延あり')).toBeVisible();
+  await expect(page.locator('tbody th')).toContainText('未集計');
+  await expect(page.locator('.daily-active-count')).toHaveText('—');
+  await expect(page.getByText('表示時は保存済み結果を読み取ります。')).toBeVisible();
 });

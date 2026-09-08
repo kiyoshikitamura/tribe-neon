@@ -4,10 +4,14 @@ export type OverviewMetric = {
   observation_status?: string; target?: number | null;
 };
 export type OverviewRow = {
-  date: string; new_users: number; tutorial: OverviewMetric;
+  date: string; new_users: number | null; tutorial: OverviewMetric;
   guild: OverviewMetric & { create?: number | null; join?: number | null };
   chat: OverviewMetric; retention: Array<OverviewMetric & { day: number }>;
   from?: string; to?: string; partial?: boolean;
+  active_users?: number | null; total_registered?: number | null;
+  active_guilds?: number | null; effective_active_guilds?: number | null;
+  generated_at?: string | null; saved_status?: string;
+  monetization?: { payers: number | null; payer_rate: number | null; revenue: number | null; arppu: number | null; arpu: number | null; reason: string };
 };
 
 function aggregate(metrics: OverviewMetric[], allowImmature = false): OverviewMetric {
@@ -37,13 +41,13 @@ export function monthlyRows(rows: OverviewRow[], today: string): OverviewRow[] {
   const months = [...new Set(rows.map((row) => row.date.slice(0, 7)))].sort().reverse();
   return months.map((month) => {
     const days = rows.filter((row) => row.date.startsWith(month)).sort((a, b) => a.date.localeCompare(b.date));
-    const activeDays = days.filter((row) => row.new_users > 0);
+    const activeDays = days.filter((row) => (row.new_users ?? 0) > 0);
     const sumBreakdown = (key: "create" | "join") => activeDays.every((row) => row.guild[key] != null)
       ? activeDays.reduce((sum, row) => sum + row.guild[key]!, 0) : null;
     return {
       date: month, from: days[0].date, to: days.at(-1)!.date,
       partial: month === today.slice(0, 7),
-      new_users: days.reduce((sum, row) => sum + row.new_users, 0),
+      new_users: days.reduce((sum, row) => sum + (row.new_users ?? 0), 0),
       tutorial: aggregate(days.map((row) => row.tutorial)),
       guild: { ...aggregate(days.map((row) => row.guild)), create: sumBreakdown("create"), join: sumBreakdown("join") },
       chat: aggregate(days.map((row) => row.chat)),
