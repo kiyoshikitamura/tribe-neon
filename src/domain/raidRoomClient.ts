@@ -1,4 +1,5 @@
 import type { RaidDifficultyId, RaidParticipantDto, RaidRewardDto, RaidRoomDto } from './raidRoom';
+import { RaidRoomStoppedError } from './raidRoomErrors.ts';
 
 /** サーバーが開始済みの戦闘を返す参照。クライアントでReplayを生成しない。 */
 export interface RaidBattleReference {
@@ -194,8 +195,10 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
           rooms: idle(), joinError: null, briefing: idle(), registrationError: null });
         if (transport.getBriefing) await refreshRoom();
         return room;
-      } catch {
-        update({ createError: '作成できませんでした。時間をおいて同じ内容で再度お試しください。' });
+      } catch (error) {
+        update({ createError: error instanceof RaidRoomStoppedError
+          ? 'レイドの新規作成は現在停止中です。再開後にお試しください。'
+          : '作成できませんでした。時間をおいて同じ内容で再度お試しください。' });
         return null;
       } finally { createPending = false; update({ creating: false }); }
     },

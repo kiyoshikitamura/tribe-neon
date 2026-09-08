@@ -159,7 +159,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
             <p>参加済み</p>
             <p className="raid-room-muted">戦闘開始時に出撃編成の総合力を確認します。</p>
             {!briefing.battleStartEnabled || !onBriefingReady
-              ? <p>現在、戦闘を開始できません。</p>
+              ? <p>現在このRoomでは新しい戦闘を開始できません。開催状態・運用の再開を確認してください。</p>
               : <OutlawButton loadingLabel="" fullWidth disabled={busy || !!lifecycle?.blockJoin} aria-label="出撃準備" onClick={async () => {
                 setTransitioning(true); setTransitionError(null);
                 try { await onBriefingReady(briefing); }

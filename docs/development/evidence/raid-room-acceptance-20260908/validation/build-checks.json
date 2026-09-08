@@ -1,0 +1,10 @@
+[
+  {
+    "name": "typecheck",
+    "exit": 0
+  },
+  {
+    "name": "build",
+    "exit": 0
+  }
+]

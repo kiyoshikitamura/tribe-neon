@@ -1,4 +1,5 @@
 import { createRaidRoomRescueClient } from './raidRoomRescue.ts';
+import { RaidRoomStoppedError } from './raidRoomErrors.ts';
 import type { RaidObserved, RaidParticipantDto, RaidPlayerSummary, RaidRewardDto, RaidRoomDto, RaidServerEligibility } from './raidRoom';
 import { RAID_DIFFICULTIES } from './raidRoom.ts';
 import type { RaidBattleReference, RaidRoomTransport, RaidRoomBriefing } from './raidRoomClient';
@@ -126,7 +127,11 @@ function reward(value: unknown): RaidRewardDto {
 export function createRaidRoomRpcTransport(client: RaidRoomRpcClient, authorities: RaidRoomRpcAuthorities = {}): RaidRoomTransport {
   async function rpc(name: string, args: Record<string, unknown>): Promise<unknown> {
     const result = await client.rpc(name, args);
-    if (!result || result.error != null) throw new Error('Raid room request failed');
+    if (!result || result.error != null) {
+      const error = result?.error as { code?: string; message?: string } | undefined;
+      if (name === 'create_raid_room_v1' && error?.code === '55000' && error.message === 'room creation disabled') throw new RaidRoomStoppedError();
+      throw new Error('Raid room request failed');
+    }
     return result.data;
   }
   async function pages<T>(name: string, args: Record<string, unknown>, key: string, parse: (value: unknown) => T, identity: (entry: T) => string): Promise<T[]> {

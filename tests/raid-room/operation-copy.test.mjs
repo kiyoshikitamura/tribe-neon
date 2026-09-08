@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import{createRaidRoomController}from'../../src/domain/raidRoomClient.ts';import{createRaidRoomRpcTransport}from'../../src/domain/raidRoomRpcTransport.ts';
+for(const [name,error,stopped]of [['stopped',{code:'55000',message:'room creation disabled'},true],['capacity',{code:'55000',message:'capacity reached'},false],['network',{message:'network'},false]])test(`停止表示は既知の作成停止だけを区別: ${name}`,async()=>{const c=createRaidRoomController(createRaidRoomRpcTransport({rpc:async()=>({data:null,error})},{enableCreation:true}));assert.equal(await c.createRoom('beginner','BOSS_A'),null);assert.equal(c.getSnapshot().createError.includes('停止中'),stopped);c.dispose();});
