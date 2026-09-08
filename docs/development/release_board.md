@@ -1,3 +1,6 @@
+# Raid第4工程 — VALIDATED
+A-04: 非公開サーバー条件判定と設定分離、C-04: SQL/境界/権限検証。B-04: Previewで発見したRaid操作中ラベルの規約修正（共有OutlawButtonはB専有）。親は仕様根拠照合・レビュー・統合を担当。生成/参加writerは構造条件の根拠未確認のため未着手。バランス再検討は行わない。A/B/C/P-04は親レビュー・機械検証済み。条件SQL14件、React操作10件、既存共通43件、全体Mock build/型検証PASS。既存PreviewのサンプルRoom操作をChromeで確認したが、実DB戦闘・報酬・実機Human PASSは未到達。詳細: raid_room_phase4_integration.md。
+
 # Raid第3工程 — VALIDATED
 A-03: Room台帳/参照RPC、B-03: 実RPC adapter/画面接続、C-03: SQL/adapter検証。親が全体typecheckと統合を担当。作業ルートはraid-room-repoのgit checkoutへ移行。PR #27更新時の完了通知を有効化。未検証を完了通知しない。A/B/C/P-03は親レビュー完了。共通43件、SQL/接続18件（adapter9重複）、全体typecheck、Mock全体build、QA HTTP/SSRがPASS。ブラウザ・実機・実DB適用は未検証。詳細はraid_room_phase3_integration.md。
 

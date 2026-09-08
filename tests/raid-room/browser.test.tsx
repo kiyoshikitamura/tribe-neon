@@ -3,6 +3,7 @@ import React from 'react';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { render, fireEvent, waitFor, cleanup, act, within } from '@testing-library/react';
+import OutlawButton from '../../src/app/components/ui/OutlawButton';
 import RaidRoomBrowser from '../../src/app/components/raid/RaidRoomBrowser';
 import { createRaidRoomController, type RaidRoomTransport } from '../../src/domain/raidRoomClient';
 import { roomFixture, participantFixture, rewardFixture, deferred } from './fixtures';
@@ -50,7 +51,9 @@ test('通信待ちは文字ラベルなし、二重タップしても参加要�
   try {
     await openRoom(h); const button = h.ui.getByRole('button', { name: '参加する' });
     fireEvent.click(button); fireEvent.click(button);
-    assert.equal(calls, 1); assert.doesNotMatch(h.ui.container.textContent ?? '', /Now Loading|読み込み中/);
+    assert.equal(calls, 1); assert.doesNotMatch(h.ui.container.textContent ?? '', /Now Loading|読み込み中|処理中/);
+    assertSpinnerOnly(button);
+    assert.equal(h.ui.getByRole('button', { name: '参加する' }), button);
     await act(async () => pending.resolve({ roomId: 'room-a', replayId: 'replay-a' }));
     await waitFor(() => assert.equal(h.battles.length, 1));
     assert.equal(h.blocking.at(-1), false);
@@ -118,4 +121,61 @@ test('終了Roomはサーバー資格がeligibleでも参加操作を出さな�
     assert.equal((button as HTMLButtonElement).disabled, true);
     fireEvent.click(button); assert.equal(joins, 0);
   } finally { h.close(); }
+});
+
+function assertSpinnerOnly(button: HTMLElement) {
+  assert.equal(button.getAttribute('aria-busy'), 'true');
+  assert.equal((button as HTMLButtonElement).disabled, true);
+  assert.equal(button.textContent, '');
+  assert.ok(button.querySelector('.spinner[aria-hidden="true"]'));
+}
+
+test('同期の難度・参加者・報酬操作もspinnerのみで操作名を維持する', async () => {
+  const h = harness();
+  try {
+    await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
+    const tab = h.ui.getByRole('tab', { name: '中級' });
+    fireEvent.click(tab);
+    assertSpinnerOnly(tab);
+    assert.equal(h.ui.getByRole('tab', { name: '中級' }), tab);
+    fireEvent.click(await h.ui.findByRole('button', { name: 'Roomを開く' }));
+    await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
+    for (const name of ['参加者一覧', '報酬']) {
+      const button = h.ui.getByRole('button', { name });
+      fireEvent.click(button);
+      assertSpinnerOnly(button);
+      assert.equal(h.ui.getByRole('button', { name }), button);
+      const dialog = h.ui.getByRole('dialog');
+      fireEvent.click(within(dialog).getAllByRole('button', { name: '閉じる' }).at(-1)!);
+    }
+  } finally { h.close(); }
+});
+
+test('一覧更新待ちはspinnerのみで操作名を維持し連打を抑止する', async () => {
+  const pending = deferred<ReturnType<typeof roomFixture>[]>(); let calls = 0;
+  const h = harness({ listRooms: async () => ++calls === 1 ? [roomFixture()] : pending.promise });
+  try {
+    await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
+    const button = h.ui.getByRole('button', { name: '更新' });
+    fireEvent.click(button); fireEvent.click(button);
+    assert.equal(calls, 2);
+    assertSpinnerOnly(button);
+    assert.equal(h.ui.getByRole('button', { name: '更新' }), button);
+    await act(async () => pending.resolve([roomFixture()]));
+    await waitFor(() => assert.equal(button.getAttribute('aria-busy'), 'false'));
+    assert.equal(button.textContent, '更新');
+  } finally { h.close(); }
+});
+
+test('共通ボタンは未指定の既定ラベルと明示ラベルを維持し空文字だけspinnerにする', () => {
+  const ui = render(<>
+    <OutlawButton isLoading aria-label="既定">操作</OutlawButton>
+    <OutlawButton isLoading loadingLabel="保存待ち" aria-label="明示">操作</OutlawButton>
+    <OutlawButton isLoading loadingLabel="" aria-label="文字なし">操作</OutlawButton>
+  </>);
+  try {
+    assert.equal(ui.getByRole('button', { name: '既定' }).textContent, '処理中…');
+    assert.equal(ui.getByRole('button', { name: '明示' }).textContent, '保存待ち');
+    assertSpinnerOnly(ui.getByRole('button', { name: '文字なし' }));
+  } finally { cleanup(); }
 });
