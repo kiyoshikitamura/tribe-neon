@@ -27,3 +27,4 @@
 
 .raid-room-boss-choice { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .raid-room-boss-choice select { width: 100%; min-height: 44px; padding: 8px; color: inherit; background: #191b22; border: 1px solid #555861; border-radius: 6px; font: inherit; }
+.raid-room-browser--detail { padding: 0; }

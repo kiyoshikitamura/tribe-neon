@@ -9,12 +9,23 @@ import OutlawButton from "../ui/OutlawButton";
 import OutlawCard from "../ui/OutlawCard";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import RaidTop from "./RaidTop";
+import RaidRoomDetail from './RaidRoomDetail';
+import RaidRoomDialogs from './RaidRoomDialogs';
+import RaidEnemyRoster from './RaidEnemyRoster';
+import { createPortal } from 'react-dom';
+import { useRaidRoomDisplay } from './useRaidRoomDisplay';
+import { withRaidLeader } from '../../../domain/raidRoomDisplayClient';
+import type { RaidRoomDisplay } from '../../../domain/raidRoomDisplay';
 import type { RaidTopData } from "../../../domain/raidTop";
 import "./RaidRoomBrowser.css";
 
 export interface RaidRoomBrowserProps {
   controller: RaidRoomController;
-  renderRewards?: (roomId: string, close: () => void) => React.ReactNode;
+  renderRewards?: (roomId: string, close: () => void, display?: RaidRoomDisplay) => React.ReactNode;
+  loadDisplay?: (roomId: string) => Promise<RaidRoomDisplay>;
+  currentUserId?: string;
+  onOpenProfile?: (userId: string) => Promise<void>;
+  profileOpen?: boolean;
   renderRescue?: (room: RaidRoomDto, disabled: boolean) => React.ReactNode;
   onBriefingReady?: (briefing: RaidRoomBriefing) => void | Promise<void>;
   onBattleReady: (reference: RaidBattleReference) => void | Promise<void>;
@@ -53,7 +64,7 @@ function RoomSummary({ room, now }: { room: RaidRoomDto; now: number | null }) {
 
 function Spinner() { return <div className="raid-room-wait" role="status" aria-label="通信中"><span className="spinner" aria-hidden="true" /></div>; }
 
-export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue, renderRewards, topData, onTopRefresh, listRefreshRevision }: RaidRoomBrowserProps) {
+export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue, renderRewards, topData, onTopRefresh, listRefreshRevision, loadDisplay, currentUserId, onOpenProfile, profileOpen }: RaidRoomBrowserProps) {
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
   // SSRとhydration初回は同じ未取得値。マウント後にだけ端末時計を参照する。
   const [now, setNow] = useState<number | null>(null);
@@ -70,6 +81,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
   const [topVariantId, setTopVariantId] = useState<string | null>(null);
   const [variantId, setVariantId] = useState("");
   const [dialog, setDialog] = useState<"participants" | "rewards" | null>(null);
+  const [enemyOpen, setEnemyOpen] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
   const [battleReference, setBattleReference] = useState<RaidBattleReference | null>(null);
@@ -78,9 +90,11 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
   const listingVisible = !snapshot.selectedRoomId && (!topData || browseOpen) && !createOpen;
   useEffect(() => { if (listingVisible) void controller.loadRooms(); }, [controller, listingVisible, listRefreshRevision]);
   useEffect(() => { setInteractionBlocking(busy); return () => setInteractionBlocking(false); }, [busy, setInteractionBlocking]);
-  useEffect(() => { setDialog(null); setTransitionError(null); setBattleReference(null); }, [snapshot.selectedRoomId]);
+  useEffect(() => { setDialog(null); setEnemyOpen(false); setTransitionError(null); setBattleReference(null); }, [snapshot.selectedRoomId]);
 
   const room = snapshot.room.status === "success" ? snapshot.room.data : null;
+  const display = useRaidRoomDisplay(snapshot.selectedRoomId, room, currentUserId, loadDisplay);
+  const displayParticipants = { ...snapshot.participants, data: snapshot.participants.data?.map(entry => ({ ...entry, player: withRaidLeader(entry.player, display.data) })) ?? null };
   const briefing = snapshot.briefing.status === 'success' ? snapshot.briefing.data : null;
   const eligibility = getRaidEligibilityPresentation(room?.serverEligibility);
   const lifecycle = room ? getRaidRoomLifecyclePresentation(room, now) : null;
@@ -111,7 +125,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
     await controller.selectRoom(null);
     onTopRefresh?.();
   };
-  return <section className={showTop ? "raid-room-browser raid-room-browser--top" : "raid-room-browser"} aria-label="レイド">
+  return <section className={showTop ? "raid-room-browser raid-room-browser--top" : snapshot.selectedRoomId ? "raid-room-browser raid-room-browser--detail" : "raid-room-browser"} aria-label="レイド">
     {showTop && topData ? <RaidTop data={topData} disabled={busy}
       onOpenRoom={(roomId, rescueId) => { void controller.selectRoom(roomId, rescueId); }}
       onChooseEnemy={(enemy) => {
@@ -122,7 +136,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       }}
       onBrowse={() => { setCreateOpen(false); setTopVariantId(null); setBrowseOpen(true); }}
       onRefresh={() => onTopRefresh?.()} /> : <>
-    <p className="raid-room-muted">開始から24時間、または撃破で終了します。</p>
+    {!snapshot.selectedRoomId && <p className="raid-room-muted">開始から24時間、または撃破で終了します。</p>}
     {!snapshot.selectedRoomId ? <>
       {topData && <OutlawButton loadingLabel="" disabled={busy} onClick={() => void returnToTop()}>トップへ</OutlawButton>}
       <div className="raid-room-tabs" role="tablist" aria-label="難易度">
@@ -170,24 +184,20 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       {snapshot.room.status === "loading" && <Spinner />}
       {snapshot.room.status === "idle" && <p>レイド情報は未取得です。</p>}
       {snapshot.room.status === "error" && <p role="alert">レイドを取得できませんでした。更新して再度お試しください。</p>}
-      {room && <OutlawCard>
-        <RoomSummary room={room} now={now} />
-        <p className="raid-room-requirement">{getRaidParticipationRequirement(room.difficultyId)}</p>
-        <p className="raid-room-muted">{getRaidRecommendedPowerLabel(room.difficultyId)}</p>
-        <div className="raid-room-row">
-          <OutlawButton loadingLabel="" aria-label="参加者一覧" disabled={snapshot.canRegister && briefing?.membershipStatus !== "joined"} onClick={() => setDialog("participants")}>参加者一覧</OutlawButton>
-          <OutlawButton loadingLabel="" aria-label="報酬" onClick={() => setDialog("rewards")}>報酬</OutlawButton>
-        </div>
-        {renderRescue?.(room, busy || !!lifecycle?.blockJoin)}
-        {snapshot.canRegister ? <>
+      {room && <RaidRoomDetail room={room} briefing={snapshot.briefing} display={display} participants={displayParticipants}
+        currentUserId={currentUserId} now={now} busy={busy}
+        onParticipants={() => setDialog('participants')} onRewards={() => setDialog('rewards')} onEnemyInfo={() => setEnemyOpen(true)}
+        rescue={renderRescue?.(room, busy || !!lifecycle?.blockJoin)}
+        action={<>
+          {snapshot.canRegister ? <>
           {snapshot.briefing.status === "loading" && <Spinner />}
           {snapshot.briefing.status === "error" && <p role="alert">参加条件を取得できませんでした。レイドを更新してください。</p>}
-          {briefing?.bossName && <p>{briefing.bossName}</p>}
+
           {briefing?.membershipStatus === "joined" ? <>
             <p>参加済み</p>
-            <p className="raid-room-muted">戦闘開始時に出撃編成の総合力を確認します。</p>
+            <p className="raid-room-muted">出撃時に編成を確認します。</p>
             {!briefing.battleStartEnabled || !onBriefingReady
-              ? <p>現在このレイドでは新しい戦闘を開始できません。開催状態・運用の再開を確認してください。</p>
+              ? <p>現在は出撃できません。</p>
               : <OutlawButton loadingLabel="" fullWidth disabled={busy || !!lifecycle?.blockJoin} aria-label="出撃準備" onClick={async () => {
                 setTransitioning(true); setTransitionError(null);
                 try { await onBriefingReady(briefing); }
@@ -199,37 +209,21 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
             onClick={() => { if (room && !getRaidRoomLifecyclePresentation(room, Date.now()).blockJoin) void controller.registerParticipation(); }}>参加する</OutlawButton>}
           {briefing?.membershipStatus === "not_joined" && briefing.joinEligibility.status !== "passed" && <p>参加条件を満たしているか確認してください。</p>}
         </> : <OutlawButton loadingLabel="" fullWidth variant="primary" disabled={busy || battleReference !== null || !lifecycle || lifecycle.blockJoin || !eligibility.canJoin} isLoading={snapshot.joining || transitioning} aria-label={joinLabel} onClick={join}>{joinLabel}</OutlawButton>}
-      </OutlawCard>}
+        </>} />}
       {snapshot.registrationError && <p role="alert">{snapshot.registrationError.replaceAll('Room', 'レイド')}</p>}
       {snapshot.joinError && <p role="alert">参加できませんでした。レイドを更新して再度お試しください。</p>}
       {transitionError && <><p role="alert">{transitionError}</p>{battleReference && <OutlawButton loadingLabel="" disabled={busy} aria-label="バトル画面を開く" onClick={() => openBattle(battleReference)}>バトル画面を開く</OutlawButton>}</>}
     </>}
     </>}
-    {dialog && snapshot.selectedRoomId && <CanonicalDialog title={dialog === "participants" ? "参加者一覧" : "報酬"} onClose={() => setDialog(null)} actions={[{ label: "閉じる", onClick: () => setDialog(null) }]}>
-      {dialog === "participants" ? <>
-        {snapshot.participants.status === "loading" && <Spinner />}
-        {snapshot.participants.status === "idle" && <p>参加者情報は未取得です。</p>}
-        {snapshot.participants.status === "error" && <p role="alert">参加者を取得できませんでした。レイドを更新してください。</p>}
-        {snapshot.participants.status === "success" && <ul className="raid-room-entries">
-          {snapshot.participants.data?.map((entry) => <li key={entry.player.userId}>
-            <Player player={entry.player} />
-            <div className="raid-room-muted">現在の所属ギルド：{entry.currentGuild.status === "unknown" ? "未確認" : entry.currentGuild.value?.name ?? "未所属"}</div>
-            <div>{count(entry.finalizedBattles)}戦 / 貢献ダメージ {count(entry.appliedDamage)}</div>
-          </li>)}
-          {snapshot.participants.data?.length === 0 && <li>参加者はいません。</li>}
-        </ul>}
-      </> : renderRewards ? renderRewards(snapshot.selectedRoomId, () => setDialog(null)) : <>
-        {snapshot.rewards.status === "loading" && <Spinner />}
-        {snapshot.rewards.status === "idle" && <p>報酬情報は未取得です。</p>}
-        {snapshot.rewards.status === "error" && <p role="alert">報酬を取得できませんでした。レイドを更新してください。</p>}
-        {snapshot.rewards.status === "success" && <ul className="raid-room-entries">
-          {snapshot.rewards.data?.map((entry, index) => <li key={`${entry.itemId}-${index}`}>
-            <strong>{resolveRewardName?.(entry.itemId) ?? "報酬情報を確認できません"} × {entry.quantity.toLocaleString("ja-JP")}</strong>
-            <div className="raid-room-muted">{entry.deliveryState.status === "unknown" ? "配布状況未確認" : entry.deliveryState.value === "delivered" ? "配布済み" : "配布待ち"}</div>
-          </li>)}
-          {snapshot.rewards.data?.length === 0 && <li>表示できる報酬はありません。</li>}
-        </ul>}
-      </>}
-    </CanonicalDialog>}
+    <RaidRoomDialogs kind={dialog} roomId={snapshot.selectedRoomId} currentUserId={currentUserId}
+      ownerUserId={room?.owner.status === 'available' ? room.owner.value.userId : undefined}
+      participants={displayParticipants} rewards={snapshot.rewards} onClose={() => setDialog(null)} onRefresh={() => void controller.refreshRoom()}
+      onOpenProfile={onOpenProfile} profileOpen={profileOpen} resolveRewardName={resolveRewardName}
+      renderRewards={renderRewards ? (id, close) => renderRewards(id, close, display.data ?? undefined) : undefined} />
+    {enemyOpen && room && typeof document !== 'undefined' && createPortal(<div className="raid-room-dialogs">
+      <CanonicalDialog title="敵情報" onClose={() => setEnemyOpen(false)} actions={[{ label: '閉じる', onClick: () => setEnemyOpen(false) }]}>
+        {briefing?.raidVariantId ? <RaidEnemyRoster bossMasterId={briefing.raidVariantId} /> : <p>敵情報を取得できませんでした。戦況を更新してください。</p>}
+      </CanonicalDialog>
+    </div>, document.body)}
   </section>;
 }

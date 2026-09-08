@@ -27,12 +27,13 @@ function harness(overrides: Partial<RaidRoomTransport> = {}, onBattle?: () => vo
   };
   const controller = createRaidRoomController(transport);
   const blocking: boolean[] = []; const battles: unknown[] = [];
-  const ui = render(<RaidRoomBrowser controller={controller} resolveRewardName={(id) => id === "TEST_ITEM" ? "検証報酬" : null} onBattleReady={async (value) => { battles.push(value); await onBattle?.(); }} setInteractionBlocking={(value) => { blocking.push(value); }} />);
+  const ui = render(<RaidRoomBrowser controller={controller} currentUserId="owner" resolveRewardName={(id) => id === "TEST_ITEM" ? "検証報酬" : null} onBattleReady={async (value) => { battles.push(value); await onBattle?.(); }} setInteractionBlocking={(value) => { blocking.push(value); }} />);
   return { ui, controller, blocking, battles, close() { cleanup(); controller.dispose(); } };
 }
 async function openRoom(h: ReturnType<typeof harness>) {
   await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
   fireEvent.click(h.ui.getByRole('tab', { name: '中級' }));
+  assert.match(h.ui.container.textContent ?? '', /160,000/);
   fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
   await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
 }
@@ -41,7 +42,7 @@ test('難度選択→Room→参加者と報酬ダイアログ→参加でReplay�
   const h = harness();
   try {
     await openRoom(h);
-    assert.match(h.ui.container.textContent ?? '', /160,000/);
+
     fireEvent.click(h.ui.getByRole('button', { name: '参加者一覧' }));
     await h.ui.findByText('救援メンバー');
     fireEvent.click(h.ui.getAllByRole('button', { name: '閉じる' }).at(-1)!);
@@ -148,7 +149,8 @@ test('同期の難度・参加者・報酬操作もspinnerのみで操作名を�
     fireEvent.click(tab);
     assertSpinnerOnly(tab);
     assert.equal(h.ui.getByRole('tab', { name: '中級' }), tab);
-    fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
+    assert.match(h.ui.container.textContent ?? '', /160,000/);
+  fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
     await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
     for (const name of ['参加者一覧', '報酬']) {
       const button = h.ui.getByRole('button', { name });
@@ -277,7 +279,7 @@ test('SSRとhydration間で期限を跨いでも不一致なくマウント後�
   await controller.selectRoom('room-a');
   const component = <RaidRoomBrowser controller={controller} onBattleReady={() => {}} setInteractionBlocking={() => {}} />;
   const html = renderToString(component);
-  assert.match(html, /残り時間 未確認/);
+  assert.match(html, /spinner/);
   clockNow = Date.parse('2026-09-09T00:00:01Z');
   assert.equal(renderToString(component), html);
   const container = document.createElement('div');
@@ -288,7 +290,7 @@ test('SSRとhydration間で期限を跨いでも不一致なくマウント後�
   try {
     await act(async () => { root = hydrateRoot(container, component, { onRecoverableError: (error) => errors.push(error) }); });
     assert.deepEqual(errors, []);
-    assert.match(container.textContent ?? '', /期限を過ぎました/);
+    await waitFor(() => assert.match(container.textContent ?? '', /期限を過ぎました/));
   } finally { act(() => root?.unmount()); container.remove(); controller.dispose(); }
 });
 
@@ -371,7 +373,7 @@ test('公開参加は参加済み表示へ更新し、戦闘不可ならReplay�
     fireEvent.click(button); fireEvent.click(button);
     assert.equal(calls, 1); assert.equal(button.textContent, '');
     await act(async () => pending.resolve());
-    await h.ui.findByText('参加済み'); await h.ui.findByText('現在このレイドでは新しい戦闘を開始できません。開催状態・運用の再開を確認してください。');
+    await h.ui.findByText('参加済み'); await h.ui.findByText('現在は出撃できません。');
     assert.deepEqual(h.battles, []);
     assert.equal(h.ui.queryByRole('button', { name: '出撃準備' }), null);
   } finally { h.close(); }

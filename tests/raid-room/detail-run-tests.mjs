@@ -13,7 +13,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const temp = await mkdtemp(join(runtimePath, 'raid-browser-'));
 try {
   const output = join(temp, 'browser.test.cjs');
-  await build({ entryPoints: [join(root, 'tests/raid-room/browser.test.tsx')], outfile: output, bundle: true,
+  await build({ entryPoints: [join(root, 'tests/raid-room/detail-ui.test.tsx')], outfile: output, bundle: true,
     platform: 'node', format: 'cjs', jsx: 'automatic', packages: 'external', loader: { '.css': 'empty' },
     plugins: [{ name: 'test-game-context', setup(build) {
       build.onResolve({ filter: /GameContext$/ }, () => ({ path: 'game-context', namespace: 'test' }));

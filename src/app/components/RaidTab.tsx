@@ -24,7 +24,7 @@ type RaidDialog = "shortage" | "recovery" | "recovery-error" | "battle-backgroun
 
 export default function RaidTab() {
   const {
-    startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, userLevel, raidPoints, raidFirstEntryFree,
+    activePlayerDetail, activeGuildDetail, showTribeChatPanel, fetchPlayerDetail, startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, userLevel, raidPoints, raidFirstEntryFree,
     setRaidPoints, setRaidFirstEntryFree, userGuildMember, fetchGuildDetail, session, syncBootstrapData,
     raidTopRefreshRevision, raidRoomReturnTarget, raidRoomActivityTracker, raidRescueTarget, setShowInboxPanel, setInboxPanelTab, setPresents, setPresentsPrefetched,
   } = useGame();
@@ -178,6 +178,7 @@ export default function RaidTab() {
         activityTracker={raidRoomActivityTracker} refreshRevision={raidTopRefreshRevision}
         returnRoomId={raidRoomReturnTarget?.userId === session?.user?.id ? raidRoomReturnTarget?.roomId : undefined}
         onOpenPresents={openRescuePresents}
+        onOpenProfile={fetchPlayerDetail} profileOpen={!!(activePlayerDetail || activeGuildDetail || showTribeChatPanel)}
         setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
         onBattleReady={() => { throw new Error("出撃準備から開始してください。"); }} />}
       {!roomUiEnabled && (loading ? <div className="raid-loading" role="status" aria-label="レイド情報を取得中"><span className="spinner" aria-hidden="true" /></div> : errorMessage ? <OutlawCard className="raid-error"><p>{errorMessage}</p><OutlawButton variant="primary" onClick={() => void loadRaidTop()}>再読み込み</OutlawButton></OutlawCard> : activeRaids.length === 0 ? <OutlawCard className="raid-empty"><strong>現在開催中のレイドはありません</strong><p>次の開催情報が確定すると、ここに表示されます。</p></OutlawCard> : <>

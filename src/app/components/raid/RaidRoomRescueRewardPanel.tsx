@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
 import type { RaidRoomRescueReward, RaidRoomRescueRewardClient } from '../../../domain/raidRoomRescueReward';
-import { ITEMS_MASTER_DATA } from '../../../utils/items_master_data';
+import type { RaidRewardPlan } from '../../../domain/raidRoomDisplay';
+import { RaidRewardPlanItems, RaidIssuedRewardItems } from './RaidRewardItems';
 import OutlawButton from '../ui/OutlawButton';
 
 const labels: Record<RaidRoomRescueReward['status'], string> = {
@@ -10,9 +11,9 @@ const labels: Record<RaidRoomRescueReward['status'], string> = {
   pending: '救援成功。報酬の送付待ちです。',
   issued: '救援報酬をプレゼントBOXへ送りました。',
 };
-const formatDate = (value: string) => new Date(value).toLocaleString('ja-JP');
-export default function RaidRoomRescueRewardPanel({ client, roomId, onOpenPresents }: {
-  client: RaidRoomRescueRewardClient; roomId: string; onOpenPresents?: () => void | Promise<void>;
+
+export default function RaidRoomRescueRewardPanel({ client, roomId, onOpenPresents, plan }: {
+  client: RaidRoomRescueRewardClient; roomId: string; onOpenPresents?: () => void | Promise<void>; plan?: RaidRewardPlan;
 }) {
   const [reward, setReward] = useState<RaidRoomRescueReward | null>(null);
   const [busy, setBusy] = useState(true);
@@ -37,18 +38,15 @@ export default function RaidRoomRescueRewardPanel({ client, roomId, onOpenPresen
     finally { openingRef.current = false; setOpening(false); }
   };
   return <div aria-label="救援報酬">
+    <RaidRewardPlanItems plan={plan} />
     {(busy || opening) && <span className="spinner" role="status" aria-label="通信中" />}
     {openError && <p role="alert">プレゼントBOXを取得できませんでした。もう一度お試しください。</p>}
     {error && <p role="alert">救援報酬を取得できませんでした。再度お試しください。</p>}
     {reward && <>
       <p role="status">{labels[reward.status]}</p>
       {reward.rescueGate.minimumBattles !== null && reward.rescueGate.minimumContributionDamage !== null && <p>救援で参加し、{reward.rescueGate.minimumBattles.toLocaleString('ja-JP')}戦・貢献ダメージ{reward.rescueGate.minimumContributionDamage.toLocaleString('ja-JP')}以上とボス撃破で成功です。</p>}
-      <p className="raid-room-muted">成功報酬は1人につきRoomごとに1回。送付から30日以内にプレゼントBOXで受け取れます。</p>
-      {reward.items.length > 0 && <ul className="raid-room-entries">{reward.items.map(item => <li key={item.presentId}>
-        <strong>{item.itemId === 'CASH' ? 'キャッシュ' : item.itemId === 'DIAMOND' ? 'ダイヤ' : ITEMS_MASTER_DATA.find(master => master.id === item.itemId)?.name ?? '報酬'} × {item.quantity.toLocaleString('ja-JP')}</strong>
-        <div>{item.presentStatus === 'CLAIMED' ? '受取済み' : item.presentStatus === 'UNCLAIMED' ? (item.expiresAt && Date.parse(item.expiresAt) <= Date.now() ? '期限切れ' : '未受取') : item.presentStatus === 'EXPIRED' ? '期限切れ' : '受取状況を確認できません'}</div>
-        {item.expiresAt && <div className="raid-room-muted">受取期限：{formatDate(item.expiresAt)}</div>}
-      </li>)}</ul>}
+      <p className="raid-room-muted">成功報酬は1人につきレイドごとに1回。送付から30日以内にプレゼントBOXで受け取れます。</p>
+      <RaidIssuedRewardItems items={reward.items} />
       {reward.status === 'issued' && onOpenPresents && <OutlawButton loadingLabel="" disabled={opening} onClick={openPresents}>プレゼントBOXへ</OutlawButton>}
     </>}
     <OutlawButton loadingLabel="" disabled={busy || opening} onClick={() => setRevision(value => value + 1)}>報酬情報を更新</OutlawButton>

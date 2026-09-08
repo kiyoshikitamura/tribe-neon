@@ -1,0 +1,56 @@
+.raid-detail { width: 100%; min-width: 0; color: var(--ui-text-primary); padding-bottom: 16px; }
+.raid-detail *, .raid-detail *::before, .raid-detail *::after { box-sizing: border-box; }
+.raid-detail__hero { position: relative; height: 224px; isolation: isolate; overflow: hidden; border-radius: 8px; background: var(--ui-bg-raised); }
+.raid-detail__background { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+.raid-detail__enemy { position: absolute; right: 0; top: 0; width: 72%; height: 136%; object-fit: contain; object-position: center top; filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)); }
+.raid-detail__hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(7,10,16,.98), rgba(7,10,16,.6) 25%, transparent 70%); pointer-events: none; }
+.raid-detail__difficulty { position: absolute; z-index: 2; left: 12px; top: 12px; padding: 4px 8px; border: 1px solid var(--ui-border); border-radius: 4px; background: rgba(7,10,16,.86); font-size: 12px; }
+.raid-detail__hero-caption { position: absolute; z-index: 2; left: 12px; right: 12px; bottom: 16px; }
+.raid-detail__hero-caption > span { color: #d8dde4; font-size: 12px; }
+.raid-detail__hero-caption h2 { margin: 4px 0 0; font-size: 24px; line-height: 1.35; overflow-wrap: anywhere; text-shadow: 0 1px 4px #000; }
+.raid-detail__owner { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 16px 0; border-bottom: 1px solid var(--ui-border); }
+.raid-detail__portrait { display: inline-block; flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%; overflow: hidden; border: 1px solid var(--ui-border); background: var(--ui-bg-raised); }
+.raid-detail__portrait img { width: 100%; height: 100%; object-fit: cover; object-position: var(--raid-detail-portrait-x) var(--raid-detail-portrait-y); transform: scale(var(--raid-detail-portrait-scale)); transform-origin: var(--raid-detail-portrait-x) 12%; }
+.raid-detail__identity { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.raid-detail__identity strong { font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+.raid-detail__identity > span { font-size: 11px; color: var(--ui-text-secondary); overflow-wrap: anywhere; }
+.raid-detail__role { align-self: flex-start; max-width: 88px; margin-top: 4px; padding: 4px 6px; font-size: 10px; line-height: 1.4; border: 1px solid var(--ui-border); color: var(--ui-text-secondary); border-radius: 4px; }
+.raid-detail__battle { padding: 16px 0; }
+.raid-detail__hp-heading { display: flex; align-items: baseline; gap: 8px; font-size: 12px; }
+.raid-detail__hp-heading strong { font-size: 28px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.raid-detail__state { margin-left: auto; font-size: 11px; color: var(--ui-text-secondary); text-align: right; }
+.raid-detail__hp { display: block; width: 100%; height: 8px; margin: 8px 0 4px; appearance: none; border: 0; border-radius: 2px; overflow: hidden; background: var(--ui-bg-root); }
+.raid-detail__hp::-webkit-progress-bar { background: var(--ui-bg-root); }
+.raid-detail__hp::-webkit-progress-value { background: var(--ui-combat); border-radius: 2px; }
+.raid-detail__hp::-moz-progress-bar { background: var(--ui-combat); border-radius: 2px; }
+.raid-detail__hp--unknown { background: var(--ui-border); }
+.raid-detail__hp-value { text-align: right; font-size: 11px; color: var(--ui-text-secondary); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.raid-detail__battle-facts { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; margin-top: 12px; }
+.raid-detail__battle-facts > div { display: grid; gap: 4px; min-width: 0; }
+.raid-detail__battle-facts > div:last-child { text-align: right; }
+.raid-detail__battle-facts strong { font-size: 14px; overflow-wrap: anywhere; }
+.raid-detail__battle-facts span { color: var(--ui-text-secondary); font-size: 10px; }
+.raid-detail__faces { display: flex; gap: 4px; margin-top: 12px; }
+.raid-detail__faces .raid-detail__portrait { width: 32px; height: 32px; flex-basis: 32px; }
+.raid-detail__entrances { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.raid-detail__entrances .outlaw-button { width: 100%; min-width: 0; min-height: 72px; padding: 8px 4px; font-size: 12px; }
+.raid-detail__entrances .outlaw-button-inner { flex-direction: column; gap: 4px; }
+.raid-detail__entrances img { width: 28px; height: 28px; object-fit: contain; }
+.raid-detail__hint { font-size: 11px; color: var(--ui-text-secondary); line-height: 1.5; margin: 8px 0 0; }
+.raid-detail__contribution { margin-top: 16px; background: var(--ui-bg-surface); border-color: var(--ui-border); box-shadow: none; }
+.raid-detail__contribution > .outlaw-card-inner { padding: 12px; }
+.raid-detail .outlaw-section-header { padding: 0; margin: 0 0 12px; background: none; border: 0; gap: 8px; }
+.raid-detail .section-header-accent { height: 16px; width: 3px; background: var(--ui-combat); box-shadow: none; border-radius: 0; }
+.raid-detail .section-header-title { font-family: inherit; font-size: 14px; letter-spacing: .02em; text-shadow: none; }
+.raid-detail__contribution-values { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: 12px; }
+.raid-detail__contribution-values > div { min-width: 0; display: grid; gap: 4px; }
+.raid-detail__contribution-values span { font-size: 11px; color: var(--ui-text-secondary); }
+.raid-detail__contribution-values strong { font-size: 20px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.raid-detail__action { margin-top: 16px; }
+.raid-detail__action .outlaw-button { min-height: 48px; }
+.raid-detail__action p, .raid-detail__rescue p { color: var(--ui-text-secondary); font-size: 12px; line-height: 1.6; }
+.raid-detail__rescue { margin-top: 16px; }
+.raid-detail__notice { font-size: 12px; line-height: 1.6; color: var(--ui-text-secondary); margin: 12px 0; }
+.raid-detail__wait { min-height: 100px; display: flex; align-items: center; justify-content: center; }
+.raid-detail__wait .spinner { width: 24px; height: 24px; flex: 0 0 24px; }
+.raid-detail__role > span { display: block; margin-bottom: 2px; font-size: 9px; color: var(--ui-text-secondary); }

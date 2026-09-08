@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RaidRoomActivityTracker } from '../../../domain/raidRoomActivitySync';
 import { createRaidRoomController } from '../../../domain/raidRoomClient';
 import { createRaidRoomRpcTransport, type RaidRoomRpcAuthorities, type RaidRoomRpcClient } from '../../../domain/raidRoomRpcTransport';
@@ -13,6 +13,7 @@ import RaidRoomRescuePanel from './RaidRoomRescuePanel';
 import OutlawButton from '../ui/OutlawButton';
 import RaidRoomBrowser, { type RaidRoomBrowserProps } from './RaidRoomBrowser';
 import { useRaidTop } from './useRaidTop';
+import { getRaidRoomDisplay } from '../../../domain/raidRoomDisplayClient';
 import type { RaidTopLoader } from '../../../domain/raidTopData';
 
 export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps, 'controller'> {
@@ -29,6 +30,7 @@ export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps
 
 /** 接続元の認証client・画面遷移・全体操作blockを受け取る。既存GameContextを変更しない。 */
 export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, activityTracker, refreshRevision, returnRoomId, loadTop, ...browserProps }: RaidRoomConnectedBrowserProps) {
+  const loadDisplay = useCallback((roomId: string) => getRaidRoomDisplay(rpcClient, roomId), [rpcClient]);
   const enableRescue = authorities?.enableRescue;
   const rewardClient = useMemo(() => createRaidRoomRescueRewardClient(rpcClient), [rpcClient]);
   const clearRewardClient = useMemo(() => createRaidRoomClearRewardClient(rpcClient), [rpcClient]);
@@ -73,9 +75,9 @@ export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescu
     }).catch(() => { if (current) setLinkError(true); });
     return () => { current = false; };
   }, [connection, rescueClient, rescueId, enableRescue, linkRevision]);
-  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} topData={top.data} onTopRefresh={top.refresh} listRefreshRevision={refreshRevision} controller={connection.controller} renderRewards={enableRescue || enableParticipation ? (roomId, close) => <div key={`${userId ?? ""}:${roomId}`}>
+  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} currentUserId={userId} loadDisplay={loadDisplay} topData={top.data} onTopRefresh={top.refresh} listRefreshRevision={refreshRevision} controller={connection.controller} renderRewards={enableRescue || enableParticipation ? (roomId, close, display) => <div key={`${userId ?? ""}:${roomId}`}>
       <h3>討伐報酬</h3>
-      <RaidRoomClearRewardPanel client={clearRewardClient} roomId={roomId} userId={userId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} />
-      {enableRescue && <><h3>救援成功報酬</h3><RaidRoomRescueRewardPanel client={rewardClient} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /></>}
+      <RaidRoomClearRewardPanel plan={display?.clearPlan} client={clearRewardClient} roomId={roomId} userId={userId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} />
+      {enableRescue && <><h3>救援成功報酬</h3><RaidRoomRescueRewardPanel plan={display?.rescuePlan} client={rewardClient} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /></>}
     </div> : browserProps.renderRewards} renderRescue={enableRescue ? (room, disabled) => <RaidRoomRescuePanel key={room.roomId} client={rescueClient} userId={userId} roomId={room.roomId} disabled={disabled} setInteractionBlocking={browserProps.setInteractionBlocking} /> : undefined} /></>;
 }
