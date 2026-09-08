@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import "./GachaFontComparison.css";
 import { flushSync } from "react-dom";
 import BattleMatchupPresentation from "@/app/components/battle/BattleMatchupPresentation";
 import BattleResultSummary from "@/app/components/battle/BattleResultSummary";
@@ -318,6 +319,18 @@ function GachaAssetTransitionFixture() {
 
 function CharacterGachaV3Fixture() {
   const query = useMemo(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search), []);
+  const font = ["zero", "tetsubin", "torono"].includes(query.get("font") || "") ? query.get("font")! : "";
+  const [fontReady, setFontReady] = useState(!font);
+  const [fontError, setFontError] = useState(false);
+  useEffect(() => {
+    if (!font) return;
+    let cancelled = false;
+    const family = { zero: "TNZero", tetsubin: "TNTetsubin", torono: "TNTorono" }[font]!;
+    document.fonts.load(`32px ${family}`, "新宿").then((loaded) => {
+      if (!cancelled) { setFontReady(loaded.length > 0); setFontError(!loaded.length); }
+    }).catch(() => { if (!cancelled) setFontError(true); });
+    return () => { cancelled = true; };
+  }, [font]);
   const [scoutAnimationState, setScoutAnimationState] = useState<null | "READY" | "SHOW_RESULTS">("READY");
   const [destination, setDestination] = useState("");
   const sequence = query.get("single") === "true" ? [query.get("rarity") || "SSR"] : ["N", "R", "SR", "SSR", "N", "SR", "R", "SSR", "R", "SR"];
@@ -334,8 +347,8 @@ function CharacterGachaV3Fixture() {
     playSe: () => undefined, playCyberSe: () => undefined,
     onboardingState: { tutorial_step: query.get("tutorial") === "false" ? "COMPLETE" : "AUTO_FORMATION" },
     navigateTab: (tab: string) => setDestination(tab) };
-  return <GameContext.Provider value={game as any}><div data-gacha-v3-fixture data-destination={destination}>
-    <button onClick={() => setScoutAnimationState("READY")}>演出を再生</button><CommonModals />
+  return <GameContext.Provider value={game as any}><div data-gacha-v3-fixture data-destination={destination} data-qa-font={font || undefined} data-qa-font-scope={query.get("fontScope") || "headings"}>
+    <button onClick={() => setScoutAnimationState("READY")}>演出を再生</button>{fontReady ? <CommonModals /> : <p role="status">{fontError ? "比較用フォントを取得できませんでした。再読み込みしてください。" : "比較用フォントを読み込み中…"}</p>}
   </div></GameContext.Provider>;
 }
 
