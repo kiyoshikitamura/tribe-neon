@@ -1,0 +1,184 @@
+{
+  "db_driver_commit": "06b7c90e42c790133077d48d998bd6b2a0dcaf20",
+  "db_evidence_commit": "bf9a5c1b4017b60703530e9d6b1a79700a03483e",
+  "product_diff_from_375a0ad": "",
+  "candidates": [
+    {
+      "ref": "origin/codex/raid-room-rescue-20260908",
+      "tip": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+      "merge_base": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+      "changes_since_common_base": [],
+      "commits": []
+    },
+    {
+      "ref": "origin/codex/kpi-daily-monthly-20260908",
+      "tip": "314b38f170001a1d88f57e05e39e9eeb866b0dc3",
+      "merge_base": "b08e396e657615afd6dfddc05bbec37d21561a25",
+      "changes_since_common_base": [
+        "docs/kpi-daily-monthly-release.md",
+        "docs/kpi-saved-results-release.md",
+        "scripts/verify_kpi_monthly.mjs",
+        "scripts/verify_kpi_saved_reader.mjs",
+        "scripts/verify_kpi_tutorial_union.mjs",
+        "src/app/admin/kpi/KpiDailyOverview.tsx",
+        "src/app/admin/kpi/kpi-dashboard.css",
+        "src/app/api/admin/kpi/v2/_saved.ts",
+        "src/app/api/admin/kpi/v2/_shared.ts",
+        "src/app/api/admin/kpi/v2/daily/route.ts",
+        "src/app/api/admin/kpi/v2/monthly/route.ts",
+        "src/utils/kpiMonthly.ts",
+        "supabase/migrations/20260908041026_kpi_overview_saved_results.sql",
+        "supabase/tests/kpi_overview_saved_results.sql",
+        "tests/e2e/kpi-v2-dashboard.spec.ts"
+      ],
+      "commits": [
+        "314b38f fix(kpi): serve saved daily and monthly aggregates with DAU and MAU",
+        "69e385e feat: 日次・月次KPIを期間ごとの比較表に統一"
+      ]
+    },
+    {
+      "ref": "origin/codex/gacha-presentation-v3-20260908",
+      "tip": "55a6a9b95032dffc8e82c59c3c318016a3cfa89a",
+      "merge_base": "b08e396e657615afd6dfddc05bbec37d21561a25",
+      "changes_since_common_base": [
+        ".github/workflows/quality.yml",
+        "docs/qa/battle-flow-v3-20260908.md",
+        "docs/qa/battle-group-comparison-20260908.md",
+        "docs/qa/battle-presentation-v3-20260908.md",
+        "docs/qa/battle-street-image-prompts.txt",
+        "docs/qa/gacha-presentation-20260908/README.md",
+        "docs/qa/gacha-presentation-20260908/font-comparison.md",
+        "docs/qa/gacha-presentation-20260908/framing.md",
+        "docs/qa/gacha-presentation-20260908/opening.png",
+        "docs/qa/gacha-presentation-20260908/ssr.png",
+        "docs/qa/gacha-presentation-20260908/summary.png",
+        "docs/qa/street-live-integration-20260908.md",
+        "package.json",
+        "public/effects/battle-flow-v3/tetsubin.woff2",
+        "public/effects/battle-live/tetsubin.woff2",
+        "public/effects/battle-v3/cutin-street.webp",
+        "public/effects/battle-v3/healing-pulse.webp",
+        "public/effects/battle-v3/street-impact.webp",
+        "public/effects/battle-v3/street-support.webp",
+        "public/effects/battle-v3/strike-impact.webp",
+        "public/effects/battle-v3/support-rise.webp",
+        "public/effects/battle-v3/tetsubin.woff2",
+        "public/effects/battle-v3/weaken-fall.webp",
+        "public/fonts/gacha-comparison/Apache-2.0.txt",
+        "public/fonts/gacha-comparison/NOTICE.md",
+        "public/fonts/gacha-comparison/OFL.txt",
+        "public/fonts/gacha-comparison/tetsubin-ReadMe.txt",
+        "public/fonts/gacha-comparison/tetsubin.woff2",
+        "public/fonts/gacha-comparison/torono-ReadMe.md",
+        "public/fonts/gacha-comparison/torono.woff2",
+        "public/fonts/gacha-comparison/zero-ReadMe.txt",
+        "public/fonts/gacha-comparison/zero.woff2",
+        "public/gacha/arrival/tokyo-alley.webp",
+        "scripts/build_street_battle_font.py",
+        "scripts/verify_battle_presentation_contract.mjs",
+        "scripts/verify_character_gacha_quotes.mjs",
+        "scripts/verify_m9x_preview_tutorial_journey.mjs",
+        "scripts/verify_ssr_gacha_quotes.mjs",
+        "scripts/verify_street_battle_integration.mjs",
+        "src/app/components/CardBattleView.tsx",
+        "src/app/components/CommonModals.tsx",
+        "src/app/components/battle/BattleMatchupPresentation.tsx",
+        "src/app/components/battle/BattleResultSummary.tsx",
+        "src/app/components/battle/BattleUnitPortrait.tsx",
+        "src/app/components/battle/QuestBattleViewer.tsx",
+        "src/app/components/battle/StreetBattle.css",
+        "src/app/components/battle/StreetBattleSetup.tsx",
+        "src/app/components/battle/StreetBattleViewer.tsx",
+        "src/app/components/battle/StreetFlow.css",
+        "src/app/components/battle/StreetStatuses.tsx",
+        "src/app/components/gacha/CharacterGachaPresentation.css",
+        "src/app/components/gacha/CharacterGachaPresentation.tsx",
+        "src/app/components/gacha/gachaStandingBounds.json",
+        "src/app/qa/battle-flow-v3/BattleFlowMock.tsx",
+        "src/app/qa/battle-flow-v3/flow.css",
+        "src/app/qa/battle-flow-v3/page.tsx",
+        "src/app/qa/battle-full-skill-load/BattleFullSkillLoadHarness.tsx",
+        "src/app/qa/battle-live/page.tsx",
+        "src/app/qa/battle-presentation-v3/BattlePresentationMock.tsx",
+        "src/app/qa/battle-presentation-v3/StatusMock.tsx",
+        "src/app/qa/battle-presentation-v3/battle-mock.css",
+        "src/app/qa/battle-presentation-v3/page.tsx",
+        "src/app/qa/battle-presentation-v3/status-mock.css",
+        "src/app/qa/presentation/GachaFontComparison.css",
+        "src/app/qa/presentation/QaPresentationHarness.tsx",
+        "src/domain/presentation/battlePresentationUnit.ts",
+        "src/domain/presentation/characterGachaQuotes.ts",
+        "src/domain/presentation/data/character_gacha_quotes_20260908.json",
+        "src/domain/presentation/qaHarness.ts",
+        "src/hooks/useBattle.ts",
+        "tests/e2e/gacha-asset-transition.spec.ts",
+        "tests/e2e/gacha-character-v3.spec.ts",
+        "tests/e2e/m9-tutorial.spec.ts",
+        "tests/e2e/m9x-cold-start.spec.ts",
+        "tests/e2e/title-auth.spec.ts"
+      ],
+      "commits": [
+        "55a6a9b Integrate fixed street presentation into regular gacha and battle flow",
+        "89107e0 Add isolated battle briefing matchup and result presentation mock",
+        "e8a66a2 Add all-enemy attack and all-ally buff comparison cases",
+        "689bc82 Correct Koharu portrait crop and keep cutin characters opaque",
+        "a20f7ff Stabilize battle portraits and prioritize skill names",
+        "8c9134b Keep battlefield visible and preserve recognition holds at double speed",
+        "feb8fa8 Separate character and skill rarity in street battle presentation",
+        "057ee8c Add support effects and persistent status badges to battle mock",
+        "9b875ba Add isolated character-rarity battle presentation comparison mock",
+        "b0dee06 Remove portrait transparency and join gacha art to opaque information area",
+        "6962bbb Normalize gacha standing art to consistent above-knee framing",
+        "9d7c060 Adopt Tetsubin Gothic throughout gacha and enlarge quote and tap labels",
+        "33c0efb Add three licensed gacha font comparison previews",
+        "32caf8a Fix full-height gacha reveal layout and strengthen Japanese typography",
+        "0d95ad5 Replace gacha opening with timed city strips and simplify acquisition reveals",
+        "d6dbcf2 Refine gacha with seven neon towns, canonical badges and SSR arrival transition",
+        "aea7cf9 feat: 既存立ち絵の合流演出と画像一括表示を実装",
+        "5e8533a feat: キャラクターガチャ演出を刷新し全60体の確定セリフを表示"
+      ]
+    }
+  ],
+  "overlaps": [
+    {
+      "ref": "origin/codex/kpi-daily-monthly-20260908",
+      "overlap_with_raid": [
+        "scripts/verify_kpi_tutorial_union.mjs"
+      ]
+    },
+    {
+      "ref": "origin/codex/gacha-presentation-v3-20260908",
+      "overlap_with_raid": [
+        ".github/workflows/quality.yml",
+        "package.json",
+        "src/hooks/useBattle.ts"
+      ]
+    }
+  ],
+  "edgeDiff": [
+    {
+      "file": "supabase/functions/resolve-battle/engine.ts",
+      "candidate_sha256": "ef929655b9ab9f9ff310e7174df01ef24682d681e960adf856e30c78087aff97",
+      "deployed_sha256": "ef929655b9ab9f9ff310e7174df01ef24682d681e960adf856e30c78087aff97",
+      "same_normalized_source": true
+    },
+    {
+      "file": "supabase/functions/resolve-battle/engine_test.ts",
+      "candidate_sha256": "647c5ce4a77cd43fc3271eccc9473465b29ff7b2dc8e176eeb2a05da42c49484",
+      "deployed_sha256": null,
+      "same_normalized_source": false
+    },
+    {
+      "file": "supabase/functions/resolve-battle/index.ts",
+      "candidate_sha256": "749fc02e9a91cefaf3710326c4e4f0115edbe9828b40f94aba32d55eedff8a0e",
+      "deployed_sha256": "cb482b85920d45cca767a1646e56cdbcc0b8ac1bb1c0195759674bfebff8f757",
+      "same_normalized_source": false
+    },
+    {
+      "file": "supabase/functions/resolve-battle/raid-room-route.ts",
+      "candidate_sha256": "d81dc62a502dda3d9657521e0020cc8dacd90987e5e2b3e8e801d7ca855f6fa3",
+      "deployed_sha256": null,
+      "same_normalized_source": false
+    }
+  ]
+}

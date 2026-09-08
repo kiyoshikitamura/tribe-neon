@@ -1,0 +1,10 @@
+{
+  "status": "PASS_WITH_SCOPE_LIMITS",
+  "command": "node --test tests/raid-room/edge-room-route.test.mjs tests/raid-room/preview-config.test.mjs tests/raid-room/rpc-transport.test.mjs",
+  "passed": 28,
+  "failed": 0,
+  "groups": {"edge_route":4,"preview_config":11,"rpc_transport":13},
+  "deployed_edge": {"version":6,"verify_jwt":true,"bundle_sha256":"63c6c7d4a5e7fefc0b06aef943c4fd75b5446ec594f8d5db69480634b524d8c1"},
+  "live_settings": {"creation":false,"battle":false,"rescue":false,"legacy":true,"expiry_cron_count":0,"reward_items":0,"reward_enabled":false,"rescue_thresholds":null,"duration_hours":24,"member_capacity":20},
+  "limitations": ["Parent final integrated candidate not supplied; remote Raid tip is provisional.","No authenticated Room execution, deployment, cron registration or operational enablement.","No production access or push."]
+}

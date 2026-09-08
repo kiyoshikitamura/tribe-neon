@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import crypto from 'node:crypto';
+import {buildPreviewConfig} from './build-preview-config.mjs';
+const dir='docs/development/evidence/raid-room-edge-ui-prep-20260908';
+const git=(...a)=>execFileSync('git',a,{encoding:'utf8'}).trim();
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+const refs=['origin/codex/raid-room-rescue-20260908','origin/codex/kpi-daily-monthly-20260908','origin/codex/gacha-presentation-v3-20260908'];
+const candidates=refs.map(ref=>{const tip=git('rev-parse',ref),base=git('merge-base','375a0ad',tip);return {ref,tip,merge_base:base,changes_since_common_base:git('diff','--name-only',base,tip).split('\n').filter(Boolean),commits:git('log','--oneline',`${base}..${tip}`).split('\n').filter(Boolean)};});
+const files=git('ls-tree','-r','--name-only','375a0ad','supabase/functions/resolve-battle').split('\n');
+const edgeDiff=files.map(file=>{const candidate=execFileSync('git',['show',`375a0ad:${file}`]);const livePath=`${dir}/deployed-edge/${file}`;const live=fs.existsSync(livePath)?fs.readFileSync(livePath):null;return {file,candidate_sha256:sha(candidate),deployed_sha256:live?sha(live):null,same_normalized_source:!!live&&candidate.toString().replace(/\r\n/g,'\n').trimEnd()===live.toString().replace(/\r\n/g,'\n').trimEnd()};});
+const overlaps=candidates.slice(1).map(c=>({ref:c.ref,overlap_with_raid: c.changes_since_common_base.filter(f=>git('diff','--name-only',c.merge_base,'375a0ad').split('\n').includes(f))}));
+fs.writeFileSync(`${dir}/candidate-comparison.json`,JSON.stringify({db_driver_commit:git('rev-parse','06b7c90'),db_evidence_commit:git('rev-parse','bf9a5c1'),product_diff_from_375a0ad:git('diff','--name-only','375a0ad','bf9a5c1','--','src','supabase/functions','supabase/migrations'),candidates,overlaps,edgeDiff},null,2)+'\n');
+const config={environment:'preview',projectRef:'sufvuqdnqohpfzkwxohq',version:1,difficulties:['beginner','intermediate','advanced','expert'].map((id,i)=>({id,rescue:{minimumBattles:[2,2,3,4][i],minimumContributionDamage:[16000,68000,205000,290000][i],items:[{itemId:'CHAR_EXP_S',quantity:1}]},clear:{minimumContributionDamage:0,items:[{itemId:'EQUIP_EXP_S',quantity:1}]}}))};
+fs.mkdirSync('docs/development/raid-room-edge-ui-prep',{recursive:true});
+fs.writeFileSync('docs/development/raid-room-edge-ui-prep/smoke-settings.proposed.json',JSON.stringify(config,null,2)+'\n');
+fs.writeFileSync('docs/development/raid-room-edge-ui-prep/smoke-settings.review.sql',buildPreviewConfig(config));
+console.log(JSON.stringify({candidates:candidates.map(c=>({ref:c.ref,tip:c.tip,changes:c.changes_since_common_base.length})),overlaps,edgeDiff},null,2));
