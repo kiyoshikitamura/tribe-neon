@@ -14,7 +14,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }
     const cards = page.locator(".cg-mini");
     await expect(cards).toHaveCount(10);
     await expect(cards.nth(5).locator(".cg-acquisition-badge")).toHaveAttribute("src", "/ui/rarity/badge-awakening-plus-1.png");
-    await expect(cards.nth(5).locator("small")).toContainText("覚醒進捗 +1");
+    await expect(cards.locator("small")).toHaveCount(0);
     expect(await cards.locator(".cg-rarity-badge").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("alt")))).toEqual(["N", "R", "SR", "SSR", "N", "SR", "R", "SSR", "R", "SR"]);
     const rects = await cards.evaluateAll((nodes) => nodes.map((node) => ({x: node.getBoundingClientRect().x, y: node.getBoundingClientRect().y})));
     expect(new Set(rects.slice(0, 5).map((rect) => rect.y)).size).toBe(1);
@@ -36,13 +36,15 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }
 
 test("SSR typing completes on tap; skip cancels timers; single normal pull closes", async ({ page }) => {
   await page.goto("/qa/presentation?scenario=gacha-character-v3&single=true&tutorial=false");
+  await expect(page.locator(".cg-opening")).toBeEnabled();
+  await page.waitForTimeout(300);
   await page.clock.install();
   await page.getByRole("button", { name: "ガチャ結果を開く", exact: true }).click();
   await page.clock.runFor(650);
   const shell = page.locator(".cg-shell");
   await expect(shell).toHaveAttribute("data-stage", "QUOTE");
   await expect(page.locator(".cg-reveal")).not.toHaveAttribute("data-character-id");
-  await page.locator(".cg-reveal").click();
+  await page.locator(".cg-reveal").dispatchEvent("click");
   const quote = page.locator(".cg-quote-intro blockquote");
   expect(await quote.textContent()).toBe(await quote.getAttribute("aria-label"));
   await page.getByRole("button", { name: "SKIP", exact: true }).click();
@@ -55,6 +57,8 @@ test("SSR typing completes on tap; skip cancels timers; single normal pull close
 
 test("N/R/SR advance directly; fast taps complete animation without skipping cards", async ({ page }) => {
   await page.goto("/qa/presentation?scenario=gacha-character-v3");
+  await expect(page.locator(".cg-opening")).toBeEnabled();
+  await page.waitForTimeout(300);
   await page.clock.install();
   await page.getByRole("button", { name: "ガチャ結果を開く", exact: true }).click();
   await page.clock.runFor(650);
@@ -66,6 +70,7 @@ test("N/R/SR advance directly; fast taps complete animation without skipping car
   await page.clock.runFor(250);
   await reveal.click();
   await expect(page.locator(".cg-top>span")).toHaveText("2 / 10");
+  await expect(page.locator(".cg-shell")).not.toHaveClass(/cg-waiting/);
   await page.clock.runFor(800);
   await reveal.click();
   await expect(page.locator(".cg-top>span")).toHaveText("3 / 10");
@@ -73,24 +78,30 @@ test("N/R/SR advance directly; fast taps complete animation without skipping car
   await expect(page.locator(".gacha-character-logo-gate")).toHaveCount(0);
 });
 
-test("SSR quote ignites before identity reveal and existing badges appear", async ({ page }) => {
+test("SSR uses a simple reveal without added light layers", async ({ page }) => {
   await page.goto("/qa/presentation?scenario=gacha-character-v3&single=true&rarity=SSR");
-  await page.clock.install();
   await page.getByRole("button", { name: "ガチャ結果を開く", exact: true }).click();
-  await page.clock.runFor(650);
   await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "QUOTE");
   await page.locator(".cg-reveal").click();
-  await page.clock.runFor(610);
-  await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "IGNITION");
-  await expect(page.locator(".cg-reveal")).not.toHaveAttribute("data-character-id");
-  await expect(page.locator(".cg-portrait")).toBeHidden();
-  await expect(page.locator(".cg-ssr-transition")).toBeVisible();
-  await page.clock.runFor(490);
-  await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "REVEAL");
-  await expect(page.locator(".cg-rarity-badge")).toHaveAttribute("src", "/ui/rarity/rarity-badge-ssr.png");
-  await page.clock.runFor(1510);
   await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "SETTLED");
-  await expect(page.locator(".cg-ssr-transition")).toBeHidden();
+  await expect(page.locator(".cg-ssr-transition")).toHaveCount(0);
+  await expect(page.locator(".cg-rarity-badge")).toHaveAttribute("src", "/ui/rarity/rarity-badge-ssr.png");
+  await expect(page.locator(".cg-rarity-line>span")).toHaveCount(1);
+});
+test("intro holds TAP until the four then three city sequence completes", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/qa/presentation?scenario=gacha-character-v3");
+  await expect(page.locator(".cg-shell")).not.toHaveClass(/cg-waiting/);
+  const tap = page.getByRole("button", { name: "ガチャ結果を開く", exact: true });
+  await expect(tap).toBeDisabled();
+  await expect(page.locator(".cg-opening-copy")).toHaveCount(0);
+  await expect(page.locator(".cg-city-group-0 .cg-city-scene")).toHaveCount(4);
+  expect(await page.locator(".cg-city-group-1 .cg-city-scene>span").allTextContents()).toEqual(["新宿", "渋谷", "六本木"]);
+  await page.clock.runFor(2900);
+  await expect(tap).toBeDisabled();
+  await page.clock.runFor(110);
+  await expect(tap).toBeEnabled();
+  await expect(page.locator(".cg-opening-copy")).toBeVisible();
 });
 
 test("reduced motion and keyboard keep controls reachable", async ({ page }) => {

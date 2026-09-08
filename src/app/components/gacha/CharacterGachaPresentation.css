@@ -8,14 +8,9 @@
 .cg-top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:max(12px,env(safe-area-inset-top)) 18px 8px;font-size:12px;letter-spacing:2px}
 .cg-top button{border:0;background:#07090a60;color:#eee;padding:12px;font-size:11px;min-height:44px}
 .cg-opening{display:flex;position:relative;align-items:center;justify-content:flex-end;flex-direction:column;width:100%;min-height:530px;height:100%;padding:80px 20px max(64px,env(safe-area-inset-bottom));border:0;background:transparent;color:#fff;overflow:hidden}
-.cg-approach{position:absolute;inset:20% 0 15%;pointer-events:none}
-.cg-approach img{position:absolute;height:86%;width:76%;object-fit:contain;object-position:50% 100%;left:12%;bottom:0;filter:brightness(0) drop-shadow(0 0 6px #d7b97566);opacity:.94}
-.cg-approach img:nth-child(2){left:-24%;transform:scale(.6);transform-origin:50% 85%;opacity:.85}
-.cg-approach img:nth-child(3){left:46%;transform:scale(.62);transform-origin:50% 85%;opacity:.85}
 .cg-headlight{position:absolute;left:10%;right:10%;top:40%;height:45%;background:radial-gradient(ellipse at 50% 55%,color-mix(in srgb,var(--cg-accent) 27%,transparent),transparent 65%);mix-blend-mode:screen;pointer-events:none;animation:cg-light 2s ease-in-out infinite alternate}
 .cg-opening-copy{position:relative;display:grid;gap:10px;text-shadow:0 2px 10px #000;z-index:2}.cg-opening-copy strong{font-size:30px;font-weight:500;letter-spacing:8px;color:#f5e5c7}.cg-opening-copy small{font-size:12px;letter-spacing:2px;color:#ded4c0}
-.cg-stage-burst .cg-approach{animation:cg-approach .62s ease-in both}.cg-stage-burst .cg-headlight{animation:cg-flash .62s ease-out both}
-.cg-reveal{display:block;width:100%;min-height:620px;height:100%;position:relative;border:0;background:transparent;color:inherit;text-align:left;padding:64px 0 20px}
+.cg-stage-burst .cg-reveal{display:block;width:100%;min-height:620px;height:100%;position:relative;border:0;background:transparent;color:inherit;text-align:left;padding:64px 0 20px}
 .cg-reveal-content{height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative}
 .cg-portrait{position:absolute;inset:0 0 160px;overflow:hidden;animation:cg-arrive .75s ease-out both}
 .cg-standing{border:0;background:transparent;box-shadow:none;margin:0;overflow:hidden;width:100%;height:100%}
@@ -47,7 +42,6 @@
 .cg-loading p{font-size:14px}.cg-loading button{font-family:inherit;color:inherit;padding:12px;border:1px solid #b6a07e;background:#16171b}.cg-loading li{font-size:13px;line-height:1.9}
 @keyframes cg-mist{to{opacity:.5;transform:translateX(3%)}}
 @keyframes cg-light{to{opacity:.45;transform:scale(1.1)}}
-@keyframes cg-approach{to{transform:scale(1.25);opacity:0}}
 @keyframes cg-flash{30%{opacity:1;filter:brightness(2)}to{opacity:0;transform:scale(1.4)}}
 @keyframes cg-arrive{from{opacity:0;transform:scale(1.035);filter:brightness(1.5)}to{opacity:1;transform:none;filter:brightness(1)}}
 @keyframes cg-copy{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -58,41 +52,32 @@
 .cg-waiting{visibility:hidden}.cg-waiting *{animation-play-state:paused!important}
 .cg-scene-loading{position:absolute;inset:0;margin:auto;z-index:1}
 
-/* 既存7街の背景を短いクロスフェードで巡る。見切るまで待つ必要はない。 */
-.cg-city-tour{position:absolute;inset:0;pointer-events:none}
-.cg-city-scene{position:absolute;inset:0;opacity:0;animation:cg-city-cycle 8.4s linear infinite;animation-delay:calc(var(--city-index) * 1.2s)}
-.cg-city-scene:first-child{opacity:1}
-.cg-city-scene img{width:100%;height:100%;object-fit:cover;filter:brightness(.66) saturate(1.1)}
-.cg-city-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#070910 4%,transparent 50%,#03071155)}
-.cg-city-scene>span{position:absolute;left:28px;top:28%;z-index:1;font-size:38px;letter-spacing:9px;text-shadow:0 0 24px #000;color:#f4efe6}
-.cg-city-names{position:relative;z-index:2;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;max-width:300px;margin-bottom:35px;font-size:11px;letter-spacing:2px;color:#e0d9ed}
-.cg-headlight{background:radial-gradient(ellipse at 50% 55%,color-mix(in srgb,var(--cg-accent) 30%,transparent),transparent 60%)}
-.cg-stage-burst .cg-city-tour{animation:cg-city-depart .62s ease-in both}
+
+/* 横長の街を4枚→3枚の順で見せ、3秒後に操作を開放する。 */
+.cg-stage-opening>.cg-city,.cg-stage-burst>.cg-city{visibility:hidden}
+.cg-opening:disabled{opacity:1;cursor:default}
+.cg-city-tour{position:absolute;inset:13% 0 23%;pointer-events:none;overflow:hidden}
+.cg-city-group{position:absolute;inset:0}
+.cg-city-group-0{animation:cg-first-cities 1.65s linear both}
+.cg-city-group-1{animation:cg-last-cities 1ms 1.5s both}
+.cg-city-scene{position:absolute;left:-8%;width:116%;height:calc(100% / var(--city-count) - 5px);top:calc(var(--city-index) * 100% / var(--city-count));overflow:hidden;transform:skewY(-6deg);animation:cg-strip-in .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--city-index) * .12s)}
+.cg-city-group-1 .cg-city-scene{animation-delay:calc(1.5s + var(--city-index) * .15s)}
+.cg-city-scene:nth-child(even){--slide-x:110%;--slide-y:-35px}
+.cg-city-scene:nth-child(odd){--slide-x:-110%;--slide-y:35px}
+.cg-city-scene img{width:100%;height:150%;margin-top:-8%;object-fit:cover;object-position:50% 45%;transform:skewY(6deg);filter:brightness(.75)}
+.cg-city-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#07091099,transparent 75%)}
+.cg-city-scene>span{position:absolute;left:15%;top:35%;z-index:1;font-size:30px;letter-spacing:6px;text-shadow:0 2px 8px #000;transform:skewY(6deg)}
+.cg-opening-copy{position:relative;z-index:2;animation:cg-copy .25s both}
+.cg-stage-burst .cg-city-tour{opacity:0;transition:opacity .35s}
 .cg-existing-badges{display:flex;align-items:center;justify-content:center;gap:6px;min-height:24px}
 .cg-existing-badges img{object-fit:contain;display:block}
 .cg-rarity-badge{width:64px;height:40px}.cg-acquisition-badge{width:60px;height:36px}
 .cg-mini .cg-existing-badges{gap:1px;height:25px;min-height:25px;margin-top:2px}
 .cg-mini .cg-rarity-badge{width:48%;height:25px}.cg-mini .cg-acquisition-badge{width:48%;height:24px}
 .cg-rarity-line .cg-existing-badges{justify-content:flex-start;flex-shrink:0}
-.cg-ssr-transition{display:none;position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
-.cg-stage-ignition .cg-ssr-transition,.cg-ssr.cg-stage-reveal .cg-ssr-transition{display:block}
-.cg-stage-ignition .cg-portrait,.cg-stage-ignition .cg-reveal-copy{visibility:hidden;animation:none}
-.cg-ssr-transition blockquote{position:absolute;inset:24% 28px auto;color:#f9df9e;text-align:center;font-size:25px;line-height:1.85}
-.cg-stage-ignition .cg-ssr-transition blockquote{animation:cg-quote-away .48s ease-in both}
-.cg-stage-reveal .cg-ssr-transition blockquote{display:none}
-.cg-ssr-transition i{position:absolute;inset:-20%;opacity:0;background:linear-gradient(115deg,transparent 43%,#ecd08288 49%,#ffffdebb 50%,#a687e677 52%,transparent 58%);mix-blend-mode:screen}
-.cg-stage-ignition .cg-ssr-transition i:first-child{animation:cg-neon-sweep .48s ease-in both}
-.cg-ssr.cg-stage-reveal .cg-ssr-transition i:nth-child(2){animation:cg-neon-sweep .8s ease-out both}
-.cg-ssr.cg-stage-reveal .cg-ssr-transition i:nth-child(3){background:radial-gradient(ellipse at 50% 30%,#e6c88b66,transparent 65%);animation:cg-impact-glow .9s ease-out both}
-.cg-ssr.cg-stage-reveal .cg-portrait{animation:cg-premium-arrive 1.15s cubic-bezier(.16,.7,.22,1) both}
-.cg-ssr.cg-stage-reveal .cg-rarity-line,.cg-ssr.cg-stage-reveal h2{animation:cg-copy .4s .45s both}
-.cg-ssr.cg-stage-reveal .cg-stats{animation:cg-copy .4s .95s both}
-.cg-stage-ignition .cg-city{animation:cg-city-charge .48s ease-in both}
-@keyframes cg-city-cycle{0%,13%{opacity:1}16%,97%{opacity:0}100%{opacity:1}}
-@keyframes cg-city-depart{to{transform:scale(1.1);filter:brightness(1.5);opacity:0}}
-@keyframes cg-quote-away{to{opacity:0;transform:translateY(-8px);filter:blur(3px)}}
-@keyframes cg-neon-sweep{0%{opacity:0;transform:translateX(-65%)}35%{opacity:.9}100%{opacity:0;transform:translateX(65%)}}
-@keyframes cg-impact-glow{from{opacity:.8}to{opacity:0}}
-@keyframes cg-city-charge{to{filter:brightness(1.15) saturate(1.4)}}
-@keyframes cg-premium-arrive{from{opacity:0;transform:translateY(20px) scale(1.06);filter:brightness(1.8)}35%{opacity:1}to{opacity:1;transform:none;filter:brightness(1)}}
-@media(prefers-reduced-motion:reduce){.cg-city-scene{animation:none!important;opacity:0}.cg-city-scene:first-child{opacity:1}.cg-ssr-transition{display:none!important}.cg-shell *{animation:none!important}}
+.cg-ssr.cg-stage-reveal .cg-portrait{animation:cg-simple-fade .35s ease-out both}
+@keyframes cg-strip-in{from{opacity:0;transform:translate(var(--slide-x),var(--slide-y)) skewY(-6deg)}to{opacity:1;transform:skewY(-6deg)}}
+@keyframes cg-first-cities{0%,85%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+@keyframes cg-last-cities{from{visibility:hidden}to{visibility:visible}}
+@keyframes cg-simple-fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.cg-city-group-0{display:none}.cg-city-group-1{visibility:visible}.cg-city-scene{animation:none!important}.cg-shell *{animation:none!important}}
