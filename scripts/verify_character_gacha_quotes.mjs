@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+const json = (path) => JSON.parse(readFileSync(new URL(`../src/domain/${path}`, import.meta.url), "utf8"));
+const characters = json("gameplay/canonical/data/characters_20260821.json").characters;
+const added = json("presentation/data/character_gacha_quotes_20260908.json").quotes;
+const ssr = json("presentation/data/ssr_gacha_quotes_20260824.json").quotes;
+const all = [...ssr, ...added];
+assert.equal(added.length, 50);
+assert.equal(new Set(all.map((entry) => entry.characterId)).size, 60);
+assert.deepEqual(all.map((entry) => entry.characterId).sort(), characters.map((entry) => entry.character_id).sort());
+assert.ok(all.every((entry) => entry.enabled && entry.quote.trim()));
+for (const entry of added) assert.notEqual(characters.find((character) => character.character_id === entry.characterId).rarity, "SSR");
+assert.equal(added.find((entry) => entry.characterId === "char_ren_male_01").quote, "お前が前を向くなら、背中くらい預かるさ。");
+assert.equal(added.find((entry) => entry.characterId === "char_gou_01").quote, "おう、呼んだか？　じっとしてるのは性に合わねえ。");
+console.log("All 60 canonical character quotes PASS (SSR 10 unchanged / new 50)");

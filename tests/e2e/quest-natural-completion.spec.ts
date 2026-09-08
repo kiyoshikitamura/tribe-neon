@@ -91,7 +91,7 @@ test("normal Quest starts its Canonical battle from the per-dispatch encounter s
   if (captureAcceptanceVisuals) await page.screenshot({ path: testInfo.outputPath("before-canonical-quest-battle-start.png"), fullPage: true });
 
   await battleStart.click();
-  const sortieAction = page.getByRole("button", { name: "出撃開始" });
+  const sortieAction = page.getByRole("button", { name: "バトルスタート", exact: true });
   await expect(page.locator(".battle-screen")).toBeVisible({ timeout: 20_000 });
   await expect(sortieAction).toBeVisible();
   await expect(sortieAction).toBeEnabled();

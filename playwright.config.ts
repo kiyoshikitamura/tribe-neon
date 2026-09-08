@@ -37,6 +37,6 @@ export default defineConfig({
     // only reuses that isolated process, avoiding the Windows teardown orphan.
     reuseExistingServer: process.env.PLAYWRIGHT_REUSE_SERVER === "true",
     timeout: 120_000,
-    env: { ...process.env, NEXT_PUBLIC_USE_MOCK_DB: "true" },
+    env: { ...process.env, NEXT_PUBLIC_USE_MOCK_DB: "true", KPI_BASIC_AUTH_USER: "m3", KPI_BASIC_AUTH_PASSWORD: "local-only" },
   },
 });

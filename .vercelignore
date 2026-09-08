@@ -4,6 +4,8 @@
 node_modules
 test-results
 playwright-report
+scratch
+.env*
 
 # Specifications, database artifacts, and local-only source material
 specs

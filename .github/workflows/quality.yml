@@ -42,6 +42,7 @@ jobs:
       - run: npm run verify:character-ssr-candidates
       - run: npm run verify:character-ssr-candidate-db-migration
       - run: npm run verify:ssr-gacha-quotes
+      - run: npm run verify:character-gacha-quotes
       - run: npm run verify:gacha-character-town-backgrounds
       - run: npm run verify:battle-mvp-result
       - run: npm run verify:battle-presentation
@@ -88,8 +89,10 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4]
     env:
-      NEXT_PUBLIC_APP_ENV: test
+      NEXT_PUBLIC_APP_ENV: preview
       NEXT_PUBLIC_USE_MOCK_DB: "true"
+      NEXT_PUBLIC_KPI_DATA_ENV: preview
+      NEXT_PUBLIC_SUPABASE_URL: https://sufvuqdnqohpfzkwxohq.supabase.co
       CAPTURE_ACCEPTANCE_VISUALS: "0"
     steps:
       - uses: actions/checkout@v4

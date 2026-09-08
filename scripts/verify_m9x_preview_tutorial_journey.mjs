@@ -146,33 +146,20 @@ try {
   await snapshotAcquisitionState("INITIAL_CHARACTER");
   await page.locator(".tutorial-world button").click();
   await (await visible(".gacha-free-btn", 25_000)).click();
-  await (await visible("[data-gacha-logo-gate]", 25_000)).click();
-  const reveal = page.locator(".tutorial-gacha-reveal");
-  const characterGate = page.locator(".gacha-character-logo-gate");
-  const resultPanel = page.locator(".gacha-result-panel");
+  await (await visible(".cg-opening", 25_000)).click();
+  const reveal = page.locator(".cg-reveal");
+  const resultPanel = page.locator(".cg-summary");
   for (let transition = 0; transition < 50 && !(await resultPanel.isVisible()); transition += 1) {
-    await page.waitForFunction(() => {
-      const result = document.querySelector(".gacha-result-panel");
-      const gate = document.querySelector(".gacha-character-logo-gate");
-      const revealButton = document.querySelector(".tutorial-gacha-reveal");
-      return (result instanceof HTMLElement && result.offsetParent !== null)
-        || (gate instanceof HTMLButtonElement && gate.offsetParent !== null && !gate.disabled)
-        || (revealButton instanceof HTMLButtonElement && revealButton.offsetParent !== null && !revealButton.disabled);
-    }, undefined, { timeout: 20_000 });
+    await page.waitForFunction(() => ["QUOTE", "REVEAL", "SETTLED", "SUMMARY"].includes(document.querySelector(".cg-shell")?.getAttribute("data-stage")), undefined, { timeout: 20_000 });
     if (await resultPanel.isVisible()) break;
-    if (await characterGate.isVisible()) {
-      await characterGate.click();
-      continue;
-    }
-    await reveal.waitFor({ state: "visible", timeout: 20_000 });
-    await page.waitForFunction(() => document.querySelector(".tutorial-gacha-reveal")?.getAttribute("data-can-advance") === "true", undefined, { timeout: 20_000 });
     await reveal.click();
+    await page.waitForTimeout(250);
   }
 
   await resultPanel.waitFor({ state: "visible", timeout: 20_000 });
   await snapshotAcquisitionState("TUTORIAL_GACHA_RESULT");
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-gacha-result.png"), fullPage: true });
-  await (await visible(".gacha-result-next", 20_000)).click();
+  await (await visible(".cg-continue", 20_000)).click();
   await visible('[data-acceptance-state="TUTORIAL_SKILL_STEP"]', 20_000);
   await page.getByRole("button", { name: "育成へ進む" }).click();
   await visible('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]', 20_000);
