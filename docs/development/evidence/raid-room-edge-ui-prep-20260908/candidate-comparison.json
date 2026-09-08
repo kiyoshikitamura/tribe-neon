@@ -179,6 +179,18 @@
       "candidate_sha256": "d81dc62a502dda3d9657521e0020cc8dacd90987e5e2b3e8e801d7ca855f6fa3",
       "deployed_sha256": null,
       "same_normalized_source": false
+    },
+    {
+      "file": "src/domain/battle/canonical_effects.ts",
+      "candidate_sha256": "67197b5e59259c68c4908ee30110378e7ed4b34a36d951695d22a126ae79679f",
+      "deployed_sha256": "67197b5e59259c68c4908ee30110378e7ed4b34a36d951695d22a126ae79679f",
+      "same_normalized_source": true
+    },
+    {
+      "file": "src/domain/battle/canonical_runtime.ts",
+      "candidate_sha256": "0d07290dbcd727ec10dd086e95b107e1da3d7871515854f306a6ce9ccb46f0df",
+      "deployed_sha256": "02c4bb6ea203008d7e8aec9f9fba71d0aa7099e85eee2f266d5e2acc3f759085",
+      "same_normalized_source": false
     }
   ]
 }

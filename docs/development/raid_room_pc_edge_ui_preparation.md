@@ -22,7 +22,7 @@
 
 管理APIで現Previewの `resolve-battle` はACTIVE v6、verify_jwt=true、bundle hash `63c6c7d4a5e7fefc0b06aef943c4fd75b5446ec594f8d5db69480634b524d8c1`。取得ソースを証跡へ保存した。
 
-375a0adとのruntime差分はindex.tsのRoom分岐追加と、新規 `raid-room-route.ts`。engine.tsは現配信と同一SHA256。配信単位はindex.ts＋engine.ts＋raid-room-route.tsとそのimport依存で、engine_test.tsは試験用。
+375a0adとのEdgeディレクトリ内の差分はindex.tsのRoom分岐追加と、新規 `raid-room-route.ts`。engine.tsは現配信と同一SHA256。ただしimport先の `src/domain/battle/canonical_runtime.ts` は95行追加・4行削除で、支援スキルの有効性評価と優先順位選択が変わる。`canonical_effects.ts` は現配信と一致する。配信単位はindex.ts＋engine.ts＋raid-room-route.ts＋両canonical依存で、engine_test.tsは試験用。Roomルートだけの変更として配信しない。通常攻撃・回復・buff/debuff・状態異常・支援再使用、およびQUEST/PVP/GVG/legacy Raidへの回帰確認を次回候補の受入に含める。
 
 新Edgeは認証ユーザー本人のReplayを取得し、RAID_SERVERに対して `get_raid_battle_route_v1(p_replay_id)` の保存台帳判定を必ず経由する。ROOMなら `finalize_raid_room_battle_v1`、LEGACYなら旧finalizer。不正値やlookupエラーは409で停止し、旧経路へfallbackしない。クライアントが送るmodeで確定先を選ばない。
 
