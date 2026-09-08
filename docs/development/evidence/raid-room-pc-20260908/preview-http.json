@@ -1,0 +1,124 @@
+{
+  "url": "https://tribe-neon-705g1hvhg-kiyoshi-kitamura.vercel.app/",
+  "observed_at": "2026-09-08T08:26:03.164Z",
+  "http_status": 200,
+  "final_url": "https://tribe-neon-705g1hvhg-kiyoshi-kitamura.vercel.app/",
+  "script_count": 14,
+  "scripts": [
+    {
+      "path": "/_next/static/chunks/27jktro2p5rq9.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "5261101892e2476e4346e19e86fd5f19cbcf7c765ff76e92eb9cefcc86b6db6a",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/0iec5q4ack_04.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "b8476a0974d7be85a6bae5bd38f52b121e465fdbf06338cba21b5fcb792e5c13",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/1-otopta3ipqh.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "681df4cad4a64ee9fe49efae5ebb38edfe642af276756c9718dc6a61d1c1229b",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/turbopack-40xexpsw9ux0s.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "649edf4bf9b1898106076f2698b9540a7efd5b6b3443c201cfed1f17f34d41ae",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/05-c3ty_6dwfk.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "aee2d073d2a1157cfe5c98907f90b3967de4c3625f9ffb154bd1979ae2b917b0",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/14mrh2-p_w84d.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "a3ac200f3ab8bfa57cf78882057741ddb5c0fbc9e2490c5d951c099b37484206",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/33u3ilb991i2x.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "26463d2f4a19e4d463d05a4abf929f548888e559ca6ff2b9f8c246f1e62f1998",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/3hl62n8-8v_td.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "453ed5573d77b0663a466187ffb7612528180949d805dcf0c645b7e5108a818d",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": true
+    },
+    {
+      "path": "/_next/static/chunks/3d5e75704krz7.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "2575c39f263cf8f1ab3a4fc0a6891e58c7f86286eb0d7491ae00bc2cf62af842",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/04qppl_9aog7s.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "791c256a20099b0c72c614f6a115f7096c89836b857c58d50a2098987782b212",
+      "supabase_refs": [
+        "sufvuqdnqohpfzkwxohq"
+      ],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/0sid96m0hvmsm.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "eb38c6c6e505c1e7fc0d5f4fe8969ec7c638df8e144c019974e34635b82cce42",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": true
+    },
+    {
+      "path": "/_next/static/chunks/2_f6sddw2rp3p.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "47ce7aa4a378eed7fa6b24a7fbcd209bb13fb1c1d29ecf7992d3c288a311e245",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/0cz1d0mv5g_q7.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    },
+    {
+      "path": "/_next/static/chunks/3noyb9zod8tkp.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200,
+      "sha256": "97733c028e50fa6d7ae23523a8d76507970f7df0bf9cdb129302d5a680f1fee5",
+      "supabase_refs": [],
+      "contains_mock_constructor": false,
+      "room_ui_env_reference": false
+    }
+  ],
+  "limitations": "Static HTTP GET only; no application JS execution, login or gameplay RPC. Bundled references alone do not prove live authenticated behavior."
+}

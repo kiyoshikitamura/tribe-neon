@@ -1,0 +1,42 @@
+{
+  "code_sha": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+  "history_only": true,
+  "missing": [
+    "20260901000215_tutorial_battle_pacing.sql",
+    "20260901000216_pvp_main_formation_matchmaking.sql",
+    "20260901000216_tutorial_battle_acceptance_pacing.sql",
+    "20260901000217_reattach_tutorial_enemy_projection.sql",
+    "20260901000218_tutorial_enemy_hp_half.sql",
+    "20260902000231_natural_patrol_encounter_authority.sql",
+    "20260902000232_battle_snapshot_presentation_metadata.sql",
+    "20260903000233_ranking_reward_notification_contract.sql",
+    "20260908000250_raid_room_read_projection.sql",
+    "20260908000251_raid_room_condition_rules.sql",
+    "20260908000252_raid_room_lifecycle.sql",
+    "20260908000253_raid_room_creation.sql",
+    "20260908000254_raid_room_legacy_isolation.sql",
+    "20260908000255_raid_room_entry.sql",
+    "20260908000256_raid_room_finalization.sql",
+    "20260908000257_raid_room_recovery_and_expiry.sql",
+    "20260908000258_raid_room_recovery_controls.sql",
+    "20260908000259_raid_room_rescue.sql",
+    "20260908000260_raid_room_rescue_rewards.sql",
+    "20260908000261_raid_ranking_retirement.sql",
+    "20260908000262_raid_room_clear_rewards.sql",
+    "20260908000263_raid_legacy_cutover.sql"
+  ],
+  "remote_only": [
+    {
+      "name": "anonymous_tutorial_cleanup_24h",
+      "version": "20260831000215"
+    },
+    {
+      "name": "acquisition_attribution_landing_authority",
+      "version": "20260907000250"
+    },
+    {
+      "name": "kpi_overview_saved_results",
+      "version": "20260908041511"
+    }
+  ]
+}
