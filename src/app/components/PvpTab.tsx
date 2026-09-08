@@ -1,17 +1,15 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { useGame } from "../context/GameContext";
 import "./PvpTab.css";
-import SubTabNav from "./ui/SubTabNav";
+import { BattleHero, RivalSelector, RaidEntryCard, BattleRankingSummary, GuildBattleTeaser } from "./pvp/BattleTopPresentation";
 import OutlawCard from "./ui/OutlawCard";
-import OutlawButton from "./ui/OutlawButton";
-import Badge from "./ui/Badge";
 import HubPage from "./ui/HubPage";
 import ScreenState from "./ui/ScreenState";
 import { useScreenReadiness } from "../hooks/useScreenReadiness";
 import { SCREEN_ASSET_MANIFESTS } from "../lib/screenManifests";
-import { CHARACTERS_MASTER } from "@/utils/game_constants";
+import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import { getCharacterLocationBackground, resolveCharacterLocationKey } from "@/utils/characterVisualAssets";
 import { supabase } from "@/utils/supabase";
 import PvpDeckPresentation from "./pvp/PvpDeckPresentation";
@@ -20,7 +18,6 @@ import { SkillDetailDialog } from "./skill/SkillPresentation";
 import type { SkillCardMaster } from "@/utils/skills_master_data";
 import CanonicalDialog from "./ui/CanonicalDialog";
 import UserIdentityRow from "./profile/UserIdentityRow";
-import StatusMetric from "./presentation/StatusMetric";
 
 const tacticNames: { [key: string]: string } = {
   ATTACK_PRIORITY: "攻撃優先",
@@ -37,9 +34,13 @@ const tacticNames: { [key: string]: string } = {
 export default function PvpTab() {
   const {
     session,
+    selectedLeader,
+    navigateTab,
+    isRaidActive,
+    raidBossName,
+    raidBossSecondsLeft,
     pvpRate,
     pvpSubView,
-    setPvpSubView,
     battleLoading,
     pvpOpponents,
     opponentsLoading,
@@ -190,98 +191,26 @@ export default function PvpTab() {
     }
   };
 
-  return (
-    <>
-    <HubPage
-      className="pvp-view"
-      title="バトル"
-      status={readiness.status}
-      onRetry={readiness.retry}
-      hideVisualHeader
-    >
-        <section className="pvp-hero" aria-label="バトル対戦">
-          <img src="/promotion/battle_page_header.webp" alt="バトル" />
-        </section>
-        <section className="pvp-self-summary" aria-label="自分のバトル情報">
-          <StatusMetric label="順位" value={ownPvpStanding === undefined ? "—" : <RankPresentation rank={ownPvpStanding?.rankPosition} />} />
-          <StatusMetric label="RATE" value={displayedPvpRate.toLocaleString()} />
-          <StatusMetric label="BP" value={pvpPoints} suffix={<span>/5</span>} />
-        </section>
 
-        <section className="pvp-point-strip" aria-label="BP回復状況">
-          <div><small>BP回復</small></div>
-          <span>{pvpPoints >= 5 ? "最大" : recoveryCountdown ? `次回復 ${recoveryCountdown}` : "回復時刻を同期中"}</span>
-          {pvpPoints < 5 && <button type="button" className="pvp-recovery-button" onClick={openBpRecoveryDialog}>回復</button>}
-        </section>
-
-        <section className="pvp-my-deck" aria-label="自分のデッキ">
-          <div className="pvp-section-heading"><strong>MY DECK</strong><span>総合力 {Number(totalPower || 0).toLocaleString()}</span></div>
-          <PvpDeckPresentation ariaLabel="自分の出撃メンバー" showSkills onSkillSelect={setSelectedSkill} members={myDeckCharacters.map(({ ownedId, owned, master }: any) => {
-              const equippedSkills = (userSkillsList || []).filter((entry: any) => entry.equipped_character_id === owned?.id).map((entry: any) => entry.skill_card_id).filter(Boolean).slice(0, 6);
-              return { key: ownedId, characterId: master?.id || ownedId, name: master?.jpName, level: Number(owned?.level || 1), skillIds: equippedSkills };
-            })} />
-          {myDeckCharacters.length === 0 && <span className="pvp-my-deck-empty">出撃編成を設定してください</span>}
-        </section>
-
-        <SubTabNav
-          tabs={[
-            { id: "opponents", label: "対戦" },
-          ]}
-          activeTabId={pvpSubView}
-          onSelect={setPvpSubView}
-        />
-
-        {battleLoading ? <ScreenState kind="loading" compact /> : (
-          <div className="pvp-content-area">
-            {pvpSubView === "opponents" && (
-              <div className="opponents-subtab">
-                <div className="pvp-compact-actions">
-                  <OutlawButton variant="secondary" onClick={handleRefreshOpponents} isLoading={opponentsLoading}>
-                    更新
-                  </OutlawButton>
-                  <OutlawButton variant="secondary" className="text-neon-gold" onClick={handleNavigateToRanking}>
-                    ランキング
-                  </OutlawButton>
-                </div>
-
-                <details className="pvp-rules-help">
-                  <summary>公式戦・模擬戦のルール</summary>
-                  <p><b>公式戦</b> BP 1消費・Rating変動あり</p>
-                  <p><b>勝利</b> {rewardLabel("VICTORY")}</p>
-                  <p><b>敗北</b> {rewardLabel("DEFEAT")}</p>
-                  <p><b>模擬戦</b> 消費・報酬・Rating・Mission進捗なし</p>
-                </details>
-
-                {opponentsLoading && pvpOpponents.length === 0 ? (
-                  <ScreenState kind="loading" compact />
-                ) : (
-                  <div className="list-container">
-                    {displayedOpponents.length === 0 && (
-                      <ScreenState kind="empty" compact title={firstPvpPending ? "勝てる相手を探しています" : "対戦相手が見つかりません"} message={firstPvpPending ? "更新して格下の相手を再検索してください。" : "時間を置いて更新してください。"} />
-                    )}
-                    {displayedOpponents.map((op: any) => (
-                      <OutlawCard key={op.opponent_user_id} className="pvp-opponent-card" data-opponent-user-id={op.opponent_user_id}>
-                        <div className="pvp-opponent-copy">
-                          <div className="pvp-opponent-heading"><UserIdentityRow userName={op.opponent_username} guildName={op.opponent_guild_name} leaderCharacterId={opponentCharactersFor(op)[0]?.character_master_id} leaderImageSrc={opponentCharactersFor(op)[0]?.asset_identifier} onOpen={() => fetchPlayerDetail(op.opponent_user_id)} /><strong><RankPresentation label="順位" rank={op.opponent_rank} /></strong></div>
-                          <PvpDeckPresentation className="pvp-opponent-deck" ariaLabel={`${op.opponent_username}の出撃メンバー`} onMemberSelect={() => fetchPlayerDetail(op.opponent_user_id)} members={opponentCharactersFor(op).map((character: any) => ({ key: `${op.opponent_user_id}-${character.slot}`, characterId: character.character_master_id, name: character.display_name, level: Number(character.level || 1), imageSrc: character.asset_identifier || undefined }))} />
-                          <div className="pvp-opponent-meta">
-                            <Badge tone="cyan">RATE {op.opponent_points}</Badge>
-                            <span className="pvp-opponent-power">総合力 {Number(op.opponent_power || 0).toLocaleString()}</span>
-                            <span className={`pvp-power-difference ${Number(op.opponent_power || 0) > Number(totalPower || 0) ? "is-higher" : "is-lower"}`}>総合力差 {Number(op.opponent_power || 0) - Number(totalPower || 0) >= 0 ? "+" : ""}{(Number(op.opponent_power || 0) - Number(totalPower || 0)).toLocaleString()}</span>
-                            <Badge tone={op.opponent_class === "STRONGER" ? "warning" : op.opponent_class === "WEAKER" ? "neutral" : "cyan"}>{op.opponent_class === "STRONGER" ? "格上" : op.opponent_class === "WEAKER" ? "格下" : "同格"}</Badge>
-                            <span>WIN +{Number(op.win_rating_delta || 0)} / LOSE {Number(op.loss_rating_delta || 0)}</span>
-                            <span>作戦 {tacticNames[op.tactic] || "攻撃優先"}</span>
-                          </div>
-                        </div>
-                        <OutlawButton 
-                          variant="danger" 
-                          onClick={() => pvpPoints < 1 ? openBpShortageDialog() : startCardBattle(
-                            "PVP", 
-                            op.opponent_username, 
-                            op.opponent_user_id, 
-                            op.opponent_points, 
-                            op.tactic, 
-                            op.opponent_guild_main_alignment, 
+  const [selectedRivalId, setSelectedRivalId] = React.useState<string | null>(null);
+  // Accepted側の初回PvP eligibilityで絞り込まれた候補だけを選択可能にする。
+  const heroOpponent = displayedOpponents.find((op: any) => op.opponent_user_id === selectedRivalId) ?? displayedOpponents[0];
+  const playerLeaderMaster = CHARACTERS_MASTER.find(character => character.id === selectedLeader);
+  const rivals = displayedOpponents.map((op: any) => {
+    const leader = opponentCharactersFor(op)[0];
+    const master = CHARACTERS_MASTER.find(character => character.id === leader?.character_master_id);
+    return { id: op.opponent_user_id, name: op.opponent_username, leaderName: leader?.display_name || master?.jpName || "対戦相手", image: master ? getCharacterTransparentImg(master.name) : leader?.asset_identifier, power: Number(op.opponent_power || 0), rank: op.opponent_rank };
+  });
+  const handleStartSelectedRival = () => {
+    const op = heroOpponent;
+    if (!op || battleLoading || opponentsLoading) return;
+    return pvpPoints < 1 ? openBpShortageDialog() : startCardBattle(
+                            "PVP",
+                            op.opponent_username,
+                            op.opponent_user_id,
+                            op.opponent_points,
+                            op.tactic,
+                            op.opponent_guild_main_alignment,
                             op.opponent_guild_sub_alignment,
                             op.defense_character_ids,
                             undefined,
@@ -295,14 +224,58 @@ export default function PvpTab() {
                               backgroundPath: pvpBackgroundPath,
                               backgroundLabel: String(currentBaseId || ""),
                             }
-                          )}
-                        >
-                          対戦する
-                        </OutlawButton>
-                      </OutlawCard>
-                    ))}
-                  </div>
-                )}
+                          );
+  };
+
+  return (
+    <>
+    <HubPage
+      className="pvp-view"
+      title="バトル"
+      status={readiness.status}
+      onRetry={readiness.retry}
+      hideVisualHeader
+    >
+        <section className="pvp-hero" aria-label="バトル対戦">
+          <img src="/promotion/battle_page_header.webp" alt="バトル" />
+        </section>
+        {pvpSubView === "opponents" && <>
+          <BattleHero player={{ name: playerLeaderMaster?.jpName || "MY TEAM", image: playerLeaderMaster ? getCharacterTransparentImg(playerLeaderMaster.name) : undefined, power: Number(totalPower || 0) }} rival={rivals.find((rival: { id: string }) => rival.id === heroOpponent?.opponent_user_id)} background={pvpBackgroundPath} attempts={pvpPoints} recovery={recoveryCountdown} busy={battleLoading || opponentsLoading} onStart={handleStartSelectedRival} onRecover={openBpRecoveryDialog} />
+          <RivalSelector rivals={rivals} selectedId={heroOpponent?.opponent_user_id} busy={battleLoading || opponentsLoading} onSelect={setSelectedRivalId} onRefresh={handleRefreshOpponents} emptyTitle={firstPvpPending ? "勝てる相手を探しています" : "対戦相手が見つかりません"} emptyMessage={firstPvpPending ? "更新して格下の相手を再検索してください。" : "時間を置いて更新してください。"} />
+          <RaidEntryCard active={isRaidActive} bossName={raidBossName} seconds={raidBossSecondsLeft} onOpen={() => navigateTab("raid")} />
+          <BattleRankingSummary rank={ownPvpStanding?.rankPosition} onOpen={handleNavigateToRanking} />
+          <GuildBattleTeaser />
+        </>}
+        <details className="pvp-deck-details"><summary>出撃編成・スキルを確認</summary>
+        <section className="pvp-my-deck" aria-label="自分のデッキ">
+          <div className="pvp-section-heading"><strong>MY DECK</strong><span>総合力 {Number(totalPower || 0).toLocaleString()}</span></div>
+          <PvpDeckPresentation ariaLabel="自分の出撃メンバー" showSkills onSkillSelect={setSelectedSkill} members={myDeckCharacters.map(({ ownedId, owned, master }: any) => {
+              const equippedSkills = (userSkillsList || []).filter((entry: any) => entry.equipped_character_id === owned?.id).map((entry: any) => entry.skill_card_id).filter(Boolean).slice(0, 6);
+              return { key: ownedId, characterId: master?.id || ownedId, name: master?.jpName, level: Number(owned?.level || 1), skillIds: equippedSkills };
+            })} />
+          {myDeckCharacters.length === 0 && <span className="pvp-my-deck-empty">出撃編成を設定してください</span>}
+        </section>
+
+        </details>
+
+        {battleLoading ? <ScreenState kind="loading" compact /> : (
+          <div className="pvp-content-area">
+            {pvpSubView === "opponents" && (
+              <div className="opponents-subtab">
+                <details className="pvp-rules-help">
+                  <summary>公式戦・模擬戦のルール</summary>
+                  <p><b>公式戦</b> BP 1消費・Rating変動あり</p>
+                  <p><b>勝利</b> {rewardLabel("VICTORY")}</p>
+                  <p><b>敗北</b> {rewardLabel("DEFEAT")}</p>
+                  <p><b>模擬戦</b> 消費・報酬・Rating・Mission進捗なし</p>
+                </details>
+
+                {heroOpponent && <details className="pvp-deck-details"><summary>選択中の相手・出撃編成を確認</summary>
+                  <UserIdentityRow userName={heroOpponent.opponent_username} guildName={heroOpponent.opponent_guild_name} leaderCharacterId={opponentCharactersFor(heroOpponent)[0]?.character_master_id} leaderImageSrc={opponentCharactersFor(heroOpponent)[0]?.asset_identifier} onOpen={() => fetchPlayerDetail(heroOpponent.opponent_user_id)} />
+                  <PvpDeckPresentation ariaLabel={heroOpponent.opponent_username + "の出撃メンバー"} onMemberSelect={() => fetchPlayerDetail(heroOpponent.opponent_user_id)} members={opponentCharactersFor(heroOpponent).map((character: any) => ({ key: heroOpponent.opponent_user_id + "-" + character.slot, characterId: character.character_master_id, name: character.display_name, level: Number(character.level || 1), imageSrc: character.asset_identifier || undefined }))} />
+                  <p>RATE {heroOpponent.opponent_points} · <RankPresentation label="順位" rank={heroOpponent.opponent_rank} /> · 作戦 {tacticNames[heroOpponent.tactic] || "攻撃優先"}</p>
+                </details>}
+
               </div>
             )}
 
