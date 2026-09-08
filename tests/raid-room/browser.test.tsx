@@ -33,7 +33,7 @@ function harness(overrides: Partial<RaidRoomTransport> = {}, onBattle?: () => vo
 async function openRoom(h: ReturnType<typeof harness>) {
   await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
   fireEvent.click(h.ui.getByRole('tab', { name: '中級' }));
-  fireEvent.click(await h.ui.findByRole('button', { name: 'Roomを開く' }));
+  fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
   await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
 }
 
@@ -113,12 +113,12 @@ test('Room一覧の空と通信失敗を別表示し、失敗を空一覧に変�
   let count = 0;
   const h = harness({ listRooms: async () => { if (++count > 1) throw new Error('offline'); return []; } });
   try {
-    await h.ui.findByText('この難易度のRoomはありません。');
+    await h.ui.findByText('この難易度のレイドはありません。');
     assert.equal(h.ui.queryByRole('alert'), null);
     fireEvent.click(h.ui.getByRole('button', { name: '更新' }));
     const alert = await h.ui.findByRole('alert');
     assert.match(alert.textContent ?? '', /一覧を取得できません/);
-    assert.equal(h.ui.queryByText('この難易度のRoomはありません。'), null);
+    assert.equal(h.ui.queryByText('この難易度のレイドはありません。'), null);
   } finally { h.close(); }
 });
 
@@ -148,7 +148,7 @@ test('同期の難度・参加者・報酬操作もspinnerのみで操作名を�
     fireEvent.click(tab);
     assertSpinnerOnly(tab);
     assert.equal(h.ui.getByRole('tab', { name: '中級' }), tab);
-    fireEvent.click(await h.ui.findByRole('button', { name: 'Roomを開く' }));
+    fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
     await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
     for (const name of ['参加者一覧', '報酬']) {
       const button = h.ui.getByRole('button', { name });
@@ -303,16 +303,16 @@ test('作成の再送IDを保ち、連打抑止・成功Room表示・戦闘未�
   });
   try {
     await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
-    fireEvent.click(h.ui.getByRole('button', { name: 'レイドを作成' }));
+    fireEvent.click(h.ui.getByRole('button', { name: '挑む' }));
     await waitFor(() => assert.equal(h.controller.getSnapshot().bossChoices.status, 'success'));
     fireEvent.change(h.ui.getByRole('combobox', { name: 'ボス' }), { target: { value: 'boss-a' } });
-    fireEvent.click(h.ui.getByRole('button', { name: '作成する' }));
+    fireEvent.click(h.ui.getByRole('button', { name: 'この敵に挑む' }));
     await h.ui.findByRole('alert');
-    fireEvent.click(h.ui.getByRole('button', { name: '作成する' }));
-    fireEvent.click(h.ui.getByRole('button', { name: '作成する' }));
+    fireEvent.click(h.ui.getByRole('button', { name: 'この敵に挑む' }));
+    fireEvent.click(h.ui.getByRole('button', { name: 'この敵に挑む' }));
     assert.equal(requests.length, 2);
     assert.equal(requests[0].requestId, requests[1].requestId);
-    const button = h.ui.getByRole('button', { name: '作成する' });
+    const button = h.ui.getByRole('button', { name: 'この敵に挑む' });
     assert.equal(button.textContent, '');
     assert.equal(button.hasAttribute('disabled'), true);
     await act(async () => pending.resolve(created));
@@ -320,7 +320,7 @@ test('作成の再送IDを保ち、連打抑止・成功Room表示・戦闘未�
     assert.deepEqual(h.battles, []);
     assert.equal(h.controller.getSnapshot().room.data?.serverEligibility.status, 'unknown');
     fireEvent.click(h.ui.getByRole('button', { name: '一覧へ' }));
-    await h.ui.findByRole('button', { name: 'Roomを開く' });
+    await h.ui.findByRole('button', { name: 'レイドを開く' });
     assert.equal(h.controller.getSnapshot().rooms.data?.[0].roomId, 'created');
   } finally { h.close(); }
 });
@@ -333,9 +333,9 @@ test('作成payload変更は新ID、候補なしは作成を抑止', async () =>
   });
   try {
     await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
-    fireEvent.click(h.ui.getByRole('button', { name: 'レイドを作成' }));
-    await h.ui.findByText('作成できるボスはありません。');
-    assert.equal(h.ui.getByRole('button', { name: '作成する' }).hasAttribute('disabled'), true);
+    fireEvent.click(h.ui.getByRole('button', { name: '挑む' }));
+    await h.ui.findByText('挑戦できる敵はありません。');
+    assert.equal(h.ui.getByRole('button', { name: 'この敵に挑む' }).hasAttribute('disabled'), true);
     await act(async () => { await h.controller.createRoom('beginner', 'a'); await h.controller.createRoom('intermediate', 'a'); });
     assert.notEqual(requests[0].requestId, requests[1].requestId);
     assert.equal(h.controller.getSnapshot().selectedRoomId, null);
@@ -371,7 +371,7 @@ test('公開参加は参加済み表示へ更新し、戦闘不可ならReplay�
     fireEvent.click(button); fireEvent.click(button);
     assert.equal(calls, 1); assert.equal(button.textContent, '');
     await act(async () => pending.resolve());
-    await h.ui.findByText('参加済み'); await h.ui.findByText('現在このRoomでは新しい戦闘を開始できません。開催状態・運用の再開を確認してください。');
+    await h.ui.findByText('参加済み'); await h.ui.findByText('現在このレイドでは新しい戦闘を開始できません。開催状態・運用の再開を確認してください。');
     assert.deepEqual(h.battles, []);
     assert.equal(h.ui.queryByRole('button', { name: '出撃準備' }), null);
   } finally { h.close(); }
@@ -432,4 +432,4 @@ test('別userへ切替後に遅れた救援送信応答は混入しない',async
  const ui=render(<Panel client={client} userId="owner" roomId="room" setInteractionBlocking={()=>{}}/>);try{fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));assert.equal(calls,1);ui.rerender(<Panel client={client} userId="other" roomId="room" setInteractionBlocking={()=>{}}/>);await ui.findByRole('button',{name:'救援を依頼'});await act(async()=>late.resolve({roomId:'room',requestId:'11111111-1111-4111-8111-111111111111',activityCount:3,guildCount:3,maxPerChannel:3,publications:[]}));assert.equal(ui.queryByText('救援依頼を送信しました。'),null);assert.match(ui.container.textContent??'',/全体 0 \/ 3 ・ ギルド 0 \/ 3/);}finally{cleanup();}
 });
 
-test('既知の作成停止は専用文言を画面へ表示する',async()=>{const h=harness({listBossChoices:async()=>[{raidVariantId:'a',name:'検証ボス'}],createRoom:async()=>{throw new RaidRoomStoppedError();}});try{await waitFor(()=>assert.equal(h.controller.getSnapshot().rooms.status,'success'));fireEvent.click(h.ui.getByRole('button',{name:'レイドを作成'}));await act(async()=>{await h.controller.createRoom('beginner','a');});await h.ui.findByText('レイドの新規作成は現在停止中です。再開後にお試しください。');}finally{h.close();}});
+test('既知の作成停止は専用文言を画面へ表示する',async()=>{const h=harness({listBossChoices:async()=>[{raidVariantId:'a',name:'検証ボス'}],createRoom:async()=>{throw new RaidRoomStoppedError();}});try{await waitFor(()=>assert.equal(h.controller.getSnapshot().rooms.status,'success'));fireEvent.click(h.ui.getByRole('button',{name:'挑む'}));await act(async()=>{await h.controller.createRoom('beginner','a');});await h.ui.findByText('レイドの新規作成は現在停止中です。再開後にお試しください。');}finally{h.close();}});

@@ -1,0 +1,12 @@
+.raid-top-qa { width: 100%; max-width: 430px; min-height: 100dvh; margin: 0 auto; background: #101218; color: #eee; padding-bottom: 88px; }
+.raid-top-qa-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 12px; font-size: 11px; border-bottom: 1px solid #444; }
+.raid-top-qa-tools label { display: flex; gap: 4px; align-items: center; }
+.raid-top-qa-tools select { background: #22252c; color: #eee; min-height: 32px; max-width: 115px; }
+.raid-top-qa-output { display: block; overflow-wrap: anywhere; padding: 8px 12px; font-size: 10px; }
+.raid-top-qa-footer { position: fixed; bottom: 0; width: 100%; max-width: 430px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: #171920; border-top: 1px solid #555; z-index: 20; box-sizing: border-box; }
+.raid-top-qa { height: 100dvh; overflow-y: auto; box-sizing: border-box; }
+.raid-top-qa { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; padding-bottom: 0; }
+.raid-top-qa-tools { flex-shrink: 0; }
+.raid-top-qa-product { flex: 1; min-height: 0; overflow: hidden; }
+.raid-top-qa-output { display: none; }
+.raid-top-qa-footer { position: static; flex-shrink: 0; }

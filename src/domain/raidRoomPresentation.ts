@@ -24,7 +24,7 @@ export function getRaidRecommendedPowerLabel(difficultyId: unknown): string {
   const difficulty = findDifficulty(difficultyId);
   if (!difficulty) return "推奨総合力：未確認";
   const recommended = difficulty.recommendedPower;
-  if (recommended === null) return "推奨総合力：ゲーム開始直後";
+  if (recommended === null) return "総合力制限なし";
   return recommended.max === null
     ? `推奨総合力：${formatPower(recommended.min)}以上`
     : `推奨総合力：${formatPower(recommended.min)}〜${formatPower(recommended.max)}`;

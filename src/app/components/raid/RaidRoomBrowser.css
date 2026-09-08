@@ -1,5 +1,6 @@
 .raid-room-browser { width: 100%; min-width: 0; color: var(--ui-text-primary, #eee); padding: 12px; box-sizing: border-box; }
 .raid-room-browser * { box-sizing: border-box; }
+.raid-room-browser--top { padding: 0; }
 .raid-room-browser p { margin: 12px 0; line-height: 1.5; overflow-wrap: anywhere; }
 .raid-room-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .raid-room-tabs .outlaw-button { padding: 10px 4px; min-width: 0; }

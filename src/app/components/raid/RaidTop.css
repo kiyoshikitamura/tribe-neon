@@ -1,0 +1,82 @@
+.raid-top { width: 100%; min-width: 0; padding: 4px 0 24px; color: var(--ui-text-primary); }
+.raid-top *, .raid-top *::before, .raid-top *::after { box-sizing: border-box; }
+.raid-top__section { min-width: 0; margin-bottom: 24px; }
+.raid-top__section:last-child { margin-bottom: 0; }
+.raid-top .outlaw-section-header { margin: 0 0 12px; padding: 4px 0; background: none; border: 0; gap: 8px; }
+.raid-top .section-header-accent { width: 3px; height: 16px; background: var(--ui-combat); box-shadow: none; border-radius: 0; }
+.raid-top .section-header-title { font-family: inherit; font-size: 15px; line-height: 1.5; letter-spacing: .04em; text-shadow: none; }
+.raid-top .section-header-subtitle { font-family: inherit; font-size: 10px; letter-spacing: 0; color: var(--ui-text-secondary); }
+.raid-top .section-header-texts { flex-wrap: wrap; gap: 4px 8px; }
+.raid-top h3 { margin: 0; font-size: 16px; line-height: 1.45; overflow-wrap: anywhere; }
+.raid-top .outlaw-card { background: var(--ui-bg-surface); border-color: var(--ui-border); box-shadow: none; }
+.raid-top .outlaw-card-inner { padding: 0; }
+.raid-top .outlaw-button { min-width: 44px; min-height: 44px; font-size: 12px; }
+.raid-top__section-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.raid-top__section-row .outlaw-section-header { margin-bottom: 0; }
+.raid-top__arrows { display: flex; gap: 4px; flex-shrink: 0; }
+.raid-top__arrows .outlaw-button { padding: 0; width: 44px; font-size: 24px; }
+.raid-top__joined-list { display: grid; gap: 8px; }
+.raid-top__joined > .outlaw-card-inner { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 12px; }
+.raid-top__joined-visual { background: linear-gradient(160deg, var(--ui-bg-raised), var(--ui-bg-root)); border-radius: 4px; overflow: hidden; min-height: 156px; position: relative; }
+.raid-top__joined-visual img { width: 100%; height: 100%; position: absolute; object-fit: cover; object-position: 50% 10%; }
+.raid-top__joined-main { min-width: 0; }
+.raid-top__joined-main h3 { font-size: 14px; margin: 4px 0 8px; }
+.raid-top__eyebrow { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--ui-text-secondary); }
+.raid-top__joined-main .outlaw-button { margin-top: 8px; }
+.raid-top__battle { min-width: 0; }
+.raid-top__hp-label { display: flex; align-items: baseline; gap: 8px; font-size: 11px; }
+.raid-top__hp-label strong { font-size: 20px; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.raid-top__state { margin-left: auto; font-size: 10px; color: var(--ui-text-secondary); text-align: right; }
+.raid-top__hp { display: block; width: 100%; height: 6px; margin: 8px 0; border: 0; border-radius: 2px; overflow: hidden; background: var(--ui-bg-root); appearance: none; }
+.raid-top__hp::-webkit-progress-bar { background: var(--ui-bg-root); }
+.raid-top__hp::-webkit-progress-value { background: var(--ui-combat); border-radius: 2px; }
+.raid-top__hp::-moz-progress-bar { background: var(--ui-combat); border-radius: 2px; }
+.raid-top__hp--unknown { background: var(--ui-border); }
+.raid-top__battle-meta { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 1.5; color: var(--ui-text-secondary); }
+.raid-top__battle-meta > span { min-width: 0; }
+.raid-top__battle-meta > span:last-child { flex-shrink: 0; }
+.raid-top__rescue-track { display: flex; width: 100%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: rgba(160,160,170,.3) transparent; padding-bottom: 4px; }
+.raid-top__rescue-track::-webkit-scrollbar { height: 4px; }
+.raid-top__rescue-track::-webkit-scrollbar-thumb { background: rgba(160,160,170,.3); border-radius: 2px; }
+.raid-top__rescue { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
+.raid-top__rescue-track--multiple .raid-top__rescue { flex-basis: 90%; }
+.raid-top__owner { display: flex; align-items: center; gap: 8px; padding: 12px; min-width: 0; }
+.raid-top__identity { min-width: 0; display: grid; gap: 2px; flex: 1; }
+.raid-top__identity strong { font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.raid-top__caption { font-size: 10px; color: var(--ui-text-secondary); }
+.raid-top__guild { font-size: 11px; color: var(--ui-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.raid-top__avatar { width: 40px; height: 40px; flex: 0 0 40px; display: inline-flex; background: var(--ui-bg-raised); border: 1px solid var(--ui-border); border-radius: 50%; overflow: hidden; }
+.raid-top__avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 16%; }
+.raid-top__avatar svg { width: 100%; height: 100%; fill: var(--ui-text-disabled); }
+.raid-top__rescue-visual, .raid-top__target-visual { position: relative; isolation: isolate; overflow: hidden; height: 208px; background: var(--ui-bg-raised); }
+.raid-top__background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.raid-top__rescue-visual::after, .raid-top__target-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(7,10,16,.98) 0%, rgba(7,10,16,.65) 22%, transparent 70%); z-index: 1; pointer-events: none; }
+.raid-top__leader { position: absolute; right: 2%; top: 0; height: 128%; width: 72%; object-fit: contain; object-position: center top; filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)); }
+.raid-top__enemy-caption { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; }
+.raid-top__enemy-caption > span { display: block; font-size: 11px; margin-bottom: 4px; color: #d8dde4; }
+.raid-top__enemy-caption h3 { text-shadow: 0 1px 4px #000; font-size: 20px; }
+.raid-top__rescue-body { padding: 12px; }
+.raid-top__participants { display: flex; min-height: 36px; align-items: center; gap: 8px; margin: 8px 0 12px; font-size: 10px; color: var(--ui-text-secondary); }
+.raid-top__avatar-stack { display: flex; padding-left: 4px; }
+.raid-top__avatar-stack .raid-top__avatar { width: 28px; height: 28px; flex-basis: 28px; margin-left: -4px; }
+.raid-top__page-count { text-align: right; color: var(--ui-text-secondary); font-size: 11px; padding-top: 4px; font-variant-numeric: tabular-nums; }
+.raid-top__targets { display: grid; gap: 12px; }
+.raid-top__target-visual { height: 184px; }
+.raid-top__target-visual .raid-top__leader { height: 145%; width: 66%; right: -2%; }
+.raid-top__target-body { padding: 8px 12px 12px; display: flex; align-items: center; gap: 12px; }
+.raid-top__roster { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); flex: 1; min-width: 0; gap: 4px; }
+.raid-top__roster > span { aspect-ratio: 1; min-width: 0; overflow: hidden; border-radius: 4px; background: var(--ui-bg-raised); border: 1px solid var(--ui-border); }
+.raid-top__roster img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
+.raid-top__target-body .outlaw-button { width: 80px; flex: 0 0 80px; padding-inline: 8px; }
+.raid-top__browse .outlaw-button { min-height: 52px; }
+.raid-top__browse .outlaw-button-inner { width: 100%; justify-content: space-between; }
+.raid-top__browse .outlaw-button-inner > span { font-size: 24px; }
+.raid-top__wait { min-height: 100px; display: flex; align-items: center; justify-content: center; }
+.raid-top__wait .spinner { width: 24px; height: 24px; flex: 0 0 24px; }
+.raid-top__notice { padding: 16px 12px; border-left: 2px solid var(--ui-border); color: var(--ui-text-secondary); font-size: 12px; line-height: 1.6; }
+.raid-top__notice p { margin: 0 0 8px; }
+.raid-top__notice p:last-child { margin-bottom: 0; }
+.raid-top__muted { color: var(--ui-text-secondary); font-size: 12px; margin: 12px 0 0; }
+@media (prefers-reduced-motion: reduce) { .raid-top * { scroll-behavior: auto; } }
+/* 共通CharacterPresentationのthumbnail焦点をデータとして受け取る。 */
+.raid-top .raid-top__portrait { object-fit: cover; object-position: var(--raid-portrait-x) var(--raid-portrait-y); transform: scale(var(--raid-portrait-scale)); transform-origin: var(--raid-portrait-x) 12%; }

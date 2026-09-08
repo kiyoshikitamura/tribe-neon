@@ -113,12 +113,14 @@ test('作成receiptより新しい同Roomの終了詳細を受信済みなら開
   assert.equal(tracker.getSnapshot(), 0);
 });
 
-test('実ConnectedBrowserの初回一覧・更新・戦闘終了revisionが通知へ接続される', async () => {
+test('実ConnectedBrowserは明示一覧後の更新・戦闘終了revisionを通知へ接続する', async () => {
   const tracker = createRaidRoomActivityTracker(() => true, () => now);
   let rooms: RaidRoomDto[] = [active]; const calls: string[] = [];
   const rpcClient = { rpc: async (name: string) => { calls.push(name); assert.equal(name, 'list_raid_rooms_v1'); return { data: { rooms, nextOffset: null }, error: null }; } };
   const props = { rpcClient, activityTracker: tracker, userId: 'A', onBattleReady() {}, setInteractionBlocking() {} };
   const view = render(<RaidRoomConnectedBrowser {...props} refreshRevision={0}/>);
+  await view.findByTestId('raid-top'); assert.equal(calls.length, 0);
+  fireEvent.click(view.getByRole('button', { name: /開催中のレイドを探す/ }));
   await waitFor(() => assert.equal(tracker.getSnapshot(), expiry));
   rooms = []; fireEvent.click(view.getByRole('button', { name: '更新' }));
   await waitFor(() => assert.equal(tracker.getSnapshot(), 0));

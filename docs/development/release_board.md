@@ -1,3 +1,7 @@
+# レイドトップ第1工程 — VALIDATED（実機受入・集約API接続待ち）
+
+RAID-TOP-A/B/C/P-01。基準70cb1f2から専用ローカルworktreeでトップ4セクションと既存導線を実装。全体型・Mock build、新規16件・関連既存189件PASS、390px画面証跡保存。日次2エリアと本人参加/救援の集約readは既存APIにないため契約/Mockのみ、製品は未取得表示。実機Human PASSではない。詳細 [統合報告](raid_top_step1_report.md)。ローカルcommitのみ、push/Deploy/DB/運用変更/追加ZIPなし。
+
 # Raid第20工程 — VALIDATED（対象回帰・CI不整合修正）
 
 RAID-A/B/C/P-20の親レビュー完了。通常lint OOM修正、本人貢献Mock、順位廃止E2E/Room ref更新、旧RPC静的検証の追随。aef63ebの独立CIでMock6・ブラウザ18件・build PASS、通常CI lint0errors/型PASS。追加静的検証は親で全assert・切替4件・eslint PASS。詳細raid_room_phase20_integration.md。
