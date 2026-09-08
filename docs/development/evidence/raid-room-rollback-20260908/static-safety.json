@@ -1,0 +1,21 @@
+{
+  "statements": 222,
+  "first": "BEGIN",
+  "last": "ROLLBACK",
+  "commit_count": 0,
+  "cron_mutation_count": 0,
+  "statement_kinds": {
+    "BEGIN": 1,
+    "SET": 3,
+    "DO": 10,
+    "CREATE": 104,
+    "ALTER": 26,
+    "REVOKE": 41,
+    "GRANT": 21,
+    "INSERT": 8,
+    "COMMENT": 4,
+    "SELECT": 2,
+    "NOTIFY": 1,
+    "ROLLBACK": 1
+  }
+}

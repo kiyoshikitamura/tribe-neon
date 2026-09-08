@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-08",
+  "timezone": "Asia/Tokyo",
+  "thread_title": "Add Daily/Monthly KPI Toggle",
+  "thread_id": "01a07f0f-3729-7db0-9851-642099bc7264",
+  "agreed_window": "18:17–18:27 JST",
+  "response": "KPI側に実行中・予約中のPreview変更なし。当時間帯のDDL・migration・手動集計・Preview変更を重ねない。既存KPI Cron（07分・37分）は停止しない。別の現担当は把握していない。",
+  "before_at": "18:17:24 JST",
+  "postflight_at": "18:17:44 JST",
+  "after_at": "18:20:15 JST",
+  "release": "after照合完了後、同スレッドへ枠の早期解放を通知済み"
+}
