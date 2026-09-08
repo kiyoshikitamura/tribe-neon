@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "new_public_relations": [
+    "raid_rooms",
+    "raid_room_lifecycle_rules",
+    "raid_room_members",
+    "raid_room_creation_settings",
+    "raid_room_creation_requests",
+    "raid_room_battle_settings",
+    "raid_room_battle_start_requests",
+    "raid_room_battle_request_cancellations",
+    "raid_room_rescue_settings",
+    "raid_room_rescue_requests",
+    "raid_room_rescue_publications",
+    "raid_room_rescue_members",
+    "raid_room_difficulty_rules",
+    "raid_room_rescue_reward_rules",
+    "raid_room_rescue_reward_items",
+    "raid_room_rescue_rewards",
+    "raid_room_rescue_reward_grants",
+    "raid_room_clear_reward_rules",
+    "raid_room_clear_reward_items",
+    "raid_room_clear_rewards",
+    "raid_room_clear_reward_grants",
+    "raid_legacy_settings"
+  ],
+  "counts": {
+    "public_relations": [
+      200,
+      222
+    ],
+    "public_functions": [
+      402,
+      438
+    ],
+    "columns": [
+      1560,
+      1660
+    ],
+    "triggers": [
+      87,
+      89
+    ]
+  },
+  "protected_functions_body_owner_acl_config_result_unchanged": 378,
+  "existing_columns_unchanged": 1560,
+  "existing_triggers_unchanged": 87,
+  "existing_data_tables_unchanged": 13,
+  "cron_unchanged": 6,
+  "migration_history_unchanged": 275
+}

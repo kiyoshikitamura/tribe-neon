@@ -1,0 +1,146 @@
+{
+  "at": "2026-09-08T09:50:04.387961+00:00",
+  "role": "postgres",
+  "rows": {
+    "users": {
+      "md5": "b868375386785c9dfdad599129f9005f",
+      "count": 19
+    },
+    "guilds": {
+      "md5": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "presents": {
+      "md5": "f1743f61e13f0f16c0e3d9bc3e31ab0e",
+      "count": 12
+    },
+    "raid_bosses": {
+      "md5": "8dc3f9460bcb0188993a96652ded9e4d",
+      "count": 39
+    },
+    "guild_members": {
+      "md5": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "raid_damage_logs": {
+      "md5": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "battle_replay_events": {
+      "md5": "633ac3819862677a894b9caa81dc5501",
+      "count": 297
+    },
+    "kpi_aggregation_runs": {
+      "md5": "d1ef56f024b5bcb1690bdf305a1a583f",
+      "count": 13
+    },
+    "kpi_metric_snapshots": {
+      "md5": "aa99066ff9d56737dd6af1d218d29618",
+      "count": 48
+    },
+    "battle_replay_sessions": {
+      "md5": "fe43a2442a2099efb225525f3213c42a",
+      "count": 5
+    },
+    "kpi_overview_saved_results": {
+      "md5": "d18b0af45b9b7b3273f1d4b55b828187",
+      "count": 355
+    },
+    "raid_instance_user_progress": {
+      "md5": "d751713988987e9331980363e24189ce",
+      "count": 0
+    },
+    "ranking_reward_notifications": {
+      "md5": "a284c22de00db085646c847676e4649b",
+      "count": 16
+    }
+  },
+  "baseline": [
+    {
+      "matches": true,
+      "check_name": "public function body/signature/owner/ACL"
+    },
+    {
+      "matches": true,
+      "check_name": "migration history"
+    },
+    {
+      "matches": true,
+      "check_name": "Cron jobs"
+    },
+    {
+      "matches": true,
+      "check_name": "columns"
+    },
+    {
+      "matches": true,
+      "check_name": "constraints"
+    },
+    {
+      "matches": true,
+      "check_name": "triggers"
+    },
+    {
+      "matches": true,
+      "check_name": "table RLS and grants"
+    },
+    {
+      "matches": true,
+      "check_name": "indexes"
+    },
+    {
+      "matches": true,
+      "check_name": "policies"
+    }
+  ],
+  "database": "postgres",
+  "cron_jobs": [
+    {
+      "jobid": 2,
+      "active": true,
+      "command": "select public.cleanup_expired_anonymous_onboarding();",
+      "jobname": "anonymous-onboarding-cleanup-daily",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "jobid": 3,
+      "active": true,
+      "command": "select public.advance_ranking_season('PVP',clock_timestamp());",
+      "jobname": "ranking-pvp-monthly-jst",
+      "schedule": "0 15 * * *"
+    },
+    {
+      "jobid": 4,
+      "active": true,
+      "command": "select public.advance_ranking_season('RAID',clock_timestamp());",
+      "jobname": "ranking-raid-weekly-jst",
+      "schedule": "0 15 * * 0"
+    },
+    {
+      "jobid": 5,
+      "active": true,
+      "command": "select public.finalize_daily_ranking_rewards();",
+      "jobname": "daily-ranking-reward-finalize-jst-midnight",
+      "schedule": "0 15 * * *"
+    },
+    {
+      "jobid": 7,
+      "active": true,
+      "command": "select public.finalize_preopen_guild_power_season();",
+      "jobname": "preopen-guild-power-finalize-20260909-jst",
+      "schedule": "* 15 8 9 *"
+    },
+    {
+      "jobid": 12,
+      "active": true,
+      "command": "set statement_timeout='120s'; select public.refresh_kpi_overview_saved_results();",
+      "jobname": "kpi-overview-saved-results-half-hourly",
+      "schedule": "7,37 * * * *"
+    }
+  ],
+  "backend_pid": 2806280,
+  "cron_running": [],
+  "room_relation": null,
+  "other_active_sessions": [],
+  "legacy_setting_relation": null
+}
