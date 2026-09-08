@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { assertStandardRouteAllowed } from './raid-room/standard-route-guard.mjs';
 import { relative, resolve } from "node:path";
 import { verifySupabaseTarget } from "./supabase_target_guard.mjs";
 import { getLinkedPostgresConnection, loadEnvironmentFile } from "./postgres_connection.mjs";
@@ -15,7 +16,9 @@ if (!environment || !file || relative(migrationRoot, sqlPath).startsWith("..")) 
 }
 
 loadEnvironmentFile(environment);
-await verifySupabaseTarget({ environment, mutation: true });
+assertStandardRouteAllowed({environment,file:true});
+const target = await verifySupabaseTarget({ environment, mutation: true });
+assertStandardRouteAllowed({environment,projectRef:target.projectRef,file:true});
 const connection = await getLinkedPostgresConnection();
 const executable = process.platform === "win32"
   ? "C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe"

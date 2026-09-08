@@ -1,0 +1,2 @@
+docs/development/raid-room-persistent/*.sql text eol=lf
+scripts/raid-room/*.mjs text eol=lf

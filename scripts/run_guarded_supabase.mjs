@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { assertStandardRouteAllowed } from './raid-room/standard-route-guard.mjs';
 import { verifySupabaseTarget } from "./supabase_target_guard.mjs";
 
 const separatorIndex = process.argv.indexOf("--");
@@ -20,7 +21,9 @@ if (typeof process.loadEnvFile === "function") {
 }
 
 try {
+  assertStandardRouteAllowed({environment,args:supabaseArgs});
   const target = await verifySupabaseTarget({ environment, mutation: true });
+  assertStandardRouteAllowed({environment,projectRef:target.projectRef,args:supabaseArgs});
   console.log(`Guard approved ${environment} mutation for ${target.projectRef}.`);
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
