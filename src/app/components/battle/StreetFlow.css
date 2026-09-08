@@ -12,3 +12,20 @@
 
 .battle-result-summary.sf-live-result{display:block;width:min(100%,480px);max-height:100%;border:0;border-radius:0;box-shadow:none;background:linear-gradient(#090d1270,#090d12af 45%,#080c12 85%),var(--battle-background-image,url('/bg/bg_street_shinjuku.jpg')) center/cover;animation:none}.sf-live-result .sf-mvp-copy p{font-size:13px;line-height:1.7;text-align:left;color:#c4bbae;margin-top:12px}.sf-live-result small{letter-spacing:normal;font-weight:400}.sf-live-result .sf-highlights small{font-size:10px}.sf-live-result .sf-loss-advice{font-size:12px;margin:14px 0}.sf-live-result .battle-result-continue{font-family:inherit;font-size:18px;margin-top:14px;min-height:50px;background:linear-gradient(120deg,#b29a6c,#e0c99b);color:#171a20;animation:none}.sf-live-result .battle-result-canonical-rewards{margin:15px 0;animation:none}.sf-live-result .battle-result-mode-reward{margin:14px 0}.sf-live-result .sf-heading p{font-size:13px}.sf-live-result .sf-details p{text-align:left;font-size:12px}
 .sf-preparing{display:grid;place-content:center;justify-items:center;gap:16px;min-height:100%;width:100%;background:#080c12;color:#f1eadf}.sf-preparing-spinner{width:32px;height:32px;border:2px solid #c6ad7c33;border-top-color:#c6ad7c;border-radius:50%;animation:sf-loading-spin .8s linear infinite}.sf-preparing button{padding:12px;min-height:44px;background:#151b23;color:inherit;border:1px solid #83735d77}@keyframes sf-loading-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.sf-preparing-spinner{animation:none}}
+.sf-root.sf-live-setup{display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;padding:10px 14px}
+.sf-setup-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+.sf-live-setup .sf-heading h1{font-size:25px;margin:4px 0}
+.sf-live-setup .sf-ready-hero{height:clamp(130px,27dvh,190px);margin-top:6px}
+.sf-live-setup .sf-team{margin:8px 0}.sf-live-setup .sf-team h2{margin-bottom:6px}
+.sf-live-setup .sf-details{margin:6px 0;padding:6px 0}.sf-live-setup .sf-strategy{padding:6px 0}
+.sf-live-setup .sf-actions{flex-shrink:0;margin-top:6px;padding-top:6px;background:#080c12;display:flex;gap:8px;align-items:center}
+.sf-live-setup .sf-actions .sf-primary{flex:1;min-height:48px;font-size:16px}
+.sf-live-setup .sf-actions .sf-secondary{width:auto;min-height:48px;margin:0}
+.battle-result-summary.sf-live-result{padding:10px 14px;min-height:0;height:100%;max-height:100%;overscroll-behavior:contain}
+.sf-live-result .sf-outcome h1{font-size:30px;margin:4px 0;line-height:1.1;letter-spacing:1px}
+.sf-live-result .sf-mvp{height:clamp(145px,28dvh,200px);margin-top:4px}
+.sf-live-result .sf-mvp-copy{padding:10px 10px 8px 20px}.sf-live-result .sf-mvp-copy h2{font-size:24px;margin:4px 0}
+.sf-live-result .sf-mvp-copy>strong{font-size:28px}.sf-live-result .sf-mvp-copy p{font-size:11px;margin:6px 0;line-height:1.5}
+.sf-live-result .sf-highlights{padding:8px 0}.sf-live-result .sf-highlights b{font-size:21px;margin-top:3px}
+.sf-live-result .sf-loss-advice,.sf-live-result .battle-result-mode-reward{margin:8px 0}
+.sf-live-result .battle-result-continue{position:sticky;bottom:0;z-index:5;min-height:48px;margin-top:8px;box-shadow:0 -8px 12px #080c12}

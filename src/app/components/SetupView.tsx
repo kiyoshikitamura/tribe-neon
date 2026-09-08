@@ -84,7 +84,7 @@ export default function SetupView() {
   const skipWorldIntro = () => {
     if (nameEntryRef.current) return;
     recordWorldIntroObservation("WORLD_INTRO_SKIPPED");
-    advancePresentation("NAME_INPUT");
+    advancePresentation(presentationState === "AGEHA_INTRO" ? "NAME_INPUT" : "AGEHA_INTRO");
   };
 
   const submitName = async () => {

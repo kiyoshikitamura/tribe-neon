@@ -92,9 +92,9 @@ export default function CharacterGachaPresentation(props: Props) {
     <OutlawButton onClick={props.onClose}>{props.tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
   </section></div>;
   if (readiness.status !== "ready" || !fontReady) return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="ガチャ演出の準備">
-    <p role="status">{readiness.status === "error" ? "画像を読み込めませんでした" : "仲間を迎える準備中…"}</p>
+    {readiness.status === "error" ? <p role="status">画像を読み込めませんでした</p> : <i className="cg-loading-spinner" role="status" aria-label="ガチャ演出を準備中" />}
     {readiness.status === "error" && <OutlawButton onClick={readiness.retry}>画像を再読み込み</OutlawButton>}
-    <button type="button" onClick={() => { props.onReveal(); setTextOnly(true); }}>獲得結果を文字で確認</button>
+    {readiness.status === "error" && <button type="button" onClick={() => { props.onReveal(); setTextOnly(true); }}>獲得結果を文字で確認</button>}
   </section></div>;
   return <ReadyCharacterGacha {...props} onTextOnly={() => { props.onReveal(); setTextOnly(true); }} />;
 }
@@ -204,9 +204,9 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
 
   return <div className="cg-overlay" data-gacha-transition-state={opening ? "ready" : "show_results"}>
     {!sceneReady && <section className="cg-loading cg-scene-loading" role="status">
-      <p>{failedScene === `${sceneKey}-${imageRetry}` ? "画像を読み込めませんでした" : "仲間を迎える準備中…"}</p>
+      {failedScene === `${sceneKey}-${imageRetry}` ? <p>画像を読み込めませんでした</p> : <i className="cg-loading-spinner" aria-label="ガチャ演出を準備中" />}
       {failedScene === `${sceneKey}-${imageRetry}` && <button type="button" onClick={() => setImageRetry((value) => value + 1)}>画像を再読み込み</button>}
-      <button type="button" onClick={onTextOnly}>獲得結果を文字で確認</button>
+      {failedScene === `${sceneKey}-${imageRetry}` && <button type="button" onClick={onTextOnly}>獲得結果を文字で確認</button>}
     </section>}
     <div ref={shell} aria-hidden={!sceneReady} inert={!sceneReady} tabIndex={-1} role="dialog" aria-modal="true" aria-label="ガチャ結果" className={`cg-shell ${sceneReady ? "" : "cg-waiting"} cg-${opening ? highest.toLowerCase() : rarity.toLowerCase()} cg-stage-${stage.toLowerCase()}`} data-gacha-presentation="arrival" data-stage={stage} onKeyDown={(event) => {
       if (event.key === "Escape" && !opening) { event.preventDefault(); skip(); }

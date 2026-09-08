@@ -229,3 +229,5 @@
 @media (min-width: 410px) {
   .raid-battle-setup { padding-inline: 18px; }
 }
+.battle-screen.street-battle-screen{position:fixed;inset:0;height:100dvh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);box-sizing:border-box}
+.battle-screen.street-battle-screen.battle-ending-screen{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}

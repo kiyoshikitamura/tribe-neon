@@ -104,3 +104,5 @@
 .cg-overlay .cg-shell .cg-top button{font-size:13px}
 .cg-overlay .cg-shell .cg-origin{font-size:12px}
 @media(max-height:700px){.cg-overlay .cg-shell .cg-reveal-copy>blockquote{font-size:18px;line-height:1.5}.cg-overlay .cg-shell .cg-quote-intro blockquote{font-size:23px}}
+.cg-loading-spinner{display:block;width:28px;height:28px;border:2px solid #d0bd9133;border-top-color:#d0bd91;border-radius:50%;animation:cg-loading-spin .8s linear infinite}
+@keyframes cg-loading-spin{to{transform:rotate(360deg)}}

@@ -32,6 +32,9 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
     expect(box.x).toBeGreaterThan(viewport.width - 100);
     await page.screenshot({ path: test.info().outputPath(`intro-${viewport.width}.png`) });
     await skip.evaluate(button => { (button as HTMLButtonElement).click(); (button as HTMLButtonElement).click(); });
+    await expect(page.locator('[data-entry-state="AGEHA_INTRO"]')).toBeVisible();
+    await expect(page.locator('.setup-ageha-character img').last()).toBeVisible();
+    await page.locator('.setup-ageha-presentation .setup-primary-action').click();
     await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toBeVisible();
     await expect(skip).toHaveCount(0);
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_users") || "[]").length)).toBe(0);
@@ -69,6 +72,8 @@ test("SKIP during scene transition cannot be overwritten by its timer", async ({
   await expect(page.locator('[data-world-stage="4"] .setup-world-tap')).toBeVisible({ timeout: 30_000 });
   await page.locator(".setup-world-tap").click();
   await page.getByRole("button", { name: "SKIP", exact: true }).click();
+  await expect(page.locator('[data-entry-state="AGEHA_INTRO"]')).toBeVisible();
+  await page.locator('.setup-ageha-presentation .setup-primary-action').click();
   await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toBeVisible();
   await page.waitForTimeout(1200);
   await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toBeVisible();

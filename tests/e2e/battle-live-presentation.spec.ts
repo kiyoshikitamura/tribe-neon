@@ -15,11 +15,15 @@ for (const viewport of [{ width: 390, height: 700 }, { width: 320, height: 568 }
     await expect(page.getByRole("heading", { name: "出撃準備" })).toHaveCount(0);
     releaseFonts();
     await expect(page.getByRole("heading", { name: "出撃準備" })).toBeVisible();
+    const startBox = await page.getByRole("button", { name: "模擬戦開始", exact: true }).boundingBox();
+    expect(startBox!.y).toBeGreaterThanOrEqual(0);
+    expect(startBox!.y + startBox!.height).toBeLessThanOrEqual(viewport.height);
     await page.screenshot({ path: test.info().outputPath("setup.png") });
     await page.getByRole("button", { name: "模擬戦開始", exact: true }).click();
     await expect(page.locator(".sf-matchup")).toBeVisible();
     await page.screenshot({ path: test.info().outputPath("vs.png") });
     await expect(page.locator(".sb-root")).toBeVisible();
+    await expect(page.locator('.sb-unit.acting')).toHaveCount(1);
     await page.getByRole("button", { name: "×1", exact: true }).click();
     await expect(page.locator(".sb-root")).toHaveAttribute("data-battle-speed", "2");
     const compact = page.locator(".sb-announcement.compact");
@@ -36,6 +40,9 @@ for (const viewport of [{ width: 390, height: 700 }, { width: 320, height: 568 }
     await page.screenshot({ path: test.info().outputPath("ssr-cutin.png") });
     await page.getByRole("button", { name: "SKIP", exact: true }).click();
     await expect(page.locator(".battle-result-summary")).toBeVisible();
+    const continueBox = await page.getByRole("button", { name: "もう一度確認", exact: true }).boundingBox();
+    expect(continueBox!.y).toBeGreaterThanOrEqual(0);
+    expect(continueBox!.y + continueBox!.height).toBeLessThanOrEqual(viewport.height);
     await page.getByText("戦績・MVPスコアの詳細", { exact: true }).click();
     await expect(page.getByRole("heading", { name: "MVPスコア内訳", exact: true })).toBeVisible();
     await page.screenshot({ path: test.info().outputPath("result.png") });

@@ -15,3 +15,4 @@
 @media(prefers-reduced-motion:reduce){.sb-root *{animation:none!important;transition:none!important}}
 .playing-container.sb-root{overflow-x:hidden;overflow-y:auto;max-height:100%;background:linear-gradient(#07090e75,#07090e80 48%,#080a0f 90%),var(--sb-background) center/cover}
 .sb-arena{position:relative;min-height:0;flex:1}.playing-container.sb-root{display:flex;flex-direction:column;gap:12px}.sb-controls{flex-shrink:0;margin-top:0}.sb-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap}.sb-arena .sb-standing{top:0;height:95%}.sb-arena .fullscreen .sb-cast-copy{padding:18px 16px}.sb-arena .fullscreen .sb-cast-copy p{margin-top:8px}
+.sb-unit.acting{outline:2px solid #ffe0a0;outline-offset:-2px;box-shadow:inset 0 0 12px #dfbd7940,0 0 10px #dfbd7960}

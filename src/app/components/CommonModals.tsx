@@ -53,6 +53,7 @@ export default function CommonModals() {
     setScoutAnimationState,
     scoutFlashingColor,
     scoutResults,
+    scoutPresentationCategory,
     errorMessage,
     setErrorMessage,
     playCyberSe,
@@ -103,11 +104,11 @@ export default function CommonModals() {
   }, [scoutAnimationState]);
 
   useEffect(() => {
-    if (scoutAnimationState !== "READY" || !tutorialPullStarted) return;
+    if (isCharacterReveal || scoutAnimationState !== "READY" || !tutorialPullStarted) return;
     setTutorialPullBurst(true);
     const timer = window.setTimeout(() => setScoutAnimationState("SHOW_RESULTS"), 620);
     return () => window.clearTimeout(timer);
-  }, [scoutAnimationState, setScoutAnimationState, tutorialPullStarted]);
+  }, [isCharacterReveal, scoutAnimationState, setScoutAnimationState, tutorialPullStarted]);
 
   const compactGachaOutcome = (result: any) => {
     const outcome = String(result.convertReward || "");
@@ -195,6 +196,8 @@ export default function CommonModals() {
         <CharacterGachaPresentation results={scoutResults} tutorial={onboardingState?.tutorial_step === "AUTO_FORMATION"}
           onReveal={() => setScoutAnimationState("SHOW_RESULTS")} playSound={playSe}
           onClose={() => { setScoutAnimationState(null); playCyberSe("click"); if (onboardingState?.tutorial_step === "AUTO_FORMATION") navigateTab("character"); }} />
+      ) : scoutAnimationState !== null && (scoutPresentationCategory === "CHARACTER" || isCharacterReveal || onboardingState?.tutorial_step === "FREE_GACHA") ? (
+        <div className="cg-overlay"><div className="cg-loading" role="status" aria-label="ガチャ演出を準備中"><i className="cg-loading-spinner" aria-hidden="true" /></div></div>
       ) : scoutAnimationState !== null && (
         <div className={`modal-overlay background-black-95 ${isCommonOpening ? "gacha-processing-overlay gacha-common-opening-overlay" : ""}`} style={{ zIndex: 20000 }} data-gacha-transition-state={scoutAnimationState.toLowerCase()} data-gacha-visual={isCommonOpening ? "tokyo-night-opening" : undefined}>
           {scoutAnimationState === "PROCESSING" || scoutAnimationState === "FLASHING" || scoutAnimationState === "READY" ? (

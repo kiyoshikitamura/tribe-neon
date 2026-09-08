@@ -144,7 +144,7 @@ export default function CardBattleView() {
   if (battleState === "ENDING" || battleState === "OUTCOME" || battleState === "RESULT") {
     const victory = battleOutcome === "VICTORY";
     return (
-      <div className={`battle-screen battle-ending-screen is-${battleState.toLowerCase()}`} style={battleBackgroundStyle} data-battle-outcome={battleOutcome || "PENDING"} data-acceptance-state={battleState === "ENDING" ? "B5" : battleState === "RESULT" ? "B6" : undefined}>
+      <div className={`battle-screen ${battleMode !== "RAID" ? "street-battle-screen" : ""} battle-ending-screen is-${battleState.toLowerCase()}`} style={battleBackgroundStyle} data-battle-outcome={battleOutcome || "PENDING"} data-acceptance-state={battleState === "ENDING" ? "B5" : battleState === "RESULT" ? "B6" : undefined}>
         <div className="battle-ending-backdrop" aria-hidden="true" />
         {battleState === "ENDING" ? (
           <div className="battle-ending-hold" role="status" aria-label="バトル終了演出">
@@ -211,7 +211,7 @@ export default function CardBattleView() {
 
     if (battleMode === "RAID") {
       const boss = enemyPartyStates[0];
-      return <><div className="battle-screen" onClick={handleFirstUserInteraction}>
+      return <><div className={`battle-screen ${battleMode !== "RAID" ? "street-battle-screen" : ""}`} onClick={handleFirstUserInteraction}>
         <div className="raid-battle-setup scroll-container" style={battleBackgroundStyle}>
           <header className="raid-battle-setup__header">
             <small>RAID BRIEFING</small>
@@ -246,12 +246,12 @@ export default function CardBattleView() {
       </div>{selectedOpponentSkill && <SkillDetailDialog skill={selectedOpponentSkill} onClose={() => setSelectedOpponentSkill(null)} />}</>;
     }
 
-    return <div className="battle-screen" onClick={handleFirstUserInteraction}><StreetBattleSetup playerParty={playerPartyStates} enemyParty={enemyPartyStates} playerPower={playerPower} enemyPower={enemyPower} tutorial={isTutorialBattle} mode={battleMode} label={battlePresentationContext?.encounterLabel || battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={isTutorialBattle ? launchBattleOnce : launchRegularBattle} onBack={["PVP","PVP_PRACTICE","GVG"].includes(battleMode) ? ()=>{if(cancelPreparedPvpBattle())playSe("UI_BACK");} : undefined}/></div>;
+    return <div className={`battle-screen ${battleMode !== "RAID" ? "street-battle-screen" : ""}`} onClick={handleFirstUserInteraction}><StreetBattleSetup playerParty={playerPartyStates} enemyParty={enemyPartyStates} playerPower={playerPower} enemyPower={enemyPower} tutorial={isTutorialBattle} mode={battleMode} label={battlePresentationContext?.encounterLabel || battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={isTutorialBattle ? launchBattleOnce : launchRegularBattle} onBack={["PVP","PVP_PRACTICE","GVG"].includes(battleMode) ? ()=>{if(cancelPreparedPvpBattle())playSe("UI_BACK");} : undefined}/></div>;
   }
 
   // 2. PLAYING オート戦闘中画面
   return (
-    <div className="battle-screen">
+    <div className={`battle-screen ${battleMode !== "RAID" ? "street-battle-screen" : ""}`}>
       <QuestBattleViewer
         battleMode={battleMode}
         opponentName={battleOpponentName}
