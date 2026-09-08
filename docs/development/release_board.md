@@ -1,3 +1,7 @@
+# Raid第10工程 — VALIDATED
+
+A: 期限batch/Cron・本人開始receipt参照、B: 再読込時の未確定戦闘復帰、C: SQL/復帰回帰検証、P: 親レビュー・統合。担当契約 RAID-A/B/C/P-10。親検証: SQL13件、共通71件（pending8含む）、React20件、実useBattle13件、全体Mock build・型検証PASS。運用設定false、実DB/Deploy未実施。実Cron/実機・救援/報酬/ランキング切替・記録消失や復帰拒否時の取消導線は残件。詳細raid_room_phase10_integration.md。
+
 # Raid第9工程 — VALIDATED
 
 A: Room専用確定/期限終了/Edge分岐、B: 製品戦闘導線と保存Replay再試行、C: SQL/実フック検証、P: 親レビュー・統合。期限後はraw貢献を保存しapplied0、終了HP/討伐不変。旧日次/Guild/ranking参加triggerを分離。

@@ -2117,6 +2117,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // ==========================================
       // 🛡️ 戦闘セッション復帰 (Resume) ロジック
       // ==========================================
+      const pendingRoomHandled = await battle.resumePendingRaidRoomBattle();
       const { data: activeBattleSession } = await supabase
         .from("battle_sessions")
         .select("*")
@@ -2125,7 +2126,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
-      if (activeBattleSession) battle.resumeBattleSession(activeBattleSession, localCharIds);
+      if (!pendingRoomHandled && activeBattleSession) battle.resumeBattleSession(activeBattleSession, localCharIds);
 
       const { data: newsData } = await supabase
         .from("news")

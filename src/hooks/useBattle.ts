@@ -1,5 +1,6 @@
 "use client";
 import type { RaidRoomBriefing } from "../domain/raidRoomClient";
+import { readRaidRoomPending, saveRaidRoomPending, clearRaidRoomPending, type RaidRoomBattlePayload } from "../domain/raidRoomBattlePending";
 import { createRaidRoomBattleAttempt } from "../domain/raidRoomBattleAttempt";
 
 
@@ -224,6 +225,37 @@ export function useBattle(options: UseBattleOptions) {
   const pendingPvpStartRef = useRef<any[] | null>(null);
   const pvpCommitSucceededRef = useRef(false);
   const roomAttemptRef = useRef<ReturnType<typeof createRaidRoomBattleAttempt> | null>(null);
+  const roomUserRef = useRef(session?.user?.id);
+  roomUserRef.current = session?.user?.id;
+  const roomRecoveryRef = useRef<Promise<boolean> | null>(null);
+  const roomPresentationUserRef = useRef<string | null>(null);
+  const previousRoomUserRef = useRef(session?.user?.id);
+  useEffect(() => {
+    if (previousRoomUserRef.current === session?.user?.id) return;
+    previousRoomUserRef.current = session?.user?.id;
+    roomAttemptRef.current = null;
+    pendingRaidStartRef.current = null;
+    raidCommitSucceededRef.current = false;
+    roomRecoveryRef.current = null;
+    roomPresentationUserRef.current = null;
+    battleStartInFlightRef.current = false;
+    setBattleState(null);
+    setBattleMode(null);
+    setBattleLoading(false);
+    setOfficialRaidResult(null);
+    setOfficialRaidReplayId(null);
+    setOfficialRaidEvents([]);
+    setPlayerPartyStates([]);
+    setEnemyPartyStates([]);
+  }, [session?.user?.id]);
+  const createPersistentRoomAttempt = (roomId: string, userId: string, initialPayload?: RaidRoomBattlePayload) =>
+    createRaidRoomBattleAttempt(roomId, initialPayload?.p_request_id ?? crypto.randomUUID(), {
+      initialPayload,
+      assertCurrent: () => { if (roomUserRef.current !== userId) throw new Error("アカウントが切り替わりました。"); },
+      beforeSend: payload => saveRaidRoomPending(userId, payload),
+      clear: requestId => clearRaidRoomPending(userId, requestId),
+    });
+
   const pendingRaidStartRef = useRef<any[] | null>(null);
   const raidCommitSucceededRef = useRef(false);
   const [settledPatrolEncounterId, setSettledPatrolEncounterId] = useState<string | null>(null);
@@ -305,6 +337,7 @@ export function useBattle(options: UseBattleOptions) {
   // 進行中のバトルセッションを復元 (Resume) する関数
   const resumeActiveBattleSession = async (patrolIdOverride?: string | null) => {
     if (!session?.user?.id) return false;
+    if (await resumePendingRaidRoomBattle()) return true;
     try {
       const canonicalPatrolId = patrolIdOverride || patrol?.id || null;
       if (canonicalPatrolId) {
@@ -459,6 +492,9 @@ export function useBattle(options: UseBattleOptions) {
     roomBriefing?: RaidRoomBriefing,
   ) => {
     if (!session) return;
+    const startingRoomUserId = session.user.id;
+    const staleRoomUser = () => Boolean(roomBriefing && roomUserRef.current !== startingRoomUserId);
+    if (staleRoomUser()) return;
     const savedRoomReceipt = roomBriefing ? roomAttemptRef.current?.savedReceipt() : null;
     if (mode === "PATROL" && patrolIdOverride && patrolIdOverride === settledPatrolEncounterId) return;
     setTutorialBattleActive(mode === "PATROL" && tutorialStep === "TUTORIAL_BATTLE");
@@ -586,6 +622,7 @@ export function useBattle(options: UseBattleOptions) {
         const { data: currentRaids, error: raidsError } = roomBriefing
           ? await supabase.rpc("get_raid_room_v1", { p_room_id: roomBriefing.roomId }).then(({ data, error }: any) => ({ data: data ? [{ id: roomBriefing.raidBossInstanceId, bossMasterId: roomBriefing.raidVariantId, currentHp: data.hp?.value?.current }] : [], error }))
           : await supabase.rpc("get_active_raids");
+        if (staleRoomUser()) return;
         const currentRaid = Array.isArray(currentRaids)
           ? currentRaids.find((entry: any) => String(entry.id) === String(areaIdOrOpponentUserId))
           : null;
@@ -594,6 +631,7 @@ export function useBattle(options: UseBattleOptions) {
           .select("*")
           .eq("id", currentRaid.bossMasterId)
           .maybeSingle();
+        if (staleRoomUser()) return;
         if (masterError || !dbMaster) throw masterError || new Error("Raid boss master is unavailable.");
         raidInstanceCurrentHp = Number(currentRaid.currentHp ?? dbMaster.max_hp);
         if (dbMaster) {
@@ -610,6 +648,7 @@ export function useBattle(options: UseBattleOptions) {
           };
         }
       } catch (err) {
+        if (staleRoomUser()) return;
         console.warn("Failed to load raid boss master:", err);
         setBattleLoading(false);
         setErrorMessage("レイド情報を確認できませんでした。レイド画面へ戻って、もう一度お試しください。");
@@ -621,6 +660,7 @@ export function useBattle(options: UseBattleOptions) {
       if (areaIdOrOpponentUserId) {
         try {
           const { data: publicBaseControls } = await supabase.rpc("get_public_guild_base_controls");
+          if (staleRoomUser()) return;
           const baseControls = (publicBaseControls || []).filter(
             (control: any) => control.base_id === areaIdOrOpponentUserId,
           );
@@ -711,6 +751,7 @@ export function useBattle(options: UseBattleOptions) {
     if (retryCharacters) party = retryCharacters;
     if ((mode === "PVP" || mode === "RAID") && !retryCharacters) {
       const { data: mainFormation, error: mainFormationError } = await supabase.rpc("get_current_main_formation");
+      if (staleRoomUser()) return;
       const canonicalParty = Array.isArray(mainFormation?.characters)
         ? mainFormation.characters.map((entry: any) => String(entry.character_id || "")).filter(Boolean).slice(0, 5)
         : [];
@@ -726,6 +767,7 @@ export function useBattle(options: UseBattleOptions) {
           supabase.from("user_skills").select("*"),
           supabase.from("user_equipments").select("*"),
         ]);
+        if (staleRoomUser()) return;
         if (ownedError || !ownedRows?.length) {
           setBattleLoading(false);
           setErrorMessage("出撃メンバーを読み込めませんでした。もう一度お試しください。");
@@ -1206,6 +1248,7 @@ export function useBattle(options: UseBattleOptions) {
     // presentation without creating an official replay, consuming PvP Point,
     // or entering any result/reward/ranking contract.
     if (mode !== "PVP_PRACTICE" && !prepareOnly) try {
+      if (staleRoomUser()) return;
       const playerSnapshot = participantsToBattleUnits(initialPlayerParty);
       const enemySnapshot = participantsToBattleUnits(initialEnemyParty);
       const replayMode = mode === "PATROL" ? "QUEST" : mode;
@@ -1223,7 +1266,7 @@ export function useBattle(options: UseBattleOptions) {
             })
         : replayMode === "RAID"
           ? roomBriefing
-            ? await (roomAttemptRef.current ??= createRaidRoomBattleAttempt(roomBriefing.roomId)).start(supabase, party, toDeterministicTactic(tactic))
+            ? await (roomAttemptRef.current ??= createPersistentRoomAttempt(roomBriefing.roomId, startingRoomUserId)).start(supabase, party, toDeterministicTactic(tactic))
             : await supabase.rpc("start_raid_battle", {
               p_instance_id: areaIdOrOpponentUserId,
               p_character_ids: party,
@@ -1245,6 +1288,7 @@ export function useBattle(options: UseBattleOptions) {
           errorMessage: replayCreation.error?.message || null,
         });
       }
+      if (staleRoomUser()) return;
       const error = replayCreation.error;
       const replaySessionId = replayMode === "QUEST"
         ? replayCreation.data?.replay_session_id
@@ -1447,7 +1491,9 @@ export function useBattle(options: UseBattleOptions) {
         const canonicalPlayers = patrolSnapshotToParticipants(replayCreation.data?.player_snapshot, false);
         const canonicalEnemies = patrolSnapshotToParticipants(replayCreation.data?.enemy_snapshot, true);
         let { data: resolvedReplay, error: resolveError } = await supabase.functions.invoke("resolve-battle", { body: { replaySessionId } });
+        if (staleRoomUser()) return;
         if (resolveError) { const retry = await supabase.functions.invoke("resolve-battle", { body: { replaySessionId } }); resolvedReplay=retry.data; resolveError=retry.error; }
+        if (staleRoomUser()) return;
         const events=serverBattleEvents(resolvedReplay?.events);
         if(resolveError||!resolvedReplay?.winner||!events.length||(roomBriefing && (resolvedReplay.roomId !== roomBriefing.roomId || !["PLAYER", "ENEMY"].includes(resolvedReplay.winner)))){setBattleLoading(false);setErrorMessage("レイド結果をサーバーで確定できませんでした。");return;}
         const { data: grantedRewards, error: rewardProjectionError } = roomBriefing
@@ -1478,8 +1524,24 @@ export function useBattle(options: UseBattleOptions) {
         officialRaidReplayIdForBattle=replaySessionId; officialRaidWinnerForBattle=resolvedReplay.winner; officialRaidEventsForBattle=events; officialRaidResultForBattle=resolvedReplay;
         setOfficialRaidReplayId(replaySessionId);setOfficialRaidWinner(resolvedReplay.winner);setOfficialRaidEvents(events);setOfficialRaidEventIndex(0);setOfficialRaidResult(resolvedReplay);
         raidCommitSucceededRef.current = true;
-        setRaidPoints?.(Number(replayCreation.data?.remaining_raid_points ?? Math.max(0, (raidPoints ?? 0) - 1)));
-        setRaidFirstEntryFree?.(false);
+        if (roomBriefing) roomPresentationUserRef.current = startingRoomUserId;
+        if (!roomBriefing || !roomAttemptRef.current?.isRecovered()) {
+          setRaidPoints?.(Number(replayCreation.data?.remaining_raid_points ?? Math.max(0, (raidPoints ?? 0) - 1)));
+          setRaidFirstEntryFree?.(false);
+        } else {
+          try {
+            const currentAttempt = await supabase.rpc("get_current_raid_attempt_state");
+            if (staleRoomUser()) return;
+            if (!currentAttempt.error && currentAttempt.data) {
+              setRaidPoints?.(Number(currentAttempt.data.raidPoints ?? 0));
+              setRaidFirstEntryFree?.(Boolean(currentAttempt.data.firstEntryFree));
+            }
+          } catch (error) {
+            // 現在値の参照失敗は確定済み戦闘を再開始する理由にしない。
+            if (staleRoomUser()) return;
+            console.warn("Failed to refresh current Raid attempts:", error);
+          }
+        }
       }
     } catch (err) {
       console.warn("Failed to create replay snapshot:", err);
@@ -1487,6 +1549,7 @@ export function useBattle(options: UseBattleOptions) {
         accepted: false,
         errorMessage: err instanceof Error ? err.message : String(err),
       });
+      if (staleRoomUser()) return;
       if (mode === "RAID" && roomBriefing) {
         setBattleLoading(false);
         setErrorMessage("レイドの開始・結果を確認できませんでした。同じ出撃を再確認してください。");
@@ -1533,9 +1596,19 @@ export function useBattle(options: UseBattleOptions) {
       opponentSkills: presentationOverride?.opponentSkills,
     };
 
+    if (staleRoomUser()) return;
+    let roomCompatibilitySaved = false;
     // 旧セッションは中断再開の互換用。再生UI移行後に廃止する。
     if (mode !== "PVP_PRACTICE" && !prepareOnly) try {
-      const { data: sessionData } = await supabase.from("battle_sessions").insert({
+      const existingRoomSession = roomBriefing && officialRaidReplayIdForBattle
+        ? await supabase.from("battle_sessions").select("id").eq("user_id", startingRoomUserId)
+            .eq("status", "ACTIVE").eq("player_state->>officialRaidReplayId", officialRaidReplayIdForBattle).maybeSingle()
+        : { data: null, error: null };
+      if (staleRoomUser()) return;
+      if (existingRoomSession.error) throw existingRoomSession.error;
+      const { data: sessionData, error: sessionError } = existingRoomSession.data
+        ? existingRoomSession
+        : await supabase.from("battle_sessions").insert({
         user_id: session.user.id,
         battle_type: mode,
         target_id: targetName,
@@ -1565,14 +1638,23 @@ export function useBattle(options: UseBattleOptions) {
         status: "ACTIVE"
       }).select().single();
 
-      if (sessionData) setBattleSessionId(sessionData.id);
+      if (staleRoomUser()) return;
+      if (sessionError) throw sessionError;
+      if (sessionData) { setBattleSessionId(sessionData.id); roomCompatibilitySaved = true; }
     } catch (err) {
       console.warn(err);
     }
 
+    if (staleRoomUser()) return;
     setBattlePresentationContext(presentationContextForBattle);
     if (!patrolPresentationEntered) setBattleState("SETUP");
     setBattleLoading(false);
+    if (roomBriefing && roomCompatibilitySaved && raidCommitSucceededRef.current) {
+      try { roomAttemptRef.current?.clear(); } catch (error) {
+        // 保存済み結果は表示できる。削除失敗でも次回は同じサーバーReplayのみ再確認する。
+        console.warn("Failed to clear saved Room request:", error);
+      }
+    }
   };
 
   const preparedBattleArgs = (args: readonly unknown[], prepareOnly: boolean): Parameters<typeof startCardBattleInternal> => {
@@ -1581,6 +1663,7 @@ export function useBattle(options: UseBattleOptions) {
   };
 
   const startCardBattle = async (...args: Parameters<typeof startCardBattleInternal>) => {
+    if (roomUserRef.current !== session?.user?.id) return;
     if (battleStartInFlightRef.current || battleEndingInFlightRef.current || battleState !== null) return;
     battleStartInFlightRef.current = true;
     const actionPerformance = beginActionPerformance("battle_start");
@@ -1607,8 +1690,55 @@ export function useBattle(options: UseBattleOptions) {
     }
   };
 
+  /** trueは未確定Roomを処理/保留した意味。旧セッション復帰と混在させない。 */
+  const resumePendingRaidRoomBattle = async (): Promise<boolean> => {
+    const userId = session?.user?.id;
+    if (!userId || roomUserRef.current !== userId) return false;
+    if (roomPresentationUserRef.current === userId) return true;
+    if (roomRecoveryRef.current) return roomRecoveryRef.current;
+    let record;
+    try { record = readRaidRoomPending(userId); } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "出撃の保存情報を確認できませんでした。");
+      return true;
+    }
+    if (!record) return false;
+    if (battleStartInFlightRef.current || battleState !== null) return true;
+    const payload = record.payload;
+    const recovery = (async () => {
+      battleStartInFlightRef.current = true;
+      setBattleLoading(true);
+      try {
+        const attempt = createPersistentRoomAttempt(payload.p_room_id, userId, payload);
+        roomAttemptRef.current = attempt;
+        const receipt = await attempt.recover(supabase);
+        if (roomUserRef.current !== userId) return true;
+        if (receipt.error) throw new Error(receipt.error.message || "出撃を再確認できませんでした。");
+        const { data: briefing, error } = await supabase.rpc("get_raid_room_briefing_v1", { p_room_id: receipt.data.room_id });
+        if (roomUserRef.current !== userId) return true;
+        if (error || briefing?.roomId !== receipt.data.room_id) throw new Error("レイド情報を再確認できませんでした。");
+        const args = ["RAID", briefing.bossName || "レイド", briefing.raidBossInstanceId,
+          undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, false, briefing];
+        pendingRaidStartRef.current = args;
+        raidCommitSucceededRef.current = false;
+        await startCardBattleInternal(...preparedBattleArgs(args, false));
+        if (roomUserRef.current === userId && raidCommitSucceededRef.current) pendingRaidStartRef.current = null;
+      } catch (error) {
+        if (roomUserRef.current === userId) setErrorMessage(error instanceof Error ? error.message : "出撃を再確認できませんでした。");
+      } finally {
+        if (roomUserRef.current === userId) { battleStartInFlightRef.current = false; setBattleLoading(false); }
+      }
+      return true;
+    })();
+    roomRecoveryRef.current = recovery;
+    try { return await recovery; } finally { if (roomRecoveryRef.current === recovery) roomRecoveryRef.current = null; }
+  };
+
   const prepareRaidRoomBattle = async (briefing: RaidRoomBriefing, presentation?: Partial<BattlePresentationContext>) => {
+    const preparingUserId = session?.user?.id;
+    if (!preparingUserId || roomUserRef.current !== preparingUserId) return;
+    if (await resumePendingRaidRoomBattle()) return;
     const { data, error } = await supabase.rpc("get_raid_room_briefing_v1", { p_room_id: briefing.roomId });
+    if (roomUserRef.current !== preparingUserId) return;
     if (error || data?.roomId !== briefing.roomId || data?.membershipStatus !== "joined" || !data?.battleStartEnabled) {
       setErrorMessage("このレイドには現在出撃できません。"); return;
     }
@@ -1708,6 +1838,7 @@ export function useBattle(options: UseBattleOptions) {
   const cancelPreparedRaidBattle = () => {
     if (battleMode !== "RAID" || !pendingRaidStartRef.current || raidCommitSucceededRef.current) return false;
     if (roomAttemptRef.current?.hasSubmitted()) return false;
+    try { roomAttemptRef.current?.clear(); } catch (error) { setErrorMessage("出撃の保存情報を更新できませんでした。"); return false; }
     roomAttemptRef.current = null;
     pendingRaidStartRef.current = null;
     setBattleState(null);
@@ -2674,6 +2805,7 @@ export function useBattle(options: UseBattleOptions) {
     await new Promise((resolve) => window.setTimeout(resolve, Math.max(900, 980 / battleSpeed)));
 
     const releaseBattlePresentation = () => {
+      roomPresentationUserRef.current = null;
       setBattleState(null);
       setBattleMode(null);
       setBattleOutcome(null);
@@ -2926,6 +3058,7 @@ export function useBattle(options: UseBattleOptions) {
   };
 
   const completeBattleResult = () => {
+    roomPresentationUserRef.current = null;
     if (battleState !== "RESULT") return;
     const destination = battleModeResultDetail?.destination;
     setBattleState(null);
@@ -2946,6 +3079,7 @@ export function useBattle(options: UseBattleOptions) {
   };
 
   const resumeBattleSession = (activeBattleSession: any, localCharIds: string[]) => {
+    if (roomPresentationUserRef.current || roomRecoveryRef.current) return;
     const pState = activeBattleSession.player_state as any;
     const eState = activeBattleSession.enemy_state as any;
 
@@ -3042,6 +3176,7 @@ export function useBattle(options: UseBattleOptions) {
     battleLoading, setBattleLoading,
     startCardBattle,
     prepareRaidRoomBattle,
+    resumePendingRaidRoomBattle,
     confirmPreparedPvpBattle,
     cancelPreparedPvpBattle,
     confirmPreparedRaidBattle,
