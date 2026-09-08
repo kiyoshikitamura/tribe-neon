@@ -207,6 +207,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const roomActivityRef = useRef(roomActivity);
   useLayoutEffect(() => { roomActivityRef.current = roomActivity; }, [roomActivity]);
   const [raidTopRefreshRevision, setRaidTopRefreshRevision] = useState(0);
+  const [raidRoomReturnTarget, setRaidRoomReturnTarget] = useState<{ userId: string; roomId: string } | null>(null);
   const [raidFirstEntryFree, setRaidFirstEntryFree] = useState<boolean>(true);
   const [cash, setCash] = useState<number>(2600);
   const [diamonds, setDiamonds] = useState<number>(200);
@@ -1001,7 +1002,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     raidPoints,
     setRaidPoints,
     setRaidFirstEntryFree,
-    requestRaidTopRefresh: () => setRaidTopRefreshRevision((revision) => revision + 1),
+    requestRaidTopRefresh: (roomId) => {
+      if (roomId) setRaidRescueTarget(null);
+      setRaidRoomReturnTarget(roomId && session?.user?.id ? { userId: session.user.id, roomId } : null);
+      setRaidTopRefreshRevision((revision) => revision + 1);
+    },
     vitality,
     setVitality,
     selectedBattleHelper: null,
@@ -4661,7 +4666,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     activeBanners, setActiveBanners,
     userItems, setUserItems,
     inventoryProjectionOwnerUserId,
-    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision, raidRescueTarget, openRaidRescue, raidRoomActivityTracker: roomActivity.tracker,
+    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision, raidRoomReturnTarget, raidRescueTarget, openRaidRescue, raidRoomActivityTracker: roomActivity.tracker,
     monthlyPassActive, setMonthlyPassActive,
     monthlyPassClaimedToday, setMonthlyPassClaimedToday,
     handlePurchaseMonthlyPass, handleClaimDailyPassReward,

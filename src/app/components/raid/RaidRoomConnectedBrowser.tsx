@@ -21,10 +21,11 @@ export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps
   userId?: string;
   activityTracker?: RaidRoomActivityTracker;
   refreshRevision?: number;
+  returnRoomId?: string;
 }
 
 /** 接続元の認証client・画面遷移・全体操作blockを受け取る。既存GameContextを変更しない。 */
-export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, activityTracker, refreshRevision, ...browserProps }: RaidRoomConnectedBrowserProps) {
+export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, activityTracker, refreshRevision, returnRoomId, ...browserProps }: RaidRoomConnectedBrowserProps) {
   const enableRescue = authorities?.enableRescue;
   const rewardClient = useMemo(() => createRaidRoomRescueRewardClient(rpcClient), [rpcClient]);
   const clearRewardClient = useMemo(() => createRaidRoomClearRewardClient(rpcClient), [rpcClient]);
@@ -40,6 +41,9 @@ export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescu
     return { controller: createRaidRoomController(activityTracker ? activityTracker.observeTransport(transport) : transport), mounts: 0 };
   }, [rpcClient, getRewards, joinRoom, enableCreation, enableParticipation, enableRescue, activityTracker, userId]);
   const previousRefresh = useRef(refreshRevision);
+  useEffect(() => {
+    if (returnRoomId && !rescueId) void connection.controller.selectRoom(returnRoomId);
+  }, [connection, returnRoomId, rescueId, refreshRevision]);
   useEffect(() => {
     if (previousRefresh.current === refreshRevision) return;
     previousRefresh.current = refreshRevision;

@@ -1,7 +1,7 @@
-✔ Room viewer uses FIX Street UI, 30 rounds and skip; legacy retains its viewer (8.9891ms)
-✔ Room matchup uses FIX VS presentation (0.6373ms)
-✔ Room Result retains raw/applied/contribution/HP and Present guidance in Street layout (1.7823ms)
-✔ Room Street skill recognition minimum is retained at accelerated speeds (0.1458ms)
+✔ Room viewer uses FIX Street UI, 30 rounds and skip; legacy retains its viewer (11.8532ms)
+✔ Room matchup uses FIX VS presentation (1.045ms)
+✔ Room Result retains raw/applied/contribution/HP and Present guidance in Street layout (2.6468ms)
+✔ Room Street skill recognition minimum is retained at accelerated speeds (0.1867ms)
 ℹ tests 4
 ℹ suites 0
 ℹ pass 4
@@ -9,5 +9,5 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 588.4799
+ℹ duration_ms 684.1167
 

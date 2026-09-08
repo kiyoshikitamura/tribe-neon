@@ -3419,6 +3419,7 @@ export function useBattle(options: UseBattleOptions) {
     }
     roomPresentationUserRef.current = null;
     const destination = battleModeResultDetail?.destination;
+    const returnRoomId = battlePresentationContext?.raidRoomId;
     setBattleState(null);
     setBattleMode(null);
     setBattleOutcome(null);
@@ -3432,7 +3433,7 @@ export function useBattle(options: UseBattleOptions) {
     setBattleSkipPending(false);
     setIsAutoPaused(false);
     setBattleModeResultDetail(null);
-    if (destination === "raid") requestRaidTopRefresh?.();
+    if (destination === "raid") requestRaidTopRefresh?.(returnRoomId);
     if (destination) navigateTab?.(destination);
   };
 
