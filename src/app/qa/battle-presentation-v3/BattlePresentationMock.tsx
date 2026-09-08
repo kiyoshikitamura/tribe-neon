@@ -1,0 +1,120 @@
+"use client";
+
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
+import { resolveCharacterGachaQuote } from "@/domain/presentation/characterGachaQuotes";
+import { getRarityBadgeAsset } from "@/utils/rarityAssets";
+import { useAudio } from "@/audio/AudioProvider";
+import "./battle-mock.css";
+
+type Character = (typeof CHARACTERS_MASTER)[number];
+type Kind = "normal" | "skill" | "heal" | "finish";
+type Phase = "idle" | "actor" | "impact" | "settle" | "mvp";
+const rarities = ["N", "R", "SR", "SSR"] as const;
+const find = (name: string) => CHARACTERS_MASTER.find(c => c.jpName === name)!;
+const first = (rarity: string) => CHARACTERS_MASTER.find(c => c.rarity === rarity)!;
+const initialActor = find("レイジ");
+const opponents = ["ケンゴ", "レオ", "ミオ", "ミヤビ", "カレン"].map(find);
+const asset = (c: Character) => getCharacterTransparentImg(c.name);
+const impactAsset = "/effects/battle-v3/strike-impact.webp";
+const initialHp = () => Array(5).fill(2400) as number[];
+const demo = [{kind:"normal", rarity:"N"}, ...rarities.map(rarity => ({kind:"skill", rarity})), {kind:"heal",rarity:"SSR"}, {kind:"finish",rarity:"SSR"}] as {kind:Kind;rarity:string}[];
+
+// Visual-only fixture. Never calls battle, gacha, reward or progress APIs.
+export default function BattlePresentationMock() {
+  const [actor, setActor] = useState(initialActor);
+  const [kind, setKind] = useState<Kind>("skill");
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [hp, setHp] = useState(initialHp);
+  const [allyHp, setAllyHp] = useState(1200);
+  const [target, setTarget] = useState(0);
+  const [amount, setAmount] = useState(0);
+  const [speed, setSpeed] = useState(1);
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState(false);
+  const [loadKey, setLoadKey] = useState(0);
+  const [muted, setMuted] = useState(true);
+  const [sequence, setSequence] = useState(-1);
+  const [totals, setTotals] = useState<Record<string, number>>({});
+  const run = useRef(0);
+  const busy = phase === "actor" || phase === "impact" || phase === "settle";
+  const audio = useAudio();
+  const tier = rarities.indexOf(actor.rarity as typeof rarities[number]);
+  const allies = [actor, ...[initialActor, find("アゲハ"), find("ゴウ"), find("カエデ"), find("コハル")].filter(c=>c.id!==actor.id)].slice(0,5);
+  const quote = resolveCharacterGachaQuote(actor.id) || "";
+  const skillName = kind === "normal" ? "通常攻撃" : kind === "heal" ? "回復スキル" : "ストリートパンチ";
+  const liveAudio = useRef({audio,muted});
+  useEffect(()=>{liveAudio.current={audio,muted};},[audio,muted]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const sources = [...CHARACTERS_MASTER.map(asset), ...rarities.map(getRarityBadgeAsset), impactAsset,
+      "/effects/battle-v3/cutin-street.webp", "/bg/bg_street_shinjuku.jpg"];
+    Promise.all(sources.map(src => new Promise<void>((resolve,reject)=>{
+      const image = new Image(); image.onload=()=>{image.decode().then(()=>resolve(),reject);}; image.onerror=reject; image.src=src;
+    }))).then(()=>document.fonts.load('20px TNBattleTetsubin','新宿')).then(()=>{if(!cancelled)setReady(true);}).catch(()=>{if(!cancelled)setError(true);});
+    const timeout=window.setTimeout(()=>{if(!cancelled){setError(true);}},15000);
+    return()=>{cancelled=true;window.clearTimeout(timeout);};
+  },[loadKey]);
+
+  function begin(next: Kind, character = actor, reset = true, nextSequence = -1) {
+    run.current++; setActor(character);setKind(next);setAmount(0);setSequence(nextSequence);
+    if(reset){setHp(initialHp());setAllyHp(1200);setTotals({});}
+    setTarget(reset ? 0 : Math.max(0,hp.findIndex(value=>value>0)));
+    setPhase("actor");
+    if(!muted) {void audio.unlockAudio();audio.playSe(next === "normal" ? "BATTLE_ATTACK" : "BATTLE_SKILL");}
+  }
+
+  useEffect(()=>{
+    if(!busy) return;
+    const id=run.current;
+    const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const delay=phase==="actor" ? (kind==="normal" ? 320 : [600,650,900,1100][Math.max(0,tier)]) : phase==="impact" ? 550 : 600;
+    const timer=window.setTimeout(()=>{
+      if(id!==run.current)return;
+      if(phase==="actor"){
+        const value=kind==="heal" ? Math.min(800,2400-allyHp) : Math.min(hp[target],kind==="normal" ? 400 : kind==="finish" ? 2400 : 1200);
+        setAmount(value);
+        if(kind==="heal")setAllyHp(h=>Math.min(2400,h+value));
+        else {setHp(h=>h.map((v,i)=>i===target ? Math.max(0,v-value):v));setTotals(t=>({...t,[actor.id]:(t[actor.id]||0)+value}));}
+        const {audio:a,muted:m}=liveAudio.current;
+        if(!m)a.playSe(kind==="heal" ? "BATTLE_BUFF" : tier===3&&kind!=="normal" ? "BATTLE_CRITICAL" : "BATTLE_DAMAGE");
+        setPhase("impact");
+      }else if(phase==="impact")setPhase("settle");
+      else if(sequence>=0 && sequence<demo.length-1){
+        const next=demo[sequence+1]; const c=next.rarity==="SSR" ? initialActor : first(next.rarity);
+        run.current++;setActor(c);setKind(next.kind);setTarget(Math.max(0,hp.findIndex(v=>v>0)));setAmount(0);setSequence(sequence+1);setPhase("actor");
+      }else setPhase(sequence>=0 ? "mvp" : "idle");
+    },(reduced ? Math.max(350,delay) : delay)/speed);
+    return()=>window.clearTimeout(timer);
+  },[phase,actor,kind,tier,speed,sequence,busy,allyHp,hp,target]);
+
+  const winnerId=Object.keys(totals).sort((a,b)=>totals[b]-totals[a])[0];
+  const winner=CHARACTERS_MASTER.find(c=>c.id===winnerId) || actor;
+  const showImpact=phase==="impact" || phase==="settle";
+  function roster(c: Character,index:number,enemy:boolean){
+    const health=enemy ? hp[index] : index===0 ? allyHp : 2400;
+    const affected=showImpact && (kind==="heal" ? !enemy&&index===0 : enemy&&index===target);
+    return <div key={`${enemy}-${c.id}`} className={`bm-unit ${enemy?"enemy":"ally"} ${!enemy&&index===0&&busy?"acting":""} ${affected?"affected":""} ${health===0?"defeated":""}`} data-unit={`${enemy?"enemy":"ally"}-${index}`}>
+      <div className="bm-face"><img src={asset(c)} alt={c.jpName}/></div>
+      <div className="bm-unit-info"><strong>{c.jpName}</strong><img className="bm-badge" src={getRarityBadgeAsset(c.rarity)} alt={c.rarity}/><div className="bm-hp" role="progressbar" aria-label={`${c.jpName} HP`} aria-valuenow={health} aria-valuemin={0} aria-valuemax={2400}><i style={{width:`${health/24}%`}}/></div><small>{health.toLocaleString()} / 2,400</small></div>
+      {health===0&&<b className="bm-ko">撃破</b>}
+      {affected&&<><b className={`bm-damage ${kind==="heal"?"heal":""}`}>{kind==="heal"?"+":"−"}{amount.toLocaleString()}</b>{phase==="impact"&&kind!=="heal"&&<img className={`bm-impact ${kind==="normal"?"normal":""}`} src={impactAsset} alt=""/>}</>}
+    </div>;
+  }
+  if(!ready)return <main className="bm-loading"><p>{error?"素材を読み込めませんでした":"バトル素材を準備中…"}</p>{error&&<button onClick={()=>{setError(false);setLoadKey(k=>k+1);}}>再読み込み</button>}</main>;
+  return <main className={`bm-root bm-tier-${actor.rarity} bm-phase-${phase}`} style={{"--bm-rate":speed} as CSSProperties}>
+    <header className="bm-header"><div><small>TRIBE NEON / 演出モック</small><h1>新宿ストリート</h1></div><span>ROUND <b>01</b></span><button onClick={()=>{run.current++;setSequence(-1);setPhase("mvp");}}>SKIP</button></header>
+    <section className="bm-rosters"><div><h2>YOUR TEAM</h2>{allies.map((c,i)=>roster(c,i,false))}</div><div><h2>ENEMY</h2>{opponents.map((c,i)=>roster(c,i,true))}</div></section>
+    <div className="bm-event" aria-live="polite">{phase==="idle"?"操作パネルから演出を再生":phase==="actor"?`${actor.jpName} → ${kind==="heal"?actor.jpName:opponents[target].jpName} / ${skillName}`:kind==="heal"?`${amount.toLocaleString()} 回復`:`${amount.toLocaleString()} ダメージ${hp[target]===0?"・撃破":""}`}</div>
+    <section className={`bm-cutin ${busy&&kind!=="normal"?"visible":""} ${tier<2?"compact":""}`} aria-label="スキル演出">
+      {busy&&kind!=="normal" ? <><img className="bm-cutin-bg" src="/effects/battle-v3/cutin-street.webp" alt=""/>{tier>=2&&<img className="bm-cutin-character" src={asset(actor)} alt=""/>}<div className="bm-cutin-copy"><small>{actor.rarity} / {actor.jpName}</small><h2>{skillName}</h2><p>{quote}</p></div>{tier===3&&phase==="impact"&&kind!=="heal"&&<img className="bm-slash" src={impactAsset} alt=""/>}</> : <div className="bm-idle"><small>CHARACTER × SKILL</small><p>仲間の一撃を、見届けろ。</p></div>}
+    </section>
+    <section className="bm-controls" aria-label="モック操作"><div className="bm-selection"><label>発動キャラ<select disabled={busy} value={actor.id} onChange={e=>setActor(CHARACTERS_MASTER.find(c=>c.id===e.target.value)!)}>{CHARACTERS_MASTER.map(c=><option key={c.id} value={c.id}>{c.rarity} {c.jpName}</option>)}</select></label><button onClick={()=>setSpeed(s=>s===1?2:1)}>×{speed}</button><button onClick={()=>{setMuted(m=>!m);void audio.unlockAudio();}}>SE {muted?"OFF":"ON"}</button></div>
+      <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("normal")}>通常攻撃</button>{rarities.map(r=><button key={r} disabled={busy} onClick={()=>begin("skill",r==="SSR"?initialActor:first(r))}>{r}スキル</button>)}</div>
+      <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("skill")}>選択キャラ</button><button disabled={busy} onClick={()=>begin("heal")}>回復</button><button disabled={busy} onClick={()=>begin("finish")}>撃破</button><button disabled={busy} onClick={()=>begin("normal",first("N"),true,0)}>連続再生</button></div>
+      <small className="bm-note">固定値モック・レアリティ＝発動キャラ基準／セリフは既存文言の仮配置</small>
+    </section>
+    {phase==="mvp"&&<section className="bm-result" role="dialog" aria-modal="true" aria-label="モック結果"><small>DEMO RESULT</small><h2>VICTORY</h2><div className="bm-mvp-art"><img src={asset(winner)} alt={winner.jpName}/></div><div className="bm-mvp-copy"><small>MVP / 与ダメージ最多</small><h3>{winner.jpName}</h3><p>{resolveCharacterGachaQuote(winner.id)}</p><strong>与ダメージ {(totals[winner.id]||0).toLocaleString()}</strong><small>固定デモの集計／未攻撃時は選択キャラの表示サンプル</small><button autoFocus onClick={()=>{setPhase("idle");setSequence(-1);setHp(initialHp());setAllyHp(1200);}}>比較へ戻る</button></div></section>}
+  </main>;
+}
