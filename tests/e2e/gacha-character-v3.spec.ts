@@ -24,6 +24,14 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }
     await cards.nth(7).click();
     await expect(page.locator(".cg-reveal")).toHaveAttribute("data-character-id", expectedId!);
     await expect(page.locator(".cg-reveal-copy>blockquote")).not.toBeEmpty();
+    const revealBox = await page.locator(".cg-reveal").boundingBox();
+    const shellBox = await shell.boundingBox();
+    expect(revealBox!.width).toBeCloseTo(shellBox!.width, 0);
+    expect(revealBox!.height).toBeGreaterThanOrEqual(shellBox!.height - 1);
+    const portraitBox = await page.locator(".cg-portrait").boundingBox();
+    const copyBox = await page.locator(".cg-reveal-copy").boundingBox();
+    expect(copyBox!.y - portraitBox!.y).toBeGreaterThan(viewport.height * .35);
+    await expect(page.locator(".cg-stats dd").first()).toHaveCSS("color", "rgb(243, 237, 224)");
     await page.getByRole("button", { name: "一覧へ戻る", exact: true }).click();
     await expect(cards).toHaveCount(10);
     await page.getByRole("button", { name: "編成へ進む" }).click();

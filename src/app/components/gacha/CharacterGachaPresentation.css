@@ -10,7 +10,7 @@
 .cg-opening{display:flex;position:relative;align-items:center;justify-content:flex-end;flex-direction:column;width:100%;min-height:530px;height:100%;padding:80px 20px max(64px,env(safe-area-inset-bottom));border:0;background:transparent;color:#fff;overflow:hidden}
 .cg-headlight{position:absolute;left:10%;right:10%;top:40%;height:45%;background:radial-gradient(ellipse at 50% 55%,color-mix(in srgb,var(--cg-accent) 27%,transparent),transparent 65%);mix-blend-mode:screen;pointer-events:none;animation:cg-light 2s ease-in-out infinite alternate}
 .cg-opening-copy{position:relative;display:grid;gap:10px;text-shadow:0 2px 10px #000;z-index:2}.cg-opening-copy strong{font-size:30px;font-weight:500;letter-spacing:8px;color:#f5e5c7}.cg-opening-copy small{font-size:12px;letter-spacing:2px;color:#ded4c0}
-.cg-stage-burst .cg-reveal{display:block;width:100%;min-height:620px;height:100%;position:relative;border:0;background:transparent;color:inherit;text-align:left;padding:64px 0 20px}
+.cg-reveal{display:block;width:100%;min-height:620px;height:100%;position:relative;border:0;background:transparent;color:inherit;text-align:left;padding:64px 0 max(20px,env(safe-area-inset-bottom));appearance:none;-webkit-appearance:none;border-radius:0}
 .cg-reveal-content{height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative}
 .cg-portrait{position:absolute;inset:0 0 160px;overflow:hidden;animation:cg-arrive .75s ease-out both}
 .cg-standing{border:0;background:transparent;box-shadow:none;margin:0;overflow:hidden;width:100%;height:100%}
@@ -51,6 +51,17 @@
 .cg-city{width:100%;height:100%;object-fit:cover}
 .cg-waiting{visibility:hidden}.cg-waiting *{animation-play-state:paused!important}
 .cg-scene-loading{position:absolute;inset:0;margin:auto;z-index:1}
+
+/* 日本語は端末内のゴシックで統一し、追加フォントの読込遅延を作らない。 */
+.cg-shell{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;-webkit-text-size-adjust:100%;font-weight:500}
+.cg-shell button{color:inherit;-webkit-tap-highlight-color:transparent}
+.cg-shell .cg-city-scene>span{font-weight:800;font-size:32px;letter-spacing:.08em}
+.cg-shell .cg-reveal h2{font-weight:800;letter-spacing:.04em}
+.cg-shell .cg-summary h2{font-weight:800;letter-spacing:.06em}
+.cg-shell .cg-opening-copy strong{font-family:Arial,sans-serif;font-weight:800;font-size:28px;letter-spacing:.16em;color:#fff}
+.cg-shell .cg-opening-copy small,.cg-shell .cg-tap-hint{font-weight:600;letter-spacing:.06em}
+.cg-shell .cg-reveal blockquote{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;font-weight:500;letter-spacing:.02em;text-wrap:wrap;line-break:strict}
+.cg-shell .cg-stats dd{font-family:Arial,sans-serif;font-weight:700;color:#f3ede0}
 
 
 /* 横長の街を4枚→3枚の順で見せ、3秒後に操作を開放する。 */
