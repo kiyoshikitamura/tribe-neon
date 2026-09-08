@@ -134,3 +134,7 @@ test('公開Room未参加では参加者APIを呼ばず、登録後にだけ取�
   await c.selectRoom('room-a'); assert.equal(calls, 0); assert.equal(c.getSnapshot().participants.status, 'idle');
   await c.registerParticipation(); assert.equal(calls, 1); c.dispose();
 });
+test('救援リンク選択からの参加は通常登録を使わず救援IDを保持',async()=>{
+ const calls=[];const c=createRaidRoomController(transport({getBriefing:async id=>briefingFixture(id),registerParticipation:async(roomId)=>{calls.push({roomId,normal:true});return {roomId,membershipStatus:'joined'};},registerRescueParticipation:async(roomId,rescueId)=>{calls.push({roomId,rescueId});return {roomId,membershipStatus:'joined'};}}));
+ try{await c.selectRoom('room-a','rescue-a');assert.equal((await c.registerParticipation()).membershipStatus,'joined');assert.deepEqual(calls,[{roomId:'room-a',rescueId:'rescue-a'}]);await c.selectRoom('room-b');await c.registerParticipation();assert.deepEqual(calls[1],{roomId:'room-b',normal:true});}finally{c.dispose();}
+});

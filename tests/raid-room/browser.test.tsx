@@ -375,3 +375,19 @@ test('公開参加は参加済み表示へ更新し、戦闘不可ならReplay�
     assert.equal(h.ui.queryByRole('button', { name: '出撃準備' }), null);
   } finally { h.close(); }
 });
+
+test('救援依頼の通信失敗後は同requestで再試行し、両公開先の回数を更新', async () => {
+ const {default: Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');
+ const ids:string[]=[], blocking:boolean[]=[];let sent=false;
+ const status={roomId:'room',isOwner:true,requestEnabled:true,activityCount:0,guildCount:0,maxPerChannel:3 as const,viaRescue:false,finalizedBattles:0,contributionDamage:0};
+ const client={getStatus:async()=>({...status,activityCount:sent?1:0,guildCount:sent?1:0}),request:async(_room:string,id:string)=>{ids.push(id);if(ids.length===1)throw Error('network');sent=true;return {roomId:'room',requestId:id,activityCount:1,guildCount:1,maxPerChannel:3 as const,publications:[]};},getLink:async()=>({roomId:'room',rescueId:'rescue'}),join:async()=>({roomId:'room',membershipStatus:'joined' as const,viaRescue:true})};
+ const ui=render(<Panel client={client} roomId="room" setInteractionBlocking={x=>blocking.push(x)}/>);
+ try {fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));await ui.findByRole('alert');fireEvent.click(ui.getByRole('button',{name:'救援を依頼'}));await ui.findByText('救援依頼を送信しました。');await waitFor(()=>assert.match(ui.container.textContent??'',/全体 1 \/ 3 ・ ギルド 1 \/ 3/));assert.equal(ids.length,2);assert.equal(ids[0],ids[1]);assert.deepEqual(blocking,[true,false,true,false]);}finally{cleanup();}
+});
+
+test('救援上限到達は依頼不可、救援参加者にはサーバー貢献を表示',async()=>{
+ const {default: Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');
+ const status={roomId:'room',isOwner:true,requestEnabled:false,activityCount:3,guildCount:3,maxPerChannel:3 as const,viaRescue:true,finalizedBattles:2,contributionDamage:12345};
+ const client={getStatus:async()=>status,request:async()=>{throw Error('unexpected request');},getLink:async()=>({roomId:'room',rescueId:'rescue'}),join:async()=>({roomId:'room',membershipStatus:'joined' as const,viaRescue:true})};
+ const ui=render(<Panel client={client} roomId="room" setInteractionBlocking={()=>{}}/>);try{assert.equal((await ui.findByRole('button',{name:'救援を依頼'}) as HTMLButtonElement).disabled,true);assert.match(ui.container.textContent??'',/救援参加：2戦 ・ 貢献ダメージ 12,345/);}finally{cleanup();}
+});

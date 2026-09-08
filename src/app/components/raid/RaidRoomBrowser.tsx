@@ -12,6 +12,7 @@ import "./RaidRoomBrowser.css";
 
 export interface RaidRoomBrowserProps {
   controller: RaidRoomController;
+  renderRescue?: (room: RaidRoomDto, disabled: boolean) => React.ReactNode;
   onBriefingReady?: (briefing: RaidRoomBriefing) => void | Promise<void>;
   onBattleReady: (reference: RaidBattleReference) => void | Promise<void>;
   setInteractionBlocking: (blocking: boolean) => void;
@@ -46,7 +47,7 @@ function RoomSummary({ room, now }: { room: RaidRoomDto; now: number | null }) {
 
 function Spinner() { return <div className="raid-room-wait" role="status" aria-label="通信中"><span className="spinner" aria-hidden="true" /></div>; }
 
-export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName }: RaidRoomBrowserProps) {
+export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue }: RaidRoomBrowserProps) {
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
   // SSRとhydration初回は同じ未取得値。マウント後にだけ端末時計を参照する。
   const [now, setNow] = useState<number | null>(null);
@@ -148,6 +149,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
           <OutlawButton loadingLabel="" aria-label="参加者一覧" disabled={snapshot.canRegister && briefing?.membershipStatus !== "joined"} onClick={() => setDialog("participants")}>参加者一覧</OutlawButton>
           <OutlawButton loadingLabel="" aria-label="報酬" onClick={() => setDialog("rewards")}>報酬</OutlawButton>
         </div>
+        {renderRescue?.(room, busy || !!lifecycle?.blockJoin)}
         {snapshot.canRegister ? <>
           {snapshot.briefing.status === "loading" && <Spinner />}
           {snapshot.briefing.status === "error" && <p role="alert">参加条件を取得できませんでした。Roomを更新してください。</p>}

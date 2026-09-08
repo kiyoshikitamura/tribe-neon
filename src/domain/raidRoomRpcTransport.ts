@@ -1,3 +1,4 @@
+import { createRaidRoomRescueClient } from './raidRoomRescue.ts';
 import type { RaidObserved, RaidParticipantDto, RaidPlayerSummary, RaidRewardDto, RaidRoomDto, RaidServerEligibility } from './raidRoom';
 import { RAID_DIFFICULTIES } from './raidRoom.ts';
 import type { RaidBattleReference, RaidRoomTransport, RaidRoomBriefing } from './raidRoomClient';
@@ -11,6 +12,7 @@ export interface RaidRoomRpcClient {
 export interface RaidRoomRpcAuthorities {
   enableCreation?: boolean;
   enableParticipation?: boolean;
+  enableRescue?: boolean;
   getRewards?: (roomId: string) => Promise<unknown>;
   joinRoom?: (request: { readonly roomId: string; readonly rescueId?: string }) => Promise<unknown>;
 }
@@ -149,6 +151,13 @@ export function createRaidRoomRpcTransport(client: RaidRoomRpcClient, authoritie
     throw new Error('Raid room pagination limit exceeded');
   }
   return {
+    ...(authorities.enableRescue ? {
+      async registerRescueParticipation(roomId: string, rescueId: string) {
+        const receipt = await createRaidRoomRescueClient(client).join(rescueId);
+        if (receipt.roomId !== roomId) invalid();
+        return receipt;
+      },
+    } : {}),
     ...(authorities.enableParticipation ? {
       async registerParticipation(roomId: string) {
         const id = text(roomId);

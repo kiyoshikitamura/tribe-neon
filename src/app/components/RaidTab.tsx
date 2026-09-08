@@ -26,7 +26,7 @@ export default function RaidTab() {
   const {
     startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, navigateTab, userLevel, raidPoints, raidFirstEntryFree,
     setRaidPoints, setRaidFirstEntryFree, userGuildMember, fetchGuildDetail, session, syncBootstrapData,
-    raidTopRefreshRevision,
+    raidTopRefreshRevision, raidRescueTarget,
   } = useGame();
   const readiness = useScreenReadiness({ assets: SCREEN_ASSET_MANIFESTS.raid });
   const [activeRaids, setActiveRaids] = React.useState<any[]>([]);
@@ -148,7 +148,8 @@ export default function RaidTab() {
   return <>
     <HubPage className="raid-view" title="レイド" hideVisualHeader status={readiness.status} onRetry={readiness.retry}>
       {process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true" && <RaidRoomConnectedBrowser
-        rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true }}
+        key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId}
+        rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
         setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
         onBattleReady={() => { throw new Error("出撃準備から開始してください。"); }} />}
       {loading ? <div className="raid-loading" role="status">レイド情報を取得中…</div> : errorMessage ? <OutlawCard className="raid-error"><p>{errorMessage}</p><OutlawButton variant="primary" onClick={() => void loadRaidTop()}>再読み込み</OutlawButton></OutlawCard> : activeRaids.length === 0 ? <OutlawCard className="raid-empty"><strong>現在開催中のレイドはありません</strong><p>次の開催情報が確定すると、ここに表示されます。</p></OutlawCard> : <>

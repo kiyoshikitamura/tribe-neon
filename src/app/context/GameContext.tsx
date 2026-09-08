@@ -198,6 +198,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [activeBanners, setActiveBanners] = useState<any[]>([]);
   const [userXp, setUserXp] = useState<number>(0);
   const [raidPoints, setRaidPoints] = useState<number>(5);
+  const [raidRescueTarget, setRaidRescueTarget] = useState<{ rescueId: string; revision: number } | null>(null);
   const [raidTopRefreshRevision, setRaidTopRefreshRevision] = useState(0);
   const [raidFirstEntryFree, setRaidFirstEntryFree] = useState<boolean>(true);
   const [cash, setCash] = useState<number>(2600);
@@ -4142,6 +4143,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const unreadMissionsCount = missions.filter(m => m.status === "CLEAR").length;
   const unclaimedPresentsCount = presents.filter(p => p.status === "UNCLAIMED").length;
 
+  const openRaidRescue = (rescueId: string) => {
+    if (process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED !== "true") return;
+    setRaidRescueTarget(previous => ({ rescueId, revision: (previous?.revision ?? 0) + 1 }));
+    setShowTribeChatPanel(false);
+    navigateTab("raid");
+  };
+  useEffect(() => { setRaidRescueTarget(null); }, [session?.user?.id]);
+
   const navigateTab = (tabName: string, subTab?: string) => {
     setSelectedNews(null);
     nav.navigateTab(tabName, subTab);
@@ -4631,7 +4640,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     activeBanners, setActiveBanners,
     userItems, setUserItems,
     inventoryProjectionOwnerUserId,
-    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision,
+    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision, raidRescueTarget, openRaidRescue,
     monthlyPassActive, setMonthlyPassActive,
     monthlyPassClaimedToday, setMonthlyPassClaimedToday,
     handlePurchaseMonthlyPass, handleClaimDailyPassReward,

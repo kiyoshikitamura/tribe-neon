@@ -24,6 +24,7 @@ export interface RaidRoomCreateRequest { readonly difficultyId: RaidDifficultyId
 
 /** 実API接続時の境界。未実装のRPC名や報酬付与処理はここに置かない。 */
 export interface RaidRoomTransport {
+  registerRescueParticipation?(roomId: string, rescueId: string): Promise<RaidRoomMembershipReceipt>;
   registerParticipation?(roomId: string): Promise<RaidRoomMembershipReceipt>;
   getBriefing?(roomId: string): Promise<RaidRoomBriefing>;
   listBossChoices?(): Promise<readonly RaidBossChoice[]>;
@@ -220,7 +221,7 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
     refreshRoom,
     async registerParticipation() {
       if (disposed || registerPending || joinPending || createPending || !state.canRegister || !transport.registerParticipation || !state.selectedRoomId) return null;
-      if (rescueId !== undefined) {
+      if (rescueId !== undefined && !transport.registerRescueParticipation) {
         update({ registrationError: '救援からの参加は現在利用できません。' });
         return null;
       }
@@ -230,7 +231,9 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
       registerPending = true;
       update({ registering: true, registrationError: null });
       try {
-        const receipt = await transport.registerParticipation(roomId);
+        const receipt = rescueId !== undefined && transport.registerRescueParticipation
+          ? await transport.registerRescueParticipation(roomId, rescueId)
+          : await transport.registerParticipation(roomId);
         if (receipt.roomId !== roomId || !['joined', 'already_joined'].includes(receipt.membershipStatus)) throw new Error('Invalid membership receipt');
         if (disposed || revision !== selectionRevision) return null;
         await refreshRoom();

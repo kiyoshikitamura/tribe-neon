@@ -1,3 +1,7 @@
+# Raid第12工程 — VALIDATED
+
+救援依頼・Activity/Guild Chat両公開先各3回・救援参加帰属・製品導線。RAID-A/B/C/P-12。親検証: SQL12件、共通76件、React22件、実useBattle17件、全体型/Mock build PASS。実DB/Deploy/有効化なし。報酬/ランキング・実DB/実機は未完了。詳細raid_room_phase12_integration.md。
+
 # Raid第11工程 — VALIDATED
 
 A: 未確認開始の一覧/ack/未開始取消、B: 保存消失からの復帰/取消導線、C: 実SQL/実hook検証、P: 親レビュー/統合。RAID-A/B/C/P-11。親検証: SQL11件、共通71件、React20件、実useBattle17件、全体型/Mock build PASS。実DB/Deploy/運用有効化なし。救援/報酬/ランキング接続、破損localの未知要求解除、実DB/多接続/実機は残件。詳細raid_room_phase11_integration.md。

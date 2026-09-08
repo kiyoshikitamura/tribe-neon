@@ -1,3 +1,4 @@
+import RaidRescueLink from './raid/RaidRescueLink';
 import React, { useState, useRef, useEffect } from "react";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
@@ -217,7 +218,7 @@ export default function TribeChatModal() {
             ) : (
               safeGuildChats.map((msg: any, idx: number) => {
                 const isSelf = msg.user_id === session?.user?.id;
-                const member = guildMembersList?.find((entry: any) => entry.user_id === msg.user_id);
+                const member = guildMembersList?.find((entry: any) => entry.user_id === (msg.user_id || msg.author_id));
                 const leaderCharacterId = member?.users?.favorite_character_id || null;
                 const timeStr = msg?.created_at
                   ? new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
@@ -237,7 +238,7 @@ export default function TribeChatModal() {
                     {msg.reply_to_message_id && (
                       <div className="tribe-msg-reply-source">返信先のメッセージ</div>
                     )}
-                    <div className="tribe-msg-bubble">{msg.content || ""}</div>
+                    <div className="tribe-msg-bubble">{msg.content || ""}<RaidRescueLink rescueId={msg.raid_rescue_id} /></div>
                     {!msg.is_system && (
                       <button type="button" className="tribe-msg-reply" onClick={() => setChatReplyTo(msg)}>返信</button>
                     )}
