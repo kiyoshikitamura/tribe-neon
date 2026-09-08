@@ -30,7 +30,7 @@ export default function RaidTab() {
   } = useGame();
   const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
   const presentOwnerRef = React.useRef(session?.user?.id);
-  presentOwnerRef.current = session?.user?.id;
+  React.useLayoutEffect(() => { presentOwnerRef.current = session?.user?.id; }, [session?.user?.id]);
   const openRescuePresents = async () => {
     const userId = session?.user?.id;
     if (!userId) throw new Error("ログインを確認してください。");

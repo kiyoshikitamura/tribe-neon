@@ -42,3 +42,24 @@ NODE_OPTIONS=--max-old-space-size=4096 timeout 120s node node_modules/eslint/bin
 ```
 
 基準版は **exit 0、error 0 / warning 91** で完了した。基準版も同じOOMになるという仮説は成立しなかった。現行版は通常4GB/6GBでOOM、基準版は同じ4GBで完走する差がある。したがって、この失敗を根拠なく既存gate障害として扱わない。一方、差分内の特定箇所が原因とまでは証明しておらず、Compiler解析負荷の原因箇所の特定・修正は残件である。
+
+## 構造分割による修復（親追加割当）
+
+前節の調査段階から修復を実施した。復帰処理だけの抽出、反復認証ガードの抽出、復帰時RP同期/ACKの抽出では通常4GBのOOMが残ったため、これらの候補は戻した。依存更新、heap増量、ルール無効化、ignore追加、`use no memo` は採用していない。
+
+最終差分は `src/hooks/useBattle.ts` のみ。巨大な開始処理 `startCardBattleInternal` の本文1,174行を同ファイルのトップレベル `runBattleStart` へ移譲した。React hook は状態と参照を所有し、開始操作時に型付きcontext（既存の79依存）と元の引数を渡す。戦闘計算・モード別分岐・RPC・awaitの順序・Replayの扱いはそのままである。復帰処理など他の機械分割候補は残していない。
+
+TypeScript ASTで元の開始本文と移譲後本文を取得し、追加したcontextの分割代入文のみ除くと**バイト単位で完全一致**した。比較元は `58c7f1f45d229424857dd59943eb368ff2af98ab`。本文SHA-256は `b2c6916fd1e1124c6de5e675412842256bda15b83896ab792cc067d9a382653f`。React Compiler がhook内部の巨大な開始処理まで同時に解析する構造を解消した。
+
+通常lintが完走して顕在化した `roomUserRef.current` のrender中書込み1件も修復した。既存のアカウント切替effectを `useLayoutEffect` にし、その先頭で参照を更新する。同じcommitで参照更新と旧出撃の取消を揃え、放棄されたrenderのアカウントを非同期処理の判定へ露出させない。元の取消条件・状態初期化は変更していない。
+
+### 担当の最終検証
+
+- `node node_modules/eslint/bin/eslint.js src/hooks/useBattle.ts`: exit 0、**0 errors / 117 warnings**。通常ルール・標準heapで完走。warningは非型付け境界などの既存設定対象を含み、warningゼロとはしていない。
+- `node node_modules/typescript/bin/tsc --noEmit`: exit 0。
+- `RAID_TEST_RUNTIME_DIR=... node tests/raid-room/run-use-battle-room-tests.mjs`: **17 PASS / 0 FAIL**。再送、再読込復帰、アカウント切替、取消等を含む。
+- `node --experimental-strip-types scripts/verify_battle_presentation_contract.mjs`: PASS。
+- `node --experimental-strip-types scripts/verify_canonical_runtime_integration.mjs`: PASS。
+- `node scripts/verify_patrol_replay_adapter.mjs`: PASS。
+
+上記はローカルNode 24での担当検証。全体lint/buildと親レビューは親が別途実施する。新規CIの成功、実Preview、実DB、実機合格とは扱わない。Git変更・DB変更・Deploy・運用設定変更は担当から行っていない。

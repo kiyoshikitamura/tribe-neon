@@ -126,3 +126,20 @@ test('実ConnectedBrowserの初回一覧・更新・戦闘終了revisionが通�
   await waitFor(() => assert.equal(tracker.getSnapshot(), expiry));
   assert.equal(calls.length, 3);
 });
+
+
+test('StrictMode再setupで通知が動作しunmount後の応答を破棄する', async () => {
+  const wrapper = ({ children }: { children: React.ReactNode }) => <React.StrictMode>{children}</React.StrictMode>;
+  const view = renderHook(() => useRaidRoomActivity('A', true), { wrapper });
+  const tracker = view.result.current.tracker;
+  const later = roomFixture('room-a', { expiresAt: { status: 'available', value: new Date(Date.now() + 60000).toISOString() } });
+  const delayed = deferred<RaidRoomDto>();
+  const observed = tracker.observeTransport(transport({ listRooms: async () => [later], getRoom: () => delayed.promise }));
+  await act(async () => { await observed.listRooms(); });
+  assert.equal(view.result.current.isActive, true);
+  const before = tracker.getSnapshot();
+  const pending = observed.getRoom('room-a');
+  view.unmount();
+  delayed.resolve(ended); await pending;
+  assert.equal(tracker.getSnapshot(), before);
+});

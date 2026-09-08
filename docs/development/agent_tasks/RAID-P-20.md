@@ -13,3 +13,7 @@ EXPECTED OUTPUT: 担当記録とProtocol準拠Completion Report
 BRANCH: codex/raid-room-rescue-20260908
 COMMIT: 親統合時に確定
 BLOCKERS: 実Preview DB/設定値は未確認。本工程はCI失敗を優先。
+
+親追加範囲: scripts/verify_kpi_tutorial_union.mjsのローカル識別子moduleを別名へ変更する通常lintエラー修正のみ（KPI計算は変更しない）。
+
+親検証追加: tests/raid-room/activity-sync.test.tsxへStrictMode再setup後の開催反映・unmount後の応答破棄を1件追加（新lifecycleの具体的回帰確認）。

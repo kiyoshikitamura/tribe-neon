@@ -1,3 +1,17 @@
+# 第20工程 最新の親検証
+
+A-20/C-20はVALIDATED。B-20/P-20は訂正版ブラウザCI結果の確認待ちで、第20工程全体はIN_PROGRESS。
+
+開始処理を同ファイルのトップレベルrunBattleStartへ移した。親もASTで元の107文（53,372文字）がcontext代入を除いて完全一致することを確認し、引数順・79依存の受渡し・アカウント取消のlayout effect化をレビューした。最終的に復帰/guard等の試行helperは残していない。
+
+親最終検証: 通常全体lint **0 errors / 1,837 warnings**（除外追加・rule緩和なし）、全体型、Room flag trueのMock build PASS。戦闘復帰17件・Activity14件PASS（StrictMode/破棄後応答の1件を追加）。BのClear4/Room28/切替3、CのMock6、順位撤去React5もPASS。KPI検証のローカル識別子変更も既存検証PASS。
+
+独立CI初回はRaid画面6件を含む11PASS、カテゴリ期待順序2FAIL。RankingTabの正しい順序「総合力→ギルド→バトル」へ期待を訂正し、次のCIで再確認する。先行CI全体の失敗を解消済みとはまだ扱わない。
+
+実DB・実機・独立Preview接続・設定値投入は未実施。全体開発完了ではない。
+
+---
+
 # 第20工程 CI回帰修正・検証中
 
 2026-09-08、開発基準head 58c7f1f45d229424857dd59943eb368ff2af98ab。
@@ -17,7 +31,7 @@ Phase15で廃止したレイド順位を期待するE2Eが残り、本人貢献R
 - git diff --check: PASS。
 - ローカルChromium取得: CDN502/timeoutで失敗。実機やブラウザの合格として補完しない。
 
-親はQualityに独立raid-regression jobを追加した。Mock6件と既存3ファイル18ブラウザテストを実行し、広域E2Eが先に打ち切られても本差分を確認できるようにする。Room UIフラグfalseの旧画面における順位廃止/本人貢献の回帰であり、新Room実DBの一連受入とは異なる。既存Quality/Edge/広域E2Eを削除・無効化せず、Release Gateを置き換えない。初回CI結果は後続記録で確認する。
+親はQualityに独立raid-regression jobを追加した。Mock6件と既存3ファイル18ブラウザテストを実行し、広域E2Eが先に打ち切られても本差分を確認できるようにする。Room UIフラグfalseの旧画面における順位廃止/本人貢献の回帰であり、新Room実DBの一連受入とは異なる。既存Quality/Edge/広域E2Eを削除・無効化せず、Release Gateを置き換えない。初回CIはRaid画面6件を含む11件PASS、カテゴリ期待順序の誤り2件FAILで打切り。親がRankingTabの総合力→ギルド→バトルと照合して訂正。訂正版は再実行待ち。
 
 ## 状態と残件
 
@@ -28,3 +42,9 @@ RAID-C-20は親レビュー・対象機械検証済み。RAID-B-20はブラウ�
 先行CI run34198126545は合成merge2e8aee2（親314b38f+58c7f1f）を検証しており、head単体や開発基準b08e396とは分ける。失敗はlint OOM、廃止順位期待、基準からあるQA件数/バナー期待、KPI/認証の未確定原因。詳しくはraid_room_phase20_lint.md / raid_room_phase20_e2e.md / raid_room_phase20_mock.md。
 
 実DB操作、手動Deploy、merge、運用フラグ有効化は行っていない。
+
+## 通常lintの追加修正
+
+useBattleを除く診断実行で7エラーを確認。Room関係6件はrender中のref更新で、BがlayoutEffect/commit後のlifecycle管理へ修正した。アカウント切替と古い応答の保護を維持する。詳細raid_room_phase20_refs.md。
+
+残る1件は既存KPI検証スクリプトの変数名moduleに対するNext lint。親がloadedModuleへ名前だけ置換し、既存KPI検証をPASS。製品KPI集計・認証は変更しない。この診断でuseBattleを除いた結果を通常lintのPASSとは扱わない。

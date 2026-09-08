@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { flushSync } from "react-dom";
 import { supabase } from "@/utils/supabase";
 import { loadRaidActivity } from "@/domain/raidRoomActivity";
@@ -205,7 +205,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
   const roomActivity = useRaidRoomActivity(session?.user?.id, roomUiEnabled);
   const roomActivityRef = useRef(roomActivity);
-  roomActivityRef.current = roomActivity;
+  useLayoutEffect(() => { roomActivityRef.current = roomActivity; }, [roomActivity]);
   const [raidTopRefreshRevision, setRaidTopRefreshRevision] = useState(0);
   const [raidFirstEntryFree, setRaidFirstEntryFree] = useState<boolean>(true);
   const [cash, setCash] = useState<number>(2600);

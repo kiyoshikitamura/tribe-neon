@@ -49,3 +49,9 @@
 ## 親レビュー後のfixture補正
 
 `raid-phase3.spec.ts` の旧Raid fixtureへ `raid_day_key` を明示追加した。SQL261に忠実なMockは旧Instanceについて同じ非null日次キーの本人ログを合算するため、キー欠落では `123,456` の期待が成立しない。fixture時刻の日付をキーに使い、本人ログのInstance参照は維持する。製品の集計条件は緩和していない。親による対象18テストの読込はPASS、実ブラウザ実行の合格とは区別する。
+
+## 初回独立CIと親の再修正
+
+head `9b486755d69a96509e25efaa8b6fba764ba2fde8` に対する [raid-regression job](https://github.com/kiyoshikitamura/tribe-neon/actions/runs/34199814934/job/101975806157) は11 PASS・2 FAILで打切り。Raid画面6件（390/412、RP不足、川崎/横浜、背景待機）はすべてPASSし、本人貢献123,456表示を確認した。
+
+失敗は今回更新したカテゴリ完全一致の順序が実装と違うこと。RankingTabの定義は「総合力・ギルド・バトル」、テストが「総合力・バトル・ギルド」だった。親レビューの見落としとして、ランキングとmain-shellの期待順序を現定義に訂正した。カテゴリ数の緩和や製品順序変更は行わない。訂正版のブラウザ再実行は次のCIで確認する。

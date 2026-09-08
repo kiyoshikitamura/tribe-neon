@@ -13,3 +13,7 @@ EXPECTED OUTPUT: 担当記録とProtocol準拠Completion Report
 BRANCH: codex/raid-room-rescue-20260908
 COMMIT: 親統合時に確定
 BLOCKERS: 実Preview DB/設定値は未確認。本工程はCI失敗を優先。
+
+## 親の追加割当: lintのRoom関連ref更新
+
+対象: src/app/components/RaidTab.tsx、src/app/components/raid/RaidRoomClearRewardPanel.tsx、src/app/components/raid/RaidRoomRescuePanel.tsx、src/app/context/GameContext.tsx、src/app/context/hooks/useRaidRoomActivity.ts。通常eslintでrender中ref更新6エラーを確認。アカウント切替時の古い応答抑止・初期Auth後bootstrap・通知を保持し、commit後のlayout effect等へ移す。rules無効化禁止。activity13/clear4/Room28/切替3の既存テストを検証。親が担当するE2E期待順序2ファイルには触れない。

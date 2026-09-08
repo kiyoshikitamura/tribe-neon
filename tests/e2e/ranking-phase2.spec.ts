@@ -79,7 +79,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
   test(`Ranking mobile hierarchy and server authority ${viewport.width}x${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await openRanking(page);
-    await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveText(["総合力", "バトル", "ギルド"]);
+    await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveText(["総合力", "ギルド", "バトル"]);
     await expect(page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true })).toHaveCount(0);
     await expect(page.locator(".ranking-position").first()).toHaveText("7位");
     await expect(page.locator(".ranking-position").first()).not.toHaveText("1位");
@@ -195,6 +195,6 @@ test("Remaining ranking rewards use frozen canonical definitions and retired Rai
   await expect(guildRewards).toContainText("プレオープン第1位限定ギルド装飾");
   await guildRewards.getByRole("button", { name: "閉じる" }).last().click();
 
-  await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveText(["総合力", "バトル", "ギルド"]);
+  await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveText(["総合力", "ギルド", "バトル"]);
   await expect(page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true })).toHaveCount(0);
 });

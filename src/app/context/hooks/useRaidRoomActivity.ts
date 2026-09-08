@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { createRaidRoomActivityTracker, type RaidRoomActivityTracker } from '../../../domain/raidRoomActivitySync';
+import { useEffect, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { createRaidRoomActivityTracker } from '../../../domain/raidRoomActivitySync';
 
 export function useRaidRoomActivity(userId: string | undefined, enabled: boolean) {
-  const current = useRef<RaidRoomActivityTracker | null>(null);
-  const tracker = useMemo(() => {
-    const next = createRaidRoomActivityTracker(() => current.current === next && enabled && !!userId);
-    return next;
+  const lifecycle = useMemo(() => {
+    let active = false;
+    return {
+      tracker: createRaidRoomActivityTracker(() => active && enabled && !!userId),
+      activate: () => { active = true; },
+      deactivate: () => { active = false; },
+    };
   }, [userId, enabled]);
-  current.current = tracker;
+  useLayoutEffect(() => {
+    lifecycle.activate();
+    return lifecycle.deactivate;
+  }, [lifecycle]);
+  const tracker = lifecycle.tracker;
   const activeUntil = useSyncExternalStore(tracker.subscribe, tracker.getSnapshot, tracker.getSnapshot);
   const [, tick] = useState(0);
   useEffect(() => {

@@ -4,7 +4,7 @@ import { readRaidRoomPending, saveRaidRoomPending, clearRaidRoomPending, type Ra
 import { createRaidRoomBattleAttempt } from "../domain/raidRoomBattleAttempt";
 
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useLayoutEffect, useCallback, type RefObject, type Dispatch, type SetStateAction } from "react";
 import { supabase } from "@/utils/supabase";
 import {
   CHARACTERS_MASTER,
@@ -154,346 +154,186 @@ function savedPatrolReplayCursor(replayId: unknown, fallback: unknown): number {
   return Number.isFinite(saved) && saved >= 0 ? saved : fallbackIndex;
 }
 
-export function useBattle(options: UseBattleOptions) {
+interface BattleStartContext {
+  session: any;
+  roomUserRef: RefObject<any>;
+  roomAttemptRef: RefObject<ReturnType<typeof createRaidRoomBattleAttempt> | null>;
+  settledPatrolEncounterId: string | null;
+  setTutorialBattleActive: Dispatch<SetStateAction<boolean>>;
+  tutorialStep: string | null | undefined;
+  activePatrolEncounterIdRef: RefObject<string | null>;
+  patrol: any;
+  userCharactersDbList: any[];
+  setErrorMessage: (msg: string | null) => void;
+  userLevel: number;
+  setBattleLoading: Dispatch<SetStateAction<boolean>>;
+  playCyberSe: (type: "click" | "attack" | "hit" | "gacha") => void;
+  setOfficialGvgAttackId: Dispatch<SetStateAction<string | null>>;
+  setOfficialGvgReplayId: Dispatch<SetStateAction<string | null>>;
+  setOfficialGvgWinner: Dispatch<SetStateAction<"PLAYER" | "ENEMY" | null>>;
+  setOfficialPatrolReplayId: Dispatch<SetStateAction<string | null>>;
+  setOfficialPatrolWinner: Dispatch<SetStateAction<"PLAYER" | "ENEMY" | null>>;
+  setOfficialPatrolEvents: Dispatch<SetStateAction<ServerBattleEvent[]>>;
+  setOfficialPatrolEventIndex: Dispatch<SetStateAction<number>>;
+  setOfficialPvpReplayId: Dispatch<SetStateAction<string | null>>;
+  setOfficialPvpWinner: Dispatch<SetStateAction<"PLAYER" | "ENEMY" | null>>;
+  setOfficialPvpEvents: Dispatch<SetStateAction<ServerBattleEvent[]>>;
+  setOfficialPvpEventIndex: Dispatch<SetStateAction<number>>;
+  setOfficialPvpResult: Dispatch<any>;
+  setCanonicalAuxReplayId: Dispatch<SetStateAction<string | null>>;
+  setCanonicalAuxEvents: Dispatch<SetStateAction<ServerBattleEvent[]>>;
+  setCanonicalAuxEventIndex: Dispatch<SetStateAction<number>>;
+  setOfficialRaidReplayId: Dispatch<SetStateAction<string | null>>;
+  setOfficialRaidWinner: Dispatch<SetStateAction<"PLAYER" | "ENEMY" | null>>;
+  setOfficialRaidEvents: Dispatch<SetStateAction<ServerBattleEvent[]>>;
+  setOfficialRaidEventIndex: Dispatch<SetStateAction<number>>;
+  setOfficialRaidResult: Dispatch<any>;
+  setBattleResultReplayEvents: Dispatch<SetStateAction<ServerBattleEvent[]>>;
+  setBattleModeResultDetail: Dispatch<SetStateAction<BattleModeResultDetail | null>>;
+  setBattleSkipPending: Dispatch<SetStateAction<boolean>>;
+  setIsAutoPaused: Dispatch<SetStateAction<boolean>>;
+  setBattleState: Dispatch<SetStateAction<"SETUP" | "PLAYING" | "ENDING" | "OUTCOME" | "RESULT" | null>>;
+  setBattleMode: Dispatch<SetStateAction<BattleMode | null>>;
+  raidBossHp: number;
+  raidBossMaxHp: number;
+  patrolNpcs: any[];
+  userGuildMember: any;
+  setHasRaidControlBonus: Dispatch<SetStateAction<boolean>>;
+  setOpponentPoints: Dispatch<SetStateAction<number>>;
+  setEnemyTactic: Dispatch<SetStateAction<string>>;
+  setBattleOpponentName: Dispatch<SetStateAction<string>>;
+  setVitality: Dispatch<SetStateAction<number>>;
+  vitality: number;
+  setGvgTargetBaseId: Dispatch<SetStateAction<string | null>>;
+  selectedMembers: string[];
+  userSkillsList: any[];
+  userEquipmentsList: any[];
+  setMaxAp: Dispatch<SetStateAction<number>>;
+  setAp: Dispatch<SetStateAction<number>>;
+  userGuild: any;
+  setPlayerPartyStates: Dispatch<SetStateAction<ParticipantState[]>>;
+  pendingPvpStartRef: RefObject<any[] | null>;
+  setEnemyPartyStates: Dispatch<SetStateAction<ParticipantState[]>>;
+  setTimeline: Dispatch<SetStateAction<any[]>>;
+  setTimelineIndex: Dispatch<SetStateAction<number>>;
+  setBattleRound: Dispatch<SetStateAction<number>>;
+  setBattleLog: Dispatch<SetStateAction<string[]>>;
+  tactic: CompatibleBattleTacticId;
+  createPersistentRoomAttempt: (roomId: string, userId: string, initialPayload?: RaidRoomBattlePayload) => ReturnType<typeof createRaidRoomBattleAttempt>;
+  setBattlePresentationContext: Dispatch<SetStateAction<BattlePresentationContext | null>>;
+  officialPatrolReplayIdRef: RefObject<string | null>;
+  officialPatrolWinnerRef: RefObject<"PLAYER" | "ENEMY" | null>;
+  playerPartyStatesRef: RefObject<ParticipantState[]>;
+  enemyPartyStatesRef: RefObject<ParticipantState[]>;
+  pvpCommitSucceededRef: RefObject<boolean>;
+  setPvpPoints: Dispatch<SetStateAction<number>>;
+  pvpPoints: number;
+  raidCommitSucceededRef: RefObject<boolean>;
+  roomPresentationUserRef: RefObject<string | null>;
+  setRaidPoints: Dispatch<SetStateAction<number>> | undefined;
+  raidPoints: number | undefined;
+  setRaidFirstEntryFree: Dispatch<SetStateAction<boolean>> | undefined;
+  setBattleSessionId: Dispatch<SetStateAction<string | null>>;
+}
+
+/** Battle startup is an imperative transaction; React owns its supplied state. */
+async function runBattleStart(context: BattleStartContext,
+  mode: BattleMode,
+  targetName: string,
+  areaIdOrOpponentUserId?: string,
+  oppPoints?: number,
+  oppTactic?: string,
+  opponentMainAlign?: string,
+  opponentSubAlign?: string,
+  opponentDefenseCharIds?: string[],
+  _supportCharacter?: any,
+  patrolNpcOverride?: any,
+  patrolIdOverride?: string,
+  presentationOverride?: Partial<BattlePresentationContext>,
+  prepareOnly: boolean = false,
+  roomBriefing?: RaidRoomBriefing
+) {
   const {
     session,
+    roomUserRef,
+    roomAttemptRef,
+    settledPatrolEncounterId,
+    setTutorialBattleActive,
+    tutorialStep,
+    activePatrolEncounterIdRef,
+    patrol,
     userCharactersDbList,
-    userEquipmentsList,
-    userSkillsList,
-    selectedMembers,
-    selectedLeader,
-    userGuild,
-    userGuildMember,
-    gvgBaseControls,
-    currentBaseId,
-    username,
-    playCyberSe,
-    syncBootstrapData,
-    pvpPoints,
-    setPvpPoints,
+    setErrorMessage,
     userLevel,
-    setUserLevel,
-    userXp,
-    setUserXp,
-    vitality,
-    setVitality,
-    pvpRate,
-    setPvpRate,
-    pvpRankings,
-    raidPoints,
-    setRaidPoints,
-    setRaidFirstEntryFree,
-    requestRaidTopRefresh,
-    cash,
-    setCash,
-    diamonds,
-    setDiamonds,
+    setBattleLoading,
+    playCyberSe,
+    setOfficialGvgAttackId,
+    setOfficialGvgReplayId,
+    setOfficialGvgWinner,
+    setOfficialPatrolReplayId,
+    setOfficialPatrolWinner,
+    setOfficialPatrolEvents,
+    setOfficialPatrolEventIndex,
+    setOfficialPvpReplayId,
+    setOfficialPvpWinner,
+    setOfficialPvpEvents,
+    setOfficialPvpEventIndex,
+    setOfficialPvpResult,
+    setCanonicalAuxReplayId,
+    setCanonicalAuxEvents,
+    setCanonicalAuxEventIndex,
+    setOfficialRaidReplayId,
+    setOfficialRaidWinner,
+    setOfficialRaidEvents,
+    setOfficialRaidEventIndex,
+    setOfficialRaidResult,
+    setBattleResultReplayEvents,
+    setBattleModeResultDetail,
+    setBattleSkipPending,
+    setIsAutoPaused,
+    setBattleState,
+    setBattleMode,
     raidBossHp,
     raidBossMaxHp,
-    raidTotalDamage,
-    setRaidTotalDamage,
-    setErrorMessage,
-    addGuildXpAndContributionByAction,
-    setConfirmDialogConfig,
-    setGlobalInteractionBlocking,
-    patrolNpcs = [],
-    patrol,
-    tutorialStep,
-    setTutorialStep,
-    navigateTab,
-  } = options;
-
-  const [battleSessionId, setBattleSessionId] = useState<string | null>(null);
-  const [battleMode, setBattleMode] = useState<BattleMode | null>(null);
-  const [hasRaidControlBonus, setHasRaidControlBonus] = useState<boolean>(false);
-  const [battleOpponentName, setBattleOpponentName] = useState<string>("");
-  const [battleState, setBattleState] = useState<"SETUP" | "PLAYING" | "ENDING" | "OUTCOME" | "RESULT" | null>(null);
-  // Capture the encounter kind when the authoritative battle is opened.
-  // The onboarding bootstrap may refresh while a replay is playing; result
-  // ownership must not be reclassified from that mutable snapshot.
-  const [tutorialBattleActive, setTutorialBattleActive] = useState(false);
-  const [battleOutcome, setBattleOutcome] = useState<"VICTORY" | "DEFEAT" | null>(null);
-  const [battleLog, setBattleLog] = useState<string[]>([]);
-  const [ap, setAp] = useState<number>(0);
-  const [maxAp, setMaxAp] = useState<number>(0);
-  const [tactic, setTactic] = useState<CompatibleBattleTacticId>("ATTACK_PRIORITY");
-  const [battleSpeed, setBattleSpeed] = useState<number>(2); // 1 = 1x, 2 = 2x（初期値）
-  const [isAutoPaused, setIsAutoPaused] = useState<boolean>(false);
-  const [gvgTargetBaseId, setGvgTargetBaseId] = useState<string | null>(null);
-  const [battleLoading, setBattleLoading] = useState<boolean>(false);
-  const battleStartInFlightRef = useRef(false);
-  const battleEndingInFlightRef = useRef(false);
-  const pendingPvpStartRef = useRef<any[] | null>(null);
-  const pvpCommitSucceededRef = useRef(false);
-  const roomAttemptRef = useRef<ReturnType<typeof createRaidRoomBattleAttempt> | null>(null);
-  const roomUserRef = useRef(session?.user?.id);
-  roomUserRef.current = session?.user?.id;
-  const roomCancelBlockingRef = useRef(false);
-  const roomRecoveryRef = useRef<Promise<boolean> | null>(null);
-  const roomPresentationUserRef = useRef<string | null>(null);
-  const previousRoomUserRef = useRef(session?.user?.id);
-  useEffect(() => {
-    if (previousRoomUserRef.current === session?.user?.id) return;
-    previousRoomUserRef.current = session?.user?.id;
-    if (roomCancelBlockingRef.current) { roomCancelBlockingRef.current = false; setGlobalInteractionBlocking?.(false); }
-    roomAttemptRef.current = null;
-    pendingRaidStartRef.current = null;
-    raidCommitSucceededRef.current = false;
-    roomRecoveryRef.current = null;
-    roomPresentationUserRef.current = null;
-    battleStartInFlightRef.current = false;
-    setBattleState(null);
-    setBattleMode(null);
-    setBattleLoading(false);
-    setOfficialRaidResult(null);
-    setOfficialRaidReplayId(null);
-    setOfficialRaidEvents([]);
-    setPlayerPartyStates([]);
-    setEnemyPartyStates([]);
-  }, [session?.user?.id]);
-  const createPersistentRoomAttempt = (roomId: string, userId: string, initialPayload?: RaidRoomBattlePayload) =>
-    createRaidRoomBattleAttempt(roomId, initialPayload?.p_request_id ?? crypto.randomUUID(), {
-      initialPayload,
-      assertCurrent: () => { if (roomUserRef.current !== userId) throw new Error("アカウントが切り替わりました。"); },
-      beforeSend: payload => saveRaidRoomPending(userId, payload),
-      clear: requestId => clearRaidRoomPending(userId, requestId),
-    });
-
-  const pendingRaidStartRef = useRef<any[] | null>(null);
-  const raidCommitSucceededRef = useRef(false);
-  const [settledPatrolEncounterId, setSettledPatrolEncounterId] = useState<string | null>(null);
-  const activePatrolEncounterIdRef = useRef<string | null>(null);
-  const [enemyTactic, setEnemyTactic] = useState<string>("OFFENSIVE");
-  const [opponentPoints, setOpponentPoints] = useState<number>(1000);
-  const [officialGvgAttackId, setOfficialGvgAttackId] = useState<string | null>(null);
-  const [officialGvgReplayId, setOfficialGvgReplayId] = useState<string | null>(null);
-  const [officialGvgWinner, setOfficialGvgWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
-  const [canonicalAuxReplayId, setCanonicalAuxReplayId] = useState<string | null>(null);
-  const [canonicalAuxEvents, setCanonicalAuxEvents] = useState<ServerBattleEvent[]>([]);
-  const [canonicalAuxEventIndex, setCanonicalAuxEventIndex] = useState(0);
-  const [officialPatrolReplayId, setOfficialPatrolReplayId] = useState<string | null>(null);
-  const [officialPatrolWinner, setOfficialPatrolWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
-  const officialPatrolReplayIdRef = useRef<string | null>(null);
-  const officialPatrolWinnerRef = useRef<"PLAYER" | "ENEMY" | null>(null);
-  const [officialPatrolEvents, setOfficialPatrolEvents] = useState<ServerBattleEvent[]>([]);
-  const [officialPatrolEventIndex, setOfficialPatrolEventIndex] = useState(0);
-  const [officialPvpReplayId, setOfficialPvpReplayId] = useState<string | null>(null);
-  const [officialPvpWinner, setOfficialPvpWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
-  const [officialPvpEvents, setOfficialPvpEvents] = useState<ServerBattleEvent[]>([]);
-  const [officialPvpEventIndex, setOfficialPvpEventIndex] = useState(0);
-  const [officialPvpResult, setOfficialPvpResult] = useState<any | null>(null);
-  const [officialRaidReplayId, setOfficialRaidReplayId] = useState<string | null>(null);
-  const [officialRaidWinner, setOfficialRaidWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
-  const [officialRaidEvents, setOfficialRaidEvents] = useState<ServerBattleEvent[]>([]);
-  const [officialRaidEventIndex, setOfficialRaidEventIndex] = useState(0);
-  const [officialRaidResult, setOfficialRaidResult] = useState<any | null>(null);
-  const [battleResultReplayEvents, setBattleResultReplayEvents] = useState<ServerBattleEvent[]>([]);
-  const [battlePresentationContext, setBattlePresentationContext] = useState<BattlePresentationContext | null>(null);
-  const [battleModeResultDetail, setBattleModeResultDetail] = useState<BattleModeResultDetail | null>(null);
-  const [battleSkipPending, setBattleSkipPending] = useState(false);
-
-  // 5v5 状態管理
-  const [playerPartyStates, setPlayerPartyStates] = useState<ParticipantState[]>([]);
-  const [enemyPartyStates, setEnemyPartyStates] = useState<ParticipantState[]>([]);
-  // Replay presentation timers must not read the render that scheduled them.
-  // Snapshot hydration and the first ACTION can otherwise cross on slower
-  // clients, which drops canonical names and applies HP events to stale rows.
-  const playerPartyStatesRef = useRef<ParticipantState[]>([]);
-  const enemyPartyStatesRef = useRef<ParticipantState[]>([]);
-  const [timeline, setTimeline] = useState<any[]>([]);
-  const [timelineIndex, setTimelineIndex] = useState<number>(0);
-  const [battleRound, setBattleRound] = useState<number>(1);
-
-  // 演出・ポップアップ
-  const [activeSkillCutIn, setActiveSkillCutIn] = useState<{ charName: string; skillName: string } | null>(null);
-  const [targetLine, setTargetLine] = useState<{ fromId: string; toId: string } | null>(null);
-  const [activeShakingCharId, setActiveShakingCharId] = useState<string | null>(null);
-  const [damagePopup, setDamagePopup] = useState<{ val: number; type: "dmg" | "heal" | "shield"; isCritical?: boolean; x: number; y: number; charId: string } | null>(null);
-  const [presentationPhase, setPresentationPhase] = useState<BattlePresentationPhase>("IDLE");
-  const [actionPresentation, setActionPresentation] = useState<BattleActionPresentation | null>(null);
-  const [authoritativeTimeline, setAuthoritativeTimeline] = useState<BattlePresentationTimelineNode[]>([]);
-  const presentationTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const presentationGateGenerationRef = useRef(0);
-
-  const clearPresentationTimers = useCallback(() => {
-    presentationGateGenerationRef.current += 1;
-    presentationTimersRef.current.forEach(clearTimeout);
-    presentationTimersRef.current = [];
-  }, []);
-
-  const recordPresentationStage = (stage: "actorFocusAt" | "targetFocusAt" | "impactAt" | "damageAt" | "hpSettledAt" | "actionCompleteAt", targetId?: string) => {
-    if (typeof window === "undefined") return;
-    const battleWindow = window as typeof window & { __TRIBE_BATTLE_PRESENTATION__?: { current?: any; history: any[] } };
-    const current = battleWindow.__TRIBE_BATTLE_PRESENTATION__?.current;
-    if (current && typeof current[stage] !== "number") {
-      current[stage] = performance.now();
-      if (targetId) current[`${stage}TargetId`] = targetId;
-    }
-  };
-
-  useEffect(() => () => clearPresentationTimers(), [clearPresentationTimers]);
-  useEffect(() => { playerPartyStatesRef.current = playerPartyStates; }, [playerPartyStates]);
-  useEffect(() => { enemyPartyStatesRef.current = enemyPartyStates; }, [enemyPartyStates]);
-
-
-
-  // 進行中のバトルセッションを復元 (Resume) する関数
-  const resumeActiveBattleSession = async (patrolIdOverride?: string | null) => {
-    if (!session?.user?.id) return false;
-    if (await resumePendingRaidRoomBattle()) return true;
-    try {
-      const canonicalPatrolId = patrolIdOverride || patrol?.id || null;
-      if (canonicalPatrolId) {
-        const { data: replayRows, error: replayError } = await supabase
-          .from("battle_replay_sessions")
-          .select("*")
-          .eq("requester_user_id", session.user.id)
-          .eq("battle_mode", "QUEST")
-          .eq("source_reference_id", canonicalPatrolId)
-          .order("created_at", { ascending: false })
-          .limit(1);
-        if (replayError) throw replayError;
-        const canonicalReplay = replayRows?.[0];
-        if (canonicalReplay) {
-          let resolvedResult = canonicalReplay.result;
-          if (canonicalReplay.status !== "RESOLVED" || !resolvedResult) {
-            const resolved = await supabase.functions.invoke("resolve-battle", {
-              body: { replaySessionId: canonicalReplay.id },
-            });
-            if (resolved.error) throw resolved.error;
-            resolvedResult = resolved.data;
-          }
-          const canonicalPlayers = patrolSnapshotToParticipants(canonicalReplay.player_snapshot, false);
-          const canonicalEnemies = patrolSnapshotToParticipants(canonicalReplay.enemy_snapshot, true);
-          const { data: replayEventRows, error: eventError } = await supabase
-            .from("battle_replay_events")
-            .select("event_index,round_number,event_type,payload")
-            .eq("battle_replay_session_id", canonicalReplay.id)
-            .order("event_index", { ascending: true });
-          if (eventError) throw eventError;
-          const canonicalEvents = Array.isArray(resolvedResult?.events) && resolvedResult.events.length > 0
-            ? serverBattleEvents(resolvedResult.events)
-            : serverBattleEvents((replayEventRows || []).map((event: any) => ({
-                index: event.event_index,
-                round: event.round_number,
-                type: event.event_type,
-                payload: event.payload,
-              })));
-          const winner = resolvedResult?.winner;
-          if (canonicalPlayers.length > 0 && canonicalEnemies.length > 0 && canonicalEvents.length > 0
-            && (winner === "PLAYER" || winner === "ENEMY")) {
-            activePatrolEncounterIdRef.current = canonicalPatrolId;
-            setTutorialBattleActive(tutorialStep === "TUTORIAL_BATTLE");
-            setBattleMode("PATROL");
-            setBattleOpponentName("クエストバトル");
-            setPlayerPartyStates(canonicalPlayers);
-            setEnemyPartyStates(canonicalEnemies);
-            playerPartyStatesRef.current = canonicalPlayers;
-            enemyPartyStatesRef.current = canonicalEnemies;
-            setTimeline([
-              ...canonicalPlayers.map((participant) => ({ id: participant.id, name: participant.name, isEnemy: false, spd: participant.stats.spd })),
-              ...canonicalEnemies.map((participant) => ({ id: participant.id, name: participant.name, isEnemy: true, spd: participant.stats.spd })),
-            ].sort((left, right) => right.spd - left.spd));
-            setTimelineIndex(0);
-            setBattleRound(1);
-            setOfficialPatrolReplayId(canonicalReplay.id);
-            setOfficialPatrolWinner(winner);
-            officialPatrolReplayIdRef.current = canonicalReplay.id;
-            officialPatrolWinnerRef.current = winner;
-            setOfficialPatrolEvents(canonicalEvents);
-            // A closed browser may leave a cursor at the final event without
-            // allowing the result paint. Replay from the canonical beginning;
-            // never strand Continue on an exhausted local cursor.
-            setOfficialPatrolEventIndex(0);
-            if (typeof window !== "undefined") window.localStorage.removeItem(patrolReplayCursorKey(canonicalReplay.id));
-            setBattlePresentationContext({
-              mode: "PATROL",
-              opponentLabel: "クエストバトル",
-              opponentLeaderCharacterId: canonicalEnemies[0]?.characterId,
-              opponentLeaderName: canonicalEnemies[0]?.name,
-            });
-            setBattleState("PLAYING");
-            return true;
-          }
-        }
-      }
-
-      const { data: activeSessions, error } = await supabase
-        .from("battle_sessions")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .eq("status", "ACTIVE")
-        .order("updated_at", { ascending: false })
-        .limit(1);
-
-      if (error || !activeSessions || activeSessions.length === 0) {
-        return false;
-      }
-
-      const activeSession = activeSessions[0];
-      const playerStateData = activeSession.player_state;
-      const enemyStateData = activeSession.enemy_state;
-
-      if (playerStateData && enemyStateData) {
-        setBattleSessionId(activeSession.id);
-        const mappedMode = activeSession.battle_type === "ARENA" ? "PVP" : activeSession.battle_type;
-        setBattleMode(mappedMode);
-        setPlayerPartyStates(playerStateData.playerStates || []);
-        setEnemyPartyStates(enemyStateData.enemyStates || []);
-        setAp(0);
-        setMaxAp(0);
-        if (playerStateData.tactic) setTactic(playerStateData.tactic);
-        if (playerStateData.log) setBattleLog(playerStateData.log);
-        if (playerStateData.timelineIndex !== undefined) setTimelineIndex(playerStateData.timelineIndex);
-        setBattleRound(1);
-        if (playerStateData.gvgAreaId) setGvgTargetBaseId(playerStateData.gvgAreaId);
-        setOfficialGvgAttackId(playerStateData.officialGvgAttackId || null);
-        setOfficialGvgReplayId(playerStateData.officialGvgReplayId || null);
-        setOfficialGvgWinner(playerStateData.officialGvgWinner === "PLAYER" ? "PLAYER" : playerStateData.officialGvgWinner === "ENEMY" ? "ENEMY" : null);
-        setCanonicalAuxReplayId(playerStateData.canonicalAuxReplayId || null);
-        setCanonicalAuxEvents(serverBattleEvents(playerStateData.canonicalAuxEvents));
-        setCanonicalAuxEventIndex(savedPatrolReplayCursor(playerStateData.canonicalAuxReplayId, playerStateData.canonicalAuxEventIndex));
-        setOfficialPatrolReplayId(playerStateData.officialPatrolReplayId || null);
-        setOfficialPatrolWinner(playerStateData.officialPatrolWinner === "PLAYER" ? "PLAYER" : playerStateData.officialPatrolWinner === "ENEMY" ? "ENEMY" : null);
-        setOfficialPatrolEvents(serverBattleEvents(playerStateData.officialPatrolEvents));
-        setOfficialPatrolEventIndex(savedPatrolReplayCursor(playerStateData.officialPatrolReplayId, playerStateData.officialPatrolEventIndex));
-        setOfficialPvpReplayId(playerStateData.officialPvpReplayId || null);
-        setOfficialPvpWinner(playerStateData.officialPvpWinner === "PLAYER" ? "PLAYER" : playerStateData.officialPvpWinner === "ENEMY" ? "ENEMY" : null);
-        setOfficialPvpEvents(serverBattleEvents(playerStateData.officialPvpEvents));
-        setOfficialPvpEventIndex(savedPatrolReplayCursor(playerStateData.officialPvpReplayId, playerStateData.officialPvpEventIndex));
-        setOfficialPvpResult(playerStateData.officialPvpResult || null);
-        setOfficialRaidReplayId(playerStateData.officialRaidReplayId || null);
-        setOfficialRaidWinner(playerStateData.officialRaidWinner === "PLAYER" ? "PLAYER" : playerStateData.officialRaidWinner === "ENEMY" ? "ENEMY" : null);
-        setOfficialRaidEvents(serverBattleEvents(playerStateData.officialRaidEvents));
-        setOfficialRaidEventIndex(savedPatrolReplayCursor(playerStateData.officialRaidReplayId, playerStateData.officialRaidEventIndex));
-        setOfficialRaidResult(playerStateData.officialRaidResult || null);
-
-        setBattleState("PLAYING");
-        return true;
-      }
-    } catch (err) {
-      console.warn("Failed to resume active battle session:", err);
-    }
-    return false;
-  };
-
-  // バトルの初期設定フェーズへ移行
-  const startCardBattleInternal = async (
-    mode: BattleMode,
-    targetName: string,
-    areaIdOrOpponentUserId?: string,
-    oppPoints?: number,
-    oppTactic?: string,
-    opponentMainAlign?: string,
-    opponentSubAlign?: string,
-    opponentDefenseCharIds?: string[],
-    _supportCharacter?: any,
-    patrolNpcOverride?: any,
-    patrolIdOverride?: string,
-    presentationOverride?: Partial<BattlePresentationContext>,
-    prepareOnly: boolean = false,
-    roomBriefing?: RaidRoomBriefing,
-  ) => {
+    patrolNpcs,
+    userGuildMember,
+    setHasRaidControlBonus,
+    setOpponentPoints,
+    setEnemyTactic,
+    setBattleOpponentName,
+    setVitality,
+    vitality,
+    setGvgTargetBaseId,
+    selectedMembers,
+    userSkillsList,
+    userEquipmentsList,
+    setMaxAp,
+    setAp,
+    userGuild,
+    setPlayerPartyStates,
+    pendingPvpStartRef,
+    setEnemyPartyStates,
+    setTimeline,
+    setTimelineIndex,
+    setBattleRound,
+    setBattleLog,
+    tactic,
+    createPersistentRoomAttempt,
+    setBattlePresentationContext,
+    officialPatrolReplayIdRef,
+    officialPatrolWinnerRef,
+    playerPartyStatesRef,
+    enemyPartyStatesRef,
+    pvpCommitSucceededRef,
+    setPvpPoints,
+    pvpPoints,
+    raidCommitSucceededRef,
+    roomPresentationUserRef,
+    setRaidPoints,
+    raidPoints,
+    setRaidFirstEntryFree,
+    setBattleSessionId,
+  } = context;
     if (!session) return;
     const startingRoomUserId = session.user.id;
     const staleRoomUser = () => Boolean(roomBriefing && roomUserRef.current !== startingRoomUserId);
@@ -1666,7 +1506,426 @@ export function useBattle(options: UseBattleOptions) {
         console.warn("Failed to clear saved Room request:", error);
       }
     }
+  }
+
+export function useBattle(options: UseBattleOptions) {
+  const {
+    session,
+    userCharactersDbList,
+    userEquipmentsList,
+    userSkillsList,
+    selectedMembers,
+    selectedLeader,
+    userGuild,
+    userGuildMember,
+    gvgBaseControls,
+    currentBaseId,
+    username,
+    playCyberSe,
+    syncBootstrapData,
+    pvpPoints,
+    setPvpPoints,
+    userLevel,
+    setUserLevel,
+    userXp,
+    setUserXp,
+    vitality,
+    setVitality,
+    pvpRate,
+    setPvpRate,
+    pvpRankings,
+    raidPoints,
+    setRaidPoints,
+    setRaidFirstEntryFree,
+    requestRaidTopRefresh,
+    cash,
+    setCash,
+    diamonds,
+    setDiamonds,
+    raidBossHp,
+    raidBossMaxHp,
+    raidTotalDamage,
+    setRaidTotalDamage,
+    setErrorMessage,
+    addGuildXpAndContributionByAction,
+    setConfirmDialogConfig,
+    setGlobalInteractionBlocking,
+    patrolNpcs = [],
+    patrol,
+    tutorialStep,
+    setTutorialStep,
+    navigateTab,
+  } = options;
+
+  const [battleSessionId, setBattleSessionId] = useState<string | null>(null);
+  const [battleMode, setBattleMode] = useState<BattleMode | null>(null);
+  const [hasRaidControlBonus, setHasRaidControlBonus] = useState<boolean>(false);
+  const [battleOpponentName, setBattleOpponentName] = useState<string>("");
+  const [battleState, setBattleState] = useState<"SETUP" | "PLAYING" | "ENDING" | "OUTCOME" | "RESULT" | null>(null);
+  // Capture the encounter kind when the authoritative battle is opened.
+  // The onboarding bootstrap may refresh while a replay is playing; result
+  // ownership must not be reclassified from that mutable snapshot.
+  const [tutorialBattleActive, setTutorialBattleActive] = useState(false);
+  const [battleOutcome, setBattleOutcome] = useState<"VICTORY" | "DEFEAT" | null>(null);
+  const [battleLog, setBattleLog] = useState<string[]>([]);
+  const [ap, setAp] = useState<number>(0);
+  const [maxAp, setMaxAp] = useState<number>(0);
+  const [tactic, setTactic] = useState<CompatibleBattleTacticId>("ATTACK_PRIORITY");
+  const [battleSpeed, setBattleSpeed] = useState<number>(2); // 1 = 1x, 2 = 2x（初期値）
+  const [isAutoPaused, setIsAutoPaused] = useState<boolean>(false);
+  const [gvgTargetBaseId, setGvgTargetBaseId] = useState<string | null>(null);
+  const [battleLoading, setBattleLoading] = useState<boolean>(false);
+  const battleStartInFlightRef = useRef(false);
+  const battleEndingInFlightRef = useRef(false);
+  const pendingPvpStartRef = useRef<any[] | null>(null);
+  const pvpCommitSucceededRef = useRef(false);
+  const roomAttemptRef = useRef<ReturnType<typeof createRaidRoomBattleAttempt> | null>(null);
+  const roomUserRef = useRef(session?.user?.id);
+  const roomCancelBlockingRef = useRef(false);
+  const roomRecoveryRef = useRef<Promise<boolean> | null>(null);
+  const roomPresentationUserRef = useRef<string | null>(null);
+  const previousRoomUserRef = useRef(session?.user?.id);
+  useLayoutEffect(() => {
+    roomUserRef.current = session?.user?.id;
+    if (previousRoomUserRef.current === session?.user?.id) return;
+    previousRoomUserRef.current = session?.user?.id;
+    if (roomCancelBlockingRef.current) { roomCancelBlockingRef.current = false; setGlobalInteractionBlocking?.(false); }
+    roomAttemptRef.current = null;
+    pendingRaidStartRef.current = null;
+    raidCommitSucceededRef.current = false;
+    roomRecoveryRef.current = null;
+    roomPresentationUserRef.current = null;
+    battleStartInFlightRef.current = false;
+    setBattleState(null);
+    setBattleMode(null);
+    setBattleLoading(false);
+    setOfficialRaidResult(null);
+    setOfficialRaidReplayId(null);
+    setOfficialRaidEvents([]);
+    setPlayerPartyStates([]);
+    setEnemyPartyStates([]);
+  }, [session?.user?.id]);
+  const createPersistentRoomAttempt = (roomId: string, userId: string, initialPayload?: RaidRoomBattlePayload) =>
+    createRaidRoomBattleAttempt(roomId, initialPayload?.p_request_id ?? crypto.randomUUID(), {
+      initialPayload,
+      assertCurrent: () => { if (roomUserRef.current !== userId) throw new Error("アカウントが切り替わりました。"); },
+      beforeSend: payload => saveRaidRoomPending(userId, payload),
+      clear: requestId => clearRaidRoomPending(userId, requestId),
+    });
+
+  const pendingRaidStartRef = useRef<any[] | null>(null);
+  const raidCommitSucceededRef = useRef(false);
+  const [settledPatrolEncounterId, setSettledPatrolEncounterId] = useState<string | null>(null);
+  const activePatrolEncounterIdRef = useRef<string | null>(null);
+  const [enemyTactic, setEnemyTactic] = useState<string>("OFFENSIVE");
+  const [opponentPoints, setOpponentPoints] = useState<number>(1000);
+  const [officialGvgAttackId, setOfficialGvgAttackId] = useState<string | null>(null);
+  const [officialGvgReplayId, setOfficialGvgReplayId] = useState<string | null>(null);
+  const [officialGvgWinner, setOfficialGvgWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
+  const [canonicalAuxReplayId, setCanonicalAuxReplayId] = useState<string | null>(null);
+  const [canonicalAuxEvents, setCanonicalAuxEvents] = useState<ServerBattleEvent[]>([]);
+  const [canonicalAuxEventIndex, setCanonicalAuxEventIndex] = useState(0);
+  const [officialPatrolReplayId, setOfficialPatrolReplayId] = useState<string | null>(null);
+  const [officialPatrolWinner, setOfficialPatrolWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
+  const officialPatrolReplayIdRef = useRef<string | null>(null);
+  const officialPatrolWinnerRef = useRef<"PLAYER" | "ENEMY" | null>(null);
+  const [officialPatrolEvents, setOfficialPatrolEvents] = useState<ServerBattleEvent[]>([]);
+  const [officialPatrolEventIndex, setOfficialPatrolEventIndex] = useState(0);
+  const [officialPvpReplayId, setOfficialPvpReplayId] = useState<string | null>(null);
+  const [officialPvpWinner, setOfficialPvpWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
+  const [officialPvpEvents, setOfficialPvpEvents] = useState<ServerBattleEvent[]>([]);
+  const [officialPvpEventIndex, setOfficialPvpEventIndex] = useState(0);
+  const [officialPvpResult, setOfficialPvpResult] = useState<any | null>(null);
+  const [officialRaidReplayId, setOfficialRaidReplayId] = useState<string | null>(null);
+  const [officialRaidWinner, setOfficialRaidWinner] = useState<"PLAYER" | "ENEMY" | null>(null);
+  const [officialRaidEvents, setOfficialRaidEvents] = useState<ServerBattleEvent[]>([]);
+  const [officialRaidEventIndex, setOfficialRaidEventIndex] = useState(0);
+  const [officialRaidResult, setOfficialRaidResult] = useState<any | null>(null);
+  const [battleResultReplayEvents, setBattleResultReplayEvents] = useState<ServerBattleEvent[]>([]);
+  const [battlePresentationContext, setBattlePresentationContext] = useState<BattlePresentationContext | null>(null);
+  const [battleModeResultDetail, setBattleModeResultDetail] = useState<BattleModeResultDetail | null>(null);
+  const [battleSkipPending, setBattleSkipPending] = useState(false);
+
+  // 5v5 状態管理
+  const [playerPartyStates, setPlayerPartyStates] = useState<ParticipantState[]>([]);
+  const [enemyPartyStates, setEnemyPartyStates] = useState<ParticipantState[]>([]);
+  // Replay presentation timers must not read the render that scheduled them.
+  // Snapshot hydration and the first ACTION can otherwise cross on slower
+  // clients, which drops canonical names and applies HP events to stale rows.
+  const playerPartyStatesRef = useRef<ParticipantState[]>([]);
+  const enemyPartyStatesRef = useRef<ParticipantState[]>([]);
+  const [timeline, setTimeline] = useState<any[]>([]);
+  const [timelineIndex, setTimelineIndex] = useState<number>(0);
+  const [battleRound, setBattleRound] = useState<number>(1);
+
+  // 演出・ポップアップ
+  const [activeSkillCutIn, setActiveSkillCutIn] = useState<{ charName: string; skillName: string } | null>(null);
+  const [targetLine, setTargetLine] = useState<{ fromId: string; toId: string } | null>(null);
+  const [activeShakingCharId, setActiveShakingCharId] = useState<string | null>(null);
+  const [damagePopup, setDamagePopup] = useState<{ val: number; type: "dmg" | "heal" | "shield"; isCritical?: boolean; x: number; y: number; charId: string } | null>(null);
+  const [presentationPhase, setPresentationPhase] = useState<BattlePresentationPhase>("IDLE");
+  const [actionPresentation, setActionPresentation] = useState<BattleActionPresentation | null>(null);
+  const [authoritativeTimeline, setAuthoritativeTimeline] = useState<BattlePresentationTimelineNode[]>([]);
+  const presentationTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const presentationGateGenerationRef = useRef(0);
+
+  const clearPresentationTimers = useCallback(() => {
+    presentationGateGenerationRef.current += 1;
+    presentationTimersRef.current.forEach(clearTimeout);
+    presentationTimersRef.current = [];
+  }, []);
+
+  const recordPresentationStage = (stage: "actorFocusAt" | "targetFocusAt" | "impactAt" | "damageAt" | "hpSettledAt" | "actionCompleteAt", targetId?: string) => {
+    if (typeof window === "undefined") return;
+    const battleWindow = window as typeof window & { __TRIBE_BATTLE_PRESENTATION__?: { current?: any; history: any[] } };
+    const current = battleWindow.__TRIBE_BATTLE_PRESENTATION__?.current;
+    if (current && typeof current[stage] !== "number") {
+      current[stage] = performance.now();
+      if (targetId) current[`${stage}TargetId`] = targetId;
+    }
   };
+
+  useEffect(() => () => clearPresentationTimers(), [clearPresentationTimers]);
+  useEffect(() => { playerPartyStatesRef.current = playerPartyStates; }, [playerPartyStates]);
+  useEffect(() => { enemyPartyStatesRef.current = enemyPartyStates; }, [enemyPartyStates]);
+
+
+
+  // 進行中のバトルセッションを復元 (Resume) する関数
+  const resumeActiveBattleSession = async (patrolIdOverride?: string | null) => {
+    if (!session?.user?.id) return false;
+    if (await resumePendingRaidRoomBattle()) return true;
+    try {
+      const canonicalPatrolId = patrolIdOverride || patrol?.id || null;
+      if (canonicalPatrolId) {
+        const { data: replayRows, error: replayError } = await supabase
+          .from("battle_replay_sessions")
+          .select("*")
+          .eq("requester_user_id", session.user.id)
+          .eq("battle_mode", "QUEST")
+          .eq("source_reference_id", canonicalPatrolId)
+          .order("created_at", { ascending: false })
+          .limit(1);
+        if (replayError) throw replayError;
+        const canonicalReplay = replayRows?.[0];
+        if (canonicalReplay) {
+          let resolvedResult = canonicalReplay.result;
+          if (canonicalReplay.status !== "RESOLVED" || !resolvedResult) {
+            const resolved = await supabase.functions.invoke("resolve-battle", {
+              body: { replaySessionId: canonicalReplay.id },
+            });
+            if (resolved.error) throw resolved.error;
+            resolvedResult = resolved.data;
+          }
+          const canonicalPlayers = patrolSnapshotToParticipants(canonicalReplay.player_snapshot, false);
+          const canonicalEnemies = patrolSnapshotToParticipants(canonicalReplay.enemy_snapshot, true);
+          const { data: replayEventRows, error: eventError } = await supabase
+            .from("battle_replay_events")
+            .select("event_index,round_number,event_type,payload")
+            .eq("battle_replay_session_id", canonicalReplay.id)
+            .order("event_index", { ascending: true });
+          if (eventError) throw eventError;
+          const canonicalEvents = Array.isArray(resolvedResult?.events) && resolvedResult.events.length > 0
+            ? serverBattleEvents(resolvedResult.events)
+            : serverBattleEvents((replayEventRows || []).map((event: any) => ({
+                index: event.event_index,
+                round: event.round_number,
+                type: event.event_type,
+                payload: event.payload,
+              })));
+          const winner = resolvedResult?.winner;
+          if (canonicalPlayers.length > 0 && canonicalEnemies.length > 0 && canonicalEvents.length > 0
+            && (winner === "PLAYER" || winner === "ENEMY")) {
+            activePatrolEncounterIdRef.current = canonicalPatrolId;
+            setTutorialBattleActive(tutorialStep === "TUTORIAL_BATTLE");
+            setBattleMode("PATROL");
+            setBattleOpponentName("クエストバトル");
+            setPlayerPartyStates(canonicalPlayers);
+            setEnemyPartyStates(canonicalEnemies);
+            playerPartyStatesRef.current = canonicalPlayers;
+            enemyPartyStatesRef.current = canonicalEnemies;
+            setTimeline([
+              ...canonicalPlayers.map((participant) => ({ id: participant.id, name: participant.name, isEnemy: false, spd: participant.stats.spd })),
+              ...canonicalEnemies.map((participant) => ({ id: participant.id, name: participant.name, isEnemy: true, spd: participant.stats.spd })),
+            ].sort((left, right) => right.spd - left.spd));
+            setTimelineIndex(0);
+            setBattleRound(1);
+            setOfficialPatrolReplayId(canonicalReplay.id);
+            setOfficialPatrolWinner(winner);
+            officialPatrolReplayIdRef.current = canonicalReplay.id;
+            officialPatrolWinnerRef.current = winner;
+            setOfficialPatrolEvents(canonicalEvents);
+            // A closed browser may leave a cursor at the final event without
+            // allowing the result paint. Replay from the canonical beginning;
+            // never strand Continue on an exhausted local cursor.
+            setOfficialPatrolEventIndex(0);
+            if (typeof window !== "undefined") window.localStorage.removeItem(patrolReplayCursorKey(canonicalReplay.id));
+            setBattlePresentationContext({
+              mode: "PATROL",
+              opponentLabel: "クエストバトル",
+              opponentLeaderCharacterId: canonicalEnemies[0]?.characterId,
+              opponentLeaderName: canonicalEnemies[0]?.name,
+            });
+            setBattleState("PLAYING");
+            return true;
+          }
+        }
+      }
+
+      const { data: activeSessions, error } = await supabase
+        .from("battle_sessions")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .eq("status", "ACTIVE")
+        .order("updated_at", { ascending: false })
+        .limit(1);
+
+      if (error || !activeSessions || activeSessions.length === 0) {
+        return false;
+      }
+
+      const activeSession = activeSessions[0];
+      const playerStateData = activeSession.player_state;
+      const enemyStateData = activeSession.enemy_state;
+
+      if (playerStateData && enemyStateData) {
+        setBattleSessionId(activeSession.id);
+        const mappedMode = activeSession.battle_type === "ARENA" ? "PVP" : activeSession.battle_type;
+        setBattleMode(mappedMode);
+        setPlayerPartyStates(playerStateData.playerStates || []);
+        setEnemyPartyStates(enemyStateData.enemyStates || []);
+        setAp(0);
+        setMaxAp(0);
+        if (playerStateData.tactic) setTactic(playerStateData.tactic);
+        if (playerStateData.log) setBattleLog(playerStateData.log);
+        if (playerStateData.timelineIndex !== undefined) setTimelineIndex(playerStateData.timelineIndex);
+        setBattleRound(1);
+        if (playerStateData.gvgAreaId) setGvgTargetBaseId(playerStateData.gvgAreaId);
+        setOfficialGvgAttackId(playerStateData.officialGvgAttackId || null);
+        setOfficialGvgReplayId(playerStateData.officialGvgReplayId || null);
+        setOfficialGvgWinner(playerStateData.officialGvgWinner === "PLAYER" ? "PLAYER" : playerStateData.officialGvgWinner === "ENEMY" ? "ENEMY" : null);
+        setCanonicalAuxReplayId(playerStateData.canonicalAuxReplayId || null);
+        setCanonicalAuxEvents(serverBattleEvents(playerStateData.canonicalAuxEvents));
+        setCanonicalAuxEventIndex(savedPatrolReplayCursor(playerStateData.canonicalAuxReplayId, playerStateData.canonicalAuxEventIndex));
+        setOfficialPatrolReplayId(playerStateData.officialPatrolReplayId || null);
+        setOfficialPatrolWinner(playerStateData.officialPatrolWinner === "PLAYER" ? "PLAYER" : playerStateData.officialPatrolWinner === "ENEMY" ? "ENEMY" : null);
+        setOfficialPatrolEvents(serverBattleEvents(playerStateData.officialPatrolEvents));
+        setOfficialPatrolEventIndex(savedPatrolReplayCursor(playerStateData.officialPatrolReplayId, playerStateData.officialPatrolEventIndex));
+        setOfficialPvpReplayId(playerStateData.officialPvpReplayId || null);
+        setOfficialPvpWinner(playerStateData.officialPvpWinner === "PLAYER" ? "PLAYER" : playerStateData.officialPvpWinner === "ENEMY" ? "ENEMY" : null);
+        setOfficialPvpEvents(serverBattleEvents(playerStateData.officialPvpEvents));
+        setOfficialPvpEventIndex(savedPatrolReplayCursor(playerStateData.officialPvpReplayId, playerStateData.officialPvpEventIndex));
+        setOfficialPvpResult(playerStateData.officialPvpResult || null);
+        setOfficialRaidReplayId(playerStateData.officialRaidReplayId || null);
+        setOfficialRaidWinner(playerStateData.officialRaidWinner === "PLAYER" ? "PLAYER" : playerStateData.officialRaidWinner === "ENEMY" ? "ENEMY" : null);
+        setOfficialRaidEvents(serverBattleEvents(playerStateData.officialRaidEvents));
+        setOfficialRaidEventIndex(savedPatrolReplayCursor(playerStateData.officialRaidReplayId, playerStateData.officialRaidEventIndex));
+        setOfficialRaidResult(playerStateData.officialRaidResult || null);
+
+        setBattleState("PLAYING");
+        return true;
+      }
+    } catch (err) {
+      console.warn("Failed to resume active battle session:", err);
+    }
+    return false;
+  };
+
+  // バトルの初期設定フェーズへ移行
+  const startCardBattleInternal = (mode: BattleMode,
+  targetName: string,
+  areaIdOrOpponentUserId?: string,
+  oppPoints?: number,
+  oppTactic?: string,
+  opponentMainAlign?: string,
+  opponentSubAlign?: string,
+  opponentDefenseCharIds?: string[],
+  _supportCharacter?: any,
+  patrolNpcOverride?: any,
+  patrolIdOverride?: string,
+  presentationOverride?: Partial<BattlePresentationContext>,
+  prepareOnly: boolean = false,
+  roomBriefing?: RaidRoomBriefing) => runBattleStart({
+    session,
+    roomUserRef,
+    roomAttemptRef,
+    settledPatrolEncounterId,
+    setTutorialBattleActive,
+    tutorialStep,
+    activePatrolEncounterIdRef,
+    patrol,
+    userCharactersDbList,
+    setErrorMessage,
+    userLevel,
+    setBattleLoading,
+    playCyberSe,
+    setOfficialGvgAttackId,
+    setOfficialGvgReplayId,
+    setOfficialGvgWinner,
+    setOfficialPatrolReplayId,
+    setOfficialPatrolWinner,
+    setOfficialPatrolEvents,
+    setOfficialPatrolEventIndex,
+    setOfficialPvpReplayId,
+    setOfficialPvpWinner,
+    setOfficialPvpEvents,
+    setOfficialPvpEventIndex,
+    setOfficialPvpResult,
+    setCanonicalAuxReplayId,
+    setCanonicalAuxEvents,
+    setCanonicalAuxEventIndex,
+    setOfficialRaidReplayId,
+    setOfficialRaidWinner,
+    setOfficialRaidEvents,
+    setOfficialRaidEventIndex,
+    setOfficialRaidResult,
+    setBattleResultReplayEvents,
+    setBattleModeResultDetail,
+    setBattleSkipPending,
+    setIsAutoPaused,
+    setBattleState,
+    setBattleMode,
+    raidBossHp,
+    raidBossMaxHp,
+    patrolNpcs,
+    userGuildMember,
+    setHasRaidControlBonus,
+    setOpponentPoints,
+    setEnemyTactic,
+    setBattleOpponentName,
+    setVitality,
+    vitality,
+    setGvgTargetBaseId,
+    selectedMembers,
+    userSkillsList,
+    userEquipmentsList,
+    setMaxAp,
+    setAp,
+    userGuild,
+    setPlayerPartyStates,
+    pendingPvpStartRef,
+    setEnemyPartyStates,
+    setTimeline,
+    setTimelineIndex,
+    setBattleRound,
+    setBattleLog,
+    tactic,
+    createPersistentRoomAttempt,
+    setBattlePresentationContext,
+    officialPatrolReplayIdRef,
+    officialPatrolWinnerRef,
+    playerPartyStatesRef,
+    enemyPartyStatesRef,
+    pvpCommitSucceededRef,
+    setPvpPoints,
+    pvpPoints,
+    raidCommitSucceededRef,
+    roomPresentationUserRef,
+    setRaidPoints,
+    raidPoints,
+    setRaidFirstEntryFree,
+    setBattleSessionId,
+  }, mode, targetName, areaIdOrOpponentUserId, oppPoints, oppTactic, opponentMainAlign, opponentSubAlign, opponentDefenseCharIds, _supportCharacter, patrolNpcOverride, patrolIdOverride, presentationOverride, prepareOnly, roomBriefing);
 
   const preparedBattleArgs = (args: readonly unknown[], prepareOnly: boolean): Parameters<typeof startCardBattleInternal> => {
     const fixed = Array.from({ length: 12 }, (_, index) => args[index]);

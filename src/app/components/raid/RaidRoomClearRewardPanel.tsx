@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RaidRoomClearReward, RaidRoomClearRewardClient } from '../../../domain/raidRoomClearReward';
 import { ITEMS_MASTER_DATA } from '../../../utils/items_master_data';
 import OutlawButton from '../ui/OutlawButton';
@@ -22,7 +22,7 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
   const openingRef = useRef(false);
   const identity = `${userId ?? ""}:${roomId}`;
   const identityRef = useRef(identity);
-  identityRef.current = identity;
+  useLayoutEffect(() => { identityRef.current = identity; }, [identity]);
   const [rewardIdentity, setRewardIdentity] = useState(identity);
   const [revision, setRevision] = useState(0);
   useEffect(() => {

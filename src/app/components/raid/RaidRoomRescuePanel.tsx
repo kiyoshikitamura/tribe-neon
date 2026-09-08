@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RaidRoomRescueClient, RaidRoomRescueStatus } from '../../../domain/raidRoomRescue';
 import { clearRaidRoomRescuePending, readRaidRoomRescuePending, saveRaidRoomRescuePending } from '../../../domain/raidRoomRescuePending';
 import OutlawButton from '../ui/OutlawButton';
@@ -19,7 +19,7 @@ function RescuePanel({ client, roomId, userId, disabled = false, setInteractionB
   const ownsBlock = useRef(false);
   const alive = useRef(true);
   const blocking = useRef(setInteractionBlocking);
-  blocking.current = setInteractionBlocking;
+  useLayoutEffect(() => { blocking.current = setInteractionBlocking; }, [setInteractionBlocking]);
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   const restore = () => {
     const saved = userId ? readRaidRoomRescuePending(userId, roomId) : null;

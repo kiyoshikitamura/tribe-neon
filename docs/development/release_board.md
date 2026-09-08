@@ -1,6 +1,6 @@
 # Raid第20工程 — IN_PROGRESS
 
-最新headのCI失敗を切り分ける。A: lint heap OOM、B: E2E失敗診断、親: 修正範囲判断・統合。実DB/Deployなし。
+A-20/C-20 VALIDATED。開始本文を変えずlint OOMを解消、本人貢献Mock対応。B-20はrefs修正とE2E更新済み、訂正したカテゴリ順序のブラウザ検証待ち。親の通常全体lint0errors/型/Mockbuild/戦闘復帰17/Activity14PASS。全体工程はIN_PROGRESS。実DB/手動Deployなし。
 
 # Raid第19工程 — VALIDATED
 
