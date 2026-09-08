@@ -36,3 +36,21 @@ URL: `/qa/battle-presentation-v3`。既存QAと同じPreview限定ゲートを�
 ## 未実施・次段階
 
 実機で素材の質感、文字、カットイン占有率、表示時間を確認。支援・弱体化の専用画像、高スキル頻度、敵側の発動カットイン、リプレイとの統合は次段階。現モックは味方側の演出比較であり、実バトル全体の完成版ではない。
+
+## 状態効果モック追加
+
+既存 `src/domain/battle/canonical_effects.ts`、`canonical_runtime.ts`、`src/domain/presentation/battleStatusPresentation.ts` を照合。攻撃・防御・速度・運のUP/DOWN、毒・出血・暗闇・沈黙・スタン・挑発、継続回復・シールド・反撃の17種類を選択可能。解除はREMOVE_STATUS all相当の表示確認（不利な状態だけ除き、強化・シールド・継続回復は保持）。新しい実ゲーム効果やディスペルは追加しない。
+
+- 効果は命中タイミングで対象に付与。強化／回復系は味方先頭、弱体／状態異常は敵側の生存対象。支援行動でダメージは発生させない。
+- HP下に独自SVGバッジ3個＋残り件数。色に加え、剣・盾・足取り・星・毒瓶・血滴・目・封じた吹き出しなどの図柄で識別。詳細はネイティブdialogで開き、全件・説明・残量を表示。
+- スタン・沈黙は残り行動、それ以外は残りターン。値・シールド480はモック固定値であり実バトルの値ではない。
+- 「複数状態」で味方・敵に各6種類を付与。「弱体解除」は味方先頭の不利状態だけを除去。「残り表示−1」は全表示の期限を1減らし0で消す操作であり、実際のターン処理、毒ダメージ、継続回復処理の実装ではない。
+- 付与を繰り返した同種効果は1バッジを更新。実ゲームのスタック規則を変更するものではない。
+- 全17種に識別図柄を用意。瞬間エフェクトの画像は回復／強化／弱体の3系統を共有し、状態ごとの図柄を重ねる。個々の状態専用イラスト17枚を作ったわけではない。
+- キャラのN/R/SR/SSRでカットインと瞬間エフェクトの表示サイズを変更。バッジの意味はレアリティによらず共通。
+
+追加素材は画像生成ツール標準モードで制作し、アルファ保持のWebPへ変換した。
+`public/effects/battle-v3/healing-pulse.webp`、`support-rise.webp`、`weaken-fall.webp`。
+プロンプト要旨: healing＝emerald/ivory upward ribbons, transparent open center, premium painted street battle effect; support＝metallic amber/silver ascending chevrons and shield outline; weaken＝downward violet/crimson pressure sweep and broken ink fragments。すべて人物・文字・背景・魔法陣・サイバーパンク表現なし、透過背景指定。
+
+検証: Preview設定のproduction build、ESLint成功。Chromiumの390×844で17種、320×568で毒・シールドを再生し対象・HP不変を確認。両画面で回復800、6件の詳細表示、シールド残量480、弱体解除後の正状態維持、期限切れ、SKIP後のタイマー停止を確認。実機Safariはユーザー確認待ち。
