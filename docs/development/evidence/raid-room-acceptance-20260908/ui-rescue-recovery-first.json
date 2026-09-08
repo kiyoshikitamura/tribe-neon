@@ -1,0 +1,37 @@
+{
+  "role": "rescue",
+  "requests": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"95087db4-06ff-4941-b3a9-bd6632642121\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"a420e877-913f-4e69-a019-d1e715b5c308\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"a420e877-913f-4e69-a019-d1e715b5c308\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"a420e877-913f-4e69-a019-d1e715b5c308\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"815f999f-ae90-4052-85d1-2066df602f73\"}"
+    }
+  ],
+  "responses": [],
+  "recovered": [
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,113\n共有HPへの反映\n3,113\n累計貢献ダメージ\n6,230\nボス残りHP\n21,887\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,118\n共有HPへの反映\n3,118\n累計貢献ダメージ\n9,348\nボス残りHP\n18,769\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,118\n共有HPへの反映\n3,118\n累計貢献ダメージ\n9,348\nボス残りHP\n18,769\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,118\n共有HPへの反映\n3,118\n累計貢献ダメージ\n9,348\nボス残りHP\n18,769\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,160\n共有HPへの反映\n3,160\n累計貢献ダメージ\n12,508\nボス残りHP\n15,609\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る"
+  ],
+  "errors": [],
+  "before": "未受取: 10件\n一括受け取り\nレイド救援成功報酬\n強化ドリンク・小 × 1\n期限: あと30日\n受け取る\nレイド討伐報酬\nカスタムオイル・小 × 1\n期限: あと30日\n受け取る\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る",
+  "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.inbox-present-item').filter({ has: getByText('レイド救援報酬', { exact: true }) }).getByRole('button', { name: '受け取る', exact: true })\u001b[22m\n",
+  "body": "ACTIVITY\nQAsk927d\n総戦力ランキング1位に到達\n›\n新宿\nSHINJUKU\n›\n未認証\nボーナス\nミッション\n1\nランキング\nレイド\nギルド\nバトル\nクエスト\nギルドバトル\n準備中\n無料スキル／装備ガチャを引こう\n›\n‹\n›\n受信箱\n‹\nお知らせ\nプレゼント\n›\n未受取: 11件\n一括受け取り\nレイド救援成功報酬\n強化ドリンク・小 × 1\n期限: あと30日\n受け取る\nレイド討伐報酬\nカスタムオイル・小 × 1\n期限: あと30日\n受け取る\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nSWR同期追加: アンケート協力のお礼\nダイヤ × 50\n期限: あと23時間\n受け取る\n閉じる\nRAID BRIEFING\nBATTLE READY\nエネミーパーティ\nキングス・クラウン\nLv.30\nメンバー\n5人\nレイジ\nミオ\nタクロウ\nレオン\nカゲヤマ\nHP\n6,400,000 / 6,400,000\nATK\n9,500\nDEF\n6,200\nMY DECK\n総合力 90,884\nRAID POINT\n0 / 5\n討伐開始時にRPを1消費\n討伐開始\nレイドへ戻る"
+}

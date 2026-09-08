@@ -1,0 +1,20 @@
+{
+  "id": "dpl_De7RHzqA292BLdcFFN7fkZCeofQt",
+  "url": "tribe-neon-ptcsb3j03-kiyoshi-kitamura.vercel.app",
+  "readyState": "READY",
+  "meta": {
+    "gitCommitAuthorName": "Codex",
+    "gitCommitAuthorEmail": "codex@openai.com",
+    "gitCommitMessage": "fix(raid): clarify operation and reward copy and verify positive clear thresholds",
+    "gitCommitRef": "codex/raid-room-pc-step2-20260908",
+    "gitCommitSha": "feeca750e4c07e66c7607cfbb0290c3370a1aae8",
+    "gitDirty": "1",
+    "gitRootDirectory": "",
+    "raidSourceSha": "feeca750e4c07e66c7607cfbb0290c3370a1aae8",
+    "githubCommitRef": "codex/raid-room-pc-step2-20260908",
+    "actor": "codex",
+    "lambdaRuntimeStats": "{\"nodejs\":3}",
+    "bundler": "turbopack"
+  },
+  "alias": []
+}

@@ -1,0 +1,80 @@
+{
+  "at": "2026-09-08T11:37:16.096Z",
+  "attempts": [
+    {
+      "id": "6652eb9b-4264-4792-9c83-be025e6e27eb",
+      "started": "2026-09-08T11:37:16.455Z",
+      "result": {
+        "data": null,
+        "error": {
+          "code": "P0001",
+          "details": null,
+          "hint": null,
+          "message": "Present is not claimable"
+        }
+      }
+    },
+    {
+      "id": "f853a17a-8050-451a-8a31-a4843c073a36",
+      "started": "2026-09-08T11:37:16.634Z",
+      "result": {
+        "data": null,
+        "error": {
+          "code": "P0001",
+          "details": null,
+          "hint": null,
+          "message": "Present is not claimable"
+        }
+      }
+    }
+  ],
+  "before": {
+    "presents": [
+      {
+        "id": "6652eb9b-4264-4792-9c83-be025e6e27eb",
+        "status": "CLAIMED",
+        "claimed_at": "2026-09-08T11:34:28.523461+00:00"
+      },
+      {
+        "id": "f853a17a-8050-451a-8a31-a4843c073a36",
+        "status": "CLAIMED",
+        "claimed_at": "2026-09-08T11:36:06.938368+00:00"
+      }
+    ],
+    "items": [
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 1
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 1
+      }
+    ]
+  },
+  "after": {
+    "presents": [
+      {
+        "id": "6652eb9b-4264-4792-9c83-be025e6e27eb",
+        "status": "CLAIMED",
+        "claimed_at": "2026-09-08T11:34:28.523461+00:00"
+      },
+      {
+        "id": "f853a17a-8050-451a-8a31-a4843c073a36",
+        "status": "CLAIMED",
+        "claimed_at": "2026-09-08T11:36:06.938368+00:00"
+      }
+    ],
+    "items": [
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 1
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 1
+      }
+    ]
+  },
+  "status": "PASS"
+}

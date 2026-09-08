@@ -1,0 +1,178 @@
+{
+  "presents": [
+    {
+      "id": "6652eb9b-4264-4792-9c83-be025e6e27eb",
+      "status": "CLAIMED",
+      "item_id": "CHAR_EXP_S",
+      "message": "レイド救援成功報酬",
+      "sent_at": "2026-09-08T11:17:58.63987+00:00",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "quantity": 1,
+      "expire_at": "2026-10-08T11:17:58.66165+00:00",
+      "claimed_at": "2026-09-08T11:34:28.523461+00:00",
+      "created_at": "2026-09-08T11:17:58.66165+00:00",
+      "source_key": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3:CHAR_EXP_S",
+      "source_kind": "RAID_ROOM_RESCUE",
+      "source_metadata": {
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "ruleVersion": 1,
+        "rewardVersion": 1
+      }
+    },
+    {
+      "id": "80a388c3-9f08-4846-be20-8ad188b34e67",
+      "status": "CLAIMED",
+      "item_id": "EQUIP_EXP_S",
+      "message": "レイド討伐報酬",
+      "sent_at": "2026-09-08T11:17:58.63987+00:00",
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "quantity": 1,
+      "expire_at": "2026-10-08T11:17:58.657925+00:00",
+      "claimed_at": "2026-09-08T11:37:30.999459+00:00",
+      "created_at": "2026-09-08T11:17:58.657925+00:00",
+      "source_key": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3:EQUIP_EXP_S",
+      "source_kind": "RAID_ROOM_CLEAR",
+      "source_metadata": {
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "ruleVersion": 1
+      }
+    },
+    {
+      "id": "9fb78226-c94c-4c45-b976-b9c7d2545918",
+      "status": "CLAIMED",
+      "item_id": "EQUIP_EXP_S",
+      "message": "レイド討伐報酬",
+      "sent_at": "2026-09-08T11:17:58.63987+00:00",
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "quantity": 1,
+      "expire_at": "2026-10-08T11:17:58.651971+00:00",
+      "claimed_at": "2026-09-08T11:37:58.856059+00:00",
+      "created_at": "2026-09-08T11:17:58.651971+00:00",
+      "source_key": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3:EQUIP_EXP_S",
+      "source_kind": "RAID_ROOM_CLEAR",
+      "source_metadata": {
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "ruleVersion": 1
+      }
+    },
+    {
+      "id": "f853a17a-8050-451a-8a31-a4843c073a36",
+      "status": "CLAIMED",
+      "item_id": "EQUIP_EXP_S",
+      "message": "レイド討伐報酬",
+      "sent_at": "2026-09-08T11:17:58.63987+00:00",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "quantity": 1,
+      "expire_at": "2026-10-08T11:17:58.656484+00:00",
+      "claimed_at": "2026-09-08T11:36:06.938368+00:00",
+      "created_at": "2026-09-08T11:17:58.656484+00:00",
+      "source_key": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3:EQUIP_EXP_S",
+      "source_kind": "RAID_ROOM_CLEAR",
+      "source_metadata": {
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "ruleVersion": 1
+      }
+    }
+  ],
+  "checked_at": "2026-09-08T11:39:03.531979+00:00",
+  "recoveries": [
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "1ccdd52d-158e-46f4-87d7-449aa0c4045b",
+      "acknowledged_at": "2026-09-08T10:56:16.235317+00:00",
+      "replay_session_id": "9977a359-e9fc-422b-a847-65a557f45786"
+    },
+    {
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "request_id": "07976ff0-079b-45b7-a1ed-021a8f013fdf",
+      "acknowledged_at": "2026-09-08T11:00:18.146425+00:00",
+      "replay_session_id": "7ebf0e01-c341-4bf7-8f56-97bfa5797545"
+    },
+    {
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "request_id": "0f70ce40-31e3-46c9-af91-d58cee9eda1d",
+      "acknowledged_at": "2026-09-08T11:06:30.566703+00:00",
+      "replay_session_id": "ad371e82-e1ff-4af0-b9fd-03393c0f520a"
+    },
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "95087db4-06ff-4941-b3a9-bd6632642121",
+      "acknowledged_at": "2026-09-08T11:26:58.380033+00:00",
+      "replay_session_id": "b8b0f7ae-b75a-47f4-8252-21db32916a20"
+    },
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "a420e877-913f-4e69-a019-d1e715b5c308",
+      "acknowledged_at": "2026-09-08T11:28:34.07018+00:00",
+      "replay_session_id": "9813e530-3943-4cf1-ba81-409dc52530e4"
+    },
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "815f999f-ae90-4052-85d1-2066df602f73",
+      "acknowledged_at": "2026-09-08T11:29:06.415078+00:00",
+      "replay_session_id": "b9d5d133-63cc-40dc-8520-78fd02164bf8"
+    },
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "229c243d-40ea-4611-a031-08db979cb890",
+      "acknowledged_at": "2026-09-08T11:33:31.966154+00:00",
+      "replay_session_id": "f6eebc22-b810-44c7-968b-28818eacde7d"
+    },
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "3c9fd8f4-fb11-4382-b13b-277e40b5d412",
+      "acknowledged_at": "2026-09-08T11:34:10.999028+00:00",
+      "replay_session_id": "e8a876c2-6a8a-4808-b76f-4af1065b8ea6"
+    },
+    {
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "request_id": "606e6885-db16-480e-98a9-de11b30be7f9",
+      "acknowledged_at": "2026-09-08T11:37:13.421308+00:00",
+      "replay_session_id": "05478f12-5b07-4359-a7c2-37c3718607e8"
+    },
+    {
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "request_id": "0ee0873c-3c8b-4068-b93b-24010771fba4",
+      "acknowledged_at": "2026-09-08T11:37:11.414098+00:00",
+      "replay_session_id": "4e518528-91b3-45f7-8041-b3f566b51bbf"
+    },
+    {
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "request_id": "30bed3be-cd64-4569-8807-d815103e95ae",
+      "acknowledged_at": "2026-09-08T11:37:44.320186+00:00",
+      "replay_session_id": "6883af2a-b132-4e5e-b7b5-59ae53437eb4"
+    }
+  ],
+  "clear_grants": [
+    {
+      "item_id": "EQUIP_EXP_S",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "quantity": 1,
+      "present_id": "9fb78226-c94c-4c45-b976-b9c7d2545918"
+    },
+    {
+      "item_id": "EQUIP_EXP_S",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "quantity": 1,
+      "present_id": "f853a17a-8050-451a-8a31-a4843c073a36"
+    },
+    {
+      "item_id": "EQUIP_EXP_S",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "quantity": 1,
+      "present_id": "80a388c3-9f08-4846-be20-8ad188b34e67"
+    }
+  ],
+  "rescue_grants": [
+    {
+      "item_id": "CHAR_EXP_S",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "quantity": 1,
+      "present_id": "6652eb9b-4264-4792-9c83-be025e6e27eb"
+    }
+  ]
+}

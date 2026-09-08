@@ -2,3 +2,4 @@ docs/development/raid-room-persistent/*.sql text eol=lf
 docs/development/evidence/raid-room-persistent-20260908/*.sql text eol=lf
 scripts/raid-room/*.mjs text eol=lf
 docs/development/evidence/raid-room-connection-20260908/*.sql text eol=lf
+docs/development/evidence/raid-room-acceptance-20260908/*.sql text eol=lf

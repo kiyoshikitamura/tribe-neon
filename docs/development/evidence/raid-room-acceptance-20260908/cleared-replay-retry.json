@@ -1,0 +1,2356 @@
+{
+  "at": "2026-09-08T11:39:54.910Z",
+  "replaySessionId": "6883af2a-b132-4e5e-b7b5-59ae53437eb4",
+  "original": {
+    "mode": "RAID",
+    "enemy": [
+      {
+        "hp": 6395630,
+        "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+        "dots": [],
+        "name": "レイジ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 6400000,
+          "atk": 9500,
+          "def": 6200,
+          "luk": 0,
+          "spd": 390
+        },
+        "regens": [],
+        "skills": [
+          {
+            "id": "SKILL_054",
+            "name": "覇王の威圧",
+            "target": "ATTACKER_WHO_DAMAGED_SELF",
+            "effects": [
+              {
+                "raw": "TRIGGER ON_DAMAGE_TAKEN",
+                "type": "TRIGGER",
+                "trigger": "ON_DAMAGE_TAKEN"
+              },
+              {
+                "raw": "COUNTER 150% ATK",
+                "type": "COUNTER",
+                "powerBp": 15000,
+                "duration": null
+              },
+              {
+                "raw": "MAX 1 activation / round",
+                "type": "TRIGGER_LIMIT",
+                "maxPerRound": 1
+              }
+            ],
+            "cooldown": null,
+            "skillPlusVal": 0,
+            "activationType": "ON_DAMAGE_TAKEN",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": "char_reiji_01"
+          }
+        ],
+        "shields": [],
+        "counters": [
+          {
+            "powerBp": 15000,
+            "maxPerRound": 1,
+            "appliedAction": 0,
+            "sourceSkillId": "SKILL_054",
+            "remainingDuration": null,
+            "applicationSequence": 1,
+            "awakeningMultiplierBp": 10000
+          }
+        ],
+        "statuses": [],
+        "alignment": "CHAOS",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 28199,
+        "characterId": "char_reiji_01",
+        "triggerCounts": {
+          "SKILL_054:1": 1
+        },
+        "equippedSkillRefs": [
+          "SKILL_054"
+        ],
+        "nextAvailableRound": {
+          "SKILL_054": 1
+        },
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 6400000,
+        "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+        "dots": [],
+        "name": "ミオ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 6400000,
+          "atk": 9500,
+          "def": 6200,
+          "luk": 0,
+          "spd": 390
+        },
+        "regens": [],
+        "skills": [
+          {
+            "id": "SKILL_060",
+            "name": "歌舞伎町の切り札",
+            "target": "ALLY_ALL",
+            "effects": [
+              {
+                "raw": "HEAL 20% MaxHP immediate",
+                "type": "HEAL",
+                "maxHpBp": 2000
+              },
+              {
+                "raw": "REGEN 7% MaxHP/Turn / 3T",
+                "type": "REGEN",
+                "maxHpBp": 700,
+                "duration": 3
+              }
+            ],
+            "cooldown": 5,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 3,
+            "exclusiveCharacterId": "char_mio_01"
+          }
+        ],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "ORDER",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 4961,
+        "characterId": "char_mio_01",
+        "triggerCounts": {},
+        "equippedSkillRefs": [
+          "SKILL_060"
+        ],
+        "nextAvailableRound": {
+          "SKILL_060": 3
+        },
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 6400000,
+        "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+        "dots": [],
+        "name": "タクロウ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 6400000,
+          "atk": 9500,
+          "def": 6200,
+          "luk": 0,
+          "spd": 390
+        },
+        "regens": [],
+        "skills": [
+          {
+            "id": "SKILL_021",
+            "name": "急所撃ち",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 190% ATK",
+                "type": "DAMAGE",
+                "powerBp": 19000
+              }
+            ],
+            "cooldown": 4,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": null
+          },
+          {
+            "id": "SKILL_027",
+            "name": "血の強襲",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 165% ATK",
+                "type": "DAMAGE",
+                "powerBp": 16500
+              },
+              {
+                "raw": "BLEED 90% / 3T",
+                "type": "BLEED",
+                "duration": 3,
+                "baseChanceBp": 9000
+              }
+            ],
+            "cooldown": 4,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "EVIL",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 17316,
+        "characterId": "char_takuro_01",
+        "triggerCounts": {},
+        "equippedSkillRefs": [
+          "SKILL_021",
+          "SKILL_027"
+        ],
+        "nextAvailableRound": {
+          "SKILL_021": 6,
+          "SKILL_027": 2
+        },
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 6400000,
+        "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_4",
+        "dots": [],
+        "name": "レオン",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 6400000,
+          "atk": 9500,
+          "def": 6200,
+          "luk": 0,
+          "spd": 390
+        },
+        "regens": [],
+        "skills": [
+          {
+            "id": "SKILL_021",
+            "name": "急所撃ち",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 190% ATK",
+                "type": "DAMAGE",
+                "powerBp": 19000
+              }
+            ],
+            "cooldown": 4,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": null
+          },
+          {
+            "id": "SKILL_027",
+            "name": "血の強襲",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 165% ATK",
+                "type": "DAMAGE",
+                "powerBp": 16500
+              },
+              {
+                "raw": "BLEED 90% / 3T",
+                "type": "BLEED",
+                "duration": 3,
+                "baseChanceBp": 9000
+              }
+            ],
+            "cooldown": 4,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "EVIL",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 7492,
+        "characterId": "char_leon_01",
+        "triggerCounts": {},
+        "equippedSkillRefs": [
+          "SKILL_021",
+          "SKILL_027"
+        ],
+        "nextAvailableRound": {
+          "SKILL_021": 2,
+          "SKILL_027": 2
+        },
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 6400000,
+        "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_5",
+        "dots": [],
+        "name": "カゲヤマ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 6400000,
+          "atk": 9500,
+          "def": 6200,
+          "luk": 0,
+          "spd": 390
+        },
+        "regens": [],
+        "skills": [
+          {
+            "id": "SKILL_022",
+            "name": "重鉄パイプ大薙ぎ",
+            "target": "ENEMY_ALL",
+            "effects": [
+              {
+                "raw": "DAMAGE 105% ATK",
+                "type": "DAMAGE",
+                "powerBp": 10500
+              },
+              {
+                "raw": "DEF -20% / 2T / chance 85%",
+                "self": false,
+                "stat": "DEF",
+                "type": "DEBUFF",
+                "chanceBp": 8500,
+                "duration": 2,
+                "magnitudeBp": 2000
+              }
+            ],
+            "cooldown": 4,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": null
+          },
+          {
+            "id": "SKILL_026",
+            "name": "決起のシュプレヒコール",
+            "target": "ALLY_ALL",
+            "effects": [
+              {
+                "raw": "ATK +20% / 2T",
+                "self": false,
+                "stat": "ATK",
+                "type": "BUFF",
+                "chanceBp": 10000,
+                "duration": 2,
+                "magnitudeBp": 2000
+              },
+              {
+                "raw": "DEF +20% / 2T",
+                "self": false,
+                "stat": "DEF",
+                "type": "BUFF",
+                "chanceBp": 10000,
+                "duration": 2,
+                "magnitudeBp": 2000
+              }
+            ],
+            "cooldown": 4,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "ORDER",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 7108,
+        "characterId": "char_kageyama_01",
+        "triggerCounts": {},
+        "equippedSkillRefs": [
+          "SKILL_022",
+          "SKILL_026"
+        ],
+        "nextAvailableRound": {
+          "SKILL_022": 2,
+          "SKILL_026": 2
+        },
+        "battleStartTriggered": {}
+      }
+    ],
+    "baseId": "shinjuku",
+    "events": [
+      {
+        "type": "ACTION",
+        "index": 0,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 1,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 9065,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 9065,
+          "randomBp": 10194,
+          "targetId": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+          "ignoreDefBp": 0,
+          "remainingHp": 3935,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 2,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 3,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 7239,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 3935,
+          "randomBp": 9769,
+          "targetId": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+          "ignoreDefBp": 0,
+          "remainingHp": 0,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "DEFEAT",
+        "index": 4,
+        "round": 1,
+        "payload": {
+          "targetId": "player_59677bee-0313-4925-816f-dcc1bdf9955c"
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 5,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 6,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 10888,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+          "counter": false,
+          "critical": true,
+          "hpDamage": 8316,
+          "randomBp": 9709,
+          "targetId": "player_73991016-17f0-400c-a2f8-841d9c74ec3a",
+          "ignoreDefBp": 0,
+          "remainingHp": 0,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "DEFEAT",
+        "index": 7,
+        "round": 1,
+        "payload": {
+          "targetId": "player_73991016-17f0-400c-a2f8-841d9c74ec3a"
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 8,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_4",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 9,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 7492,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_4",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 7492,
+          "randomBp": 10298,
+          "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+          "ignoreDefBp": 0,
+          "remainingHp": 17368,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 10,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_5",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 11,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 7108,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_5",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 7108,
+          "randomBp": 9770,
+          "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+          "ignoreDefBp": 0,
+          "remainingHp": 10260,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 12,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+          "skillId": "SKILL_001"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 13,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 2981,
+          "actorId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 2981,
+          "randomBp": 9614,
+          "targetId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "ignoreDefBp": 0,
+          "remainingHp": 6397019,
+          "shieldDamage": 0,
+          "activeEffectsAfter": [
+            {
+              "id": "COUNTER_SKILL_054",
+              "kind": "COUNTER",
+              "remainingDuration": null
+            }
+          ]
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 14,
+        "round": 1,
+        "payload": {
+          "action": "COUNTER",
+          "target": "ATTACKER_WHO_DAMAGED_SELF",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "skillId": "SKILL_054"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 15,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 13967,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "counter": true,
+          "critical": false,
+          "hpDamage": 10260,
+          "randomBp": 10238,
+          "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+          "ignoreDefBp": 0,
+          "remainingHp": 0,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "DEFEAT",
+        "index": 16,
+        "round": 1,
+        "payload": {
+          "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632"
+        }
+      },
+      {
+        "type": "DEFEAT",
+        "index": 17,
+        "round": 1,
+        "payload": {
+          "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632"
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 18,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 19,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 852,
+          "actorId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 852,
+          "randomBp": 9779,
+          "targetId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "ignoreDefBp": 0,
+          "remainingHp": 6396167,
+          "shieldDamage": 0,
+          "activeEffectsAfter": [
+            {
+              "id": "COUNTER_SKILL_054",
+              "kind": "COUNTER",
+              "remainingDuration": null
+            }
+          ]
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 20,
+        "round": 1,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 21,
+        "round": 1,
+        "payload": {
+          "hit": true,
+          "amount": 537,
+          "actorId": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 537,
+          "randomBp": 9548,
+          "targetId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "ignoreDefBp": 0,
+          "remainingHp": 6395630,
+          "shieldDamage": 0,
+          "activeEffectsAfter": [
+            {
+              "id": "COUNTER_SKILL_054",
+              "kind": "COUNTER",
+              "remainingDuration": null
+            }
+          ]
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 22,
+        "round": 2,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 23,
+        "round": 2,
+        "payload": {
+          "hit": true,
+          "amount": 8874,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 8874,
+          "randomBp": 9895,
+          "targetId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+          "ignoreDefBp": 0,
+          "remainingHp": 1026,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 24,
+        "round": 2,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+          "skillId": "BASIC_ATTACK"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 25,
+        "round": 2,
+        "payload": {
+          "hit": true,
+          "amount": 7541,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 1026,
+          "randomBp": 10091,
+          "targetId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+          "ignoreDefBp": 0,
+          "remainingHp": 0,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "DEFEAT",
+        "index": 26,
+        "round": 2,
+        "payload": {
+          "targetId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6"
+        }
+      },
+      {
+        "type": "ACTION",
+        "index": 27,
+        "round": 2,
+        "payload": {
+          "target": "ENEMY_SINGLE",
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+          "skillId": "SKILL_021"
+        }
+      },
+      {
+        "type": "DAMAGE",
+        "index": 28,
+        "round": 2,
+        "payload": {
+          "hit": true,
+          "amount": 17643,
+          "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+          "counter": false,
+          "critical": false,
+          "hpDamage": 9000,
+          "randomBp": 9940,
+          "targetId": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+          "ignoreDefBp": 0,
+          "remainingHp": 0,
+          "shieldDamage": 0,
+          "activeEffectsAfter": []
+        }
+      },
+      {
+        "type": "DEFEAT",
+        "index": 29,
+        "round": 2,
+        "payload": {
+          "targetId": "player_8c095d57-4959-4e53-a77a-05400df7fe61"
+        }
+      },
+      {
+        "type": "RESULT",
+        "index": 30,
+        "round": 2,
+        "payload": {
+          "rounds": 2,
+          "winner": "ENEMY"
+        }
+      }
+    ],
+    "player": [
+      {
+        "hp": 0,
+        "id": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+        "dots": [],
+        "name": "ケンゴ",
+        "team": "PLAYER",
+        "level": 7,
+        "stats": {
+          "hp": 24860,
+          "atk": 3921,
+          "def": 2004,
+          "luk": 15,
+          "spd": 187
+        },
+        "rarity": "SSR",
+        "regens": [],
+        "skills": [
+          {
+            "id": "SKILL_001",
+            "name": "ストリートパンチ",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 90% ATK",
+                "type": "DAMAGE",
+                "powerBp": 9000
+              }
+            ],
+            "skillId": "SKILL_001",
+            "cooldown": 3,
+            "plusValue": 0,
+            "slotIndex": 0,
+            "skillPlusVal": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "EVIL",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 2981,
+        "characterId": "char_kengo_01",
+        "triggerCounts": {},
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": [
+          {
+            "id": "SKILL_001",
+            "name": "ストリートパンチ",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 90% ATK",
+                "type": "RAW"
+              }
+            ],
+            "skillId": "SKILL_001",
+            "cooldown": 3,
+            "plusValue": 0,
+            "slotIndex": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "nextAvailableRound": {
+          "SKILL_001": 4
+        },
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 0,
+        "id": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+        "dots": [],
+        "name": "ダイモン",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 9900,
+          "atk": 1240,
+          "def": 760,
+          "luk": 8,
+          "spd": 100
+        },
+        "rarity": "R",
+        "regens": [],
+        "skills": [],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 852,
+        "characterId": "char_daimon_01",
+        "triggerCounts": {},
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": [],
+        "nextAvailableRound": {},
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 0,
+        "id": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+        "dots": [],
+        "name": "マサト",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 9000,
+          "atk": 800,
+          "def": 760,
+          "luk": 12,
+          "spd": 92
+        },
+        "rarity": "N",
+        "regens": [],
+        "skills": [],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "CHAOS",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 537,
+        "characterId": "char_masato_01",
+        "triggerCounts": {},
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": [],
+        "nextAvailableRound": {},
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 0,
+        "id": "player_73991016-17f0-400c-a2f8-841d9c74ec3a",
+        "dots": [],
+        "name": "ナオト",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 8316,
+          "atk": 972,
+          "def": 745,
+          "luk": 8,
+          "spd": 127
+        },
+        "rarity": "N",
+        "regens": [],
+        "skills": [],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 0,
+        "characterId": "char_naoto_01",
+        "triggerCounts": {},
+        "awakeningLevel": 1,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": [],
+        "nextAvailableRound": {},
+        "battleStartTriggered": {}
+      },
+      {
+        "hp": 0,
+        "id": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+        "dots": [],
+        "name": "カズヤ",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 13000,
+          "atk": 800,
+          "def": 1150,
+          "luk": 6,
+          "spd": 72
+        },
+        "rarity": "R",
+        "regens": [],
+        "skills": [],
+        "shields": [],
+        "counters": [],
+        "statuses": [],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "modifiers": [],
+        "rawDamage": 0,
+        "characterId": "char_ren_male_01",
+        "triggerCounts": {},
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": [],
+        "nextAvailableRound": {},
+        "battleStartTriggered": {}
+      }
+    ],
+    "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+    "rounds": 2,
+    "winner": "ENEMY",
+    "rawDamage": 4370,
+    "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+    "roomOutcome": "DEFEAT_SUCCESS",
+    "appliedDamage": 1261,
+    "raidVariantId": "RAID_SHINJUKU_V1",
+    "enemyRawDamage": 65076,
+    "raidInstanceId": "c127f1da-9a60-4919-b351-6a99412574d7",
+    "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+    "playerRawDamage": 4370,
+    "remainingBossHp": 0,
+    "lateFinalization": false,
+    "personalContribution": 13732,
+    "participationProgress": {
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "updated_at": "2026-09-08T11:17:58.644388+00:00",
+      "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "finalized_battles": 3,
+      "raid_points_consumed": 2,
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+    }
+  },
+  "retry": {
+    "data": {
+      "mode": "RAID",
+      "enemy": [
+        {
+          "hp": 6395630,
+          "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+          "dots": [],
+          "name": "レイジ",
+          "team": "ENEMY",
+          "level": 30,
+          "stats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "luk": 0,
+            "spd": 390
+          },
+          "regens": [],
+          "skills": [
+            {
+              "id": "SKILL_054",
+              "name": "覇王の威圧",
+              "target": "ATTACKER_WHO_DAMAGED_SELF",
+              "effects": [
+                {
+                  "raw": "TRIGGER ON_DAMAGE_TAKEN",
+                  "type": "TRIGGER",
+                  "trigger": "ON_DAMAGE_TAKEN"
+                },
+                {
+                  "raw": "COUNTER 150% ATK",
+                  "type": "COUNTER",
+                  "powerBp": 15000,
+                  "duration": null
+                },
+                {
+                  "raw": "MAX 1 activation / round",
+                  "type": "TRIGGER_LIMIT",
+                  "maxPerRound": 1
+                }
+              ],
+              "cooldown": null,
+              "skillPlusVal": 0,
+              "activationType": "ON_DAMAGE_TAKEN",
+              "availableFromRound": 1,
+              "exclusiveCharacterId": "char_reiji_01"
+            }
+          ],
+          "shields": [],
+          "counters": [
+            {
+              "powerBp": 15000,
+              "maxPerRound": 1,
+              "appliedAction": 0,
+              "sourceSkillId": "SKILL_054",
+              "remainingDuration": null,
+              "applicationSequence": 1,
+              "awakeningMultiplierBp": 10000
+            }
+          ],
+          "statuses": [],
+          "alignment": "CHAOS",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 28199,
+          "characterId": "char_reiji_01",
+          "triggerCounts": {
+            "SKILL_054:1": 1
+          },
+          "equippedSkillRefs": [
+            "SKILL_054"
+          ],
+          "nextAvailableRound": {
+            "SKILL_054": 1
+          },
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 6400000,
+          "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+          "dots": [],
+          "name": "ミオ",
+          "team": "ENEMY",
+          "level": 30,
+          "stats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "luk": 0,
+            "spd": 390
+          },
+          "regens": [],
+          "skills": [
+            {
+              "id": "SKILL_060",
+              "name": "歌舞伎町の切り札",
+              "target": "ALLY_ALL",
+              "effects": [
+                {
+                  "raw": "HEAL 20% MaxHP immediate",
+                  "type": "HEAL",
+                  "maxHpBp": 2000
+                },
+                {
+                  "raw": "REGEN 7% MaxHP/Turn / 3T",
+                  "type": "REGEN",
+                  "maxHpBp": 700,
+                  "duration": 3
+                }
+              ],
+              "cooldown": 5,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 3,
+              "exclusiveCharacterId": "char_mio_01"
+            }
+          ],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "ORDER",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 4961,
+          "characterId": "char_mio_01",
+          "triggerCounts": {},
+          "equippedSkillRefs": [
+            "SKILL_060"
+          ],
+          "nextAvailableRound": {
+            "SKILL_060": 3
+          },
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 6400000,
+          "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+          "dots": [],
+          "name": "タクロウ",
+          "team": "ENEMY",
+          "level": 30,
+          "stats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "luk": 0,
+            "spd": 390
+          },
+          "regens": [],
+          "skills": [
+            {
+              "id": "SKILL_021",
+              "name": "急所撃ち",
+              "target": "ENEMY_SINGLE",
+              "effects": [
+                {
+                  "raw": "DAMAGE 190% ATK",
+                  "type": "DAMAGE",
+                  "powerBp": 19000
+                }
+              ],
+              "cooldown": 4,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": null
+            },
+            {
+              "id": "SKILL_027",
+              "name": "血の強襲",
+              "target": "ENEMY_SINGLE",
+              "effects": [
+                {
+                  "raw": "DAMAGE 165% ATK",
+                  "type": "DAMAGE",
+                  "powerBp": 16500
+                },
+                {
+                  "raw": "BLEED 90% / 3T",
+                  "type": "BLEED",
+                  "duration": 3,
+                  "baseChanceBp": 9000
+                }
+              ],
+              "cooldown": 4,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": null
+            }
+          ],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "EVIL",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 17316,
+          "characterId": "char_takuro_01",
+          "triggerCounts": {},
+          "equippedSkillRefs": [
+            "SKILL_021",
+            "SKILL_027"
+          ],
+          "nextAvailableRound": {
+            "SKILL_021": 6,
+            "SKILL_027": 2
+          },
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 6400000,
+          "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_4",
+          "dots": [],
+          "name": "レオン",
+          "team": "ENEMY",
+          "level": 30,
+          "stats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "luk": 0,
+            "spd": 390
+          },
+          "regens": [],
+          "skills": [
+            {
+              "id": "SKILL_021",
+              "name": "急所撃ち",
+              "target": "ENEMY_SINGLE",
+              "effects": [
+                {
+                  "raw": "DAMAGE 190% ATK",
+                  "type": "DAMAGE",
+                  "powerBp": 19000
+                }
+              ],
+              "cooldown": 4,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": null
+            },
+            {
+              "id": "SKILL_027",
+              "name": "血の強襲",
+              "target": "ENEMY_SINGLE",
+              "effects": [
+                {
+                  "raw": "DAMAGE 165% ATK",
+                  "type": "DAMAGE",
+                  "powerBp": 16500
+                },
+                {
+                  "raw": "BLEED 90% / 3T",
+                  "type": "BLEED",
+                  "duration": 3,
+                  "baseChanceBp": 9000
+                }
+              ],
+              "cooldown": 4,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": null
+            }
+          ],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "EVIL",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 7492,
+          "characterId": "char_leon_01",
+          "triggerCounts": {},
+          "equippedSkillRefs": [
+            "SKILL_021",
+            "SKILL_027"
+          ],
+          "nextAvailableRound": {
+            "SKILL_021": 2,
+            "SKILL_027": 2
+          },
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 6400000,
+          "id": "raid_c127f1da-9a60-4919-b351-6a99412574d7_5",
+          "dots": [],
+          "name": "カゲヤマ",
+          "team": "ENEMY",
+          "level": 30,
+          "stats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "luk": 0,
+            "spd": 390
+          },
+          "regens": [],
+          "skills": [
+            {
+              "id": "SKILL_022",
+              "name": "重鉄パイプ大薙ぎ",
+              "target": "ENEMY_ALL",
+              "effects": [
+                {
+                  "raw": "DAMAGE 105% ATK",
+                  "type": "DAMAGE",
+                  "powerBp": 10500
+                },
+                {
+                  "raw": "DEF -20% / 2T / chance 85%",
+                  "self": false,
+                  "stat": "DEF",
+                  "type": "DEBUFF",
+                  "chanceBp": 8500,
+                  "duration": 2,
+                  "magnitudeBp": 2000
+                }
+              ],
+              "cooldown": 4,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": null
+            },
+            {
+              "id": "SKILL_026",
+              "name": "決起のシュプレヒコール",
+              "target": "ALLY_ALL",
+              "effects": [
+                {
+                  "raw": "ATK +20% / 2T",
+                  "self": false,
+                  "stat": "ATK",
+                  "type": "BUFF",
+                  "chanceBp": 10000,
+                  "duration": 2,
+                  "magnitudeBp": 2000
+                },
+                {
+                  "raw": "DEF +20% / 2T",
+                  "self": false,
+                  "stat": "DEF",
+                  "type": "BUFF",
+                  "chanceBp": 10000,
+                  "duration": 2,
+                  "magnitudeBp": 2000
+                }
+              ],
+              "cooldown": 4,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": null
+            }
+          ],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "ORDER",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 7108,
+          "characterId": "char_kageyama_01",
+          "triggerCounts": {},
+          "equippedSkillRefs": [
+            "SKILL_022",
+            "SKILL_026"
+          ],
+          "nextAvailableRound": {
+            "SKILL_022": 2,
+            "SKILL_026": 2
+          },
+          "battleStartTriggered": {}
+        }
+      ],
+      "baseId": "shinjuku",
+      "events": [
+        {
+          "type": "ACTION",
+          "index": 0,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 1,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 9065,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 9065,
+            "randomBp": 10194,
+            "targetId": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+            "ignoreDefBp": 0,
+            "remainingHp": 3935,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 2,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 3,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 7239,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 3935,
+            "randomBp": 9769,
+            "targetId": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+            "ignoreDefBp": 0,
+            "remainingHp": 0,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "DEFEAT",
+          "index": 4,
+          "round": 1,
+          "payload": {
+            "targetId": "player_59677bee-0313-4925-816f-dcc1bdf9955c"
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 5,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 6,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 10888,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+            "counter": false,
+            "critical": true,
+            "hpDamage": 8316,
+            "randomBp": 9709,
+            "targetId": "player_73991016-17f0-400c-a2f8-841d9c74ec3a",
+            "ignoreDefBp": 0,
+            "remainingHp": 0,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "DEFEAT",
+          "index": 7,
+          "round": 1,
+          "payload": {
+            "targetId": "player_73991016-17f0-400c-a2f8-841d9c74ec3a"
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 8,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_4",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 9,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 7492,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_4",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 7492,
+            "randomBp": 10298,
+            "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+            "ignoreDefBp": 0,
+            "remainingHp": 17368,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 10,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_5",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 11,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 7108,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_5",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 7108,
+            "randomBp": 9770,
+            "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+            "ignoreDefBp": 0,
+            "remainingHp": 10260,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 12,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+            "skillId": "SKILL_001"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 13,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 2981,
+            "actorId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 2981,
+            "randomBp": 9614,
+            "targetId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "ignoreDefBp": 0,
+            "remainingHp": 6397019,
+            "shieldDamage": 0,
+            "activeEffectsAfter": [
+              {
+                "id": "COUNTER_SKILL_054",
+                "kind": "COUNTER",
+                "remainingDuration": null
+              }
+            ]
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 14,
+          "round": 1,
+          "payload": {
+            "action": "COUNTER",
+            "target": "ATTACKER_WHO_DAMAGED_SELF",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "skillId": "SKILL_054"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 15,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 13967,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "counter": true,
+            "critical": false,
+            "hpDamage": 10260,
+            "randomBp": 10238,
+            "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+            "ignoreDefBp": 0,
+            "remainingHp": 0,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "DEFEAT",
+          "index": 16,
+          "round": 1,
+          "payload": {
+            "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632"
+          }
+        },
+        {
+          "type": "DEFEAT",
+          "index": 17,
+          "round": 1,
+          "payload": {
+            "targetId": "player_82360aea-3b72-45b7-90ca-68ac72098632"
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 18,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 19,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 852,
+            "actorId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 852,
+            "randomBp": 9779,
+            "targetId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "ignoreDefBp": 0,
+            "remainingHp": 6396167,
+            "shieldDamage": 0,
+            "activeEffectsAfter": [
+              {
+                "id": "COUNTER_SKILL_054",
+                "kind": "COUNTER",
+                "remainingDuration": null
+              }
+            ]
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 20,
+          "round": 1,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 21,
+          "round": 1,
+          "payload": {
+            "hit": true,
+            "amount": 537,
+            "actorId": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 537,
+            "randomBp": 9548,
+            "targetId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "ignoreDefBp": 0,
+            "remainingHp": 6395630,
+            "shieldDamage": 0,
+            "activeEffectsAfter": [
+              {
+                "id": "COUNTER_SKILL_054",
+                "kind": "COUNTER",
+                "remainingDuration": null
+              }
+            ]
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 22,
+          "round": 2,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 23,
+          "round": 2,
+          "payload": {
+            "hit": true,
+            "amount": 8874,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_1",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 8874,
+            "randomBp": 9895,
+            "targetId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+            "ignoreDefBp": 0,
+            "remainingHp": 1026,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 24,
+          "round": 2,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+            "skillId": "BASIC_ATTACK"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 25,
+          "round": 2,
+          "payload": {
+            "hit": true,
+            "amount": 7541,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_2",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 1026,
+            "randomBp": 10091,
+            "targetId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+            "ignoreDefBp": 0,
+            "remainingHp": 0,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "DEFEAT",
+          "index": 26,
+          "round": 2,
+          "payload": {
+            "targetId": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6"
+          }
+        },
+        {
+          "type": "ACTION",
+          "index": 27,
+          "round": 2,
+          "payload": {
+            "target": "ENEMY_SINGLE",
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+            "skillId": "SKILL_021"
+          }
+        },
+        {
+          "type": "DAMAGE",
+          "index": 28,
+          "round": 2,
+          "payload": {
+            "hit": true,
+            "amount": 17643,
+            "actorId": "raid_c127f1da-9a60-4919-b351-6a99412574d7_3",
+            "counter": false,
+            "critical": false,
+            "hpDamage": 9000,
+            "randomBp": 9940,
+            "targetId": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+            "ignoreDefBp": 0,
+            "remainingHp": 0,
+            "shieldDamage": 0,
+            "activeEffectsAfter": []
+          }
+        },
+        {
+          "type": "DEFEAT",
+          "index": 29,
+          "round": 2,
+          "payload": {
+            "targetId": "player_8c095d57-4959-4e53-a77a-05400df7fe61"
+          }
+        },
+        {
+          "type": "RESULT",
+          "index": 30,
+          "round": 2,
+          "payload": {
+            "rounds": 2,
+            "winner": "ENEMY"
+          }
+        }
+      ],
+      "player": [
+        {
+          "hp": 0,
+          "id": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+          "dots": [],
+          "name": "ケンゴ",
+          "team": "PLAYER",
+          "level": 7,
+          "stats": {
+            "hp": 24860,
+            "atk": 3921,
+            "def": 2004,
+            "luk": 15,
+            "spd": 187
+          },
+          "rarity": "SSR",
+          "regens": [],
+          "skills": [
+            {
+              "id": "SKILL_001",
+              "name": "ストリートパンチ",
+              "target": "ENEMY_SINGLE",
+              "effects": [
+                {
+                  "raw": "DAMAGE 90% ATK",
+                  "type": "DAMAGE",
+                  "powerBp": 9000
+                }
+              ],
+              "skillId": "SKILL_001",
+              "cooldown": 3,
+              "plusValue": 0,
+              "slotIndex": 0,
+              "skillPlusVal": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 1,
+              "exclusiveCharacterId": null
+            }
+          ],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "EVIL",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 2981,
+          "characterId": "char_kengo_01",
+          "triggerCounts": {},
+          "awakeningLevel": 0,
+          "combatModifiers": {
+            "criticalDamageBp": 0,
+            "damageReductionBp": 0,
+            "damageDealtNegativeBp": 0,
+            "damageDealtPositiveBp": 0,
+            "criticalRateNegativeBp": 0,
+            "criticalRatePositiveBp": 0
+          },
+          "statusModifiers": {
+            "statusChanceGenericBp": 0,
+            "statusChanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            },
+            "statusResistanceGenericBp": 0,
+            "statusResistanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            }
+          },
+          "equipmentEffects": [],
+          "equippedSkillRefs": [
+            {
+              "id": "SKILL_001",
+              "name": "ストリートパンチ",
+              "target": "ENEMY_SINGLE",
+              "effects": [
+                {
+                  "raw": "DAMAGE 90% ATK",
+                  "type": "RAW"
+                }
+              ],
+              "skillId": "SKILL_001",
+              "cooldown": 3,
+              "plusValue": 0,
+              "slotIndex": 0,
+              "activationType": "ACTIVE",
+              "availableFromRound": 1,
+              "exclusiveCharacterId": null
+            }
+          ],
+          "nextAvailableRound": {
+            "SKILL_001": 4
+          },
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 0,
+          "id": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+          "dots": [],
+          "name": "ダイモン",
+          "team": "PLAYER",
+          "level": 1,
+          "stats": {
+            "hp": 9900,
+            "atk": 1240,
+            "def": 760,
+            "luk": 8,
+            "spd": 100
+          },
+          "rarity": "R",
+          "regens": [],
+          "skills": [],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "JUSTICE",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 852,
+          "characterId": "char_daimon_01",
+          "triggerCounts": {},
+          "awakeningLevel": 0,
+          "combatModifiers": {
+            "criticalDamageBp": 0,
+            "damageReductionBp": 0,
+            "damageDealtNegativeBp": 0,
+            "damageDealtPositiveBp": 0,
+            "criticalRateNegativeBp": 0,
+            "criticalRatePositiveBp": 0
+          },
+          "statusModifiers": {
+            "statusChanceGenericBp": 0,
+            "statusChanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            },
+            "statusResistanceGenericBp": 0,
+            "statusResistanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            }
+          },
+          "equipmentEffects": [],
+          "equippedSkillRefs": [],
+          "nextAvailableRound": {},
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 0,
+          "id": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+          "dots": [],
+          "name": "マサト",
+          "team": "PLAYER",
+          "level": 1,
+          "stats": {
+            "hp": 9000,
+            "atk": 800,
+            "def": 760,
+            "luk": 12,
+            "spd": 92
+          },
+          "rarity": "N",
+          "regens": [],
+          "skills": [],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "CHAOS",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 537,
+          "characterId": "char_masato_01",
+          "triggerCounts": {},
+          "awakeningLevel": 0,
+          "combatModifiers": {
+            "criticalDamageBp": 0,
+            "damageReductionBp": 0,
+            "damageDealtNegativeBp": 0,
+            "damageDealtPositiveBp": 0,
+            "criticalRateNegativeBp": 0,
+            "criticalRatePositiveBp": 0
+          },
+          "statusModifiers": {
+            "statusChanceGenericBp": 0,
+            "statusChanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            },
+            "statusResistanceGenericBp": 0,
+            "statusResistanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            }
+          },
+          "equipmentEffects": [],
+          "equippedSkillRefs": [],
+          "nextAvailableRound": {},
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 0,
+          "id": "player_73991016-17f0-400c-a2f8-841d9c74ec3a",
+          "dots": [],
+          "name": "ナオト",
+          "team": "PLAYER",
+          "level": 1,
+          "stats": {
+            "hp": 8316,
+            "atk": 972,
+            "def": 745,
+            "luk": 8,
+            "spd": 127
+          },
+          "rarity": "N",
+          "regens": [],
+          "skills": [],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "JUSTICE",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 0,
+          "characterId": "char_naoto_01",
+          "triggerCounts": {},
+          "awakeningLevel": 1,
+          "combatModifiers": {
+            "criticalDamageBp": 0,
+            "damageReductionBp": 0,
+            "damageDealtNegativeBp": 0,
+            "damageDealtPositiveBp": 0,
+            "criticalRateNegativeBp": 0,
+            "criticalRatePositiveBp": 0
+          },
+          "statusModifiers": {
+            "statusChanceGenericBp": 0,
+            "statusChanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            },
+            "statusResistanceGenericBp": 0,
+            "statusResistanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            }
+          },
+          "equipmentEffects": [],
+          "equippedSkillRefs": [],
+          "nextAvailableRound": {},
+          "battleStartTriggered": {}
+        },
+        {
+          "hp": 0,
+          "id": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+          "dots": [],
+          "name": "カズヤ",
+          "team": "PLAYER",
+          "level": 1,
+          "stats": {
+            "hp": 13000,
+            "atk": 800,
+            "def": 1150,
+            "luk": 6,
+            "spd": 72
+          },
+          "rarity": "R",
+          "regens": [],
+          "skills": [],
+          "shields": [],
+          "counters": [],
+          "statuses": [],
+          "alignment": "JUSTICE",
+          "equipment": [],
+          "modifiers": [],
+          "rawDamage": 0,
+          "characterId": "char_ren_male_01",
+          "triggerCounts": {},
+          "awakeningLevel": 0,
+          "combatModifiers": {
+            "criticalDamageBp": 0,
+            "damageReductionBp": 0,
+            "damageDealtNegativeBp": 0,
+            "damageDealtPositiveBp": 0,
+            "criticalRateNegativeBp": 0,
+            "criticalRatePositiveBp": 0
+          },
+          "statusModifiers": {
+            "statusChanceGenericBp": 0,
+            "statusChanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            },
+            "statusResistanceGenericBp": 0,
+            "statusResistanceIndividualBp": {
+              "STUN": 0,
+              "BLEED": 0,
+              "BLIND": 0,
+              "TAUNT": 0,
+              "POISON": 0,
+              "SILENCE": 0
+            }
+          },
+          "equipmentEffects": [],
+          "equippedSkillRefs": [],
+          "nextAvailableRound": {},
+          "battleStartTriggered": {}
+        }
+      ],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "rounds": 2,
+      "winner": "ENEMY",
+      "rawDamage": 4370,
+      "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+      "roomOutcome": "DEFEAT_SUCCESS",
+      "appliedDamage": 1261,
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "enemyRawDamage": 65076,
+      "raidInstanceId": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "playerRawDamage": 4370,
+      "remainingBossHp": 0,
+      "lateFinalization": false,
+      "personalContribution": 13732,
+      "participationProgress": {
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "updated_at": "2026-09-08T11:17:58.644388+00:00",
+        "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "finalized_battles": 3,
+        "raid_points_consumed": 2,
+        "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+      }
+    },
+    "error": null
+  },
+  "status": "PASS"
+}

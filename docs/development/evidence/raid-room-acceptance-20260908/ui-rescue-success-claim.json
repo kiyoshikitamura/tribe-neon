@@ -1,0 +1,40 @@
+{
+  "role": "rescue",
+  "requests": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"229c243d-40ea-4611-a031-08db979cb890\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"229c243d-40ea-4611-a031-08db979cb890\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"3c9fd8f4-fb11-4382-b13b-277e40b5d412\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/claim_present",
+      "body": "{\"p_present_id\":\"6652eb9b-4264-4792-9c83-be025e6e27eb\"}"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/claim_present",
+      "status": 200,
+      "body": {
+        "status": "success",
+        "present_id": "6652eb9b-4264-4792-9c83-be025e6e27eb"
+      }
+    }
+  ],
+  "recovered": [
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n2,417\n共有HPへの反映\n2,417\n累計貢献ダメージ\n14,925\nボス残りHP\n13,192\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n2,417\n共有HPへの反映\n2,417\n累計貢献ダメージ\n14,925\nボス残りHP\n13,192\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,590\n共有HPへの反映\n3,590\n累計貢献ダメージ\n18,515\nボス残りHP\n9,602\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る"
+  ],
+  "errors": [],
+  "before": "未受取: 10件\n一括受け取り\nレイド救援成功報酬\n強化ドリンク・小 × 1\n期限: あと30日\n受け取る\nレイド討伐報酬\nカスタムオイル・小 × 1\n期限: あと30日\n受け取る\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る",
+  "failure": "locator.click: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '閉じる', exact: true }).first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled aria-busy=\"false\" class=\"outlaw-button semantic-cta semantic-cta--secondary variant-secondary full-width active-scale-effect fullscreen-close-btn\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    9 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n",
+  "body": "R0908R01\nTRIBE R0908Guild01\nLv.5 · EXP 0/300\n総合力\n90,884\nMENU\n☰\n9\n2,000\n170\n⚡\n90/100\n+1 2:16\nACTIVITY\nQAsk927d\n総戦力ランキング1位に到達\n›\n新宿\nSHINJUKU\n›\n未認証\nボーナス\nミッション\n1\nランキング\nレイド\nギルド\nバトル\nクエスト\nギルドバトル\n準備中\n無料スキル／装備ガチャを引こう\n›\n‹\n›\nマイページ\nコミュニティ\nキャラ\nガチャ\nFREE\nショップ\n準備中\n受信箱\n‹\nお知らせ\nプレゼント\n›\n未受取: 9件\n一括受取中…\nレイド討伐報酬\nカスタムオイル・小 × 1\n期限: あと30日\n受け取る\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\n閉じる"
+}
