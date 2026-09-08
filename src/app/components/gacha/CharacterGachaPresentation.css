@@ -1,3 +1,4 @@
+@font-face{font-family:TNTetsubin;src:url("/fonts/gacha-comparison/tetsubin.woff2") format("woff2");font-weight:400;font-display:swap}
 .cg-overlay{position:fixed;inset:0;z-index:20000;background:#030405f5;display:flex;justify-content:center;color:#f3ede0}
 .cg-shell{--cg-accent:#ccd3dc;position:relative;isolation:isolate;width:min(100%,480px);height:100dvh;overflow-y:auto;overflow-x:hidden;background:#0b0c10;font-family:inherit;outline:none}
 .cg-sr{--cg-accent:#d7b4ed}.cg-ssr{--cg-accent:#f0cf87}
@@ -92,3 +93,15 @@
 @keyframes cg-last-cities{from{visibility:hidden}to{visibility:visible}}
 @keyframes cg-simple-fade{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.cg-city-group-0{display:none}.cg-city-group-1{visibility:visible}.cg-city-scene{animation:none!important}.cg-shell *{animation:none!important}}
+
+/* 採用書体。セリフ・操作案内を含めて鉄瓶ゴシックへ統一する。 */
+.cg-overlay .cg-shell,.cg-overlay .cg-loading,.cg-overlay .cg-shell :is(button,h2,p,span,strong,small,blockquote,dt,dd){font-family:TNTetsubin,"Hiragino Sans",sans-serif;font-weight:400;font-synthesis:none}
+.cg-overlay .cg-shell .cg-reveal-copy>blockquote{font-size:20px;line-height:1.6;letter-spacing:.02em}
+.cg-overlay .cg-shell .cg-quote-intro blockquote{font-size:26px;line-height:1.7}
+.cg-overlay .cg-shell .cg-opening-copy strong{font-size:36px;letter-spacing:.12em}
+.cg-overlay .cg-shell .cg-opening-copy small{font-size:14px;letter-spacing:.04em}
+.cg-overlay .cg-shell .cg-tap-hint,.cg-overlay .cg-shell .cg-summary-hint{font-size:13px;letter-spacing:.04em}
+.cg-overlay .cg-shell .cg-top{font-size:13px;letter-spacing:.04em}
+.cg-overlay .cg-shell .cg-top button{font-size:13px}
+.cg-overlay .cg-shell .cg-origin{font-size:12px}
+@media(max-height:700px){.cg-overlay .cg-shell .cg-reveal-copy>blockquote{font-size:18px;line-height:1.5}.cg-overlay .cg-shell .cg-quote-intro blockquote{font-size:23px}}

@@ -66,6 +66,14 @@ function StandingArt({ result, variant = "reveal", background = false }: { resul
 /** 抽選結果・報酬更新は呼び出し元で確定。再試行は画像取得のみ。 */
 export default function CharacterGachaPresentation(props: Props) {
   const [textOnly, setTextOnly] = useState(false);
+  const [fontReady, setFontReady] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    const done = () => { if (!cancelled) setFontReady(true); };
+    const timer = window.setTimeout(done, 4000);
+    void document.fonts.load('20px TNTetsubin', '新宿 TAP').then(done, done);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, []);
   const readiness = useScreenReadiness({ assets: [
     ...CITIES.map((city) => ({ src: getCharacterLocationBackground(city) })),
     ...props.results.flatMap((result) => [{ src: result.imageUrl }, { src: town(result) }, { src: getRarityBadgeAsset(result.rarity) }, ...(acquisitionBadge(result) ? [{ src: acquisitionBadge(result)! }] : [])]),
@@ -74,7 +82,7 @@ export default function CharacterGachaPresentation(props: Props) {
     <h2>獲得結果</h2><ol>{props.results.map((result, index) => <li key={index}>{result.rarity} {result.name} / {outcome(result)}</li>)}</ol>
     <OutlawButton onClick={props.onClose}>{props.tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
   </section></div>;
-  if (readiness.status !== "ready") return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="ガチャ演出の準備">
+  if (readiness.status !== "ready" || !fontReady) return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="ガチャ演出の準備">
     <p role="status">{readiness.status === "error" ? "画像を読み込めませんでした" : "仲間を迎える準備中…"}</p>
     {readiness.status === "error" && <OutlawButton onClick={readiness.retry}>画像を再読み込み</OutlawButton>}
     <button type="button" onClick={() => { props.onReveal(); setTextOnly(true); }}>獲得結果を文字で確認</button>
