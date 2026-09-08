@@ -42,7 +42,7 @@ import { canonicalMissionUiStatus } from "@/domain/gameplay/canonical/missions";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { normalizeUserBio } from "@/domain/presentation/userBio";
 import { waitForBrowserPaint } from "@/domain/presentation/browserPaint";
-import { CANONICAL_QUEST_REWARD_POOLS, CANONICAL_QUESTS } from "@/domain/gameplay/canonical/quests";
+import { CANONICAL_QUEST_REWARD_POOLS, CANONICAL_QUESTS, canonicalQuestById } from "@/domain/gameplay/canonical/quests";
 import {
   featureUiExposure,
   isFeatureOpen,
@@ -1639,7 +1639,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // 見回り関連データとマスタデータの同期
       const [{ data: questsData }, { data: canonicalQuestData }, { data: questPoolData }, { data: encounterData }, { data: questProgressionData }] = await Promise.all([
         supabase.from("quests").select("*"),
-        supabase.from("canonical_quest_master").select("*"),
+        supabase.from("canonical_quest_master").select("*").eq("version", "2026-08-30"),
         supabase.from("canonical_quest_reward_pool_items").select("*"),
         Promise.resolve({ data: [] as any[] }),
         supabase.rpc("get_canonical_quest_progression"),
@@ -1669,7 +1669,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           const firstClearItems = poolRows.filter((item: any) => item.reward_pool_id === canonical?.first_clear_reward_pool_id);
           return {
             ...quest,
-            reward_cash: canonical?.cash_reward ?? quest.cash_reward ?? quest.reward_cash ?? 0,
+            reward_cash: canonical?.cash_reward ?? canonicalQuestById(quest.id)?.cashReward ?? quest.cash_reward ?? quest.reward_cash ?? 0,
             reward_xp: canonical?.user_exp ?? quest.exp_reward ?? quest.reward_xp ?? 0,
             reward_items: rewardPoolItems,
             first_clear_user_exp: canonical?.first_clear_user_exp ?? 0,
