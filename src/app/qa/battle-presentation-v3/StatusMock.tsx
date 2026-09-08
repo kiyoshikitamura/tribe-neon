@@ -24,7 +24,7 @@ export type Status = {id:StatusId; remaining:number; shield?:number};
 export const makeStatus = (id:StatusId):Status => ({id,remaining:statusCatalog[id].duration,...(id==="SHIELD"?{shield:480}:{})});
 export const supportive = (kind:string) => ["heal","buff","shield","regen","counter","cleanse"].includes(kind);
 export const statusKinds = ["buff","debuff","status","shield","regen","counter","cleanse"];
-export const effectAsset = (kind:string) => `/effects/battle-v3/${kind==="heal"||kind==="regen"||kind==="cleanse"?"healing-pulse":kind==="buff"||kind==="shield"||kind==="counter"?"support-rise":"weaken-fall"}.webp`;
+export const effectAsset = (_kind:string) => "/effects/battle-v3/street-support.webp";
 
 const paths:Record<string,string>={
   sword:"M5 19 19 5V11L11 19ZM4 14 10 20M3 21 7 17",

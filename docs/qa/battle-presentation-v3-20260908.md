@@ -54,3 +54,18 @@ URL: `/qa/battle-presentation-v3`。既存QAと同じPreview限定ゲートを�
 プロンプト要旨: healing＝emerald/ivory upward ribbons, transparent open center, premium painted street battle effect; support＝metallic amber/silver ascending chevrons and shield outline; weaken＝downward violet/crimson pressure sweep and broken ink fragments。すべて人物・文字・背景・魔法陣・サイバーパンク表現なし、透過背景指定。
 
 検証: Preview設定のproduction build、ESLint成功。Chromiumの390×844で17種、320×568で毒・シールドを再生し対象・HP不変を確認。両画面で回復800、6件の詳細表示、シールド残量480、弱体解除後の正状態維持、期限切れ、SKIP後のタイマー停止を確認。実機Safariはユーザー確認待ち。
+
+
+## 2026-09-08 ストリート演出・二軸レアリティ更新
+
+- キャラクターのレアリティ：N/R/SRは行動キャラ付近のセリフとスキル名、SSRのみ全画面の既存立ち絵・セリフ。効果発生前に全画面を閉じて盤面へ戻す。
+- スキルのレアリティ：既存マスタ skills_20260821.json のN/R/SR/SSRを確認。モックでは独立選択し、N/Rは基本効果、SRは短い素材の重なり、SSRは遅れて重なる衝撃・SE差分。攻撃／回復／状態付与に共通適用。区分はモック比較用。ゲームマスタ・ダメージ・装備制限は変更しない。
+- 属性：既存の正・秩・悪・混の画像バッジを全参加者に常設。状態バッジと別位置。
+- 攻撃128px／通常88pxへ縮小。支援効果も対象行内へ縮小。下部カットイン枠を撤去。
+- DoT発生ボタンは180ダメージの単発表示サンプル。付与時の特殊演出と区別し、全画面／特殊素材を出さない。実エンジンのターン進行ではない。
+- セリフはFIX済みガチャ文言の仮配置。ガチャ・本番・レイドの変更なし。
+
+### 追加画像
+組み込み画像生成ツールを使用。生成PNGの透過を保持しWebPへ縮小。
+- public/effects/battle-v3/street-impact.webp：短い衝撃・擦れ・金属片。
+- public/effects/battle-v3/street-support.webp：スプレーとドライインクの刷毛目。回復／支援／弱体で動き・色・アイコンを変える共通素材。
