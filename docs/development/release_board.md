@@ -1,3 +1,7 @@
+# Raid第17工程 — VALIDATED（設定・切替準備）
+
+RAID-A/C/P-17。オフライン設定生成・未入力template・切替手順。親Node11 PASS、固定SHA経路レビュー。製品停止実装/実SQL実行/実機確認ではない。旧生成/開始停止guardと旧UI置換、数値、Preview接続が残る。詳細raid_room_phase17_integration.md。
+
 # Raid第16工程 — VALIDATED
 
 討伐報酬のACTIVE累積貢献判定・Present接続・表示。RAID-A/B/C/P-16。親レビュー・SQL10/討伐画面4/Room画面28/共通86/全体型/Mock build PASS。数値未投入、設定無効。SQL262未適用、実DB/Deployなし。詳細raid_room_phase16_integration.md。
@@ -214,3 +218,4 @@ Main AI Agentがdependency / file overlapを確認してから割り当てるこ
 
 ## Raid初回成果
 A/B/Cの指定範囲は親レビュー済み。対象26テストPASS、strict TypeScript PASS。実画面・DB・Preview接続未実施。次工程はRoomの取得/表示/操作の接続契約と画面。構造条件はspecの未確認事項を照合し、依存する処理だけを保留する。
+
