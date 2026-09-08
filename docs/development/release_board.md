@@ -1,3 +1,9 @@
+# Raid第8工程 — VALIDATED
+
+追加確定3条件をspecへ記録。A: 公開参照/参加/戦闘開始RPC、B: 参加・事前表示接続、C: SQL検証、P: 統合。実確定/報酬未接続で開始フラグfalse。
+
+親検証: SQL22件、共通52件、React20件、全体TypeScript・Mock build PASS。実DB・実戦闘/確定・実機未完了。詳細raid_room_phase8_integration.md。
+
 # Raid第7工程 — VALIDATED
 
 A: 旧Raid経路からRoomを分離。B: 参加登録と既存戦闘導線の接続契約。C: SQL回帰検証。P: 親レビュー・統合。生成フラグfalseを維持し、公開参加・戦闘・報酬接続の完了と扱わない。

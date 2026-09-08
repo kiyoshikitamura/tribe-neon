@@ -6,11 +6,26 @@ export interface RaidBattleReference {
   readonly replayId: string;
 }
 
+export interface RaidRoomMembershipReceipt { readonly roomId: string; readonly membershipStatus: 'joined' | 'already_joined' }
+export interface RaidRoomBriefing {
+  readonly roomId: string;
+  readonly raidBossInstanceId: string;
+  readonly raidVariantId: string | null;
+  readonly bossName: string | null;
+  readonly baseId: string | null;
+  readonly membershipStatus: 'joined' | 'not_joined';
+  readonly joinEligibility: { readonly status: 'passed' | 'failed' | 'unknown'; readonly reason: string; readonly actualPower: number | null; readonly minimumPower: number | null };
+  /** 運用フラグのみ。実出撃編成の資格を示さない。 */
+  readonly battleStartEnabled: boolean;
+}
+
 export interface RaidBossChoice { readonly raidVariantId: string; readonly name: string }
 export interface RaidRoomCreateRequest { readonly difficultyId: RaidDifficultyId; readonly raidVariantId: string; readonly requestId: string }
 
 /** 実API接続時の境界。未実装のRPC名や報酬付与処理はここに置かない。 */
 export interface RaidRoomTransport {
+  registerParticipation?(roomId: string): Promise<RaidRoomMembershipReceipt>;
+  getBriefing?(roomId: string): Promise<RaidRoomBriefing>;
   listBossChoices?(): Promise<readonly RaidBossChoice[]>;
   createRoom?(request: RaidRoomCreateRequest): Promise<RaidRoomDto>;
   listRooms(): Promise<readonly RaidRoomDto[]>;
@@ -32,6 +47,10 @@ export interface RaidRoomClientState {
   readonly room: RaidRoomResource<RaidRoomDto>;
   readonly participants: RaidRoomResource<readonly RaidParticipantDto[]>;
   readonly rewards: RaidRoomResource<readonly RaidRewardDto[]>;
+  readonly canRegister: boolean;
+  readonly briefing: RaidRoomResource<RaidRoomBriefing>;
+  readonly registering: boolean;
+  readonly registrationError: string | null;
   readonly canCreate: boolean;
   readonly bossChoices: RaidRoomResource<readonly RaidBossChoice[]>;
   readonly creating: boolean;
@@ -49,6 +68,7 @@ export interface RaidRoomController {
   createRoom(difficultyId: RaidDifficultyId, raidVariantId: string): Promise<RaidRoomDto | null>;
   selectRoom(roomId: string | null, rescueId?: string): Promise<void>;
   refreshRoom(): Promise<void>;
+  registerParticipation(): Promise<RaidRoomMembershipReceipt | null>;
   join(): Promise<RaidBattleReference | null>;
   dispose(): void;
 }
@@ -62,6 +82,7 @@ const failure = <T>(): RaidRoomResource<T> => ({ status: 'error', data: null, er
 export function createRaidRoomController(transport: RaidRoomTransport): RaidRoomController {
   let state: RaidRoomClientState = {
     rooms: idle(), selectedRoomId: null, room: idle(), participants: idle(), rewards: idle(),
+    canRegister: !!transport.registerParticipation && !!transport.getBriefing, briefing: idle(), registering: false, registrationError: null,
     joining: false, joinError: null, canCreate: !!transport.createRoom && !!transport.listBossChoices, bossChoices: idle(), creating: false, createError: null,
   };
   const listeners = new Set<() => void>();
@@ -72,6 +93,7 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
   let rescueId: string | undefined;
   // 選択を変えても通信中の参加要求は取り消せないため、settleまで連打防止を維持する。
   // 通信失敗時のサーバー確定有無は判断できない。再送の二重消費防止はサーバー側の冪等性が必要。
+  let registerPending = false;
   let joinPending = false;
   let createPending = false;
   let createAttempt: { key: string; requestId: string } | null = null;
@@ -88,8 +110,18 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
     const roomId = state.selectedRoomId;
     const revision = ++detailRevision;
     const current = () => !disposed && revision === detailRevision && state.selectedRoomId === roomId;
-    update({ room: loading(), participants: loading(), rewards: loading() });
+    update({ room: loading(), participants: loading(), rewards: loading(), briefing: transport.getBriefing ? loading() : idle() });
+    const briefingRequest = (async (): Promise<RaidRoomBriefing | null> => {
+      if (!transport.getBriefing) return null;
+      try {
+        const briefing = await transport.getBriefing(roomId);
+        if (briefing.roomId !== roomId) throw new Error('Room mismatch');
+        if (current()) update({ briefing: success(briefing) });
+        return briefing;
+      } catch { if (current()) update({ briefing: failure() }); return null; }
+    })();
     await Promise.all([
+      briefingRequest,
       (async () => {
         try {
           const room = await transport.getRoom(roomId);
@@ -101,6 +133,11 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
       })(),
       (async () => {
         try {
+          if (transport.getBriefing) {
+            const briefing = await briefingRequest;
+            if (!current()) return;
+            if (briefing?.membershipStatus !== 'joined') { update({ participants: idle() }); return; }
+          }
           const participants = await transport.listParticipants(roomId);
           if (participants.some((entry) => entry.roomId !== roomId)) throw new Error('Room mismatch');
           if (current()) update({ participants: success(participants) });
@@ -139,7 +176,7 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
       }
     },
     async createRoom(difficultyId, raidVariantId) {
-      if (disposed || createPending || joinPending || !transport.createRoom || !state.canCreate) return null;
+      if (disposed || createPending || joinPending || registerPending || !transport.createRoom || !state.canCreate) return null;
       createPending = true;
       const revision = selectionRevision;
       update({ creating: true, createError: null });
@@ -153,7 +190,8 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
         selectionRevision++; detailRevision++; listRevision++;
         rescueId = undefined;
         update({ selectedRoomId: room.roomId, room: success(room), participants: idle(), rewards: idle(),
-          rooms: idle(), joinError: null });
+          rooms: idle(), joinError: null, briefing: idle(), registrationError: null });
+        if (transport.getBriefing) await refreshRoom();
         return room;
       } catch {
         update({ createError: '作成できませんでした。時間をおいて同じ内容で再度お試しください。' });
@@ -176,12 +214,37 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
       selectionRevision++;
       detailRevision++;
       rescueId = sourceRescueId;
-      update({ selectedRoomId: roomId, room: idle(), participants: idle(), rewards: idle(), joinError: null });
+      update({ selectedRoomId: roomId, room: idle(), participants: idle(), rewards: idle(), joinError: null, briefing: idle(), registrationError: null });
       await refreshRoom();
     },
     refreshRoom,
+    async registerParticipation() {
+      if (disposed || registerPending || joinPending || createPending || !state.canRegister || !transport.registerParticipation || !state.selectedRoomId) return null;
+      if (rescueId !== undefined) {
+        update({ registrationError: '救援からの参加は現在利用できません。' });
+        return null;
+      }
+      const briefing = state.briefing.data;
+      if (state.briefing.status !== 'success' || !briefing || briefing.joinEligibility.status !== 'passed' || briefing.membershipStatus !== 'not_joined') return null;
+      const roomId = state.selectedRoomId, revision = selectionRevision;
+      registerPending = true;
+      update({ registering: true, registrationError: null });
+      try {
+        const receipt = await transport.registerParticipation(roomId);
+        if (receipt.roomId !== roomId || !['joined', 'already_joined'].includes(receipt.membershipStatus)) throw new Error('Invalid membership receipt');
+        if (disposed || revision !== selectionRevision) return null;
+        await refreshRoom();
+        return receipt;
+      } catch {
+        if (!disposed && revision === selectionRevision) {
+          detailRevision++;
+          update({ briefing: idle(), registrationError: '参加を確認できませんでした。Roomを更新して再度お試しください。' });
+        }
+        return null;
+      } finally { registerPending = false; update({ registering: false }); }
+    },
     async join() {
-      if (disposed || joinPending || createPending || state.selectedRoomId === null) return null;
+      if (disposed || joinPending || createPending || registerPending || state.canRegister || state.selectedRoomId === null) return null;
       const room = state.room.data;
       if (state.room.status !== 'success' || !room || room.serverEligibility.status !== 'eligible') {
         update({ joinError: '参加条件を確認してからお試しください。' });

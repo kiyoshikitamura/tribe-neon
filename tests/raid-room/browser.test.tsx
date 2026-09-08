@@ -354,3 +354,24 @@ test('作成待ち中に選択を変えた場合は古い作成応答で画面�
     assert.deepEqual(h.battles, []);
   } finally { h.close(); }
 });
+
+test('公開参加は参加済み表示へ更新し、戦闘不可ならReplay遷移しない', async () => {
+  let joined = false, calls = 0;
+  const pending = deferred<void>();
+  const h = harness({
+    getBriefing: async roomId => ({ roomId, raidBossInstanceId: 'instance-a', raidVariantId: 'boss-a', bossName: '確認ボス', baseId: null,
+      membershipStatus: joined ? 'joined' : 'not_joined',
+      joinEligibility: { status: 'passed', reason: 'passed', actualPower: 200000, minimumPower: 160000 }, battleStartEnabled: false }),
+    registerParticipation: async roomId => { calls++; await pending.promise; joined = true; return { roomId, membershipStatus: 'joined' }; },
+  });
+  try {
+    await act(async () => { await h.controller.selectRoom('room-a'); });
+    const button = await h.ui.findByRole('button', { name: '参加する' });
+    fireEvent.click(button); fireEvent.click(button);
+    assert.equal(calls, 1); assert.equal(button.textContent, '');
+    await act(async () => pending.resolve());
+    await h.ui.findByText('参加済み'); await h.ui.findByText('現在、戦闘を開始できません。');
+    assert.deepEqual(h.battles, []);
+    assert.equal(h.ui.queryByRole('button', { name: '出撃準備' }), null);
+  } finally { h.close(); }
+});

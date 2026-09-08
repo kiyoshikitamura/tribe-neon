@@ -74,3 +74,63 @@ test('disposeは購読通知と進行中応答の反映を停止する', async (
   c.subscribe(() => notified++); c.selectRoom('room-a'); c.dispose(); const before = notified; const snapshot = c.getSnapshot();
   pending.resolve(roomFixture()); await settle(); assert.equal(notified, before); assert.equal(c.getSnapshot(), snapshot);
 });
+
+const briefingFixture = (roomId, membershipStatus = 'not_joined') => ({
+  roomId, raidBossInstanceId: 'instance-a', raidVariantId: 'boss-a', bossName: 'ボス', baseId: null,
+  membershipStatus, joinEligibility: { status: 'passed', reason: 'passed', actualPower: 200000, minimumPower: 160000 }, battleStartEnabled: false,
+});
+test('参加登録は連打を抑止し詳細を更新、既存combinedjoinを呼ばない', async () => {
+  const pending = deferred(); let calls = 0, joined = false, battleCalls = 0;
+  const c = createRaidRoomController(transport({
+    getBriefing: async id => briefingFixture(id, joined ? 'joined' : 'not_joined'),
+    registerParticipation: async roomId => { calls++; await pending.promise; joined = true; return { roomId, membershipStatus: 'joined' }; },
+    joinRoom: async () => { battleCalls++; throw new Error('not connected'); },
+  }));
+  await c.selectRoom('room-a');
+  const first = c.registerParticipation();
+  assert.equal(await c.registerParticipation(), null); assert.equal(await c.join(), null);
+  pending.resolve(); assert.equal((await first).membershipStatus, 'joined');
+  assert.equal(c.getSnapshot().briefing.data.membershipStatus, 'joined');
+  assert.equal(calls, 1); assert.equal(battleCalls, 0); c.dispose();
+});
+test('参加失敗後は資格を破棄し再取得、古い登録応答で選択を戻さない', async () => {
+  const pending = deferred(); let calls = 0;
+  const c = createRaidRoomController(transport({
+    getBriefing: async id => briefingFixture(id),
+    registerParticipation: async roomId => { if (++calls === 1) throw new Error('offline'); await pending.promise; return { roomId, membershipStatus: 'already_joined' }; },
+  }));
+  await c.selectRoom('room-a'); assert.equal(await c.registerParticipation(), null);
+  assert.equal(c.getSnapshot().briefing.status, 'idle'); assert.equal(await c.registerParticipation(), null);
+  await c.refreshRoom(); const registration = c.registerParticipation(); await c.selectRoom('room-b');
+  pending.resolve(); assert.equal(await registration, null);
+  assert.equal(c.getSnapshot().briefing.data.roomId, 'room-b'); c.dispose();
+});
+
+test('救援帰属未接続では登録RPCへ救援IDを黙って捨てて送らない', async () => {
+  let calls = 0;
+  const c = createRaidRoomController(transport({ getBriefing: async id => briefingFixture(id),
+    registerParticipation: async roomId => { calls++; return { roomId, membershipStatus: 'joined' }; } }));
+  await c.selectRoom('room-a', 'rescue-a');
+  assert.equal(await c.registerParticipation(), null); assert.equal(calls, 0);
+  assert.match(c.getSnapshot().registrationError, /救援/); c.dispose();
+});
+test('作成した主催Roomもbriefingと参加者を取得する', async () => {
+  const c = createRaidRoomController(transport({ listBossChoices: async () => [],
+    createRoom: async request => roomFixture('created', { difficultyId: request.difficultyId }),
+    getBriefing: async id => briefingFixture(id, 'joined'),
+    registerParticipation: async roomId => ({ roomId, membershipStatus: 'already_joined' }) }));
+  await c.createRoom('intermediate', 'boss-a');
+  assert.equal(c.getSnapshot().briefing.data.roomId, 'created');
+  assert.equal(c.getSnapshot().briefing.data.membershipStatus, 'joined');
+  assert.equal(c.getSnapshot().participants.status, 'success'); c.dispose();
+});
+test('公開Room未参加では参加者APIを呼ばず、登録後にだけ取得する', async () => {
+  let joined = false, calls = 0;
+  const c = createRaidRoomController(transport({
+    getBriefing: async id => briefingFixture(id, joined ? 'joined' : 'not_joined'),
+    listParticipants: async () => { calls++; return []; },
+    registerParticipation: async roomId => { joined = true; return { roomId, membershipStatus: 'joined' }; },
+  }));
+  await c.selectRoom('room-a'); assert.equal(calls, 0); assert.equal(c.getSnapshot().participants.status, 'idle');
+  await c.registerParticipation(); assert.equal(calls, 1); c.dispose();
+});

@@ -1,6 +1,6 @@
 import type { RaidObserved, RaidParticipantDto, RaidPlayerSummary, RaidRewardDto, RaidRoomDto, RaidServerEligibility } from './raidRoom';
 import { RAID_DIFFICULTIES } from './raidRoom.ts';
-import type { RaidBattleReference, RaidRoomTransport } from './raidRoomClient';
+import type { RaidBattleReference, RaidRoomTransport, RaidRoomBriefing } from './raidRoomClient';
 
 /** 認証済みクライアントを親から注入する。接続先・資格情報をこのadapterで生成しない。 */
 export interface RaidRoomRpcClient {
@@ -10,6 +10,7 @@ export interface RaidRoomRpcClient {
 /** 未接続の権利処理は後続のサーバーAuthorityからのみ注入する。 */
 export interface RaidRoomRpcAuthorities {
   enableCreation?: boolean;
+  enableParticipation?: boolean;
   getRewards?: (roomId: string) => Promise<unknown>;
   joinRoom?: (request: { readonly roomId: string; readonly rescueId?: string }) => Promise<unknown>;
 }
@@ -148,6 +149,27 @@ export function createRaidRoomRpcTransport(client: RaidRoomRpcClient, authoritie
     throw new Error('Raid room pagination limit exceeded');
   }
   return {
+    ...(authorities.enableParticipation ? {
+      async registerParticipation(roomId: string) {
+        const id = text(roomId);
+        const result = object(await rpc('register_raid_room_v1', { p_room_id: id }));
+        if (result.roomId !== id) invalid();
+        return { roomId: id, membershipStatus: choice(result.membershipStatus, ['joined', 'already_joined'] as const) };
+      },
+      async getBriefing(roomId: string): Promise<RaidRoomBriefing> {
+        const id = text(roomId);
+        const result = object(await rpc('get_raid_room_briefing_v1', { p_room_id: id }));
+        if (result.roomId !== id || typeof result.battleStartEnabled !== 'boolean') invalid();
+        const gate = object(result.joinEligibility);
+        return {
+          roomId: id, raidBossInstanceId: text(result.raidBossInstanceId),
+          raidVariantId: nullable(text)(result.raidVariantId), bossName: nullable(text)(result.bossName), baseId: nullable(text)(result.baseId),
+          membershipStatus: choice(result.membershipStatus, ['joined', 'not_joined'] as const),
+          joinEligibility: { status: choice(gate.status, ['passed', 'failed', 'unknown'] as const), reason: text(gate.reason), actualPower: nullable(integer)(gate.actualPower), minimumPower: nullable(integer)(gate.minimumPower) },
+          battleStartEnabled: result.battleStartEnabled,
+        };
+      },
+    } : {}),
     ...(authorities.enableCreation ? {
       async listBossChoices() {
         const response = object(await rpc('list_raid_room_boss_choices_v1', {}));

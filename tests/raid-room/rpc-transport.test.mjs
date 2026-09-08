@@ -97,3 +97,21 @@ test('生成の停止エラー・不正DTO・候補重複は成功にしない',
   await assert.rejects(createRaidRoomRpcTransport(clientFor({}), { enableCreation: true }).createRoom({ difficultyId: 'beginner', raidVariantId: 'a', requestId: 'r' }));
   await assert.rejects(createRaidRoomRpcTransport(clientFor({ choices: [{ raidVariantId: 'a', name: 'A' }, { raidVariantId: 'a', name: 'B' }] }), { enableCreation: true }).listBossChoices());
 });
+
+test('参加登録とbriefingはopt-in、正規RPC引数とreceiptを保持する', async () => {
+  assert.equal(createRaidRoomRpcTransport(clientFor(null)).registerParticipation, undefined);
+  const calls = [];
+  const briefing = { roomId: 'room-a', raidBossInstanceId: 'instance-a', raidVariantId: 'boss-a', bossName: 'ボス', baseId: null,
+    membershipStatus: 'joined', joinEligibility: { status: 'passed', reason: 'passed', actualPower: 160000, minimumPower: 160000 }, battleStartEnabled: false };
+  const t = createRaidRoomRpcTransport({ rpc: async (name, args) => { calls.push({ name, args }); return { data: name === 'register_raid_room_v1' ? { roomId: 'room-a', membershipStatus: 'already_joined' } : briefing, error: null }; } }, { enableParticipation: true });
+  assert.deepEqual(await t.registerParticipation('room-a'), { roomId: 'room-a', membershipStatus: 'already_joined' });
+  assert.deepEqual(await t.getBriefing('room-a'), briefing);
+  assert.deepEqual(calls, [{ name: 'register_raid_room_v1', args: { p_room_id: 'room-a' } }, { name: 'get_raid_room_briefing_v1', args: { p_room_id: 'room-a' } }]);
+  await assert.rejects(t.joinRoom({ roomId: 'room-a' }));
+});
+test('参加receipt別Roomや不正briefingを拒否し資格を捏造しない', async () => {
+  for (const response of [{ roomId: 'other', membershipStatus: 'joined' }, { roomId: 'room-a', membershipStatus: 'eligible' }]) {
+    await assert.rejects(createRaidRoomRpcTransport(clientFor(response), { enableParticipation: true }).registerParticipation('room-a'));
+  }
+  await assert.rejects(createRaidRoomRpcTransport(clientFor({ roomId: 'room-a', battleStartEnabled: 'false' }), { enableParticipation: true }).getBriefing('room-a'));
+});

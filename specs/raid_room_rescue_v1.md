@@ -14,6 +14,12 @@
 - 救援成功は「救援経由」「難度別必要戦闘数」「必要Contribution Damage」「Raid CLEAR」のAND。
 - Activity / Guild Chatの救援からRoomへ遷移。参加者一覧、Raid Result、Present受取の経路を接続する。
 
+## 2026-09-08 追加確定
+Product Ownerが第7工程後の3条件の提案へ「進めてください」と回答。
+- Room一覧は全プレイヤーに公開する。認証済みプレイヤーの参照とし、参加条件とは分離する。
+- 参加登録時の総合力はMain Formation、戦闘開始時は実出撃編成でサーバー判定する。確定済み下限16/20/24万を共用。
+- 期限前開始・期限後確定は、結果と個人貢献を保存し、終了後の共有HP・討伐判定を変更しない。報酬資格は別途定めた条件から判定する。
+
 ## バランス値の扱い
 後から変更できる設定として分離し、実機確認で調整する。バランス妥当性研究を実装開始条件にしない。
 推奨総合力の目安: 初級は開始直後、中級18〜22万、上級22〜26万、超級26万以上。
@@ -23,12 +29,12 @@ HP・敵ステータス・報酬品目と数量は承認済み値と混同せず
 
 ## 未確認の構造条件
 未決定と断定せず、既存資料・Product Owner決定の所在を親が照合する。依存しない実装は継続する。
-- Roomの再生成・公開範囲の詳細。生成者本人に既存Lv5解放と難度の総合力下限を適用する実装前提。作成追加費用はなし。
-- 総合力の判定時点と、Main Formation・実際の出撃編成が異なる場合の参加下限判定対象。
+- Roomの再生成の詳細。公開一覧は上記追加確定を適用。生成者本人に既存Lv5解放と難度の総合力下限を適用する実装前提。作成追加費用はなし。
+- 総合力判定対象・時点は上記追加確定で解消。
 - 救援公開先・権限・頻度、救援経由の帰属・集計開始時点。
 - Guild所属を現在／参加時／戦闘Snapshotのどれで表示・判定するか。
 - 報酬の品目・資格・Room/日次境界と既存報酬・ランキングの切替。
-- 期限後戦闘確定、切替時の開始済み戦闘。
+- 期限後戦闘確定は上記追加確定を適用。切替時の旧開始済み戦闘の扱いは残す。
 これらをWorker独断で確定仕様として埋めない。権利付与・DB移行・運用切替は対応条件の確認後に実装する。
 
 ## Authorityと既存監査
@@ -39,7 +45,7 @@ HP・敵ステータス・報酬品目と数量は承認済み値と混同せず
 ## 引き継ぐ既存条件（2026-09-08照合）
 - レイド解放はユーザーLv5以上。根拠: `spec_progression.md`「レベルによる機能アンロック」、Migration `20260830000210_canonical_master_freeze_runtime.sql` の `start_raid_battle`。新仕様の「初級は総合力制限なし」はLv制限の撤廃を意味しない。
 - 戦闘の消費はRaid Point 1、ユーザー初回のみ0。上限5、2時間に1回復、日付変更でリセットしない。根拠: `production/gameplay_foundation/user_level_action_resource_foundation_20260822.md`、同Migrationの `start_raid_battle`。旧無料3回・Cash2回・Diamond5回は使わない。Room作成自体の追加費用の有無と混同しない。
-- 代表総合力はMain Formationの最終HP＋ATK＋DEF合計をサーバーで算出する。根拠: `product_decisions.md`「Production Specification Reconciliation（2026-08-17）」。Room参加下限へ接続する際の実出撃編成との差異・判定時点だけを残確認とする。
+- 代表総合力はMain Formationの最終HP＋ATK＋DEF合計をサーバーで算出する。根拠: `product_decisions.md`「Production Specification Reconciliation（2026-08-17）」。参加登録はこのMain Formation、戦闘開始は実出撃Snapshotで判定する（上記追加確定）。
 
 ## 初回の共通実装契約
 difficulty IDは beginner / intermediate / advanced / expert（内部識別子の実装選択）。
