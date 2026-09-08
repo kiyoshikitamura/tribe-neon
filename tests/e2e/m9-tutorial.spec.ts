@@ -152,7 +152,7 @@ async function revealTutorialTenPull(page: import("@playwright/test").Page, capt
     await expect(reveal.locator(".cg-stats dt")).toHaveText(["HP", "ATK", "DEF"]);
     await expect.poll(() => reveal.locator(".cg-stats dd").allTextContents()).not.toContain("—");
     await expect(reveal).not.toContainText(/SPD|LUK|戦闘力/);
-    await expect(reveal.locator("blockquote")).not.toBeEmpty();
+    await expect(reveal.locator(".cg-reveal-copy>blockquote")).not.toBeEmpty();
     await expect(reveal.locator(".cg-rarity-line>span")).not.toBeEmpty();
     await expect(page.locator(".cg-city")).toHaveAttribute("src", /bg_street_/);
     if (await reveal.getAttribute("data-presentation-state") === "SSR_REVEAL") ssrCount += 1;
@@ -493,7 +493,7 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
     await page.screenshot({ path: test.info().outputPath(`m9-1-gacha-result-${width}.png`), fullPage: true });
   }
   await expect(page.locator(".cg-mini .character-presentation-gacha-result-compact")).toHaveCount(10);
-  await expect(page.locator(".cg-mini .cg-mini-rarity")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .cg-rarity-badge")).toHaveCount(10);
   await expect(page.locator(".cg-mini").filter({ hasText: "GEAR" })).toHaveCount(0);
   await expect(page.locator(".cg-mini .character-presentation img").first()).toBeVisible();
   const characterImage = await page.locator(".cg-mini .character-presentation img").first().evaluate((image) => {

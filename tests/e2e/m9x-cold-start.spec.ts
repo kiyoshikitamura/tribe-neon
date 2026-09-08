@@ -61,7 +61,7 @@ test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes forma
     await expect(page.locator(".cg-top>span")).toHaveText(`${index + 1} / 10`);
     await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "SETTLED");
     await expect(reveal.locator(".character-presentation-character")).toBeVisible();
-    await expect(reveal.locator("blockquote")).not.toBeEmpty();
+    await expect(reveal.locator(".cg-reveal-copy>blockquote")).not.toBeEmpty();
     await reveal.click();
   }
   await expect(reveal).toHaveAttribute("data-presentation-state", "SSR_QUOTE");
@@ -74,7 +74,7 @@ test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes forma
   await reveal.click();
   await expect(page.locator(".cg-mini")).toHaveCount(10);
   await expect(page.locator(".cg-mini .character-presentation-gacha-result-compact")).toHaveCount(10);
-  await expect(page.locator(".cg-mini .cg-mini-rarity")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .cg-rarity-badge")).toHaveCount(10);
   await expect(page.locator(".cg-mini>small")).toHaveCount(10);
   await expect(page.locator(".cg-mini.cg-ssr")).toHaveCount(1);
   for (const width of [375, 390, 430]) {

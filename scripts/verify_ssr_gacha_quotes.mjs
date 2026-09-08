@@ -34,6 +34,6 @@ const presentation = await readFile(resolve(root, "src/app/components/gacha/Char
 assert.match(modal, /<CharacterGachaPresentation results=\{scoutResults\}/, "Tutorial and normal pulls must use confirmed results");
 assert.match(presentation, /resolveCharacterGachaQuote\(current.characterId\)/, "Quote must resolve by canonical ID");
 assert.match(presentation, /stage === "QUOTE"/, "SSR Quote stage is missing");
-assert.match(presentation, /data-character-id=\{stage === "QUOTE" \? undefined/, "SSR identity must not be projected before reveal");
+assert.match(presentation, /data-character-id=\{stage === "QUOTE" \|\| stage === "IGNITION" \? undefined/, "SSR identity must not be projected before reveal");
 
 console.log(JSON.stringify({ status: "PASS", productionSsr: productionSsr.length, enabledQuotes: enabled.length, duplicate: 0, missing: 0, unknown: 0 }, null, 2));

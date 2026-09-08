@@ -57,3 +57,42 @@
 .cg-city{width:100%;height:100%;object-fit:cover}
 .cg-waiting{visibility:hidden}.cg-waiting *{animation-play-state:paused!important}
 .cg-scene-loading{position:absolute;inset:0;margin:auto;z-index:1}
+
+/* 既存7街の背景を短いクロスフェードで巡る。見切るまで待つ必要はない。 */
+.cg-city-tour{position:absolute;inset:0;pointer-events:none}
+.cg-city-scene{position:absolute;inset:0;opacity:0;animation:cg-city-cycle 8.4s linear infinite;animation-delay:calc(var(--city-index) * 1.2s)}
+.cg-city-scene:first-child{opacity:1}
+.cg-city-scene img{width:100%;height:100%;object-fit:cover;filter:brightness(.66) saturate(1.1)}
+.cg-city-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#070910 4%,transparent 50%,#03071155)}
+.cg-city-scene>span{position:absolute;left:28px;top:28%;z-index:1;font-size:38px;letter-spacing:9px;text-shadow:0 0 24px #000;color:#f4efe6}
+.cg-city-names{position:relative;z-index:2;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;max-width:300px;margin-bottom:35px;font-size:11px;letter-spacing:2px;color:#e0d9ed}
+.cg-headlight{background:radial-gradient(ellipse at 50% 55%,color-mix(in srgb,var(--cg-accent) 30%,transparent),transparent 60%)}
+.cg-stage-burst .cg-city-tour{animation:cg-city-depart .62s ease-in both}
+.cg-existing-badges{display:flex;align-items:center;justify-content:center;gap:6px;min-height:24px}
+.cg-existing-badges img{object-fit:contain;display:block}
+.cg-rarity-badge{width:64px;height:40px}.cg-acquisition-badge{width:60px;height:36px}
+.cg-mini .cg-existing-badges{gap:1px;height:25px;min-height:25px;margin-top:2px}
+.cg-mini .cg-rarity-badge{width:48%;height:25px}.cg-mini .cg-acquisition-badge{width:48%;height:24px}
+.cg-rarity-line .cg-existing-badges{justify-content:flex-start;flex-shrink:0}
+.cg-ssr-transition{display:none;position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.cg-stage-ignition .cg-ssr-transition,.cg-ssr.cg-stage-reveal .cg-ssr-transition{display:block}
+.cg-stage-ignition .cg-portrait,.cg-stage-ignition .cg-reveal-copy{visibility:hidden;animation:none}
+.cg-ssr-transition blockquote{position:absolute;inset:24% 28px auto;color:#f9df9e;text-align:center;font-size:25px;line-height:1.85}
+.cg-stage-ignition .cg-ssr-transition blockquote{animation:cg-quote-away .48s ease-in both}
+.cg-stage-reveal .cg-ssr-transition blockquote{display:none}
+.cg-ssr-transition i{position:absolute;inset:-20%;opacity:0;background:linear-gradient(115deg,transparent 43%,#ecd08288 49%,#ffffdebb 50%,#a687e677 52%,transparent 58%);mix-blend-mode:screen}
+.cg-stage-ignition .cg-ssr-transition i:first-child{animation:cg-neon-sweep .48s ease-in both}
+.cg-ssr.cg-stage-reveal .cg-ssr-transition i:nth-child(2){animation:cg-neon-sweep .8s ease-out both}
+.cg-ssr.cg-stage-reveal .cg-ssr-transition i:nth-child(3){background:radial-gradient(ellipse at 50% 30%,#e6c88b66,transparent 65%);animation:cg-impact-glow .9s ease-out both}
+.cg-ssr.cg-stage-reveal .cg-portrait{animation:cg-premium-arrive 1.15s cubic-bezier(.16,.7,.22,1) both}
+.cg-ssr.cg-stage-reveal .cg-rarity-line,.cg-ssr.cg-stage-reveal h2{animation:cg-copy .4s .45s both}
+.cg-ssr.cg-stage-reveal .cg-stats{animation:cg-copy .4s .95s both}
+.cg-stage-ignition .cg-city{animation:cg-city-charge .48s ease-in both}
+@keyframes cg-city-cycle{0%,13%{opacity:1}16%,97%{opacity:0}100%{opacity:1}}
+@keyframes cg-city-depart{to{transform:scale(1.1);filter:brightness(1.5);opacity:0}}
+@keyframes cg-quote-away{to{opacity:0;transform:translateY(-8px);filter:blur(3px)}}
+@keyframes cg-neon-sweep{0%{opacity:0;transform:translateX(-65%)}35%{opacity:.9}100%{opacity:0;transform:translateX(65%)}}
+@keyframes cg-impact-glow{from{opacity:.8}to{opacity:0}}
+@keyframes cg-city-charge{to{filter:brightness(1.15) saturate(1.4)}}
+@keyframes cg-premium-arrive{from{opacity:0;transform:translateY(20px) scale(1.06);filter:brightness(1.8)}35%{opacity:1}to{opacity:1;transform:none;filter:brightness(1)}}
+@media(prefers-reduced-motion:reduce){.cg-city-scene{animation:none!important;opacity:0}.cg-city-scene:first-child{opacity:1}.cg-ssr-transition{display:none!important}.cg-shell *{animation:none!important}}

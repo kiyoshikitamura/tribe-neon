@@ -5,7 +5,9 @@
 ## 今回の変更
 
 - キャラクター画像は既存立ち絵のみ。描き起こし・ポーズ変更なし。
-- 人物なしの夜の路地背景を追加。開始は実際の獲得キャラの立ち絵を黒い人影として配置。
+- 導入は既存の新宿・渋谷・池袋・六本木・秋葉原・川崎・横浜の背景をクロスフェード。シルエットは撤去。7街を8.4秒で巡回するが、タップは最初から可能。
+- 既存のレアリティ・NEW・覚醒段階バッジを再利用。覚醒は結果が持つ実段階を表示し、進捗増加を段階上昇として扱わない。
+- SSRはセリフ全文後600msの余韻、480msの光の走査、立ち絵・街の発光・登場SE、名前・バッジ・能力値の順に展開。登場は1500msで落ち着き、タップで短縮可能。reduced motionでは動きを省略。
 - カード裏面・扇状配置・金属フレームを撤去。登場は顔・表情を大きく見せ、名前と確定セリフを重視。
 - 一覧上部は獲得した仲間の立ち絵から最大3人を表示（最高レアリティを中央）。下の10件は取得順を保った5列2行の顔一覧。
 - タップで演出完了、次タップで次へ、SKIP、人物の再表示、編成CTAは維持。
@@ -13,7 +15,7 @@
 
 ## 読み込み修正
 
-人物だけ・背景だけが先行することを防ぐため、立ち絵・出身地背景・追加背景の先読みとデコードをまとめて待つ。
+人物だけ・背景だけが先行することを防ぐため、立ち絵・7街背景・既存バッジの先読みとデコードをまとめて待つ。
 さらに実際に表示するDOMの画像もデコード完了まで画面を非表示にし、登場・セリフのタイマーを停止する。
 これによりブラウザーが先読み画像を再取得する場合も、完成した画面を一括表示する。
 12秒で画像準備を打ち切り、画像だけの再読み込みを案内。待機中・取得失敗時も獲得結果を文字で確認できる。再抽選はしない。
@@ -22,7 +24,7 @@
 
 - Next.js preview設定の本番ビルド・TypeScript・実装ESLintエラーなし。
 - 既存SSR10体および全60体セリフのマスタチェック成功。
-- Playwright 9件成功: キャラ1回／10回、390×844／320×568、取得順、詳細、編成への遷移、再実行、SSR文字送り、SKIP、連打、N/R/SRの連続紹介、reduced motion、キーボード、初回画像遅延、背景取得失敗と再試行・文字結果。
+- Playwright 9件成功: キャラ1回／10回、390×844／320×568、取得順、詳細、編成への遷移、再実行、SSR文字送り・切り替え・バッジ、SKIP、連打、N/R/SRの連続紹介、reduced motion、キーボード、初回画像遅延、背景取得失敗と再試行・文字結果。
 - 画面撮影時のJavaScriptエラー0・欠落画像0。撮影時のみ日本語フォントを追加（アプリ依存関係への追加なし）。
 - 実機Safari・実音声・本番抽選はユーザー確認待ち。本番未反映。
 
@@ -30,13 +32,10 @@ QA URLのパス: `/qa/presentation?scenario=gacha-character-v3`
 `single=true` / `rarity=N|R|SR|SSR` / `tutorial=false` で単発・レアリティ・通常ガチャを確認可能。
 本番では従来どおりQAページは404。
 
-## 追加画像素材
+## 使用画像素材
 
-`public/gacha/arrival/tokyo-alley.webp` — 1024×1536、319,076 bytes。
-内蔵画像生成で制作し、WebPに変換。人物を含まないため、既存立ち絵と動的に合成できる。
-
-制作プロンプト:
-Production background asset for TRIBE NEON modern Tokyo street character meeting animation, portrait 1024x1536. Beautiful premium hand-painted Japanese game background, realistic illustrated environment, nighttime narrow Tokyo side street, warm amber lamps along aged concrete and shopfronts, rain-wet asphalt with soft reflections, subtle atmospheric ground mist at bottom, strong cinematic depth, vanishing point center at 42% height, lower central 65% clear empty space for compositing existing standing characters. Indirect headlights far in background, natural warm rim-light mood with muted blue shadows. Detailed atmospheric art, grounded contemporary Japan, not cyberpunk or science fiction. No humans, no silhouettes, no faces, no vehicles in foreground, no letters, no readable signs, no logos, no 109, no UI, no borders, no frames. Edge shops subdued to allow characters to dominate. Full bleed single background only. No triptych.
+背景は既存の `public/bg/bg_street_*.jpg` の7街、キャラは既存立ち絵、バッジは `public/ui/rarity/` を使用。
+前案の `public/gacha/arrival/tokyo-alley.webp` は今回の演出では使用しない。新しいキャラクター画像・ポーズ・カードフレームは追加しない。
 
 ![開始](opening.png)
 ![仲間一覧](summary.png)

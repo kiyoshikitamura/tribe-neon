@@ -8,6 +8,7 @@ import OutlawButton from "../ui/OutlawButton";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { resolveCharacterGachaQuote } from "@/domain/presentation/characterGachaQuotes";
+import { getRarityBadgeAsset, getAcquisitionBadgeAsset } from "@/utils/rarityAssets";
 import "./CharacterGachaPresentation.css";
 
 export type CharacterGachaResult = {
@@ -22,7 +23,7 @@ type Props = {
   onClose: () => void;
   playSound: (sound: "GACHA_REVEAL" | "GACHA_SR" | "GACHA_SSR") => void;
 };
-type Stage = "OPENING" | "BURST" | "QUOTE" | "REVEAL" | "SETTLED" | "SUMMARY";
+type Stage = "OPENING" | "BURST" | "QUOTE" | "IGNITION" | "REVEAL" | "SETTLED" | "SUMMARY";
 const motionQuery = "(prefers-reduced-motion: reduce)";
 const subscribeMotion = (notify: () => void) => {
   const media = window.matchMedia(motionQuery);
@@ -34,7 +35,17 @@ const town = (result: CharacterGachaResult) => getCharacterLocationBackground(CH
 const outcome = (result: CharacterGachaResult) => result.convertReward === "新規獲得" ? "NEW" : result.convertReward || "獲得";
 const number = (value: number | undefined) => typeof value === "number" && Number.isFinite(value) ? value.toLocaleString("ja-JP") : "—";
 
-const ARRIVAL_BACKGROUND = "/gacha/arrival/tokyo-alley.webp";
+const CITIES = ["新宿", "渋谷", "池袋", "六本木", "秋葉原", "川崎", "横浜"];
+const ARRIVAL_BACKGROUND = getCharacterLocationBackground("渋谷");
+const acquisitionBadge = (result: CharacterGachaResult) => getAcquisitionBadgeAsset(result.convertReward === "新規獲得" ? "NEW" : "AWAKENING", result.awakeningLevel);
+
+function ResultBadges({ result }: { result: CharacterGachaResult }) {
+  const acquired = acquisitionBadge(result);
+  return <span className="cg-existing-badges">
+    <img className="cg-rarity-badge" src={getRarityBadgeAsset(result.rarity)} alt={result.rarity} />
+    {acquired && <img className="cg-acquisition-badge" src={acquired} alt={result.convertReward === "新規獲得" ? "NEW" : `覚醒 +${result.awakeningLevel}`} />}
+  </span>;
+}
 
 // 全画面のデコード完了後にのみ描画。子要素ごとの非同期表示を作らない。
 function StandingArt({ result, variant = "reveal", background = false }: { result: CharacterGachaResult; variant?: "reveal" | "gacha-result-compact"; background?: boolean }) {
@@ -55,8 +66,8 @@ function StandingArt({ result, variant = "reveal", background = false }: { resul
 export default function CharacterGachaPresentation(props: Props) {
   const [textOnly, setTextOnly] = useState(false);
   const readiness = useScreenReadiness({ assets: [
-    { src: ARRIVAL_BACKGROUND },
-    ...props.results.flatMap((result) => [{ src: result.imageUrl }, { src: town(result) }]),
+    ...CITIES.map((city) => ({ src: getCharacterLocationBackground(city) })),
+    ...props.results.flatMap((result) => [{ src: result.imageUrl }, { src: town(result) }, { src: getRarityBadgeAsset(result.rarity) }, ...(acquisitionBadge(result) ? [{ src: acquisitionBadge(result)! }] : [])]),
   ] });
   if (textOnly) return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="獲得結果">
     <h2>獲得結果</h2><ol>{props.results.map((result, index) => <li key={index}>{result.rarity} {result.name} / {outcome(result)}</li>)}</ol>
@@ -131,7 +142,7 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
   useEffect(() => {
     if (stage !== "QUOTE" || !sceneReady) return;
     if (reducedMotion || letters >= quote.length) {
-      const timer = window.setTimeout(() => setStage("REVEAL"), reducedMotion ? 0 : 600);
+      const timer = window.setTimeout(() => setStage(reducedMotion ? "REVEAL" : "IGNITION"), reducedMotion ? 0 : 600);
       return () => window.clearTimeout(timer);
     }
     const timer = window.setTimeout(() => setLetters((length) => length + 1), 38);
@@ -139,9 +150,15 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
   }, [stage, letters, quote, reducedMotion, sceneReady]);
 
   useEffect(() => {
+    if (stage !== "IGNITION" || !sceneReady) return;
+    const timer = window.setTimeout(() => setStage("REVEAL"), reducedMotion ? 0 : 480);
+    return () => window.clearTimeout(timer);
+  }, [stage, sceneReady, reducedMotion]);
+
+  useEffect(() => {
     if (stage !== "REVEAL" || !sceneReady) return;
     callbacks.current.playSound(rarity === "SSR" ? "GACHA_SSR" : rarity === "SR" ? "GACHA_SR" : "GACHA_REVEAL");
-    const timer = window.setTimeout(() => setStage("SETTLED"), reducedMotion ? 0 : rarity === "SSR" ? 1050 : rarity === "SR" ? 750 : 450);
+    const timer = window.setTimeout(() => setStage("SETTLED"), reducedMotion ? 0 : rarity === "SSR" ? 1500 : rarity === "SR" ? 750 : 450);
     return () => window.clearTimeout(timer);
   }, [stage, rarity, index, reducedMotion, sceneReady]);
 
@@ -156,8 +173,8 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
     if (now - lastTap.current < 220) return;
     lastTap.current = now;
     if (stage === "OPENING") { announce(); setStage("BURST"); }
-    else if (stage === "QUOTE") { if (letters < quote.length) setLetters(quote.length); else setStage("REVEAL"); }
-    else if (stage === "REVEAL") setStage("SETTLED");
+    else if (stage === "QUOTE") { if (letters < quote.length) setLetters(quote.length); else setStage(reducedMotion ? "REVEAL" : "IGNITION"); }
+    else if (stage === "IGNITION" || stage === "REVEAL") setStage("SETTLED");
     else if (stage === "SETTLED") {
       if (reviewing || index + 1 >= results.length) { setReviewing(false); setStage("SUMMARY"); }
       else { const next = results[index + 1]; setIndex(index + 1); setLetters(0); setStage(next.rarity.toUpperCase() === "SSR" && resolveCharacterGachaQuote(next.characterId) ? "QUOTE" : "REVEAL"); }
@@ -184,7 +201,8 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
       <div className="cg-atmosphere" aria-hidden="true" />
       {stage !== "SUMMARY" && <header className="cg-top"><span>{opening ? `${results.length}連ガチャ` : `${index + 1} / ${results.length}`}</span><button type="button" onClick={skip}>{reviewing ? "一覧へ戻る" : "SKIP"}</button></header>}
       {opening ? <button type="button" className="cg-opening" onClick={tap} disabled={stage === "BURST"} aria-label="ガチャ結果を開く">
-        <div className="cg-approach" aria-hidden="true">{results.slice(0, 3).map((result, i) => <img key={i} src={result.imageUrl} alt="" style={{ "--person": i } as React.CSSProperties} />)}</div>
+        <div className="cg-city-tour" aria-hidden="true">{CITIES.map((city, i) => <div className="cg-city-scene" key={city} style={{ "--city-index": i } as React.CSSProperties}><img src={getCharacterLocationBackground(city)} alt="" /><span>{city}</span></div>)}</div>
+        <div className="cg-city-names" aria-label="7つの街">{CITIES.map((city) => <span key={city}>{city}</span>)}</div>
         <div className="cg-headlight" aria-hidden="true" />
         <div className="cg-opening-copy"><strong>TAP</strong><small>タップして仲間を迎える</small></div>
       </button> : stage === "SUMMARY" ? <section className="cg-summary">
@@ -193,15 +211,16 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
         <div className={`cg-grid ${results.length === 1 ? "cg-single" : ""}`}>
           {results.map((result, i) => <button type="button" key={`${result.characterId}-${i}`} onClick={() => showDetail(i)} className={`cg-mini cg-${result.rarity.toLowerCase()}`} data-result-index={i} data-character-id={result.characterId} aria-label={`${result.rarity} ${result.name} ${outcome(result)} 詳細を見る`}>
             <StandingArt result={result} variant="gacha-result-compact" />
-            <b className="cg-mini-rarity">{result.rarity}</b><span className="cg-mini-name">{result.name}</span><small className={outcome(result) === "NEW" ? "cg-new" : ""}>{outcome(result)}</small>
+            <ResultBadges result={result} /><span className="cg-mini-name">{result.name}</span><small className={outcome(result) === "NEW" ? "cg-new" : ""}>{outcome(result)}</small>
           </button>)}
         </div>
         <p className="cg-summary-hint">仲間をタップして詳細を見る</p>
         <OutlawButton variant="primary" className="cg-continue" onClick={() => callbacks.current.onClose()}>{tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
-      </section> : <button type="button" className={`cg-reveal ${stage === "SETTLED" ? "is-settled" : ""}`} onClick={tap} aria-label={stage === "QUOTE" ? "セリフを表示して登場演出へ" : `${current.name} ${reviewing ? "一覧へ戻る" : "タップして次へ"}`} data-character-id={stage === "QUOTE" ? undefined : current.characterId} data-presentation-state={stage === "QUOTE" ? "SSR_QUOTE" : `${rarity}_REVEAL`}>
+      </section> : <button type="button" className={`cg-reveal ${stage === "SETTLED" ? "is-settled" : ""}`} onClick={tap} aria-label={stage === "QUOTE" || stage === "IGNITION" ? "セリフを表示して登場演出へ" : `${current.name} ${reviewing ? "一覧へ戻る" : "タップして次へ"}`} data-character-id={stage === "QUOTE" || stage === "IGNITION" ? undefined : current.characterId} data-presentation-state={stage === "QUOTE" ? "SSR_QUOTE" : stage === "IGNITION" ? "SSR_IGNITION" : `${rarity}_REVEAL`}>
         {stage === "QUOTE" ? <div className="cg-quote-intro"><span aria-hidden="true">SSR</span><blockquote aria-label={quote}><span aria-hidden="true">{quote.slice(0, reducedMotion ? quote.length : letters)}</span></blockquote><small>{letters < quote.length ? "タップで全文表示" : "TAP"}</small></div> : <div className="cg-reveal-content" key={index}>
           <div className="cg-portrait"><StandingArt result={current} /></div>
-          <div className="cg-reveal-copy"><div className="cg-rarity-line"><b>{rarity}</b><span className={outcome(current) === "NEW" ? "cg-new" : ""}>{outcome(current)}</span></div>
+          {rarity === "SSR" && <div className="cg-ssr-transition" aria-hidden="true"><i /><i /><i /><blockquote>{quote}</blockquote></div>}
+          <div className="cg-reveal-copy"><div className="cg-rarity-line"><ResultBadges result={current} /><span className={outcome(current) === "NEW" ? "cg-new" : ""}>{outcome(current)}</span></div>
             <h2>{current.name}</h2><p className="cg-origin">{[current.role, current.attribute].filter(Boolean).join(" / ")}</p>
             {quote && <blockquote>{quote}</blockquote>}
             <dl className="cg-stats" aria-label="初期パラメータ">{(["hp", "atk", "def"] as const).map((key) => <div key={key}><dt>{key.toUpperCase()}</dt><dd>{number(current[key])}</dd></div>)}</dl>

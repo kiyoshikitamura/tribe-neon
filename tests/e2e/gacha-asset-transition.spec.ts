@@ -29,7 +29,7 @@ test("character arrival and SKIP remain safe at iPhone 14 geometry", async ({ pa
   const fixture = await openTransitionFixture(page, { delay: 500 });
   await page.locator('[data-gacha-category="CHARACTER"]').click();
   await page.getByRole("button", { name: "10回 10,000キャッシュ" }).click();
-  await expect(page.locator(".cg-approach img")).toHaveCount(3);
+  await expect(page.locator(".cg-city-scene img")).toHaveCount(7);
   const skip = page.getByRole("button", { name: "SKIP", exact: true });
   await expect(skip).toBeVisible();
   const rect = await skip.boundingBox();
