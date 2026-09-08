@@ -1,0 +1,267 @@
+{
+  "before": {
+    "PLAYER": {
+      "totalActions": 75,
+      "normalAttacks": 0,
+      "attackSkills": 18,
+      "buffActions": 27,
+      "debuffActions": 19,
+      "healActions": 0,
+      "shieldDefenseActions": 24,
+      "damageProducingActions": 17,
+      "supportOnlyActions": 58,
+      "redundantSupportCast": 30
+    },
+    "ENEMY": {
+      "totalActions": 63,
+      "normalAttacks": 3,
+      "attackSkills": 3,
+      "buffActions": 21,
+      "debuffActions": 10,
+      "healActions": 0,
+      "shieldDefenseActions": 29,
+      "damageProducingActions": 6,
+      "supportOnlyActions": 57,
+      "redundantSupportCast": 23
+    },
+    "finalRound": 15,
+    "winner": "ENEMY",
+    "defeats": [
+      "ソラ",
+      "タイガ"
+    ]
+  },
+  "after": {
+    "config": {
+      "seed": 20260829,
+      "playerTactic": "ATTACK_PRIORITY",
+      "enemyTactic": "ATTACK_PRIORITY",
+      "maxRounds": 15
+    },
+    "metrics": {
+      "PLAYER": {
+        "totalActions": 59,
+        "normalAttacks": 38,
+        "attackSkills": 15,
+        "buffActions": 5,
+        "debuffActions": 6,
+        "healActions": 0,
+        "shieldDefenseActions": 5,
+        "damageProducingActions": 53,
+        "supportOnlyActions": 6,
+        "redundantSupportCast": 1,
+        "damageProducingRate": 0.8983050847457628,
+        "supportOnlyRate": 0.1016949152542373,
+        "redundantSupportRate": 0.01694915254237288
+      },
+      "ENEMY": {
+        "totalActions": 40,
+        "normalAttacks": 27,
+        "attackSkills": 1,
+        "buffActions": 1,
+        "debuffActions": 0,
+        "healActions": 0,
+        "shieldDefenseActions": 11,
+        "damageProducingActions": 28,
+        "supportOnlyActions": 12,
+        "redundantSupportCast": 0,
+        "damageProducingRate": 0.7,
+        "supportOnlyRate": 0.3,
+        "redundantSupportRate": 0
+      }
+    },
+    "combined": {
+      "totalActions": 99,
+      "damageProducingActions": 81,
+      "supportOnlyActions": 18,
+      "redundantSupportCast": 1,
+      "damageProducingRate": 0.8181818181818182,
+      "supportOnlyRate": 0.18181818181818182,
+      "redundantSupportRate": 0.010101010101010102
+    },
+    "focus": {
+      "PLAYER": {
+        "singleTargetActions": 52,
+        "lowestEligible": 52,
+        "persistenceOpportunities": 47,
+        "persisted": 47,
+        "nearLethalSwitches": 0,
+        "lowestEligibleRate": 1,
+        "persistenceRate": 1
+      },
+      "ENEMY": {
+        "singleTargetActions": 28,
+        "lowestEligible": 28,
+        "persistenceOpportunities": 24,
+        "persisted": 24,
+        "nearLethalSwitches": 0,
+        "lowestEligibleRate": 1,
+        "persistenceRate": 1
+      }
+    },
+    "defeats": [
+      {
+        "eventIndex": 87,
+        "round": 3,
+        "target": "ソラ"
+      },
+      {
+        "eventIndex": 131,
+        "round": 5,
+        "target": "タイガ"
+      },
+      {
+        "eventIndex": 184,
+        "round": 7,
+        "target": "ケンゴ"
+      },
+      {
+        "eventIndex": 201,
+        "round": 8,
+        "target": "ノア"
+      },
+      {
+        "eventIndex": 241,
+        "round": 10,
+        "target": "アゲハ"
+      },
+      {
+        "eventIndex": 280,
+        "round": 13,
+        "target": "レイジ"
+      }
+    ],
+    "result": {
+      "finalRound": 13,
+      "winner": "PLAYER",
+      "explicitReason": null,
+      "inferredReason": "DEFEAT"
+    },
+    "finalHp": {
+      "アゲハ": 0,
+      "レオ": 106327,
+      "ミヤビ": 411250,
+      "ゴウ": 329155,
+      "コハル": 571135,
+      "ソラ": 0,
+      "タイガ": 0,
+      "ケンゴ": 0,
+      "レイジ": 0,
+      "ノア": 0
+    }
+  },
+  "skillPriorityComparison": {
+    "config": {
+      "seed": 20260829,
+      "playerTactic": "SKILL_PRIORITY",
+      "enemyTactic": "SKILL_PRIORITY",
+      "maxRounds": 8
+    },
+    "metrics": {
+      "PLAYER": {
+        "totalActions": 38,
+        "normalAttacks": 22,
+        "attackSkills": 9,
+        "buffActions": 4,
+        "debuffActions": 5,
+        "healActions": 0,
+        "shieldDefenseActions": 5,
+        "damageProducingActions": 29,
+        "supportOnlyActions": 7,
+        "redundantSupportCast": 1,
+        "damageProducingRate": 0.7631578947368421,
+        "supportOnlyRate": 0.18421052631578946,
+        "redundantSupportRate": 0.02631578947368421
+      },
+      "ENEMY": {
+        "totalActions": 33,
+        "normalAttacks": 16,
+        "attackSkills": 2,
+        "buffActions": 3,
+        "debuffActions": 4,
+        "healActions": 0,
+        "shieldDefenseActions": 9,
+        "damageProducingActions": 18,
+        "supportOnlyActions": 15,
+        "redundantSupportCast": 2,
+        "damageProducingRate": 0.5454545454545454,
+        "supportOnlyRate": 0.45454545454545453,
+        "redundantSupportRate": 0.06060606060606061
+      }
+    },
+    "combined": {
+      "totalActions": 71,
+      "damageProducingActions": 47,
+      "supportOnlyActions": 22,
+      "redundantSupportCast": 3,
+      "damageProducingRate": 0.6619718309859155,
+      "supportOnlyRate": 0.30985915492957744,
+      "redundantSupportRate": 0.04225352112676056
+    },
+    "focus": {
+      "PLAYER": {
+        "singleTargetActions": 30,
+        "lowestEligible": 30,
+        "persistenceOpportunities": 26,
+        "persisted": 26,
+        "nearLethalSwitches": 0,
+        "lowestEligibleRate": 1,
+        "persistenceRate": 1
+      },
+      "ENEMY": {
+        "singleTargetActions": 18,
+        "lowestEligible": 18,
+        "persistenceOpportunities": 14,
+        "persisted": 14,
+        "nearLethalSwitches": 0,
+        "lowestEligibleRate": 1,
+        "persistenceRate": 1
+      }
+    },
+    "defeats": [
+      {
+        "eventIndex": 113,
+        "round": 3,
+        "target": "ソラ"
+      },
+      {
+        "eventIndex": 238,
+        "round": 6,
+        "target": "アゲハ"
+      },
+      {
+        "eventIndex": 243,
+        "round": 6,
+        "target": "タイガ"
+      },
+      {
+        "eventIndex": 273,
+        "round": 8,
+        "target": "ノア"
+      }
+    ],
+    "result": {
+      "finalRound": 8,
+      "winner": "ENEMY",
+      "explicitReason": null,
+      "inferredReason": "ROUND_LIMIT"
+    },
+    "finalHp": {
+      "アゲハ": 0,
+      "レオ": 341250,
+      "ミヤビ": 411250,
+      "ゴウ": 78710,
+      "コハル": 612500,
+      "ソラ": 0,
+      "タイガ": 0,
+      "ケンゴ": 213062,
+      "レイジ": 542101,
+      "ノア": 0
+    }
+  }
+}
+
+(node:39512) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/battle/canonical_effects.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
