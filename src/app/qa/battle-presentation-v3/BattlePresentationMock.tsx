@@ -82,8 +82,9 @@ export default function BattlePresentationMock() {
   useEffect(()=>{
     if(!busy) return;
     const id=run.current;
-    const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const delay=phase==="actor" ? (kind==="dot" ? 100 : kind==="normal" ? 320 : [850,850,1000,1500][Math.max(0,tier)]) : phase==="impact" ? 550 : 600;
+    // Recognition holds are real time, independent of playback speed or reduced motion.
+    const minimum=phase==="actor" ? (kind==="normal"||kind==="dot" ? 100 : tier===3 ? 1200 : 800) : phase==="impact" ? 450 : 250;
     const timer=window.setTimeout(()=>{
       if(id!==run.current)return;
       if(phase==="actor"){
@@ -106,7 +107,7 @@ export default function BattlePresentationMock() {
         const next=demo[sequence+1]; const c=next.rarity==="SSR" ? initialActor : first(next.rarity);
         run.current++;setActor(c);setKind(next.kind);setTarget(Math.max(0,hp.findIndex(v=>v>0)));setAmount(0);setSequence(sequence+1);setPhase("actor");
       }else setPhase(sequence>=0 ? "mvp" : "idle");
-    },(reduced ? Math.max(350,delay) : delay)/speed);
+    },Math.max(minimum,delay/speed));
     return()=>window.clearTimeout(timer);
   },[phase,actor,kind,tier,speed,sequence,busy,allyHp,hp,target,stateAction,allyTarget,activeStatus,statuses,special]);
 
@@ -136,16 +137,16 @@ export default function BattlePresentationMock() {
     rootRef.current?.scrollTo({top:0,behavior:"instant"});
   }
   if(!ready)return <main className="bm-loading"><p>{error?"素材を読み込めませんでした":"バトル素材を準備中…"}</p>{error&&<button onClick={()=>{setError(false);setLoadKey(k=>k+1);}}>再読み込み</button>}</main>;
-  return <main ref={rootRef} className={`bm-root bm-tier-${actor.rarity} bm-phase-${phase} bm-skill-${skillRarity}`} data-special={special} style={{"--bm-rate":speed} as CSSProperties}>
+  return <main ref={rootRef} className={`bm-root bm-tier-${actor.rarity} bm-phase-${phase} bm-skill-${skillRarity}`} data-special={special} style={{"--bm-rate":speed,"--bm-effect-time":`${Math.max(450,550/speed)}ms`} as CSSProperties}>
     <header className="bm-header"><div><small>TRIBE NEON / 演出モック</small><h1>新宿ストリート</h1></div><span>ROUND <b>01</b></span><button onClick={()=>{run.current++;setSequence(-1);setPhase("mvp");}}>SKIP</button></header>
     <section className="bm-rosters"><div><h2>YOUR TEAM</h2>{allies.map((c,i)=>roster(c,i,false))}</div><div><h2>ENEMY</h2>{opponents.map((c,i)=>roster(c,i,true))}</div></section>
     <div className="bm-event" aria-live="polite">{phase==="idle"?"操作パネルから演出を再生":phase==="actor"?`${actor.jpName} → ${allyTarget?actor.jpName:opponents[target].jpName} / ${skillName}`:stateAction?kind==="cleanse"?`${removed}件の弱体を解除`: `${skillName} 付与`:kind==="heal"?`${amount.toLocaleString()} 回復`:`${amount.toLocaleString()} ダメージ${hp[target]===0?"・撃破":""}`}</div>
     {phase==="actor"&&kind!=="normal"&&kind!=="dot"&&<section className={`bm-announcement ${tier===3?"fullscreen":"near-actor"}`} aria-label="スキル演出">
       {tier===3&&<img className="bm-full-character" src={asset(actor)} alt=""/>}
-      <div className="bm-announcement-copy"><small>{actor.rarity} / {actor.jpName}</small><p>{quote}</p><h2>{skillName}</h2><span>SKILL {skillRarity}</span></div>
+      <div className="bm-announcement-copy">{tier<3&&<div className="bm-speaker-face"><img src={asset(actor)} alt={actor.jpName}/></div>}<small>{actor.rarity} / {actor.jpName}</small><p>{quote}</p><h2>{skillName}</h2><span>SKILL {skillRarity}</span></div>
       {tier===3&&<button className="bm-cutin-skip" onClick={()=>{run.current++;setSequence(-1);setPhase("mvp");}}>SKIP</button>}
     </section>}
-    <section className="bm-controls" aria-label="モック操作"><div className="bm-selection"><label>発動キャラ<select disabled={busy} value={actor.id} onChange={e=>{setActor(CHARACTERS_MASTER.find(c=>c.id===e.target.value)!);setStatuses({});}}>{CHARACTERS_MASTER.map(c=><option key={c.id} value={c.id}>{c.rarity} {c.jpName}</option>)}</select></label><button onClick={()=>setSpeed(s=>s===1?2:1)}>×{speed}</button><button onClick={()=>{setMuted(m=>!m);void audio.unlockAudio();}}>SE {muted?"OFF":"ON"}</button></div>
+    <section className="bm-controls" aria-label="モック操作"><div className="bm-selection"><label>発動キャラ<select disabled={busy} value={actor.id} onChange={e=>{setActor(CHARACTERS_MASTER.find(c=>c.id===e.target.value)!);setStatuses({});}}>{CHARACTERS_MASTER.map(c=><option key={c.id} value={c.id}>{c.rarity} {c.jpName}</option>)}</select></label><button disabled={busy} onClick={()=>setSpeed(s=>s===1?2:1)}>×{speed}</button><button onClick={()=>{setMuted(m=>!m);void audio.unlockAudio();}}>SE {muted?"OFF":"ON"}</button></div>
       <label className="bm-skill-select">スキルレアリティ<select aria-label="スキルレアリティ" value={skillRarity} disabled={busy} onChange={e=>setSkillRarity(e.target.value as typeof rarities[number])}>{rarities.map(r=><option key={r}>{r}</option>)}</select></label>
       <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("normal")}>通常攻撃</button>{rarities.map(r=><button key={r} disabled={busy} onClick={()=>begin("skill",r==="SSR"?initialActor:first(r))}>{r}キャラ</button>)}</div>
       <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("skill")}>選択キャラ</button><button disabled={busy} onClick={()=>begin("heal")}>回復</button><button disabled={busy} onClick={()=>begin("finish")}>撃破</button><button disabled={busy} onClick={()=>begin("normal",first("N"),true,0)}>連続再生</button></div>
