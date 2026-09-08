@@ -23,7 +23,7 @@ export interface RaidTopEntry {
   readonly ownerGuild: RaidObserved<RaidGuildSummary | null>;
   readonly participants: RaidObserved<readonly RaidPlayerSummary[]>;
   readonly membership: RaidObserved<'owner' | 'member' | 'rescue' | 'not_joined'>;
-  readonly rescue: RaidObserved<{ readonly rescueId: string; readonly source: 'activity' | 'guild_chat' }>;
+  readonly rescue: RaidObserved<{ readonly rescueId: string; readonly source: 'activity' | 'guild_chat'; readonly scope?: 'ACTIVITY' | 'GUILD'; readonly guildId?: string | null }>;
 }
 
 /** 日次正本の返値を受け取る。全7エリアやクライアント独自抽選で代替しない。 */

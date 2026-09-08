@@ -1,7 +1,7 @@
 import type { RaidDailyTargets, RaidTopData } from './raidTop';
 import { resolveRaidTopEnemy } from './raidTopAssets';
 
-/** サーバーの認証済み・上限付き一括投影を受け取る注入境界。現時点のDBには未実装。 */
+/** 認証済み・上限付き一括投影の注入境界。ローカルMockも同じparserを通す。 */
 export type RaidTopLoader = () => Promise<Omit<RaidTopData, 'canCreate'>>;
 
 export function unavailableRaidTopData(canCreate: boolean): RaidTopData {
@@ -21,6 +21,7 @@ export function resolveRaidDailyTargets(value: { readonly dateJst: string; reado
 
 import { createRaidRoomRpcTransport } from './raidRoomRpcTransport';
 import type { RaidObserved, RaidPlayerSummary, RaidGuildSummary } from './raidRoom';
+import { CHARACTERS_MASTER, getCharacterTransparentImg } from '@/utils/game_constants';
 import type { RaidTopEntry, RaidTopResource } from './raidTop';
 
 function record(value: unknown): Record<string, unknown> {
@@ -37,9 +38,17 @@ function observed<T>(value: unknown, parse: (value: unknown) => T): RaidObserved
   if (item.status !== 'available') throw new Error('Invalid raid top observation');
   return { status: 'available', value: parse(item.value) };
 }
+function leaderIcon(item: Record<string, unknown>): unknown {
+  if (!('leaderCharacterId' in item)) return item.leaderIconUrl;
+  const leader = observed(item.leaderCharacterId, (id) => id === null ? null : nonempty(id));
+  if (leader.status === 'unknown') return leader;
+  if (leader.value === null) return { status: 'available', value: null };
+  const character = CHARACTERS_MASTER.find((entry) => entry.id === leader.value);
+  return character ? { status: 'available', value: getCharacterTransparentImg(character.name) } : { status: 'unknown' };
+}
 function player(value: unknown): RaidPlayerSummary {
   const item = record(value);
-  return { userId: nonempty(item.userId), name: nonempty(item.name), leaderIconUrl: observed(item.leaderIconUrl, (url) => {
+  return { userId: nonempty(item.userId), name: nonempty(item.name), leaderIconUrl: observed(leaderIcon(item), (url) => {
     if (url === null) return null;
     const path = nonempty(url);
     if (!/^\/(?!\/)/.test(path) && !/^https:\/\//.test(path)) throw new Error('Invalid raid top image');
@@ -49,9 +58,10 @@ function player(value: unknown): RaidPlayerSummary {
 
 async function entry(value: unknown): Promise<RaidTopEntry> {
   const item = record(value);
-  const rawRoom = record(item.room);
+  const sourceRoom = record(item.room);
+  const rawRoom = { ...sourceRoom, owner: observed(sourceRoom.owner, player) };
   // 既存DTO parserを再利用するメモリ内transport。ネットワーク要求は発生しない。
-  const room = await createRaidRoomRpcTransport({ rpc: async () => ({ data: rawRoom, error: null }) }).getRoom(nonempty(rawRoom.roomId));
+  const room = await createRaidRoomRpcTransport({ rpc: async () => ({ data: rawRoom, error: null }) }).getRoom(nonempty(sourceRoom.roomId));
   return {
     room,
     enemy: observed(item.enemy, (value) => {
@@ -61,7 +71,7 @@ async function entry(value: unknown): Promise<RaidTopEntry> {
     }),
     ownerGuild: observed<RaidGuildSummary | null>(item.ownerGuild, (value) => value === null ? null : { guildId: nonempty(record(value).guildId), name: nonempty(record(value).name) }),
     participants: observed(item.participants, (value) => {
-      if (!Array.isArray(value) || value.length > 20) throw new Error('Invalid raid top participants');
+      if (!Array.isArray(value) || value.length > 5) throw new Error('Invalid raid top participants');
       const players = value.map(player);
       if (new Set(players.map((p) => p.userId)).size !== players.length) throw new Error('Duplicate raid top participants');
       return players;
@@ -73,7 +83,15 @@ async function entry(value: unknown): Promise<RaidTopEntry> {
     rescue: observed(item.rescue, (value) => {
       const rescue = record(value);
       if (rescue.source !== 'activity' && rescue.source !== 'guild_chat') throw new Error('Invalid raid top rescue source');
-      return { rescueId: nonempty(rescue.rescueId), source: rescue.source };
+      const rescueId = nonempty(rescue.rescueId);
+      if (!('scope' in rescue) && !('guildId' in rescue)) return { rescueId, source: rescue.source };
+      if (rescue.source === 'activity' && rescue.scope === 'ACTIVITY' && rescue.guildId === null) {
+        return { rescueId, source: rescue.source, scope: rescue.scope, guildId: null };
+      }
+      if (rescue.source === 'guild_chat' && rescue.scope === 'GUILD') {
+        return { rescueId, source: rescue.source, scope: rescue.scope, guildId: nonempty(rescue.guildId) };
+      }
+      throw new Error('Invalid raid top rescue scope');
     }),
   };
 }

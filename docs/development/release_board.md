@@ -1,3 +1,7 @@
+# レイドトップ第2工程 — VALIDATED（隔離DB・表示境界、Preview未接続）
+
+RAID-TOP-A/B/C/P-02。基準c397df2から専用ローカルbranchで日次2エリア正本・集約API・画面接続を実装。実PG10群＋同時性2群、追加TS6件、既存関連205件、型/Mock build PASS。隔離PGの実SQL返値を実loader/parser/表示へ通した検証であり、PostgREST/GoTrue/Preview/実機の接続完了ではない。日次→集約→frontendの適用順と残件は [統合報告](raid_top_step2_report.md)。ローカルcommitのみ、外部適用・運用変更なし。
+
 # レイドトップ第1工程 — VALIDATED（実機受入・集約API接続待ち）
 
 RAID-TOP-A/B/C/P-01。基準70cb1f2から専用ローカルworktreeでトップ4セクションと既存導線を実装。全体型・Mock build、新規16件・関連既存189件PASS、390px画面証跡保存。日次2エリアと本人参加/救援の集約readは既存APIにないため契約/Mockのみ、製品は未取得表示。実機Human PASSではない。詳細 [統合報告](raid_top_step1_report.md)。ローカルcommitのみ、push/Deploy/DB/運用変更/追加ZIPなし。

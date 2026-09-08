@@ -8,6 +8,7 @@ import { useRaidRoomActivity } from '../../src/app/context/hooks/useRaidRoomActi
 import type { RaidRoomTransport } from '../../src/domain/raidRoomClient';
 import type { RaidRoomDto } from '../../src/domain/raidRoom';
 import { deferred, roomFixture } from './fixtures';
+import { unavailableRaidTopData } from '../../src/domain/raidTopData';
 
 afterEach(cleanup);
 const now = Date.parse('2026-09-08T12:00:00Z');
@@ -116,17 +117,18 @@ test('作成receiptより新しい同Roomの終了詳細を受信済みなら開
 test('実ConnectedBrowserは明示一覧後の更新・戦闘終了revisionを通知へ接続する', async () => {
   const tracker = createRaidRoomActivityTracker(() => true, () => now);
   let rooms: RaidRoomDto[] = [active]; const calls: string[] = [];
-  const rpcClient = { rpc: async (name: string) => { calls.push(name); assert.equal(name, 'list_raid_rooms_v1'); return { data: { rooms, nextOffset: null }, error: null }; } };
+  const rpcClient = { rpc: async (name: string) => { calls.push(name); if (name === 'get_raid_top_v1') return { data: unavailableRaidTopData(false), error: null }; assert.equal(name, 'list_raid_rooms_v1'); return { data: { rooms, nextOffset: null }, error: null }; } };
   const props = { rpcClient, activityTracker: tracker, userId: 'A', onBattleReady() {}, setInteractionBlocking() {} };
   const view = render(<RaidRoomConnectedBrowser {...props} refreshRevision={0}/>);
-  await view.findByTestId('raid-top'); assert.equal(calls.length, 0);
+  await view.findByTestId('raid-top'); assert.deepEqual(calls, ['get_raid_top_v1']);
   fireEvent.click(view.getByRole('button', { name: /開催中のレイドを探す/ }));
   await waitFor(() => assert.equal(tracker.getSnapshot(), expiry));
   rooms = []; fireEvent.click(view.getByRole('button', { name: '更新' }));
   await waitFor(() => assert.equal(tracker.getSnapshot(), 0));
   rooms = [active]; view.rerender(<RaidRoomConnectedBrowser {...props} refreshRevision={1}/>);
   await waitFor(() => assert.equal(tracker.getSnapshot(), expiry));
-  assert.equal(calls.length, 3);
+  assert.equal(calls.filter(name => name === 'list_raid_rooms_v1').length, 3);
+  assert.equal(calls.filter(name => name === 'get_raid_top_v1').length, 2);
 });
 
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { RaidRoomRpcClient } from '@/domain/raidRoomRpcTransport';
 import type { RaidTopData } from '@/domain/raidTop';
+import { createRaidTopRpcLoader, millisecondsUntilNextRaidJstDay } from '@/domain/raidTopRpc';
 import { unavailableRaidTopData, parseRaidTopSnapshot, type RaidTopLoader } from '@/domain/raidTopData';
 
 interface UseRaidTopOptions {
@@ -11,13 +12,14 @@ interface UseRaidTopOptions {
   readonly refreshRevision: number | undefined;
   readonly enabled: boolean;
   readonly canCreate: boolean;
-  /** ローカルMockまたは将来の認証済み一括参照。未実装RPCを本番で呼ばない。 */
+  /** 省略時は認証済み一括RPC。ローカルMock注入を維持する。 */
   readonly loadTop?: RaidTopLoader;
 }
 
 export function useRaidTop({ rpcClient, userId, refreshRevision, enabled, canCreate, loadTop }: UseRaidTopOptions): { data: RaidTopData; refresh: () => void } {
   const [revision, setRevision] = useState(0);
-  const request = useMemo(() => ({ rpcClient, userId, refreshRevision, enabled, loadTop, revision }), [rpcClient, userId, refreshRevision, enabled, loadTop, revision]);
+  const loader = useMemo(() => loadTop ?? createRaidTopRpcLoader(rpcClient), [loadTop, rpcClient]);
+  const request = useMemo(() => ({ rpcClient, userId, refreshRevision, enabled, loadTop: loader, revision }), [rpcClient, userId, refreshRevision, enabled, loader, revision]);
   const [snapshot, setSnapshot] = useState<{ request: typeof request; data: Omit<RaidTopData, 'canCreate'> } | null>(null);
   const refresh = useCallback(() => setRevision((value) => value + 1), []);
   useEffect(() => {
@@ -31,8 +33,18 @@ export function useRaidTop({ rpcClient, userId, refreshRevision, enabled, canCre
     return () => { cancelled = true; };
   }, [request]);
 
-  // SQL250/252: 本人参加テーブルは直接参照不可。全体一覧＋カード別取得で代替しない。
-  if (!enabled || !userId || !loadTop) return { data: unavailableRaidTopData(canCreate), refresh };
+  useEffect(() => {
+    if (!enabled || !userId) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = () => { timer = setTimeout(() => { refresh(); schedule(); }, millisecondsUntilNextRaidJstDay(Date.now())); };
+    const resume = () => { if (document.visibilityState === 'visible') refresh(); };
+    schedule();
+    document.addEventListener('visibilitychange', resume);
+    return () => { clearTimeout(timer); document.removeEventListener('visibilitychange', resume); };
+  }, [enabled, userId, refresh]);
+
+  // 認証なし/無効時は要求しない。全ページ/カード別取得は使わない。
+  if (!enabled || !userId) return { data: unavailableRaidTopData(canCreate), refresh };
   const data: RaidTopData = snapshot?.request === request
     ? { ...snapshot.data, canCreate }
     : { participating: { status: 'loading' }, rescues: { status: 'loading' }, dailyTargets: { status: 'loading' }, canCreate };
