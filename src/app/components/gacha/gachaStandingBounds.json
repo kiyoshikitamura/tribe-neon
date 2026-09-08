@@ -1,0 +1,302 @@
+{
+  "ageha_transparent_asset.png": {
+    "center": 47.4609,
+    "top": 0.03561,
+    "bodyHeight": 0.944767
+  },
+  "alice_transparent_asset.png": {
+    "center": 43.9453,
+    "top": 0.072674,
+    "bodyHeight": 0.901163
+  },
+  "aoi_transparent_asset.png": {
+    "center": 52.4089,
+    "top": 0.043605,
+    "bodyHeight": 0.932413
+  },
+  "cecile_transparent_asset.png": {
+    "center": 50.9766,
+    "top": 0.021076,
+    "bodyHeight": 0.957849
+  },
+  "chang_transparent_asset.png": {
+    "center": 51.5625,
+    "top": 0.03343,
+    "bodyHeight": 0.956395
+  },
+  "daimon_transparent_asset.png": {
+    "center": 49.8698,
+    "top": 0.042151,
+    "bodyHeight": 0.940407
+  },
+  "genji_transparent_asset.png": {
+    "center": 47.1354,
+    "top": 0.03343,
+    "bodyHeight": 0.954942
+  },
+  "go_transparent_asset.png": {
+    "center": 54.6224,
+    "top": 0.026163,
+    "bodyHeight": 0.962936
+  },
+  "gou_transparent_asset.png": {
+    "center": 51.8229,
+    "top": 0.026163,
+    "bodyHeight": 0.960756
+  },
+  "jihoon_transparent_asset.png": {
+    "center": 50.651,
+    "top": 0.048692,
+    "bodyHeight": 0.922238
+  },
+  "joe_transparent_asset.png": {
+    "center": 49.2839,
+    "top": 0.036337,
+    "bodyHeight": 0.945494
+  },
+  "kaede_transparent_asset.png": {
+    "center": 46.0286,
+    "top": 0.040698,
+    "bodyHeight": 0.9375
+  },
+  "kageyama_transparent_asset.png": {
+    "center": 49.1536,
+    "top": 0.037791,
+    "bodyHeight": 0.9375
+  },
+  "kaito_transparent_asset.png": {
+    "center": 51.6927,
+    "top": 0.047965,
+    "bodyHeight": 0.940407
+  },
+  "karen_transparent_asset.png": {
+    "center": 51.3021,
+    "top": 0.046512,
+    "bodyHeight": 0.934593
+  },
+  "kengo_transparent_asset.png": {
+    "center": 51.1068,
+    "top": 0.044331,
+    "bodyHeight": 0.9375
+  },
+  "kenji_transparent_asset.png": {
+    "center": 52.6693,
+    "top": 0.045058,
+    "bodyHeight": 0.936047
+  },
+  "koharu_transparent_asset.png": {
+    "center": 48.3724,
+    "top": 0.068314,
+    "bodyHeight": 0.917151
+  },
+  "leo_transparent_asset.png": {
+    "center": 51.3672,
+    "top": 0.042151,
+    "bodyHeight": 0.944767
+  },
+  "leon_transparent_asset.png": {
+    "center": 51.7578,
+    "top": 0.036337,
+    "bodyHeight": 0.952035
+  },
+  "long_transparent_asset.png": {
+    "center": 49.6094,
+    "top": 0.03125,
+    "bodyHeight": 0.946221
+  },
+  "lucas_transparent_asset.png": {
+    "center": 52.5391,
+    "top": 0.013081,
+    "bodyHeight": 0.982558
+  },
+  "makoto_transparent_asset.png": {
+    "center": 46.8099,
+    "top": 0.047238,
+    "bodyHeight": 0.93968
+  },
+  "mark_transparent_asset.png": {
+    "center": 50.4557,
+    "top": 0.030523,
+    "bodyHeight": 0.956395
+  },
+  "martina_transparent_asset.png": {
+    "center": 47.0052,
+    "top": 0.042878,
+    "bodyHeight": 0.945494
+  },
+  "masato_transparent_asset.png": {
+    "center": 53.5156,
+    "top": 0.03343,
+    "bodyHeight": 0.954215
+  },
+  "maya_transparent_asset.png": {
+    "center": 50.7161,
+    "top": 0.061773,
+    "bodyHeight": 0.91061
+  },
+  "mei_transparent_asset.png": {
+    "center": 47.7865,
+    "top": 0.028343,
+    "bodyHeight": 0.952762
+  },
+  "minami_transparent_asset.png": {
+    "center": 54.2318,
+    "top": 0.034157,
+    "bodyHeight": 0.94186
+  },
+  "mio_transparent_asset.png": {
+    "center": 53.3203,
+    "top": 0.037791,
+    "bodyHeight": 0.954215
+  },
+  "miyabi_transparent_asset.png": {
+    "center": 51.5625,
+    "top": 0.031977,
+    "bodyHeight": 0.959302
+  },
+  "momoko_transparent_asset.png": {
+    "center": 51.7578,
+    "top": 0.040698,
+    "bodyHeight": 0.933866
+  },
+  "naoto_transparent_asset.png": {
+    "center": 51.0417,
+    "top": 0.039971,
+    "bodyHeight": 0.936047
+  },
+  "noa_transparent_asset.png": {
+    "center": 54.6224,
+    "top": 0.059593,
+    "bodyHeight": 0.929506
+  },
+  "reiji_transparent_asset.png": {
+    "center": 52.474,
+    "top": 0.031977,
+    "bodyHeight": 0.960756
+  },
+  "reina_transparent_asset.png": {
+    "center": 53.7109,
+    "top": 0.028343,
+    "bodyHeight": 0.957122
+  },
+  "ren_male_transparent_asset.png": {
+    "center": 53.776,
+    "top": 0.03343,
+    "bodyHeight": 0.957122
+  },
+  "ren_transparent_asset.png": {
+    "center": 46.224,
+    "top": 0.042878,
+    "bodyHeight": 0.944041
+  },
+  "riki_transparent_asset.png": {
+    "center": 50.5859,
+    "top": 0.03561,
+    "bodyHeight": 0.951308
+  },
+  "rin_transparent_asset.png": {
+    "center": 52.1484,
+    "top": 0.038517,
+    "bodyHeight": 0.946948
+  },
+  "rui_transparent_asset.png": {
+    "center": 49.1536,
+    "top": 0.030523,
+    "bodyHeight": 0.957122
+  },
+  "sakura_transparent_asset.png": {
+    "center": 51.8229,
+    "top": 0.050872,
+    "bodyHeight": 0.922965
+  },
+  "sawat_transparent_asset.png": {
+    "center": 49.9349,
+    "top": 0.044331,
+    "bodyHeight": 0.929506
+  },
+  "seiya_transparent_asset.png": {
+    "center": 55.8594,
+    "top": 0.047965,
+    "bodyHeight": 0.9375
+  },
+  "serika_transparent_asset.png": {
+    "center": 52.4089,
+    "top": 0.037064,
+    "bodyHeight": 0.943314
+  },
+  "shin_transparent_asset.png": {
+    "center": 50.5208,
+    "top": 0.056686,
+    "bodyHeight": 0.917151
+  },
+  "shion_transparent_asset.png": {
+    "center": 47.6562,
+    "top": 0.037791,
+    "bodyHeight": 0.947674
+  },
+  "shun_transparent_asset.png": {
+    "center": 50.5208,
+    "top": 0.044331,
+    "bodyHeight": 0.942587
+  },
+  "sora_transparent_asset.png": {
+    "center": 43.2292,
+    "top": 0.03343,
+    "bodyHeight": 0.946221
+  },
+  "souta_transparent_asset.png": {
+    "center": 54.1016,
+    "top": 0.034884,
+    "bodyHeight": 0.946948
+  },
+  "taiga_transparent_asset.png": {
+    "center": 54.1667,
+    "top": 0.03125,
+    "bodyHeight": 0.962936
+  },
+  "takeshi_transparent_asset.png": {
+    "center": 49.6745,
+    "top": 0.029797,
+    "bodyHeight": 0.957849
+  },
+  "takuro_transparent_asset.png": {
+    "center": 50.7812,
+    "top": 0.032703,
+    "bodyHeight": 0.960756
+  },
+  "tatsuya_transparent_asset.png": {
+    "center": 50.3906,
+    "top": 0.025436,
+    "bodyHeight": 0.961483
+  },
+  "tetsu_transparent_asset.png": {
+    "center": 51.888,
+    "top": 0.029797,
+    "bodyHeight": 0.970203
+  },
+  "tomoya_transparent_asset.png": {
+    "center": 49.8698,
+    "top": 0.042151,
+    "bodyHeight": 0.946948
+  },
+  "yoshihiko_transparent_asset.png": {
+    "center": 49.9349,
+    "top": 0.045058,
+    "bodyHeight": 0.942587
+  },
+  "yuki_transparent_asset.png": {
+    "center": 47.2005,
+    "top": 0.036337,
+    "bodyHeight": 0.943314
+  },
+  "yukina_transparent_asset.png": {
+    "center": 52.2786,
+    "top": 0.038517,
+    "bodyHeight": 0.942587
+  },
+  "yuuji_transparent_asset.png": {
+    "center": 50.0651,
+    "top": 0.037064,
+    "bodyHeight": 0.949855
+  }
+}

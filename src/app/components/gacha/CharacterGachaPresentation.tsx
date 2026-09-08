@@ -10,6 +10,7 @@ import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { resolveCharacterGachaQuote } from "@/domain/presentation/characterGachaQuotes";
 import { getRarityBadgeAsset, getAcquisitionBadgeAsset } from "@/utils/rarityAssets";
 import "./CharacterGachaPresentation.css";
+import standingBounds from "./gachaStandingBounds.json";
 
 export type CharacterGachaResult = {
   type: string; characterId: string; name: string; rarity: string; imageUrl: string;
@@ -51,7 +52,15 @@ function ResultBadges({ result }: { result: CharacterGachaResult }) {
 // 全画面のデコード完了後にのみ描画。子要素ごとの非同期表示を作らない。
 function StandingArt({ result, variant = "reveal", background = false }: { result: CharacterGachaResult; variant?: "reveal" | "gacha-result-compact"; background?: boolean }) {
   const framing = getCharacterPresentationMetadata(result.imageUrl);
+  const filename = result.imageUrl.split("?")[0].split("/").pop() || "";
+  const bounds = standingBounds[filename as keyof typeof standingBounds] || { center: 50, top: .03, bodyHeight: .95 };
+  // Show the same head-to-above-knee region at every rarity and viewport.
+  // Bounds exclude transparent padding; preserve 2% headroom.
+  const artHeight = 98 / (bounds.bodyHeight * .70);
   return <figure className={`character-presentation character-presentation-${variant} cg-standing`} style={{
+    "--cg-art-height": `${artHeight}%`,
+    "--cg-art-top": `${2 - bounds.top * artHeight}%`,
+    "--cg-art-center": `${bounds.center}%`,
     "--character-compact-x": `${framing.compactX}%`,
     "--character-compact-y": `${framing.compactY}%`,
     "--character-compact-scale": framing.compactScale,
