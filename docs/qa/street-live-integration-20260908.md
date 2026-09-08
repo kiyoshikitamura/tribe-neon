@@ -32,6 +32,17 @@
 
 ## Remaining release acceptance
 
+### 追加修正（実機指摘）
+
+- エフェクト上の「シールド」「攻撃UP」「吸収」等の説明を削除。ダメージ・回復数値、MISS/CRITICALは維持。状態内容とシールド残量はバッジ詳細で確認する。
+- 下部の発動ログは読み上げ用にのみ保持し、重複した文字表示を外す。
+- 顔アイコン付きカットインを画面中央に固定。
+- SSRは操作部と分離したバトル領域内に配置。セリフの下端が操作ボタンに重ならない構造に変更。
+- 初回の素材・フォント読込完了まで準備画面本文を表示せず、ローディング表示にする。読込失敗時の再試行を維持。
+- Chromium 390×700 / 320×568、フォント通信を意図的に遅延させ、本文の先行表示なし・中央位置・セリフと操作部の非重複・SSR不透明・スキップ遷移を検証。
+
+### 本番前の残確認
+
 - Real iPhone/Safari visual review of the integrated view (not only the frozen mock).
 - Authenticated end-to-end normal gacha purchase/settlement, official PVP and quest reward/onboarding continuation on Preview. The local fixture cannot verify backend transactions.
 - Release review and explicit Production authorization for the combined rollout.

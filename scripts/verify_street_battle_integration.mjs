@@ -30,3 +30,8 @@ const result=read('src/app/components/battle/BattleResultSummary.tsx');
 assert.match(result,/analyzeBattleResult\(/);assert.match(result,/disabled=\{victory && \(tutorial \|\| presentationContext\?\.mode === "PATROL"\) && !rewards\}/);
 for(const file of ['StreetBattleViewer.tsx','StreetBattleSetup.tsx','StreetStatuses.tsx'])assert.doesNotMatch(read(`src/app/components/battle/${file}`),/from ["'][^"']*\/qa\//,'no QA fixtures in live views');
 console.log('PASS street integration: routing / separate rarities / 1x,2x,3x holds / all targets / HP / crops / reward gate');
+assert.doesNotMatch(street,/labels.map|<small>吸収/,'effect explanation text is omitted; persistent status details remain');
+assert.match(css,/\.sb-announcement.compact\{position:fixed;top:50%;left:50%;transform:translate\(-50%,-50%\)/);
+assert.match(css,/\.sb-announcement.fullscreen\{position:absolute/,'SSR belongs to the arena, not the control area');
+assert.match(street,/<div className="sb-arena">/);
+assert.match(read('src/app/components/battle/StreetBattleSetup.tsx'),/if \(!ready\) return <section className="sf-preparing"/,'hide setup until font and images have loaded');
