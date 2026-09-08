@@ -71,3 +71,12 @@ assert.equal((await api.dailyOverview(new FixtureService(many),range)).rows[0].t
 const cross=tables([fact(0,'2026-09-06T23:00:00+09:00')],[fact(0)],[]);cross.kpi_subjects=[{...subjects[0],registered_at:'2026-09-06T09:00:00+09:00'}];
 assert.equal((await api.postTutorial(new FixtureService(cross),range)).cohort,0,'do not re-cohort on later MyPage');
 console.log('PASS exclusion, user dedupe, earliest valid evidence, source error, >1000 rows, period boundary');
+// 月次で増えるコホートにもRESTの1000行上限を適用させない。
+const manyActivity=large.flatMap(r=>[1,2,3,4,5].map(day=>({subject_id:r.subject_id,activity_date:api.addDays(range.from,day),last_active_at:api.addDays(range.from,day)+'T10:00:00+09:00'})));
+const manyGuild=large.map((r,i)=>({id:'mp'+i,subject_id:r.subject_id,guild_id:'g',joined_at:'2026-09-07T14:00:00+09:00',left_at:null}));
+const volume={...many,kpi_daily_user_activity:manyActivity,kpi_guild_membership_periods:manyGuild,kpi_guild_conversion_facts:manyGuild.map(r=>({subject_id:r.subject_id,membership_period_id:r.id,conversion_type:'JOIN',occurred_at:r.joined_at})),kpi_guild_chat_activation_facts:manyGuild.map(r=>({subject_id:r.subject_id,membership_period_id:r.id,occurred_at:r.joined_at}))};
+const all=(await api.dailyOverview(new FixtureService(volume),{...range,today:'2026-09-20'})).rows[0];
+assert.equal(all.guild.numerator,1201); assert.equal(all.chat.numerator,1201);
+for(const day of all.retention)assert.equal(day.numerator,1201);
+await assert.rejects(()=>api.dailyOverview(new FixtureService(volume,'kpi_daily_user_activity'),range));
+console.log('PASS monthly read volume: 1201 Guild/Chat, 6005 activity rows, activity failure is not zero');

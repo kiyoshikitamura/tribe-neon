@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { monthlyRows, type OverviewRow } from "../../src/utils/kpiMonthly";
 
 const metric = (key: string, numerator: number | null, denominator: number | null, value: number | null, target: number | null, status = "PASS") => ({
   metric_key: key, definition_version: "kpi-v2-20260906", numerator, denominator, value, target, status,
@@ -40,7 +41,8 @@ async function mockApi(page: Page, options: { empty?: boolean; fail?: string } =
   await page.route("**/api/admin/kpi/v2/**", async (route) => {
     const key = new URL(route.request().url()).pathname.split("/").at(-1)!;
     if (options.fail === key) return route.fulfill({ status: 500, contentType: "application/json", headers: { "Cache-Control": "no-store" }, body: JSON.stringify({ error: "fixture failure" }) });
-    let body = fixtures[key];
+    let body = key === "monthly" ? { timezone:"Asia/Tokyo", rows:monthlyRows((fixtures.daily as {rows:OverviewRow[]}).rows.map(row => ({...row, tutorial:row.tutorial.numerator == null ? {...row.tutorial, numerator:0, denominator:row.new_users} : row.tutorial})),"2026-09-06") } : fixtures[key];
+    if (options.empty && (key === "daily" || key === "monthly")) body = { rows:[], timezone:"Asia/Tokyo" };
     if (options.empty && key === "marketing") body = { status:"NOT_READY", reason:"no_data", grain:"CAMPAIGN", rows:[] };
     await route.fulfill({ status: 200, contentType: "application/json", headers: { "Cache-Control":"no-store" }, body: JSON.stringify(body) });
   });
@@ -54,8 +56,8 @@ for (const viewport of [{ width:390, height:844 }, { width:412, height:915 }]) {
   test(`KPI daily mobile ${viewport.width}px scroll and detail`, async ({ page }) => {
     await page.setViewportSize(viewport); await mockApi(page); await page.goto("/admin/kpi");
     await expect(page.getByRole("heading", { name:"日次KPI" })).toBeVisible();
-    const mobile = page.locator(".daily-mobile");
-    await expect(mobile.getByText("新規ユーザー").first()).toBeVisible();
+    const mobile = page.locator(".daily-period-table");
+    await expect(mobile.getByText("新規", { exact:true }).first()).toBeVisible();
     await expect(mobile.getByText("Tutorial").first()).toBeVisible();
     await expect(mobile.getByText("Guild").first()).toBeVisible();
     await expect(mobile.getByText("Chat").first()).toBeVisible();
@@ -63,12 +65,15 @@ for (const viewport of [{ width:390, height:844 }, { width:412, height:915 }]) {
     await expect(mobile.getByText("統合計測（既存完了＋MyPage・重複除外）").first()).toBeVisible();
     await expect(mobile.getByText("7 / 14人").first()).toBeVisible();
     await expect(mobile.getByText("3 / 7人").first()).toBeVisible();
-    await expect(mobile.getByText("D5").first()).toBeVisible();
+    await mobile.evaluate((node) => { node.scrollLeft = node.scrollWidth; });
+    await expect(mobile.getByText("D5", { exact:true })).toBeVisible();
+    await mobile.evaluate((node) => { node.scrollLeft = 0; });
     await expect(page.getByText("FROM")).toHaveCount(0);
-    const shell = page.locator(".kpi-shell");
+    const shell = mobile;
     await shell.evaluate((node) => { node.scrollTop = node.scrollHeight; });
     expect(await shell.evaluate((node) => node.scrollTop > 0 && Math.ceil(node.scrollTop + node.clientHeight) >= node.scrollHeight)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await shell.evaluate((node) => { node.scrollTop = 0; });
     await page.getByRole("link", { name:"2026-09-06 の詳細" }).click();
     await expect(page).toHaveURL(/\/admin\/kpi\/day\/2026-09-06$/);
     await expect(page.getByRole("heading", { name:"2026-09-06 JST" })).toBeVisible();
@@ -91,4 +96,33 @@ test("KPI daily desktop table and automatic error state", async ({ page }) => {
   await expect(page.locator(".daily-desktop tbody tr").nth(1)).toContainText("旧Tutorial Complete");
   await expect(page.getByText("表示条件")).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+for (const width of [390, 412, 1440]) {
+  test('KPI monthly switching and drilldown ' + width, async ({page}) => {
+    await page.setViewportSize({width,height:900}); await mockApi(page); await page.goto('/admin/kpi');
+    await page.getByRole('button',{name:'月次',exact:true}).click();
+    await expect(page.getByRole('heading',{name:'月次KPI'})).toBeVisible();
+    await expect(page.locator('tbody tr')).toHaveCount(2);
+    await expect(page.getByText('当月途中 · 2026-09-06まで')).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({path:'scratch/kpi-monthly-'+width+'.png'});
+    const request = page.waitForRequest(req=>req.url().includes('/daily?from=2026-08-01&to=2026-08-31'));
+    await page.getByRole('button',{name:'2026-08 の日次一覧'}).click(); await request;
+    await expect(page.getByRole('heading',{name:'日次KPI'})).toBeVisible();
+    await page.locator('.kpi-secondary-views summary').click();
+    await page.getByRole('button',{name:'Validation V2'}).click();
+    await expect(page.getByRole('heading',{name:'日次実数'})).toHaveCount(0);
+    await expect(page.locator('.v2-shell')).toBeVisible();
+    await page.getByRole('button',{name:'Legacy Snapshot'}).click();
+    await expect(page.locator('.kpi-shell')).toBeVisible();
+  });
+}
+test('KPI monthly errors retry and empty', async ({page}) => {
+  await mockApi(page,{fail:'monthly'}); await page.goto('/admin/kpi');
+  await page.getByRole('button',{name:'月次',exact:true}).click();
+  await expect(page.locator('.v2-alert')).toContainText('月次KPIを取得できません');
+  await page.unroute('**/api/admin/kpi/v2/**'); await mockApi(page,{empty:true});
+  await page.getByRole('button',{name:'再試行'}).click();
+  await expect(page.getByText('対象期間がありません。')).toBeVisible();
 });

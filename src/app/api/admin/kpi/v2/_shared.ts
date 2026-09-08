@@ -22,6 +22,14 @@ async function fetchAll<T>(page: (from: number, to: number) => PageResult<T>) {
   }
 }
 
+async function fetchBatches<T>(ids: string[], page: (ids: string[], from: number, to: number) => PageResult<T>) {
+  const result: T[] = [];
+  for (let offset = 0; offset < ids.length; offset += 200) {
+    result.push(...await fetchAll((from, to) => page(ids.slice(offset, offset + 200), from, to)));
+  }
+  return result;
+}
+
 export function noStore(value: unknown, status = 200) {
   return NextResponse.json(value, { status, headers: { "Cache-Control": "no-store" } });
 }
@@ -65,11 +73,10 @@ function jstDate(timestamp: string) {
 }
 
 async function exclusions(service: SupabaseClient): Promise<Period[]> {
-  const { data, error } = await service.from("kpi_account_classification_periods")
+  return fetchAll<Period>((from, to) => service.from("kpi_account_classification_periods")
     .select("subject_id,classification,valid_from,valid_to")
-    .in("classification", ["admin", "qa", "test", "fraud_suspended"]);
-  if (error) throw error;
-  return (data || []) as Period[];
+    .in("classification", ["admin", "qa", "test", "fraud_suspended"])
+    .order("subject_id").order("valid_from").range(from, to));
 }
 
 function excluded(periods: Period[], subjectId: string, at: string) {
@@ -285,10 +292,10 @@ export async function retention(service: SupabaseClient, range: NonNullable<Retu
   const periods = await exclusions(service);
   const subjects = subjectData.filter((row) => !excluded(periods, row.subject_id, row.registered_at));
   const ids = subjects.map((row) => row.subject_id);
-  const { data: activityData } = ids.length
-    ? await service.from("kpi_daily_user_activity").select("subject_id,activity_date,last_active_at").in("subject_id", ids)
-      .gte("activity_date", range.from).lte("activity_date", addDays(range.to, 5)).limit(200000)
-    : { data: [] as any[] };
+  const activityData = await fetchBatches<any>(ids, (batch, from, to) => service.from("kpi_daily_user_activity")
+    .select("subject_id,activity_date,last_active_at").in("subject_id", batch)
+    .gte("activity_date", range.from).lte("activity_date", addDays(range.to, 5))
+    .order("subject_id").order("activity_date").range(from, to));
   const active = new Set(((activityData || []) as any[])
     .filter((row) => !excluded(periods, row.subject_id, row.last_active_at)).map((row) => `${row.subject_id}:${row.activity_date}`));
   const targets = [0, .38, .30, .26, .23, .21];
@@ -323,28 +330,22 @@ export async function dailyOverview(service: SupabaseClient, range: NonNullable<
   const subjectIds = subjects.map((row) => row.subject_id);
   const subjectLinks = subjects;
   const completions = await tutorialCompletions(service, subjectLinks || [], periods);
-  const [{ data: membershipData, error: membershipError }, { data: conversionData, error: conversionError }] = subjectIds.length
-    ? await Promise.all([
-      service.from("kpi_guild_membership_periods").select("id,subject_id,guild_id,joined_at,left_at").in("subject_id", subjectIds),
-      service.from("kpi_guild_conversion_facts").select("subject_id,conversion_type,membership_period_id,occurred_at").in("subject_id", subjectIds),
-    ])
-    : [{ data: [] as any[], error: null }, { data: [] as any[], error: null }];
-  if (membershipError) throw membershipError;
-  if (conversionError) throw conversionError;
+  const [membershipData, conversionData] = await Promise.all([
+    fetchBatches<any>(subjectIds, (batch, from, to) => service.from("kpi_guild_membership_periods")
+      .select("id,subject_id,guild_id,joined_at,left_at").in("subject_id", batch).order("id").range(from, to)),
+    fetchBatches<any>(subjectIds, (batch, from, to) => service.from("kpi_guild_conversion_facts")
+      .select("subject_id,conversion_type,membership_period_id,occurred_at").in("subject_id", batch).order("subject_id").order("membership_period_id").range(from, to)),
+  ]);
   const memberships = (membershipData || []) as any[];
   const conversions = ((conversionData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
   const membershipPeriodIds = memberships.map((row) => row.id);
   const sourceUserIds = ((subjectLinks || []) as any[]).map((row) => row.source_user_id).filter(Boolean);
-  const [{ data: activationData, error: activationError }, rawPosts] = await Promise.all([
-    membershipPeriodIds.length
-      ? service.from("kpi_guild_chat_activation_facts").select("subject_id,membership_period_id,occurred_at").in("membership_period_id", membershipPeriodIds)
-      : Promise.resolve({ data: [] as any[], error: null }),
-    sourceUserIds.length
-      ? fetchAll<any>((from, to) => service.from("board_posts").select("id,user_id,target_id,created_at,is_system")
-        .eq("target_type", "GUILD").eq("is_system", false).in("user_id", sourceUserIds).range(from, to))
-      : Promise.resolve([] as any[]),
+  const [activationData, rawPosts] = await Promise.all([
+    fetchBatches<any>(membershipPeriodIds, (batch, from, to) => service.from("kpi_guild_chat_activation_facts")
+      .select("subject_id,membership_period_id,occurred_at").in("membership_period_id", batch).order("membership_period_id").range(from, to)),
+    fetchBatches<any>(sourceUserIds, (batch, from, to) => service.from("board_posts").select("id,user_id,target_id,created_at,is_system")
+      .eq("target_type", "GUILD").eq("is_system", false).in("user_id", batch).order("id").range(from, to)),
   ]);
-  if (activationError) throw activationError;
   const activations = ((activationData || []) as any[]).filter((row) => !excluded(periods, row.subject_id, row.occurred_at));
   const subjectBySource = new Map(((subjectLinks || []) as any[]).filter((row) => row.source_user_id).map((row) => [row.source_user_id, row.subject_id]));
   const retentionByDate = new Map(retentionResult.cohorts.map((cohort) => [cohort.cohort_date, cohort]));
