@@ -17,7 +17,9 @@ if (!forceMock && (!supabaseUrl || !supabaseAnonKey)) {
   );
 }
 
-if (!forceMock && !/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(supabaseUrl)) {
+// 既存Productionドメインはktpolnkyyfkowxdmijww.supabase.coのCNAME。
+const isProductionCustomDomain = isProduction && /^https:\/\/api\.tribe-neon\.com\/?$/i.test(supabaseUrl);
+if (!forceMock && !isProductionCustomDomain && !/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(supabaseUrl)) {
   throw new Error(`NEXT_PUBLIC_SUPABASE_URL is not a valid Supabase project URL for ${appEnvironment}.`);
 }
 
