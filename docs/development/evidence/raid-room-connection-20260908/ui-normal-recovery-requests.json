@@ -1,0 +1,374 @@
+[
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_onboarding_state",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/unlock_eligible_user_cosmetics",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_bbs_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_chat_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_direct_message_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_legacy_user_cosmetics",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_direct_message_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_chat_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_current_missions",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_active_users",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/record_current_guild_login",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+    "body": "{\"p_user_id\":\"25975265-f042-4dd1-8ffc-a12f8414a035\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/begin_kpi_acquisition_journey_v1",
+    "body": "{\"p_token\":\"f262766fa094f3a9664477fb7eba94f56edf06b4cb86044adfceabddee47599a\",\"p_source\":\"web_v1\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/record_kpi_acquisition_observation_v1",
+    "body": "{\"p_token\":\"f262766fa094f3a9664477fb7eba94f56edf06b4cb86044adfceabddee47599a\",\"p_event_type\":\"TITLE_ARRIVED\",\"p_idempotency_key\":\"title_arrived\",\"p_metadata\":{},\"p_source\":\"web_v1\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_chat_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_chat_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_profiles",
+    "body": "{\"p_user_ids\":[\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"25975265-f042-4dd1-8ffc-a12f8414a035\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_leader_characters",
+    "body": "{\"p_user_ids\":[\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"25975265-f042-4dd1-8ffc-a12f8414a035\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_canonical_quest_progression",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_raid_attempt_state",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_pvp_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_guild_base_controls",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_gvg_rankings",
+    "body": "{\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/list_raid_rooms_v1",
+    "body": "{\"p_difficulty_id\":null,\"p_limit\":20,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_main_formation",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_power_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_guild_power_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/record_kpi_acquisition_observation_v1",
+    "body": "{\"p_token\":\"f262766fa094f3a9664477fb7eba94f56edf06b4cb86044adfceabddee47599a\",\"p_event_type\":\"TAP_TO_START\",\"p_idempotency_key\":\"tap_to_start\",\"p_metadata\":{},\"p_source\":\"web_v1\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_onboarding_state",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+    "body": "{\"p_user_id\":\"25975265-f042-4dd1-8ffc-a12f8414a035\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_current_missions",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_active_users",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/record_current_guild_login",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+    "body": "{\"p_user_id\":\"25975265-f042-4dd1-8ffc-a12f8414a035\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/issue_kpi_mypage_ready_context_v1",
+    "body": "{\"p_tutorial_version\":\"canonical-v1\",\"p_idempotency_key\":\"mypage-ready:5b8cf9320228b41930d58033\",\"p_source\":\"mypage_handshake_v1\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_recent_social_activity_feed",
+    "body": "{\"p_limit\":20}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_pending_mission_event_dialog",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_pending_ranking_reward_notification",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/process_login_bonus",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_profiles",
+    "body": "{\"p_user_ids\":[\"ae28676d-bdca-4f8d-b574-183da188104c\",\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\",\"25975265-f042-4dd1-8ffc-a12f8414a035\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_kpi_first_mypage_access_v1",
+    "body": "{\"p_context_id\":\"0897cacd-f07e-43f0-8699-feb4daac168d\",\"p_idempotency_key\":\"mypage-ack:5b8cf9320228b41930d58033\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_chat_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_profiles",
+    "body": "{\"p_user_ids\":[\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"25975265-f042-4dd1-8ffc-a12f8414a035\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_leader_characters",
+    "body": "{\"p_user_ids\":[\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"25975265-f042-4dd1-8ffc-a12f8414a035\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_canonical_quest_progression",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_raid_attempt_state",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_pvp_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_guild_base_controls",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_gvg_rankings",
+    "body": "{\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/list_raid_rooms_v1",
+    "body": "{\"p_difficulty_id\":null,\"p_limit\":20,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_main_formation",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_power_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_guild_power_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/list_raid_room_battle_recoveries_v1",
+    "body": "{\"p_limit\":1}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_raid_room_briefing_v1",
+    "body": "{\"p_room_id\":\"af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/functions/v1/resolve-battle",
+    "body": "{\"replaySessionId\":\"ad371e82-e1ff-4af0-b9fd-03393c0f520a\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_raid_attempt_state",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_active_users",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+    "body": "{\"p_user_id\":\"25975265-f042-4dd1-8ffc-a12f8414a035\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_current_missions",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_active_users",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_active_mission_events",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/record_current_guild_login",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+    "body": "{\"p_user_id\":\"25975265-f042-4dd1-8ffc-a12f8414a035\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_chat_unread_counts",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_profiles",
+    "body": "{\"p_user_ids\":[\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"25975265-f042-4dd1-8ffc-a12f8414a035\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_leader_characters",
+    "body": "{\"p_user_ids\":[\"fadc944c-0b15-472c-be4d-305c26d8163f\",\"25975265-f042-4dd1-8ffc-a12f8414a035\",\"5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0\"]}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_canonical_quest_progression",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_raid_attempt_state",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_pvp_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_guild_base_controls",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_gvg_rankings",
+    "body": "{\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/list_raid_rooms_v1",
+    "body": "{\"p_difficulty_id\":null,\"p_limit\":20,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_current_main_formation",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_my_power_snapshot",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_power_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/get_public_guild_power_rankings",
+    "body": "{\"p_daily\":false,\"p_limit\":100,\"p_offset\":0}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_active_users",
+    "body": "{}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+    "body": "{\"p_user_id\":\"25975265-f042-4dd1-8ffc-a12f8414a035\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+    "body": "{\"p_request_id\":\"0f70ce40-31e3-46c9-af91-d58cee9eda1d\"}"
+  },
+  {
+    "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/list_raid_rooms_v1",
+    "body": "{\"p_difficulty_id\":null,\"p_limit\":20,\"p_offset\":0}"
+  }
+]

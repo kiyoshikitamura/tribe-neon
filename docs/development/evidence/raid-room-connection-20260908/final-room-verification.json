@@ -1,0 +1,77 @@
+{
+  "at": "2026-09-08 11:07:01.789287+00",
+  "backend_pid": 2812934,
+  "requests": [
+    {
+      "user": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "replay": "9977a359-e9fc-422b-a847-65a557f45786",
+      "acknowledged": "2026-09-08T10:56:16.235317+00:00"
+    },
+    {
+      "user": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "replay": "7ebf0e01-c341-4bf7-8f56-97bfa5797545",
+      "acknowledged": "2026-09-08T11:00:18.146425+00:00"
+    },
+    {
+      "user": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "replay": "ad371e82-e1ff-4af0-b9fd-03393c0f520a",
+      "acknowledged": "2026-09-08T11:06:30.566703+00:00"
+    }
+  ],
+  "progress": [
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "updated_at": "2026-09-08T10:40:15.16335+00:00",
+      "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "finalized_battles": 1,
+      "raid_points_consumed": 0,
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+    },
+    {
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "updated_at": "2026-09-08T10:55:53.1932+00:00",
+      "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "finalized_battles": 1,
+      "raid_points_consumed": 0,
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+    },
+    {
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "updated_at": "2026-09-08T10:55:54.34252+00:00",
+      "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "finalized_battles": 1,
+      "raid_points_consumed": 0,
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+    }
+  ],
+  "rooms": [
+    {
+      "hp": 31988539,
+      "max_hp": 32000000,
+      "status": "ACTIVE",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "expires_at": "2026-09-09T10:35:48.611071+00:00"
+    },
+    {
+      "hp": 32000000,
+      "max_hp": 32000000,
+      "status": "ACTIVE",
+      "room_id": "3972a461-b45f-4b02-8142-75f294461ae3",
+      "expires_at": "2026-09-09T10:40:55.031663+00:00"
+    }
+  ],
+  "cron_runs": [
+    {
+      "start": "2026-09-08T11:07:00.102305+00:00",
+      "status": "succeeded"
+    },
+    {
+      "start": "2026-09-08T11:06:00.11442+00:00",
+      "status": "succeeded"
+    },
+    {
+      "start": "2026-09-08T11:05:00.113983+00:00",
+      "status": "succeeded"
+    }
+  ]
+}

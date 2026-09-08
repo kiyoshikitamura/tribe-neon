@@ -1,0 +1,18 @@
+[
+  {
+    "file": "settings-apply.sql",
+    "sha256": "3bcb633df687832882a8cb5378b84851f6f054c28b95da106ef038086314e728"
+  },
+  {
+    "file": "cron-apply.sql",
+    "sha256": "e9c1f0625bf31cf0c376774e5b012f17eb7126e9e5f4e05215524452e6a815fa"
+  },
+  {
+    "file": "legacy-stop.sql",
+    "sha256": "d8981402fa7c579942d67ef749724cd6c4ffd8ed4d2940117e65c66a973c937f"
+  },
+  {
+    "file": "room-enable.sql",
+    "sha256": "0519f0880aae252eaab1bed1198cde745ebcf29daefe38b6f35daf6b5c65f282"
+  }
+]

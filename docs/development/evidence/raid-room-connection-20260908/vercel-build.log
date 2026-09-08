@@ -1,0 +1,89 @@
+Vercel CLI 59.11.7 (Node.js 24.19.0)
+Fetching deployment "tribe-neon-pdtk7d8o1-kiyoshi-kitamura.vercel.app" in kiyoshi-kitamura
+2026-09-08T10:21:20.488Z  Running build in Washington, D.C., USA (East) – iad1 (Turbo Build Machine)
+2026-09-08T10:21:20.489Z  Build machine configuration: 30 cores, 60 GB
+2026-09-08T10:21:20.511Z  Retrieving list of deployment files...
+2026-09-08T10:21:20.988Z  Downloading 2028 deployment files...
+2026-09-08T10:21:25.764Z  Restored build cache from previous deployment (7ShHrNh8VC5tkSwmkpwBvpLwqgMB)
+2026-09-08T10:21:26.054Z  Running "vercel build"
+2026-09-08T10:21:26.078Z  Vercel CLI 59.11.7
+2026-09-08T10:21:26.742Z  Installing dependencies...
+2026-09-08T10:21:30.834Z
+2026-09-08T10:21:30.834Z  added 12 packages in 4s
+2026-09-08T10:21:30.834Z
+2026-09-08T10:21:30.834Z  151 packages are looking for funding
+2026-09-08T10:21:30.834Z  run `npm fund` for details
+2026-09-08T10:21:30.834Z  npm warn allow-scripts 2 packages have install scripts not yet covered by allowScripts:
+2026-09-08T10:21:30.834Z  npm warn allow-scripts   sharp@0.34.5 (install: node install/check.js || npm run build)
+2026-09-08T10:21:30.834Z  npm warn allow-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-09-08T10:21:30.834Z  npm warn allow-scripts
+2026-09-08T10:21:30.834Z  npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+2026-09-08T10:21:30.865Z  Detected Next.js version: 16.2.10
+2026-09-08T10:21:30.872Z  Running "npm run build"
+2026-09-08T10:21:30.945Z
+2026-09-08T10:21:30.945Z  > tribe-neon@0.1.0 build
+2026-09-08T10:21:30.945Z  > next build
+2026-09-08T10:21:30.945Z
+2026-09-08T10:21:31.506Z  Applying modifyConfig from Vercel
+2026-09-08T10:21:31.528Z  ▲ Next.js 16.2.10 (Turbopack)
+2026-09-08T10:21:31.528Z
+2026-09-08T10:21:31.562Z  Creating an optimized production build ...
+2026-09-08T10:21:34.599Z  ✓ Compiled successfully in 2.8s
+2026-09-08T10:21:34.602Z  Running TypeScript ...
+2026-09-08T10:21:42.836Z  Finished TypeScript in 8.2s ...
+2026-09-08T10:21:42.843Z  Collecting page data using 29 workers ...
+2026-09-08T10:21:43.651Z  Generating static pages using 29 workers (0/13) ...
+2026-09-08T10:21:43.754Z  Generating static pages using 29 workers (3/13)
+2026-09-08T10:21:43.804Z  Generating static pages using 29 workers (6/13)
+2026-09-08T10:21:43.879Z  Generating static pages using 29 workers (9/13)
+2026-09-08T10:21:43.879Z  ✓ Generating static pages using 29 workers (13/13) in 228ms
+2026-09-08T10:21:43.890Z  Finalizing page optimization ...
+2026-09-08T10:21:43.950Z  Running onBuildComplete from Vercel
+2026-09-08T10:21:44.325Z
+2026-09-08T10:21:44.326Z  Route (app)
+2026-09-08T10:21:44.326Z  ┌ ○ /
+2026-09-08T10:21:44.326Z  ├ ○ /_not-found
+2026-09-08T10:21:44.326Z  ├ ƒ /admin/kpi
+2026-09-08T10:21:44.326Z  ├ ƒ /admin/kpi/day/[date]
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/marketing
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/refresh
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/snapshots
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/timeseries
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/acquisition
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/community
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/daily
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/guild
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/marketing
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/post-tutorial
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/retention
+2026-09-08T10:21:44.326Z  ├ ƒ /api/admin/kpi/v2/tutorial
+2026-09-08T10:21:44.327Z  ├ ƒ /api/admin/kpi/v2/validation
+2026-09-08T10:21:44.327Z  ├ ƒ /api/kpi/identity-transition
+2026-09-08T10:21:44.327Z  ├ ○ /auth/callback
+2026-09-08T10:21:44.327Z  ├ ƒ /legal/commercial
+2026-09-08T10:21:44.327Z  ├ ƒ /legal/privacy
+2026-09-08T10:21:44.327Z  ├ ƒ /legal/terms
+2026-09-08T10:21:44.327Z  ├ ƒ /legal/tokusho
+2026-09-08T10:21:44.327Z  ├ ○ /manifest.webmanifest
+2026-09-08T10:21:44.327Z  ├ ○ /open
+2026-09-08T10:21:44.327Z  ├ ƒ /qa/audio
+2026-09-08T10:21:44.327Z  ├ ƒ /qa/battle-full-skill-load
+2026-09-08T10:21:44.327Z  ├ ƒ /qa/presentation
+2026-09-08T10:21:44.327Z  ├ ƒ /qa/raid-room
+2026-09-08T10:21:44.327Z  ├ ○ /robots.txt
+2026-09-08T10:21:44.327Z  └ ○ /sitemap.xml
+2026-09-08T10:21:44.327Z
+2026-09-08T10:21:44.327Z
+2026-09-08T10:21:44.327Z  ƒ Proxy (Middleware)
+2026-09-08T10:21:44.327Z
+2026-09-08T10:21:44.327Z  ○  (Static)   prerendered as static content
+2026-09-08T10:21:44.327Z  ƒ  (Dynamic)  server-rendered on demand
+2026-09-08T10:21:44.327Z
+2026-09-08T10:21:45.853Z  Build Completed in /vercel/output [19s]
+2026-09-08T10:21:45.879Z  Deploying outputs...
+2026-09-08T10:21:55.399Z  Deployment completed
+2026-09-08T10:21:55.405Z  Creating build cache...
+2026-09-08T10:22:00.117Z  Created build cache: 5s
+2026-09-08T10:22:00.117Z  Uploading build cache [167.80 MB]
+2026-09-08T10:22:03.288Z  Build cache uploaded: 3.171s
+status	● Ready

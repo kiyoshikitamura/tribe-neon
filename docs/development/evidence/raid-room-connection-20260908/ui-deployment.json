@@ -1,0 +1,22 @@
+{
+  "id": "dpl_3Y99GAhqc2zr6BRxhoXMfuwtq3CP",
+  "url": "tribe-neon-pdtk7d8o1-kiyoshi-kitamura.vercel.app",
+  "target": null,
+  "readyState": "READY",
+  "createdAt": 1788862879654,
+  "meta": {
+    "gitCommitAuthorName": "Codex",
+    "gitCommitAuthorEmail": "codex@openai.com",
+    "gitCommitMessage": "fix(build): exclude archived evidence and validate Raid Preview candidate",
+    "gitCommitRef": "codex/raid-room-pc-step2-20260908",
+    "gitCommitSha": "99c534bb63a2659b5569d339b3ff51c49d398339",
+    "gitDirty": "1",
+    "gitRootDirectory": "",
+    "raidSourceSha": "99c534bb63a2659b5569d339b3ff51c49d398339",
+    "githubCommitRef": "codex/raid-room-pc-step2-20260908",
+    "actor": "codex",
+    "lambdaRuntimeStats": "{\"nodejs\":3}",
+    "bundler": "turbopack"
+  },
+  "alias": []
+}

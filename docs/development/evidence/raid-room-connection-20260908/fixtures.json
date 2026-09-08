@@ -1,0 +1,53 @@
+{
+  "started_at": "2026-09-08T10:22:54.545Z",
+  "users": [
+    {
+      "role": "host",
+      "name": "R0908H01",
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "initialization": {
+        "success": true,
+        "error": null,
+        "data": {
+          "status": "success",
+          "tutorial_step": "WORLD_INTRO"
+        },
+        "count": null,
+        "status": 200,
+        "statusText": "OK"
+      }
+    },
+    {
+      "role": "normal",
+      "name": "R0908N01",
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "initialization": {
+        "success": true,
+        "error": null,
+        "data": {
+          "status": "success",
+          "tutorial_step": "WORLD_INTRO"
+        },
+        "count": null,
+        "status": 200,
+        "statusText": "OK"
+      }
+    },
+    {
+      "role": "rescue",
+      "name": "R0908R01",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "initialization": {
+        "success": true,
+        "error": null,
+        "data": {
+          "status": "success",
+          "tutorial_step": "WORLD_INTRO"
+        },
+        "count": null,
+        "status": 200,
+        "statusText": "OK"
+      }
+    }
+  ]
+}

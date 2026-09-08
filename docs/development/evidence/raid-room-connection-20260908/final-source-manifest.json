@@ -1,0 +1,1965 @@
+{
+  "sha": "251dc03fcd9a1dcf9c9f871ff09223613788cadf",
+  "files": [
+    {
+      "path": ".vercelignore",
+      "sha256": "baeb220e86f3f509e689ba3df9d1e19221a4116624b89426094ecb7871db02b8",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "next.config.ts",
+      "sha256": "9c6d750eb0776dcd1f3464a6ebea2e3cd9001a1eb16e9bcddb3688c86c91b31a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "8549ed70e2369e6ad880fe8cc1452cd2cb7e8963fb88012b5fa29a7064816658",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "39b405f5b8f5bf2c84b844f6b3656d6a7b96ccc786df6ede66b6bf106ed4968f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/KpiDailyOverview.tsx",
+      "sha256": "7c4b707b31a0264ca6399dcb7b4f0e067ab833c948da20ad4c743036446417e4",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/KpiDashboard.tsx",
+      "sha256": "ab051e24590f9b6f2fd4bdbda853cb15de8f417f1832412a6007afaafb4bfc97",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/KpiDashboardShell.tsx",
+      "sha256": "01f245b521df8e0778465acb9a3f5f45ece89a6a076167ed362313d377e5bb46",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/KpiDashboardV2.tsx",
+      "sha256": "436a2c6f8b9ef9246d3d94b3240c679640fc0448fbfe776f23e43839da0ec2f3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/day/[date]/page.tsx",
+      "sha256": "f76e849e91cbcc289b88e46585e163c0eb50bf438362085523ccd089d91192b2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/kpi-dashboard.css",
+      "sha256": "6d595a4340dfb815d00d3b865f6551cb98c1952257da204cd52a2b4756b03663",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/admin/kpi/page.tsx",
+      "sha256": "ea52a7a5e679b69938e27a10bb2e3732ff15335c7e20eea90334e3a2b82c0b8b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/marketing/route.ts",
+      "sha256": "4bd56eee4cdd322c9bff74539a13ca50d9bea678d6a8d7545b8fa27e973453b0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/refresh/route.ts",
+      "sha256": "20acc5360291c63ef5199ac98073e0f017cde78f53d5856f7cfb7727d5d0e12f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/snapshots/route.ts",
+      "sha256": "c1c7ed77c4f2417a0ce431a9624d77fe4a745dcefd0d1780315bad210540224a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/timeseries/route.ts",
+      "sha256": "4c688494c61bf605f7793afb35ba534b8f4da5bc53c4faa7843fb8c57569b3a2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/_shared.ts",
+      "sha256": "d1a69cbfbd1dd658ee5484aefcd29f8be677067fd3c0b720d1f60e05d79e5482",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/acquisition/route.ts",
+      "sha256": "71a4def5b20a3f9bc4dc29abf4ebafb9b00e7f00f1e06888cb4e361c07ae0a05",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/community/route.ts",
+      "sha256": "95b65773d017735e15b20edfe1660b5bb9267e47000714c05f58cfa461aab56e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/daily/route.ts",
+      "sha256": "3c7543326d5c12550e773aafdb83687347837bcf36d02c51b586ebb6661edbbb",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/guild/route.ts",
+      "sha256": "cb17a4c1efc08a734b9a4c99ce7c2f693cd918c07a7b145da1eb083cf0c6b150",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/marketing/route.ts",
+      "sha256": "3cc02fed9e65c1082f148963cf7b9213811990879c1541f221d9042bc81bbc0d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/post-tutorial/route.ts",
+      "sha256": "20b468703144d3294d2bee9d9c386de133ebe3e7615f279998518908e82a23b0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/retention/route.ts",
+      "sha256": "4a2b182cff0dd6da64bb739a1ffe14b03a7452b017eb1ecfeeaaa73ace4feee9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/tutorial/route.ts",
+      "sha256": "bc9da022ed4238789c4d5d141c6610cba6f68fd5d9d87583f81ada4425f15919",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/admin/kpi/v2/validation/route.ts",
+      "sha256": "8fd6dcba154b37ce230f59a02ee5cec80f22e3538e952b7d09d149386fe5280c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/api/kpi/identity-transition/route.ts",
+      "sha256": "2101e0445c02db3f78e593165be805f36eeb5a0bab471a3dc795ebbe8dcd06e2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/auth/callback/page.tsx",
+      "sha256": "5ba2d476e7a7ef94790ddc5fe7ed8831612e73e2f383f19301282df3c6757dc0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AdvView.css",
+      "sha256": "6c93d73b9f487d223ef8abf8fff47f4be6cf0f46091790658ce3030d7383a7cb",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AdvView.tsx",
+      "sha256": "17dcf2e08c7921745d270a4431fba2ca952a5fcc2da2212855bc80a2f8518031",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AttributeBadge.tsx",
+      "sha256": "13285bca6c732ff20a86dbe439e78ee2d054669d0651607714a07f2c2bdf3b66",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AuthView.css",
+      "sha256": "1e4106832378bab1dc3e1561b5e7d8ac5687801f68e7d2ff521185e38c906e30",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AuthView.tsx",
+      "sha256": "74dafbe0bb9f85bed3d2bf27c0d2375599ba215457f12659f6ce488cd1194807",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AuthenticationReminderModal.tsx",
+      "sha256": "94797b1ba4daa9d008844459ba52e81a8a52024b68a49c2fb0b50656fdc775b9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AvatarRenderer.css",
+      "sha256": "0ffec34e97098745703495099c4acdc1f7a64ef91cf807dfb3028f01d11419bb",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AvatarRenderer.tsx",
+      "sha256": "1393b268f450076fbce8985db4719fb9bee86ad71dd47db6ddc48577721260be",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AvatarTab.css",
+      "sha256": "1928fafdf480f32910af85d16199d213f6c80d44614915403d2560d8ed8462fd",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/AvatarTab.tsx",
+      "sha256": "38519e775e9d4a50f05a073f7bd4a610a52b0af881b5e9e9471f1bac81ea14d2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/BagTab.css",
+      "sha256": "e713d43c740843e5369f78c845e4d9c72f91eddac28fc87d44b5f6ed903824d9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/BagTab.tsx",
+      "sha256": "2443334ea9b006878577a422fccbbf16e3f34585eb45ecb1585f5aab29d49397",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/BbsTab.css",
+      "sha256": "85d5bf39965e401e875f77dd934aa2c9724b65f11f7ca6fadda0870f6c8ed4dd",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/BbsTab.tsx",
+      "sha256": "ad796dd46a59bf27f78f69a448111cbbbb3f2be917d17ddcbfb71469d9c220c3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CardBattleView.css",
+      "sha256": "75cdc3c9f03d827cbcd8f8b5c9e64ff7404748f9d3388bef8bc4109fbc8ddde9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CardBattleView.tsx",
+      "sha256": "30723a5cace97e09fcb65086a7bcf876dbb2ffa53a92cabb08dd265abb2b3176",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CardIcon.tsx",
+      "sha256": "8dbc923ae187fee5e20b0918e247d5ac710428e9a5f79eaa4c714e009cd4b658",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CharacterTab.css",
+      "sha256": "012de107ad4575cd2723569e7ce2e6e8f890068135938e0ac0621c01a7d3e4f3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CharacterTab.tsx",
+      "sha256": "51298dd85c98f263c32a565125ae71769a0bae76f1b6d1b9debcd346af857613",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CommonModals.css",
+      "sha256": "d1108cb813aa41b7503be42fb10ecdc4456a178a8d014aa624ddbaf99378cae6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/CommonModals.tsx",
+      "sha256": "ab1cd20de61f222c87b309512dc4adb48e241e8abf2b87f76055d0f91c6c6253",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ExternalBrowserGooglePrompt.tsx",
+      "sha256": "1d91c0625740fee5dadc0b57369626bd9b6cb80f0b24a31d6e3f7e400b396fe3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/Footer.css",
+      "sha256": "8b356f4a533aeb205cab63a4c3a6ebc2d57dae7253ed3d02da6a76a5c6c74bdf",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/Footer.tsx",
+      "sha256": "a13db31af0218bea171e5f0eafbe5058454e0ea2b9e53ded24b8937a2fbb0bed",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/FriendPanel.css",
+      "sha256": "57b439efbf98021256e7f957839456b0b6a2bcfb301a2a599540740261c17ff0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/FriendPanel.tsx",
+      "sha256": "e36b658b6b829e9e130bc6101e3b398c1d4a63836e4a95b062f520c1f03a488f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GachaTab.css",
+      "sha256": "d542602ccff5635778d4a6930770c000dddcdb2d746546fc2a9df50b16ae7913",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GachaTab.tsx",
+      "sha256": "865bdc6e1759e9ac32ba428f14b6cf8d6dcd32f38a4e64bb27f714929b45951f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GuildTab.css",
+      "sha256": "d853d2884c7d28306ad9917a3832d930a349d636806256231b8c855eddcd30f7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GuildTab.tsx",
+      "sha256": "fa52d803339caa9989ec3ca5116462ef57148dc3ee60c826571c3ba80e917df8",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GvgMatchStatusPanel.tsx",
+      "sha256": "c8018dbd23e8eecea308a3101f2d97de39dc3312cdd9a9501f9f2e3525f111d7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GvgTab.css",
+      "sha256": "5755de7f00bfd5e0d7d969dd32efc350e291105a037c32b0c426bd364250949a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/GvgTab.tsx",
+      "sha256": "c0fd048394f2c806c49c9a5603ea982b181ab6b00ee73d4744114f70a0d88d14",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/Header.css",
+      "sha256": "99fd8194d69ac736e6d5d426f40b117c103203e49f86d1fb106d57909b6c2789",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/Header.tsx",
+      "sha256": "3a577e2fd9561709df17df5da17930b8b75d20e81c685a6352979fc08d860036",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/HomeResumeShell.css",
+      "sha256": "d77633b74e498e172bbfdb53a6b922baaf7eea2db61049539e3ff8ad3f85c828",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/HomeResumeShell.tsx",
+      "sha256": "500ab3dafb10a4441da3a304c97aa251e003ea5c79a08c0b95110a307f3e19de",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/HomeTab.css",
+      "sha256": "ae03558db669bf020e7daf45308ba24d673cfb7472b9b7023aaf6195736e5f44",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/HomeTab.tsx",
+      "sha256": "8528aa656de623d846fd9ed47a2710e45d59b353e916f9e6adc4ef1a24c5f3cc",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/InboxPanel.css",
+      "sha256": "0c9722b3e08a8600783dda62deaab041151ae23b887bbe3730f9bcc37533d534",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/InboxPanel.tsx",
+      "sha256": "d71fea06d387bc4ec1cb9effbed3690f40dc8d13bbdf93c4f3ff404a2b5a7d40",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/LegalPanel.css",
+      "sha256": "49d4664b2e97e2d55263dafcab748d1899eb48d31ff83feb21c44c45afbc2e65",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/LegalPanel.tsx",
+      "sha256": "32415d5dc647b82397513d61f1097601852be4e7f566998f5fd6f56c189d045f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/LoginBonusModal.css",
+      "sha256": "064adbd8468bd4750930f6a2bf87d691d844d01e64bf10fbe1a45dbfa4c1c23b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/LoginBonusModal.tsx",
+      "sha256": "0bf923873a750c423d79e8b66e736c6957bffdc08f73591b89f0fa40bc8c616b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MenuTab.css",
+      "sha256": "5d6af8aa2aa809e31d5eab680c118436d9ea3bbb5067d3e2a136b6b499269562",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MenuTab.tsx",
+      "sha256": "c190083b33625df86f7a0e4ebe843bf061c4da5a479b79c728af37810a987406",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MissionPanel.css",
+      "sha256": "2eafe96e0f9e4ae14759cd4e54fa9b88d47964fdc10253cf0f64d93092eae94d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MissionPanel.tsx",
+      "sha256": "8902121b57324a51e8b2f93aa7c905acba2c775b0c0f376be4aef9a4421afdd0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MonthlyPassBanner.css",
+      "sha256": "36ba83efb347654113d94867e040b8eaa7cb3e756fef2e2bcbd827a06a242757",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MonthlyPassBanner.tsx",
+      "sha256": "5f1b1dbce51cbca136e9bcad23890c6db0e1574bfd4e9990a32cb856b591679c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MoveBaseModal.css",
+      "sha256": "c7a65a950a3d3c8c89781c59b6fdbfcd698f9d6073ec8c21a4ba947780eae7b3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/MoveBaseModal.tsx",
+      "sha256": "72286f22abe6c6c5e0f04ea950d3a0dfa894219a9083b5642bfdc5a98589f531",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PCLeftChat.css",
+      "sha256": "a8ba73d114e9d97105318b6147af31f80b9d5b9ca6506450118048d167db0885",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PCLeftChat.tsx",
+      "sha256": "75ea6614911fc897599a1701fa2ebfce6ed9ab9da9964333fd38e4ad36a3a87d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PCRightSidebar.css",
+      "sha256": "c586e7b866bfae52cef04148c6644b025c5ee613f765508825c76157f65d5687",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PCRightSidebar.tsx",
+      "sha256": "c28e41e358ee59847e54e40657898d7426a9d0a3644e96ccce0b50139b5c9d68",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PatrolTab.css",
+      "sha256": "4c514199eae1bdd31095a01a99423dad8ce9332ac53ca04b46ef305b50c8d762",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PatrolTab.tsx",
+      "sha256": "eed886f325e62b5d3e6e671490b2d89d3f4a91f13f6d9f187ac33e703ff54156",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PvpTab.css",
+      "sha256": "7aabc5f555160c25624ed7a8fb53ae6f361ad7bfbdb46efeea7d2541b1b2b170",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/PvpTab.tsx",
+      "sha256": "5b6ea322e68d3a2fcde748c0b56846f959197a4a36943b0b897dc56a5f1af4c3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/RaidRankingMetric.css",
+      "sha256": "e395206dfe70b9215ce33d13ce223654f1bd1912b970f59cef8127f2cec4ba3f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/RaidTab.css",
+      "sha256": "d4ae3a56d08d803fcb815a61d7c53dcf375dbab353979161e9e2f7a6c4bf4771",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/RaidTab.tsx",
+      "sha256": "0e3427fc5c62bc0e8ea98c7ffbdc7443ad545d32664b7d7964d26023250011a5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/RankingTab.css",
+      "sha256": "58d7dfa7abc9a38bc06e048ae4a751bde1a9c825428e29372e66777334119be6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/RankingTab.tsx",
+      "sha256": "86bdd07ed5eb7e44e877fecaed0bd86f1e0fe27a1204425ce75a9521606eef56",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/SettingsPanel.css",
+      "sha256": "8566d9a489080b1ce601797b120d826463eb5c69e3bd5d869ceadac7f2a4e219",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/SettingsPanel.tsx",
+      "sha256": "c86a62f0144897f6940463dfbc94929ad914427fc37b2e28387cbb761507558d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/SetupView.css",
+      "sha256": "1f3ed2df6da311e622d9a5a002cacd8536f727db0239ddc75bbe8eab047de9f0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/SetupView.tsx",
+      "sha256": "f31acb2840420e5e086e027644cbf7e18739dd6ae59f94a9596d687fe13a6d12",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ShopTab.css",
+      "sha256": "e8e350ecb9bffec4c63a321082916e62a1d13be7232a968a1abd563d3096e284",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ShopTab.tsx",
+      "sha256": "3565257521e0d5744cb6990cad84418708191e594bdc721df03096192696bd51",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TitleView.css",
+      "sha256": "5f858b528a1407e8cfc951b6a87fc834624f239429a97b4fae978962ed568dc4",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TitleView.tsx",
+      "sha256": "242b3655174569052ddd33f681f8789e010a06680be448d10d120fc4226e8a19",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TribeChatModal.css",
+      "sha256": "7fc82e24ae80de879e0ae6989b381717df9aca1736bc2a6cdaf292dcc8cba8bf",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TribeChatModal.tsx",
+      "sha256": "7044087f21caf736e9f9eae96553f9d7d73ae5bb4cec60fbb96bc57bee127cfc",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialAuthentication.tsx",
+      "sha256": "9d70a03f766f20062a324a52eff4fdc9fc8dfd707b1865fff1947e24037c233a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialBattlePrompt.tsx",
+      "sha256": "bd6d1d3152df565aa11782e7a1f96aef3d885767fbbebc289b77fcf3781e08aa",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialFreeInstant.tsx",
+      "sha256": "1ed0f82f4e40dc56677ce60e3d175da1f04eccdee7fd82d0de0e64265cd5770f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialNavigator.tsx",
+      "sha256": "c4f069123f19757a7418641f5117add87ac42dd0ef84a23ae84287425243cd0b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialRuleGuide.css",
+      "sha256": "02d420bc87bb70f411dc1d16f3065a41ff6e9d74363937248f358f0ee8450c67",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialRuleGuide.tsx",
+      "sha256": "fe9160cd39da0a26c037767c1feb318834455bd020995be86c038ba927b6c89e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialWorldIntro.css",
+      "sha256": "82b113ca324b38adbbbcf0f7905827cdf749b242661639357327f200faac1892",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/TutorialWorldIntro.tsx",
+      "sha256": "61a22f0268401f1f1f1835d61ba346155e19ad038dd1c0f7cf2eaa302a95559e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleEffectPresentation.css",
+      "sha256": "b728ab7d0968505db8390e5385a52df57c5c3379ce44aac4d63952a89bdbbbe3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleEffectPresentation.tsx",
+      "sha256": "35ada544d6bcbe7f36c4cbcaf3a63df9b3374d2ccf87db96a4827a9e1cc5a785",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleMatchupPresentation.css",
+      "sha256": "8945e3c749031ecdfafa1bdb57d08b0ee033c667e604954308cafdc3ed4a50ab",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleMatchupPresentation.tsx",
+      "sha256": "4557b783d253e611641203699584b5af35034e747f32a8e4dd5609042d75c0a4",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleResultSummary.css",
+      "sha256": "6526ce282f4c112874bcf8ecfb5d812d1ec263536ca30656ad157b8d97a46895",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleResultSummary.tsx",
+      "sha256": "5e1671d3501bf876a26f6b1a3b97e31a4c9674c054e5b6f50436f606fc192316",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleUnitPortrait.css",
+      "sha256": "14163e00eb9c7ab05f412dc8870be38681e011192e2bee69eeb32ee5c6d11c62",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/BattleUnitPortrait.tsx",
+      "sha256": "b161b11af23a92e964d88aa4e7c93d8209543c088a3ba55d30682232571d439e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/ModeBattleResultCard.css",
+      "sha256": "0ff7e201999f80b4cb28d5b1ae00a115a0600c98e4621933b1f0362251d24812",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/ModeBattleResultCard.tsx",
+      "sha256": "e9066ef7936e0745ae22546c311a75704054d06f720610b8121fefbe3d943502",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/QuestBattleViewer.css",
+      "sha256": "c100b1d096ba90e546e29de4ad3d5850ed64ed903768cb05c37230607c5e30e7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/battle/QuestBattleViewer.tsx",
+      "sha256": "ab8ff55ca7b84ed9d8a586775ac38ea9801c966579a9e7b2113f8513e7225092",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/character/CharacterPresentation.css",
+      "sha256": "53831891b0a077e7e12378fc7b982f2db6f5b241b5e87fde14a3ca974e05caef",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/character/CharacterPresentation.tsx",
+      "sha256": "d07526d1af1adb7ffb03be7bda40be0ea73b8f55a2cabb394da29b9d48351403",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/character/CharacterStageHUD.tsx",
+      "sha256": "7698f21feb79de41cea13eb566b892763a8903e5bee70c245475e8051f1c7291",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/character/CharacterSystemV2.css",
+      "sha256": "831c1c708b054e8e40ecdc2018bc221908b62c3dc464545178a426cb81932e98",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/character/CharacterSystemV2.tsx",
+      "sha256": "730e9e4ebb1ef29e5b5b72ad420bef0a3154109d7ff572b7029e0f7c807d6c3d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/character/characterPresentationMetadata.ts",
+      "sha256": "fa673b9f5fc73c0a5a5d90e57f6f60569014294082cd00be074a9ea5a3b2327e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/mission/PrepMissionEventDialogController.css",
+      "sha256": "7054e173cceaff8904eb4402d20f1dfc71e173e0cbc111bb0cf5aced8c45fa2d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/mission/PrepMissionEventDialogController.tsx",
+      "sha256": "f3106a1c8a2030b6088db453fbf59cfd86034025e5407699af60915e2a499864",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/presentation/RankPresentation.tsx",
+      "sha256": "a6d1a188773985f5db0f775648dfa11fb6c465667bb5aad59742023a1a4c46a3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/presentation/StatusMetric.css",
+      "sha256": "936ec552f7139f0f0ca0f6dbfdd2c503d2ea50c8e9fa5f5e8b46b9345df593bd",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/presentation/StatusMetric.tsx",
+      "sha256": "5b668a51884256654e684e078a1064e5281a2a39300a4ae755abaa88d9d77f15",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/profile/PublicUserProfile.css",
+      "sha256": "5379e24f1fc23ba93e3225427c58961618f1581acdb527d0196ab66f8993f473",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/profile/PublicUserProfile.tsx",
+      "sha256": "a5019f0d183fbe3690b8142b9b8c80db2b5fb3009d7cbcf9beea38163c84bb26",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/profile/UserIdentityRow.css",
+      "sha256": "5c6a6c347dd7f167b8c10e9e8d5a77df6fd3b8075329bfd7c4b0b5836b16116a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/profile/UserIdentityRow.tsx",
+      "sha256": "d1c074f57544b614f33573cecf389a186657f6de4c98b4ad1dedcca627c2e3a8",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/pvp/PvpDeckPresentation.css",
+      "sha256": "9132934c115e15da6a5adf51fc5620c8d24cfa2c99bafeed8e363357ece18908",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/pvp/PvpDeckPresentation.tsx",
+      "sha256": "3fbc369939af2b9bbc952303f87abc93aabdf650b8df5623d9cf5aff2afff6ee",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/quest/QuestPresentationV2.css",
+      "sha256": "10bc58de583daaee93e0f43ef9a49e65f5ad7e77b7a9578fb554435c3d15f3f7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/quest/QuestPresentationV2.tsx",
+      "sha256": "83835c6f6a73a792d13a1a9b990c547b4c9ba7f4e0c162479e4d9fa80436c2e5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidEnemyRoster.css",
+      "sha256": "39efc3ddaad2d2adeaf3cb9866a1bd512ab723e681916af5de6972e47d7af1f2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidEnemyRoster.tsx",
+      "sha256": "12a6cf15858c97dfeee3b2adbbb5953177defe967c50b34d3aadbf79cc5801a9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRescueLink.tsx",
+      "sha256": "5e44baa91aacc22eaa045b83075636e951645b871e988300e9819bdf70bc9935",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRoomBrowser.css",
+      "sha256": "55866bea016733e73f23af76c1a2a0ee664b644ecdeade1eef3a004d9d66dbfe",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRoomBrowser.tsx",
+      "sha256": "e8adee9257c1b247e9ef33d958706ade92de3e2a6c0ad2dcf745c2f4a4b64346",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRoomClearRewardPanel.tsx",
+      "sha256": "bddd42599bd33f3deefc0e6458c4a14de490a8b82aeb4c3f317047b5c18127b5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRoomConnectedBrowser.tsx",
+      "sha256": "bb90d7808bbe93a55603188551dbe4f75114211b5a98e663df37ec2baeb9e878",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRoomRescuePanel.tsx",
+      "sha256": "f3be636b445dce77bf54684893ec1d2d219b81435072fdd5328329f9f885c6f8",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/raid/RaidRoomRescueRewardPanel.tsx",
+      "sha256": "d3410c0ebbd974f4febfced7aceb550899b9209124717d0b1556ebb3a9e49868",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ranking/RankingRewardButton.css",
+      "sha256": "970642e93c56cd6930b4a7f5932187bc2c8fef2e899a1e42a3d672a6aa27ae6d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ranking/RankingRewardDialog.css",
+      "sha256": "b9b07ad776f2bebbccb1a730f457278f576a9a01a4afddbaa53984baf1cf94fb",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ranking/RankingRewardDialog.tsx",
+      "sha256": "40bd1ee4f6a066d1d70debdaeadc20a1973b8bf39bb9a0377b46009ad4461c3a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ranking/RankingRewardNotificationController.tsx",
+      "sha256": "fd3f619969eb6007e421c56e49d332fd0a5fe58eaa68d2eeee326ba755eaf3a6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/skill/SkillPresentation.css",
+      "sha256": "9627eb417bf5c9c5bf66803492ff84699236b544d43634e2edcc777b6a74f76b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/skill/SkillPresentation.tsx",
+      "sha256": "3d9299bba07cfb64e9a6f8d92e218c004a3b9e3337d49677b2aa7f416d9f2a0a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/tutorial/TypewriterText.tsx",
+      "sha256": "298773c5d7fd51a243e6cd311aa3f344ec425a6757266808dc9d9c7addd32d7e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/Badge.css",
+      "sha256": "acfbc616084dcf2c78747032b0e2e6042911b87effde273a273e2c3322933778",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/Badge.tsx",
+      "sha256": "c81bb8d28ad2fa408575375c9b0dee9736691a0f3faf59b8a2c8b4e0f1387c9f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/BrandedLoading.tsx",
+      "sha256": "63af5607c5675599cf4beaf210d23867c8bbc2d12b449286865431cb6cdd2da7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/CanonicalDialog.css",
+      "sha256": "4d9c182b088f0d035a3caa70bee9980e6c729d473247b6707e5e1ffe7dec73e0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/CanonicalDialog.tsx",
+      "sha256": "7b1fa796860357b9319b4ca67e7a6ee01111d3f4c5a4ea82de0e4fb6b3cbf5e3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/CanonicalItemIcon.tsx",
+      "sha256": "bfd547d5037d2cbcb96997215a3a955488905910915d933a8c3dac3b8c17f7a2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ConfirmDialog.css",
+      "sha256": "31d186ffa5c7885494c7a02693e409742154d09922daf67e8efaf3a47ee08c07",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ConfirmDialog.tsx",
+      "sha256": "7af4e2417d684c95111dd1795fa2004c70523b76bd78cde1ca0aa37aa55ae83b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/EditableSettingSection.css",
+      "sha256": "74281c651b3602df3d75800cc93e85359c6fe5134d13a5b9a2d85241f5c39681",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/EditableSettingSection.tsx",
+      "sha256": "a337a98ea6466eaa93de777b8bb4589f12dd0df2547870f12ac967a752470a5c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/FullScreenPanel.css",
+      "sha256": "6a2d41754a89be050d9386fdf08ca6511c367930bd8394943ae33f9a80090a0e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/FullScreenPanel.tsx",
+      "sha256": "8f08713b4d7dcb738b14d0aba641dbdd00739b3ed5117f3e12e4bbaa6ef62c79",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/GlobalInteractionBlocker.css",
+      "sha256": "14d0502902270baeda61628bd7d95e9bd76a82f12daa449a05760e8252aa2244",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/GlobalInteractionBlocker.tsx",
+      "sha256": "a8316d895d3ab024cfdbfe45ec829c23b890a6e6c87e89f220e9b494e795ef40",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/HeroPanel.css",
+      "sha256": "ce6727f33c4ef3dca463dcde00f741eba8b1cac5ec2c8c51bf3a9507f390b66b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/HeroPanel.tsx",
+      "sha256": "9c4a2ccf90df4b419dd9de6f28bc9df800931d0211c7587622b1568b78336877",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/HubPage.css",
+      "sha256": "4dc53bbcac3e51365e1d0f6843e0d7c049c44328d2450ab8734620826b387865",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/HubPage.tsx",
+      "sha256": "55a3cb46a04cd5209e6b10e32cf4eace598078cbc8e62493e55c4f0f6e97621a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ListRow.css",
+      "sha256": "dadf5d9d3f60492787c8aac1f6a5f968d2cf18c9b245e13808de675e6ddd4e9a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ListRow.tsx",
+      "sha256": "d5a81e782235cec5197564dff4c76a59f1b5b0220633093c023c2039310215ec",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ModalShell.css",
+      "sha256": "020a01ee829744cd757b3d5d25537e28de10bb74b3052d2309c5676bb52abd34",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ModalShell.tsx",
+      "sha256": "41e7b0e024dafed9e183036f0697dcd8c2cc4b6e00afafe379f884ce79756927",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/OutlawButton.css",
+      "sha256": "829d4568c2e31f3b37ed080eece0f9411d5d1e035d6ad572a51b62b4607a2968",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/OutlawButton.tsx",
+      "sha256": "916b2a02c77a5020ccb536df000cd30da2fc6d4acb03448d9a9d31d3f25aa7a1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/OutlawCard.css",
+      "sha256": "88f5dd12d5477ae45277a693a4fffbbe088f4086f9c6e08da551e445d821a3e9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/OutlawCard.tsx",
+      "sha256": "ee5b745e2056ca6802a1c6affea047c678db489d5533c3a427bb26978232e2be",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/PageHeader.css",
+      "sha256": "f4309e2b919fea97e5085b3cb97b24c996c238e9aa294002bebe7fbafebe9137",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/PageHeader.tsx",
+      "sha256": "60d1fbbc5cc6077cc64debc7272a2532e5160d70cab9062c536fa29431b67337",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/PageShell.css",
+      "sha256": "da29ade31f62f770152c45fd42efbf3678887194d69bec1757ec6751faca96ce",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/PageShell.tsx",
+      "sha256": "209687a1e160a389a7c170e83b38e2b01f6f6b309f0193d563668b0d4c38ca43",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/PeriodStatus.css",
+      "sha256": "0dc7651e379763bc6b1bc7a08b24747ad770e031ffc7e9ff3fea7409fc038674",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/PeriodStatus.tsx",
+      "sha256": "688e2119c9a35129f0ddd996a60f148420846cdca31b3159bfa635c2accf75b6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/RarityFrame.css",
+      "sha256": "3cec9eaaf321a1289abcae6cfcdd7efee1656326baa996c603eede9cc5f9bec2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/RarityFrame.tsx",
+      "sha256": "06dabe2c235a1f024ef2af4c0afd55d1d0c1a063813a177fde72d9e4a811c7a8",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ResourceDisplay.css",
+      "sha256": "857980bfbfd6c5b8f55548380f3a30bc0488521c8a8626c9f40a6f499819ae67",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ResourceDisplay.tsx",
+      "sha256": "dc1b3c2cb9bd0cc369e4582fe61cdcfd1e405db00a080c07732be337a505d043",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/RewardReceipt.css",
+      "sha256": "10d7debdafb9b2397c98d12ec9edf7e40d7a35044a9bcd26ffb1efcac73ff423",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/RewardReceipt.tsx",
+      "sha256": "a6550c8a0c7e43cb5794bd8bdc7d3072363dab4243eb80a0692ff5100c0ab8a7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ScreenReadinessBoundary.tsx",
+      "sha256": "4bedc9fd7d9ecd20ac65aeb17bb2ab692fde77b27d8dd284963524d622ae7fe1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ScreenState.css",
+      "sha256": "ee273412a8c2f0dd63121a79ae69950ce523f60b9f23b18aee471bf925300580",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/ScreenState.tsx",
+      "sha256": "a6df2c90b9aa07488a7cf88018c70c41d7a0ae9c6238c592ad33c2415d4191f2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/SectionHeader.css",
+      "sha256": "7d5a6c775b41f36b1cdc9cc45c97d98d3f9e7c025455ecf34d594f02dccc71dc",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/SectionHeader.tsx",
+      "sha256": "0a971bf46f271b6fb73dcd851909f08168f24056d4a48d7b07aebc3be6ec47b1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/SubTabNav.css",
+      "sha256": "620fb787e29b2685d50318740f6a217c323ddb0e4981dcebe4ad59eb0b39e2ae",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/components/ui/SubTabNav.tsx",
+      "sha256": "d5e4da4d34f885d2d59350436bfbf8e24280e40d5ee5b57c96e4759455b883d6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/GameContext.tsx",
+      "sha256": "4b2caf9c60271e8fc4cf48db36ac55db5fd90dd8d3d54ed9abf100bd02820bde",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/directMessageConversations.ts",
+      "sha256": "c6facd3fa1a7fdde6bc40e2a7512189a5f2a1c400fda2e999b636b125ef228f6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useAuth.ts",
+      "sha256": "90a2b09f09086b27aeed1e7e2cafddcffef3bf1a93bb5af2e2f78bf8120a6ce5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useCharacterProgression.ts",
+      "sha256": "b6eb463dcc2d54493ca671775d200b20d39b19d72196dad69fd32ab2cbcee947",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useChat.ts",
+      "sha256": "c341ce11c144214968ff55414f675f710b344056660de61180ed422d31b519ad",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useFriends.ts",
+      "sha256": "f4e7b5f9b43ea6f1b8d59b5e98eb42117f12a096a691831b163c7d1911d81f8d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useGacha.ts",
+      "sha256": "3b0f4c8c9fc8d43af0ba1911d2e8fc9a11f34d86a8aa5c8bb5badb7ee694aa7a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useGuild.ts",
+      "sha256": "3dd71f4a2112472c1cdbf1e051bdc0e85a21daff3180cf51cdcd64dd15a06e64",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useGvg.ts",
+      "sha256": "9d42eca7e1c8b51eb283f166c364fd9db1d52d0e1116019a6552bf9dac8a7c7d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useInventory.ts",
+      "sha256": "f8425f308b80dc27202b3ebc1efdda3b7df6f03aaf634895d1443286456a6ad9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useNavigation.ts",
+      "sha256": "da457b76f0edb384dd9b7cdd75d24158137616c10ab3c7bc713d22ef10147bc6",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/usePatrol.ts",
+      "sha256": "ecee64191a7e0cd6d932beae097022fa5f0758882b1c92c3046bbf7bbd785bc9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/usePvp.ts",
+      "sha256": "17709e98059c372821186ab24058dd76f482ae6637365943e3b4c5ba03adb3ae",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useRaid.ts",
+      "sha256": "539f91ee5a4fad542df106a60474bfe9fa302430507d131c0dbba7c24ec89a85",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useRaidRoomActivity.ts",
+      "sha256": "f42604c5c60b75cea2a10b4128b6053c874744c301f84beb924724c37b53a182",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useShop.ts",
+      "sha256": "e1ebcd2a345f11f84a16759163aba6a52454b11b439e1853bb3bd846f8de121a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useStory.ts",
+      "sha256": "a05e8715be2cb874d27177930272c15074b524c979e2eddb6fabab41c05a6477",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/context/hooks/useUserProfile.ts",
+      "sha256": "e0f7ce669e9c09acf690fdcde28ce4acf31368641eb5a74d00838e49212f3077",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/favicon.ico",
+      "sha256": "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/globals.css",
+      "sha256": "94942fce627c6a42ff7af74891ed814ba8fc2e084dc33082ab8571f6cfc2de3f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/hooks/useImagePreloader.ts",
+      "sha256": "5684fb38957e57f6f0f9be211b623c63f73f2e04e75e96f589465620741a616a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/hooks/useScreenReadiness.ts",
+      "sha256": "2820bd6b98afd23daaff6352abd4524709565a334a6a60f1ee34abe7b571164a",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/hooks/useSecureMutation.ts",
+      "sha256": "c3ee21790f9638317af0761afd3f071a320f4fc34551281339f2b37fc62f142f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "sha256": "46229b61760439f170215ffee8d399dbc0e2a0ce715194f8dd48d15608d0018d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/legal/LegalPage.tsx",
+      "sha256": "85c7b8f7329ca4afe3471618906c3d04ee867f19e6a21d0306ad85b21ec0516b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/legal/commercial/page.tsx",
+      "sha256": "850cb03a9581434dfdc0f5a1ced7c892dceaab6ebd7fe686b21b0224c5ccfe80",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/legal/legal.css",
+      "sha256": "916281a4209ca1e58a8f10a40bc56560a82aa71aac5610f44d242bbc1fb76fbf",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/legal/privacy/page.tsx",
+      "sha256": "707b005bbd35e5d73d434a68c090a44e76a1742960968ed59bdc8ee144e74bc1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/legal/terms/page.tsx",
+      "sha256": "c7d279bc2ab3757d1350de673618d7172d54e044dc12ed398f185d63de267b4b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/legal/tokusho/page.tsx",
+      "sha256": "69b32c93cc9768d3083bf9dda62b055159c53e87ddd6a00a4ea374667d31be78",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/lib/homeResumePresentation.ts",
+      "sha256": "5525491d590cb309c3202fdfc389f52065e025b2cbc4ca8012e5bdc83f33fd1c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/lib/requestCache.ts",
+      "sha256": "494a2e604c7b97bf042668099ac4e680c6816625d713bb3c86ec09c48131977d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/lib/screenAssets.ts",
+      "sha256": "3a9eba1544fffc2bb6dffff6d48e5b5acbcdca6f1729b6b2aaf9d3652e7c77f2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/lib/screenManifests.ts",
+      "sha256": "14361661f56a4641554abc44b1691d790c158c9e8e08aa19227b2c87f5beeef5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/lib/tutorialCompletionAssets.ts",
+      "sha256": "0845a1947cfd9a11bffe896b97761ec6fa718a95e62e705679e12f7437159028",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/lib/userFacingError.ts",
+      "sha256": "83c3ae0e1ff450dba372e539690b15d1e4b7d8cdc41fb6f56e8371b8459d9c7b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/manifest.ts",
+      "sha256": "93ded96fa4433f98555870c9c80d574e19100542c76dba2980a399b1837eb583",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/open/page.tsx",
+      "sha256": "e50a83b84d564efc5188b3067b1169273b512d8af9c5b95179251fabf7755e23",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/page.module.css",
+      "sha256": "39838c6279b10f0e663858f414848e2f20c0eddeb6af16c35371ed8fe89bb441",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/page.tsx",
+      "sha256": "55a0927a6f5c52d0c0c43fe2931ea87389125031275c7975d73de2fdc9139d76",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/audio/AudioLifecycleHarness.tsx",
+      "sha256": "cbe54e364d52512108e8868a3941b79f36293d37184a58e3044ab0178a831558",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/audio/audio-lifecycle.css",
+      "sha256": "0dfe5a6cc7d4301903b37198bcf6f1450ee4a5e6d9c5c16927114554230f536d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/audio/page.tsx",
+      "sha256": "0185d70e83169b2c983e97676b26c7482b26bb14e6317f4495090eb6bd39ee2c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/battle-full-skill-load/BattleFullSkillLoadHarness.tsx",
+      "sha256": "da5501bd12f21a8bbfbc6389191d540aeb3ec9194d89f82905009f0a9679352e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/battle-full-skill-load/battle-full-skill-load.css",
+      "sha256": "7ccdda954e15f7c14dfb1f241a655006a14d1aeac1ab8e66bfdf5b41d0df3873",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/battle-full-skill-load/page.tsx",
+      "sha256": "8adc728e6fa18809c2b39a213ecafc7e05e9de96af3cd86d18f8c3c075604442",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/presentation/QaPresentationHarness.tsx",
+      "sha256": "76d83f783332323c4977c1ab82fca29bdb9f37e861989c964a463f46c2d8ee82",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/presentation/page.tsx",
+      "sha256": "35fd7729164ed7617d84a0fbef8a1c16690baf7df44b876c83bd137680b2ad1c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/presentation/qa-presentation.css",
+      "sha256": "810c75cdeb0ffc93fc4914e08a8161855b80a0bad33bfa65d502567d646da210",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/raid-room/RaidRoomHarness.css",
+      "sha256": "76f5549da7ffae7d3561e6a2e8f1ff7ae51262b03958de532f3e6b914101c44c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/raid-room/RaidRoomHarness.tsx",
+      "sha256": "836ddedc9fc7a3bc92b1bb8f6718335a4a5346ce4c7f299cef7fbac67a4150b7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/raid-room/page.tsx",
+      "sha256": "7709efef493cfa4a3348ba6e351d4cbeac7e3ee73434e608db00e2a948a577ac",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/qa/raid-room/raidRoomFixture.ts",
+      "sha256": "d66e10f46d04d8bdb854e2a0c801df67be6f4e188ee7f79d001b80fd0607e9e5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/robots.ts",
+      "sha256": "032802c5569c8fa265fffc2dd84a1316855021e65684752447a39d72cce745e1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/app/sitemap.ts",
+      "sha256": "6da51498be892a6a235298b861c2a90479b9da648f2e9d75fe23bd7cbe782775",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/audio/AudioProvider.tsx",
+      "sha256": "760662412a452c78607c2ed3435b728959e75e6e984619329d745e03eb8d5a35",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/audio/audioContract.ts",
+      "sha256": "7a5e23f2a7f7924ee11396433ac6e333ff1618e370d79488f3fae6e371429cb9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/constants/characters.ts",
+      "sha256": "6ec9d1bb75381a757404c9aad54dc90cbd551e99d58f36d6109bc743b77690b3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/constants/enemies.ts",
+      "sha256": "f5ab3b557914ddb4ca7994d7169322ad445fa917345b659e4f977ac832dab69f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/constants/open_beta_provisional_characters.ts",
+      "sha256": "1eb71c85325657757be54898baeb285d07a82cfce76209c2c645797ec016aa39",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/async/runCompositeOperation.ts",
+      "sha256": "522ca05b4869b4c18863580263d1158a8895073efc09b940b244859137390043",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/battle/canonical_effects.ts",
+      "sha256": "7eea585ef12b384d306f89b12d986ec49116df2e437f0f9a0d54551aea386e20",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/battle/canonical_runtime.ts",
+      "sha256": "2685fde85b390242ac5e7a676e0a281e00055d31fadd8b85c6a5a373378b9c04",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/battle/fullSkillLoadFixture.ts",
+      "sha256": "87173f57b59b5c953998b1339b9c0193dc34ec66aae7c7fa1d3dc39429c85a2d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/action_resources.ts",
+      "sha256": "6166feade3ea8e562d9ceea20c822e135eaf647e84901eac239e332651cf2565",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/awakening.ts",
+      "sha256": "ff27aae134f3f42de9a7ae0cce8e05fef909cf24b8e4c46c797feb1dfc331623",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/calculations.ts",
+      "sha256": "afec0f6137aef269cbd3a01d0076c2e5dabcb29010f4c8da63ba270e56c8f21b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/combat_production.ts",
+      "sha256": "6648f014751abcb20e7c4a1d02ed10562d537ccbc978de74428de25babacb024",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/action_resources_20260822.json",
+      "sha256": "dc06e7a01f5b0be191f57bbd4752393a7c83e9f7c91f62f0c4fc283928c45077",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/activation_budget_20260822.json",
+      "sha256": "dc0d8aa16a9618aa11556db50ec7f7191b11eded215955af27fb8274b0d87ba7",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/characters_20260821.json",
+      "sha256": "089f9a3fa1762ce39893ee642f2d3d7b8713c94376d9b116f16a2b89a2b610f9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/equipment_20260821.json",
+      "sha256": "06ecfc6ccd2ba229b831be33f74e194fb3d187697455679f34634a9569a8b361",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/equipment_limit_break_20260821.json",
+      "sha256": "4500f1e87757eb91a755b49f735cbf34c5e795687616652444669c7e387be087",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/equipment_progression_20260821.json",
+      "sha256": "8b2a60e0d35fd5377af82e56bc7d966f0fe32a971b61caaec4c30e4b05358998",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/formal_open_contracts_20260830.json",
+      "sha256": "e971fa791ded7dcc236db029a2833f053bbfcfd777f33fc60911cbdadcc473ce",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/gacha_production_20260830.json",
+      "sha256": "2d03c8a9d1f102a23944494c7a51eabda2ffdc0c1c9533e5888a60938b50221f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/guild_production_20260823.json",
+      "sha256": "1b4808403b1b19155240cb470d9676cbe28a9f017c9eae1afe25fb867b146d7c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/items_20260822.json",
+      "sha256": "88a3279acb0625ed94120a2d398e773adc73d0f208f87cdea567c16b50563be1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/login_bonus_20260822.json",
+      "sha256": "587cbad8242d1ccf5cdca02b955f8bae762afae57b45dbbcd70252de819da6d3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/login_bonus_20260830.json",
+      "sha256": "5a285709e17296626c9a3be76c7ea5d0dce59a4a9160c3f7b69ca4b13bd63755",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/missions_20260821.json",
+      "sha256": "32d75d70c2acfab39e034c8a6e73fe503f89fd63b8255da969e378d1cb004b98",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/missions_20260902.json",
+      "sha256": "e78ac36200a04e428de8ffa3f2f0accdf1a7ccec0aeda4c984f7aaeb96340441",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/pvp_matchmaking_20260822.json",
+      "sha256": "bf25d5fbcfc82f63fece7b3d751a32ee103b632aab8d040db38d09a27e94e431",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/pvp_production_20260822.json",
+      "sha256": "7ee9e1707719c01dcb6f72f65c98baaa8b91818a9b8d5f5e5faf2298ed5023b2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/pvp_production_20260830.json",
+      "sha256": "4f349cec0d9ca81ef7513e9a18d392e4d9e6c9983e06ab109489d8c09fc48352",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/pvp_ranking_rewards_20260822.json",
+      "sha256": "40ed52a23d151865f22b50181f154e17d12a26ca06f0b54aa049039c4de23e9e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/quest_encounters_20260822.json",
+      "sha256": "9cf1ac57e13e4cd78eca9955a884b044ce2e28683d58e3514fa8877a87ad6020",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/quest_enemy_pools_20260830.json",
+      "sha256": "f0d6ed3e81912b3eec8d3abc61c751dbe85aa48508aeb472b7678e643431c6b2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/quests_20260822.json",
+      "sha256": "da7a4d7f4dd5c4b7976faf385f935b04a07a9a942459346d2264b841b5b50d45",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/quests_20260830.json",
+      "sha256": "57d9f2f596c18fd95e535fadd9a9558f56a6f1f93c008b48c0e21545339b3884",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/raid_bosses_20260822.json",
+      "sha256": "40db741f968911911586a04344b3358cdc3020a29ab0b245e453f86b8d9dd999",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/raid_production_20260822.json",
+      "sha256": "33fccebc842e319fd0d7a96ef28c46c9dbc5077631a69eb3aca6db6e862f2f6e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/raid_production_20260830.json",
+      "sha256": "1cb7ece9fa13d4d09280038ca32cd500838c89d7ac419cc96fd9701ce84c6ffc",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/raid_rewards_20260822.json",
+      "sha256": "1127fb077fdb26ae45223920ba215a0a242e619a2330b743fc756dc6d11e6fa1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/raid_rewards_20260830.json",
+      "sha256": "259cfa81fd688d72095c9d168f3e33a4990a65e733b8fa4c1d2c02d8b2a6308f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/ranking_competition_20260822.json",
+      "sha256": "a7805df7e94ed5acb2737fcb69ad4dc07e02eece51e663a4146b135d30179f49",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/ranking_season_rewards_20260830.json",
+      "sha256": "a9304109e12195e0da5c84aa690cbe109f72143c2f61ef990f1771245ab17b4e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/reward_supply_20260822.json",
+      "sha256": "eccaf8615e54803991504fca6a787319cd9b639fd619cf9cac0020a7b19ad1ce",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/skills_20260821.json",
+      "sha256": "f6fbb525673c9311dc9128aa30a4e4430ebdd18bf2acf41e1a1da512ccfa21e1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/data/user_level_progression_20260822.json",
+      "sha256": "8dd03cdf2124f6fc0ebba0fc83bc0e60b0626f2949e2db2905fdd360534beba2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/guild_production.ts",
+      "sha256": "84d24adb304dcd12e478bcd0c32c054c2a546bf54801b85f1736b88bc695c1e1",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/items.ts",
+      "sha256": "0d0479b4ed1047f747ec8883db92484ca64bfa413390cd0bf757460b57d1e931",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/masters.ts",
+      "sha256": "ca4d15152b3a63744ea5fd16a666f1f0f3492c2139f76095dba60703fdf0b92f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/mission_runtime.ts",
+      "sha256": "fe783f36e33419366eecb4b2c32e47bd3acae3817a0b5fe7db592b249a441505",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/missions.ts",
+      "sha256": "93c29b187bf299d3c7baedb0e2932c582ea60ef4d0724d1c0493f6e901718058",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/quests.ts",
+      "sha256": "f623c6667df21250bc945ba2be3c74d0510d43f5aae9c6425865fe9b175f46ee",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/canonical/types.ts",
+      "sha256": "62e59432013e39a8bd9591e9e5f27bc43a32ce76c5023c3942a6b11843ad15db",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/gameplay/inventoryProjection.ts",
+      "sha256": "5b6207a2d5b8eda62785aa24d4b80237ad93c7c00a23701e846ccc8c1b6c312f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/operations/data/operations_feature_state_20260823.json",
+      "sha256": "b884604dc95c6d12ea280d9f55ed402ab821e5a63b0d7a65a45eeb0f9f57c92c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/operations/operations.ts",
+      "sha256": "16ecaadef2cbf8a6aa602e480eb53e4a2ac0f5be50faa982b8b7b51f4a993d8f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/battlePresentationUnit.ts",
+      "sha256": "dcc2dca2a1ea39129324ae6bd3bcee1677b20ac4dde9acbfeed0a03ab17d03f3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/battleResultScoring.ts",
+      "sha256": "721a7679747b2565451af655e042fbfc05af7c0c948536d85c7e25eceef32e9c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/battleSkillLabels.ts",
+      "sha256": "2349d6e4840b1dec6c8a03ee840672a989702b5a3756506b71f46e3d5914a033",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/battleStatusPresentation.ts",
+      "sha256": "9d94735258c3372013d9b5de69eb41e8b8542080d89ef4cbac5029fe81666c8f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/battleTerminology.ts",
+      "sha256": "d55a3bf872d082d9f3ede1448c5913698acc0371521d946c5fd89e24de6114aa",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/browserPaint.ts",
+      "sha256": "c7cde6193127ff1a8695b3eb1e9e41af10216729ca934dd7924e36e973df702d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/data/ssr_gacha_quotes_20260824.json",
+      "sha256": "8de80636e2c58cacea4afa930fa50a723da178a8355c0d8f7f8e16027c06d1a5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/homeActionPresentation.ts",
+      "sha256": "8a0f43f415da4720c7bd59944c549f6816e5b4278a7641cfe096e7fb74d8982c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/homeCharacterDialogue.ts",
+      "sha256": "159b529cf06278adbf37e50bf1c3c8dccd7aa5ec0334d5144c0d0a876dfa140f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/loginBonusPresentation.ts",
+      "sha256": "3bd76631e01f2870468d34fb559cdfd9a3075f4f661862b73b83d0d40d37cda5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/production_creatives.ts",
+      "sha256": "e7f8f10d52104580603335cb88f6c72e0b8cee069c46cc042f3fe8d3ba4352ba",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/qaHarness.ts",
+      "sha256": "b6eeeae0432fed994ced345ecf1174f8ab40890e4027b3e9a219474fe2ff142c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/raidRosterPresentation.ts",
+      "sha256": "789837b77f3b8a64f6e1ad3b02e197cac3859399b0b20cb85ddc464e0d078dd4",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/ssrGachaQuotes.ts",
+      "sha256": "c641caef03f8c4f26d428cc0aa1771c14ae9238230138b32338956203d56451d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/presentation/userBio.ts",
+      "sha256": "7d27495fde7a8d462851c83794e9bc711aa94cbdec768eed2a02690b65a7cc91",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoom.ts",
+      "sha256": "893f8c17eb3e2951a1bd02eec9f050a7b96e0c0dd8fb5b268fdb13e57947f9a5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomActivity.ts",
+      "sha256": "e7061dd7ce55883a8e4995b453bdb46bcd62c02eaacfd6d7d684a3e017ed3d12",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomActivitySync.ts",
+      "sha256": "782ccb7a7a99344ccfe1111c6b8e864f235d83828ee9e51e6ccbb8bbd8bbac05",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomBattleAttempt.ts",
+      "sha256": "eb56b438cbcb6ea6c407cd5b533fe31a0b782920b71926c0788dbe6d2ed2a187",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomBattlePending.ts",
+      "sha256": "b7984bab2d3601ae4726ffd4e2b37b24d6b00f8514560b69555ac16ee94c29b9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomClearReward.ts",
+      "sha256": "4006146bde9dfbd285acdd53080aa6c6da11a25a2685bd251ef265d6466ceee3",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomClient.ts",
+      "sha256": "ca74f6c2b6a6867d6e18c83a038a3890b2812013f6ff53fd1eafb1c2d347f8c0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomLifecyclePresentation.ts",
+      "sha256": "825033005b80d2f0c9523f1618a87d8c74450cbcf80af9806dbdf1645020b50b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomPresentation.ts",
+      "sha256": "5ba5c3a625175ca23ae8a2cf6d7db6c4407384659ec8773979f2a5ecc5d4168e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomRescue.ts",
+      "sha256": "67ca15888ca4cb6eca476d3fd7150b1228fa12f39250771a856e16a132c33140",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomRescuePending.ts",
+      "sha256": "575e1310a16aa695ab8fc53b0f10345f119b789c700f78f70108e1fd0841357d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomRescueReward.ts",
+      "sha256": "f0d4133020046b776743db655a71a9529e3a93b7409aed8bb9d8845a45347c13",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/raidRoomRpcTransport.ts",
+      "sha256": "fc077718cbcb3e643cf326a94dd24561a180635d9dbbea4ca47f8c0497f8d748",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/ranking/preopenGuildPowerSeason.ts",
+      "sha256": "77b7b110ab2a3aacbfd7bebe465bf9b5c107902fc91e8f2be014fb0283269a53",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/ranking/rankingRewardNotification.ts",
+      "sha256": "6c3eb8225d54f59026040f17fb8365abd8c9342b284fa1e5a7de8c6f3cb98b97",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/ranking/rankingRewardPresentation.ts",
+      "sha256": "47cca14646af5b2b7b71e9199e2f5ef06c1ded5283321d6af6b91874e02fc5bf",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/ranking/rankingSeason.ts",
+      "sha256": "79d5529e23c42da590f64f9e6e01969b90b427a212dafcfb3459efeceaeeba57",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/domain/social/recentActivity.ts",
+      "sha256": "c2023a61c029198b1ac96f70329d5181b8b28aa95a05ddbd3c1e2bfe1db6d48d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/battle/battleAI.ts",
+      "sha256": "5dadbd0a139bd35e3714678dc79f2619f718d6aece68360ecdb1937656c85995",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/battle/battleTypes.ts",
+      "sha256": "740ada5ae9b0b003876c0aa1a0faafef84b64e14b18ae252c9611d19a4a5388f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/battle/battleUtils.ts",
+      "sha256": "73f3b359a746d9dc727b0622220ea8c5e5893ecdb4fa311d88d8b6ba9d9da50b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/battle/deterministicBattleAdapter.ts",
+      "sha256": "7baf6a888aa0b8469e713dcf5666e7a98d40fce52b096959894b1b5543e80b90",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/battle/gvgSnapshotAdapter.ts",
+      "sha256": "2cdc3194c449f9ba442994095fe9c30b0bdc96f4f0c1f8a400b4fbe03ef76525",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/battle/patrolReplayAdapter.ts",
+      "sha256": "7c0577741cf66119025528edf60d4cf710e733780c0b991f23aa093f7ad9e169",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/useBattle.ts",
+      "sha256": "34a50bffd21eea52d5fa38bd1e9d9f0e76095b28606ca6a5f3c2624d913cdcc2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/hooks/useImmediateActionLock.ts",
+      "sha256": "b012d4cbde3c2be8a332766a02b595718c2200a310780a129ef846a7f35d5f15",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/lib/battle/battleSnapshot.ts",
+      "sha256": "fb13ab8eab3e80018af9add5ab4a248be1938e3f9fde9530d62a886a55c342fd",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/lib/battle/deterministicBattle.ts",
+      "sha256": "44dc665b04702d0bcb0f1a583ba9efb9079b7b0b6bddda3c8143fbe0230f5712",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/proxy.ts",
+      "sha256": "cf9b767db2a10c5bc6f0ddf077a8baef77afe51733ee220dbd43e1952a31ad0e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/actionPerformance.ts",
+      "sha256": "dc85506d6811d82731a81dc90f418b5d309555545e6cb3fe2964b3faa58ba1a0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/assetPresentation.ts",
+      "sha256": "92036a4a085cab772e5fc4af18d7b07487e290d14abb6e8a09e47615d36ebc15",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/attributeAssets.ts",
+      "sha256": "117dc27b5034c8cbc428efe791bddf84458be1b64e82ce015b9d4c7e847c2e2b",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/authIntents.ts",
+      "sha256": "eda82ad1b0dfc5f411f50171af7cb6cca866236b944d105aa32394e4f003a639",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/auth_session_events.ts",
+      "sha256": "e8bd0111e42662dd0fb0039e2b4062f4b430f5f2d77fbd58e3525bba72a6bfcc",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/browserDetection.ts",
+      "sha256": "a68506aba66ade0a1f46018ac87c0f3fcc286e980e7e43534d7e953813be8968",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/characterVisualAssets.ts",
+      "sha256": "adc48b0400c2ac8ce7cb0a9ec5f621493d63438de846ab463a81987c00c01099",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/equipment_progression.ts",
+      "sha256": "8dae1c4929d26a384e00235a69b9a4a63419f2eb605f59b6738586d712298dc5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/equipments_master_data.ts",
+      "sha256": "bdbb3fd958346e371d49c3b9bd0d7482b0d44ba5e1723ad8eb7b15e9972710e5",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/game_constants.ts",
+      "sha256": "b62408ffc900915a46d8bd3a79b12fc1788c50ef8b6a2bf80d445a9e9c3813d9",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/gvg_utils.ts",
+      "sha256": "a297b763503f8fc484421290fb1e1686a27d483578c4a366f6ae3b72d256b277",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/items_master_data.ts",
+      "sha256": "01b110fc23b02a0e49c327512d79a1cf589357d7d55916a9f7bd62f3a224ef5c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/jst_date.ts",
+      "sha256": "0944ee2be9edff8078caa285cc58b4f501a41f14cd34f2aff3609dac5d57fdcd",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/kpiFormalOpen.ts",
+      "sha256": "53fe5c536d0a60f535bae57b53f4187ec4b0467bbaf277a6aa097f8746af2035",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/kpiInstrumentation.ts",
+      "sha256": "a0c27984bd4caccc69a932d196fdfe8c9e978e6fed31397300d3b9e571638875",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/kpiRuntime.ts",
+      "sha256": "ef9b9b8a678e3fcde4f84d1578652de9f88a56db3b02602219996f1718f0bd3f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/kpiTutorialCompletion.ts",
+      "sha256": "aeb019b0e5039804c87eadaa54e4e4362513147190faa672ae1f74b844208836",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/legalSettingsReturn.ts",
+      "sha256": "9da56b576b922b1d256b381106066aa0ecaf6e290dcaf660f223947e9a28b20d",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/login_bonus_master_data.ts",
+      "sha256": "2f1f35f4ada7d07188104c107cec2f0cd5a95c4265aec60062a4f307521a2ab2",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/missions_master_data.ts",
+      "sha256": "262f42bc30e19ecf6727ac68054cc4bff4db4b61d225ba4d7ea53a737d05794c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/mock/MockSupabaseClient.ts",
+      "sha256": "d66f1308401270b4abb4edbd24b6960212b858cb69393c0a989dbf11999a266f",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/mock/mockRpc.ts",
+      "sha256": "c47dcf41f5d9bc24aa596c4a7d0b7bf4aae73afecc9db36d5360323d3cb5c720",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/rarityAssets.ts",
+      "sha256": "166d981554c93cd81873cc5c523228e26d19105fa9f171260b162c6a615b6188",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/shop_master_data.ts",
+      "sha256": "b74f584422d1df09cce185aa4106b4b8924c83d8b644d7589c05d9a58b99e3ff",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/skillVisualAssets.ts",
+      "sha256": "d9aa7fe65215afef65281e8ae55e12b59b9f9ff70da125a385a4bfcea282e67c",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/skills_master_data.ts",
+      "sha256": "064e4dda766e38f4fba69edb18a33d33e0059d75e95227c5eb33458431539941",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/stats_calculator.ts",
+      "sha256": "891abf7bb05068ff488fd05a454b901f17eb6e402cf8d583358754cbffb2a2f0",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/supabase.ts",
+      "sha256": "30e211cca6a05eb2792b1c91487a6d483832b2681a2e27ca920f1db329045acd",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/supabaseUrl.ts",
+      "sha256": "e922a7ba2f764f7bc382659d48208db925422cb079f89e4f4f841ce5149a1a27",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "src/utils/tutorialJourneyTrace.ts",
+      "sha256": "19c5919e240d00f324e1b24688d9a33450d3fc55ffcb04fc29a21a9d13732209",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/engine.ts",
+      "sha256": "5c947b859393d00b6ac347ccc76ff0ab54996787acd247eecd78da194b127abe",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/engine_test.ts",
+      "sha256": "97ff89fd64ffa8b806af754b7118074d3f7111978566b66271ab5c4866ea389e",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/index.ts",
+      "sha256": "b7274ff2c4587fd768e2ed4b390b848a05cbd8cb819260e5f109f7e0e0b86795",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/raid-room-route.ts",
+      "sha256": "e4ff29fb5e82ae6b461c982a82d8e63a7aaceaeab315d9ee478d4d18913c7872",
+      "matchesCommitLF": true
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "8290bb9ddc705e870721b9a521777eeb8b5fd9a782ff26012dac96421a2127a0",
+      "matchesCommitLF": true
+    }
+  ]
+}
