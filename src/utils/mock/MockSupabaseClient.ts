@@ -8,6 +8,8 @@ import { DEFAULT_LOGIN_BONUS_MASTERS } from "../login_bonus_master_data.ts";
 const isTactic = (value: unknown): value is Tactic => value === "ATTACK_PRIORITY" || value === "HEAL_PRIORITY" || value === "SKILL_PRIORITY" || value === "BALANCED" || value === "WEAKNESS_FOCUS";
 
 export class MockSupabaseClient {
+  private authSubscribers = new Set<(event: string, session: any) => void>();
+
   public getStorage(key: string, defaultVal: any = []) {
     if (typeof window === "undefined") return defaultVal;
     const data = localStorage.getItem(`mock_db_${key}`);
@@ -86,14 +88,18 @@ export class MockSupabaseClient {
       return { data: { session: null } };
     },
     onAuthStateChange: (callback: any) => {
-      setTimeout(async () => {
+      this.authSubscribers.add(callback);
+      const initialSessionTimer = setTimeout(async () => {
         const { data } = await this.auth.getSession();
-        callback("INITIAL_SESSION", data.session);
+        if (this.authSubscribers.has(callback)) callback("INITIAL_SESSION", data.session);
       }, 50);
       return {
         data: {
           subscription: {
-            unsubscribe: () => {}
+            unsubscribe: () => {
+              clearTimeout(initialSessionTimer);
+              this.authSubscribers.delete(callback);
+            }
           }
         }
       };
@@ -124,11 +130,14 @@ export class MockSupabaseClient {
           || localStorage.getItem("tribe_demo_uuid");
         if (!demoId) {
           demoId = "00000000-0000-4000-8000-" + Math.floor(100000000000 + Math.random() * 900000000000).toString();
-          localStorage.setItem("tribe_demo_uuid", demoId);
         }
+        localStorage.setItem("tribe_demo_uuid", demoId);
         localStorage.setItem("mock_auth_mode", "EMAIL");
       }
       const { data } = await this.auth.getSession();
+      if (data.session) {
+        for (const callback of this.authSubscribers) callback("SIGNED_IN", data.session);
+      }
       return { data: { user: data.session?.user || {}, session: data.session }, error: null };
     },
     signInWithOAuth: async ({ options }: any = {}) => {

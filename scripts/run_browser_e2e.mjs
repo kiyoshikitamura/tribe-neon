@@ -43,7 +43,7 @@ const stopProcessTree = async (child) => {
 
 const server = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", port], {
   stdio: "inherit",
-  env: process.env,
+  env: { ...process.env, KPI_BASIC_AUTH_USER: "m3", KPI_BASIC_AUTH_PASSWORD: "local-only" },
   detached: !isWindows,
 });
 spawned.add(server);

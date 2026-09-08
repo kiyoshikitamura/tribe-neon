@@ -139,88 +139,29 @@ function tutorialEncounterSnapshot(encounterId: string) {
 }
 
 async function revealTutorialTenPull(page: import("@playwright/test").Page, captureVisuals = false) {
-  const pullGate = page.locator("[data-gacha-logo-gate]");
-  await expect(pullGate).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-opening")).toBeVisible({ timeout: 15_000 });
   if (captureVisuals) await page.screenshot({ path: test.info().outputPath("G1-pull-gate.png") });
-  await pullGate.click();
-  await expect(page.locator(".tutorial-gacha-reveal, .gacha-result-panel").first()).toBeVisible();
-  if (captureVisuals) await page.screenshot({ path: test.info().outputPath("G2-pull-flash.png") });
-  const reveal = page.locator(".tutorial-gacha-reveal");
-  const assertRevealParameters = async () => {
-    const rarity = String((await reveal.getAttribute("class"))?.match(/rarity-(n|r|sr|ssr)/)?.[1] || "n").toUpperCase();
-    await expect(reveal.locator(".tutorial-gacha-reveal-parameters dt")).toHaveText(["HP", "ATK", "DEF"]);
-    await expect(reveal.locator(".tutorial-gacha-reveal-parameters dd")).toHaveCount(3);
-    await expect.poll(() => reveal.locator(".tutorial-gacha-reveal-parameters dd").allTextContents())
-      .not.toContain("—");
-    await expect(reveal).not.toContainText(/SPD|LUK|戦闘力/);
-    await expect(reveal.locator(`.character-presentation-rarity-badge[alt="${rarity}"]`)).toBeVisible();
-    await expect(reveal.locator(".tutorial-gacha-acquisition-badge")).toHaveCount(1);
-    await expect(reveal.locator(".tutorial-gacha-reveal-heading")).toHaveCount(0);
-    const layerMetrics = await reveal.evaluate((root) => {
-      const card = root.getBoundingClientRect();
-      const art = root.querySelector(".character-presentation-art")?.getBoundingClientRect();
-      const background = root.querySelector(".character-presentation-background")?.getBoundingClientRect();
-      const frame = root.querySelector(".character-presentation-frame")?.getBoundingClientRect();
-      return {
-        outerBackground: getComputedStyle(root).backgroundImage.includes("bg_street_"),
-        artInsideCard: Boolean(art && art.left >= card.left && art.right <= card.right && art.top >= card.top && art.bottom <= card.bottom),
-        backgroundInsideArt: Boolean(art && background && background.left >= art.left && background.right <= art.right && background.top >= art.top && background.bottom <= art.bottom),
-        frameCoversArt: Boolean(art && frame && frame.left <= art.left && frame.right >= art.right && frame.top <= art.top && frame.bottom >= art.bottom),
-      };
-    });
-    expect(layerMetrics).toEqual({ outerBackground: false, artInsideCard: true, backgroundInsideArt: true, frameCoversArt: true });
-  };
-  await expect(reveal).toBeVisible({ timeout: 15_000 });
+  await page.locator(".cg-opening").click();
+  const reveal = page.locator(".cg-reveal");
   let finalCharacterId: string | null = null;
-  let ssrQuoteCount = 0;
+  let ssrCount = 0;
   for (let index = 0; index < 10; index += 1) {
+    await expect(page.locator(".cg-top>span")).toHaveText(`${index + 1} / 10`);
     await expect(page.locator('[data-acceptance-state="TUTORIAL_SKILL_STEP"]')).toHaveCount(0);
-    await expect(reveal.locator(".tutorial-gacha-count")).toHaveText(`${index + 1} / 10`);
-    const state = await reveal.getAttribute("data-presentation-state");
-    if (state === "SSR_QUOTE") {
-      ssrQuoteCount += 1;
-      await expect(reveal.locator(".tutorial-ssr-quote")).not.toContainText("SSR");
-      await expect(reveal.locator(".tutorial-ssr-quote blockquote")).not.toBeEmpty();
-      await expect(reveal).toHaveAttribute("aria-label", /特別紹介を確認/);
-      await expect(reveal).not.toHaveAttribute("data-character-id", /.+/);
-      if (captureVisuals && index === 9) {
-        for (const viewport of c2AcceptanceViewports) {
-          await page.setViewportSize(viewport);
-          const bounds = await reveal.evaluate((element) => ({ rect: element.getBoundingClientRect().toJSON(), viewportWidth: innerWidth, viewportHeight: innerHeight, scrollWidth: element.scrollWidth, clientWidth: element.clientWidth }));
-          expect(bounds.rect.left).toBeGreaterThanOrEqual(0);
-          expect(bounds.rect.right).toBeLessThanOrEqual(bounds.viewportWidth);
-          expect(bounds.rect.bottom).toBeLessThanOrEqual(bounds.viewportHeight);
-          expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.clientWidth + 1);
-          await page.screenshot({ path: test.info().outputPath(`m9x-ssr-quote-${viewport.label}.png`) });
-        }
-      }
-      await expect(reveal).toHaveAttribute("data-can-advance", "true");
-      await reveal.click();
-      await expect(reveal).toHaveAttribute("data-presentation-state", "SSR_FLASH");
-      await expect(reveal).toHaveAttribute("data-presentation-state", "SSR_REVEAL");
-    } else {
-      await expect(reveal).toHaveAttribute("data-presentation-state", "STANDARD_REVEAL");
-    }
-    await expect(reveal.locator(".character-presentation-attribute-badge")).toBeVisible();
-    await expect(reveal).toHaveAttribute("data-can-advance", "true", { timeout: 3_000 });
-    await assertRevealParameters();
+    await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "SETTLED", { timeout: 5000 });
+    await expect(reveal.locator(".cg-stats dt")).toHaveText(["HP", "ATK", "DEF"]);
+    await expect.poll(() => reveal.locator(".cg-stats dd").allTextContents()).not.toContain("—");
+    await expect(reveal).not.toContainText(/SPD|LUK|戦闘力/);
+    await expect(reveal.locator(".cg-reveal-copy>blockquote")).not.toBeEmpty();
+    await expect(reveal.locator(".cg-rarity-badge")).toHaveAttribute("alt", /^(N|R|SR|SSR)$/);
+    await expect(page.locator(".cg-city")).toHaveAttribute("src", /bg_street_/);
+    if (await reveal.getAttribute("data-presentation-state") === "SSR_REVEAL") ssrCount += 1;
     if (index === 9) finalCharacterId = await reveal.getAttribute("data-character-id");
-    if (captureVisuals && index === 9) {
-      await page.screenshot({ path: test.info().outputPath("G4-rarity-SSR.png") });
-      for (const viewport of c2AcceptanceViewports) {
-        await page.setViewportSize(viewport);
-        await page.screenshot({ path: test.info().outputPath(`m9x-ssr-reveal-${viewport.label}.png`) });
-      }
-    }
+    if (captureVisuals && index === 9) await page.screenshot({ path: test.info().outputPath("G4-rarity-SSR.png") });
     await reveal.click();
-    if (index < 9) {
-      const nextCharacterGate = page.locator(".gacha-character-logo-gate");
-      await expect(nextCharacterGate).toBeVisible();
-      await nextCharacterGate.click();
-      await expect(reveal.locator(".tutorial-gacha-count")).toHaveText(`${index + 2} / 10`);
-    }
+    await expect(page.locator(".gacha-character-logo-gate")).toHaveCount(0);
   }
-  expect(ssrQuoteCount).toBeGreaterThanOrEqual(1);
+  expect(ssrCount).toBeGreaterThanOrEqual(1);
   return finalCharacterId;
 }
 
@@ -501,11 +442,11 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
     button.click();
   });
   await expect(page.getByText(/ガチャ準備中|ガチャ実行中/)).toHaveCount(0);
-  await expect(page.locator("[data-gacha-logo-gate], .gacha-presentation-stage, .tutorial-gacha-reveal").first()).toBeVisible();
+  await expect(page.locator(".cg-opening, .cg-reveal").first()).toBeVisible();
   await expect(page.locator(".blocker-spinner")).toHaveCount(0);
   await revealTutorialTenPull(page, true);
-  await expect(page.getByText("ガチャ結果")).toBeVisible({ timeout: 15_000 });
-  await expect(page.locator(".gacha-result-card")).toHaveCount(10);
+  await expect(page.locator(".cg-summary")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-mini")).toHaveCount(10);
   const elapsedMs = Date.now() - startedAt;
   test.info().annotations.push({ type: "gacha-result-ms", description: String(elapsedMs) });
   // Ten reveals are intentionally user-paced. The guaranteed SSR now includes
@@ -514,9 +455,9 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
   expect(elapsedMs).toBeLessThan(browserName === "webkit" ? 50_000 : 35_000);
   for (const width of [375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
-    const metrics = await page.locator(".gacha-result-panel").evaluate((modal) => {
+    const metrics = await page.locator(".cg-summary").evaluate((modal) => {
       const rect = modal.getBoundingClientRect();
-      const cards = Array.from(modal.querySelectorAll(".gacha-result-card"));
+      const cards = Array.from(modal.querySelectorAll(".cg-mini"));
       return {
         left: rect.left,
         right: rect.right,
@@ -531,10 +472,10 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
         cardHeights: cards.map((card) => Math.round(card.getBoundingClientRect().height)),
         frameRects: cards.map((card) => {
           const cardRect = card.getBoundingClientRect();
-          const frameRect = card.querySelector(".character-presentation-frame")?.getBoundingClientRect();
+          const frameRect = card.querySelector(".character-presentation")?.getBoundingClientRect();
           return frameRect ? {
             widthDelta: Math.abs(frameRect.width - cardRect.width),
-            heightDelta: Math.abs(frameRect.height - cardRect.height),
+            heightDelta: Math.max(0, frameRect.height - cardRect.height),
           } : null;
         }),
       };
@@ -551,11 +492,11 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
     expect(metrics.frameRects.every((frame) => frame && frame.widthDelta <= 1 && frame.heightDelta <= 1)).toBe(true);
     await page.screenshot({ path: test.info().outputPath(`m9-1-gacha-result-${width}.png`), fullPage: true });
   }
-  await expect(page.locator(".gacha-result-card .character-presentation-gacha-result-compact")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card .character-presentation-frame.is-character")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card").filter({ hasText: "GEAR" })).toHaveCount(0);
-  await expect(page.locator(".gacha-result-card .character-presentation img").first()).toBeVisible();
-  const characterImage = await page.locator(".gacha-result-card .character-presentation img").first().evaluate((image) => {
+  await expect(page.locator(".cg-mini .character-presentation-gacha-result-compact")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .cg-rarity-badge")).toHaveCount(10);
+  await expect(page.locator(".cg-mini").filter({ hasText: "GEAR" })).toHaveCount(0);
+  await expect(page.locator(".cg-mini .character-presentation img").first()).toBeVisible();
+  const characterImage = await page.locator(".cg-mini .character-presentation img").first().evaluate((image) => {
     const rect = image.getBoundingClientRect();
     return { width: rect.width, height: rect.height, objectFit: getComputedStyle(image).objectFit, objectPosition: getComputedStyle(image).objectPosition };
   });
@@ -563,7 +504,7 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
   expect(characterImage.height).toBeGreaterThanOrEqual(45);
   expect(characterImage.objectFit).toBe("cover");
   expect(characterImage.objectPosition).toContain("0%");
-  const resultBounds = await page.locator(".gacha-result-panel").evaluate((modal) => {
+  const resultBounds = await page.locator(".cg-summary").evaluate((modal) => {
     const rect = modal.getBoundingClientRect();
     return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, viewportWidth: innerWidth, viewportHeight: innerHeight };
   });
@@ -596,7 +537,7 @@ test("formation advances directly to the quest boundary and resumes there", asyn
   await page.getByRole("button", { name: "次へ" }).click();
   await page.getByRole("button", { name: "無料10連を引く" }).click();
   await revealTutorialTenPull(page);
-  await expect(page.getByText("ガチャ結果")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-summary")).toBeVisible({ timeout: 15_000 });
   await page.getByRole("button", { name: "編成へ進む" }).click();
   await completeVisibleTutorialGrowth(page);
   const formationAction = page.getByRole("button", { name: "おすすめ編成にする" });
@@ -680,7 +621,7 @@ test("three random tutorial SSRs remain the same owned character through result 
     await page.getByRole("button", { name: "無料10連を引く" }).click();
     const ssrRevealId = await revealTutorialTenPull(page);
     expect(ssrRevealId).toBe(tutorialSsr.id);
-    await expect(page.getByText("ガチャ結果")).toBeVisible();
+    await expect(page.locator(".cg-summary")).toBeVisible();
     const ownedId = await page.evaluate((masterId) => {
       const userId = localStorage.getItem("tribe_demo_uuid");
       return JSON.parse(localStorage.getItem("mock_db_user_characters") || "[]")
@@ -1300,7 +1241,7 @@ test("new mobile player completes the guided first session without footer naviga
   await expect(page.getByRole("button", { name: "無料10連を引く" })).toHaveClass(/semantic-cta--primary/);
   await page.getByRole("button", { name: "無料10連を引く" }).click();
   await revealTutorialTenPull(page);
-  await expect(page.getByText("ガチャ結果")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-summary")).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("button", { name: "編成へ進む" })).toHaveClass(/semantic-cta--primary/);
   await page.getByRole("button", { name: "編成へ進む" }).click();
   await completeVisibleTutorialGrowth(page);

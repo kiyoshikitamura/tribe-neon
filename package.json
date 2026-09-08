@@ -32,6 +32,7 @@
     "verify:async-transition-acceptance": "node scripts/verify_async_transition_acceptance_matrix.mjs",
     "verify:character-ssr-candidates": "node scripts/verify_character_ssr_candidate_contract.mjs",
     "verify:character-ssr-candidate-db-migration": "node scripts/verify_character_ssr_candidate_db_migration.mjs",
+    "verify:character-gacha-quotes": "node scripts/verify_character_gacha_quotes.mjs",
     "verify:ssr-gacha-quotes": "node scripts/verify_ssr_gacha_quotes.mjs",
     "verify:home-character-dialogue": "node scripts/verify_home_character_dialogue.mjs",
     "verify:gacha-character-town-backgrounds": "node --experimental-strip-types scripts/verify_gacha_character_town_backgrounds.mjs",

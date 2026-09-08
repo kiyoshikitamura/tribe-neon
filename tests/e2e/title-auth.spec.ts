@@ -39,7 +39,7 @@ async function openCompletedAnonymousAuthentication(page: import("@playwright/te
   const tapToStart = page.getByRole("button", { name: "TAP TO START" });
   await tapToStart.waitFor({ state: "visible", timeout: 10_000 }).catch(() => undefined);
   if (await tapToStart.isVisible()) await tapToStart.click();
-  const resume = page.getByRole("button", { name: /^(チュートリアルを続ける|続きから)$/ });
+  const resume = page.locator(".title-entry-actions").getByRole("button", { name: /^(チュートリアルを続ける|続きから)$/ });
   await resume.waitFor({ state: "visible", timeout: 2_000 }).catch(() => undefined);
   if (await resume.isVisible()) await resume.click();
 }
@@ -97,6 +97,7 @@ test("email login without a game profile uses provider-neutral guidance", async 
   await page.getByPlaceholder("パスワード (6文字以上)").fill("secure-pass-123");
   await page.getByRole("button", { name: "メールでログイン" }).click();
 
+  await page.getByRole("button", { name: "TAP TO START", exact: true }).click();
   await expect(page.getByText(/この認証アカウントにはゲームデータがありません/)).toBeVisible();
   await expect(page.getByText(/このGoogleアカウントにはゲームデータがありません/)).toHaveCount(0);
 });
@@ -265,7 +266,7 @@ test("tutorial gacha failure overlays the intact offer and remains retryable", a
 
   await expect(page.getByText("ガチャの実行に失敗しました。通信状態を確認して、もう一度お試しください。")).toBeVisible();
   await expect(page.locator(".tutorial-gacha-page")).toBeVisible();
-  await expect(page.locator(".gacha-presentation-stage, .tutorial-gacha-reveal")).toHaveCount(0);
+  await expect(page.locator(".gacha-presentation-stage, .cg-reveal")).toHaveCount(0);
   await page.getByRole("dialog", { name: "エラー" }).getByRole("button", { name: "閉じる" }).last().click();
   await expect(page.getByRole("button", { name: "無料10連を引く" })).toBeEnabled();
 });
@@ -418,6 +419,7 @@ test("email confirmation return with a different uid is rejected before finaliza
   }, { sourceUserId, returnedUserId });
   await page.goto("/");
 
+  await page.getByRole("button", { name: "TAP TO START", exact: true }).click();
   await expect(page.getByText(/メール連携を開始したゲームデータと異なるユーザーが検出されました/)).toBeVisible();
   await expect.poll(async () => page.evaluate(() => localStorage.getItem("tribe_demo_uuid"))).toBeNull();
   const progress = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]"));
@@ -1006,8 +1008,11 @@ test("OAuth callback restores the persisted session and retains the invitation c
 });
 
 test("OAuth callback restores a remembered KPI destination when the provider drops return_to", async ({ page }) => {
-  await page.goto("/");
-  await page.evaluate(() => {
+  await page.route("**/admin/kpi", (route) => route.continue({
+    headers: { ...route.request().headers(), authorization: `Basic ${Buffer.from("m3:local-only").toString("base64")}` },
+  }));
+  await page.addInitScript(() => {
+    if (window.location.pathname !== "/auth/callback") return;
     localStorage.setItem("tribe_demo_uuid", "00000000-0000-4000-8000-000000000888");
     localStorage.setItem("mock_auth_mode", "GOOGLE");
     localStorage.setItem("tribe_oauth_return_intent", JSON.stringify({
