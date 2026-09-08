@@ -1,0 +1,28 @@
+.character-home { width:100%; min-width:0; color:var(--ui-text-primary); background:var(--ui-bg-root); padding-bottom:max(12px,env(safe-area-inset-bottom,0px)); }
+.character-home-header { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 12px; min-height:44px; }
+.character-home-header button { min-width:44px; min-height:44px; padding:0 6px; border:0; background:transparent; color:inherit; font-size:24px; }
+.character-home-header>button { display:flex; align-items:center; gap:6px; }
+.character-home-header button span { font-size:12px; }
+.character-home-switch { display:flex; align-items:center; }
+.character-home-switch>span { min-width:54px; text-align:center; font-size:12px; font-variant-numeric:tabular-nums; }
+.character-home-switch i { padding:0 3px; font-style:normal; color:var(--ui-text-secondary); }
+.character-home-switch button:disabled { opacity:.25; cursor:default; }
+.character-home-art { position:relative; isolation:isolate; height:clamp(230px,45dvh,420px); overflow:hidden; touch-action:pan-y; user-select:none; }
+.character-home-background { position:absolute; z-index:-2; inset:0; width:100%; height:100%; object-fit:cover; opacity:.65; }
+.character-home-art::after { position:absolute; z-index:-1; inset:0; content:""; background:linear-gradient(180deg,rgba(0,0,0,.08) 65%,var(--ui-bg-root)); }
+.character-home-art .character-presentation-full-body { width:100%; height:100%; margin:0; aspect-ratio:auto; border:0; border-radius:0; background:transparent; box-shadow:none; pointer-events:none; }
+.character-home-art .character-presentation-character { padding:8px 12px; object-fit:contain; object-position:center; }
+.character-home-art .character-presentation-light { display:none; }
+.character-home-information { display:grid; gap:6px; padding:0 20px; }
+.character-home-rarity { color:var(--ui-text-secondary); font-size:12px; font-weight:800; letter-spacing:.16em; }
+.character-home-identity h1 { margin:3px 0 6px; font-size:clamp(24px,6.8vw,28px); line-height:1.2; font-weight:900; overflow-wrap:anywhere; }
+.character-home-identity p { display:flex; gap:24px; margin:0; color:var(--ui-text-secondary); font-size:13px; }
+.character-home-power { display:grid; gap:2px; text-align:center; }
+.character-home-power>span { color:var(--ui-text-secondary); font-size:11px; letter-spacing:.16em; }
+.character-home-power strong { font-family:var(--font-display); font-size:clamp(32px,8.5vw,36px); line-height:1.1; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.character-home-information>.outlaw-button { min-height:48px; }
+.character-home-destinations { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.character-home-destinations .outlaw-button { min-height:54px; padding:8px; }
+.character-home-destinations small { display:block; margin-top:3px; font-size:11px; font-weight:400; color:var(--ui-text-secondary); }
+.character-home-retry { padding:8px; border:0; background:transparent; color:var(--ui-text-secondary); text-decoration:underline; }
+@media(max-height:740px) { .character-home-art { height:34dvh; min-height:180px; } .character-home-information { gap:8px; } .character-home-identity h1 { font-size:24px; } .character-home-power strong { font-size:32px; } }
