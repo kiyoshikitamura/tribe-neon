@@ -1,3 +1,7 @@
+# Raid第20工程 — IN_PROGRESS
+
+最新headのCI失敗を切り分ける。A: lint heap OOM、B: E2E失敗診断、親: 修正範囲判断・統合。実DB/Deployなし。
+
 # Raid第19工程 — VALIDATED
 
 RAID-A/B/C/P-19。A: SQL250〜263統合fixture、B: 開催通知更新、C: 通知/画面検証、親: レビュー・全体検証・残件整理。親レビュー・SQL統合6/通知13/切替3/Room28/戦闘hook17、全体型・Mock build PASS。実DB/Deploy/運用切替なし。詳細raid_room_phase19_integration.md。

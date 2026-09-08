@@ -79,7 +79,8 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
   test(`Ranking mobile hierarchy and server authority ${viewport.width}x${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await openRanking(page);
-    await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveCount(4);
+    await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveText(["総合力", "バトル", "ギルド"]);
+    await expect(page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true })).toHaveCount(0);
     await expect(page.locator(".ranking-position").first()).toHaveText("7位");
     await expect(page.locator(".ranking-position").first()).not.toHaveText("1位");
     await expect(page.locator(".ranking-user-row")).toHaveCount(5);
@@ -115,19 +116,17 @@ test("Ranking categories isolate metrics and profiles preserve identity context"
   await expect(page.locator(".ranking-skeleton")).toHaveCount(0);
   await expect(page.locator(".ranking-guild-row")).toHaveCount(3);
 
-  await page.getByRole("button", { name: "レイド", exact: true }).click();
-  await expect(page.locator(".ranking-skeleton")).toHaveCount(0);
-  await expect(page.locator(".ranking-user-row")).toHaveCount(5);
-  await expect(page.locator(".ranking-metric small").first()).toHaveText("ダメージ");
-  const raidMetric = page.locator(".ranking-user-row .ranking-metric").first();
-  const raidRow = page.locator(".ranking-user-row").first();
-  for (const value of ["7,630", "24,033", "9,999,999", "123,456,789", "9,999,999,999"]) {
-    await raidMetric.evaluate((node, nextValue) => { if (node.firstChild) node.firstChild.textContent = nextValue; }, value);
-    expect(await raidRow.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
-  }
+  await expect(page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true })).toHaveCount(0);
 
   await page.getByRole("button", { name: "総合力", exact: true }).click();
   await expect(page.locator(".ranking-skeleton")).toHaveCount(0);
+  // Preserve long-number layout coverage on the remaining power metric.
+  const metric = page.locator(".ranking-user-row .ranking-metric").first();
+  const metricRow = page.locator(".ranking-user-row").first();
+  for (const value of ["7,630", "24,033", "9,999,999", "123,456,789", "9,999,999,999"]) {
+    await metric.evaluate((node, nextValue) => { if (node.firstChild) node.firstChild.textContent = nextValue; }, value);
+    expect(await metricRow.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+  }
   await page.locator(".ranking-current .user-identity-row").click();
   const selfProfile = page.getByRole("dialog", { name: "RankingTesterの公開プロフィール" });
   await expect(selfProfile).toBeVisible();
@@ -135,7 +134,7 @@ test("Ranking categories isolate metrics and profiles preserve identity context"
   await expect(selfProfile.getByRole("button", { name: "DMを送る" })).toHaveCount(0);
 });
 
-test("Top three rank stays compact beside identity and Raid Daily keeps canonical current user", async ({ page }) => {
+test("Top three rank stays compact beside identity and PvP Daily keeps canonical current user", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openRanking(page, "/?top3=1");
   await expect(page.locator(".ranking-position").nth(0)).toHaveText("1位");
@@ -151,7 +150,7 @@ test("Top three rank stays compact beside identity and Raid Daily keeps canonica
   await expect(page.locator(".ranking-skeleton")).toHaveCount(0);
   expect(await page.locator(".ranking-position").first().evaluate((node) => node.getBoundingClientRect().width)).toBeLessThanOrEqual(30);
 
-  await page.getByRole("button", { name: "レイド", exact: true }).click();
+  await expect(page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "デイリー", exact: true }).click();
   await expect(page.locator(".ranking-skeleton")).toHaveCount(0);
   const current = page.locator(".ranking-current");
@@ -166,7 +165,7 @@ test("RankPresentation uses 圏外 for missing server placement", async ({ page 
   await expect(page.locator(".ranking-tab-view")).not.toContainText(/(?:^|\D)0位|undefined位|null位|#0/);
 });
 
-test("Ranking rewards use frozen canonical definitions and Raid season excludes historical damage", async ({ page }) => {
+test("Remaining ranking rewards use frozen canonical definitions and retired Raid has no category", async ({ page }) => {
   await openRanking(page);
   await page.getByRole("button", { name: "報酬確認" }).click();
   const powerRewards = page.getByRole("dialog", { name: "ランキング報酬確認" });
@@ -196,12 +195,6 @@ test("Ranking rewards use frozen canonical definitions and Raid season excludes 
   await expect(guildRewards).toContainText("プレオープン第1位限定ギルド装飾");
   await guildRewards.getByRole("button", { name: "閉じる" }).last().click();
 
-  await page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true }).click();
-  await expect(page.locator(".ranking-skeleton")).toHaveCount(0);
-  await expect(page.locator(".ranking-user-row").first().locator(".ranking-metric")).toContainText("50,000");
-  await page.getByRole("button", { name: "報酬確認" }).click();
-  const raidRewards = page.getByRole("dialog", { name: "ランキング報酬確認" });
-  await expect(raidRewards).toContainText("週次");
-  await expect(raidRewards).toContainText("個人ランキング");
-  await expect(raidRewards).toContainText("ギルドランキング");
+  await expect(page.locator(".ranking-category-nav .sub-tab-item")).toHaveText(["総合力", "バトル", "ギルド"]);
+  await expect(page.locator(".ranking-category-nav").getByRole("button", { name: "レイド", exact: true })).toHaveCount(0);
 });
