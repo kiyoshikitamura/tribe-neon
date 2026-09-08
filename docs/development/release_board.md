@@ -1,3 +1,9 @@
+# Raid第7工程 — VALIDATED
+
+A: 旧Raid経路からRoomを分離。B: 参加登録と既存戦闘導線の接続契約。C: SQL回帰検証。P: 親レビュー・統合。生成フラグfalseを維持し、公開参加・戦闘・報酬接続の完了と扱わない。
+
+親レビュー・PGlite実SQL14件PASS。B-07は接続契約文書のレビュー完了で、公開参加/戦闘コード実装ではない。詳細: raid_room_phase7_integration.md。
+
 # Raid第6工程 — VALIDATED
 
 基準67070ed。Room作成追加消費なしを確認。A-06: 認証・Lv5・総合力を確認する公開生成RPC、本人単位request冪等性、boss選択肢参照。B-06: 生成操作・adapter・QA fixture。C-06: 生成SQLの条件・再送・副作用検証。P-06: 親統合。旧開始/終了/報酬経路との分離前の誤運用を防ぐため、生成APIの有効化設定は初期false。実DB適用・公開参加/戦闘/救援/報酬接続はこの工程で完了扱いにしない。
