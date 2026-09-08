@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {battlePresentationBudget,battlePresentationImpactAt} from '../src/domain/presentation/battlePresentationUnit.ts';
+const read=path=>readFileSync(new URL(`../${path}`,import.meta.url),'utf8');
+for(const speed of [1,2,3])for(const tier of ['NORMAL','STANDARD','SR','SSR']){
+ const actor=battlePresentationImpactAt(speed,tier,true);
+ const remaining=battlePresentationBudget(tier,speed,true)-actor;
+ if(tier!=='NORMAL')assert.ok(actor>=(tier==='SSR'?1200:800),`${tier}/${speed}: recognition hold`);
+ assert.ok(Math.round(remaining*.55)>=450,'impact hold');assert.ok(remaining>=700,'number hold');
+}
+assert.equal(battlePresentationBudget('SSR',2),1200,'raid timing unchanged');
+const viewer=read('src/app/components/battle/QuestBattleViewer.tsx');
+assert.match(viewer,/props.battleMode !== "RAID"\) return <StreetBattleViewer/);
+const street=read('src/app/components/battle/StreetBattleViewer.tsx');
+assert.match(street,/fullscreen = master\?\.rarity==="SSR"/);
+assert.match(street,/CANONICAL_SKILL_VIEW.find\(s=>s.id===action\?\.unit.skillId\)/);
+assert.match(street,/special = isSkill && \(skillRarity==="SR" \|\| skillRarity==="SSR"\)/);
+assert.match(street,/groups.find\(g=>g.targetId===p.id\)/);
+assert.match(street,/hpDamage \?\? e.payload.amount/);
+assert.match(street,/effectiveAmount \?\? e.payload.amount/);
+assert.match(street,/healEvents.length>0/,'zero effective heal remains visible');
+assert.doesNotMatch(street,/Math.random|fetch\(|setInterval|setTimeout/,'view must not derive or advance the replay');
+const css=read('src/app/components/battle/StreetBattle.css');
+assert.match(css,/\.sb-standing\{[^}]*opacity:1/);assert.match(css,/data-character="koharu"/);
+assert.doesNotMatch(css,/\.sb-unit\.acting\{[^}]*transform:/);
+const gacha=read('src/app/components/CommonModals.tsx');
+assert.match(gacha,/isCharacterReveal && \(scoutAnimationState === "READY" \|\| scoutAnimationState === "SHOW_RESULTS"\)/);
+assert.match(gacha,/<CharacterGachaPresentation/);
+const result=read('src/app/components/battle/BattleResultSummary.tsx');
+assert.match(result,/analyzeBattleResult\(/);assert.match(result,/disabled=\{victory && \(tutorial \|\| presentationContext\?\.mode === "PATROL"\) && !rewards\}/);
+for(const file of ['StreetBattleViewer.tsx','StreetBattleSetup.tsx','StreetStatuses.tsx'])assert.doesNotMatch(read(`src/app/components/battle/${file}`),/from ["'][^"']*\/qa\//,'no QA fixtures in live views');
+console.log('PASS street integration: routing / separate rarities / 1x,2x,3x holds / all targets / HP / crops / reward gate');
