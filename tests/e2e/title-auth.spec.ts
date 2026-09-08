@@ -1008,8 +1008,11 @@ test("OAuth callback restores the persisted session and retains the invitation c
 });
 
 test("OAuth callback restores a remembered KPI destination when the provider drops return_to", async ({ page }) => {
-  await page.goto("/");
-  await page.evaluate(() => {
+  await page.route("**/admin/kpi", (route) => route.continue({
+    headers: { ...route.request().headers(), authorization: `Basic ${Buffer.from("m3:local-only").toString("base64")}` },
+  }));
+  await page.addInitScript(() => {
+    if (window.location.pathname !== "/auth/callback") return;
     localStorage.setItem("tribe_demo_uuid", "00000000-0000-4000-8000-000000000888");
     localStorage.setItem("mock_auth_mode", "GOOGLE");
     localStorage.setItem("tribe_oauth_return_intent", JSON.stringify({

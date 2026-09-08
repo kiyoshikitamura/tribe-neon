@@ -153,7 +153,7 @@ async function revealTutorialTenPull(page: import("@playwright/test").Page, capt
     await expect.poll(() => reveal.locator(".cg-stats dd").allTextContents()).not.toContain("—");
     await expect(reveal).not.toContainText(/SPD|LUK|戦闘力/);
     await expect(reveal.locator(".cg-reveal-copy>blockquote")).not.toBeEmpty();
-    await expect(reveal.locator(".cg-rarity-line>span")).not.toBeEmpty();
+    await expect(reveal.locator(".cg-rarity-badge")).toHaveAttribute("alt", /^(N|R|SR|SSR)$/);
     await expect(page.locator(".cg-city")).toHaveAttribute("src", /bg_street_/);
     if (await reveal.getAttribute("data-presentation-state") === "SSR_REVEAL") ssrCount += 1;
     if (index === 9) finalCharacterId = await reveal.getAttribute("data-character-id");
@@ -445,7 +445,7 @@ test("free gacha presents one CTA, feedback, result assets, and formation connec
   await expect(page.locator(".cg-opening, .cg-reveal").first()).toBeVisible();
   await expect(page.locator(".blocker-spinner")).toHaveCount(0);
   await revealTutorialTenPull(page, true);
-  await expect(page.getByText("ガチャ結果")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-summary")).toBeVisible({ timeout: 15_000 });
   await expect(page.locator(".cg-mini")).toHaveCount(10);
   const elapsedMs = Date.now() - startedAt;
   test.info().annotations.push({ type: "gacha-result-ms", description: String(elapsedMs) });
@@ -537,7 +537,7 @@ test("formation advances directly to the quest boundary and resumes there", asyn
   await page.getByRole("button", { name: "次へ" }).click();
   await page.getByRole("button", { name: "無料10連を引く" }).click();
   await revealTutorialTenPull(page);
-  await expect(page.getByText("ガチャ結果")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-summary")).toBeVisible({ timeout: 15_000 });
   await page.getByRole("button", { name: "編成へ進む" }).click();
   await completeVisibleTutorialGrowth(page);
   const formationAction = page.getByRole("button", { name: "おすすめ編成にする" });
@@ -621,7 +621,7 @@ test("three random tutorial SSRs remain the same owned character through result 
     await page.getByRole("button", { name: "無料10連を引く" }).click();
     const ssrRevealId = await revealTutorialTenPull(page);
     expect(ssrRevealId).toBe(tutorialSsr.id);
-    await expect(page.getByText("ガチャ結果")).toBeVisible();
+    await expect(page.locator(".cg-summary")).toBeVisible();
     const ownedId = await page.evaluate((masterId) => {
       const userId = localStorage.getItem("tribe_demo_uuid");
       return JSON.parse(localStorage.getItem("mock_db_user_characters") || "[]")
@@ -1241,7 +1241,7 @@ test("new mobile player completes the guided first session without footer naviga
   await expect(page.getByRole("button", { name: "無料10連を引く" })).toHaveClass(/semantic-cta--primary/);
   await page.getByRole("button", { name: "無料10連を引く" }).click();
   await revealTutorialTenPull(page);
-  await expect(page.getByText("ガチャ結果")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".cg-summary")).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("button", { name: "編成へ進む" })).toHaveClass(/semantic-cta--primary/);
   await page.getByRole("button", { name: "編成へ進む" }).click();
   await completeVisibleTutorialGrowth(page);

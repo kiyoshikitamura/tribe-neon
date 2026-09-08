@@ -75,7 +75,7 @@ test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes forma
   await expect(page.locator(".cg-mini")).toHaveCount(10);
   await expect(page.locator(".cg-mini .character-presentation-gacha-result-compact")).toHaveCount(10);
   await expect(page.locator(".cg-mini .cg-rarity-badge")).toHaveCount(10);
-  await expect(page.locator(".cg-mini>small")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .cg-mini-name")).toHaveCount(10);
   await expect(page.locator(".cg-mini.cg-ssr")).toHaveCount(1);
   for (const width of [375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
