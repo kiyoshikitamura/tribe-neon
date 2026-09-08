@@ -50,6 +50,7 @@ test('復帰済みRoomはpending開始なしで再生を許可し追加RPCなし
  const x=setup(),client=(globalThis as any).__raidClient,original=client.rpc;
  client.rpc=(n:string,p:any)=>n==='list_raid_room_battle_recoveries_v1'?Promise.resolve({data:[{requestId:'request',roomId:'room',payload:{p_room_id:'room',p_request_id:'request',p_character_ids:['c'],p_tactic:'BALANCED'},receipt:x.receipt}],error:null}):original(n,p);
  await act(async()=>{await x.hook.result.current.resumePendingRaidRoomBattle(true)});
+ assert.equal(x.hook.result.current.battlePresentationContext?.raidRoomId,'room');
  const before=x.calls.length;
  await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
  assert.equal(x.calls.length,before);assert.equal(count(x.calls,'start_raid_room_battle_v1'),0);
@@ -61,6 +62,7 @@ test('互換table不在でもRoom RESULT確認後にackし、失敗時は結果�
  await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing)});
  await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
  assert.equal(count(x.calls,'acknowledge_raid_room_battle_recovery_v1'),0);assert.equal(window.localStorage.length,1);
+ assert.equal(x.hook.result.current.battlePresentationContext?.raidRoomId,'room');
  await act(async()=>{await x.hook.result.current.endBattleSession('DEFEAT')});assert.equal(x.hook.result.current.battleState,'RESULT');
  client.rpc=(n:string,p:any)=>n==='acknowledge_raid_room_battle_recovery_v1'?Promise.resolve({data:null,error:{message:'offline'}}):originalRpc(n,p);
  await act(async()=>{await x.hook.result.current.completeBattleResult()});assert.equal(x.hook.result.current.battleState,'RESULT');assert.equal(window.localStorage.length,1);

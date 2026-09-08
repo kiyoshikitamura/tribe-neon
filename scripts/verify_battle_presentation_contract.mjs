@@ -174,7 +174,8 @@ assert.match(portrait, /hp\.toLocaleString\(\)\} \/ \{maxHp\.toLocaleString\(\)/
 assert.doesNotMatch(portrait, /Math\.round\(hpPercent\)\}%/, "Visible Battle HP must not use percentage copy");
 for (const tone of ["damage", "heal", "status"]) assert.match(effects, new RegExp(`battle-target-effect is-${tone}`), `${tone} must retain its distinct icon-local effect layer`);
 for (const tone of ["buff", "debuff", "shield", "poison", "bleed", "stun"]) assert.doesNotMatch(effects, new RegExp(`battle-target-effect is-${tone}`), `${tone} Apply must not duplicate the unit overlay inside the icon`);
-assert.ok(portrait.indexOf("battle-unit-identity-badges") < portrait.indexOf("<strong>{participant.name}</strong>"), "Attribute badge must precede the character name on both mirrored sides");
+const raidPortrait = portrait.slice(portrait.indexOf("className={`battle-unit-art"));
+assert.ok(raidPortrait.indexOf("battle-unit-identity-badges") < raidPortrait.indexOf("<strong>{participant.name}</strong>"), "Legacy Raid attribute badge must precede the character name on both mirrored sides");
 assert.match(portraitCss, /--character-battle-icon-scale/, "Battle icons must use presentation-only face crop metadata");
 assert.match(effectsCss, /--character-cutin-scale/, "Premium cut-ins must use normalized presentation-only crop metadata");
 assert.match(effectsCss, /\.battle-cutin-slot \.battle-skill-cutin \.battle-cutin-character/, "SR and SSR cut-ins must share one crop template with equal specificity");

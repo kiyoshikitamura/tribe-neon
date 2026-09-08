@@ -1,0 +1,29 @@
+{
+  "presentationSha": "3bdefedd9b49fbbadac5ca2bbc832fe10c1b9716",
+  "raidBaseline": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+  "raidFixes": [
+    "251dc03",
+    "feeca750"
+  ],
+  "files": [
+    "src/app/components/CardBattleView.tsx",
+    "src/app/components/CardBattleView.css",
+    "src/app/components/battle/StreetBattle.css",
+    "src/app/components/battle/StreetBattleSetup.tsx",
+    "src/app/components/battle/StreetBattleViewer.tsx",
+    "src/app/components/battle/StreetFlow.css",
+    "src/app/components/battle/StreetStatuses.tsx",
+    "src/app/components/battle/BattleUnitPortrait.tsx",
+    "src/app/components/battle/BattleMatchupPresentation.tsx",
+    "src/app/components/battle/BattleResultSummary.tsx",
+    "src/app/components/battle/QuestBattleViewer.tsx",
+    "src/domain/presentation/battlePresentationUnit.ts",
+    "src/domain/presentation/characterGachaQuotes.ts",
+    "src/domain/presentation/data/character_gacha_quotes_20260908.json",
+    "public/effects/battle-flow-v3/tetsubin.woff2",
+    "public/effects/battle-v3/tetsubin.woff2",
+    "public/effects/battle-v3/street-impact.webp",
+    "public/effects/battle-v3/street-support.webp",
+    "public/fonts/gacha-comparison/tetsubin-ReadMe.txt"
+  ]
+}

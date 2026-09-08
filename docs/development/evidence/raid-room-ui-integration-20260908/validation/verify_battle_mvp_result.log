@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "formula": "team-category-maximum ratio",
+  "caps": {
+    "damage": 40,
+    "kills": 20,
+    "heal": 20,
+    "shield": 15,
+    "survival": 5
+  },
+  "healerMvp": true,
+  "shieldMvp": true,
+  "deterministic": true
+}
+
+(node:42776) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/presentation/battleResultScoring.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)

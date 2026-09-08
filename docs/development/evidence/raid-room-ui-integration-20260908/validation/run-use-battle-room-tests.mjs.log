@@ -1,0 +1,732 @@
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684858
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 1,
+  deltaMs: 1,
+  at: 1788868684859
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788868684862
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 3,
+  deltaMs: 0,
+  at: 1788868684862
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684872
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684872
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684872
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788868684872
+}
+✔ 実useBattle Room準備キャンセルでstart/resolveなし (25.9171ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 15,
+  deltaMs: 11,
+  at: 1788868684873
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788868684875
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684877
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684877
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684877
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684878
+}
+✔ 実useBattle RoomconfirmはRoom start/resolve、旧開始/報酬なし (5.4603ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788868684879
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684881
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684882
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684882
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684882
+}
+✔ 実useBattle resolve失敗後は同Replay再試行、再開始なし (4.3314ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684884
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684884
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684885
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684885
+}
+✔ 実useBattle 非Roomは旧開始と旧報酬参照を維持 (2.7396ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 4,
+  deltaMs: 4,
+  at: 1788868684885
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10953:10
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788868684887
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684888
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684888
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684889
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684889
+}
+✔ 実useBattle 開始throwは互換sessionを保存せず同request再試行 (4.1573ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788868684891
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684893
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684893
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684894
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684894
+}
+✔ 実useBattle reload後はreceiptを読むだけで同Replay確定し追加開始なし (4.7874ms)
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11001:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788868684896
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684898
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684898
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684898
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684898
+}
+✔ 実useBattle 開始通信不明reloadは同request同編成で再送する (4.286ms)
+Failed to create replay snapshot: Error: quota
+    at proto.setItem (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11021:11)
+    at saveRaidRoomPending (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:60:11)
+    at Object.beforeSend (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9214:30)
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:111:27)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11025:7
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684900
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684900
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684900
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684900
+}
+✔ 実useBattle 保存不可は開始/確定/互換sessionを送信しない (2.334ms)
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11040:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788868684901
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684903
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684903
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684903
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684903
+}
+✔ 実useBattle 別userのpendingは復帰しない (2.8205ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788868684903
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11056:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684906
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684906
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684906
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684906
+}
+✔ 実useBattle 同時復帰呼出しはreceipt/resolve各1回 (2.8318ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 4,
+  deltaMs: 3,
+  at: 1788868684906
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11072:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788868684908
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684909
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684909
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684909
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684909
+}
+✔ 実useBattle receipt待機中にuser変更しても旧user応答を確定へ流さない (3.344ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684912
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684912
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684912
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684912
+}
+✔ 実useBattle 互換session保存後clear前reloadは既存sessionを再利用 (2.496ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788868684912
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684914
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684914
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684914
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684914
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788868684914
+}
+Failed to refresh current Raid attempts: Error: transport
+    at TestContext.<anonymous> (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11114:72)
+    at Test.runInAsyncScope (node:async_hooks:227:14)
+    at Test.run (node:internal/test_runner/test:1382:25)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+✔ 実useBattle 復帰後の現在RP参照失敗でも表示値保持・確定Replay再開始なし (4.7444ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788868684917
+}
+✔ 実useBattle local消失はserver開始記録から同Replay復帰、startなし (1.3324ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684919
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684919
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684919
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684919
+}
+✔ 実useBattle server一覧空は自動出撃せずflag false旧bootを維持 (1.3223ms)
+Failed to clear saved Room request: Error: 出撃結果の確認記録を保存できませんでした。
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9105:115)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11169:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684921
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684921
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684921
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684921
+}
+✔ 実useBattle ack失敗はlocal復帰情報を保持 (1.7146ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788868684921
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11182:7
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788868684923
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684924
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684924
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684924
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684924
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:10852:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:135:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:114:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:119:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:8719:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:9719:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\outputs\raid-test-runtime\raid-browser-rLiljU\browser.test.cjs:11182:7
+✔ 実useBattle 取消通信失敗は保持して再試行、started復帰/cancelledのみ消去 (5.287ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788868684926
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684927
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684927
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684928
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788868684928
+}
+✔ 復帰済みRoomはpending開始なしで再生を許可し追加RPCなし (1.2239ms)
+{ code: 'PGRST205', message: 'missing retired table' }
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 1,
+  at: 1788868684929
+}
+✔ 互換table不在でもRoom RESULT確認後にackし、失敗時は結果を保持 (1614.4297ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2425.7112
+

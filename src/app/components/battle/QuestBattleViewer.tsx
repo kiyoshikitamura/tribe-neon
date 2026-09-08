@@ -11,6 +11,7 @@ import {
   type BattleImpactKind,
 } from "./BattleEffectPresentation";
 import "./QuestBattleViewer.css";
+import StreetBattleViewer from "./StreetBattleViewer";
 import { useAudio } from "@/audio/AudioProvider";
 import type { BattlePresentationPhase } from "@/hooks/useBattle";
 import { isInternalBattleLabel } from "@/domain/presentation/battleSkillLabels";
@@ -23,8 +24,9 @@ type Participant = BattleParticipantView & {
 
 type TimelineNode = { id: string; name: string; isEnemy?: boolean };
 
-type Props = {
+export type QuestBattleViewerProps = {
   battleMode: string;
+  street?: boolean;
   opponentName: string;
   playerParty: Participant[];
   enemyParty: Participant[];
@@ -69,7 +71,7 @@ const tacticLabel: Record<string, string> = {
   BALANCED: "バランス",
 };
 
-export default function QuestBattleViewer(props: Props) {
+export default function QuestBattleViewer(props: QuestBattleViewerProps) {
   const { playSe } = useAudio();
   const allParticipants = [...props.playerParty, ...props.enemyParty];
   const activeTimelineNode = props.actionPresentation
@@ -179,10 +181,12 @@ export default function QuestBattleViewer(props: Props) {
   const roundLimit = props.roundLimit
     ?? (props.battleMode === "RAID" ? 30 : props.battleMode === "PVP" || props.battleMode === "PVP_PRACTICE" || props.battleMode === "GVG" ? 20 : 15);
 
+  if (props.street || props.battleMode !== "RAID") return <StreetBattleViewer {...props} />;
+
   return (
     <div className={`playing-container quest-battle-viewer ${props.tutorial ? "is-tutorial is-stress-parity" : ""}`} style={props.backgroundPath ? { "--battle-background-image": `url(${props.backgroundPath})` } as React.CSSProperties : undefined} data-battle-speed={props.speed} data-acceptance-state={props.tutorial ? acceptanceState : undefined} data-action-phase={actionPhase} data-action-kind={isSkillAction ? "skill" : "normal"} data-action-actor-id={activeParticipant?.id || ""} data-action-target-id={targetParticipant?.id || ""}>
       <header className="battle-viewer-header">
-        <span>{props.battleMode === "PATROL" ? "QUEST BATTLE" : props.battleMode}</span>
+        <span>{props.battleMode}</span>
         <strong data-displayed-round={props.round} data-configured-round-limit={roundLimit}>ROUND {props.round}<small> / {roundLimit}</small></strong>
         <i>AUTO</i>
       </header>
