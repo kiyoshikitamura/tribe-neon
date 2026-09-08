@@ -1,12 +1,28 @@
 # ガチャ・非レイドバトル 本番リリース候補の検証記録
 
-更新日: 2026-09-08。STATUS: **未反映**。見た目の承認と技術検証の完了は別に扱う。
+更新日: 2026-09-08。STATUS: **反映済み**。全体CI PASSではなく、残る既存失敗・旧表示テスト不整合は下記のとおり。
+
+## 最終配信
+
+- 本番SHA: `59be3c715defa33c61adbfb0e84f16778f34525d`
+- Vercel deployment: `dpl_8up8KQuqxybgbAC8mBNCM2vhudW9`（target=production / READY）
+- 固定URL: https://tribe-neon-mhb2ax66b-kiyoshi-kitamura.vercel.app
+- 本番URL: https://www.tribe-neon.com/
+- リリース候補PR: https://github.com/kiyoshikitamura/tribe-neon/pull/29 （Draft、baseは実配信元ブランチ。マージはしていない）
+
+Production設定で新規ビルドし、APP_ENV=production / Mock=false / QA=falseをbuildとruntime両方で明示。固定URL確認後、ユーザー承認に基づきガチャ＋非レイドバトルを同時にpromoteした。Previewビルドは昇格していない。
+
+本番URLでタイトル→開始選択、法的情報3ページ、QA5経路404、立ち絵・背景・戦闘画像200、ガチャ／バトル両フォントのブラウザdecode成功を確認。pageerror=0。通信先は`https://api.tribe-neon.com`のみで、CNAMEはProduction DB識別子と一致。
+
+ガチャ・準備・VS・バトル・Resultの通し確認と確定処理は、同一製品ソースのローカル候補＋専用Preview QAで実施。本番アカウントを新規作成・消費する追加検証は行っていない。この確認範囲を本番実アカウントの全操作確認済みとは扱わない。
+
+promote直前・直後の66 alias比較では、変更は`tribe-neon.com`、`www.tribe-neon.com`、`tirbe-neon.vercel.app`の3件のみ。KPI両ドメイン・共有Preview既存aliasは無変更。生成されるproject既定aliasはProduction候補作成時に新deploymentへ付与された。
 
 ## 配信基準と取り込み
 
-- 実配信SHA: `418bf0fbadf0a92422e25452d257f9a718a46efb`
-- 実配信元: `codex/world-intro-skip-20260907`
-- Production deployment: `dpl_5aQ6LcHhifhK5wqF67x18G6QGJ2a`
+- 反映直前SHA: `418bf0fbadf0a92422e25452d257f9a718a46efb`
+- 反映直前の配信元: `codex/world-intro-skip-20260907`
+- 反映直前Production deployment: `dpl_5aQ6LcHhifhK5wqF67x18G6QGJ2a`
 - 固定URL: https://tribe-neon-p5bkvfwt1-kiyoshi-kitamura.vercel.app
 - 本番URL: https://www.tribe-neon.com/
 - Vercel project: `prj_He8QAAwvfwm74FWq2Vb8BFHCbEXb`
@@ -76,7 +92,7 @@ DNS照合で`api.tribe-neon.com`のCNAMEはProduction識別子`ktpolnkyyfkowxdmi
 
 実配信基準との差分で`supabase/`、実認証・確定処理、DB運用設定は変更なし。useBattleの変更は非レイド演出時間の指定だけで、Raidには既存時間計算を維持。共有UIはRaid分岐を維持する。DB migration、Edge配信、公開フラグ、共有alias操作は実行していない。
 
-本番反映前に、残るテスト不整合と実データ確認結果を確定し、Production環境でQAページ非公開・素材配信を確認する。ガチャと非レイドバトルは必ず一緒に反映する。本番承認はユーザーから取得済みであり、技術確認が完了した場合の再承認は不要。
+残るテストを既存不具合・旧演出テスト不整合に分類し、今回の演出契約・関連E2E・実データ確定・Production環境の確認を根拠に反映した。全体CI成功は未取得のままで、既存の認証／Home系失敗と旧battleテストの更新が残る。大規模な無関係改修や検証無効化は行っていない。
 
 ## ロールバック
 
@@ -86,4 +102,4 @@ DNS照合で`api.tribe-neon.com`のCNAMEはProduction識別子`ktpolnkyyfkowxdmi
 npx --yes vercel rollback dpl_5aQ6LcHhifhK5wqF67x18G6QGJ2a --scope kiyoshi-kitamura --yes
 ```
 
-このコマンドは記録のみで、まだ実行していない。新しい本番deploymentは作成していない。
+このロールバックコマンドは記録のみで、まだ実行していない。旧deploymentの固定URLは保持。復旧時もKPIのブランチ別ドメイン設定を保持し、本番3ドメインの向き先を確認する。DB/Edgeを戻す作業は今回のリリースには不要。
