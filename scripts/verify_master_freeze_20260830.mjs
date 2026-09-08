@@ -16,7 +16,16 @@ assert.deepEqual(guild.creation, { userLevel: 5, cashCost: 500, nameMin: 1, name
 assert.equal(quests.quests.length, 21);
 assert.deepEqual([quests.difficultyContracts.EASY.durationSec,quests.difficultyContracts.NORMAL.durationSec,quests.difficultyContracts.HARD.durationSec],[300,3600,10800]);
 assert.deepEqual([quests.difficultyContracts.EASY.vitalityCost,quests.difficultyContracts.NORMAL.vitalityCost,quests.difficultyContracts.HARD.vitalityCost],[3,10,20]);
-assert.equal(quests.difficultyContracts.HARD.dailyFirstClearCash,20);
+for (const [difficulty, cash] of Object.entries({ EASY: 600, NORMAL: 1200, HARD: 2000 })) {
+  assert.equal(quests.difficultyContracts[difficulty].cashReward, cash);
+  assert.equal(quests.difficultyContracts[difficulty].dailyFirstClearCash, 0);
+  const rows = quests.quests.filter((quest) => quest.difficulty === difficulty);
+  assert.equal(rows.length, 7);
+  for (const quest of rows) {
+    assert.equal(quest.cashReward, cash, quest.questId);
+    assert.equal(quest.dailyFirstClearCash, 0, quest.questId);
+  }
+}
 assert.equal(missions.missions.length,47);
 assert.equal(missions.missions.filter((mission)=>mission.isEnabled&&mission.preopen).length,40);
 assert.deepEqual([...new Set(missions.missions.map((m)=>m.category))].sort(),["DAILY","NORMAL"]);

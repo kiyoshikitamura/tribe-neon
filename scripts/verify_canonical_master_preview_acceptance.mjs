@@ -134,8 +134,8 @@ async function questAcceptance() {
     .select("source_key,reward_payload").eq("user_id", player.id).eq("source_key", "QUEST_HARD_FIRST");
   const { data: hardCash } = await admin.from("presents").select("quantity")
     .eq("user_id", player.id).eq("item_id", "CASH").eq("message", "HARDクエスト本日初回報酬");
-  assert(hardClaims.length === 1 && hardCash.length === 1 && hardCash[0].quantity === 20,
-    "HARD daily CASH exactly-once mismatch");
+  assert(hardClaims.length === 0 && hardCash.length === 0,
+    "Retired HARD daily CASH grant was issued");
   return "PASS";
 }
 

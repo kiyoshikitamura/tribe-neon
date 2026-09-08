@@ -55,6 +55,7 @@
     "verify:user-resource:development": "node scripts/verify_user_resource_development.mjs",
     "verify:user-resource:e2e:development": "node scripts/verify_user_resource_development_e2e.mjs",
     "verify:quest-production-master": "node scripts/verify_quest_production_master.mjs",
+    "verify:quest-cash:preview": "node --env-file=.env.preview.local scripts/verify_quest_cash_preview.mjs",
     "verify:quest-reward-pools": "node scripts/verify_quest_reward_pools.mjs",
     "verify:mock-quest-production": "node --experimental-strip-types scripts/verify_mock_quest_production.mjs",
     "generate:quest-production-db-migration": "node scripts/generate_quest_production_db_migration.mjs",

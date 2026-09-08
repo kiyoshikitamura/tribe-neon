@@ -1,0 +1,254 @@
+{
+  "scope": "Quest CASH only",
+  "checkedAt": "2026-09-08T16:46:22.518Z",
+  "baselineCommit": "826f8b770f36a6f6844d920b0adcd2853188b91d",
+  "productionProject": "ktpolnkyyfkowxdmijww",
+  "previewProject": "sufvuqdnqohpfzkwxohq",
+  "productionUnchanged": true,
+  "previewMigrationReplayUnchanged": true,
+  "masterCashDriftCount": 0,
+  "compatibilityCashDriftCount": 0,
+  "functionDefinitionDriftCount": 0,
+  "nonCashQuestFieldsUnchanged": true,
+  "master": [
+    {
+      "quest_id": "q_akihabara_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_akihabara_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_akihabara_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_ikebukuro_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_ikebukuro_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_ikebukuro_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_kawasaki_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_kawasaki_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_kawasaki_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_roppongi_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_roppongi_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_roppongi_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_shibuya_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_shibuya_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_shibuya_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_shinjuku_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_shinjuku_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_shinjuku_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_yokohama_1",
+      "difficulty": "EASY",
+      "cash_reward": 600,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_yokohama_2",
+      "difficulty": "NORMAL",
+      "cash_reward": 1200,
+      "daily_first_clear_cash": 0
+    },
+    {
+      "quest_id": "q_yokohama_3",
+      "difficulty": "HARD",
+      "cash_reward": 2000,
+      "daily_first_clear_cash": 0
+    }
+  ],
+  "functionHashes": [
+    {
+      "name": "claim_patrol_rewards",
+      "productionSha256": "9720210b16d330270a8aa0643fe1425281ead7f56e70897222f882282201356c",
+      "migrationSha256": "9720210b16d330270a8aa0643fe1425281ead7f56e70897222f882282201356c",
+      "previewSha256": "9720210b16d330270a8aa0643fe1425281ead7f56e70897222f882282201356c",
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ]
+    },
+    {
+      "name": "on_canonical_hard_quest_complete",
+      "productionSha256": "afbcbeb5512be52b67af84caa5099a081cf532095439187f0e3d29a7095ca441",
+      "migrationSha256": "afbcbeb5512be52b67af84caa5099a081cf532095439187f0e3d29a7095ca441",
+      "previewSha256": "afbcbeb5512be52b67af84caa5099a081cf532095439187f0e3d29a7095ca441",
+      "acl": [
+        "=X/postgres",
+        "postgres=X/postgres",
+        "anon=X/postgres",
+        "authenticated=X/postgres",
+        "service_role=X/postgres"
+      ]
+    }
+  ],
+  "unchangedHashes": [
+    {
+      "name": "trigger_hash",
+      "before": "36b4a68ffdbc4a1aa440ccf234327cf5",
+      "after": "36b4a68ffdbc4a1aa440ccf234327cf5"
+    },
+    {
+      "name": "enemy_pool_hash",
+      "before": "73b0ebbaf90ca8f09dec049fb302eaac",
+      "after": "73b0ebbaf90ca8f09dec049fb302eaac"
+    },
+    {
+      "name": "reward_pool_hash",
+      "before": "5e1c2de39b2f546cd86bce5d81f104cf",
+      "after": "5e1c2de39b2f546cd86bce5d81f104cf"
+    },
+    {
+      "name": "other_functions_hash",
+      "before": "b32342302b535344bf1c788f030011b4",
+      "after": "b32342302b535344bf1c788f030011b4"
+    }
+  ],
+  "runtime": {
+    "status": "PASS",
+    "projectRef": "sufvuqdnqohpfzkwxohq",
+    "masterRows": 21,
+    "results": [
+      {
+        "difficulty": "EASY",
+        "cashBefore": 1234,
+        "cashAfter": 1834,
+        "responseCash": 600,
+        "accruedCash": 600,
+        "successfulClaims": 1,
+        "rejectedConcurrentClaims": 7,
+        "retryRejected": true,
+        "xp": 100,
+        "missionChecks": 3,
+        "battleWinner": "PLAYER",
+        "legacyHardCash": 0
+      },
+      {
+        "difficulty": "NORMAL",
+        "cashBefore": 1834,
+        "cashAfter": 3034,
+        "responseCash": 1200,
+        "accruedCash": 1200,
+        "successfulClaims": 1,
+        "rejectedConcurrentClaims": 7,
+        "retryRejected": true,
+        "xp": 400,
+        "missionChecks": 2,
+        "battleWinner": "ENEMY",
+        "legacyHardCash": 0
+      },
+      {
+        "difficulty": "HARD",
+        "cashBefore": 3034,
+        "cashAfter": 5034,
+        "responseCash": 2000,
+        "accruedCash": 2000,
+        "successfulClaims": 1,
+        "rejectedConcurrentClaims": 7,
+        "retryRejected": true,
+        "xp": 1000,
+        "missionChecks": 2,
+        "battleWinner": "ENEMY",
+        "legacyHardCash": 0
+      },
+      {
+        "difficulty": "HARD",
+        "cashBefore": 5034,
+        "cashAfter": 7034,
+        "responseCash": 2000,
+        "accruedCash": 2000,
+        "successfulClaims": 1,
+        "rejectedConcurrentClaims": 7,
+        "retryRejected": true,
+        "xp": 1000,
+        "missionChecks": 2,
+        "battleWinner": "ENEMY",
+        "legacyHardCash": 0
+      }
+    ],
+    "fixturesDeleted": 2,
+    "checkedAt": "2026-09-08T16:41:47.248Z"
+  }
+}

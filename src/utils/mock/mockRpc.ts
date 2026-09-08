@@ -2813,9 +2813,6 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       ? canonicalQuest.userExp + (isFirstClear ? canonicalQuest.firstClearUserExp : 0)
       : Math.max(0, Number(quest.exp_reward || 0));
     const cashReward = canonicalQuest ? canonicalQuest.cashReward : Math.max(0, Number(quest.cash_reward || 0));
-    const dailyClaims = client.getStorage("canonical_daily_activity_claims") || [];
-    const gameDay = jstCycleDate();
-    const hardDailyCash = canonicalQuest?.difficulty === "HARD" && !dailyClaims.some((entry: any) => entry.user_id === userId && entry.game_day === gameDay && entry.source_key === "QUEST_HARD_FIRST") ? 20 : 0;
     const awardedItems = canonicalQuest
       ? [...rollCanonicalQuestItems(canonicalQuest.rewardPoolId), ...(isFirstClear && canonicalQuest.firstClearRewardPoolId ? rollCanonicalQuestItems(canonicalQuest.firstClearRewardPoolId) : [])]
       : [];
@@ -2825,16 +2822,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     user.xp = progression.xp;
 
     const presents = client.getStorage("presents") || [];
-    if (cashReward > 0) presents.push({
-      id: `patrol_reward_${p_patrol_id}`,
-      user_id: userId,
-      item_id: "CASH",
-      quantity: cashReward,
-      message: `クエスト報酬: ${quest.name}`,
-      status: "UNCLAIMED",
-      sent_at: new Date().toISOString(),
-      expire_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    });
+    if (cashReward > 0) user.cash = Number(user.cash || 0) + cashReward;
     for (const item of awardedItems) {
       presents.push({
         id: `patrol_item_${p_patrol_id}_${presents.length}`,
@@ -2847,11 +2835,6 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         expire_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       });
     }
-    if (hardDailyCash > 0) {
-      dailyClaims.push({ game_day: gameDay, user_id: userId, source_key: "QUEST_HARD_FIRST", source_ref: p_patrol_id, reward_payload: [{ itemId: "CASH", quantity: 20 }] });
-      presents.push({ id:`quest_hard_daily_${userId}_${gameDay}`,user_id:userId,item_id:"CASH",quantity:20,message:"HARDクエスト本日初回報酬",status:"UNCLAIMED",sent_at:new Date().toISOString() });
-      client.setStorage("canonical_daily_activity_claims",dailyClaims);
-    }
     if (isFirstClear) {
       firstClears.push({ user_id: userId, quest_id: quest.id, cleared_at: new Date().toISOString() });
       client.setStorage("user_quest_first_clears", firstClears);
@@ -2859,7 +2842,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     patrol.status = "COMPLETED";
     patrol.has_battle_event = false;
     patrol.battle_resolved = true;
-    patrol.rewards_accrued = { course_name: quest.name, cash: cashReward, daily_cash: hardDailyCash, xp: rewardXp, items: awardedItems, first_clear: isFirstClear };
+    patrol.rewards_accrued = { course_name: quest.name, cash: cashReward, xp: rewardXp, items: awardedItems, first_clear: isFirstClear };
     client.setStorage("users", users);
     client.setStorage("presents", presents);
     client.setStorage("user_patrols", patrols);
@@ -2871,7 +2854,6 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         patrol_id: p_patrol_id,
         course_name: quest.name,
         cash: cashReward,
-        daily_cash: hardDailyCash,
         xp: rewardXp,
         items: awardedItems,
         first_clear: isFirstClear,

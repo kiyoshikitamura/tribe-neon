@@ -91,14 +91,13 @@ client.setStorage("user_patrols", resolvedPatrols);
 
 const claimed = await executeMockRpc(client, "claim_patrol_rewards", { p_patrol_id: patrol.id });
 const claimedPatrol = client.getStorage("user_patrols")[0];
-const rewardPresent = client.getStorage("presents")[0];
 const rewardedUser = client.getStorage("users")[0];
-if (claimed.error || claimedPatrol.status !== "COMPLETED" || rewardPresent.quantity !== 250 || rewardedUser.xp !== 40) {
+if (claimed.error || claimedPatrol.status !== "COMPLETED" || rewardedUser.cash !== 5250 || claimed.data.cash !== 250 || claimedPatrol.rewards_accrued.cash !== 250 || rewardedUser.xp !== 40) {
   throw new Error("Patrol reward claim did not use authoritative quest rewards");
 }
 
 const repeatedClaim = await executeMockRpc(client, "claim_patrol_rewards", { p_patrol_id: patrol.id });
-if (!repeatedClaim.error || client.getStorage("presents").length !== 1 || client.getStorage("users")[0].xp !== 40) {
+if (!repeatedClaim.error || client.getStorage("presents").length !== 0 || client.getStorage("users")[0].cash !== 5250 || client.getStorage("users")[0].xp !== 40) {
   throw new Error("Repeated patrol reward claim was not rejected before granting rewards");
 }
 
@@ -122,7 +121,7 @@ const freeLimited = await executeMockRpc(client, "complete_patrol_instantly", {
   p_patrol_id: limitPatrol.id,
   p_use_currency: "FREE_PREOPEN",
 });
-if (!freeLimited.error || client.getStorage("users")[0].cash !== 5000) {
+if (!freeLimited.error || client.getStorage("users")[0].cash !== 5250) {
   throw new Error("Daily free instant-completion limit was not enforced");
 }
 

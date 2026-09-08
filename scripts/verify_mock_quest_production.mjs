@@ -33,9 +33,9 @@ try {
   }
 
   const first = await executeMockRpc(client, "claim_patrol_rewards", { p_patrol_id: "first" });
-  if (first.error || first.data.xp !== 200 || first.data.cash !== 300 || first.data.first_clear !== true) throw new Error("Canonical first-clear reward mismatch");
+  if (first.error || first.data.xp !== 100 || first.data.cash !== 600 || first.data.first_clear !== true) throw new Error("Canonical first-clear reward mismatch");
   const firstItems = first.data.items.map((item) => `${item.item_id}:${item.quantity}`);
-  for (const expected of ["CHAR_EXP_S:5", "CHAR_EXP_S:3", "EQUIP_EXP_S:6", "EQUIP_EXP_S:4", "CHAR_EXP_M:1", "EQUIP_EXP_M:1"]) {
+  for (const expected of ["CHAR_EXP_S:1", "EQUIP_EXP_S:1"]) {
     if (!firstItems.includes(expected)) throw new Error(`Missing first-clear item ${expected}`);
   }
 
@@ -45,6 +45,22 @@ try {
   const repeat = await executeMockRpc(client, "claim_patrol_rewards", { p_patrol_id: "repeat" });
   if (repeat.error || repeat.data.xp !== 100 || repeat.data.first_clear !== false) throw new Error("Repeat clear incorrectly reissued first-clear reward");
   if (client.getStorage("user_quest_first_clears").length !== 1) throw new Error("First-clear ledger is not exactly-once");
+  if (client.getStorage("users")[0].cash !== 1200) throw new Error("CASH must be credited directly at claim");
+  const { CANONICAL_QUESTS } = await import("../src/domain/gameplay/canonical/quests.ts");
+  for (const quest of CANONICAL_QUESTS) {
+    client.setStorage("quests", [{ id: quest.questId, name: quest.name, cash_reward: 0 }]);
+    client.setStorage("user_patrols", [{ id: quest.questId, user_id: userId, course_id: quest.questId, status: "CLAIMABLE", expires_at: new Date(0).toISOString(), battle_resolved: true }]);
+    const before = client.getStorage("users")[0];
+    const attempts = await Promise.all(Array.from({ length: 8 }, () => executeMockRpc(client, "claim_patrol_rewards", { p_patrol_id: quest.questId })));
+    const successes = attempts.filter((result) => !result.error);
+    const cash = { EASY: 600, NORMAL: 1200, HARD: 2000 }[quest.difficulty];
+    if (successes.length !== 1 || successes[0].data.cash !== cash) throw new Error(`${quest.questId}: concurrent claim mismatch`);
+    if (client.getStorage("users")[0].cash !== before.cash + cash) throw new Error(`${quest.questId}: balance mismatch`);
+    if (client.getStorage("user_patrols")[0].rewards_accrued.cash !== cash) throw new Error(`${quest.questId}: accrued mismatch`);
+    if (successes[0].data.xp !== quest.userExp) throw new Error(`${quest.questId}: EXP mismatch`);
+  }
+  if (client.getStorage("presents").some((item) => item.item_id === "CASH")) throw new Error("Quest CASH must not create a second present grant");
+  if (client.getStorage("canonical_daily_activity_claims").length) throw new Error("HARD first daily grant must be disabled");
 } finally {
   Math.random = originalRandom;
 }
