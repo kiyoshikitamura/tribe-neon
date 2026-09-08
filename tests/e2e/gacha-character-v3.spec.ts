@@ -131,7 +131,8 @@ test("cold images gate the entire scene and arrival animation", async ({ page })
   const gate = new Promise<void>((resolve) => { release = resolve; });
   await page.route("**/characters/**", async (route) => { await gate; await route.continue(); });
   await page.goto("/qa/presentation?scenario=gacha-character-v3", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("status")).toHaveText("仲間を迎える準備中…");
+  await expect(page.getByRole("status", { name: "ガチャ演出を準備中" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "獲得結果を文字で確認" })).toHaveCount(0);
   await expect(page.locator(".cg-city, .cg-approach, .cg-reveal")).toHaveCount(0);
   release();
   await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "OPENING");

@@ -45,8 +45,20 @@ for (const viewport of [{ width: 390, height: 700 }, { width: 320, height: 568 }
     expect(continueBox!.y + continueBox!.height).toBeLessThanOrEqual(viewport.height);
     await page.getByText("戦績・MVPスコアの詳細", { exact: true }).click();
     await expect(page.getByRole("heading", { name: "MVPスコア内訳", exact: true })).toBeVisible();
+    const expandedContinue = await page.getByRole("button", { name: "もう一度確認", exact: true }).boundingBox();
+    expect(expandedContinue!.y).toBeGreaterThanOrEqual(0);
+    expect(expandedContinue!.y + expandedContinue!.height).toBeLessThanOrEqual(viewport.height);
     await page.screenshot({ path: test.info().outputPath("result.png") });
     await page.getByRole("button", { name: "もう一度確認", exact: true }).click();
     await expect(page.getByRole("button", { name: "Stress Battleを開始" })).toBeVisible();
   });
 }
+
+test("legacy quest presentation lights the acting character inside its card", async ({ page }) => {
+  await page.goto("/qa/presentation?scenario=battle-5v3");
+  const actor = page.locator(".sb-unit.acting");
+  await expect(actor).toHaveCount(1);
+  await expect(actor).toHaveAttribute("data-participant-id", "player-1");
+  await expect(actor).toHaveCSS("outline-width", "2px");
+  await expect(actor).toHaveCSS("outline-offset", "-2px");
+});

@@ -22,7 +22,7 @@ async function advanceEntryToName(page: import("@playwright/test").Page) {
   await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toBeVisible();
 }
 
-test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes formation", async ({ page }) => {
+test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes formation", async ({ page, browserName }) => {
   const userId = "00000000-0000-4000-8000-000000009901";
   await page.addInitScript(({ userId }) => {
     localStorage.setItem("tribe_demo_uuid", userId);
@@ -51,9 +51,20 @@ test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes forma
   const newGameCta = page.locator(".title-entry-primary");
   if (await newGameCta.isVisible()) await newGameCta.click();
   await expect(freeCta).toBeEnabled();
+  await page.evaluate(() => {
+    const audit = { oldBackground: false, prematureTextResult: false, spinnerSeen: false };
+    Object.assign(window, { __IPHONE14_GACHA_AUDIT__: audit });
+    new MutationObserver(() => {
+      audit.oldBackground ||= Boolean(document.querySelector('.gacha-common-opening-overlay'));
+      audit.spinnerSeen ||= Boolean(document.querySelector('.cg-loading-spinner'));
+      const loading = document.querySelector('.cg-loading');
+      audit.prematureTextResult ||= Boolean(loading?.textContent?.includes('獲得結果を文字で確認') && !loading.textContent.includes('画像を読み込めませんでした'));
+    }).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
   await freeCta.click();
   const pullGate = page.locator(".cg-opening");
   await expect(pullGate).toBeVisible({ timeout:15_000 });
+  expect(await page.evaluate(() => (window as typeof window & { __IPHONE14_GACHA_AUDIT__: unknown }).__IPHONE14_GACHA_AUDIT__)).toEqual({ oldBackground: false, prematureTextResult: false, spinnerSeen: true });
   await page.screenshot({ path: test.info().outputPath("gacha-start.png") });
   await pullGate.click();
   const reveal = page.locator(".cg-reveal");
@@ -83,10 +94,12 @@ test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes forma
     expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth + 1);
     await page.screenshot({ path: test.info().outputPath(`gacha-ten-pull-result-${width}.png`) });
   }
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send("Emulation.setDeviceMetricsOverride", { width: 430, height: 844, deviceScaleFactor: 2, mobile: false });
-  await page.screenshot({ path: test.info().outputPath("gacha-ten-pull-result-desktop-dpr2.png") });
-  await cdp.send("Emulation.clearDeviceMetricsOverride");
+  if (browserName === "chromium") {
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send("Emulation.setDeviceMetricsOverride", { width: 430, height: 844, deviceScaleFactor: 2, mobile: false });
+    await page.screenshot({ path: test.info().outputPath("gacha-ten-pull-result-desktop-dpr2.png") });
+    await cdp.send("Emulation.clearDeviceMetricsOverride");
+  }
   await page.setViewportSize({ width: 390, height: 844 });
   const payload = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_gacha_execution_history") || "[]")[0]?.result_payload);
   expect(payload.results).toHaveLength(10);
