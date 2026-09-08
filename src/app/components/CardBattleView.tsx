@@ -13,6 +13,7 @@ import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { parseCanonicalEffects } from "@/domain/battle/canonical_effects";
 import PvpDeckPresentation from "./pvp/PvpDeckPresentation";
 import RaidEnemyRoster from "./raid/RaidEnemyRoster";
+import { findCanonicalRaidVariant } from "@/domain/presentation/raidRosterPresentation";
 import { SkillDetailDialog, SkillIconGrid } from "./skill/SkillPresentation";
 import "./CardBattleView.css";
 
@@ -211,7 +212,9 @@ export default function CardBattleView() {
     }
 
     if (battleMode === "RAID" && isRoomBattle) {
-      return <div className="battle-screen street-battle-screen" onClick={handleFirstUserInteraction}><StreetBattleSetup playerParty={playerPartyStates} enemyParty={enemyPartyStates} playerPower={playerPower} enemyPower={enemyPower} tutorial={false} mode="RAID" label={battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={launchRegularBattle} startLabel="討伐開始" backLabel="レイドへ戻る" resourceLabel={raidFirstEntryFree ? "初回無料" : ("RP " + raidPoints + " / 5・開始時に1消費")} onBack={()=>{if(cancelPreparedRaidBattle())playSe("UI_BACK");}}/></div>;
+      const leaderId = findCanonicalRaidVariant(undefined, battleOpponentName)?.memberCharacterIds[0];
+      const leader = CHARACTERS_MASTER.find(character => character.id === leaderId);
+      return <div className="battle-screen street-battle-screen" onClick={handleFirstUserInteraction}><StreetBattleSetup playerParty={playerPartyStates} enemyParty={enemyPartyStates} enemyLeader={leader ? {characterId:leader.id,name:leader.jpName} : undefined} enemyDetails={<RaidEnemyRoster raidName={battleOpponentName}/>} playerPower={playerPower} enemyPower={enemyPower} tutorial={false} mode="RAID" label={battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={launchRegularBattle} startLabel="討伐開始" backLabel="レイドへ戻る" resourceLabel={raidFirstEntryFree ? "初回無料" : ("RP " + raidPoints + " / 5・開始時に1消費")} onBack={()=>{if(cancelPreparedRaidBattle())playSe("UI_BACK");}}/></div>;
     }
 
     if (battleMode === "RAID") {

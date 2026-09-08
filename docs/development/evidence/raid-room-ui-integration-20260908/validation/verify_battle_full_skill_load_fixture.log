@@ -151,7 +151,7 @@
   "productionImpact": 0
 }
 
-(node:39444) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/battle/fullSkillLoadFixture.ts is not specified and it doesn't parse as CommonJS.
+(node:39848) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/battle/fullSkillLoadFixture.ts is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
 (Use `node --trace-warnings ...` to show where the warning was created)

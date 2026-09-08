@@ -2114,7 +2114,7 @@ export function useBattle(options: UseBattleOptions) {
       // The setup-screen callback can capture the pre-commit empty event
       // array. The commit ref is synchronous and is the authoritative guard.
       || (battleMode === "PVP" && pvpCommitSucceededRef.current)
-      || (battleMode === "RAID" && officialRaidEvents.length > 0)
+      || (battleMode === "RAID" && raidCommitSucceededRef.current)
       || ((battleMode === "GVG" || battleMode === "PVP_PRACTICE") && canonicalAuxEvents.length > 0);
     if (hasAuthoritativeReplay) {
       // The confirmation callback may still close over the pre-replay setup

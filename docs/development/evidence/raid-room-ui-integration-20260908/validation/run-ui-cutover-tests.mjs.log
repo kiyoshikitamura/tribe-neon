@@ -1,6 +1,6 @@
-✔ Room flag trueは旧UIと旧取得を停止しRoom接続を表示 (23.9536ms)
-✔ Room flag undefinedは既存一覧を維持しRoom画面を表示しない (10.8156ms)
-✔ Room flag falseは既存一覧を維持しRoom画面を表示しない (3.7244ms)
+✔ Room flag trueは旧UIと旧取得を停止しRoom接続を表示 (26.563ms)
+✔ Room flag undefinedは既存一覧を維持しRoom画面を表示しない (12.9461ms)
+✔ Room flag falseは既存一覧を維持しRoom画面を表示しない (5.5951ms)
 ℹ tests 3
 ℹ suites 0
 ℹ pass 3
@@ -8,5 +8,5 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 724.2331
+ℹ duration_ms 769.9736
 

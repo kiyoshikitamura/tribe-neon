@@ -56,6 +56,17 @@ test('復帰済みRoomはpending開始なしで再生を許可し追加RPCなし
  assert.equal(x.calls.length,before);assert.equal(count(x.calls,'start_raid_room_battle_v1'),0);
 });
 
+test('準備画面の古い再生callbackでも確定SnapshotのIDを上書きしない',async()=>{
+ const x=setup();
+ await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing)});
+ const launchFromSetup=x.hook.result.current.launchBattlePlaying;
+ await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+ const ids=x.hook.result.current.playerPartyStates.map(p=>p.id);assert.deepEqual(ids,['p']);
+ await act(async()=>{launchFromSetup()});
+ assert.deepEqual(x.hook.result.current.playerPartyStates.map(p=>p.id),ids);
+ assert.equal(count(x.calls,'start_raid_room_battle_v1'),1);
+});
+
 test('互換table不在でもRoom RESULT確認後にackし、失敗時は結果を保持',async()=>{
  const x=setup(),client=(globalThis as any).__raidClient,originalFrom=client.from,originalRpc=client.rpc;
  client.from=(name:string)=>{const chain=originalFrom(name);if(name==='battle_sessions')chain.maybeSingle=async()=>({data:null,error:{code:'PGRST205',message:'missing retired table'}});return chain;};
