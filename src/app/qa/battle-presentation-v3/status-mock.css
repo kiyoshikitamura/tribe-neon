@@ -14,6 +14,8 @@
 @media(max-height:650px){.bm-root .bm-unit{height:76px;margin-bottom:3px}.bm-root .bm-face{height:49px}.bm-root .bm-unit-info{padding-top:1px}.bm-root .bm-unit-info>strong{font-size:10px;margin-bottom:16px}.bm-badge{top:11px}.bm-attribute{top:14px}.bm-hp{height:4px}.bm-root .bs-badges button{height:25px;min-height:25px}.bs-badges{height:25px;bottom:1px}.fullscreen p{font-size:20px}.fullscreen h2{font-size:25px}.bm-announcement.near-actor{top:140px}.bm-announcement.near-actor p{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.bm-announcement,.bm-full-character,.bm-special-stroke{animation:none!important}}
 
+/* Group effects remain local to each target; no oversized screen-wide texture. */
+.bm-root[data-all-targets=true] .bm-impact{width:104px;height:104px;top:-22px;right:0}.bm-root[data-all-targets=true] .bm-special-stroke.attack{width:98px;height:90px}.bm-root[data-all-targets=true] .bs-vfx b{font-size:12px}.bm-root[data-all-targets=true].bm-phase-impact .bm-unit.affected{outline:1px solid #d3bc8980}.bm-root[data-all-targets=true] .bm-damage{font-size:25px}
 /* Asset-specific transparent top margin: keep Koharu's eyes at the shared height. */
 .bm-face[data-character=koharu] img,.bm-speaker-face[data-character=koharu] img{transform:translateY(-18%) scale(2.65)}
 .bm-root .bm-full-character{opacity:1;animation-name:bm-solid-enter}.bm-root .bm-announcement.fullscreen{animation-name:bm-solid-enter}

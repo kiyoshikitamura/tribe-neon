@@ -33,6 +33,7 @@ export default function BattlePresentationMock() {
   const [allyHp, setAllyHp] = useState(1200);
   const [target, setTarget] = useState(0);
   const [amount, setAmount] = useState(0);
+  const [allTargets, setAllTargets] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
@@ -55,7 +56,7 @@ export default function BattlePresentationMock() {
   const quote = resolveCharacterGachaQuote(actor.id) || "";
   const stateAction = statusKinds.includes(kind);
   const allyTarget = supportive(kind);
-  const skillName = stateAction ? kind==="cleanse" ? "弱体解除" : statusCatalog[activeStatus].name : kind === "dot" ? "毒ダメージ" : kind === "normal" ? "通常攻撃" : kind === "heal" ? "回復スキル" : "ストリートパンチ";
+  const skillName = allTargets ? (kind==="buff" ? "全体攻撃UP" : "全体攻撃") : stateAction ? kind==="cleanse" ? "弱体解除" : statusCatalog[activeStatus].name : kind === "dot" ? "毒ダメージ" : kind === "normal" ? "通常攻撃" : kind === "heal" ? "回復スキル" : "ストリートパンチ";
   const liveAudio = useRef({audio,muted});
   useEffect(()=>{liveAudio.current={audio,muted};},[audio,muted]);
 
@@ -70,7 +71,8 @@ export default function BattlePresentationMock() {
     return()=>{cancelled=true;window.clearTimeout(timeout);};
   },[loadKey]);
 
-  function begin(next: Kind, character = actor, reset = true, nextSequence = -1) {
+  function begin(next: Kind, character = actor, reset = true, nextSequence = -1, everyone = false) {
+    setAllTargets(everyone);
     run.current++; setActor(character);setKind(next);setAmount(0);setSequence(nextSequence);setRemoved(0);
     if(reset){setHp(initialHp());setAllyHp(1200);setTotals({});setStatuses({});}
     setTarget(reset ? 0 : Math.max(0,hp.findIndex(value=>value>0)));
@@ -95,10 +97,19 @@ export default function BattlePresentationMock() {
           if(kind==="cleanse") {
             setRemoved((statuses[key]||[]).filter(s=>!statusCatalog[s.id].positive).length);
             setStatuses(all=>({...all,[key]:(all[key]||[]).filter(s=>statusCatalog[s.id].positive)}));
-          } else setStatuses(all=>({...all,[key]:[...(all[key]||[]).filter(s=>s.id!==activeStatus),makeStatus(activeStatus)]}));
+          } else setStatuses(all=>{
+            const updated={...all};
+            const keys=allTargets ? Array.from({length:5},(_,i)=>`ally-${i}`) : [key];
+            for(const targetKey of keys)updated[targetKey]=[...(all[targetKey]||[]).filter(s=>s.id!==activeStatus),makeStatus(activeStatus)];
+            return updated;
+          });
         }
         else if(kind==="heal")setAllyHp(h=>Math.min(2400,h+value));
-        else {setHp(h=>h.map((v,i)=>i===target ? Math.max(0,v-value):v));setTotals(t=>({...t,[actor.id]:(t[actor.id]||0)+value}));}
+        else {
+          const dealt=allTargets ? hp.reduce((sum,v)=>sum+Math.min(v,value),0) : value;
+          setHp(h=>h.map((v,i)=>allTargets||i===target ? Math.max(0,v-value):v));
+          setTotals(t=>({...t,[actor.id]:(t[actor.id]||0)+dealt}));
+        }
         const {audio:a,muted:m}=liveAudio.current;
         if(!m)a.playSe(stateAction ? allyTarget ? "BATTLE_BUFF" : "BATTLE_DEBUFF" : kind==="heal" ? "BATTLE_BUFF" : special ? "BATTLE_CRITICAL" : "BATTLE_DAMAGE");
         setPhase("impact");
@@ -109,14 +120,14 @@ export default function BattlePresentationMock() {
       }else setPhase(sequence>=0 ? "mvp" : "idle");
     },Math.max(minimum,delay/speed));
     return()=>window.clearTimeout(timer);
-  },[phase,actor,kind,tier,speed,sequence,busy,allyHp,hp,target,stateAction,allyTarget,activeStatus,statuses,special]);
+  },[phase,actor,kind,tier,speed,sequence,busy,allyHp,hp,target,stateAction,allyTarget,activeStatus,statuses,special,allTargets]);
 
   const winnerId=Object.keys(totals).sort((a,b)=>totals[b]-totals[a])[0];
   const winner=CHARACTERS_MASTER.find(c=>c.id===winnerId) || actor;
   const showImpact=phase==="impact" || phase==="settle";
   function roster(c: Character,index:number,enemy:boolean){
     const health=enemy ? hp[index] : index===0 ? allyHp : 2400;
-    const affected=showImpact && (allyTarget ? !enemy&&index===0 : enemy&&index===target);
+    const affected=showImpact && (allyTarget ? !enemy&&(allTargets||index===0) : enemy&&(allTargets||index===target));
     return <div key={`${enemy}-${c.id}`} className={`bm-unit ${enemy?"enemy":"ally"} ${!enemy&&index===0&&busy?"acting":""} ${affected?"affected":""} ${health===0?"defeated":""}`} data-unit={`${enemy?"enemy":"ally"}-${index}`} data-positive={allyTarget} data-has-status={Boolean((statuses[`${enemy?"enemy":"ally"}-${index}`]||[]).length)}>
       <div className="bm-face" data-character={c.name}><img src={asset(c)} alt={c.jpName}/></div>
       <div className="bm-unit-info"><strong>{c.jpName}</strong><img className="bm-badge" src={getRarityBadgeAsset(c.rarity)} alt={c.rarity}/><img className="bm-attribute" src={getAttributeBadgeAsset(c.alignment)!} alt={`属性：${getAttributeLabel(c.alignment)}`}/><div className="bm-hp" role="progressbar" aria-label={`${c.jpName} HP`} aria-valuenow={health} aria-valuemin={0} aria-valuemax={2400}><i style={{width:`${health/24}%`}}/></div><small>{health.toLocaleString()} / 2,400</small></div>
@@ -137,10 +148,10 @@ export default function BattlePresentationMock() {
     rootRef.current?.scrollTo({top:0,behavior:"instant"});
   }
   if(!ready)return <main className="bm-loading"><p>{error?"素材を読み込めませんでした":"バトル素材を準備中…"}</p>{error&&<button onClick={()=>{setError(false);setLoadKey(k=>k+1);}}>再読み込み</button>}</main>;
-  return <main ref={rootRef} className={`bm-root bm-tier-${actor.rarity} bm-phase-${phase} bm-skill-${skillRarity}`} data-special={special} style={{"--bm-rate":speed,"--bm-effect-time":`${Math.max(450,550/speed)}ms`} as CSSProperties}>
+  return <main ref={rootRef} className={`bm-root bm-tier-${actor.rarity} bm-phase-${phase} bm-skill-${skillRarity}`} data-special={special} data-all-targets={allTargets} style={{"--bm-rate":speed,"--bm-effect-time":`${Math.max(450,550/speed)}ms`} as CSSProperties}>
     <header className="bm-header"><div><small>TRIBE NEON / 演出モック</small><h1>新宿ストリート</h1></div><span>ROUND <b>01</b></span><button onClick={()=>{run.current++;setSequence(-1);setPhase("mvp");}}>SKIP</button></header>
     <section className="bm-rosters"><div><h2>YOUR TEAM</h2>{allies.map((c,i)=>roster(c,i,false))}</div><div><h2>ENEMY</h2>{opponents.map((c,i)=>roster(c,i,true))}</div></section>
-    <div className="bm-event" aria-live="polite">{phase==="idle"?"操作パネルから演出を再生":phase==="actor"?`${actor.jpName} → ${allyTarget?actor.jpName:opponents[target].jpName} / ${skillName}`:stateAction?kind==="cleanse"?`${removed}件の弱体を解除`: `${skillName} 付与`:kind==="heal"?`${amount.toLocaleString()} 回復`:`${amount.toLocaleString()} ダメージ${hp[target]===0?"・撃破":""}`}</div>
+    <div className="bm-event" aria-live="polite">{phase==="idle"?"操作パネルから演出を再生":allTargets ? phase==="actor" ? `${actor.jpName} → ${allyTarget?"味方全員":"敵全員"} / ${skillName}` : allyTarget ? "味方5人に攻撃UPを付与" : `敵5人に各${amount.toLocaleString()} ダメージ` : phase==="actor"?`${actor.jpName} → ${allyTarget?actor.jpName:opponents[target].jpName} / ${skillName}`:stateAction?kind==="cleanse"?`${removed}件の弱体を解除`: `${skillName} 付与`:kind==="heal"?`${amount.toLocaleString()} 回復`:`${amount.toLocaleString()} ダメージ${hp[target]===0?"・撃破":""}`}</div>
     {phase==="actor"&&kind!=="normal"&&kind!=="dot"&&<section className={`bm-announcement ${tier===3?"fullscreen":"near-actor"}`} aria-label="スキル演出">
       {tier===3&&<img className="bm-full-character" src={asset(actor)} alt=""/>}
       <div className="bm-announcement-copy">{tier<3&&<div className="bm-speaker-face" data-character={actor.name}><img src={asset(actor)} alt={actor.jpName}/></div>}<small>{actor.rarity} / {actor.jpName}</small><p>{quote}</p><h2>{skillName}</h2><span>SKILL {skillRarity}</span></div>
@@ -148,6 +159,8 @@ export default function BattlePresentationMock() {
     </section>}
     <section className="bm-controls" aria-label="モック操作"><div className="bm-selection"><label>発動キャラ<select disabled={busy} value={actor.id} onChange={e=>{setActor(CHARACTERS_MASTER.find(c=>c.id===e.target.value)!);setStatuses({});}}>{CHARACTERS_MASTER.map(c=><option key={c.id} value={c.id}>{c.rarity} {c.jpName}</option>)}</select></label><button disabled={busy} onClick={()=>setSpeed(s=>s===1?2:1)}>×{speed}</button><button onClick={()=>{setMuted(m=>!m);void audio.unlockAudio();}}>SE {muted?"OFF":"ON"}</button></div>
       <label className="bm-skill-select">スキルレアリティ<select aria-label="スキルレアリティ" value={skillRarity} disabled={busy} onChange={e=>setSkillRarity(e.target.value as typeof rarities[number])}>{rarities.map(r=><option key={r}>{r}</option>)}</select></label>
+      <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("skill",actor,true,-1,true)}>全体攻撃</button><button disabled={busy} onClick={()=>{setActiveStatus("ATK_UP");begin("buff",actor,true,-1,true);}}>全体バフ</button></div>
+      <small className="bm-note">全体ケースは選択中のキャラ・スキルレアリティで再生。毎回HPと状態をリセット。攻撃は敵5人に各1,200、バフは味方5人に攻撃UP・2ターンの固定サンプル。</small>
       <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("normal")}>通常攻撃</button>{rarities.map(r=><button key={r} disabled={busy} onClick={()=>begin("skill",r==="SSR"?initialActor:first(r))}>{r}キャラ</button>)}</div>
       <div className="bm-buttons"><button disabled={busy} onClick={()=>begin("skill")}>選択キャラ</button><button disabled={busy} onClick={()=>begin("heal")}>回復</button><button disabled={busy} onClick={()=>begin("finish")}>撃破</button><button disabled={busy} onClick={()=>begin("normal",first("N"),true,0)}>連続再生</button></div>
       <div className="bs-controls"><label>状態効果<select aria-label="状態効果" disabled={busy} value={selectedStatus} onChange={e=>setSelectedStatus(e.target.value as StatusId)}>{Object.entries(statusCatalog).map(([id,c])=><option key={id} value={id}>{c.name}</option>)}</select></label><button disabled={busy} onClick={()=>playStatus(selectedStatus)}>付与を再生</button></div>
