@@ -24,6 +24,7 @@ import { GameContext } from "@/app/context/GameContext";
 import { WORLD_STAGES } from "@/app/components/SetupView";
 import { QA_PRESENTATION_SCENARIOS, VISUAL_COMPLIANCE_GATE, type QaPresentationScenarioId } from "@/domain/presentation/qaHarness";
 import { resolveSsrGachaQuote } from "@/domain/presentation/ssrGachaQuotes";
+import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { waitForBrowserPaint } from "@/domain/presentation/browserPaint";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
@@ -344,6 +345,30 @@ function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPM
   return <GameContext.Provider value={game as any}><div className="qa-gacha-result" data-gacha-result-type={type}><CommonModals /></div></GameContext.Provider>;
 }
 
+function CharacterGachaV3Fixture() {
+  const query = useMemo(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search), []);
+  const [scoutAnimationState, setScoutAnimationState] = useState<null | "READY" | "SHOW_RESULTS">("READY");
+  const [destination, setDestination] = useState("");
+  const sequence = query.get("single") === "true" ? [query.get("rarity") || "SSR"] : ["N", "R", "SR", "SSR", "N", "SR", "R", "SSR", "R", "SR"];
+  const results = useMemo(() => sequence.map((rarity, index) => {
+    const characters = CHARACTERS_MASTER.filter((entry) => entry.rarity === rarity);
+    const character = characters[index % characters.length];
+    return { type: "CHARACTER", characterId: character.id, name: character.jpName, rarity,
+      imageUrl: getCharacterTransparentImg(character.name), attributeKey: character.alignment,
+      role: character.homeTown, ...getCharacterBaseStats(character.id, 1, 0),
+      awakeningLevel: index > 4 ? 1 : 0,
+      convertReward: index > 4 ? "覚醒進捗 +1（1/2）" : "新規獲得" };
+  }), []);
+  const game = { scoutAnimationState, setScoutAnimationState, scoutFlashingColor: "GOLD", scoutResults: results,
+    playSe: () => undefined, playCyberSe: () => undefined,
+    onboardingState: { tutorial_step: query.get("tutorial") === "false" ? "COMPLETE" : "AUTO_FORMATION" },
+    navigateTab: (tab: string) => setDestination(tab) };
+  return <GameContext.Provider value={game as any}><div data-gacha-v3-fixture data-destination={destination}>
+    <button onClick={() => setScoutAnimationState("READY")}>演出を再生</button><CommonModals />
+  </div></GameContext.Provider>;
+}
+
+
 function PublicProfileFixture() {
   const [open, setOpen] = useState(true);
   return <GameContext.Provider value={{ playCyberSe: () => undefined } as any}>{open ? <PublicUserProfile profile={{
@@ -480,6 +505,7 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
 }
 
 function Scenario({ id }: { id: QaPresentationScenarioId }) {
+  if (id === "gacha-character-v3") return <CharacterGachaV3Fixture />;
   if (id.startsWith("first-home-")) return <ProductionHomeFixture scenario={id as HomeScenario} />;
   if (id === "gacha-ssr-reveal") return <SsrRevealFixture />;
   if (id === "battle-5v3") return <BattleFixture size={3} />;

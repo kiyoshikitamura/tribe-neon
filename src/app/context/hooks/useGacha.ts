@@ -20,6 +20,7 @@ export function useGacha() {
   const [scoutAnimationState, setScoutAnimationState] = useState<null | "PROCESSING" | "FLASHING" | "READY" | "SHOW_RESULTS">(null);
   const [scoutFlashingColor, setScoutFlashingColor] = useState<"BLUE" | "PURPLE" | "GOLD">("BLUE");
   const [scoutResults, setScoutResults] = useState<any[]>([]);
+  const [scoutPresentationCategory, setScoutPresentationCategory] = useState<string | null>(null);
 
   return {
     featureOperatingStates, setFeatureOperatingStates,
@@ -32,6 +33,7 @@ export function useGacha() {
     specialPityPoints, setSpecialPityPoints,
     scoutAnimationState, setScoutAnimationState,
     scoutFlashingColor, setScoutFlashingColor,
-    scoutResults, setScoutResults
+    scoutResults, setScoutResults,
+    scoutPresentationCategory, setScoutPresentationCategory
   };
 }

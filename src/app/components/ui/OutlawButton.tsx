@@ -66,7 +66,7 @@ export default function OutlawButton({
     >
       <span className="outlaw-button-inner">
         {busy && <span className="spinner outlaw-button-spinner" aria-hidden="true" />}
-        {busy ? (loadingLabel ?? "処理中…") : children}
+        {busy ? (loadingLabel || "処理中…") : children}
       </span>
     </button>
   );
