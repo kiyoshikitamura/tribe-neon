@@ -1,4 +1,4 @@
-import type { RaidParticipantDto, RaidRewardDto, RaidRoomDto } from './raidRoom';
+import type { RaidDifficultyId, RaidParticipantDto, RaidRewardDto, RaidRoomDto } from './raidRoom';
 
 /** サーバーが開始済みの戦闘を返す参照。クライアントでReplayを生成しない。 */
 export interface RaidBattleReference {
@@ -6,8 +6,13 @@ export interface RaidBattleReference {
   readonly replayId: string;
 }
 
+export interface RaidBossChoice { readonly raidVariantId: string; readonly name: string }
+export interface RaidRoomCreateRequest { readonly difficultyId: RaidDifficultyId; readonly raidVariantId: string; readonly requestId: string }
+
 /** 実API接続時の境界。未実装のRPC名や報酬付与処理はここに置かない。 */
 export interface RaidRoomTransport {
+  listBossChoices?(): Promise<readonly RaidBossChoice[]>;
+  createRoom?(request: RaidRoomCreateRequest): Promise<RaidRoomDto>;
   listRooms(): Promise<readonly RaidRoomDto[]>;
   getRoom(roomId: string): Promise<RaidRoomDto>;
   listParticipants(roomId: string): Promise<readonly RaidParticipantDto[]>;
@@ -27,6 +32,10 @@ export interface RaidRoomClientState {
   readonly room: RaidRoomResource<RaidRoomDto>;
   readonly participants: RaidRoomResource<readonly RaidParticipantDto[]>;
   readonly rewards: RaidRoomResource<readonly RaidRewardDto[]>;
+  readonly canCreate: boolean;
+  readonly bossChoices: RaidRoomResource<readonly RaidBossChoice[]>;
+  readonly creating: boolean;
+  readonly createError: string | null;
   readonly joining: boolean;
   readonly joinError: string | null;
 }
@@ -35,6 +44,9 @@ export interface RaidRoomController {
   getSnapshot(): RaidRoomClientState;
   subscribe(listener: () => void): () => void;
   loadRooms(): Promise<void>;
+  loadBossChoices(): Promise<void>;
+  resetCreateRequest(): void;
+  createRoom(difficultyId: RaidDifficultyId, raidVariantId: string): Promise<RaidRoomDto | null>;
   selectRoom(roomId: string | null, rescueId?: string): Promise<void>;
   refreshRoom(): Promise<void>;
   join(): Promise<RaidBattleReference | null>;
@@ -50,7 +62,7 @@ const failure = <T>(): RaidRoomResource<T> => ({ status: 'error', data: null, er
 export function createRaidRoomController(transport: RaidRoomTransport): RaidRoomController {
   let state: RaidRoomClientState = {
     rooms: idle(), selectedRoomId: null, room: idle(), participants: idle(), rewards: idle(),
-    joining: false, joinError: null,
+    joining: false, joinError: null, canCreate: !!transport.createRoom && !!transport.listBossChoices, bossChoices: idle(), creating: false, createError: null,
   };
   const listeners = new Set<() => void>();
   let disposed = false;
@@ -61,6 +73,9 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
   // 選択を変えても通信中の参加要求は取り消せないため、settleまで連打防止を維持する。
   // 通信失敗時のサーバー確定有無は判断できない。再送の二重消費防止はサーバー側の冪等性が必要。
   let joinPending = false;
+  let createPending = false;
+  let createAttempt: { key: string; requestId: string } | null = null;
+  let choicesRevision = 0;
 
   const update = (patch: Partial<RaidRoomClientState>) => {
     if (disposed) return;
@@ -111,6 +126,40 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
       listeners.add(listener);
       return () => { listeners.delete(listener); };
     },
+    resetCreateRequest() { if (!createPending) { createAttempt = null; update({ createError: null }); } },
+    async loadBossChoices() {
+      if (disposed || !transport.listBossChoices) return;
+      const revision = ++choicesRevision;
+      update({ bossChoices: loading() });
+      try {
+        const choices = await transport.listBossChoices();
+        if (!disposed && revision === choicesRevision) update({ bossChoices: success(choices) });
+      } catch {
+        if (!disposed && revision === choicesRevision) update({ bossChoices: failure() });
+      }
+    },
+    async createRoom(difficultyId, raidVariantId) {
+      if (disposed || createPending || joinPending || !transport.createRoom || !state.canCreate) return null;
+      createPending = true;
+      const revision = selectionRevision;
+      update({ creating: true, createError: null });
+      try {
+        const key = JSON.stringify([difficultyId, raidVariantId]);
+        if (!createAttempt || createAttempt.key !== key) createAttempt = { key, requestId: globalThis.crypto.randomUUID() };
+        const room = await transport.createRoom({ difficultyId, raidVariantId, requestId: createAttempt.requestId });
+        if (!room.roomId || room.difficultyId !== difficultyId) throw new Error('Invalid created room');
+        createAttempt = null;
+        if (disposed || revision !== selectionRevision) return null;
+        selectionRevision++; detailRevision++; listRevision++;
+        rescueId = undefined;
+        update({ selectedRoomId: room.roomId, room: success(room), participants: idle(), rewards: idle(),
+          rooms: idle(), joinError: null });
+        return room;
+      } catch {
+        update({ createError: '作成できませんでした。時間をおいて同じ内容で再度お試しください。' });
+        return null;
+      } finally { createPending = false; update({ creating: false }); }
+    },
     async loadRooms() {
       if (disposed) return;
       const revision = ++listRevision;
@@ -132,7 +181,7 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
     },
     refreshRoom,
     async join() {
-      if (disposed || joinPending || state.selectedRoomId === null) return null;
+      if (disposed || joinPending || createPending || state.selectedRoomId === null) return null;
       const room = state.room.data;
       if (state.room.status !== 'success' || !room || room.serverEligibility.status !== 'eligible') {
         update({ joinError: '参加条件を確認してからお試しください。' });

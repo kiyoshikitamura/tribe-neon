@@ -76,3 +76,24 @@ test('ineligible空reasonsを保持し、eligibleへ矛盾理由を混入した�
   assert.deepEqual((await createRaidRoomRpcTransport(clientFor(roomFixture('room-a',{serverEligibility:eligibility}))).getRoom('room-a')).serverEligibility,eligibility);
   await assert.rejects(createRaidRoomRpcTransport(clientFor(roomFixture('room-a',{serverEligibility:{status:'eligible',evaluatedAt:'2026-09-08T00:00:00Z',reasons:['denied']}}))).getRoom('room-a'));
 });
+
+test('生成は明示opt-in、契約キーを送り未接続参加を成功にしない', async () => {
+  assert.equal(createRaidRoomRpcTransport(clientFor(null)).createRoom, undefined);
+  const calls = [];
+  const transport = createRaidRoomRpcTransport({ rpc: async (name, args) => {
+    calls.push({ name, args });
+    return { data: name === 'list_raid_room_boss_choices_v1' ? { choices: [{ raidVariantId: 'boss-a', name: 'ボス' }] } : roomFixture(), error: null };
+  } }, { enableCreation: true });
+  assert.deepEqual(await transport.listBossChoices(), [{ raidVariantId: 'boss-a', name: 'ボス' }]);
+  const request = { difficultyId: 'intermediate', raidVariantId: 'boss-a', requestId: 'request-a' };
+  assert.equal((await transport.createRoom(request)).roomId, 'room-a');
+  assert.deepEqual(calls[1], { name: 'create_raid_room_v1', args: { p_difficulty_id: 'intermediate', p_raid_variant_id: 'boss-a', p_request_id: 'request-a' } });
+  await assert.rejects(transport.joinRoom({ roomId: 'room-a' }));
+});
+
+test('生成の停止エラー・不正DTO・候補重複は成功にしない', async () => {
+  const disabled = createRaidRoomRpcTransport({ rpc: async () => ({ data: null, error: { code: '55000' } }) }, { enableCreation: true });
+  await assert.rejects(disabled.createRoom({ difficultyId: 'beginner', raidVariantId: 'a', requestId: 'r' }));
+  await assert.rejects(createRaidRoomRpcTransport(clientFor({}), { enableCreation: true }).createRoom({ difficultyId: 'beginner', raidVariantId: 'a', requestId: 'r' }));
+  await assert.rejects(createRaidRoomRpcTransport(clientFor({ choices: [{ raidVariantId: 'a', name: 'A' }, { raidVariantId: 'a', name: 'B' }] }), { enableCreation: true }).listBossChoices());
+});

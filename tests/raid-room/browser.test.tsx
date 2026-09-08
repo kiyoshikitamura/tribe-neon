@@ -290,3 +290,67 @@ test('SSRとhydration間で期限を跨いでも不一致なくマウント後�
     assert.match(container.textContent ?? '', /期限を過ぎました/);
   } finally { act(() => root?.unmount()); container.remove(); controller.dispose(); }
 });
+
+test('作成の再送IDを保ち、連打抑止・成功Room表示・戦闘未開始を守る', async () => {
+  const requests: any[] = [];
+  const pending = deferred<any>();
+  const created = roomFixture('created', { difficultyId: 'beginner', serverEligibility: { status: 'unknown' } });
+  const h = harness({
+    listRooms: async () => requests.length >= 2 ? [created] : [],
+    listBossChoices: async () => [{ raidVariantId: 'boss-a', name: '確認ボス' }],
+    createRoom: async request => { requests.push(request); if (requests.length === 1) throw new Error('network'); return pending.promise; },
+  });
+  try {
+    await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
+    fireEvent.click(h.ui.getByRole('button', { name: 'レイドを作成' }));
+    await waitFor(() => assert.equal(h.controller.getSnapshot().bossChoices.status, 'success'));
+    fireEvent.change(h.ui.getByRole('combobox', { name: 'ボス' }), { target: { value: 'boss-a' } });
+    fireEvent.click(h.ui.getByRole('button', { name: '作成する' }));
+    await h.ui.findByRole('alert');
+    fireEvent.click(h.ui.getByRole('button', { name: '作成する' }));
+    fireEvent.click(h.ui.getByRole('button', { name: '作成する' }));
+    assert.equal(requests.length, 2);
+    assert.equal(requests[0].requestId, requests[1].requestId);
+    const button = h.ui.getByRole('button', { name: '作成する' });
+    assert.equal(button.textContent, '');
+    assert.equal(button.hasAttribute('disabled'), true);
+    await act(async () => pending.resolve(created));
+    await waitFor(() => assert.equal(h.controller.getSnapshot().selectedRoomId, 'created'));
+    assert.deepEqual(h.battles, []);
+    assert.equal(h.controller.getSnapshot().room.data?.serverEligibility.status, 'unknown');
+    fireEvent.click(h.ui.getByRole('button', { name: '一覧へ' }));
+    await h.ui.findByRole('button', { name: 'Roomを開く' });
+    assert.equal(h.controller.getSnapshot().rooms.data?.[0].roomId, 'created');
+  } finally { h.close(); }
+});
+
+test('作成payload変更は新ID、候補なしは作成を抑止', async () => {
+  const requests: any[] = [];
+  const h = harness({
+    listBossChoices: async () => [],
+    createRoom: async request => { requests.push(request); throw new Error('disabled'); },
+  });
+  try {
+    await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
+    fireEvent.click(h.ui.getByRole('button', { name: 'レイドを作成' }));
+    await h.ui.findByText('作成できるボスはありません。');
+    assert.equal(h.ui.getByRole('button', { name: '作成する' }).hasAttribute('disabled'), true);
+    await act(async () => { await h.controller.createRoom('beginner', 'a'); await h.controller.createRoom('intermediate', 'a'); });
+    assert.notEqual(requests[0].requestId, requests[1].requestId);
+    assert.equal(h.controller.getSnapshot().selectedRoomId, null);
+  } finally { h.close(); }
+});
+
+test('作成待ち中に選択を変えた場合は古い作成応答で画面を戻さない', async () => {
+  const pending = deferred<any>();
+  const h = harness({ listBossChoices: async () => [], createRoom: async () => pending.promise });
+  try {
+    let creating: Promise<any>;
+    await act(async () => { creating = h.controller.createRoom('beginner', 'a'); });
+    await act(async () => { await h.controller.selectRoom('room-a'); });
+    await act(async () => { pending.resolve(roomFixture('created', { difficultyId: 'beginner' })); await creating!; });
+    assert.equal(h.controller.getSnapshot().selectedRoomId, 'room-a');
+    assert.equal(h.controller.getSnapshot().creating, false);
+    assert.deepEqual(h.battles, []);
+  } finally { h.close(); }
+});

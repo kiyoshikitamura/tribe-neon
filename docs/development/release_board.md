@@ -1,3 +1,9 @@
+# Raid第6工程 — VALIDATED
+
+基準67070ed。Room作成追加消費なしを確認。A-06: 認証・Lv5・総合力を確認する公開生成RPC、本人単位request冪等性、boss選択肢参照。B-06: 生成操作・adapter・QA fixture。C-06: 生成SQLの条件・再送・副作用検証。P-06: 親統合。旧開始/終了/報酬経路との分離前の誤運用を防ぐため、生成APIの有効化設定は初期false。実DB適用・公開参加/戦闘/救援/報酬接続はこの工程で完了扱いにしない。
+
+親検証: 生成SQL20件、共通45件、React19件、全体TypeScript・Mock build PASS。詳細: raid_room_phase6_integration.md。
+
 # Raid第5工程 — VALIDATED
 
 基準SHA: `94ed7cc7bcc4a093a0395d2f027c6c9b06ba0ed1`。2026-09-08、開催数上限は同時開催Room数10/10/10/5、終了は開始から24時間または撃破と確認済み。第4工程以前の「上限集計単位・期限未確認」はこの決定で解消。

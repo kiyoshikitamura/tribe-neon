@@ -25,8 +25,22 @@ export function createRaidRoomQaTransport(): RaidRoomTransport {
     if (!room) throw new Error("QA Room unavailable");
     return room;
   };
+  const creations = new Map<string, { key: string; room: RaidRoomDto }>();
   const pause = () => new Promise<void>((resolve) => setTimeout(resolve, 200));
   return {
+    async listBossChoices() { await pause(); return [{ raidVariantId: "qa-boss", name: "確認用ボス" }]; },
+    async createRoom(request) {
+      await pause();
+      const key = JSON.stringify([request.difficultyId, request.raidVariantId]);
+      const previous = creations.get(request.requestId);
+      if (previous) { if (previous.key !== key) throw new Error("QA conflict"); return previous.room; }
+      if (request.raidVariantId !== "qa-boss") throw new Error("QA unknown boss");
+      const created: RaidRoomDto = { ...rooms[0], roomId: `qa-created-${request.requestId}`, difficultyId: request.difficultyId,
+        owner: known({ userId: "qa-self", name: "確認用作成者", leaderIconUrl: unknown }),
+        createdAt: known(new Date().toISOString()), expiresAt: known(new Date(Date.now() + 86400000).toISOString()),
+        participantCount: known(1), hp: known({ current: 100000, max: 100000 }), serverEligibility: unknown };
+      rooms.push(created); creations.set(request.requestId, { key, room: created }); return created;
+    },
     async listRooms() { await pause(); return rooms; },
     async getRoom(roomId) { await pause(); return find(roomId); },
     async listParticipants(roomId) {
@@ -39,7 +53,7 @@ export function createRaidRoomQaTransport(): RaidRoomTransport {
         { roomId, player: { userId: "qa-rescuer", name: "確認用救援者", leaderIconUrl: unknown }, currentGuild: unknown,
           battleGuildSnapshot: unknown, finalizedBattles: known(0), rawDamage: known(0), appliedDamage: known(0) },
       ];
-      await pause(); return participants;
+      await pause(); return room.roomId.startsWith("qa-created-") ? [{ ...participants[0], finalizedBattles: known(0), rawDamage: known(0), appliedDamage: known(0) }] : participants;
     },
     async getRewards(roomId) {
       find(roomId); await pause();

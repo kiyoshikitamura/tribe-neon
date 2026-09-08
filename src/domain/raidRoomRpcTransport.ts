@@ -9,6 +9,7 @@ export interface RaidRoomRpcClient {
 
 /** 未接続の権利処理は後続のサーバーAuthorityからのみ注入する。 */
 export interface RaidRoomRpcAuthorities {
+  enableCreation?: boolean;
   getRewards?: (roomId: string) => Promise<unknown>;
   joinRoom?: (request: { readonly roomId: string; readonly rescueId?: string }) => Promise<unknown>;
 }
@@ -147,6 +148,25 @@ export function createRaidRoomRpcTransport(client: RaidRoomRpcClient, authoritie
     throw new Error('Raid room pagination limit exceeded');
   }
   return {
+    ...(authorities.enableCreation ? {
+      async listBossChoices() {
+        const response = object(await rpc('list_raid_room_boss_choices_v1', {}));
+        const choices = array(response.choices, value => {
+          const entry = object(value);
+          return { raidVariantId: text(entry.raidVariantId), name: text(entry.name) };
+        });
+        if (new Set(choices.map(entry => entry.raidVariantId)).size !== choices.length) invalid();
+        return choices;
+      },
+      async createRoom(request: import('./raidRoomClient').RaidRoomCreateRequest) {
+        const difficultyId = choice(request.difficultyId, RAID_DIFFICULTIES.map(entry => entry.id));
+        const response = room(await rpc('create_raid_room_v1', {
+          p_difficulty_id: difficultyId, p_raid_variant_id: text(request.raidVariantId), p_request_id: text(request.requestId),
+        }));
+        if (response.difficultyId !== difficultyId) invalid();
+        return response;
+      },
+    } : {}),
     listRooms: () => pages('list_raid_rooms_v1', { p_difficulty_id: null }, 'rooms', room, (entry) => entry.roomId),
     async getRoom(roomId) {
       const id = text(roomId);

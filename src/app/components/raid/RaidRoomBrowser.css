@@ -23,3 +23,6 @@
 .raid-room-browser .outlaw-button[aria-busy="true"] .spinner { width: 24px; height: 24px; }
 .raid-room-browser .canonical-dialog-body { scrollbar-color: rgba(160, 160, 170, .3) transparent; }
 @media (max-width: 350px) { .raid-room-browser { padding: 8px; } .raid-room-row { gap: 6px; } }
+
+.raid-room-boss-choice { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.raid-room-boss-choice select { width: 100%; min-height: 44px; padding: 8px; color: inherit; background: #191b22; border: 1px solid #555861; border-radius: 6px; font: inherit; }
