@@ -15,6 +15,8 @@ import OutlawButton from "./ui/OutlawButton";
 import OutlawCard from "./ui/OutlawCard";
 import RankPresentation from "./presentation/RankPresentation";
 import StatusMetric from "./presentation/StatusMetric";
+import RaidRoomConnectedBrowser from "./raid/RaidRoomConnectedBrowser";
+import type { RaidRoomBriefing } from "../../domain/raidRoomClient";
 import RaidEnemyRoster from "./raid/RaidEnemyRoster";
 import "./RaidTab.css";
 
@@ -22,7 +24,7 @@ type RaidDialog = "shortage" | "recovery" | "recovery-error" | "battle-backgroun
 
 export default function RaidTab() {
   const {
-    startCardBattle, playCyberSe, navigateTab, userLevel, raidPoints, raidFirstEntryFree,
+    startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, navigateTab, userLevel, raidPoints, raidFirstEntryFree,
     setRaidPoints, setRaidFirstEntryFree, userGuildMember, fetchGuildDetail, session, syncBootstrapData,
     raidTopRefreshRevision,
   } = useGame();
@@ -137,8 +139,18 @@ export default function RaidTab() {
     setDialog(null);
   };
 
+  const openRoomBriefing = async (briefing: RaidRoomBriefing) => {
+    const background = await preloadAsset({ src: getCanonicalBattleBackground(briefing.baseId || "") || "/bg/bg_street_shinjuku.jpg", fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true });
+    if (!background.resolvedSrc) throw new Error("戦場の背景を取得できませんでした。");
+    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" });
+  };
+
   return <>
     <HubPage className="raid-view" title="レイド" hideVisualHeader status={readiness.status} onRetry={readiness.retry}>
+      {process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true" && <RaidRoomConnectedBrowser
+        rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true }}
+        setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
+        onBattleReady={() => { throw new Error("出撃準備から開始してください。"); }} />}
       {loading ? <div className="raid-loading" role="status">レイド情報を取得中…</div> : errorMessage ? <OutlawCard className="raid-error"><p>{errorMessage}</p><OutlawButton variant="primary" onClick={() => void loadRaidTop()}>再読み込み</OutlawButton></OutlawCard> : activeRaids.length === 0 ? <OutlawCard className="raid-empty"><strong>現在開催中のレイドはありません</strong><p>次の開催情報が確定すると、ここに表示されます。</p></OutlawCard> : <>
         <div className="raid-target-tabs" role="tablist" aria-label="レイド対象">{activeRaids.map((raid) => <button key={raid.id} role="tab" aria-selected={raid.id === selectedRaid?.id} className={raid.id === selectedRaid?.id ? "is-active" : ""} onClick={() => setSelectedRaidId(raid.id)}>{getCanonicalBattleAreaName(raid.baseId) || raid.baseId}</button>)}</div>
         <OutlawCard className={`raid-boss-hero ${isDefeated || isExpired ? "raid-boss-ended" : ""}`}>

@@ -1,4 +1,7 @@
 "use client";
+import type { RaidRoomBriefing } from "../domain/raidRoomClient";
+import { createRaidRoomBattleAttempt } from "../domain/raidRoomBattleAttempt";
+
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/utils/supabase";
@@ -220,6 +223,7 @@ export function useBattle(options: UseBattleOptions) {
   const battleEndingInFlightRef = useRef(false);
   const pendingPvpStartRef = useRef<any[] | null>(null);
   const pvpCommitSucceededRef = useRef(false);
+  const roomAttemptRef = useRef<ReturnType<typeof createRaidRoomBattleAttempt> | null>(null);
   const pendingRaidStartRef = useRef<any[] | null>(null);
   const raidCommitSucceededRef = useRef(false);
   const [settledPatrolEncounterId, setSettledPatrolEncounterId] = useState<string | null>(null);
@@ -452,8 +456,10 @@ export function useBattle(options: UseBattleOptions) {
     patrolIdOverride?: string,
     presentationOverride?: Partial<BattlePresentationContext>,
     prepareOnly: boolean = false,
+    roomBriefing?: RaidRoomBriefing,
   ) => {
     if (!session) return;
+    const savedRoomReceipt = roomBriefing ? roomAttemptRef.current?.savedReceipt() : null;
     if (mode === "PATROL" && patrolIdOverride && patrolIdOverride === settledPatrolEncounterId) return;
     setTutorialBattleActive(mode === "PATROL" && tutorialStep === "TUTORIAL_BATTLE");
     if (mode === "PATROL") activePatrolEncounterIdRef.current = patrolIdOverride || patrol?.id || null;
@@ -485,7 +491,7 @@ export function useBattle(options: UseBattleOptions) {
       setErrorMessage("GvGは公式マッチが開催中の場合のみ開始できます。");
       return;
     }
-    if (mode === "RAID" && userLevel < 5) {
+    if (mode === "RAID" && !savedRoomReceipt && userLevel < 5) {
       setErrorMessage("レイドへの参加にはプレイヤーレベル5以上が必要です。");
       return;
     }
@@ -575,9 +581,11 @@ export function useBattle(options: UseBattleOptions) {
       }
     }
 
-    if (mode === "RAID") {
+    if (mode === "RAID" && !savedRoomReceipt) {
       try {
-        const { data: currentRaids, error: raidsError } = await supabase.rpc("get_active_raids");
+        const { data: currentRaids, error: raidsError } = roomBriefing
+          ? await supabase.rpc("get_raid_room_v1", { p_room_id: roomBriefing.roomId }).then(({ data, error }: any) => ({ data: data ? [{ id: roomBriefing.raidBossInstanceId, bossMasterId: roomBriefing.raidVariantId, currentHp: data.hp?.value?.current }] : [], error }))
+          : await supabase.rpc("get_active_raids");
         const currentRaid = Array.isArray(currentRaids)
           ? currentRaids.find((entry: any) => String(entry.id) === String(areaIdOrOpponentUserId))
           : null;
@@ -699,7 +707,9 @@ export function useBattle(options: UseBattleOptions) {
     let battleUserCharacters = userCharactersDbList;
     let battleUserSkills = userSkillsList;
     let battleUserEquipments = userEquipmentsList;
-    if (mode === "PVP" || mode === "RAID") {
+    const retryCharacters = roomBriefing ? roomAttemptRef.current?.characters() : null;
+    if (retryCharacters) party = retryCharacters;
+    if ((mode === "PVP" || mode === "RAID") && !retryCharacters) {
       const { data: mainFormation, error: mainFormationError } = await supabase.rpc("get_current_main_formation");
       const canonicalParty = Array.isArray(mainFormation?.characters)
         ? mainFormation.characters.map((entry: any) => String(entry.character_id || "")).filter(Boolean).slice(0, 5)
@@ -733,7 +743,8 @@ export function useBattle(options: UseBattleOptions) {
     setAp(0);
 
     // 味方部隊の個別ステータス構築
-    let initialPlayerParty: ParticipantState[] = userCharRecords.map((charRecord, idx) => {
+    let initialPlayerParty: ParticipantState[] = savedRoomReceipt
+      ? patrolSnapshotToParticipants(savedRoomReceipt.player_snapshot, false) : userCharRecords.map((charRecord, idx) => {
       const stats = getCharacterTotalStats(charRecord, battleUserEquipments);
       const master = CHARACTERS_MASTER.find(c => c.id === charRecord.character_id);
 
@@ -794,8 +805,8 @@ export function useBattle(options: UseBattleOptions) {
     setPlayerPartyStates(initialPlayerParty);
 
     // 敵（エネミー）部隊の構築
-    let initialEnemyParty: ParticipantState[] = [];
-    let loadedRealEnemy = false;
+    let initialEnemyParty: ParticipantState[] = savedRoomReceipt ? patrolSnapshotToParticipants(savedRoomReceipt.enemy_snapshot, true) : [];
+    let loadedRealEnemy = Boolean(savedRoomReceipt);
 
     if (mode === "PATROL") {
       initialEnemyParty = [{
@@ -1211,7 +1222,9 @@ export function useBattle(options: UseBattleOptions) {
               p_tactic: toDeterministicTactic(tactic),
             })
         : replayMode === "RAID"
-          ? await supabase.rpc("start_raid_battle", {
+          ? roomBriefing
+            ? await (roomAttemptRef.current ??= createRaidRoomBattleAttempt(roomBriefing.roomId)).start(supabase, party, toDeterministicTactic(tactic))
+            : await supabase.rpc("start_raid_battle", {
               p_instance_id: areaIdOrOpponentUserId,
               p_character_ids: party,
               p_tactic: toDeterministicTactic(tactic),
@@ -1436,8 +1449,10 @@ export function useBattle(options: UseBattleOptions) {
         let { data: resolvedReplay, error: resolveError } = await supabase.functions.invoke("resolve-battle", { body: { replaySessionId } });
         if (resolveError) { const retry = await supabase.functions.invoke("resolve-battle", { body: { replaySessionId } }); resolvedReplay=retry.data; resolveError=retry.error; }
         const events=serverBattleEvents(resolvedReplay?.events);
-        if(resolveError||!resolvedReplay?.winner||!events.length){setBattleLoading(false);setErrorMessage("レイド結果をサーバーで確定できませんでした。");return;}
-        const { data: grantedRewards, error: rewardProjectionError } = await supabase.rpc("get_current_raid_battle_rewards", { p_replay_id: replaySessionId });
+        if(resolveError||!resolvedReplay?.winner||!events.length||(roomBriefing && (resolvedReplay.roomId !== roomBriefing.roomId || !["PLAYER", "ENEMY"].includes(resolvedReplay.winner)))){setBattleLoading(false);setErrorMessage("レイド結果をサーバーで確定できませんでした。");return;}
+        const { data: grantedRewards, error: rewardProjectionError } = roomBriefing
+          ? { data: [], error: null }
+          : await supabase.rpc("get_current_raid_battle_rewards", { p_replay_id: replaySessionId });
         if (rewardProjectionError) {
           // Battle finalization has already succeeded. Never start another
           // Raid attempt merely because the read-only reward projection had a
@@ -1446,6 +1461,7 @@ export function useBattle(options: UseBattleOptions) {
         }
         resolvedReplay = {
           ...resolvedReplay,
+          roomId: roomBriefing?.roomId,
           rewardProjectionUnavailable: Boolean(rewardProjectionError),
           grantedRewards: (!rewardProjectionError && Array.isArray(grantedRewards) ? grantedRewards : []).map((entry: any) => ({
             itemId: String(entry.itemId || ""),
@@ -1471,6 +1487,11 @@ export function useBattle(options: UseBattleOptions) {
         accepted: false,
         errorMessage: err instanceof Error ? err.message : String(err),
       });
+      if (mode === "RAID" && roomBriefing) {
+        setBattleLoading(false);
+        setErrorMessage("レイドの開始・結果を確認できませんでした。同じ出撃を再確認してください。");
+        return;
+      }
       if (officialGvgAttackIdForBattle) {
         await abortOfficialGvgStart("公式GvGのサーバー確定に失敗しました。もう一度お試しください。");
         return;
@@ -1554,6 +1575,11 @@ export function useBattle(options: UseBattleOptions) {
     setBattleLoading(false);
   };
 
+  const preparedBattleArgs = (args: readonly unknown[], prepareOnly: boolean): Parameters<typeof startCardBattleInternal> => {
+    const fixed = Array.from({ length: 12 }, (_, index) => args[index]);
+    return [...fixed, prepareOnly, args[13]] as unknown as Parameters<typeof startCardBattleInternal>;
+  };
+
   const startCardBattle = async (...args: Parameters<typeof startCardBattleInternal>) => {
     if (battleStartInFlightRef.current || battleEndingInFlightRef.current || battleState !== null) return;
     battleStartInFlightRef.current = true;
@@ -1565,10 +1591,11 @@ export function useBattle(options: UseBattleOptions) {
           pendingPvpStartRef.current = args;
           pvpCommitSucceededRef.current = false;
         } else {
+          roomAttemptRef.current = null;
           pendingRaidStartRef.current = args;
           raidCommitSucceededRef.current = false;
         }
-        await startCardBattleInternal(...([...args.slice(0, 12), true] as unknown as Parameters<typeof startCardBattleInternal>));
+        await startCardBattleInternal(...preparedBattleArgs(args, true));
       } else {
         await startCardBattleInternal(...args);
       }
@@ -1578,6 +1605,14 @@ export function useBattle(options: UseBattleOptions) {
     } finally {
       battleStartInFlightRef.current = false;
     }
+  };
+
+  const prepareRaidRoomBattle = async (briefing: RaidRoomBriefing, presentation?: Partial<BattlePresentationContext>) => {
+    const { data, error } = await supabase.rpc("get_raid_room_briefing_v1", { p_room_id: briefing.roomId });
+    if (error || data?.roomId !== briefing.roomId || data?.membershipStatus !== "joined" || !data?.battleStartEnabled) {
+      setErrorMessage("このレイドには現在出撃できません。"); return;
+    }
+    await startCardBattle("RAID", data.bossName || "レイド", data.raidBossInstanceId, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, presentation, false, data);
   };
 
   // 割合防御減算モデル ＋ 乱数±5% ＋ LUK連動クリティカル ＋ アライメント相性計算
@@ -1634,7 +1669,7 @@ export function useBattle(options: UseBattleOptions) {
     battleStartInFlightRef.current = true;
     pvpCommitSucceededRef.current = false;
     try {
-      await startCardBattleInternal(...([...pending.slice(0, 12), false] as unknown as Parameters<typeof startCardBattleInternal>));
+      await startCardBattleInternal(...preparedBattleArgs(pending, false));
       if (pvpCommitSucceededRef.current) pendingPvpStartRef.current = null;
       return pvpCommitSucceededRef.current;
     } finally {
@@ -1662,7 +1697,7 @@ export function useBattle(options: UseBattleOptions) {
     battleStartInFlightRef.current = true;
     raidCommitSucceededRef.current = false;
     try {
-      await startCardBattleInternal(...([...pending.slice(0, 12), false] as unknown as Parameters<typeof startCardBattleInternal>));
+      await startCardBattleInternal(...preparedBattleArgs(pending, false));
       if (raidCommitSucceededRef.current) pendingRaidStartRef.current = null;
       return raidCommitSucceededRef.current;
     } finally {
@@ -1672,6 +1707,8 @@ export function useBattle(options: UseBattleOptions) {
 
   const cancelPreparedRaidBattle = () => {
     if (battleMode !== "RAID" || !pendingRaidStartRef.current || raidCommitSucceededRef.current) return false;
+    if (roomAttemptRef.current?.hasSubmitted()) return false;
+    roomAttemptRef.current = null;
     pendingRaidStartRef.current = null;
     setBattleState(null);
     setBattleMode(null);
@@ -2726,11 +2763,14 @@ export function useBattle(options: UseBattleOptions) {
         await syncBootstrapData(session.user.id);
         setBattleModeResultDetail({
           stats: [
-            { label: "今回のダメージ", value: Number(raidResultTemp.appliedDamage || 0).toLocaleString() },
+            ...(raidResultTemp.roomId ? [
+              { label: "今回の個人ダメージ", value: Number(raidResultTemp.rawDamage || 0).toLocaleString() },
+              { label: "共有HPへの反映", value: Number(raidResultTemp.appliedDamage || 0).toLocaleString() },
+            ] : [{ label: "今回のダメージ", value: Number(raidResultTemp.appliedDamage || 0).toLocaleString() }]),
             { label: "累計貢献ダメージ", value: Number(raidResultTemp.personalContribution || 0).toLocaleString() },
             { label: "ボス残りHP", value: Number(raidResultTemp.remainingBossHp || 0).toLocaleString() },
           ],
-          reward: raidResultTemp.rewardProjectionUnavailable
+          reward: raidResultTemp.roomId ? "報酬情報は現在未提供です" : raidResultTemp.rewardProjectionUnavailable
             ? "報酬はサーバーで確定済み"
             : Array.isArray(raidResultTemp.grantedRewards) && raidResultTemp.grantedRewards.length > 0
               ? "獲得報酬"
@@ -2742,7 +2782,7 @@ export function useBattle(options: UseBattleOptions) {
                 quantity: Number(entry.quantity || 0),
               })).filter((entry: any) => entry.id && entry.quantity > 0)
             : [],
-          note: userGuildMember ? undefined : "ギルドに加入すると、ギルドランキングに参加できます。",
+          note: raidResultTemp.roomId ? (raidResultTemp.lateFinalization ? "開催終了後の確定です。個人貢献のみ記録しました。" : undefined) : userGuildMember ? undefined : "ギルドに加入すると、ギルドランキングに参加できます。",
           continueLabel: "レイドへ戻る",
           destination: "raid",
         });
@@ -3001,6 +3041,7 @@ export function useBattle(options: UseBattleOptions) {
     gvgTargetBaseId, setGvgTargetBaseId,
     battleLoading, setBattleLoading,
     startCardBattle,
+    prepareRaidRoomBattle,
     confirmPreparedPvpBattle,
     cancelPreparedPvpBattle,
     confirmPreparedRaidBattle,

@@ -4463,6 +4463,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     // ハンドラ
     startCardBattle: battle.startCardBattle,
+    prepareRaidRoomBattle: battle.prepareRaidRoomBattle,
     confirmPreparedPvpBattle: battle.confirmPreparedPvpBattle,
     cancelPreparedPvpBattle: battle.cancelPreparedPvpBattle,
     confirmPreparedRaidBattle: battle.confirmPreparedRaidBattle,

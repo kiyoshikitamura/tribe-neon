@@ -1,3 +1,9 @@
+# Raid第9工程 — VALIDATED
+
+A: Room専用確定/期限終了/Edge分岐、B: 製品戦闘導線と保存Replay再試行、C: SQL/実フック検証、P: 親レビュー・統合。期限後はraw貢献を保存しapplied0、終了HP/討伐不変。旧日次/Guild/ranking参加triggerを分離。
+
+親検証: SQL16件、共通63件（Edge4・attempt7を含む）、既存React20件、実useBattle5件、全体Mock build・最終型検証PASS。作成/開始設定false、製品Room露出既定false。救援/報酬・ランキング切替・期限Cron・未確定通信のreload復帰・実DB/実機は未完了。詳細raid_room_phase9_integration.md。
+
 # Raid第8工程 — VALIDATED
 
 追加確定3条件をspecへ記録。A: 公開参照/参加/戦闘開始RPC、B: 参加・事前表示接続、C: SQL検証、P: 統合。実確定/報酬未接続で開始フラグfalse。

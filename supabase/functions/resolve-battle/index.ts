@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { resolveBattle, type Tactic } from "./engine.ts";
+import { selectRaidFinalizer } from "./raid-room-route.ts";
 
 const allowedTactics = new Set<Tactic>(["ATTACK_PRIORITY", "HEAL_PRIORITY", "SKILL_PRIORITY", "BALANCED", "WEAKNESS_FOCUS"]);
 const corsHeaders = {
@@ -25,6 +26,19 @@ Deno.serve(async (request) => {
   const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
   const { data: session, error } = await admin.from("battle_replay_sessions").select("*").eq("id", replaySessionId).eq("requester_user_id", user.id).maybeSingle();
   if (error || !session) return json({ error: "Replay session was not found" }, { status: 404 });
+
+  // Roomルーティングは保存台帳と開始receiptを検証するサービスRPCだけで決める。
+  let raidFinalizeRpc = "finalize_raid_battle";
+  if (session.battle_mode === "RAID" && session.resolution_authority === "RAID_SERVER") {
+    try {
+      raidFinalizeRpc = await selectRaidFinalizer(session.id, async (id) => {
+        const { data, error } = await admin.rpc("get_raid_battle_route_v1", { p_replay_id: id });
+        return { data, error };
+      });
+    } catch (routeError) {
+      return json({ error: routeError instanceof Error ? routeError.message : "Invalid Raid authority" }, { status: 409 });
+    }
+  }
 
   const finalizePatrol = async (winner: "PLAYER" | "ENEMY") => {
     if (session.battle_mode !== "QUEST" || !session.source_reference_id) return null;
@@ -112,7 +126,7 @@ Deno.serve(async (request) => {
     return json(finalized);
   }
   if (isOfficialRaid) {
-    const { data: finalized, error: finalizeError } = await admin.rpc("finalize_raid_battle", {
+    const { data: finalized, error: finalizeError } = await admin.rpc(raidFinalizeRpc, {
       p_replay_id: session.id,
       p_result: result,
     });
