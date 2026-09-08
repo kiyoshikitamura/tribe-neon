@@ -1,3 +1,7 @@
+# Raid第14工程 — VALIDATED
+
+救援依頼の再読込後の同一要求再送、残るランキング/別報酬の根拠照合。RAID-A/B/C/P-14。親レビュー・共通83/React28/全体型/Mock build PASS。Aは根拠文書のレビューでランキング実装ではない。実DB/Deployなし。詳細raid_room_phase14_integration.md。
+
 # Raid第13工程 — VALIDATED
 
 救援成功の本人Room1回・Present自動送付30日・報酬表示と既存Present受取接続。RAID-A/B/C/P-13。親レビューとSQL9件、共通79件、React24件、実useBattle17件、全体型/Mock build PASS。品目数量未投入、運用false。実DB/実機/ランキング切替・通常参加/主催者報酬は残件。詳細raid_room_phase13_integration.md。

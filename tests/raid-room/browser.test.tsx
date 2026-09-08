@@ -14,7 +14,7 @@ import { roomFixture, participantFixture, rewardFixture, deferred } from './fixt
 const fixtureNow = Date.parse('2026-09-08T00:00:00Z');
 const originalNow = Date.now;
 let clockNow = fixtureNow;
-beforeEach(() => { clockNow = fixtureNow; Date.now = () => clockNow; });
+beforeEach(() => { clockNow = fixtureNow; Date.now = () => clockNow; window.localStorage.clear(); });
 afterEach(() => { Date.now = originalNow; });
 
 function harness(overrides: Partial<RaidRoomTransport> = {}, onBattle?: () => void | Promise<void>) {
@@ -381,15 +381,15 @@ test('救援依頼の通信失敗後は同requestで再試行し、両公開先�
  const ids:string[]=[], blocking:boolean[]=[];let sent=false;
  const status={roomId:'room',isOwner:true,requestEnabled:true,activityCount:0,guildCount:0,maxPerChannel:3 as const,viaRescue:false,finalizedBattles:0,contributionDamage:0};
  const client={getStatus:async()=>({...status,activityCount:sent?1:0,guildCount:sent?1:0}),request:async(_room:string,id:string)=>{ids.push(id);if(ids.length===1)throw Error('network');sent=true;return {roomId:'room',requestId:id,activityCount:1,guildCount:1,maxPerChannel:3 as const,publications:[]};},getLink:async()=>({roomId:'room',rescueId:'rescue'}),join:async()=>({roomId:'room',membershipStatus:'joined' as const,viaRescue:true})};
- const ui=render(<Panel client={client} roomId="room" setInteractionBlocking={x=>blocking.push(x)}/>);
- try {fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));await ui.findByRole('alert');fireEvent.click(ui.getByRole('button',{name:'救援を依頼'}));await ui.findByText('救援依頼を送信しました。');await waitFor(()=>assert.match(ui.container.textContent??'',/全体 1 \/ 3 ・ ギルド 1 \/ 3/));assert.equal(ids.length,2);assert.equal(ids[0],ids[1]);assert.deepEqual(blocking,[true,false,true,false]);}finally{cleanup();}
+ const ui=render(<Panel client={client} userId="rescue-user" roomId="room" setInteractionBlocking={x=>blocking.push(x)}/>);
+ try {fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));await ui.findByRole('alert');fireEvent.click(ui.getByRole('button',{name:'救援依頼の送信結果を確認'}));await ui.findByText('救援依頼を送信しました。');await waitFor(()=>assert.match(ui.container.textContent??'',/全体 1 \/ 3 ・ ギルド 1 \/ 3/));assert.equal(ids.length,2);assert.equal(ids[0],ids[1]);assert.deepEqual(blocking,[true,false,true,false]);}finally{cleanup();}
 });
 
 test('救援上限到達は依頼不可、救援参加者にはサーバー貢献を表示',async()=>{
  const {default: Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');
  const status={roomId:'room',isOwner:true,requestEnabled:false,activityCount:3,guildCount:3,maxPerChannel:3 as const,viaRescue:true,finalizedBattles:2,contributionDamage:12345};
  const client={getStatus:async()=>status,request:async()=>{throw Error('unexpected request');},getLink:async()=>({roomId:'room',rescueId:'rescue'}),join:async()=>({roomId:'room',membershipStatus:'joined' as const,viaRescue:true})};
- const ui=render(<Panel client={client} roomId="room" setInteractionBlocking={()=>{}}/>);try{assert.equal((await ui.findByRole('button',{name:'救援を依頼'}) as HTMLButtonElement).disabled,true);assert.match(ui.container.textContent??'',/救援参加：2戦 ・ 貢献ダメージ 12,345/);}finally{cleanup();}
+ const ui=render(<Panel client={client} userId="rescue-user" roomId="room" setInteractionBlocking={()=>{}}/>);try{assert.equal((await ui.findByRole('button',{name:'救援を依頼'}) as HTMLButtonElement).disabled,true);assert.match(ui.container.textContent??'',/救援参加：2戦 ・ 貢献ダメージ 12,345/);}finally{cleanup();}
 });
 
 test('救援報酬は取得失敗後に再試行し未設定を成功と表示しない',async()=>{
@@ -404,4 +404,29 @@ test('救援報酬の発行明細を表示しPresent取得失敗後の再試行�
  const client={getReward:async()=>({roomId:'room',status:'issued' as const,rescueGate:{status:'succeeded' as const,minimumBattles:1,minimumContributionDamage:100},issuedAt:'2026-09-08T00:00:00Z',expiresAt:'2026-10-08T00:00:00Z',items:[{itemId:'CASH',quantity:37,presentId:'present',presentStatus:'CLAIMED',claimedAt:'2026-09-08T00:01:00Z',expiresAt:'2026-10-08T00:00:00Z'}]})};
  const ui=render(<Panel client={client} roomId="room" onOpenPresents={async()=>{if(++opened===1)throw Error("network");}}/>);
  try{await ui.findByText('受取済み');assert.match(ui.container.textContent??'',/キャッシュ × 37/);fireEvent.click(ui.getByRole('button',{name:'プレゼントBOXへ'}));assert.equal(opened,1);await ui.findByRole('alert');fireEvent.click(ui.getByRole('button',{name:'プレゼントBOXへ'}));await waitFor(()=>assert.equal(opened,2));await waitFor(()=>assert.equal(ui.queryByRole('alert'),null));}finally{cleanup();}
+});
+
+function rescueHarnessClient(overrides: Partial<import('../../src/domain/raidRoomRescue').RaidRoomRescueClient> = {}) {
+ const status={roomId:'room',isOwner:true,requestEnabled:true,activityCount:0,guildCount:0,maxPerChannel:3 as const,viaRescue:false,finalizedBattles:0,contributionDamage:0};
+ return {getStatus:async()=>status,request:async(roomId:string,requestId:string)=>({roomId,requestId,activityCount:1,guildCount:1,maxPerChannel:3 as const,publications:[]}),getLink:async()=>({roomId:'room',rescueId:'rescue'}),join:async()=>({roomId:'room',membershipStatus:'joined' as const,viaRescue:true}),...overrides};
+}
+test('救援依頼は再mount後も同要求で確認し、成功後の依頼は新要求になる',async()=>{
+ const {default:Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');const ids:string[]=[];
+ const client=rescueHarnessClient({request:async(roomId,requestId)=>{ids.push(requestId);if(ids.length===1)throw Error('response lost');return {roomId,requestId,activityCount:1,guildCount:1,maxPerChannel:3,publications:[]};}});
+ let ui=render(<Panel client={client} userId="owner" roomId="room" setInteractionBlocking={()=>{}}/>);
+ try {fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));await ui.findByRole('alert');ui.unmount();ui=render(<Panel client={client} userId="owner" roomId="room" setInteractionBlocking={()=>{}}/>);fireEvent.click(await ui.findByRole('button',{name:'救援依頼の送信結果を確認'}));await ui.findByText('救援依頼を送信しました。');await waitFor(()=>assert.equal((ui.getByRole('button',{name:'救援を依頼'}) as HTMLButtonElement).disabled,false));fireEvent.click(ui.getByRole('button',{name:'救援を依頼'}));await waitFor(()=>assert.equal(ids.length,3));assert.equal(ids[0],ids[1]);assert.notEqual(ids[1],ids[2]);await ui.findByText('救援依頼を送信しました。');}finally{cleanup();}
+});
+test('上限到達・終了後でも保存済み救援要求は同じIDで結果確認できる',async()=>{
+ const {default:Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');const {saveRaidRoomRescuePending}=await import('../../src/domain/raidRoomRescuePending');const id='11111111-1111-4111-8111-111111111111';saveRaidRoomRescuePending('owner','room',id,window.localStorage);const calls:string[]=[];
+ const client=rescueHarnessClient({getStatus:async()=>({roomId:'room',isOwner:true,requestEnabled:false,activityCount:3,guildCount:3,maxPerChannel:3,viaRescue:false,finalizedBattles:0,contributionDamage:0}),request:async(roomId,requestId)=>{calls.push(requestId);return {roomId,requestId,activityCount:3,guildCount:3,maxPerChannel:3,publications:[]};}});
+ const ui=render(<Panel client={client} userId="owner" roomId="room" disabled setInteractionBlocking={()=>{}}/>);try{const retry=await ui.findByRole('button',{name:'救援依頼の送信結果を確認'});await waitFor(()=>assert.equal((retry as HTMLButtonElement).disabled,false));fireEvent.click(retry);await ui.findByText('救援依頼を送信しました。');assert.deepEqual(calls,[id]);await waitFor(()=>assert.equal((ui.getByRole('button',{name:'救援を依頼'}) as HTMLButtonElement).disabled,true));}finally{cleanup();}
+});
+test('救援要求の保存失敗時は送信RPCを呼ばない',async()=>{
+ const {default:Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');let calls=0;const client=rescueHarnessClient({request:async()=>{calls++;throw Error('must not send');}});const proto=Object.getPrototypeOf(window.localStorage);const setItem=proto.setItem;proto.setItem=()=>{throw Error('quota');};
+ const ui=render(<Panel client={client} userId="owner" roomId="room" setInteractionBlocking={()=>{}}/>);try{fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));await ui.findByRole('alert');assert.equal(calls,0);}finally{proto.setItem=setItem;cleanup();}
+});
+test('別userへ切替後に遅れた救援送信応答は混入しない',async()=>{
+ const {default:Panel}=await import('../../src/app/components/raid/RaidRoomRescuePanel');const late=deferred<Awaited<ReturnType<import('../../src/domain/raidRoomRescue').RaidRoomRescueClient['request']>>>();let calls=0;
+ const client=rescueHarnessClient({request:async()=>{calls++;return late.promise;}});
+ const ui=render(<Panel client={client} userId="owner" roomId="room" setInteractionBlocking={()=>{}}/>);try{fireEvent.click(await ui.findByRole('button',{name:'救援を依頼'}));assert.equal(calls,1);ui.rerender(<Panel client={client} userId="other" roomId="room" setInteractionBlocking={()=>{}}/>);await ui.findByRole('button',{name:'救援を依頼'});await act(async()=>late.resolve({roomId:'room',requestId:'11111111-1111-4111-8111-111111111111',activityCount:3,guildCount:3,maxPerChannel:3,publications:[]}));assert.equal(ui.queryByText('救援依頼を送信しました。'),null);assert.match(ui.container.textContent??'',/全体 0 \/ 3 ・ ギルド 0 \/ 3/);}finally{cleanup();}
 });

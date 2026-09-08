@@ -170,7 +170,7 @@ export default function RaidTab() {
   return <>
     <HubPage className="raid-view" title="レイド" hideVisualHeader status={readiness.status} onRetry={readiness.retry}>
       {process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true" && <RaidRoomConnectedBrowser
-        key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId}
+        key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId} userId={session?.user?.id}
         rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
         onOpenPresents={openRescuePresents}
         setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
