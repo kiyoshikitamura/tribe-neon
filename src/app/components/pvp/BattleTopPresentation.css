@@ -56,3 +56,35 @@
 .battle-top-guild small { font-size: 9px; }
 .battle-top-rival:active, .battle-top-attempts button:active { transform: scale(.95); }
 .battle-top-rival:focus-visible, .battle-top-attempts button:focus-visible { outline: 2px solid #a8dce0; outline-offset: -3px; }
+
+.battle-top-standing { appearance: none; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.battle-top-standing:focus-visible { outline: 1px solid #a8dce0; outline-offset: -2px; }
+.battle-top-deck-links { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 30px; }
+.battle-top-deck-links button { min-height: 28px; border: 0; padding: 2px 0 6px; background: transparent; color: #a5c9ce; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.battle-top-deck-links button:last-child { color: #d6a2aa; }
+.battle-top-deck-links button:disabled { opacity: .4; cursor: default; }
+.battle-top-comparison .battle-top-rate, .battle-top-rival > .battle-top-rate { color: #d5dae0; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: .015em; }
+.battle-top-comparison .battle-top-username { margin-bottom: 2px; }
+.battle-top-comparison .battle-top-rate { margin-bottom: 4px; }
+.battle-top-rival > .battle-top-rate { display: block; margin: 5px 0; font-size: 10px; white-space: nowrap; }
+.battle-top-rule, .battle-top-rate-delta { margin: 5px 0 0; text-align: center; font-size: 10px; line-height: 1.5; color: #b7bec8; }
+.battle-top-rate-delta { margin-top: 2px; font-variant-numeric: tabular-nums; color: #d6d9df; }
+.battle-top-ranking small { display: block; margin-top: 10px; font-size: 10px; color: #aeb6c2; }
+.battle-top-ranking strong { display: block; font-size: 34px; }
+.battle-top-ranking p { margin: 4px 0 0; color: #dbe0e6; font-size: 13px; font-variant-numeric: tabular-nums; }
+.battle-top-raid { position: relative; min-height: 232px; padding: 18px 14px; overflow: hidden; isolation: isolate; border: 0; border-radius: 4px; background: #121418; }
+.battle-top-raid::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg,#111318f2,#11131865),var(--raid-entry-background) center/cover; }
+.battle-top-raid-copy { position: relative; z-index: 2; align-self: stretch; display: flex; flex-direction: column; align-items: flex-start; width: 55%; }
+.battle-top-raid h2 { margin-top: 25px; font-size: 16px; line-height: 1.5; max-width: 10em; }
+.battle-top-raid-copy > .outlaw-button { margin-top: auto; }
+.battle-top-raid-art { position: absolute; inset: 12px 0 8px 43%; }
+.battle-top-raid-art .character-presentation { width: 100%; height: 100%; aspect-ratio: auto; border: 0; background: transparent; box-shadow: none; }
+.battle-top-raid-art .character-presentation-character { object-fit: contain; object-position: center; transform: none; }
+.battle-top-raid-art .character-presentation-light, .battle-top-raid-art .character-presentation-art::before { display: none; }
+.battle-top-deck-dialog { min-width: 0; white-space: normal; }
+.battle-top-deck-summary { display: grid; gap: 3px; margin-bottom: 16px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.battle-top-deck-summary strong { overflow-wrap: anywhere; color: #eee; font-size: 16px; }
+.battle-top-deck-dialog .pvp-my-deck { padding: 0; border: 0; background: transparent; }
+.battle-top-deck-dialog .pvp-section-heading { display: none; }
+.battle-top-deck-dialog .pvp-deck-member > .character-presentation { height: 66px; }
+.battle-top-deck-dialog .pvp-deck-member .shared-skill-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }

@@ -9,15 +9,14 @@ import HubPage from "./ui/HubPage";
 import ScreenState from "./ui/ScreenState";
 import { useScreenReadiness } from "../hooks/useScreenReadiness";
 import { SCREEN_ASSET_MANIFESTS } from "../lib/screenManifests";
-import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
+import { CHARACTERS_MASTER, getCharacterTransparentImg, getCanonicalBattleBackground } from "@/utils/game_constants";
 import { getCharacterLocationBackground, resolveCharacterLocationKey } from "@/utils/characterVisualAssets";
 import { supabase } from "@/utils/supabase";
 import PvpDeckPresentation from "./pvp/PvpDeckPresentation";
-import RankPresentation from "./presentation/RankPresentation";
 import { SkillDetailDialog } from "./skill/SkillPresentation";
 import type { SkillCardMaster } from "@/utils/skills_master_data";
 import CanonicalDialog from "./ui/CanonicalDialog";
-import UserIdentityRow from "./profile/UserIdentityRow";
+import { findCanonicalRaidVariant } from "@/domain/presentation/raidRosterPresentation";
 
 const tacticNames: { [key: string]: string } = {
   ATTACK_PRIORITY: "攻撃優先",
@@ -34,6 +33,8 @@ const tacticNames: { [key: string]: string } = {
 export default function PvpTab() {
   const {
     session,
+    username,
+    raidBossBaseId,
     selectedLeader,
     navigateTab,
     isRaidActive,
@@ -60,9 +61,9 @@ export default function PvpTab() {
     selectedMembers,
     userItems,
     handleUseItem,
-    fetchPlayerDetail,
   } = useGame();
 
+  const [deckDialog, setDeckDialog] = React.useState<"my" | "rival" | null>(null);
   const [clock, setClock] = React.useState(() => Date.now());
   const [selectedSkill, setSelectedSkill] = React.useState<SkillCardMaster | null>(null);
   const [bpDialog, setBpDialog] = React.useState<"shortage" | "recovery" | null>(null);
@@ -199,8 +200,11 @@ export default function PvpTab() {
   const rivals = displayedOpponents.map((op: any) => {
     const leader = opponentCharactersFor(op)[0];
     const master = CHARACTERS_MASTER.find(character => character.id === leader?.character_master_id);
-    return { id: op.opponent_user_id, name: op.opponent_username, leaderName: leader?.display_name || master?.jpName || "対戦相手", image: master ? getCharacterTransparentImg(master.name) : leader?.asset_identifier, power: Number(op.opponent_power || 0), rank: op.opponent_rank };
+    return { id: op.opponent_user_id, name: op.opponent_username, leaderName: leader?.display_name || master?.jpName || "対戦相手", image: master ? getCharacterTransparentImg(master.name) : leader?.asset_identifier, power: Number(op.opponent_power || 0), rate: op.opponent_points == null ? undefined : Number(op.opponent_points), winDelta: typeof op.win_rating_delta === "number" ? op.win_rating_delta : undefined, lossDelta: typeof op.loss_rating_delta === "number" ? op.loss_rating_delta : undefined, rank: op.opponent_rank };
   });
+  const raidVariant = findCanonicalRaidVariant(undefined, raidBossName);
+  const raidLeader = CHARACTERS_MASTER.find(character => character.id === raidVariant?.memberCharacterIds[0]);
+  const raidImage = raidLeader ? getCharacterTransparentImg(raidLeader.name) : undefined;
   const handleStartSelectedRival = () => {
     const op = heroOpponent;
     if (!op || battleLoading || opponentsLoading) return;
@@ -240,23 +244,10 @@ export default function PvpTab() {
           <img src="/promotion/battle_page_header.webp" alt="バトル" />
         </section>
         {pvpSubView === "opponents" && <>
-          <BattleHero player={{ name: playerLeaderMaster?.jpName || "MY TEAM", image: playerLeaderMaster ? getCharacterTransparentImg(playerLeaderMaster.name) : undefined, power: Number(totalPower || 0) }} rival={rivals.find((rival: { id: string }) => rival.id === heroOpponent?.opponent_user_id)} background={pvpBackgroundPath} attempts={pvpPoints} recovery={recoveryCountdown} busy={battleLoading || opponentsLoading} onStart={handleStartSelectedRival} onRecover={openBpRecoveryDialog} />
+          <BattleHero player={{ name: username || "—", leaderName: playerLeaderMaster?.jpName || "リーダー", rate: displayedPvpRate, image: playerLeaderMaster ? getCharacterTransparentImg(playerLeaderMaster.name) : undefined, power: Number(totalPower || 0) }} rival={rivals.find((rival: { id: string }) => rival.id === heroOpponent?.opponent_user_id)} background={pvpBackgroundPath} attempts={pvpPoints} recovery={recoveryCountdown} busy={battleLoading || opponentsLoading} onStart={handleStartSelectedRival} onRecover={openBpRecoveryDialog} onPlayerDeck={() => setDeckDialog("my")} onRivalDeck={() => setDeckDialog("rival")} />
           <RivalSelector rivals={rivals} selectedId={heroOpponent?.opponent_user_id} busy={battleLoading || opponentsLoading} onSelect={setSelectedRivalId} onRefresh={handleRefreshOpponents} emptyTitle={firstPvpPending ? "勝てる相手を探しています" : "対戦相手が見つかりません"} emptyMessage={firstPvpPending ? "更新して格下の相手を再検索してください。" : "時間を置いて更新してください。"} />
-          <RaidEntryCard active={isRaidActive} bossName={raidBossName} seconds={raidBossSecondsLeft} onOpen={() => navigateTab("raid")} />
-          <BattleRankingSummary rank={ownPvpStanding?.rankPosition} onOpen={handleNavigateToRanking} />
-          <GuildBattleTeaser />
+          <BattleRankingSummary rate={displayedPvpRate} rank={ownPvpStanding?.rankPosition} onOpen={handleNavigateToRanking} />
         </>}
-        <details className="pvp-deck-details"><summary>出撃編成・スキルを確認</summary>
-        <section className="pvp-my-deck" aria-label="自分のデッキ">
-          <div className="pvp-section-heading"><strong>MY DECK</strong><span>総合力 {Number(totalPower || 0).toLocaleString()}</span></div>
-          <PvpDeckPresentation ariaLabel="自分の出撃メンバー" showSkills onSkillSelect={setSelectedSkill} members={myDeckCharacters.map(({ ownedId, owned, master }: any) => {
-              const equippedSkills = (userSkillsList || []).filter((entry: any) => entry.equipped_character_id === owned?.id).map((entry: any) => entry.skill_card_id).filter(Boolean).slice(0, 6);
-              return { key: ownedId, characterId: master?.id || ownedId, name: master?.jpName, level: Number(owned?.level || 1), skillIds: equippedSkills };
-            })} />
-          {myDeckCharacters.length === 0 && <span className="pvp-my-deck-empty">出撃編成を設定してください</span>}
-        </section>
-
-        </details>
 
         {battleLoading ? <ScreenState kind="loading" compact /> : (
           <div className="pvp-content-area">
@@ -270,11 +261,6 @@ export default function PvpTab() {
                   <p><b>模擬戦</b> 消費・報酬・Rating・Mission進捗なし</p>
                 </details>
 
-                {heroOpponent && <details className="pvp-deck-details"><summary>選択中の相手・出撃編成を確認</summary>
-                  <UserIdentityRow userName={heroOpponent.opponent_username} guildName={heroOpponent.opponent_guild_name} leaderCharacterId={opponentCharactersFor(heroOpponent)[0]?.character_master_id} leaderImageSrc={opponentCharactersFor(heroOpponent)[0]?.asset_identifier} onOpen={() => fetchPlayerDetail(heroOpponent.opponent_user_id)} />
-                  <PvpDeckPresentation ariaLabel={heroOpponent.opponent_username + "の出撃メンバー"} onMemberSelect={() => fetchPlayerDetail(heroOpponent.opponent_user_id)} members={opponentCharactersFor(heroOpponent).map((character: any) => ({ key: heroOpponent.opponent_user_id + "-" + character.slot, characterId: character.character_master_id, name: character.display_name, level: Number(character.level || 1), imageSrc: character.asset_identifier || undefined }))} />
-                  <p>RATE {heroOpponent.opponent_points} · <RankPresentation label="順位" rank={heroOpponent.opponent_rank} /> · 作戦 {tacticNames[heroOpponent.tactic] || "攻撃優先"}</p>
-                </details>}
 
               </div>
             )}
@@ -305,7 +291,26 @@ export default function PvpTab() {
 
           </div>
         )}
+        <RaidEntryCard active={isRaidActive} bossName={raidBossName} seconds={raidBossSecondsLeft} image={raidImage} background={getCanonicalBattleBackground(raidBossBaseId)} onOpen={() => navigateTab("raid")} />
+        <GuildBattleTeaser />
     </HubPage>
+    {deckDialog && <CanonicalDialog title={deckDialog === "my" ? "MY DECK" : "RIVAL DECK"} onClose={() => setDeckDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDeckDialog(null) }]}>
+      <div className="battle-top-deck-dialog">
+        <div className="battle-top-deck-summary"><strong>{deckDialog === "my" ? username || "—" : heroOpponent?.opponent_username || "—"}</strong><span>RATE {deckDialog === "my" ? displayedPvpRate.toLocaleString() : Number(heroOpponent?.opponent_points || 0).toLocaleString()}</span><span>総合力 {Number(deckDialog === "my" ? totalPower : heroOpponent?.opponent_power || 0).toLocaleString()}</span></div>
+        {deckDialog === "my" ? <>        <section className="pvp-my-deck" aria-label="自分のデッキ">
+          <div className="pvp-section-heading"><strong>MY DECK</strong><span>総合力 {Number(totalPower || 0).toLocaleString()}</span></div>
+          <PvpDeckPresentation ariaLabel="自分の出撃メンバー" showSkills onSkillSelect={setSelectedSkill} members={myDeckCharacters.map(({ ownedId, owned, master }: any) => {
+              const equippedSkills = (userSkillsList || []).filter((entry: any) => entry.equipped_character_id === owned?.id).map((entry: any) => entry.skill_card_id).filter(Boolean).slice(0, 6);
+              return { key: ownedId, characterId: master?.id || ownedId, name: master?.jpName, level: Number(owned?.level || 1), skillIds: equippedSkills };
+            })} />
+          {myDeckCharacters.length === 0 && <span className="pvp-my-deck-empty">出撃編成を設定してください</span>}
+        </section>
+</> : heroOpponent ? <>
+          <PvpDeckPresentation ariaLabel="相手のデッキ" members={opponentCharactersFor(heroOpponent).map((character: any) => ({ key: heroOpponent.opponent_user_id + "-" + character.slot, characterId: character.character_master_id, name: character.display_name, level: Number(character.level || 1), imageSrc: character.asset_identifier || undefined }))} />
+          <p>作戦 {tacticNames[heroOpponent.tactic] || "攻撃優先"}</p>
+        </> : <p>対戦相手を選択してください</p>}
+      </div>
+    </CanonicalDialog>}
     {selectedSkill && <SkillDetailDialog skill={selectedSkill} onClose={() => setSelectedSkill(null)} />}
     {bpDialog === "shortage" && <CanonicalDialog title="BPが不足しています" onClose={() => setBpDialog(null)} actions={[
       { label: "閉じる", semantic: "secondary", onClick: () => setBpDialog(null) },
