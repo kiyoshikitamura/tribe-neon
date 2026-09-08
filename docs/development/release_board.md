@@ -1,3 +1,7 @@
+# Raid第15工程 — VALIDATED
+
+レイドランキング・順位報酬生成停止、製品導線撤去。RAID-A/B/C/P-15。過去データ/Present・Room参加者貢献・他ランキング維持。親レビュー・SQL8/順位画面5/Room画面28/共通83/全体型/Mock build PASS。SQL261未適用。実DB/Deployなし。詳細raid_room_phase15_integration.md。
+
 # Raid第14工程 — VALIDATED
 
 救援依頼の再読込後の同一要求再送、残るランキング/別報酬の根拠照合。RAID-A/B/C/P-14。親レビュー・共通83/React28/全体型/Mock build PASS。Aは根拠文書のレビューでランキング実装ではない。実DB/Deployなし。詳細raid_room_phase14_integration.md。

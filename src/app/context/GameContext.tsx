@@ -1915,13 +1915,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      const { data: raidSeasonData } = await supabase.rpc("get_raid_season_rankings", { p_limit: 100, p_offset: 0 });
-      const seasonIndividuals = (raidSeasonData?.individual || []).map((row: any) => ({
-        user_id: row.user_id, damage_dealt: row.contribution, users: { username: row.username }, guild_id: null, guilds: null,
-      }));
-      setRaidSeasonRankings(seasonIndividuals);
+      setRaidSeasonRankings([]);
       setRaidDamageLogs([]);
-      setRaidTotalDamage(Number(seasonIndividuals.find((row: any) => row.user_id === userId)?.damage_dealt || 0));
 
       const { data: charsData } = await supabase
         .from("user_characters")
@@ -4153,6 +4148,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const navigateTab = (tabName: string, subTab?: string) => {
     setSelectedNews(null);
+    if (tabName === "ranking" && subTab === "raid") {
+      nav.navigateTab("raid");
+      return;
+    }
     nav.navigateTab(tabName, subTab);
   };
 

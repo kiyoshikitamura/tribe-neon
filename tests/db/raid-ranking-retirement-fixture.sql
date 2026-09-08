@@ -1,0 +1,32 @@
+-- PGlite専用の周辺schema。ランキング本体はRepository migrationを読み込む。
+create role anon; create role authenticated; create role service_role;
+create schema auth;
+create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
+create function auth.jwt() returns jsonb language sql as $$select coalesce(nullif(current_setting('request.jwt.claims',true),'')::jsonb,'{}'::jsonb)$$;
+grant usage on schema public,auth to anon,authenticated,service_role;
+create table users(id uuid primary key,cash bigint default 0,neon_diamonds bigint default 0);
+create table guilds(id uuid primary key);
+create table presents(id uuid primary key default gen_random_uuid(),user_id uuid references users(id),item_id text,quantity int,message text,status text,expire_at timestamptz,claimed_at timestamptz);
+create table user_items(user_id uuid,item_id text,quantity int,updated_at timestamptz,primary key(user_id,item_id));
+create table equipment_battle_master(equipment_id text primary key);
+create table user_equipments(user_id uuid,equipment_id text,equipment_master_id text,level int,plus_val int);
+create table ranking_seasons(id uuid primary key default gen_random_uuid(),ranking_type text,starts_at timestamptz,ends_at timestamptz,status text,created_at timestamptz default now(),updated_at timestamptz default now(),unique(ranking_type,starts_at));
+create table raid_bosses(id uuid primary key,raid_day_key text,current_hp bigint);
+create table raid_rooms(id uuid primary key,raid_boss_instance_id uuid);
+create table raid_damage_logs(id uuid default gen_random_uuid(),raid_boss_instance_id uuid,user_id uuid,raw_damage bigint,created_at timestamptz default now());
+create table canonical_raid_reward_master(version text,reward_type text,reward_key text,item_id text,quantity int);
+create table raid_production_reward_grants(instance_id uuid,user_id uuid,reward_type text,reward_key text,item_id text,quantity int,created_at timestamptz,unique(instance_id,user_id,reward_type,reward_key,item_id));
+create table raid_rewards_master(id int primary key,reward_type text,reward_item_id text,item_id text,reward_quantity int,quantity int);
+create table raid_reward_grants(raid_boss_instance_id uuid,user_id uuid,reward_id int,reward_reason text,unique(raid_boss_instance_id,user_id,reward_id));
+create table pvp_daily_wins(user_id uuid,activity_date date,wins int);
+create table battle_replay_sessions(id uuid primary key default gen_random_uuid(),requester_user_id uuid,battle_mode text,finalization_status text,finalized_at timestamptz);
+create function canonical_ranking_reward_payload() returns jsonb language sql as $$select '{"progression":{"PVP":[[1,100,"CASH",7]],"RAID_PERSONAL":[[1,100,"CASH",7]],"RAID_GUILD":[[1,100,"CASH",7]]}}'::jsonb$$;
+create function resolve_canonical_reward_item(x text) returns text language sql as $$select x$$;
+create function ranking_period_bounds(x text,t timestamptz) returns table(starts_at timestamptz,ends_at timestamptz) language sql as $$select date_trunc('month',t),date_trunc('month',t)+interval '1 month'$$;
+-- PvP境界の呼出し維持を記録。PvP本体の全再検証は本fixtureの範囲外。
+create table boundary_calls(name text);
+create function assert_pvp_boundary_replay_continuity(uuid,timestamptz) returns void language sql as $$insert into boundary_calls values('assert')$$;
+create function finalize_pvp_season_rewards(uuid) returns integer language plpgsql as $$begin insert into boundary_calls values('finalize');return 0;end$$;
+create function reconcile_pvp_after_season_boundary(uuid,timestamptz) returns void language sql as $$insert into boundary_calls values('reconcile')$$;
+insert into users(id) values('00000000-0000-0000-0000-000000000001'),('00000000-0000-0000-0000-000000000002');
+insert into guilds values('00000000-0000-0000-0000-000000000101');
