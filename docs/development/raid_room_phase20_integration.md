@@ -1,3 +1,26 @@
+# 第20工程 最終親レビュー — VALIDATED
+
+2026-09-08。RAID-A/B/C/P-20の担当範囲を親レビュー・機械検証完了。全CI合格・新Room実機受入・開発全体完了ではない。以下が最新判定で、後段は時系列の診断記録。
+
+## 確認結果
+
+- head aef63eb424a00bd7739f6db6fdabe301b13442cc、Quality run34201260481。CI checkoutは合成ed99a9548d5a4e60d829ec74c7d61c83f58cf3d2（base314b38f + head aef63eb）。
+- 独立raid-regression job101980329709: Mock6件、build、ブラウザ18件PASS（49秒、retry0）。Room UI falseの旧画面貢献/順位廃止/残るカテゴリとshellの検証。
+- 通常CI: lint0errors/1836warnings、型PASS。head単独の既報ローカルlintは1837warningsで、合成treeとは区別する。
+- First Home検証の旧RPC直接呼出し要求を修正。親は実ソースを照合し、更新スクリプト全assert・activity-cutover4件・対象eslint PASS。7都市背景はheadのgit blobを取得しasset検証も実行。その他assertは維持。
+- npm集約verify:tutorial-first-homeは、変更していないStarter Skill iconのsparse未展開によりローカル停止。集約全体のローカルPASSとはしない。変更のないparity3種は直前CIでPASS。
+- 既報の戦闘復帰17、Activity14/Clear4/Room28/切替3と親型/Mockbuildの結果を保持。設定生成11件も再実行PASS。
+
+## 残件
+
+広域4shardは189PASS/8FAIL/2interrupted/91未実行。presentation fixture数・旧Homeバナー数、KPI2件、認証3件、Home CTA1件。原因未特定のものを既存不具合と断定しない。追加静的検証のremote CI結果も追跡する。
+
+独立Preview接続、4難度の救援/討伐閾値・報酬品目数量、実DB適用/Edge接続/実Cron/多接続/実機は未完了。既存手順と未入力設定templateを利用し、バランス研究を追加しない。本番/DB/手動Deploy/運用有効化なし。
+
+証跡: https://github.com/kiyoshikitamura/tribe-neon/actions/runs/34201260481/job/101980329709
+
+---
+
 # 第20工程 最新の親検証
 
 A-20/C-20はVALIDATED。B-20/P-20は訂正版ブラウザCI結果の確認待ちで、第20工程全体はIN_PROGRESS。

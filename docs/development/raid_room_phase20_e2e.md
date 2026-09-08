@@ -55,3 +55,15 @@
 head `9b486755d69a96509e25efaa8b6fba764ba2fde8` に対する [raid-regression job](https://github.com/kiyoshikitamura/tribe-neon/actions/runs/34199814934/job/101975806157) は11 PASS・2 FAILで打切り。Raid画面6件（390/412、RP不足、川崎/横浜、背景待機）はすべてPASSし、本人貢献123,456表示を確認した。
 
 失敗は今回更新したカテゴリ完全一致の順序が実装と違うこと。RankingTabの定義は「総合力・ギルド・バトル」、テストが「総合力・バトル・ギルド」だった。親レビューの見落としとして、ランキングとmain-shellの期待順序を現定義に訂正した。カテゴリ数の緩和や製品順序変更は行わない。訂正版のブラウザ再実行は次のCIで確認する。
+
+## 訂正後CI（2026-09-08）
+
+head aef63eb424a00bd7739f6db6fdabe301b13442cc / run34201260481。checkoutはPR合成 ed99a9548d5a4e60d829ec74c7d61c83f58cf3d2（base314b38f + head aef63eb）。
+
+独立raid-regression job101980329709はMock6件・build・ブラウザ18件すべてPASS。ブラウザ49秒、retries0。Raid6件、ランキング6件、共通shell6件。ランキング撤去、本人貢献、残る順位カテゴリ、画面枠と既存資産を確認。Room UI flag falseのMock環境であり、新Room実DB/実機検証ではない。
+
+広域4shardは189PASS・8FAIL・2interrupted・91未実行。失敗はpresentation fixture数、旧Homeバナー数、KPI画面2件、optional-authの名前表示、phase5 Home CTA、title-authの説明とメール復帰。既報の原因候補を保持し、新しい全件の原因を断定しない。今回のレイド関連18PASSを全CI合格とは扱わない。
+
+通常lintは0errors/1836warnings、型検証PASS。その後verify:tutorial-first-homeで、GameContextの旧RPC直接呼出しを要求する静的assertがFAIL。Room移行後の取得経路に合わせて追加修正する。他のassertやCI gateは削除しない。
+
+証跡: https://github.com/kiyoshikitamura/tribe-neon/actions/runs/34201260481/job/101980329709

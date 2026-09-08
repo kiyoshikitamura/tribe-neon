@@ -1,6 +1,8 @@
-# Raid第20工程 — IN_PROGRESS
+# Raid第20工程 — VALIDATED（対象回帰・CI不整合修正）
 
-A-20/C-20 VALIDATED。開始本文を変えずlint OOMを解消、本人貢献Mock対応。B-20はrefs修正とE2E更新済み、訂正したカテゴリ順序のブラウザ検証待ち。親の通常全体lint0errors/型/Mockbuild/戦闘復帰17/Activity14PASS。全体工程はIN_PROGRESS。実DB/手動Deployなし。
+RAID-A/B/C/P-20の親レビュー完了。通常lint OOM修正、本人貢献Mock、順位廃止E2E/Room ref更新、旧RPC静的検証の追随。aef63ebの独立CIでMock6・ブラウザ18件・build PASS、通常CI lint0errors/型PASS。追加静的検証は親で全assert・切替4件・eslint PASS。詳細raid_room_phase20_integration.md。
+
+全CI合格・全体開発完了ではない。広域E2E8件FAIL（認証/KPI/Home等）、追加静的検証のremote CI、設定値、独立Preview接続、実DB/実Cron/多接続/実機が残る。運用フラグ無効、実DB/手動Deployなし。次は設定値と接続を揃え、実Previewの縦通し確認へ進む。
 
 # Raid第19工程 — VALIDATED
 
