@@ -1,3 +1,6 @@
+# Raid第2工程 — VALIDATED
+A-02: Room通信controller / B-02: Room画面 / C-02: 操作・競合テスト。担当契約はagent_tasks/RAID-*-02.md。親は統合とQA導線を担当。共通処理34件・React操作7件と対象strict TypeScriptを検証。開発用 /qa/raid-room を追加、配信URL未発行。実DB接続と本番切替は未実施。
+
 # Raid Room V1 — 現在の開発作業
 基準: b08e396e657615afd6dfddc05bbec37d21561a25 / branch: codex/raid-room-rescue-20260908
 親: このチャット。子A/B/Cを排他的ファイル範囲で管理する。初回はA型・条件 → B表示/C検証 → 親レビューの順。

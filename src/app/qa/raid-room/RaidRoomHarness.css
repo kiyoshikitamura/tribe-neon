@@ -1,0 +1,4 @@
+.raid-room-qa { width: 100%; max-width: 430px; min-height: 100dvh; margin: 0 auto; padding: 16px 12px max(24px, env(safe-area-inset-bottom)); box-sizing: border-box; color: var(--ui-text-primary, #f1f2f5); background: var(--ui-bg-surface, #11131c); }
+.raid-room-qa > header { margin-bottom: 18px; }
+.raid-room-qa h1 { margin: 0 0 8px; font-size: 24px; }
+.raid-room-qa > header p { font-size: 12px; line-height: 1.6; color: var(--ui-text-secondary, #b6bac6); }
