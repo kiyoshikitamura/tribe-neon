@@ -9,6 +9,7 @@
 .battle-top-labels span:last-child { color: #e49399; }
 .battle-top-stage { position: relative; display: grid; grid-template-columns: minmax(0,1fr) 36px minmax(0,1fr); grid-template-rows: minmax(0,1fr); align-items: center; height: 196px; }
 .battle-top-standing { min-width: 0; min-height: 0; height: 100%; }
+.battle-top-stage[aria-busy="true"] .battle-top-standing { visibility: hidden; }
 .battle-top-standing .character-presentation, .battle-top-rival .character-presentation { width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
 .battle-top-standing .character-presentation-art, .battle-top-rival .character-presentation-art { width: 100%; height: 100%; aspect-ratio: auto; overflow: visible; }
 .battle-top-standing .character-presentation-character, .battle-top-rival .character-presentation-character { inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; transform: none; filter: drop-shadow(0 3px 4px #0008); }

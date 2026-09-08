@@ -47,11 +47,11 @@ function BattleHeroContent({ player, rival, background, attempts, recovery, busy
     <div className="battle-top-labels"><span>MY TEAM</span><span>RIVAL</span></div>
     <div className="battle-top-stage" aria-busy={!ready}>
       <div className="battle-top-standing is-player">
-        {ready && <CharacterPresentation src={player.image} alt={player.name} variant="full-body" metadata={false} />}
+        <CharacterPresentation src={player.image} alt={player.name} variant="full-body" metadata={false} />
       </div>
       <strong className="battle-top-vs">VS</strong>
       <div className="battle-top-standing is-rival">
-        {ready && <CharacterPresentation src={rival?.image} alt={rival?.leaderName || "対戦相手"} variant="full-body" metadata={false} />}
+        <CharacterPresentation src={rival?.image} alt={rival?.leaderName || "対戦相手"} variant="full-body" metadata={false} />
       </div>
       {!ready && <div className="battle-top-asset-state">
         {readiness.status === "error" ? <OutlawButton variant="secondary" onClick={retryImages}>画像を再取得</OutlawButton>
