@@ -1,0 +1,137 @@
+[
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "authenticated=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "d10782e4cc472779bd9e8402b0164b74",
+    "args": "p_user_id uuid, p_guild_name text, p_creation_cost integer",
+    "name": "create_guild_v2",
+    "owner": "postgres",
+    "config": [
+      "search_path=public"
+    ],
+    "result": "jsonb",
+    "definition": "CREATE OR REPLACE FUNCTION public.create_guild_v2(p_user_id uuid, p_guild_name text, p_creation_cost integer)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare v_user public.users%rowtype; v_name text:=trim(coalesce(p_guild_name,'')); v_guild uuid;\nbegin\n if auth.uid() is null or auth.uid()<>p_user_id then raise exception 'Only the current user can create a guild' using errcode='42501'; end if;\n if char_length(v_name) not between 1 and 12 or p_creation_cost<>500 then raise exception 'Invalid guild creation request' using errcode='22023'; end if;\n perform pg_advisory_xact_lock(hashtextextended(auth.uid()::text||':guild-create',0));\n select * into v_user from public.users where id=auth.uid() for update;\n if not found or v_user.level<5 or v_user.cash<500 then raise exception 'Guild creation requirements are not met' using errcode='P0001'; end if;\n if v_user.guild_id is not null or exists(select 1 from public.guild_members where user_id=auth.uid()) then raise exception 'Leave the current guild before creating another guild' using errcode='23505'; end if;\n perform 1 from public.guilds where lower(trim(name))=lower(v_name) and not is_disbanded for update;\n if found then raise exception 'Guild name is already in use' using errcode='23505'; end if;\n update public.guild_join_requests set status='CANCELLED',reviewed_at=now(),reviewed_by=auth.uid() where user_id=auth.uid() and status='PENDING';\n insert into public.guilds(name,leader_id,level,xp,funds,recruitment_mode,approval_required) values(v_name,auth.uid(),1,0,0,'OPEN_JOIN',false) returning id into v_guild;\n insert into public.guild_members(guild_id,user_id,role,weekly_contribution,total_contribution) values(v_guild,auth.uid(),'MASTER',0,0);\n update public.users set cash=cash-500,guild_id=v_guild where id=auth.uid();\n perform public.evaluate_mission_progress(auth.uid(),'GUILD_JOIN',1);\n return jsonb_build_object('status','success','guild_id',v_guild,'cash_spent',500);\nend $function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "anon=X/postgres",
+      "authenticated=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "224372d31c2b4756defed5eb49deabf0",
+    "args": "",
+    "name": "get_user_setup_status",
+    "owner": "postgres",
+    "config": [
+      "search_path=public"
+    ],
+    "result": "boolean",
+    "definition": "CREATE OR REPLACE FUNCTION public.get_user_setup_status()\n RETURNS boolean\n LANGUAGE sql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\n  SELECT EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid());\n$function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "authenticated=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "6e5b13312b51d1f956fed288b72ea106",
+    "args": "p_username text",
+    "name": "initialize_current_player",
+    "owner": "postgres",
+    "config": [
+      "search_path=public"
+    ],
+    "result": "jsonb",
+    "definition": "CREATE OR REPLACE FUNCTION public.initialize_current_player(p_username text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  v_user_id uuid:=auth.uid();\n  v_username text:=btrim(p_username);\n  v_is_anonymous boolean:=coalesce((auth.jwt()->>'is_anonymous')::boolean,false);\nbegin\n  if v_user_id is null then raise exception 'Authentication is required'; end if;\n  if not v_is_anonymous then raise exception 'Anonymous onboarding session is required'; end if;\n  if v_username is null or char_length(v_username) not between 1 and 8 then\n    raise exception 'Username must contain 1 to 8 characters';\n  end if;\n  perform pg_advisory_xact_lock(hashtextextended(v_user_id::text,0));\n  if exists(select 1 from public.users where id=v_user_id) then\n    insert into public.tutorial_progress(user_id,step_id) values(v_user_id,'WORLD_INTRO') on conflict(user_id) do nothing;\n    return jsonb_build_object('status','already_initialized','tutorial_step',(select step_id from public.tutorial_progress where user_id=v_user_id));\n  end if;\n  if exists(select 1 from public.users where lower(btrim(username))=lower(v_username)) then\n    raise exception 'Username is already in use' using errcode='23505';\n  end if;\n  insert into public.users(id,username,current_base_id,favorite_character_id)\n  values(v_user_id,v_username,'shinjuku',null);\n  insert into public.tutorial_progress(user_id,step_id) values(v_user_id,'WORLD_INTRO') on conflict(user_id) do nothing;\n  return jsonb_build_object('status','success','tutorial_step','WORLD_INTRO');\nend;\n$function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "authenticated=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "c50b9a91b3dc7cd968ce11e82acb093d",
+    "args": "p_username text, p_invite_code text",
+    "name": "initialize_current_player",
+    "owner": "postgres",
+    "config": [
+      "search_path=public"
+    ],
+    "result": "jsonb",
+    "definition": "CREATE OR REPLACE FUNCTION public.initialize_current_player(p_username text, p_invite_code text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare v_result jsonb; v_invitation jsonb;\nbegin\n v_result:=public.initialize_current_player(p_username);\n if v_result->>'status'='success' and nullif(btrim(coalesce(p_invite_code,'')),'') is not null then\n  v_invitation:=public.apply_current_player_invitation(p_invite_code);\n  v_result:=v_result||jsonb_build_object('invitation',v_invitation);\n end if;\n return v_result;\nend $function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "authenticated=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "1abd956fa67e58a327ed105809fb0093",
+    "args": "p_guild_id uuid",
+    "name": "join_guild",
+    "owner": "postgres",
+    "config": [
+      "search_path=public"
+    ],
+    "result": "jsonb",
+    "definition": "CREATE OR REPLACE FUNCTION public.join_guild(p_guild_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  v_mode text;\n  v_cap integer;\n  v_count integer;\n  v_user public.users%rowtype;\nbegin\n  if auth.uid() is null then raise exception 'Authentication is required'; end if;\n  select * into v_user from public.users where id = auth.uid() for update;\n  if not found then raise exception 'Guild joining requirements are not met'; end if;\n  if v_user.last_guild_left_at is not null and v_user.last_guild_left_at > now() - interval '24 hours' then\n    raise exception 'Guild rejoin cooldown is active'\n      using errcode = 'P0001', detail = 'GUILD_JOIN_COOLDOWN_ACTIVE';\n  end if;\n  if exists(select 1 from public.guild_members where user_id = auth.uid()) then raise exception 'Already in a guild'; end if;\n  select recruitment_mode, public.canonical_guild_member_cap(id)\n    into v_mode, v_cap\n  from public.guilds\n  where id = p_guild_id and not is_disbanded\n  for update;\n  if not found then raise exception 'Guild not found'; end if;\n  if v_mode <> 'OPEN_JOIN' then raise exception 'Guild does not accept direct joins'; end if;\n  select count(*) into v_count from public.guild_members where guild_id = p_guild_id;\n  if v_count >= v_cap then raise exception 'Guild member cap reached'; end if;\n  insert into public.guild_members(guild_id, user_id, role, weekly_contribution, total_contribution)\n  values(p_guild_id, auth.uid(), 'MEMBER', 0, 0);\n  update public.guild_join_requests\n  set status = 'CANCELLED', reviewed_at = now(), reviewed_by = auth.uid()\n  where user_id = auth.uid() and status = 'PENDING';\n  perform public.evaluate_mission_progress(auth.uid(), 'GUILD_JOIN', 1);\n  return jsonb_build_object('status', 'success');\nend;\n$function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "14499368ed882281efbec073523213e1",
+    "args": "p_user_id uuid, p_registered_at timestamp with time zone, p_registration_type text",
+    "name": "kpi_ensure_subject",
+    "owner": "postgres",
+    "config": [
+      "search_path=public, auth, pg_temp"
+    ],
+    "result": "uuid",
+    "definition": "CREATE OR REPLACE FUNCTION public.kpi_ensure_subject(p_user_id uuid, p_registered_at timestamp with time zone DEFAULT now(), p_registration_type text DEFAULT NULL::text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'auth', 'pg_temp'\nAS $function$\r\ndeclare\r\n  v_subject_id uuid;\r\n  v_registration_type text := p_registration_type;\r\nbegin\r\n  if p_user_id is null then\r\n    raise exception 'p_user_id is required' using errcode = '22004';\r\n  end if;\r\n\r\n  select subject_id into v_subject_id\r\n  from public.kpi_subjects\r\n  where source_user_id = p_user_id;\r\n  if v_subject_id is not null then\r\n    return v_subject_id;\r\n  end if;\r\n\r\n  if v_registration_type is null then\r\n    select case when au.is_anonymous then 'anonymous' else 'authenticated' end\r\n    into v_registration_type\r\n    from auth.users au\r\n    where au.id = p_user_id;\r\n  end if;\r\n  v_registration_type := coalesce(v_registration_type, 'unknown');\r\n\r\n  begin\r\n    insert into public.kpi_subjects(source_user_id, registered_at, registration_type)\r\n    values(p_user_id, coalesce(p_registered_at, now()), v_registration_type)\r\n    returning subject_id into v_subject_id;\r\n  exception when unique_violation then\r\n    select subject_id into v_subject_id\r\n    from public.kpi_subjects\r\n    where source_user_id = p_user_id;\r\n  end;\r\n\r\n  return v_subject_id;\r\nend;\r\n$function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "service_role=X/postgres"
+    ],
+    "md5": "0e0c5bf5b3de73c7c9320dbf76749756",
+    "args": "p_subject_id uuid, p_at timestamp with time zone",
+    "name": "kpi_is_subject_excluded",
+    "owner": "postgres",
+    "config": [
+      "search_path=public, pg_temp"
+    ],
+    "result": "boolean",
+    "definition": "CREATE OR REPLACE FUNCTION public.kpi_is_subject_excluded(p_subject_id uuid, p_at timestamp with time zone)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public', 'pg_temp'\nAS $function$\r\n  select exists (\r\n    select 1\r\n    from public.kpi_account_classification_periods period\r\n    where period.subject_id = p_subject_id\r\n      and period.classification in ('admin', 'qa', 'test', 'fraud_suspended')\r\n      and period.valid_from <= p_at\r\n      and (period.valid_to is null or period.valid_to > p_at)\r\n  );\r\n$function$\n",
+    "security_definer": true
+  },
+  {
+    "acl": [
+      "postgres=X/postgres",
+      "service_role=X/postgres",
+      "authenticated=X/postgres"
+    ],
+    "md5": "a1c1ec5935ec0209dce609d4c3c683f7",
+    "args": "p_user_id uuid, p_guild_id uuid, p_is_master boolean, p_has_others boolean",
+    "name": "leave_guild",
+    "owner": "postgres",
+    "config": [
+      "search_path=public"
+    ],
+    "result": "jsonb",
+    "definition": "CREATE OR REPLACE FUNCTION public.leave_guild(p_user_id uuid, p_guild_id uuid, p_is_master boolean, p_has_others boolean)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\ndeclare v_role text;v_other integer;\r\nbegin if auth.uid() is null or auth.uid()<>p_user_id then raise exception 'Only current user can leave Guild'; end if;\r\n perform 1 from public.guilds where id=p_guild_id for update; select role into v_role from public.guild_members where guild_id=p_guild_id and user_id=auth.uid() for update;\r\n if v_role is null then raise exception 'Guild membership required'; end if; select count(*) into v_other from public.guild_members where guild_id=p_guild_id and user_id<>auth.uid();\r\n if v_role='MASTER' and v_other>0 then raise exception 'Transfer MASTER before leaving Guild'; end if;\r\n delete from public.guild_members where guild_id=p_guild_id and user_id=auth.uid(); update public.users set last_guild_left_at=now() where id=auth.uid();\r\n if v_role='MASTER' then update public.guilds set is_disbanded=true,disbanded_at=now(),recruitment_mode='CLOSED',approval_required=false where id=p_guild_id; end if;\r\n return jsonb_build_object('status','success','disbanded',v_role='MASTER'); end $function$\n",
+    "security_definer": true
+  }
+]

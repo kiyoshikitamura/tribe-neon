@@ -1,6 +1,6 @@
 # Raid Room PC 実行記録
 
-2026-09-08 / STATUS: IN_PROGRESS（工程1記録済み、工程2準備、実適用待ち）
+2026-09-08 / STATUS: IN_PROGRESS（工程1記録済み、工程2資料はHUMAN_REVIEW_READY、実適用待ち）
 
 ## 今回の結果
 
@@ -40,3 +40,7 @@
 - 暫定設定の親レビュー、実Preview一連検証・実Cron・競合・実機受入。
 
 Repository記録のみを全体開発完了と通知しない。親による根拠レビュー前にrelease_boardを更新しない。
+
+## 工程2追記（2026-09-08）
+
+375a0ad固定で現Preview実定義との互換性を照合し、[適用SQL・影響・復旧・専用ユーザー/Guild手順](raid_room_pc_step2.md) を準備した。STATUS: HUMAN_REVIEW_READY（工程2資料のみ）。第21工程待ちにはしていない。実DB・Cron・Deploy・テストユーザー作成は未実行。

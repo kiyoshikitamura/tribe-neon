@@ -1,0 +1,44 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_raid_season_rankings.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_raid_season_rankings.candidate.sql
+index e8546dc..d463ce6 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_raid_season_rankings.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_raid_season_rankings.candidate.sql
+@@ -1,7 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.get_raid_season_rankings(p_limit integer DEFAULT 100, p_offset integer DEFAULT 0)
+- RETURNS jsonb
+- LANGUAGE plpgsql
+- STABLE SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
+-declare v_uid uuid:=auth.uid(); v_season public.ranking_seasons%rowtype;
++create or replace function public.get_raid_season_rankings(p_limit integer default 100,p_offset integer default 0)
++returns jsonb language plpgsql stable security definer set search_path=public as $$
+@@ -9 +4 @@ begin
+-  if v_uid is null then raise exception 'authentication required' using errcode='42501'; end if;
++ if auth.uid() is null then raise exception 'authentication required' using errcode='42501'; end if;
+@@ -11,22 +6,2 @@ begin
+-  select * into v_season from public.ranking_seasons where id=public.current_ranking_season_id('RAID');
+-  return jsonb_build_object(
+-    'season_id',v_season.id,'starts_at',v_season.starts_at,'ends_at',v_season.ends_at,
+-    'individual',coalesce((with totals as (
+-      select log.user_id,player.username,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at
+-      from public.raid_damage_logs log join public.users player on player.id=log.user_id
+-      where log.raid_boss_instance_id is not null and log.created_at>=v_season.starts_at and log.created_at<v_season.ends_at
+-      group by log.user_id,player.username), ranked as (select totals.*,rank() over(order by contribution desc) rank_position from totals)
+-      select jsonb_agg(to_jsonb(page) order by page.rank_position,page.achieved_at,page.user_id) from (select * from ranked order by rank_position,achieved_at,user_id limit p_limit offset p_offset) page),'[]'::jsonb),
+-    'guild',coalesce((with totals as (
+-      select log.guild_id,guild.name guild_name,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at,count(distinct log.user_id)::integer participant_count
+-      from public.raid_damage_logs log join public.guilds guild on guild.id=log.guild_id
+-      where log.raid_boss_instance_id is not null and log.guild_id is not null and log.created_at>=v_season.starts_at and log.created_at<v_season.ends_at
+-      group by log.guild_id,guild.name), ranked as (select totals.*,rank() over(order by contribution desc) rank_position from totals)
+-      select jsonb_agg(to_jsonb(page) order by page.rank_position,page.achieved_at,page.guild_id) from (select * from ranked order by rank_position,achieved_at,guild_id limit p_limit offset p_offset) page),'[]'::jsonb),
+-    'selfRank',(with totals as (
+-      select log.user_id,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at from public.raid_damage_logs log
+-      where log.raid_boss_instance_id is not null and log.created_at>=v_season.starts_at and log.created_at<v_season.ends_at group by log.user_id), ranked as (
+-      select totals.*,rank() over(order by contribution desc) rank_position from totals) select to_jsonb(ranked) from ranked where user_id=v_uid));
+-end;
+-$function$
+-;
+\ No newline at end of file
++ return jsonb_build_object('status','RETIRED','individual','[]'::jsonb,'guild','[]'::jsonb,'selfRank',null,'season_id',null,'starts_at',null,'ends_at',null);
++end $$;
+\ No newline at end of file

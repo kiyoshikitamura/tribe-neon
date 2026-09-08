@@ -1,0 +1,23 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_expired_raid_instance.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_expired_raid_instance.candidate.sql
+index 5f3da60..701fc6f 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_expired_raid_instance.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_expired_raid_instance.candidate.sql
+@@ -1,6 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.finalize_expired_raid_instance(p_instance_id uuid)
+- RETURNS void
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.finalize_expired_raid_instance(p_instance_id uuid) returns void
++language plpgsql security definer set search_path=public as $$
+@@ -10,0 +7,3 @@ begin
++ -- Room登録の正本は台帳。bossロック待機後の別SQLで確認する。
++ if exists(select 1 from public.raid_rooms where raid_boss_instance_id=p_instance_id) then return; end if;
++
+@@ -20,2 +19 @@ begin
+-end $function$
+-;
+\ No newline at end of file
++end $$;
+\ No newline at end of file

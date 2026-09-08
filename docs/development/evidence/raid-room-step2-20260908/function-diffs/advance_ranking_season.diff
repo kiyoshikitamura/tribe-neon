@@ -1,0 +1,23 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/advance_ranking_season.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/advance_ranking_season.candidate.sql
+index 564a4d5..d6d66c4 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/advance_ranking_season.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/advance_ranking_season.candidate.sql
+@@ -1,6 +1,4 @@
+-CREATE OR REPLACE FUNCTION public.advance_ranking_season(p_type text, p_at timestamp with time zone DEFAULT clock_timestamp())
+- RETURNS uuid
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.advance_ranking_season(
++  p_type text,
++  p_at timestamptz default clock_timestamp()
++) returns uuid language plpgsql security definer set search_path=public as $$
+@@ -13,0 +12 @@ begin
++  if v_type='RAID' then return null; end if;
+@@ -55,2 +54 @@ end;
+-$function$
+-;
+\ No newline at end of file
++$$;
+\ No newline at end of file

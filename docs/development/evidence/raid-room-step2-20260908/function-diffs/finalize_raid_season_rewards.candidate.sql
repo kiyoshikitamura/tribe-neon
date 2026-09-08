@@ -1,0 +1,1 @@
+create or replace function public.finalize_raid_season_rewards(p_season_id uuid) returns integer language sql security definer set search_path=public as $$ select 0 $$;

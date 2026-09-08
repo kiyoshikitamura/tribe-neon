@@ -1,0 +1,33 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/rotate_daily_raids.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/rotate_daily_raids.candidate.sql
+index 6e56b33..0a95641 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/rotate_daily_raids.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/rotate_daily_raids.candidate.sql
+@@ -1,7 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.rotate_daily_raids()
+- RETURNS void
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
+-declare v_today date:=(clock_timestamp() at time zone 'Asia/Tokyo')::date; v_pair text[]; v_area text; v_variant public.canonical_raid_variants%rowtype; v_start timestamptz; v_end timestamptz; v_cleared record;
++create or replace function public.rotate_daily_raids() returns void language plpgsql security definer set search_path=public as $$
++declare v_legacy_enabled boolean; v_today date:=(clock_timestamp() at time zone 'Asia/Tokyo')::date; v_pair text[]; v_area text; v_variant public.canonical_raid_variants%rowtype; v_start timestamptz; v_end timestamptz; v_cleared record;
+@@ -8,0 +4,4 @@ begin
++ -- 設定行を先に共有lockし、管理者の停止UPDATEと開始/生成を直列化する。
++ select enabled into v_legacy_enabled from public.raid_legacy_settings where singleton for share;
++ if v_legacy_enabled is distinct from true then return; end if;
++
+@@ -10,2 +9,2 @@ begin
+- for v_cleared in select id from public.raid_bosses where status='ACTIVE' and (current_hp=0 or expires_at<=now()) for update loop perform public.finalize_expired_raid_instance(v_cleared.id); end loop;
+- for v_cleared in select id from public.raid_bosses where status='CLEARED' and raid_day_key=v_today::text and respawn_after<=now() for update loop perform public.respawn_cleared_raid_slot(v_cleared.id); end loop;
++ for v_cleared in select id from public.raid_bosses where not exists(select 1 from public.raid_rooms r where r.raid_boss_instance_id=public.raid_bosses.id) and status='ACTIVE' and (current_hp=0 or expires_at<=now()) for update loop perform public.finalize_expired_raid_instance(v_cleared.id); end loop;
++ for v_cleared in select id from public.raid_bosses where not exists(select 1 from public.raid_rooms r where r.raid_boss_instance_id=public.raid_bosses.id) and status='CLEARED' and raid_day_key=v_today::text and respawn_after<=now() for update loop perform public.respawn_cleared_raid_slot(v_cleared.id); end loop;
+@@ -14 +13 @@ begin
+-  if not exists(select 1 from public.raid_bosses where raid_day_key=v_today::text and base_id=v_area and status='ACTIVE') and not exists(select 1 from public.raid_bosses where raid_day_key=v_today::text and base_id=v_area and status='CLEARED' and respawn_after>now()) then
++  if not exists(select 1 from public.raid_bosses where not exists(select 1 from public.raid_rooms r where r.raid_boss_instance_id=public.raid_bosses.id) and raid_day_key=v_today::text and base_id=v_area and status='ACTIVE') and not exists(select 1 from public.raid_bosses where not exists(select 1 from public.raid_rooms r where r.raid_boss_instance_id=public.raid_bosses.id) and raid_day_key=v_today::text and base_id=v_area and status='CLEARED' and respawn_after>now()) then
+@@ -19,2 +18 @@ begin
+-end $function$
+-;
+\ No newline at end of file
++end $$;
+\ No newline at end of file

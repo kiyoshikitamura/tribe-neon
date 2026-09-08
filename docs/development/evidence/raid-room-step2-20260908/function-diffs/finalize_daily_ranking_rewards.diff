@@ -1,0 +1,43 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_daily_ranking_rewards.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_daily_ranking_rewards.candidate.sql
+index 905ac94..45a98b8 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_daily_ranking_rewards.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_daily_ranking_rewards.candidate.sql
+@@ -1,6 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.finalize_daily_ranking_rewards(p_ranking_day_key date DEFAULT NULL::date)
+- RETURNS jsonb
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.finalize_daily_ranking_rewards(p_ranking_day_key date default null)
++returns jsonb language plpgsql security definer set search_path=public as $$
+@@ -76,19 +72 @@ begin
+-  insert into public.ranking_daily_entity_snapshots(ranking_day_key,ranking_type,ranked_entity_id,score,rank_position)
+-  select v_day,'RAID_PERSONAL',ranked.user_id,ranked.score,ranked.rank_position
+-  from (
+-    select participation.user_id,coalesce(sum(log.raw_damage),0)::bigint score,
+-      row_number() over(order by coalesce(sum(log.raw_damage),0) desc,
+-        participation.first_finalized_at,participation.user_id)::integer rank_position
+-    from public.ranking_daily_participation participation
+-    join public.raid_damage_logs log on log.user_id=participation.user_id
+-      and log.created_at>=v_start and log.created_at<v_end
+-    where participation.ranking_day_key=v_day and participation.ranking_type='RAID_PERSONAL'
+-      and participation.finalized_count>=1
+-    group by participation.user_id,participation.first_finalized_at
+-  ) ranked where ranked.rank_position<=100;
+-  insert into public.ranking_daily_recipient_snapshots
+-  select snapshot.ranking_day_key,snapshot.ranking_type,snapshot.ranked_entity_id,
+-    snapshot.ranked_entity_id,snapshot.rank_position,snapshot.score
+-  from public.ranking_daily_entity_snapshots snapshot
+-  where snapshot.ranking_day_key=v_day and snapshot.ranking_type='RAID_PERSONAL';
+-
++  -- レイド順位snapshotと新規受取者は生成しない。
+@@ -97 +75 @@ begin
+-    where recipient.ranking_day_key=v_day
++    where recipient.ranking_day_key=v_day and recipient.ranking_type<>'RAID_PERSONAL'
+@@ -113,2 +91 @@ end;
+-$function$
+-;
+\ No newline at end of file
++$$;
+\ No newline at end of file

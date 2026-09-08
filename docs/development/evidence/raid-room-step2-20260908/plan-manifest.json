@@ -1,0 +1,171 @@
+{
+  "sha": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+  "project_ref": "sufvuqdnqohpfzkwxohq",
+  "observed_at": "2026-09-08T08:37:27.885238+00:00",
+  "sources": [
+    {
+      "file": "20260908000250_raid_room_read_projection.sql",
+      "sha256": "dda21baef9cd11902684ac323657531874b5082b80145c92b9e650df4d020bc6",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000251_raid_room_condition_rules.sql",
+      "sha256": "4f422f2dc7323d0a501640daed0c71fb7e236cffb6b5ec8de012927a76ec48ab",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000252_raid_room_lifecycle.sql",
+      "sha256": "8e1d91f1255c52f3cc0fd60be743c7983b1bcab3b0ece497869afb2da87470f9",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000253_raid_room_creation.sql",
+      "sha256": "f440e79518fe5fa33dc45ab6554ef814ac21e41b8767f470efc0b928388411b6",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000254_raid_room_legacy_isolation.sql",
+      "sha256": "62e224d0b09862978ff8ce7ad93c3559a577d70ade623c0230102dc38115c4e1",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000255_raid_room_entry.sql",
+      "sha256": "6252976872faad09609c40184bf93933cf0aa9a801b3e649dd4692c1b142f710",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000256_raid_room_finalization.sql",
+      "sha256": "794850fa1a76d062533b938643866779e0dc5880e295c07fdacb84e0618300a9",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000257_raid_room_recovery_and_expiry.sql",
+      "sha256": "e3d7564a67642daafd60e8fa042d72eb882b6b095f8e2b2addd50871cd65338c",
+      "adjustments": [
+        "transaction/notify統合",
+        "Cron登録分離"
+      ]
+    },
+    {
+      "file": "20260908000258_raid_room_recovery_controls.sql",
+      "sha256": "d852c8acefa220fe4bc72210b2ff362e2b9d8ae12e82c2732e3229c7a32193de",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000259_raid_room_rescue.sql",
+      "sha256": "4088d5f8c869ff8db3bd26faf95e3dfdf0250cd404ea2588e639b79397e7691f",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000260_raid_room_rescue_rewards.sql",
+      "sha256": "ea6c3eefc40f23ab75460ffddef23ed6c2751130e141fdb1887adf086d30d742",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000261_raid_ranking_retirement.sql",
+      "sha256": "4871b9843104f635b64f5d4800cd8d8280a8915111540ca334f00544457ac542",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000262_raid_room_clear_rewards.sql",
+      "sha256": "9560d00c2a95b06bb65acc2602841ee982bed4e706705a27dcf31b1e67dc3342",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    },
+    {
+      "file": "20260908000263_raid_legacy_cutover.sql",
+      "sha256": "e9ad475d7afb5e6ed97da918d74b71e0acd875e2f41db794d8e69dc0999a7a75",
+      "adjustments": [
+        "transaction/notify統合"
+      ]
+    }
+  ],
+  "existing_function_names_replaced": [
+    "start_raid_battle",
+    "finalize_raid_battle",
+    "finalize_expired_raid_instance",
+    "respawn_cleared_raid_slot",
+    "grant_canonical_raid_day_clear_reward",
+    "grant_canonical_raid_reward",
+    "grant_raid_reward",
+    "rotate_daily_raids",
+    "get_active_raids",
+    "on_canonical_daily_activity_finalized",
+    "on_canonical_guild_official_battle_exp",
+    "capture_daily_ranking_participation",
+    "get_raid_rankings",
+    "get_raid_season_rankings",
+    "finalize_raid_season_rewards",
+    "raid_season_reset",
+    "advance_ranking_season",
+    "get_active_ranking_seasons",
+    "grant_canonical_ranking_season_reward",
+    "grant_canonical_daily_ranking_reward",
+    "finalize_daily_ranking_rewards",
+    "converge_ranking_lifecycle_safety"
+  ],
+  "snapshot_additive_patch": true,
+  "cron_registration_deferred": true,
+  "unregistered_files_reapplied": [],
+  "artifacts": [
+    {
+      "file": "00-baseline-guard.sql",
+      "sha256": "e693e496d2e7c4ba1f7083615564ae31c04042383948853041e7de62b00ae3f9"
+    },
+    {
+      "file": "00-readonly-recheck.sql",
+      "sha256": "f95d3363ec5c7deaff96dcaaf4c213224fc6a5eef0341a7c0725f920b76db4eb"
+    },
+    {
+      "file": "01-snapshot-dependency.sql",
+      "sha256": "b582918f43edfe3aff90d30953df2504f036183fe134012a8c3246cd78c17923"
+    },
+    {
+      "file": "02-raid-delta.sql",
+      "sha256": "72a44910ec76b93ca58dee93717a15f3f56655959e935b44cb07df2df289f4f8"
+    },
+    {
+      "file": "03-expiry-cron.sql",
+      "sha256": "6cac6f067302c9cdfccfed5d60184efd7fbdaf54f4b154bb98b8261679d56f0d"
+    },
+    {
+      "file": "04-postflight.sql",
+      "sha256": "f847a7829caa99cddd6c8798fc3045d699d514e8e53cbab0796310164303ffae"
+    },
+    {
+      "file": "05-stop-new-operations.sql",
+      "sha256": "037a7529e5c8f0895412368176946982dce0e993aa022281e64343db230a9f17"
+    },
+    {
+      "file": "06-test-account-classification.psql",
+      "sha256": "8db10ca2cdb2f4212af52c106d9f09dc440afb8348657bb6355b3686ddd22a02"
+    },
+    {
+      "file": "review-apply.psql",
+      "sha256": "33f4853b53e2b4969953208b73fa4cbd8f2150d13ed264f7d57cc42d29891dea"
+    }
+  ]
+}

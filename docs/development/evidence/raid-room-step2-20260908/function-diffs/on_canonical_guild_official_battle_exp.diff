@@ -1,0 +1,18 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_guild_official_battle_exp.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_guild_official_battle_exp.candidate.sql
+index b2ffee5..bac65fa 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_guild_official_battle_exp.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_guild_official_battle_exp.candidate.sql
+@@ -1,6 +1 @@
+-CREATE OR REPLACE FUNCTION public.on_canonical_guild_official_battle_exp()
+- RETURNS trigger
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.on_canonical_guild_official_battle_exp() returns trigger language plpgsql security definer set search_path=public as $$
+@@ -9,2 +4 @@ begin if new.finalization_status='FINALIZED' and old.finalization_status is dist
+- elsif new.battle_mode='RAID' and new.resolution_authority='RAID_SERVER' then perform public.grant_canonical_guild_daily_exp(new.requester_user_id,'RAID_FINALIZED',new.id); end if; end if; return new; end $function$
+-;
+\ No newline at end of file
++ elsif new.battle_mode='RAID' and new.resolution_authority='RAID_SERVER' and not exists(select 1 from public.raid_rooms where raid_boss_instance_id=new.source_reference_id) then perform public.grant_canonical_guild_daily_exp(new.requester_user_id,'RAID_FINALIZED',new.id); end if; end if; return new; end $$;
+\ No newline at end of file

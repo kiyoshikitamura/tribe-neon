@@ -1,0 +1,26 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_raid_reward.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_raid_reward.candidate.sql
+index 6bdb7a3..77e1b8e 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_raid_reward.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_raid_reward.candidate.sql
+@@ -1,6 +1,4 @@
+-CREATE OR REPLACE FUNCTION public.grant_raid_reward(p_instance_id uuid, p_user_id uuid, p_reward_id integer, p_reason text)
+- RETURNS boolean
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.grant_raid_reward(
++  p_instance_id uuid, p_user_id uuid, p_reward_id integer, p_reason text
++)
++returns boolean language plpgsql security definer set search_path = public as $$
+@@ -8,0 +7,4 @@ begin
++  if p_reason in ('RANK_PERSONAL','RANK_GUILD','PERSONAL_RANK','GUILD_RANK') or exists(select 1 from public.raid_rewards_master where id=p_reward_id and reward_type in ('RANK_PERSONAL','RANK_GUILD','PERSONAL_RANK','GUILD_RANK')) then return false; end if;
++  perform 1 from public.raid_bosses where id=p_instance_id for update;
++ -- Room登録の正本は台帳。bossロック待機後の別SQLで確認する。
++ if exists(select 1 from public.raid_rooms where raid_boss_instance_id=p_instance_id) then return false; end if;
+@@ -17,2 +19 @@ begin
+-end; $function$
+-;
+\ No newline at end of file
++end; $$;
+\ No newline at end of file

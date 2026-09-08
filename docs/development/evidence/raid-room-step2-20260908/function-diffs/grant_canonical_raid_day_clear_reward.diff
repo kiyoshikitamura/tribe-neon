@@ -1,0 +1,23 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_day_clear_reward.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_day_clear_reward.candidate.sql
+index b3222d9..929f34f 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_day_clear_reward.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_day_clear_reward.candidate.sql
+@@ -1,6 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.grant_canonical_raid_day_clear_reward(p_instance_id uuid, p_user_id uuid)
+- RETURNS jsonb
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.grant_canonical_raid_day_clear_reward(p_instance_id uuid,p_user_id uuid) returns jsonb
++language plpgsql security definer set search_path=public as $$
+@@ -10,0 +7,3 @@ begin
++
++ -- Room登録の正本は台帳。bossロック待機後の別SQLで確認する。
++ if exists(select 1 from public.raid_rooms where raid_boss_instance_id=p_instance_id) then return jsonb_build_object('eligible',false); end if;
+@@ -31,2 +30 @@ begin
+-end $function$
+-;
+\ No newline at end of file
++end $$;
+\ No newline at end of file

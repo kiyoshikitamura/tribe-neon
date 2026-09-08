@@ -1,0 +1,27 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_daily_activity_finalized.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_daily_activity_finalized.candidate.sql
+index b1f0d55..e14b8d8 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_daily_activity_finalized.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/on_canonical_daily_activity_finalized.candidate.sql
+@@ -1,6 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.on_canonical_daily_activity_finalized()
+- RETURNS trigger
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.on_canonical_daily_activity_finalized() returns trigger
++language plpgsql security definer set search_path=public as $$
+@@ -19,0 +16 @@ begin
++  if exists(select 1 from public.raid_rooms where raid_boss_instance_id=new.source_reference_id) then return new; end if;
+@@ -23 +20 @@ begin
+-  select count(*) into v_count from public.battle_replay_sessions where requester_user_id=new.requester_user_id and battle_mode='RAID' and finalization_status='FINALIZED' and (finalized_at at time zone 'Asia/Tokyo')::date=v_day;
++  select count(*) into v_count from public.battle_replay_sessions where requester_user_id=new.requester_user_id and battle_mode='RAID' and not exists(select 1 from public.raid_rooms r where r.raid_boss_instance_id=battle_replay_sessions.source_reference_id) and finalization_status='FINALIZED' and (finalized_at at time zone 'Asia/Tokyo')::date=v_day;
+@@ -28 +25 @@ begin
+-  select coalesce(sum(progress.raid_points_consumed),0) into v_consumed from public.raid_instance_user_progress progress join public.raid_bosses boss on boss.id=progress.raid_boss_instance_id where progress.user_id=new.requester_user_id and boss.raid_day_key=v_day::text;
++  select coalesce(sum(progress.raid_points_consumed),0) into v_consumed from public.raid_instance_user_progress progress join public.raid_bosses boss on boss.id=progress.raid_boss_instance_id where progress.user_id=new.requester_user_id and boss.raid_day_key=v_day::text and not exists(select 1 from public.raid_rooms r where r.raid_boss_instance_id=boss.id);
+@@ -35,2 +32 @@ begin
+-end $function$
+-;
+\ No newline at end of file
++end $$;
+\ No newline at end of file

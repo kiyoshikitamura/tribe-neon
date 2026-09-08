@@ -1,0 +1,35 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_battle.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_battle.candidate.sql
+index 6b302b4..94f4d65 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_battle.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_battle.candidate.sql
+@@ -1,6 +1,8 @@
+-CREATE OR REPLACE FUNCTION public.finalize_raid_battle(p_replay_id uuid, p_result jsonb)
+- RETURNS jsonb
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.finalize_raid_battle(
++  p_replay_id uuid,
++  p_result jsonb
++) returns jsonb
++language plpgsql
++security definer
++set search_path = public
++as $$
+@@ -35,2 +36,0 @@ begin
+-  perform public.advance_ranking_season('RAID',clock_timestamp());
+- perform public.validate_official_battle_result(p_result);
+@@ -44,0 +45,6 @@ begin
++
++ -- Room登録の正本は台帳。bossロック待機後の別SQLで確認する。
++ if exists(select 1 from public.raid_rooms where raid_boss_instance_id=v_instance.id) then raise exception 'Room battles require the Room finalization entry point' using errcode='55000'; end if;
++  -- 229の非Roomランキングlifecycle hookを復元。Room拒否後にのみ実行。
++  perform public.advance_ranking_season('RAID',clock_timestamp());
++  perform public.validate_official_battle_result(p_result);
+@@ -130,2 +136 @@ end
+-$function$
+-;
+\ No newline at end of file
++$$;
+\ No newline at end of file

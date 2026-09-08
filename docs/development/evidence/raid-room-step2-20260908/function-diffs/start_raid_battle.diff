@@ -1,0 +1,30 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/start_raid_battle.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/start_raid_battle.candidate.sql
+index 030d9cc..afb6748 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/start_raid_battle.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/start_raid_battle.candidate.sql
+@@ -1,7 +1,3 @@
+-CREATE OR REPLACE FUNCTION public.start_raid_battle(p_instance_id uuid, p_character_ids text[], p_tactic text DEFAULT 'ATTACK_PRIORITY'::text)
+- RETURNS jsonb
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
+-declare v_uid uuid:=auth.uid(); v_user public.users%rowtype; v_instance record; v_cost integer; v_cost_type text; v_guild uuid; v_players jsonb; v_enemy jsonb:='[]'; v_member text; v_entry record; v_skill_refs jsonb; v_skills jsonb; v_replay uuid; v_seed bigint; v_slot integer:=0;
++create or replace function public.start_raid_battle(p_instance_id uuid,p_character_ids text[],p_tactic text default 'ATTACK_PRIORITY') returns jsonb
++language plpgsql security definer set search_path=public as $$
++declare v_legacy_enabled boolean; v_uid uuid:=auth.uid(); v_user public.users%rowtype; v_instance record; v_cost integer; v_cost_type text; v_guild uuid; v_players jsonb; v_enemy jsonb:='[]'; v_member text; v_entry record; v_skill_refs jsonb; v_skills jsonb; v_replay uuid; v_seed bigint; v_slot integer:=0;
+@@ -9,0 +6,4 @@ begin
++ -- 設定行を先に共有lockし、管理者の停止UPDATEと開始/生成を直列化する。
++ select enabled into v_legacy_enabled from public.raid_legacy_settings where singleton for share;
++ if v_legacy_enabled is distinct from true then raise exception 'legacy Raid entry disabled' using errcode='55000'; end if;
++
+@@ -14,0 +15,3 @@ begin
++
++ -- Room登録の正本は台帳。bossロック待機後の別SQLで確認する。
++ if exists(select 1 from public.raid_rooms where raid_boss_instance_id=p_instance_id) then raise exception 'Room battles require the Room entry point' using errcode='55000'; end if;
+@@ -28,2 +31 @@ begin
+-end $function$
+-;
+\ No newline at end of file
++end $$;
+\ No newline at end of file

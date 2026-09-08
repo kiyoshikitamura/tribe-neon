@@ -1,0 +1,26 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_reward.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_reward.candidate.sql
+index 89db7bd..96a4125 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_reward.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/grant_canonical_raid_reward.candidate.sql
+@@ -1,6 +1 @@
+-CREATE OR REPLACE FUNCTION public.grant_canonical_raid_reward(p_instance uuid, p_user uuid, p_type text, p_key text)
+- RETURNS integer
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.grant_canonical_raid_reward(p_instance uuid,p_user uuid,p_type text,p_key text) returns integer language plpgsql security definer set search_path=public as $$
+@@ -8 +3,6 @@ declare row record; granted integer:=0;
+-begin for row in select * from public.canonical_raid_reward_master where version='2026-08-22' and reward_type=p_type and reward_key=p_key loop
++begin
++ if p_type in ('PERSONAL_RANK','GUILD_RANK') then return 0; end if;
++ perform 1 from public.raid_bosses where id=p_instance for update;
++ -- Room登録の正本は台帳。bossロック待機後の別SQLで確認する。
++ if exists(select 1 from public.raid_rooms where raid_boss_instance_id=p_instance) then return 0; end if;
++ for row in select * from public.canonical_raid_reward_master where version='2026-08-22' and reward_type=p_type and reward_key=p_key loop
+@@ -11,2 +11 @@ begin for row in select * from public.canonical_raid_reward_master where version
+- end loop; return granted; end $function$
+-;
+\ No newline at end of file
++ end loop; return granted; end $$;
+\ No newline at end of file
