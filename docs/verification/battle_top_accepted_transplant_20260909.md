@@ -36,4 +36,27 @@
 
 ## 検証・固定Preview
 
-検証完了後に結果を追記する。Production反映は禁止。新Previewの実機確認はユーザー待ち。
+- 統合・配信SHA: `2d3b799ba604a99d69516935e5172a5f8f9e395a`。
+- 新固定Preview: https://tribe-neon-8cmz91acg-kiyoshi-kitamura.vercel.app 。Vercel固有deployment URL（移動する共有aliasではない）。READY / target=Preview / Git metadata SHA一致。
+- 移植commit: `ca39c250e5aa314648d2cde22eb052bdd561355e`（Accepted上への表示差分統合）、`2d3b799ba604a99d69516935e5172a5f8f9e395a`（Heroと共通画像componentを並行準備し、二段階の表示待機を解消）。
+- TypeScript PASS、lint 0 errors（既存・ローカル検証用ファイルを含む警告1,723）、local production build PASS、Vercel production build PASS。
+- Battle TOP E2E 5/5 PASS: 390×844、412×915、Safe Area余白、左右立ち絵、Power、CTA、相手切替、Ready取消、Ranking/Raid、reload、background/foreground、画像失敗→再取得、double tap、サーバー拒否時BP維持。
+- Tutorial開始E2E 4/4 PASS。はじめから→World→SKIP→アゲハ紹介→名前入力、通常進行、連打、reload、back、名前登録→FREE_GACHAまで。固定Previewでも両サイズのWorld→アゲハ→名前入力smoke PASS。
+- 既存Street Battle演出E2E 3/3 PASS、Character Gacha V3 E2E 9/9 PASS。変更後のBattle TOP/Tutorial 9件を再実行し全通過。
+- `verify:pvp-r8`（18 checks）、Battle presentation、full skill load、AI audit、MVP result PASS。
+- 固定Preview実DBで2戦PASS。相手切替時RPC 0。各戦`start_pvp_battle` HTTP 200が1回のみ。選択targetの送信一致。BP 5→4→3。Ready→Street Battle→Result→初回「ランキングを確認」、通常「バトルへ戻る」を確認。
+- 初回実DBテストの2戦目は検証用相手の防衛snapshot未作成で拒否。既存QA fixture同様に検証ユーザーだけに保存処理を追加して再通過。アプリのDB処理は変更なし。検証ユーザーは実行後に削除。
+- `git diff 502c41f..2d3b799`でsrc/public/supabaseの変更はBattle TOPの4ファイルのみ。他1,507ファイルは一致。Tutorial・Home・Gacha・Character・Battle本体／Formula・Economy・Master・DBは完全一致。Battle開始引数も空白を除いて一致。
+- 390/412ともdocument horizontal overflow=0。390ではHeader・両Leader・Power・CTA・残り回数・SelectorをFirst Viewで確認。412ではRaid上端も見える。画像aspect ratio維持。
+- 再確認時もProductionは`b722f6e` / `dpl_6TVTedpFhixiwvbWJd1fktAtRXy9`のまま。本作業によるProduction反映なし。
+
+## Before / After・未解決事項
+
+- 旧244a525のスクリーンショット: `scratch/battle-top/after-390.png`、`after-412.png`。
+- 新固定Preview: `scratch/battle-top/accepted-after-live-390.png`、`accepted-after-live-412.png`。
+- 最新Tutorial: `scratch/battle-top/accepted-tutorial-world-390.png`、`accepted-tutorial-name-390.png`（412版もあり）。
+- Ready/Battle/Result: `scratch/battle-top/accepted-live-{ready,battle,result}-{0,1}.png`。
+- 実行記録: `scratch/battle-top/accepted-live-results.json`、`transplant-parity.json`、`scratch/integrated-final-smoke.log`。
+- 既存`verify:pvp-r9`の`bio edit`チェックはFAIL。Accepted SHAのファイルを直接読み込む同じテストでも同一FAILを再現。今回の変更とは無関係な既存事項として残し、Settings等は変更しない。
+- Battle TOPの自動／ブラウザ画面AcceptanceはPASS。ユーザーによるiPhone実機最終確認は未完了。
+- 現在Productionの古い系統への切替は確認事項として報告のみ。Production復旧・反映・main統合は実施しない。
