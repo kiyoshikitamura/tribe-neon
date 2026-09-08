@@ -64,7 +64,13 @@ Raid担当が共有Preview停止枠を19:17:02〜20:17:02 JSTと連絡。追加�
 
 Preview実接続（Mock=false）の候補を別worktreeでローカルビルド済み。Raid担当から、新規QAユーザー1件自身のチュートリアル・ガチャ・クエスト操作だけは競合せず開始可能との回答を取得し、限定検証を開始。環境・配信の停止枠は継続。**検証完了までは実データ確定処理の合格を主張しない。** 固定Replay QAは確定処理の代用にしない。
 
+20:08 JST追記: Raid担当より共有変更枠の解除通知を取得。限定実データ検証は完了しPASS。新規QA UID `ae28676d-bdca-4f8d-b574-183da188104c`、開始20:02:49 JST。チュートリアル10連履歴COMPLETED、Replay `03faa63f-9c01-4e1d-9245-e9e2fc6c99f8` がRESOLVED / PATROL_SERVER / NOT_REQUIRED、派遣COMPLETED / battle_resolved=true、ユーザーLv.2と報酬表示を確認。COMPLETE・所持キャラ・履歴・Replay・CASH・Lv/XPは再読込後も保持。通常有料1回は表示価格100 CASHで2000→1900、履歴1→2、再読込後に重複消費・追加履歴なし。QAユーザーは証跡用に保持しRaid担当へID共有済み。
+
+初回通常ガチャ移動時は既存のミッション案内・アカウント保護案内が自動テストを遮ったため、同じQAセッションで「あとで」「閉じる」を操作して継続した。製品側の変更や新規QA再作成はしていない。pageerrorは0。周辺RPC `unlock_eligible_user_cosmetics` 400、`get_chat_unread_counts` 409、`acknowledge_kpi_first_mypage_access_v1` 409を別途記録し、ガチャ・報酬の合格をこれら周辺機能の合格とはしない。
+
 Production環境値はVercelから読み取り確認。URLは`https://api.tribe-neon.com`、Mock=false、QA tools=false。機密値は出力・コミットしない。PreviewビルドのProduction昇格は行っていない。
+
+DNS照合で`api.tribe-neon.com`のCNAMEはProduction識別子`ktpolnkyyfkowxdmijww.supabase.co`。Vercel deploy dry-runでscratch・QAセッション・環境ファイルがアップロード対象に含まれないことを確認。
 
 ## 変更除外と反映条件
 
