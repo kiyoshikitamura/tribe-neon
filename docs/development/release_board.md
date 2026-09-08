@@ -1,3 +1,7 @@
+# Raid第16工程 — VALIDATED
+
+討伐報酬のACTIVE累積貢献判定・Present接続・表示。RAID-A/B/C/P-16。親レビュー・SQL10/討伐画面4/Room画面28/共通86/全体型/Mock build PASS。数値未投入、設定無効。SQL262未適用、実DB/Deployなし。詳細raid_room_phase16_integration.md。
+
 # Raid第15工程 — VALIDATED
 
 レイドランキング・順位報酬生成停止、製品導線撤去。RAID-A/B/C/P-15。過去データ/Present・Room参加者貢献・他ランキング維持。親レビュー・SQL8/順位画面5/Room画面28/共通83/全体型/Mock build PASS。SQL261未適用。実DB/Deployなし。詳細raid_room_phase15_integration.md。

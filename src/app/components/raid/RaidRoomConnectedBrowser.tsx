@@ -5,6 +5,8 @@ import { createRaidRoomController } from '../../../domain/raidRoomClient';
 import { createRaidRoomRpcTransport, type RaidRoomRpcAuthorities, type RaidRoomRpcClient } from '../../../domain/raidRoomRpcTransport';
 import { createRaidRoomRescueClient } from '../../../domain/raidRoomRescue';
 import { createRaidRoomRescueRewardClient } from '../../../domain/raidRoomRescueReward';
+import { createRaidRoomClearRewardClient } from '../../../domain/raidRoomClearReward';
+import RaidRoomClearRewardPanel from './RaidRoomClearRewardPanel';
 import RaidRoomRescueRewardPanel from './RaidRoomRescueRewardPanel';
 import RaidRoomRescuePanel from './RaidRoomRescuePanel';
 import OutlawButton from '../ui/OutlawButton';
@@ -22,6 +24,7 @@ export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps
 export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, ...browserProps }: RaidRoomConnectedBrowserProps) {
   const enableRescue = authorities?.enableRescue;
   const rewardClient = useMemo(() => createRaidRoomRescueRewardClient(rpcClient), [rpcClient]);
+  const clearRewardClient = useMemo(() => createRaidRoomClearRewardClient(rpcClient), [rpcClient]);
   const rescueClient = useMemo(() => createRaidRoomRescueClient(rpcClient), [rpcClient]);
   const [linkError, setLinkError] = useState(false);
   const [linkRevision, setLinkRevision] = useState(0);
@@ -50,5 +53,9 @@ export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescu
     }).catch(() => { if (current) setLinkError(true); });
     return () => { current = false; };
   }, [connection, rescueClient, rescueId, enableRescue, linkRevision]);
-  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} controller={connection.controller} renderRewards={enableRescue ? (roomId, close) => <RaidRoomRescueRewardPanel key={roomId} client={rewardClient} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /> : browserProps.renderRewards} renderRescue={enableRescue ? (room, disabled) => <RaidRoomRescuePanel key={room.roomId} client={rescueClient} userId={userId} roomId={room.roomId} disabled={disabled} setInteractionBlocking={browserProps.setInteractionBlocking} /> : undefined} /></>;
+  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} controller={connection.controller} renderRewards={enableRescue || enableParticipation ? (roomId, close) => <div key={`${userId ?? ""}:${roomId}`}>
+      <h3>討伐報酬</h3>
+      <RaidRoomClearRewardPanel client={clearRewardClient} roomId={roomId} userId={userId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} />
+      {enableRescue && <><h3>救援成功報酬</h3><RaidRoomRescueRewardPanel client={rewardClient} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /></>}
+    </div> : browserProps.renderRewards} renderRescue={enableRescue ? (room, disabled) => <RaidRoomRescuePanel key={room.roomId} client={rescueClient} userId={userId} roomId={room.roomId} disabled={disabled} setInteractionBlocking={browserProps.setInteractionBlocking} /> : undefined} /></>;
 }
