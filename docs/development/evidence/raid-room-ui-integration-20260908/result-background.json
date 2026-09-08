@@ -1,0 +1,130 @@
+[
+  {
+    "engine": "chromium",
+    "order": "street-first",
+    "mode": "PATROL",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-first",
+    "mode": "PATROL",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-first",
+    "mode": "RAID",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-first",
+    "mode": "RAID",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-last",
+    "mode": "PATROL",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-last",
+    "mode": "PATROL",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-last",
+    "mode": "RAID",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "chromium",
+    "order": "street-last",
+    "mode": "RAID",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-first",
+    "mode": "PATROL",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-first",
+    "mode": "PATROL",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-first",
+    "mode": "RAID",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-first",
+    "mode": "RAID",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-last",
+    "mode": "PATROL",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-last",
+    "mode": "PATROL",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-last",
+    "mode": "RAID",
+    "outcome": "is-victory",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  },
+  {
+    "engine": "webkit",
+    "order": "street-last",
+    "mode": "RAID",
+    "outcome": "is-defeat",
+    "background": "linear-gradient(rgba(9, 13, 18, 0.44), rgba(9, 13, 18, 0.686) 45%, rgb(8, 12, 18) 85%), url(\"/bg/bg_street_shinjuku.jpg\")",
+    "status": "PASS"
+  }
+]
