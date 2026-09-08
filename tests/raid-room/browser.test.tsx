@@ -391,3 +391,17 @@ test('救援上限到達は依頼不可、救援参加者にはサーバー貢�
  const client={getStatus:async()=>status,request:async()=>{throw Error('unexpected request');},getLink:async()=>({roomId:'room',rescueId:'rescue'}),join:async()=>({roomId:'room',membershipStatus:'joined' as const,viaRescue:true})};
  const ui=render(<Panel client={client} roomId="room" setInteractionBlocking={()=>{}}/>);try{assert.equal((await ui.findByRole('button',{name:'救援を依頼'}) as HTMLButtonElement).disabled,true);assert.match(ui.container.textContent??'',/救援参加：2戦 ・ 貢献ダメージ 12,345/);}finally{cleanup();}
 });
+
+test('救援報酬は取得失敗後に再試行し未設定を成功と表示しない',async()=>{
+ const {default:Panel}=await import('../../src/app/components/raid/RaidRoomRescueRewardPanel');let calls=0;
+ const client={getReward:async()=>{if(++calls===1)throw Error('network');return {roomId:'room',status:'unconfigured' as const,rescueGate:{status:'unknown' as const,minimumBattles:null,minimumContributionDamage:null},issuedAt:null,expiresAt:null,items:[]};}};
+ const ui=render(<Panel client={client} roomId="room" onOpenPresents={()=>{throw Error('unexpected');}}/>);
+ try{await ui.findByRole('alert');fireEvent.click(ui.getByRole('button',{name:'報酬情報を更新'}));await ui.findByText('救援報酬は準備中です。');assert.equal(ui.queryByRole('button',{name:'プレゼントBOXへ'}),null);assert.equal(ui.queryByText(/救援成功。/),null);}finally{cleanup();}
+});
+
+test('救援報酬の発行明細を表示しPresent取得失敗後の再試行で遷移',async()=>{
+ const {default:Panel}=await import('../../src/app/components/raid/RaidRoomRescueRewardPanel');let opened=0;
+ const client={getReward:async()=>({roomId:'room',status:'issued' as const,rescueGate:{status:'succeeded' as const,minimumBattles:1,minimumContributionDamage:100},issuedAt:'2026-09-08T00:00:00Z',expiresAt:'2026-10-08T00:00:00Z',items:[{itemId:'CASH',quantity:37,presentId:'present',presentStatus:'CLAIMED',claimedAt:'2026-09-08T00:01:00Z',expiresAt:'2026-10-08T00:00:00Z'}]})};
+ const ui=render(<Panel client={client} roomId="room" onOpenPresents={async()=>{if(++opened===1)throw Error("network");}}/>);
+ try{await ui.findByText('受取済み');assert.match(ui.container.textContent??'',/キャッシュ × 37/);fireEvent.click(ui.getByRole('button',{name:'プレゼントBOXへ'}));assert.equal(opened,1);await ui.findByRole('alert');fireEvent.click(ui.getByRole('button',{name:'プレゼントBOXへ'}));await waitFor(()=>assert.equal(opened,2));await waitFor(()=>assert.equal(ui.queryByRole('alert'),null));}finally{cleanup();}
+});

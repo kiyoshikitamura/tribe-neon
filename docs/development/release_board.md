@@ -1,3 +1,7 @@
+# Raid第13工程 — VALIDATED
+
+救援成功の本人Room1回・Present自動送付30日・報酬表示と既存Present受取接続。RAID-A/B/C/P-13。親レビューとSQL9件、共通79件、React24件、実useBattle17件、全体型/Mock build PASS。品目数量未投入、運用false。実DB/実機/ランキング切替・通常参加/主催者報酬は残件。詳細raid_room_phase13_integration.md。
+
 # Raid第12工程 — VALIDATED
 
 救援依頼・Activity/Guild Chat両公開先各3回・救援参加帰属・製品導線。RAID-A/B/C/P-12。親検証: SQL12件、共通76件、React22件、実useBattle17件、全体型/Mock build PASS。実DB/Deploy/有効化なし。報酬/ランキング・実DB/実機は未完了。詳細raid_room_phase12_integration.md。

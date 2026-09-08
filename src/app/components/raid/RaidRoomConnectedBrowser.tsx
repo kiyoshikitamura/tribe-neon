@@ -4,6 +4,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createRaidRoomController } from '../../../domain/raidRoomClient';
 import { createRaidRoomRpcTransport, type RaidRoomRpcAuthorities, type RaidRoomRpcClient } from '../../../domain/raidRoomRpcTransport';
 import { createRaidRoomRescueClient } from '../../../domain/raidRoomRescue';
+import { createRaidRoomRescueRewardClient } from '../../../domain/raidRoomRescueReward';
+import RaidRoomRescueRewardPanel from './RaidRoomRescueRewardPanel';
 import RaidRoomRescuePanel from './RaidRoomRescuePanel';
 import OutlawButton from '../ui/OutlawButton';
 import RaidRoomBrowser, { type RaidRoomBrowserProps } from './RaidRoomBrowser';
@@ -11,12 +13,14 @@ import RaidRoomBrowser, { type RaidRoomBrowserProps } from './RaidRoomBrowser';
 export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps, 'controller'> {
   rpcClient: RaidRoomRpcClient;
   authorities?: RaidRoomRpcAuthorities;
+  onOpenPresents?: () => void | Promise<void>;
   rescueId?: string | null;
 }
 
 /** 接続元の認証client・画面遷移・全体操作blockを受け取る。既存GameContextを変更しない。 */
-export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, ...browserProps }: RaidRoomConnectedBrowserProps) {
+export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, ...browserProps }: RaidRoomConnectedBrowserProps) {
   const enableRescue = authorities?.enableRescue;
+  const rewardClient = useMemo(() => createRaidRoomRescueRewardClient(rpcClient), [rpcClient]);
   const rescueClient = useMemo(() => createRaidRoomRescueClient(rpcClient), [rpcClient]);
   const [linkError, setLinkError] = useState(false);
   const [linkRevision, setLinkRevision] = useState(0);
@@ -45,5 +49,5 @@ export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescu
     }).catch(() => { if (current) setLinkError(true); });
     return () => { current = false; };
   }, [connection, rescueClient, rescueId, enableRescue, linkRevision]);
-  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} controller={connection.controller} renderRescue={enableRescue ? (room, disabled) => <RaidRoomRescuePanel key={room.roomId} client={rescueClient} roomId={room.roomId} disabled={disabled} setInteractionBlocking={browserProps.setInteractionBlocking} /> : undefined} /></>;
+  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} controller={connection.controller} renderRewards={enableRescue ? (roomId, close) => <RaidRoomRescueRewardPanel key={roomId} client={rewardClient} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /> : browserProps.renderRewards} renderRescue={enableRescue ? (room, disabled) => <RaidRoomRescuePanel key={room.roomId} client={rescueClient} roomId={room.roomId} disabled={disabled} setInteractionBlocking={browserProps.setInteractionBlocking} /> : undefined} /></>;
 }

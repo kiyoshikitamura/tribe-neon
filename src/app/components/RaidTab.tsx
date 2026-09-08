@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { supabase } from "@/utils/supabase";
 import { getCanonicalBattleAreaName, getCanonicalBattleBackground } from "@/utils/game_constants";
 import { preloadAsset } from "../lib/screenAssets";
@@ -26,8 +27,29 @@ export default function RaidTab() {
   const {
     startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, navigateTab, userLevel, raidPoints, raidFirstEntryFree,
     setRaidPoints, setRaidFirstEntryFree, userGuildMember, fetchGuildDetail, session, syncBootstrapData,
-    raidTopRefreshRevision, raidRescueTarget,
+    raidTopRefreshRevision, raidRescueTarget, setShowInboxPanel, setInboxPanelTab, setPresents, setPresentsPrefetched,
   } = useGame();
+  const presentOwnerRef = React.useRef(session?.user?.id);
+  presentOwnerRef.current = session?.user?.id;
+  const openRescuePresents = async () => {
+    const userId = session?.user?.id;
+    if (!userId) throw new Error("ログインを確認してください。");
+    setGlobalInteractionBlocking(true);
+    try {
+      const { data, error } = await supabase.from("presents").select("*").eq("user_id", userId).order("sent_at", { ascending: false });
+      if (error || !Array.isArray(data)) throw new Error("プレゼントを取得できませんでした。");
+      if (presentOwnerRef.current !== userId) throw new Error("ログインが変更されました。");
+      setPresents(data.map(present => ({
+        id: String(present.id), title: present.message ? present.message.split(":")[0] : "配布アイテム",
+        desc: present.message ? present.message.split(":")[1] || present.message : "",
+        reward: `${canonicalItemName(present.item_id)} +${present.quantity}`, itemId: present.item_id, qty: present.quantity,
+        expireText: Date.parse(present.expire_at) <= Date.now() ? "期限切れ" : `期限: ${new Date(present.expire_at).toLocaleString("ja-JP")}`,
+        status: present.status, loading: false,
+      })));
+      setPresentsPrefetched(true);
+      setInboxPanelTab("presents"); setShowInboxPanel(true);
+    } finally { setGlobalInteractionBlocking(false); }
+  };
   const readiness = useScreenReadiness({ assets: SCREEN_ASSET_MANIFESTS.raid });
   const [activeRaids, setActiveRaids] = React.useState<any[]>([]);
   const [selectedRaidId, setSelectedRaidId] = React.useState<string | null>(null);
@@ -150,6 +172,7 @@ export default function RaidTab() {
       {process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true" && <RaidRoomConnectedBrowser
         key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId}
         rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
+        onOpenPresents={openRescuePresents}
         setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
         onBattleReady={() => { throw new Error("出撃準備から開始してください。"); }} />}
       {loading ? <div className="raid-loading" role="status">レイド情報を取得中…</div> : errorMessage ? <OutlawCard className="raid-error"><p>{errorMessage}</p><OutlawButton variant="primary" onClick={() => void loadRaidTop()}>再読み込み</OutlawButton></OutlawCard> : activeRaids.length === 0 ? <OutlawCard className="raid-empty"><strong>現在開催中のレイドはありません</strong><p>次の開催情報が確定すると、ここに表示されます。</p></OutlawCard> : <>

@@ -12,6 +12,7 @@ import "./RaidRoomBrowser.css";
 
 export interface RaidRoomBrowserProps {
   controller: RaidRoomController;
+  renderRewards?: (roomId: string, close: () => void) => React.ReactNode;
   renderRescue?: (room: RaidRoomDto, disabled: boolean) => React.ReactNode;
   onBriefingReady?: (briefing: RaidRoomBriefing) => void | Promise<void>;
   onBattleReady: (reference: RaidBattleReference) => void | Promise<void>;
@@ -47,7 +48,7 @@ function RoomSummary({ room, now }: { room: RaidRoomDto; now: number | null }) {
 
 function Spinner() { return <div className="raid-room-wait" role="status" aria-label="通信中"><span className="spinner" aria-hidden="true" /></div>; }
 
-export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue }: RaidRoomBrowserProps) {
+export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue, renderRewards }: RaidRoomBrowserProps) {
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
   // SSRとhydration初回は同じ未取得値。マウント後にだけ端末時計を参照する。
   const [now, setNow] = useState<number | null>(null);
@@ -188,7 +189,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
           </li>)}
           {snapshot.participants.data?.length === 0 && <li>参加者はいません。</li>}
         </ul>}
-      </> : <>
+      </> : renderRewards ? renderRewards(snapshot.selectedRoomId, () => setDialog(null)) : <>
         {snapshot.rewards.status === "loading" && <Spinner />}
         {snapshot.rewards.status === "idle" && <p>報酬情報は未取得です。</p>}
         {snapshot.rewards.status === "error" && <p role="alert">報酬を取得できませんでした。Roomを更新してください。</p>}
