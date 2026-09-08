@@ -31,7 +31,7 @@
 3. 指摘箇所が成立したらユーザー承認に基づきProductionへ反映し、配信SHA・deployment ID・本番確認結果を報告する。
 4. レイド・DB・Edge・共有Preview aliasを変更しない。並走Raid `251dc03`のRoom復帰/Result後ackを上書きしない。この修正はuseBattleに変更なし。
 
-本番デプロイはリモートPC側で実施。ここでは本番未反映。
+引き継ぎ時点では本番未反映。リモートPC側での反映結果は下記。
 
 ## リモートPC検証記録
 
@@ -47,3 +47,25 @@
 - 従来形式の通常クエスト表示fixtureで行動者1名の枠が点灯し、2px内側に描画されることを確認。
 
 WebKitはデスクトップの自動ブラウザであり、iPhone 14実機での再確認済みという意味ではない。今回の検証はローカルMockのみで、共有Previewの実データ・設定・Edgeを操作していない。`supabase/`と`src/hooks/useBattle.ts`は現本番から無差分。
+
+## Production反映結果
+
+- STATUS: **反映済み**
+- 配信SHA: `3bdefedd9b49fbbadac5ca2bbc832fe10c1b9716`
+- 製品コード: `eff2f35491efb078cf6f6495dfadadc97f071063`と同一。後続差分は対象テスト・記録のみ。
+- Deployment ID: `dpl_73A7dsAKVLxBgFVuM9H4mLW6F3E6`
+- 本番: https://www.tribe-neon.com/
+- 固定URL: https://tribe-neon-kgkfs7za0-kiyoshi-kitamura.vercel.app
+- ロールバック: `59be3c715defa33c61adbfb0e84f16778f34525d` / `dpl_8up8KQuqxybgbAC8mBNCM2vhudW9`
+
+Production環境で新規ビルドし、APP_ENV=production / Mock=false / QA=falseを明示。固定URL確認後に本番ドメインへ切替。Previewビルドの昇格ではない。
+
+本番でタイトル→開始選択、法的情報3ページ、QA5経路404、立ち絵・背景・エフェクト200、ガチャ／バトル両フォントdecode、準備画面・行動枠を含む修正CSSの配信を確認。戦闘CSSは遅延読込の別ファイルも照合した。pageerror=0、API接続先は`https://api.tribe-neon.com`。
+
+切替直前・直後のalias比較で変更はゲーム本番3件（www、apex、tirbe-neon.vercel.app）のみ。KPI・共有Preview aliasは維持。レイド機能・DB構成・Edge・共有Preview実データに変更なし。全体CIの既存失敗整理は実施していない。
+
+```powershell
+npx --yes vercel rollback dpl_8up8KQuqxybgbAC8mBNCM2vhudW9 --scope kiyoshi-kitamura --yes
+```
+
+上記は復旧用の記録で未実行。本番実アカウントでの追加消費・iPhone 14実機の再確認は行っていない。
