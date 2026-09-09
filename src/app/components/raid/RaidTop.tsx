@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { RaidTopEntry, RaidTopProps, RaidTopResource } from "@/domain/raidTop";
 import type { RaidPlayerSummary } from "@/domain/raidRoom";
 import { getRaidDifficultyLabel } from "@/domain/raidRoomPresentation";
 import { getRaidRoomLifecyclePresentation } from "@/domain/raidRoomLifecyclePresentation";
 import { preloadAssetManifest, type AssetResult } from "@/app/lib/screenAssets";
-import { getCharacterPresentationMetadata } from "../character/characterPresentationMetadata";
 import OutlawButton from "../ui/OutlawButton";
 import UserAvatar from "../profile/UserAvatar";
 import OutlawCard from "../ui/OutlawCard";
@@ -19,12 +18,6 @@ type ImageResolver = (url: string) => string;
 
 function Spinner() {
   return <div className="raid-top__wait" role="status" aria-label="通信中"><span className="spinner" aria-hidden="true" /></div>;
-}
-function Portrait({ url, alt }: { url: string; alt: string }) {
-  const crop = getCharacterPresentationMetadata(url);
-  // 共通キャラクター画像のサムネイル焦点を再利用する。画像はトップ単位で事前ロード済み。
-  const style = { "--raid-portrait-scale": url.startsWith("data:") ? 1 : crop.thumbnailScale, "--raid-portrait-x": `${crop.thumbnailX}%`, "--raid-portrait-y": `${crop.thumbnailY}%` } as CSSProperties;
-  return <img className="raid-top__portrait" src={url} alt={alt} style={style} />;
 }
 function PersonIcon({ player, resolve }: { player?: RaidPlayerSummary; resolve: ImageResolver }) {
   const image = player?.leaderIconUrl.status === "available" ? player.leaderIconUrl.value : null;
@@ -124,7 +117,7 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
       <ResourceNotice resource={data.rescues} onRefresh={onRefresh} disabled={disabled} unavailable="救援情報は現在確認できません" />
       <div className={`raid-top__rescue-track ${rescues.length > 1 ? "raid-top__rescue-track--multiple" : ""}`} ref={carousel} onScroll={event => { const track = event.currentTarget; const card = track.firstElementChild as HTMLElement | null; setPosition({ key: rescueKey, index: Math.round(track.scrollLeft / ((card?.offsetWidth ?? track.clientWidth) + 12)) }); }}>
         {rescues.map(entry => <OutlawCard key={`${entry.room.roomId}-${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`} className="raid-top__rescue">
-          <Owner entry={entry} resolve={resolve} />
+          <div className="raid-top__requester-art">{entry.room.owner.status === "available" && entry.room.owner.value.leaderIconUrl.status === "available" && entry.room.owner.value.leaderIconUrl.value ? <img src={resolve(entry.room.owner.value.leaderIconUrl.value)} alt="" /> : <PersonIcon resolve={resolve} />}</div><Owner entry={entry} resolve={resolve} />
           <div className="raid-top__rescue-visual">{entry.enemy.status === "available" && <><img className="raid-top__background" src={resolve(entry.enemy.value.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(entry.enemy.value.leaderImageUrl)} alt="" /></>}<div className="raid-top__enemy-caption"><span>{getRaidDifficultyLabel(entry.room.difficultyId)}{entry.enemy.status === "available" && ` / ${entry.enemy.value.areaName}`}</span><h3>{entry.enemy.status === "available" ? entry.enemy.value.bossName : "敵情報未確認"}</h3></div></div>
           <div className="raid-top__rescue-body"><BattleState entry={entry} now={now} resolve={resolve} />{entry.rescue.status === "unknown" && <p className="raid-top__muted">救援情報を確認できません</p>}<OutlawButton loadingLabel="" fullWidth variant="primary" disabled={disabled || entry.rescue.status === "unknown"} onClick={() => onOpenRoom(entry.room.roomId, entry.rescue.status === "available" ? entry.rescue.value.rescueId : undefined)}>{entry.room.state.status === "available" && entry.room.state.value !== "active" ? "戦況を見る" : "救援に向かう"}</OutlawButton></div>
         </OutlawCard>)}
@@ -132,9 +125,9 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
     </section>}
     <section aria-label="今日の強敵" className="raid-top__section"><SectionHeader title="今日の強敵" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
       <ResourceNotice resource={data.dailyTargets} onRefresh={onRefresh} disabled={disabled} unavailable="本日の対象エリアは未確認です" />
-      {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><div className="raid-top__roster" aria-label="敵編成">{enemy.roster.map((member, index) => <span key={`${member.id}-${index}`} title={member.name}><Portrait url={resolve(member.imageUrl)} alt={member.name} /></span>)}</div><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>この敵に挑む</OutlawButton></div></OutlawCard>)}</div>}
+      {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>この敵に挑む</OutlawButton></div></OutlawCard>)}</div>}
       {data.dailyTargets.status === "ready" && !data.canCreate && <p className="raid-top__muted">現在、新たな挑戦は受け付けていません</p>}
     </section>
-    <section aria-label="開催中を探す" className="raid-top__section raid-top__browse"><OutlawButton loadingLabel="" fullWidth onClick={onBrowse} disabled={disabled}>開催中を探す <span aria-hidden="true">›</span></OutlawButton></section>
+    <section aria-label="開催中のレイドを探す" className="raid-top__section raid-top__browse"><OutlawButton loadingLabel="" fullWidth onClick={onBrowse} disabled={disabled}><span className="raid-top__browse-copy"><strong>開催中のレイドを探す</strong><small>ほかの挑戦者に加勢する</small></span><span aria-hidden="true">›</span></OutlawButton></section>
   </div>;
 }
