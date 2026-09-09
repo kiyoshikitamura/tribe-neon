@@ -1,5 +1,8 @@
 # Raid告知・公開手順
 
+> 本番反映済み（2026-09-10）。最新の適用結果・配信SHA・検証範囲は `docs/development/raid-announcement-release/RESULT.md` を参照。
+> 以下の「未適用」記述は実装当時の履歴。準備migration・通知を再投入せず、送信済みIDを先に確認すること。
+
 ## ActivityのQA表示修正（2026-09-10追記）
 
 本番hotfix `43096bcbc06e89cfc58980b15c07c34e4b025dc2` を基準に独立branch `codex/raid-announcement-production-20260910` を作り、告知/バナー差分だけをcherry-pick。以降の本番更新があれば配信前に再確認して保持する。

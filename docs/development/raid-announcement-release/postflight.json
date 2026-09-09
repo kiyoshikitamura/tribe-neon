@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "at": "2026-09-09T19:02:53.485Z",
+  "wwwHttp": 200,
+  "apexHttp": 308,
+  "newsPublicApi": "exact match",
+  "newsId": 1,
+  "messageId": "d0718b02-2747-54c6-a3ff-d517011a9a34",
+  "systemMessages": 1,
+  "bannerPublicApi": "active raid destination",
+  "activity": {
+    "visible": 7,
+    "deleted_actor_rows": 0
+  },
+  "limits": "UI tested with component fixtures; no new production QA account or user battle actions"
+}
