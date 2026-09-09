@@ -1337,9 +1337,10 @@ test("new mobile player completes the guided first session without footer naviga
   const loginBonus = page.getByRole("dialog", { name: "ログインボーナス" });
   if (await loginBonus.isVisible()) await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
   await page.locator('.footer-item[aria-label="キャラ"]').click();
+  await page.getByRole("button", {name: "キャラ一覧", exact: true}).click();
   await page.locator(".character-v2-card").filter({ has: page.locator("strong", { hasText: ownerMaster.jpName }) }).click();
   await expect(page.locator(".character-home-power strong")).toHaveText((stats.hp + stats.atk + stats.def).toLocaleString());
-  await expect(page.locator(".character-home").getByRole("button", { name: /Equipment/ })).toContainText("5 / 7");
+  await expect(page.locator(".character-home").getByRole("button", { name: /装備/ })).toContainText("5 / 7");
   await page.screenshot({ path: test.info().outputPath("fresh-persisted-equipment-home.png") });
   expect(failedImages).toEqual([]);
   expect(pageErrors).toEqual([]);

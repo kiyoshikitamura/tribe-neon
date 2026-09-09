@@ -6,7 +6,6 @@ test.setTimeout(120_000);
 if (process.env.CHARACTER_HOME_BROWSER === "webkit") test.use({ browserName: "webkit", isMobile: true, hasTouch: true });
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem("mock_rpc_fixture:empty_raid_recoveries", "true"));
   await page.addInitScript(() => {
     const userId = "00000000-0000-4000-8000-000000000829";
     const now = new Date().toISOString();
@@ -92,6 +91,8 @@ for (const width of [375,390,430]) {
   await page.setViewportSize({width,height:844});
   await enterGame(page);
   await page.locator('.footer-item[aria-label="キャラ"]').click();
+  await expect(page.locator('.character-home')).toHaveAttribute('data-character-id','char_reiji_01');
+  await page.getByRole('button',{name:'キャラ一覧',exact:true}).click();
   await expect(page.locator('.character-v2-card')).toHaveCount(3);
   await expect(page.locator('.character-v2-card-power').first()).toContainText('総合力');
   await page.locator('.character-v2-card').first().click();
@@ -99,8 +100,8 @@ for (const width of [375,390,430]) {
   await expect(home).toBeVisible();
   await expect(home.locator('.semantic-cta--primary')).toHaveText('育成する');
   await expect(home.locator('.character-home-identity')).toContainText('覚醒 +3');
-  await expect(home.getByRole('button',{name:/PARTY/})).toContainText('編成中');
-  await expect(home.getByRole('button',{name:/Equipment/})).toContainText('1 / 7');
+  await expect(home.getByRole('button',{name:/パーティ/})).toContainText('編成中');
+  await expect(home.getByRole('button',{name:/装備/})).toContainText('1 / 7');
   await expectMobileGeometry(page,'.character-home');
   const bottom=await home.locator('.character-home-destinations').boundingBox();
   const footer=await page.locator('.page-shell-footer').boundingBox();
@@ -120,13 +121,13 @@ for (const width of [375,390,430]) {
   await home.getByRole('button',{name:'育成する'}).click();
   await expect(page.locator('.character-v2-growth')).toBeVisible();
   await page.locator('.character-v2-growth').getByRole('button',{name:'戻る',exact:true}).click();
-  await home.getByRole('button',{name:/Equipment/}).click();
-  await expect(page.locator('.character-v2-equipment-slots button')).toHaveCount(7);
+  await home.getByRole('button',{name:/装備/}).click();
+  await expect(page.locator('.character-equipment-slot')).toHaveCount(7);
   await page.getByRole('button',{name:'戻る',exact:true}).click();
-  await home.getByRole('button',{name:/PARTY/}).click();
-  await expect(page.locator('.character-v2-party-slots > *')).toHaveCount(5);
+  await home.getByRole('button',{name:/パーティ/}).click();
+  await expect(page.locator('.character-party-members > *')).toHaveCount(4);
   await page.getByRole('button',{name:'キャラホームへ戻る'}).click();
-  await home.getByRole('button',{name:'キャラクター一覧へ戻る'}).click();
+  await home.getByRole('button',{name:'キャラ一覧'}).click();
   await expect(home).toHaveCount(0);
  });
 }
@@ -139,22 +140,22 @@ test('Saved empty formation is not the display fallback; one Character and low h
  });
  await page.setViewportSize({width:390,height:667}); await enterGame(page);
  await page.locator('.footer-item[aria-label="キャラ"]').click();
- await page.locator('.character-v2-card').first().click();
  const home=page.getByRole('region',{name:'キャラクターホーム'});
- await expect(home.getByRole('button',{name:/PARTY/})).toContainText('未編成');
+ await expect(home.getByRole('button',{name:/パーティ/})).toContainText('未編成');
  await expect(home.getByRole('button',{name:'次のキャラクター'})).toBeDisabled();
  await expect(home.getByRole('button',{name:'前のキャラクター'})).toBeDisabled();
  await expectMobileGeometry(page,'.character-home');
  await home.locator('h1').evaluate(el=>el.textContent='長いキャラクター名の表示確認用テキスト');
  await home.locator('.character-home-power strong').evaluate(el=>el.textContent='1,234,567');
  await expectMobileGeometry(page,'.character-home');
- await home.getByRole('button',{name:/Equipment/}).scrollIntoViewIfNeeded();
- await expect(home.getByRole('button',{name:/Equipment/})).toBeInViewport();
+ await home.getByRole('button',{name:/装備/}).scrollIntoViewIfNeeded();
+ await expect(home.getByRole('button',{name:/装備/})).toBeInViewport();
  await page.screenshot({path:test.info().outputPath('character-home-low-height-long-name.png')});
 });
 
 test('Empty roster and filters remain navigable',async({page})=>{
  await enterGame(page); await page.locator('.footer-item[aria-label="キャラ"]').click();
+ await page.getByRole('button',{name:'キャラ一覧',exact:true}).click();
  await page.locator('.character-v2-filters.is-rarity').getByRole('button',{name:'N',exact:true}).click();
  await expect(page.getByText('条件に一致するキャラクターがいません。')).toBeVisible();
  await page.locator('.character-v2-filters.is-rarity').getByRole('button',{name:'レアリティ',exact:true}).click();
@@ -181,11 +182,12 @@ test('Many owned Characters switch within the current filtered roster',async({pa
  localStorage.setItem('mock_db_user_characters',JSON.stringify(characters.map((entry,index)=>({id:'owned-many-'+index,user_id:uid,character_id:entry.character_id,level:1,awakening_level:0}))));
  },characterSource.characters);
  await enterGame(page); await page.locator('.footer-item[aria-label="キャラ"]').click();
+ await page.getByRole('button',{name:'キャラ一覧',exact:true}).click();
  await expect(page.locator('.character-v2-card')).toHaveCount(characterSource.characters.length);
  await page.locator('.character-v2-card').last().click();
  await page.getByRole('button',{name:'次のキャラクター'}).click();
- await expect(page.locator('.character-home')).toHaveAttribute('data-character-id',characterSource.characters[0].character_id);
- await page.getByRole('button',{name:'キャラクター一覧へ戻る'}).click();
+ await expect(page.locator('.character-home')).toHaveAttribute('data-character-id','char_reiji_01');
+ await page.getByRole('button',{name:'キャラ一覧'}).click();
  await page.locator('.character-v2-filters.is-rarity').getByRole('button',{name:'SSR',exact:true}).click();
  const count=await page.locator('.character-v2-card').count();
  await page.locator('.character-v2-card').first().click();

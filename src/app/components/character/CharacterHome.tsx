@@ -52,7 +52,7 @@ export default function CharacterHome({ character, master, power, equipment, use
 
   return <section className="character-home" aria-label="キャラクターホーム" data-character-id={character.character_id}>
     <header className="character-home-header">
-      <button type="button" onClick={onBack} aria-label="キャラクター一覧へ戻る">‹ <span>キャラクター</span></button>
+      <button type="button" onClick={onBack} aria-label="キャラ一覧"><span>キャラ一覧</span></button>
       <div className="character-home-switch" aria-label="表示中の一覧内でキャラクターを切替">
         <button type="button" disabled={total < 2} onClick={() => onSwitch(-1)} aria-label="前のキャラクター">‹</button>
         <span aria-live="polite">{position} <i>/</i> {total}</span>
@@ -79,8 +79,8 @@ export default function CharacterHome({ character, master, power, equipment, use
       <div className="character-home-power"><span>総合力</span><strong>{power.toLocaleString()}</strong></div>
       <OutlawButton variant="primary" fullWidth onClick={onGrowth}>育成する</OutlawButton>
       <div className="character-home-destinations">
-        <OutlawButton variant="secondary" onClick={onEquipment}><span>Equipment<small>{equippedCount} / {GEAR_SLOTS_MASTER.length}</small></span></OutlawButton>
-        <OutlawButton variant="secondary" onClick={onParty}><span>PARTY<small>{partyLabel}</small></span></OutlawButton>
+        <OutlawButton variant="secondary" onClick={onEquipment}><span>装備<small>{equippedCount} / {GEAR_SLOTS_MASTER.length}</small></span></OutlawButton>
+        <OutlawButton variant="secondary" onClick={onParty}><span>パーティ<small>{partyLabel}</small></span></OutlawButton>
       </div>
       {formationError && <button className="character-home-retry" type="button" onClick={() => setRetry((value) => value + 1)}>編成状態を再確認</button>}
     </div>

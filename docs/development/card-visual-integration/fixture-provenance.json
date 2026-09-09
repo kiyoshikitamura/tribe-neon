@@ -1,0 +1,32 @@
+[
+  {
+    "Fixture": "raid-detail/actual-display.json",
+    "Source": "C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-09\\game03-tribe-neon-raid-preview-step5\\outputs\\raid-detail\\actual-display.json",
+    "SHA256": "03398DB41F713B7DB15D0E88710D59663A90D819074751118E981BAB1B4ED91A",
+    "Purpose": "Replay existing fixture through current parser/UI, not a new DB test"
+  },
+  {
+    "Fixture": "raid-top-data/actual-pg-snapshot.json",
+    "Source": "C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-09\\game03-tribe-neon-raid-preview-step5\\outputs\\raid-top-data\\actual-pg-snapshot.json",
+    "SHA256": "9522BB7C22010507F251057502C366B005F233AEC422FDC423A0E92AF24B2F26",
+    "Purpose": "Replay existing fixture through current parser/UI, not a new DB test"
+  },
+  {
+    "Fixture": "raid-step4/actual-enemy.json",
+    "Source": "C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-09\\game03-tribe-neon-raid-preview-step5\\outputs\\raid-step4\\actual-enemy.json",
+    "SHA256": "BC276F9788C37B7B76C04238406E699A58BCB86C7493EE902C94B8C3B7A16907",
+    "Purpose": "Replay existing fixture through current parser/UI, not a new DB test"
+  },
+  {
+    "Fixture": "raid-step4/actual-list.json",
+    "Source": "C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-09\\game03-tribe-neon-raid-preview-step5\\outputs\\raid-step4\\actual-list.json",
+    "SHA256": "9F56A50462833FC3B4E126ECFE031D683E4EC4443F1A7CEBAEF5BF71022B429C",
+    "Purpose": "Replay existing fixture through current parser/UI, not a new DB test"
+  },
+  {
+    "Fixture": "raid-step4/actual-rescue.json",
+    "Source": "C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-09\\game03-tribe-neon-raid-preview-step5\\outputs\\raid-step4\\actual-rescue.json",
+    "SHA256": "B86BBB9CF14299E198A0E34806EF9E9492343247702A26E690B146806BEB3EB8",
+    "Purpose": "Replay existing fixture through current parser/UI, not a new DB test"
+  }
+]

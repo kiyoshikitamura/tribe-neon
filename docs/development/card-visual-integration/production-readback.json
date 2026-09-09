@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-09-09T07:14:44.292Z",
+  "alias": "https://www.tribe-neon.com",
+  "deploymentId": "dpl_A53gBsmTqXXBiUVDpXwQxpigJJMx",
+  "url": "https://tribe-neon-nfmjnrpd8-kiyoshi-kitamura.vercel.app",
+  "target": "production",
+  "state": "READY",
+  "sha": "550c02225cbecb6ba6f174ee3fb952bcaae2f6dd",
+  "branch": "codex/production-base-battle-top-20260909"
+}

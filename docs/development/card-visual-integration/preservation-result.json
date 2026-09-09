@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "base": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+  "checkedTrackedRuntimeFiles": 1607,
+  "preservedRuntimeFiles": 1599,
+  "adoptedFiles": [
+    "src/app/components/character/CharacterHome.tsx",
+    "src/app/components/character/CharacterSystemV2.tsx",
+    "src/app/components/character/CharacterSystemV2.css",
+    "src/app/components/character/CharacterEquipment.tsx",
+    "src/app/components/character/CharacterEquipment.css",
+    "src/app/components/character/CharacterParty.tsx",
+    "src/app/components/character/CharacterParty.css",
+    "src/app/context/GameContext.tsx"
+  ],
+  "unexpectedChanges": [],
+  "gameContextOutsidePartySave": "IDENTICAL",
+  "gachaProductionBlobs": "IDENTICAL",
+  "assets": "UNCHANGED",
+  "dbMaster": "UNCHANGED",
+  "raidStage56": "BASE_PRESERVED",
+  "characterBranchWholesaleMerge": false
+}
