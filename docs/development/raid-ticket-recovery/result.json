@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "scope": "Actual RaidTab handlers and dialog props; mocked React hooks and server transport. No real tickets consumed.",
+  "checks": [
+    "zero RP opens; close consumes nothing",
+    "no ticket disables recovery",
+    "double click consumes one; updates RP; next preparation succeeds",
+    "zero RP with free entry bypasses recovery",
+    "positive RP bypasses recovery",
+    "failure does not fake recovery or auto retry"
+  ]
+}

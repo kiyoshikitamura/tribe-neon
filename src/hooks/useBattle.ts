@@ -2088,7 +2088,7 @@ export function useBattle(options: UseBattleOptions) {
     try { return await recovery; } finally { if (roomRecoveryRef.current === recovery) roomRecoveryRef.current = null; }
   };
 
-  const prepareRaidRoomBattle = async (briefing: RaidRoomBriefing, presentation?: Partial<BattlePresentationContext>) => {
+  const prepareRaidRoomBattle = async (briefing: RaidRoomBriefing, presentation?: Partial<BattlePresentationContext>, beforePrepare?: () => Promise<boolean>) => {
     const preparingUserId = session?.user?.id;
     if (!preparingUserId || roomUserRef.current !== preparingUserId) return;
     if (await resumePendingRaidRoomBattle(true)) return;
@@ -2097,6 +2097,9 @@ export function useBattle(options: UseBattleOptions) {
     if (error || data?.roomId !== briefing.roomId || data?.membershipStatus !== "joined" || !data?.battleStartEnabled) {
       setErrorMessage("このレイドには現在出撃できません。"); return;
     }
+    // Resuming an already charged battle must not require another ticket.
+    if (beforePrepare && !await beforePrepare()) return;
+    if (roomUserRef.current !== preparingUserId) return;
     await startCardBattle("RAID", data.bossName || "レイド", data.raidBossInstanceId, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, presentation, false, data);
   };
 

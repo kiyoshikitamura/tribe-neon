@@ -59,6 +59,8 @@ export default function RaidTab() {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [dialog, setDialog] = React.useState<RaidDialog>(null);
   const [recoveryLoading, setRecoveryLoading] = React.useState(false);
+  const recoveryInFlightRef = React.useRef(false);
+  const [recoveryRevision, setRecoveryRevision] = React.useState(0);
   const [raidTicketQuantity, setRaidTicketQuantity] = React.useState(0);
   const [battleBackgroundLoading, setBattleBackgroundLoading] = React.useState(false);
   const [projectionRevision, setProjectionRevision] = React.useState(0);
@@ -150,24 +152,53 @@ export default function RaidTab() {
   };
 
   const recoverRaidPoint = async () => {
-    if (recoveryLoading || !session?.user?.id) return;
+    const userId = session?.user?.id;
+    if (recoveryInFlightRef.current || !userId || raidTicketQuantity <= 0) return;
+    recoveryInFlightRef.current = true;
     setRecoveryLoading(true);
-    const { error } = await supabase.rpc("use_action_resource_ticket", { p_item_id: "RAID_POINT_TICKET" });
-    if (error) {
+    let recovered = false;
+    try {
+      const { data, error } = await supabase.rpc("use_action_resource_ticket", { p_item_id: "RAID_POINT_TICKET" });
+      if (presentOwnerRef.current !== userId) return;
+      if (error || data?.status !== "success") throw new Error("recovery failed");
+      recovered = true;
+      setRaidPoints(Number(data.points));
+      setRaidTicketQuantity(Number(data.quantity));
+      setDialog(null);
+      setRecoveryRevision(value => value + 1);
+      await syncBootstrapData(userId);
+      if (presentOwnerRef.current === userId) await loadRaidTop();
+    } catch {
+      if (!recovered && presentOwnerRef.current === userId) setDialog("recovery-error");
+    } finally {
+      recoveryInFlightRef.current = false;
       setRecoveryLoading(false);
-      setDialog("recovery-error");
-      return;
     }
-    await syncBootstrapData(session.user.id);
-    await loadRaidTop();
-    setRecoveryLoading(false);
-    setDialog(null);
+  };
+
+  const checkRoomEntryResource = async (): Promise<boolean> => {
+    const userId = session?.user?.id;
+    if (!userId) return false;
+    const { data: attempt, error: attemptError } = await supabase.rpc("get_current_raid_attempt_state");
+    if (presentOwnerRef.current !== userId) return false;
+    if (attemptError || !attempt || !Number.isFinite(Number(attempt.raidPoints))) throw new Error("RPを確認できませんでした。");
+    setRaidPoints(Number(attempt.raidPoints));
+    setRaidFirstEntryFree(Boolean(attempt.firstEntryFree));
+    if (!attempt.firstEntryFree && Number(attempt.raidPoints) <= 0) {
+      const { data: ticket, error: ticketError } = await supabase.from("user_items").select("quantity").eq("user_id", userId).eq("item_id", "RAID_POINT_TICKET").maybeSingle();
+      if (presentOwnerRef.current !== userId) return false;
+      if (ticketError) throw new Error("チケットを確認できませんでした。");
+      setRaidTicketQuantity(Number(ticket?.quantity || 0));
+      setDialog("recovery");
+      return false;
+    }
+    return true;
   };
 
   const openRoomBriefing = async (briefing: RaidRoomBriefing) => {
     const background = await preloadAsset({ src: getCanonicalBattleBackground(briefing.baseId || "") || "/bg/bg_street_shinjuku.jpg", fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true });
     if (!background.resolvedSrc) throw new Error("戦場の背景を取得できませんでした。");
-    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" });
+    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" }, checkRoomEntryResource);
   };
 
   return <>
@@ -175,7 +206,7 @@ export default function RaidTab() {
       {roomUiEnabled && <RaidRoomConnectedBrowser
         key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId} userId={session?.user?.id}
         rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
-        activityTracker={raidRoomActivityTracker} refreshRevision={raidTopRefreshRevision}
+        activityTracker={raidRoomActivityTracker} refreshRevision={raidTopRefreshRevision + recoveryRevision}
         returnRoomId={raidRoomReturnTarget?.userId === session?.user?.id ? raidRoomReturnTarget?.roomId : undefined}
         onOpenPresents={openRescuePresents}
         onOpenProfile={fetchPlayerDetail} profileOpen={!!(activePlayerDetail || activeGuildDetail || showTribeChatPanel)}
@@ -197,8 +228,11 @@ export default function RaidTab() {
       </>)}
     </HubPage>
     {dialog === "shortage" && <CanonicalDialog title="RPが不足しています" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }, { label: "回復する", semantic: "primary", onClick: () => setDialog("recovery") }]}>挑戦にはRPが1必要です。{`\n`}レイドチケットで1回復できます。</CanonicalDialog>}
-    {dialog === "recovery" && <CanonicalDialog title="RP回復" onClose={() => !recoveryLoading && setDialog(null)} actions={raidTicketQuantity > 0 ? [{ label: "キャンセル", semantic: "secondary", onClick: () => setDialog(null), disabled: recoveryLoading }, { label: recoveryLoading ? "使用中…" : "1枚使用", semantic: "primary", onClick: () => void recoverRaidPoint(), disabled: recoveryLoading }] : [{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
-    {dialog === "recovery-error" && <CanonicalDialog title="RPを回復できませんでした" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>時間をおいて、もう一度お試しください。</CanonicalDialog>}
+    {dialog === "recovery" && <CanonicalDialog title="レイドチケットで回復しますか？" onClose={() => !recoveryInFlightRef.current && setDialog(null)} actions={[
+      { label: "閉じる", semantic: "secondary", onClick: () => setDialog(null), disabled: recoveryLoading },
+      { label: recoveryLoading ? "回復中…" : "回復する", semantic: "primary", onClick: () => void recoverRaidPoint(), disabled: recoveryLoading || raidTicketQuantity <= 0 },
+    ]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>1枚使用してRPを1回復します。</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
+    {dialog === "recovery-error" && <CanonicalDialog title="RPの回復結果を確認してください" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>回復結果を確認できませんでした。RPと所持枚数を確認するため、閉じて出撃準備を押し直してください。</CanonicalDialog>}
     {dialog === "battle-background-error" && <CanonicalDialog title="戦場を準備できませんでした" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>通信状態を確認して、もう一度お試しください。</CanonicalDialog>}
     <GlobalInteractionBlocker isBlocking={battleBackgroundLoading} />
   </>;
