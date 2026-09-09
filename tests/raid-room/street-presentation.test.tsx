@@ -20,3 +20,19 @@ test('Resultは同一Roomの確定receiptだけを表示しMVPとcontinueControl
  const wrong=renderToStaticMarkup(<BattleResultSummary {...shared} modeResult={{raidReceipt:{roomId:'other-room',roomState:{status:'available',value:'cleared'},lateFinalization:true}}}/>);
  assert.match(wrong,/戦況未取得/);assert.doesNotMatch(wrong,/撃破済み|開催終了後の確定です/);assert.match(wrong,/既存ack復帰/);
 });
+
+const hitPlayer:any={id:'p',characterId:'char_reiji_01',name:'レイジ',hp:1000,maxHp:1000,alignment:'EVIL',rarity:'SSR'};
+const hitEnemy:any={...hitPlayer,id:'e',name:'相手',hp:850,isEnemy:true};
+const hitProps:any={...props,battleMode:'PATROL',tutorial:true,canSkip:false,playerParty:[hitPlayer],enemyParty:[hitEnemy],timeline:[{id:'p',name:'レイジ'}],targetLine:{fromId:'p',toId:'e'},actionPresentation:null};
+test('旧通知の通常攻撃は同じ対象に命中画像と数字を描画し、非対象には出さない',()=>{
+ const s=renderToStaticMarkup(<QuestBattleViewer {...hitProps} damagePopup={{charId:'e',val:150,type:'dmg'}}/>);
+ assert.equal((s.match(/class="sb-effect"/g)||[]).length,1);assert.match(s,/street-impact.webp/);assert.match(s,/data-battle-number="damage"[^>]*>−150/);assert.ok(s.indexOf('id="e"')<s.indexOf('class="sb-effect"'));assert.doesNotMatch(s,/>SKIP</);
+});
+test('旧通知のスキルは予告を先に出し、命中でカットインを退け、クリア時に画像も消す',()=>{
+ const cue={charName:'レイジ',skillName:'スキル発動'};
+ const cast=renderToStaticMarkup(<QuestBattleViewer {...hitProps} skillCutIn={cue}/>);assert.match(cast,/sb-announcement/);assert.doesNotMatch(cast,/class="sb-effect"/);
+ const hit=renderToStaticMarkup(<QuestBattleViewer {...hitProps} skillCutIn={cue} damagePopup={{charId:'e',val:150,type:'dmg'}}/>);assert.match(hit,/class="sb-effect"/);assert.doesNotMatch(hit,/class="sb-announcement/);
+ const clear=renderToStaticMarkup(<QuestBattleViewer {...hitProps}/>);assert.doesNotMatch(clear,/class="sb-effect"/);
+});
+test('回復・シールドは打撃画像にしない',()=>{for(const type of ['heal','shield']){const s=renderToStaticMarkup(<QuestBattleViewer {...hitProps} damagePopup={{charId:'p',val:150,type}}/>);assert.doesNotMatch(s,/street-impact.webp/);assert.match(s,/\+150/);}});
+test('通常・RaidのReplayはACTOR/IMPACT/RETURNと対象1件の描画を維持',()=>{for(const battleMode of ['PVP','RAID'])for(const beat of ['ACTOR','IMPACT','RETURN']){const action={unit:{actorId:'p',skillId:'BASIC_ATTACK',replayStartCursor:1,targets:[{targetId:'e',events:[{type:'DAMAGE',index:2,payload:{targetId:'e',amount:150,hpDamage:150,hit:true}}]}]},tier:'NORMAL',beat};const s=renderToStaticMarkup(<QuestBattleViewer {...hitProps} battleMode={battleMode} tutorial={false} canSkip actionPresentation={action} damagePopup={{charId:'e',val:150,type:'dmg'}}/>);assert.equal((s.match(/class="sb-effect /g)||[]).length,beat==='IMPACT'?1:0);assert.match(s,/>SKIP</);assert.equal((s.match(/data-battle-number="damage"/g)||[]).length,beat==='ACTOR'?0:1);}});

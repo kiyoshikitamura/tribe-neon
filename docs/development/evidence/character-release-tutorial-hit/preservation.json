@@ -1,0 +1,43 @@
+{
+  "baseline": "894bcb6cab5984e59ddd6a52cb41a5dbd19813b3",
+  "sourceFix": "84a1231845a5e0a82dce91c4f37267e833c1605f",
+  "sourceAncestorOfBaseline": false,
+  "appliedViewerEqualsSourceFix": true,
+  "productionSourceChanges": [
+    "src/app/components/battle/StreetBattleViewer.tsx"
+  ],
+  "preservation": [
+    {
+      "path": "src/app/components/character",
+      "unchanged": true
+    },
+    {
+      "path": "src/app/context/GameContext.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "src/app/components/raid",
+      "unchanged": true
+    },
+    {
+      "path": "src/hooks/useBattle.ts",
+      "unchanged": true
+    },
+    {
+      "path": "src/utils/rarityAssets.ts",
+      "unchanged": true
+    },
+    {
+      "path": "public",
+      "unchanged": true
+    },
+    {
+      "path": "supabase",
+      "unchanged": true
+    }
+  ],
+  "liveConnection": "NOT_RUN",
+  "humanAcceptance": "NOT_RUN",
+  "deployment": "NOT_RUN",
+  "databaseChanges": "NONE"
+}

@@ -1,0 +1,19 @@
+(node:43592) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-09/game03-character-release-tutorial-hit/src/app/components/character/characterHomeSelection.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\game03-character-release-tutorial-hit\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Mock DB RPC] Calling set_character_equipment with: {
+  p_character_id: 'owned-c',
+  p_equipment_id: 'exclusive',
+  p_slot_index: 0
+}
+[Mock DB RPC] Calling set_character_equipment_bulk with: {
+  p_character_id: 'owned-c',
+  p_equipment_ids: [ 'one', 'two' ],
+  p_slot_indexes: [ 0, 1 ]
+}
+[Mock DB RPC] Calling list_raid_room_battle_recoveries_v1 with: { p_limit: 1 }
+[Mock RPC] Unhandled RPC call: list_raid_room_battle_recoveries_v1
+[Mock DB RPC] Calling unhandled_rpc_contract_probe with: {}
+[Mock RPC] Unhandled RPC call: unhandled_rpc_contract_probe
+Integration A PASS: canonical exclusive rejection/no mutation, bulk two-slot equip, selection reorder/removal/empty (6 groups), opt-in recovery fixture off/on/unrelated (3 groups).
