@@ -245,3 +245,7 @@ A/B/Cの指定範囲は親レビュー済み。対象26テストPASS、strict Ty
 ## RAID-DETAIL-STEP3
 
 STATUS: MACHINE PASS / HUMAN REVIEW REQUIRED。基準4e50a455から専用ローカルbranch。戦況詳細・参加者・報酬を統合。227件、隔離DB表示4群＋第2工程10群、型/Mock build PASS。追加SQL1本、Preview/HTTP認証/実端末は待ち。詳細は raid_detail_step3_report.md。
+
+## RAID-CHARACTER 固定候補統合
+
+9fe5909 + a02754c を専用ローカルbranchで統合。最新本番同期ではない。Fresh Mock完走、双方回帰・型/build・lint 0 errors。旧Room活動fixtureのbrowser1件FAIL、実HTTP/Preview/人の実端末受入は未完了。詳細 raid_character_integration_report.md。外部反映なし。

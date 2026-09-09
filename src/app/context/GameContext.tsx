@@ -463,7 +463,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     specialPityPoints, setSpecialPityPoints,
     scoutAnimationState, setScoutAnimationState,
     scoutFlashingColor, setScoutFlashingColor,
-    scoutResults, setScoutResults
+    scoutResults, setScoutResults,
+    scoutPresentationCategory, setScoutPresentationCategory
   } = gacha;
 
   const shop = useShop();
@@ -3349,6 +3350,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // Common FA opening owns the foreground for every category while the
       // existing server-authoritative mutation proceeds behind it.
       flushSync(() => {
+        setScoutPresentationCategory(category);
         setScoutResults([]);
         setScoutFlashingColor("BLUE");
         setScoutAnimationState("PROCESSING");
@@ -4338,6 +4340,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     scoutAnimationState, setScoutAnimationState,
     scoutFlashingColor, setScoutFlashingColor,
     scoutResults, setScoutResults,
+    scoutPresentationCategory,
     selectedCourse, setSelectedCourse,
     selectedMembers, setSelectedMembers,
     selectedPatrolMember, setSelectedPatrolMember,

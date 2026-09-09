@@ -10,6 +10,8 @@ test.beforeEach(async ({ page }) => {
     const now = new Date().toISOString();
     localStorage.setItem("tribe_demo_uuid", userId);
     localStorage.setItem("mock_auth_mode", "EMAIL");
+    // Fresh fixture has no prior Raid battle receipts; no progression is advanced.
+    localStorage.setItem("mock_rpc_fixture:empty_raid_recoveries", "true");
     localStorage.setItem("mock_db_users", JSON.stringify([{ id: userId, username: "Guide QA", level: 5, cash: 100000, pvp_points: 5, current_base_id: "shinjuku", last_active_at: now }]));
     localStorage.setItem("mock_db_tutorial_progress", JSON.stringify([{ user_id: userId, step_id: "AUTHENTICATION" }]));
     localStorage.setItem("mock_db_user_account_auth_methods", JSON.stringify([{ user_id: userId, auth_method: "EMAIL" }]));

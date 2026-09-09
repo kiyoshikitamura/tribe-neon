@@ -21,16 +21,16 @@
 解凍してフォントファイルにして下さい。
 2.フォントをパソコンにインストールします。
 以下からお使いのパソコンのインストール方法に従ってください。
- 
+
 Windows7でのフォントのインストール
 http://www.fontna.com/?page_id=106
- 
+
 WindowsXP〜7でのフォントのインストール
 http://www.fontna.com/?page_id=157
- 
+
 Mac OS Xでのフォントのインストール
 http://www.fontna.com/?page_id=181
- 
+
 
 ライセンス
 ----------

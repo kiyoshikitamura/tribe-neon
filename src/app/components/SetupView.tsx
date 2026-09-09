@@ -8,6 +8,8 @@ import { userFacingErrorMessage } from "../lib/userFacingError";
 import "./SetupView.css";
 import { featureUiExposure } from "@/domain/operations/operations";
 import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
+import OutlawButton from "./ui/OutlawButton";
+import { recordWorldIntroObservation } from "@/utils/acquisitionAttribution";
 
 type EntryPresentationState = "WORLD_INFORMATION" | "WORLD_TO_AGEHA" | "AGEHA_INTRO" | "NAME_INPUT";
 
@@ -28,12 +30,16 @@ export default function SetupView() {
   const [worldStage, setWorldStage] = useState(0);
   const [worldStageComplete, setWorldStageComplete] = useState(false);
   const submitRef = useRef(false);
+  const nameEntryRef = useRef(false);
   const { session,setupUsername,setSetupUsername,setSetupGiftCode,setupLoading,handleInitializeUser,handleFirstUserInteraction,errorMessage,setErrorMessage } = useGame();
 
   useEffect(() => {
-    const stored = window.sessionStorage.getItem(entryStateKey(session?.user?.id));
+    let stored: string | null = null;
+    try { stored = window.sessionStorage.getItem(entryStateKey(session?.user?.id)); } catch { /* 画面内の遷移は維持する。 */ }
+    nameEntryRef.current = stored === "NAME_INPUT";
     if (stored === "AGEHA_INTRO" || stored === "NAME_INPUT") setPresentationState(stored);
     void recordAcquisitionObservation("WORLD_INTRO_STARTED");
+    if (stored !== "NAME_INPUT") recordWorldIntroObservation("WORLD_INTRO_VIEWED");
   }, [session?.user?.id]);
 
   useEffect(() => {
@@ -45,7 +51,8 @@ export default function SetupView() {
   useEffect(() => {
     if (presentationState !== "WORLD_TO_AGEHA") return;
     const timer = window.setTimeout(() => {
-      window.sessionStorage.setItem(entryStateKey(session?.user?.id), "AGEHA_INTRO");
+      if (nameEntryRef.current) return;
+      try { window.sessionStorage.setItem(entryStateKey(session?.user?.id), "AGEHA_INTRO"); } catch { /* 画面内の遷移は維持する。 */ }
       setPresentationState("AGEHA_INTRO");
     }, 800);
     return () => window.clearTimeout(timer);
@@ -58,6 +65,7 @@ export default function SetupView() {
   useEffect(() => {
     if (presentationState !== "WORLD_INFORMATION" || !worldStageComplete || worldStage >= WORLD_STAGES.length - 1) return;
     const timer = window.setTimeout(() => {
+      if (nameEntryRef.current) return;
       setWorldStageComplete(false);
       setWorldStage((current) => current + 1);
     }, 2300);
@@ -65,9 +73,18 @@ export default function SetupView() {
   }, [presentationState, worldStage, worldStageComplete]);
 
   const advancePresentation = (nextState: EntryPresentationState) => {
+    if (nameEntryRef.current) return;
+    if (nextState === "NAME_INPUT") nameEntryRef.current = true;
     handleFirstUserInteraction();
-    window.sessionStorage.setItem(entryStateKey(session?.user?.id), nextState);
+    if (nextState === "WORLD_TO_AGEHA") void recordAcquisitionObservation("WORLD_INTRO_COMPLETED");
+    try { window.sessionStorage.setItem(entryStateKey(session?.user?.id), nextState); } catch { /* 画面内の遷移は維持する。 */ }
     setPresentationState(nextState);
+  };
+
+  const skipWorldIntro = () => {
+    if (nameEntryRef.current) return;
+    recordWorldIntroObservation("WORLD_INTRO_SKIPPED");
+    advancePresentation(presentationState === "AGEHA_INTRO" ? "NAME_INPUT" : "AGEHA_INTRO");
   };
 
   const submitName = async () => {
@@ -80,6 +97,9 @@ export default function SetupView() {
   return (
     <div className={`setup-container scroll-container ${presentationState === "NAME_INPUT" ? "is-registration" : "is-world-entry"}`} onClick={handleFirstUserInteraction} data-entry-state={presentationState}>
       <div className="setup-world-shade" aria-hidden="true" />
+      {presentationState !== "NAME_INPUT" && (
+        <OutlawButton type="button" variant="ghost" className="setup-world-skip" aria-label="SKIP" onClick={skipWorldIntro}>SKIP</OutlawButton>
+      )}
       {presentationState === "WORLD_INFORMATION" ? (
         <section className={`setup-world-presentation is-stage-${worldStage + 1}`} aria-label="TRIBE NEON プロローグ" data-world-stage={worldStage + 1}>
           <div key={`world-motion-${worldStage}`} className="setup-world-motion" aria-hidden="true"><i /><i /></div>
@@ -97,7 +117,7 @@ export default function SetupView() {
             {WORLD_STAGES.map((_, index) => <i key={index} className={index <= worldStage ? "is-active" : ""} />)}
           </div>
           {worldStage === WORLD_STAGES.length - 1 && worldStageComplete && (
-            <button className="setup-world-tap" onClick={() => { handleFirstUserInteraction(); void recordAcquisitionObservation("WORLD_INTRO_COMPLETED"); setPresentationState("WORLD_TO_AGEHA"); }}>
+            <button className="setup-world-tap" onClick={() => advancePresentation("WORLD_TO_AGEHA")}>
               TAP TO CONTINUE <span aria-hidden="true">⌄</span>
             </button>
           )}

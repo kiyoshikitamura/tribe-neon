@@ -1,4 +1,5 @@
 .setup-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,6 +10,28 @@
   background: var(--ui-bg-root) url('/bg/bg_street_shinjuku.jpg') center/cover no-repeat;
   padding: 16px;
 }
+
+/* シーン演出の外側に置き、開始直後と場面転換中も操作できる。 */
+.setup-container.is-world-entry > .setup-world-skip {
+  position: absolute;
+  z-index: 10;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  right: max(12px, env(safe-area-inset-right, 0px));
+  min-width: 64px;
+  min-height: 44px;
+  padding: 8px 14px;
+  color: #f3f4f6;
+  background: rgba(15, 17, 21, .92);
+  border: 1px solid #747983;
+  border-radius: 8px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  box-shadow: none;
+}
+.setup-container.is-world-entry > .setup-world-skip:hover { background: #30343b; }
+.setup-container.is-world-entry > .setup-world-skip:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.setup-container.is-world-entry > .setup-world-skip:active { transform: scale(.95); }
+.setup-world-progress { pointer-events: none; }
 .setup-world-shade{position:absolute;inset:0;background:radial-gradient(circle at 72% 28%,rgba(0,240,255,.12),transparent 34%),linear-gradient(180deg,rgba(1,4,10,.28),rgba(1,4,10,.56) 58%,#01040a);animation:setup-lighting 6s ease-in-out infinite alternate}.setup-container>*:not(.setup-world-shade){position:relative}.setup-container.is-world-entry{padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 20px)}.setup-box{display:grid;gap:14px}.setup-box label{font-weight:800}
 
 .setup-world-presentation{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-items:center;width:min(100%,430px);height:100%;min-height:0;gap:18px;padding:clamp(28px,7vh,62px) 8px 16px}.setup-world-brand{align-self:start;justify-self:center;color:#f4dfa0;font-size:9px;font-weight:900;letter-spacing:.34em;text-shadow:0 0 14px rgba(242,201,95,.35)}.setup-world-brand small{display:block;margin-top:3px;color:#d5d9df;font-size:5px;text-align:center;letter-spacing:.44em}.setup-world-copy{position:relative;display:grid;place-items:center;min-height:44vh;padding:34px 18px;text-align:center;text-shadow:0 2px 18px #000;animation:world-stage-in .55s ease both}.setup-world-copy::before,.setup-world-copy::after{position:absolute;right:2%;left:2%;height:1px;content:"";background:linear-gradient(90deg,transparent,var(--ui-danger),var(--ui-accent),transparent);box-shadow:0 0 16px rgba(255,0,127,.35)}.setup-world-copy::before{top:12px}.setup-world-copy::after{bottom:12px}.setup-world-copy .tutorial-typewriter{display:block;white-space:pre-line;color:#f2f5f8;font-size:clamp(18px,5vw,23px);font-weight:800;line-height:1.72;letter-spacing:.025em}.setup-world-copy .tutorial-typewriter em{color:var(--ui-danger);font-style:normal;font-size:1.14em;text-shadow:0 0 15px color-mix(in srgb,var(--ui-danger) 60%,transparent)}.setup-world-presentation.is-stage-2 .tutorial-typewriter em,.setup-world-presentation.is-stage-4 .tutorial-typewriter em{color:#f5ce42;font-size:1.55em;font-style:italic;letter-spacing:.04em;text-shadow:0 0 18px rgba(255,210,45,.6)}.tutorial-typewriter-caret{display:inline-block;width:2px;height:1em;margin-left:3px;vertical-align:-.12em;background:var(--ui-accent);animation:typewriter-caret .72s steps(1) infinite}.setup-world-tap{align-self:end;justify-self:center;min-width:220px;padding:12px 20px;border:0;color:#f3dcff;background:transparent;font-size:15px;font-style:italic;font-weight:1000;letter-spacing:.08em;text-shadow:0 0 12px #c566ff;animation:world-tap-pulse 1.25s ease-in-out infinite}.setup-world-tap span{display:block;font-size:24px;line-height:.7}.setup-world-transition{display:grid;place-items:center;width:100%;height:100%;overflow:hidden;animation:world-transition-out .8s ease both}.setup-world-transition::before{position:absolute;inset:-18%;content:"";background:repeating-linear-gradient(142deg,transparent 0 14px,rgba(255,0,127,.1) 15px 16px,transparent 17px 28px);animation:world-neon-sweep .8s ease both}.setup-world-transition span{width:48vmax;height:48vmax;border-radius:50%;background:radial-gradient(circle,rgba(0,240,255,.3),rgba(255,0,127,.08) 32%,transparent 66%);filter:blur(10px)}

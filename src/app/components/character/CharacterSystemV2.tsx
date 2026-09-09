@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGame } from "@/app/context/GameContext";
 import { CHARACTERS_MASTER, GEAR_SLOTS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
@@ -16,10 +16,12 @@ import CharacterPresentation from "./CharacterPresentation";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import OutlawButton from "../ui/OutlawButton";
+import CharacterHome from "./CharacterHome";
+import { resolveHomeCharacter } from "./characterHomeSelection";
 import "./CharacterSystemV2.css";
 
 type MainView = "CHARACTERS" | "PARTY" | "SKILLS" | "EQUIPMENT";
-type CharacterView = "LIST" | "DETAIL" | "GROWTH" | "LOADOUT";
+type CharacterView = "LIST" | "HOME" | "GROWTH" | "LOADOUT";
 type AssetDetail = { kind: "skill" | "equipment"; record: any; master: any } | null;
 
 const TARGET_LABEL: Record<string, string> = {
@@ -45,11 +47,13 @@ function SkillArt({ master }: { master: any }) {
   </span>;
 }
 
-export default function CharacterSystemV2() {
+export default function CharacterSystemV2({ initialCharacterMasterId }: { initialCharacterMasterId?: string }) {
   const game = useGame() as any;
   const { characterEntryView, setCharacterEntryView } = game;
   const [mainView, setMainView] = useState<MainView>(characterEntryView === "party" ? "PARTY" : "CHARACTERS");
-  const [characterView, setCharacterView] = useState<CharacterView>("LIST");
+  const [characterView, setCharacterView] = useState<CharacterView>(initialCharacterMasterId ? "HOME" : "LIST");
+  const [entryMasterId, setEntryMasterId] = useState(initialCharacterMasterId);
+  const [returnToHome, setReturnToHome] = useState(false);
   const [assetDetail, setAssetDetail] = useState<AssetDetail>(null);
   const [assetGrowth, setAssetGrowth] = useState<AssetDetail>(null);
   const [rarityFilter, setRarityFilter] = useState("ALL");
@@ -66,9 +70,19 @@ export default function CharacterSystemV2() {
   }, [characterEntryView, setCharacterEntryView]);
 
   const ownedCharacters = game.userCharactersDbList || [];
-  const selectedCharacter = ownedCharacters.find((entry: any) => entry.character_id === game.upgradeSelectedCharId) || ownedCharacters[0];
+  const filteredCharacters = ownedCharacters.filter((record: any) => {
+    const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id);
+    return master && (rarityFilter === "ALL" || master.rarity === rarityFilter) && (attributeFilter === "ALL" || master.alignment === attributeFilter);
+  });
+  const selectedCharacter = resolveHomeCharacter(characterView === "HOME" ? filteredCharacters : ownedCharacters, entryMasterId ?? game.upgradeSelectedCharId) || ownedCharacters[0];
   const selectedMaster = CHARACTERS_MASTER.find((entry: any) => entry.id === selectedCharacter?.character_id);
-  const stats = useMemo(() => getCharacterTotalStats(selectedCharacter, game.userEquipmentsList || []), [selectedCharacter, game.userEquipmentsList]);
+  useEffect(() => {
+    if (characterView === "HOME" && selectedCharacter && selectedCharacter.character_id !== game.upgradeSelectedCharId) game.setUpgradeSelectedCharId(selectedCharacter.character_id);
+  }, [characterView, selectedCharacter, game.upgradeSelectedCharId, game.setUpgradeSelectedCharId]);
+  useEffect(() => {
+    document.querySelector(".main-content")?.scrollTo({ top: 0 });
+  }, [mainView, characterView]);
+  const stats = getCharacterTotalStats(selectedCharacter, game.userEquipmentsList || []);
   const power = stats.hp + stats.atk + stats.def;
   const skillSlots = canonicalSkillSlotCount(Math.max(0, Math.min(5, Number(selectedCharacter?.awakening_level || 0))));
   const equippedSkills = (game.userSkillsList || []).filter((entry: any) => entry.equipped_character_id === selectedCharacter?.id);
@@ -90,10 +104,6 @@ export default function CharacterSystemV2() {
   const equipmentCurrentLevel = Number(growthRecord?.level || 1);
   const equipmentAfterLevel = assetGrowth?.kind === "equipment" ? Math.min(getEquipmentLevelCap(Number(growthRecord?.plus_val || 0)), equipmentCurrentLevel + equipmentMaterialCount) : equipmentCurrentLevel;
 
-  const filteredCharacters = ownedCharacters.filter((record: any) => {
-    const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id);
-    return master && (rarityFilter === "ALL" || master.rarity === rarityFilter) && (attributeFilter === "ALL" || master.alignment === attributeFilter);
-  });
   const filteredSkills = (game.userSkillsList || []).filter((record: any) => {
     const master = CANONICAL_SKILL_VIEW.find((entry: any) => entry.id === (record.skill_card_id || record.skill_id));
     return master && (assetFilter === "ALL" || master.rarity === assetFilter || (assetFilter === "EQUIPPED" && Boolean(record.equipped_character_id)));
@@ -104,8 +114,9 @@ export default function CharacterSystemV2() {
   });
 
   const selectCharacter = (record: any, detail = true) => {
+    setEntryMasterId(undefined);
     game.setUpgradeSelectedCharId(record.character_id);
-    setCharacterView(detail ? "DETAIL" : "LIST");
+    setCharacterView(detail ? "HOME" : "LIST");
     setMainView("CHARACTERS");
     game.playCyberSe("click");
   };
@@ -178,11 +189,12 @@ export default function CharacterSystemV2() {
     const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id);
     if (!master) return null;
     const partyIndex = (game.selectedMembers || []).indexOf(record.character_id);
+    const cardStats = getCharacterTotalStats(record, game.userEquipmentsList || []);
     return <button type="button" key={record.id || record.character_id} className="character-v2-card active-scale-effect" onClick={() => selectCharacter(record)}>
       <span className={rarityClass(master.rarity)}><CharacterPresentation src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /></span>
       <span className="character-v2-card-badges">{record.is_new && <b>NEW</b>}{partyIndex === 0 && <b>LEADER</b>}{partyIndex > 0 && <b>編成中</b>}</span>
       <span className="character-v2-card-level">Lv.{Number(record.level || 1)}{Number(record.awakening_level || 0) > 0 ? ` / 覚醒+${Number(record.awakening_level)}` : ""}</span>
-      {!compact && <strong>{master.jpName}</strong>}
+      {!compact && <><strong>{master.jpName}</strong><span className="character-v2-card-power">{master.rarity} · 総合力 {(cardStats.hp + cardStats.atk + cardStats.def).toLocaleString()}</span></>}
     </button>;
   };
 
@@ -206,38 +218,43 @@ export default function CharacterSystemV2() {
 
   const inventoryReady = Boolean(game.session?.user?.id)
     && game.inventoryProjectionOwnerUserId === game.session.user.id;
-  if (!selectedCharacter || !selectedMaster || !inventoryReady) return <div className="character-v2-empty" role="status"><span className="spinner" /></div>;
+  if (!inventoryReady) return <div className="character-v2-empty" role="status"><span className="spinner" /></div>;
 
+  if (!selectedCharacter || !selectedMaster) return <section className="character-v2-view"><h1>キャラクター</h1><p>所持キャラクターがいません。</p></section>;
+  const goHome = () => { setMainView("CHARACTERS"); setCharacterView("HOME"); };
+  const switchCharacter = (direction: -1 | 1) => {
+    if (filteredCharacters.length < 2) return;
+    const index = filteredCharacters.findIndex((entry: any) => entry.character_id === selectedCharacter.character_id);
+    selectCharacter(filteredCharacters[(Math.max(0, index) + direction + filteredCharacters.length) % filteredCharacters.length]);
+  };
   return <div className="character-v2-shell">
-    <nav className="character-v2-main-nav" aria-label="キャラクター管理">
+    {!(mainView === "CHARACTERS" && (characterView === "HOME" || characterView === "LIST")) && <nav className="character-v2-main-nav" aria-label="キャラクター管理">
       {(["CHARACTERS", "PARTY", "SKILLS", "EQUIPMENT"] as MainView[]).map((view) => <button key={view} className={mainView === view ? "active" : ""} onClick={() => { setMainView(view); setCharacterView("LIST"); setAssetFilter("ALL"); }}>{({ CHARACTERS: "キャラクター", PARTY: "パーティ", SKILLS: "スキル", EQUIPMENT: "装備" } as Record<MainView, string>)[view]}</button>)}
-    </nav>
+    </nav>}
 
     {mainView === "CHARACTERS" && characterView === "LIST" && <section className="character-v2-view">
-      <header className="character-v2-title"><div><span>キャラクター</span><strong>所持キャラクター</strong></div><button onClick={() => setMainView("PARTY")}>パーティ編成</button></header>
+      <header className="character-v2-title"><div><span>キャラクター</span><strong>所持キャラクター</strong></div></header>
       <div className="character-v2-filters">
         {["ALL", "JUSTICE", "EVIL", "ORDER", "CHAOS"].map((value) => <button key={value} className={attributeFilter === value ? "active" : ""} onClick={() => setAttributeFilter(value)}>{({ ALL: "すべて", JUSTICE: "正義", EVIL: "悪", ORDER: "秩序", CHAOS: "混沌" } as any)[value]}</button>)}
       </div>
       <div className="character-v2-filters is-rarity">
         {["ALL", "N", "R", "SR", "SSR"].map((value) => <button key={value} className={rarityFilter === value ? "active" : ""} onClick={() => setRarityFilter(value)}>{value === "ALL" ? "レアリティ" : value}</button>)}
       </div>
+      {filteredCharacters.length === 0 && <p>条件に一致するキャラクターがいません。</p>}
       <div className="character-v2-character-grid">{filteredCharacters.map((record: any) => renderCharacterCard(record))}</div>
     </section>}
 
-    {mainView === "CHARACTERS" && characterView === "DETAIL" && <section className="character-v2-view character-v2-detail">
-      <header className="character-v2-title"><button onClick={() => setCharacterView("LIST")}>戻る</button><strong>キャラクター詳細</strong><span /></header>
-      <div className={`character-v2-stage ${rarityClass(selectedMaster.rarity)}`} style={{ backgroundImage: `url(${getCharacterLocationBackground(selectedMaster.homeTown)})` }}>
-        <CharacterPresentation src={getCharacterTransparentImg(selectedMaster.name)} alt={selectedMaster.jpName} variant="full-body" rarity={selectedMaster.rarity} frameKind={false} metadata={false} />
-        <div className="character-v2-stage-meta"><strong>{selectedMaster.jpName}</strong><span>{selectedMaster.rarity}</span><dl><div><dt>Lv</dt><dd>{Number(selectedCharacter.level || 1)}</dd></div><div><dt>覚醒</dt><dd>+{Number(selectedCharacter.awakening_level || 0)}</dd></div><div><dt>属性</dt><dd>{ATTRIBUTE_LABEL[selectedMaster.alignment] || "無所属"}</dd></div></dl></div>
-      </div>
-      <section className="character-v2-status-block"><header><strong>STATUS</strong><div><span>総合力</span><b>{power.toLocaleString()}</b></div></header><dl className="character-v2-stats">{(["hp", "atk", "def", "spd", "luk"] as const).map((key) => <div key={key}><dt>{key.toUpperCase()}</dt><dd>{Number(stats[key]).toLocaleString()}</dd></div>)}</dl></section>
-      <section className="character-v2-loadout-summary"><header><strong>装備中Skill</strong><button onClick={() => { setCharacterView("LOADOUT"); setSelectedSkillSlot(0); }}>変更</button></header><div className="character-v2-summary-grid">{Array.from({ length: skillSlots }).map((_, index) => { const record = equippedSkills.find((entry: any) => Number(entry.slot_index) === index); const master = record && CANONICAL_SKILL_VIEW.find((entry: any) => entry.id === (record.skill_card_id || record.skill_id)); return <button key={index} onClick={() => master && setAssetDetail({ kind: "skill", record, master })}>{master ? <SkillArt master={master} /> : <span className="character-v2-empty-slot">EMPTY</span>}</button>; })}</div></section>
-      <section className="character-v2-loadout-summary"><header><strong>装備中アイテム</strong><button onClick={() => { setCharacterView("LOADOUT"); setSelectedGearSlot(0); }}>変更</button></header><div className="character-v2-equipment-slots">{GEAR_SLOTS_MASTER.map((slot: any) => { const record = equippedGear.find((entry: any) => Number(entry.slot_index) === slot.index); const master = record && CANONICAL_EQUIPMENT_VIEW.find((entry: any) => entry.id === record.equipment_id); return <button key={slot.index} onClick={() => master && setAssetDetail({ kind: "equipment", record, master })}><small>{slot.type}</small>{master ? <EquipmentArt master={master} /> : <span className="character-v2-empty-slot">EMPTY</span>}<b>{slot.label}</b></button>; })}</div></section>
-      <div className="character-v2-primary-actions"><OutlawButton onClick={() => setCharacterView("GROWTH")}>強化</OutlawButton><OutlawButton onClick={() => setCharacterView("LOADOUT")}>スキル・装備</OutlawButton><OutlawButton variant="primary" onClick={() => setMainView("PARTY")}>編成</OutlawButton></div>
-    </section>}
+    {mainView === "CHARACTERS" && characterView === "HOME" && (filteredCharacters.length > 0 ? <CharacterHome
+      character={selectedCharacter} master={selectedMaster} power={power} equipment={game.userEquipmentsList || []} userId={game.session.user.id}
+      position={filteredCharacters.findIndex((entry: any) => entry.character_id === selectedCharacter.character_id) + 1} total={filteredCharacters.length}
+      onSwitch={switchCharacter} onBack={() => setCharacterView("LIST")}
+      onGrowth={() => { setReturnToHome(true); setCharacterView("GROWTH"); }}
+      onEquipment={() => { setReturnToHome(true); setSelectedSkillSlot(null); setSelectedGearSlot(0); setCharacterView("LOADOUT"); }}
+      onParty={() => { setReturnToHome(true); setMainView("PARTY"); }}
+    /> : <section className="character-v2-view"><p>条件に一致するキャラクターがいません。</p><OutlawButton onClick={() => setCharacterView("LIST")}>一覧へ戻る</OutlawButton></section>)}
 
     {mainView === "CHARACTERS" && characterView === "GROWTH" && <fieldset className="character-v2-view character-v2-growth character-v2-pending-surface" disabled={game.upgradeLoading} aria-busy={game.upgradeLoading}>
-      <header className="character-v2-title"><button onClick={() => setCharacterView("DETAIL")}>戻る</button><strong>キャラ強化</strong><span>{selectedMaster.jpName}</span></header>
+      <header className="character-v2-title"><button onClick={() => setCharacterView("HOME")}>戻る</button><strong>キャラ強化</strong><span>{selectedMaster.jpName}</span></header>
       <div className="character-v2-growth-target">{renderCharacterCard(selectedCharacter, true)}<div><small>強化対象</small><strong>{selectedMaster.jpName}</strong><span>{selectedMaster.rarity} / 覚醒 +{Number(selectedCharacter.awakening_level || 0)}</span><b>総合力 {power.toLocaleString()}</b></div></div>
       <section className="character-v2-operation-card"><h3>Lv強化</h3><div className="character-v2-current-after"><span><small>Current</small><strong>Lv.{Number(selectedCharacter.level || 1)}</strong></span><i>→</i><span className={characterMaterialCount > 0 ? "has-preview" : ""}><small>After</small><strong>Lv.{characterAfterLevel}</strong></span></div>
         {characterMaterialCount > 0 && <dl className="character-v2-preview-stats">{(["hp", "atk", "def", "spd", "luk"] as const).map((key) => <div key={key}><dt>{key.toUpperCase()}</dt><dd>{Number(stats[key]).toLocaleString()} → <b>{Number(characterAfterStats[key]).toLocaleString()}</b></dd></div>)}</dl>}
@@ -248,7 +265,7 @@ export default function CharacterSystemV2() {
     </fieldset>}
 
     {mainView === "CHARACTERS" && characterView === "LOADOUT" && <section className="character-v2-view">
-      <header className="character-v2-title"><button onClick={() => setCharacterView("DETAIL")}>戻る</button><strong>装備変更</strong><span>{selectedMaster.jpName}</span></header>
+      <header className="character-v2-title"><button onClick={() => setCharacterView("HOME")}>戻る</button><strong>装備変更</strong><span>{selectedMaster.jpName}</span></header>
       <section className="character-v2-loadout-summary"><header><strong>装備中Skill</strong><span>{skillSlots} slots</span></header><div className="character-v2-summary-grid">{Array.from({ length: 6 }).map((_, index) => { const unlocked = index < skillSlots; const record = equippedSkills.find((entry: any) => Number(entry.slot_index) === index); const master = record && CANONICAL_SKILL_VIEW.find((entry: any) => entry.id === (record.skill_card_id || record.skill_id)); return <button key={index} disabled={!unlocked} className={selectedSkillSlot === index ? "active" : ""} onClick={() => setSelectedSkillSlot(index)}>{!unlocked ? <span className="character-v2-empty-slot">LOCK</span> : master ? <SkillArt master={master} /> : <span className="character-v2-empty-slot">EMPTY</span>}</button>; })}</div></section>
       {selectedSkillSlot !== null && <>{renderAssetGrid("skill")}</>}
       <section className="character-v2-loadout-summary"><header><strong>装備中アイテム</strong></header><div className="character-v2-equipment-slots">{GEAR_SLOTS_MASTER.map((slot: any) => { const record = equippedGear.find((entry: any) => Number(entry.slot_index) === slot.index); const master = record && CANONICAL_EQUIPMENT_VIEW.find((entry: any) => entry.id === record.equipment_id); return <button key={slot.index} className={selectedGearSlot === slot.index ? "active" : ""} onClick={() => setSelectedGearSlot(slot.index)}><small>{slot.type}</small>{master ? <EquipmentArt master={master} /> : <span className="character-v2-empty-slot">EMPTY</span>}<b>{slot.label}</b></button>; })}</div></section>
@@ -257,7 +274,7 @@ export default function CharacterSystemV2() {
     </section>}
 
     {mainView === "PARTY" && <section className="character-v2-view character-v2-party">
-      <header className="character-v2-title"><div><span>パーティ編成</span><strong>{party.length} / 5</strong></div></header><div className="character-v2-party-power"><span>PARTY TOTAL POWER</span><strong>{partyPower.toLocaleString()}</strong></div>
+      <header className="character-v2-title">{returnToHome && <button onClick={goHome}>キャラホームへ戻る</button>}<div><span>パーティ編成</span><strong>{party.length} / 5</strong></div></header><div className="character-v2-party-power"><span>PARTY TOTAL POWER</span><strong>{partyPower.toLocaleString()}</strong></div>
       <div className="character-v2-party-slots">{Array.from({ length: 5 }).map((_, index) => { const member = party[index]; return member?.record && member.master ? <div key={member.record.id} className="character-v2-party-slot">{renderCharacterCard(member.record, true)}<span>{index === 0 ? "LEADER" : `SLOT ${index + 1}`}</span>{index > 0 && <button disabled={partyPending} onClick={() => void game.handleSetPartyLeader(member.record.character_id)}>リーダー変更</button>}</div> : <div className="character-v2-party-slot is-empty" key={index}><b>{index + 1}</b><span>EMPTY</span></div>; })}</div>
       <div className="character-v2-filters">{["ALL", "JUSTICE", "EVIL", "ORDER", "CHAOS"].map((value) => <button key={value} className={attributeFilter === value ? "active" : ""} onClick={() => setAttributeFilter(value)}>{({ ALL: "すべて", JUSTICE: "正義", EVIL: "悪", ORDER: "秩序", CHAOS: "混沌" } as any)[value]}</button>)}</div>
       <div className="character-v2-character-grid is-party">{filteredCharacters.map((record: any) => { const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id); if (!master) return null; const selected = (game.selectedMembers || []).includes(record.character_id); return <button key={record.id} className={`character-v2-card ${selected ? "is-selected" : ""}`} disabled={partyPending} onClick={() => void game.handleTogglePartyMember(record.character_id)}><span className={rarityClass(master.rarity)}><CharacterPresentation src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /></span><span className="character-v2-card-level">Lv.{Number(record.level || 1)} / +{Number(record.awakening_level || 0)}</span><strong>{master.jpName}</strong></button>; })}</div>

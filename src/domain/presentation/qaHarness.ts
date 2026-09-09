@@ -1,4 +1,5 @@
 export const QA_PRESENTATION_SCENARIOS = [
+  ["gacha-character-v3", "Gacha Character / Rich reveal"],
   ["world-introduction", "World Introduction"],
   ["name-input-error", "Name duplicate → retry"],
   ["gacha-page", "Gacha Page"],

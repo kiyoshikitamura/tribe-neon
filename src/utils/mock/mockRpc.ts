@@ -185,6 +185,12 @@ const applyMockCharacterAwakeningEquivalent = (character: any) => {
 };
 
 export async function executeMockRpc(client: any, funcName: string, params: any): Promise<any> {
+  // Explicit fresh-user test fixture only. This does not model stored Raid
+  // recovery or replace the real RPC/ack authority; absent fixture stays unsupported.
+  if (funcName === "list_raid_room_battle_recoveries_v1" && typeof window !== "undefined"
+    && localStorage.getItem("mock_rpc_fixture:empty_raid_recoveries") === "true") {
+    return { data: [], error: null };
+  }
   const qaDelay = typeof window === "undefined" ? 0 : Number(localStorage.getItem(`mock_rpc_delay_ms:${funcName}`) || 0);
   if (Number.isFinite(qaDelay) && qaDelay > 0) {
     await new Promise((resolve) => window.setTimeout(resolve, Math.min(qaDelay, 5000)));
