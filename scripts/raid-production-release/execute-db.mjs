@@ -8,6 +8,7 @@ const receipt=root+'/'+phase+'-applied.json';assert.ok(!fs.existsSync(receipt),'
 if(phase!=='db')assert.equal(JSON.parse(fs.readFileSync(root+'/db-applied.json')).status,'PASS');
 if(phase==='cron')assert.equal(JSON.parse(fs.readFileSync(root+'/edge-applied.json')).status,'PASS');
 if(['settings','open'].includes(phase))assert.equal(JSON.parse(fs.readFileSync(root+'/frontend-readback.json')).status,'PASS');
+if(phase==='open')assert.equal(JSON.parse(fs.readFileSync(root+'/settings-applied.json')).status,'PASS');
 const pat=fs.readFileSync(path.join(os.homedir(),'.supabase/access-token'),'utf8').trim();
 async function query(sql){const r=await fetch('https://api.supabase.com/v1/projects/ktpolnkyyfkowxdmijww/database/query',{method:'POST',headers:{Authorization:`Bearer ${pat}`,'Content-Type':'application/json'},body:JSON.stringify({query:sql})});const data=await r.json();if(!r.ok){const e=new Error('Production SQL failed');e.details=data;throw e;}return data;}
 const pre=await query("begin read only;select jsonb_build_object('bossHash',(select md5(jsonb_agg(to_jsonb(t) order by id)::text) from raid_bosses t),'pending',(select count(*) from battle_replay_sessions where battle_mode='RAID' and finalization_status='PENDING'),'kpi',(select jsonb_agg(jsonb_build_object('name',proname,'hash',md5(pg_get_functiondef(oid))) order by proname) from pg_proc where proname in ('kpi_daily_engagement_v1','refresh_kpi_overview_saved_results')),'cron',(select jsonb_agg(to_jsonb(j) order by jobid) from cron.job j)) state;rollback;");
