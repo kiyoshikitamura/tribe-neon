@@ -7,3 +7,5 @@
 共通Headerの資源欄にRP 残数/5を追加。既存GameContextの残数を使用し、消費/帰還時更新と連動する。狭幅は折返し可能、追加RPCやローカル推測はなし。
 
 検証: typecheck PASS。共有撃破+個人ENEMY、開催中、期限終了の実BattleResultSummaryと帰還ボタンを375/390/430pxで9件PASS。実HeaderのRP5→2→0と7桁所持金/ダイヤを同3幅で9件PASS。fixtureはMockのみ、本番戦闘を再投入していない。JSON/画像を併記。新規Production buildの結果は配信後別記録。
+
+2026-09-10 03:15 JST、本番配信43096bcbc06e89cfc58980b15c07c34e4b025dc2 / dpl_GeUBFjZb8s66XURam5waiNPMxGuCへゲーム2alias切替。新規Production build・配信内修正文言/ヘッダーclass・Production公開キー/API接続・www HTTP200を確認。KPI等の他alias不変。DB/Edge/報酬変更なし。本番Replayの再投入は行っていないため、ユーザーの次回実戦での表示確認と区別する。
