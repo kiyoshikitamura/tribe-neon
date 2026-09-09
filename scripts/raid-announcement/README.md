@@ -1,5 +1,18 @@
 # Raid告知・公開手順
 
+## ActivityのQA表示修正（2026-09-10追記）
+
+本番hotfix `43096bcbc06e89cfc58980b15c07c34e4b025dc2` を基準に独立branch `codex/raid-announcement-production-20260910` を作り、告知/バナー差分だけをcherry-pick。以降の本番更新があれば配信前に再確認して保持する。
+
+- 本番読取監査で、QA名のSSR履歴3件はactor_user_id=NULL。FKはON DELETE SET NULLのため、削除後も名前のsnapshotが残る。既存RPCは日付だけで返していた。
+- `20260909181921_activity_actor_visibility.sql` は既存get_recent_social_activity_feedの表示条件のみを修正。現存actorがあること、イベント時点の既存kpi_account_classification_periodsでqa/testでないことをLIMIT前に検査する。
+- 名前パターンで除外しない。管理者等の別分類や未分類の現存ユーザーは従来どおり表示。削除済みの実ユーザーも、本人が存在しない履歴として表示対象外になる。
+- 履歴の削除/更新、KPI台帳/分類/集計、Raid/戦闘/報酬の変更なし。既存関数の署名・ACL・認証・24時間・順序・上限を維持。DB分類REQUIRES_MIGRATION（関数定義差替えのみ）。
+- 本番データで条件をread-only照合: 直近10件→7件、除外3件はNULL actorの上記履歴のみ（監査時点）。本番へmigration未適用。
+- `node scripts/raid-announcement/verify-activity.mjs` で隔離PostgreSQL実行PASS。削除actor、qa/test、QA名の実ユーザー、分類の終了境界、LIMIT前除外、全履歴保持、ACL一致、認証必須、時間窓を確認。
+- 反映時は担当を一本化し、最新関数定義が監査した240版と一致することを再確認して単独適用。通常アカウントでMyPageを開き直して確認。既に開いた画面のReact stateを遠隔消去する処理は追加しない。
+- 復旧は240 migration内の旧関数定義のみを再適用（他のDDLや権限操作は不要）。保存履歴が不変なので復旧時に元の表示条件へ戻せる。
+
 2026-09-10再変更: 提供素材によりバナー追加を復帰。現在のキャンペーン2点の末尾へ追加して3点。通常4点へ戻った場合はそれらを保持して末尾追加する。
 
 ## 追加バナー
