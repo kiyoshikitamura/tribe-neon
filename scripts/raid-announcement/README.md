@@ -1,6 +1,19 @@
 # Raid告知・公開手順
 
-2026-09-10変更: バナーはユーザー指示により完全に対象外。画像・バナーDB・MyPage・rotationは変更しない。
+2026-09-10再変更: 提供素材によりバナー追加を復帰。現在のキャンペーン2点の末尾へ追加して3点。通常4点へ戻った場合はそれらを保持して末尾追加する。
+
+## 追加バナー
+
+- 提供画像を無加工コピー: `public/promotion/mypage_banner_raid_update.webp`。
+- SHA256: `a0aac9982a117094cc1aa234dd035cb30f25291bde6aaec299e2c9eec32b0a7c`（提供元と一致）。1160×480。
+- `banner-prepare.sql`: 既存home_banner_masterに対象行だけ非表示で準備。SAFE_ADDITIVE、schema変更なし。準備SQLの再実行で運営状態を上書きしない。
+- Raid本番Smoke PASSとフロント/素材配信確認後に同ファイル記載のUPDATEでactive=true。end_atはNULL。active=falseで非表示、image_urlで差替え。
+- HomeTabの既存2点/キャンペーン制御を保持し、対象行のみ追加。既存15秒更新・focus更新でON/OFF/画像差替えを反映。旧マスター行は取り込まない。
+- `navigateTab('raid')` を使用。運営のRaid公開状態を尊重し、告知バナーについては旧isRaidActive（開催中戦闘）条件を使わない。
+- 既存6:1枠と4秒rotationを保持。提供画像が縦長のためobject-fit:containで左右余白あり。切抜き/変形なしだが、文字は小さめ。画像生成/加工なし。
+- `node scripts/raid-announcement/verify-banner.mjs`: 実HomeTabのバナー処理/JSXを抽出、APIと周辺状態のみfixture。PC Chromium/Mobile WebKitで3点・順序・自動回転・Raidタップ・ON/OFF・画像欠損時の2点保持PASS。実Raidページ/戻ると本番全MyPageは公開時確認が必要。
+- 既存promotion検証・型・Mock build PASS。対象lint error 0、既存warningのみ。スクリーンショット `scratch/banner-ui/mobile.png`。
+- 本番DBや配信には未適用。以前の「バナー対象外」記述はこの追加節で更新する。
 
 基準SHA: `8c0fa6b2131faaed7b63e172ac12424d3fe8f6be`。
 作業branch: `codex/raid-announcement-20260910`。

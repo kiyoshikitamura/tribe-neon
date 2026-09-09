@@ -186,7 +186,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       ]
       : []);
   const visibleBanners = useMemo(
-    () => banners.filter((banner) => banner.destination !== "raid" || isRaidActive),
+    () => banners.filter((banner) => banner.id === "raid_battle_major_update" || banner.destination !== "raid" || isRaidActive),
     [banners, isRaidActive],
   );
   const activeBannerIndex = visibleBanners.length ? bannerIndex % visibleBanners.length : 0;
@@ -264,7 +264,11 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     if (qaState?.bannerAuthority) return;
     if (!session?.user?.id) return;
     let cancelled = false;
+    let bannerLoadRunning = false;
     const loadBannerAuthority = async () => {
+      if (bannerLoadRunning) return;
+      bannerLoadRunning = true;
+      try {
       const { data, error } = await supabase.rpc("get_active_mission_events");
       if (cancelled || error || !Array.isArray(data)) return;
       const prepEvent = data.find((event: any) => String(event.event_id || event.id || "") === "GVG_PREP_20260904");
@@ -282,11 +286,26 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
         || isDestinationAvailable(banner.destination, featureOperatingStates));
       const loaded = await Promise.all(loadableBanners.map((banner) => banner.img ? preloadAndDecodeHomeImage(banner.img) : Promise.resolve(false)));
       if (cancelled || loaded.some((value) => !value)) return;
-      const nextKey = loadableBanners.map((banner) => banner.id).join(":");
+      // Only the release row is additive; legacy master rows must not replace
+      // the two campaign banners or their existing telemetry/navigation.
+      const { data: releaseRows, error: releaseError } = await supabase.from("home_banner_master")
+        .select("id,title,image_url,destination_value")
+        .eq("id", "raid_battle_major_update");
+      if (cancelled) return;
+      const release = !releaseError && releaseRows?.[0];
+      const releaseImage = release && resolvePresentableAssetUrl(release.image_url);
+      if (release && releaseImage && release.destination_value === "raid"
+        && isDestinationAvailable("raid", featureOperatingStates)
+        && await preloadAndDecodeHomeImage(releaseImage)) {
+        loadableBanners.push({ id: release.id, title: release.title, img: releaseImage, destination: "raid" });
+      }
+      if (cancelled) return;
+      const nextKey = JSON.stringify(loadableBanners);
       if (bannerAuthorityKeyRef.current === nextKey) return;
       bannerAuthorityKeyRef.current = nextKey;
       setBannerIndex(0);
       setBanners(loadableBanners);
+      } finally { bannerLoadRunning = false; }
     };
     void loadBannerAuthority();
     const timer = window.setInterval(() => void loadBannerAuthority(), 15000);
@@ -767,6 +786,11 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
               {visibleBanners[activeBannerIndex].img
                 ? <img src={visibleBanners[activeBannerIndex].img!} alt="" className="banner-bg-img" onError={() => {
                     const failedId = visibleBanners[activeBannerIndex].id;
+                    if (failedId === "raid_battle_major_update") {
+                      bannerAuthorityKeyRef.current = "";
+                      setBanners((current) => current.filter((banner) => banner.id !== failedId));
+                      return;
+                    }
                     setBanners((current) => current.map((banner) => banner.id === failedId ? { ...banner, img: null } : banner));
                   }} />
                 : <span className="banner-fallback-art" aria-hidden="true" />}

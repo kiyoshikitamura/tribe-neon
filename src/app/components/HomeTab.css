@@ -1066,6 +1066,7 @@
 .banner-bg-img { width:100%;height:100%;object-fit:cover;object-position:center; }
 
 .banner-card[data-banner-id="gvg-prep"],
+.banner-card[data-banner-id="raid_battle_major_update"],
 .banner-card[data-banner-id="guild-power-ranking"] {
   height:auto;
   min-width:0;
@@ -1073,6 +1074,7 @@
   border-radius:0;
 }
 .banner-card[data-banner-id="gvg-prep"] .banner-bg-img,
+.banner-card[data-banner-id="raid_battle_major_update"] .banner-bg-img,
 .banner-card[data-banner-id="guild-power-ranking"] .banner-bg-img {
   display:block;
   object-fit:contain;
