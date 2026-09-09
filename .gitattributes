@@ -11,3 +11,8 @@ scripts/raid-production-rehearsal/*.mjs text eol=lf
 # Preserve prepublication evidence hashes.
 docs/development/raid-prepublication-closeout/** -text
 scripts/raid-prepublication-*/*.mjs text eol=lf
+
+# Launch SQL guards and manifests require canonical checkout bytes.
+config/raid-room/launch-balance.* -text
+docs/development/raid-launch-balance/** -text
+docs/development/raid-launch-integration/** -text

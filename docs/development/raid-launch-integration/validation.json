@@ -1,0 +1,41 @@
+{
+  "sourceCandidate": "6c6b4febe11437bacd528b5765867632513e84b5",
+  "at": "2026-09-09T16:36:59.708Z",
+  "typecheck": "PASS",
+  "build": {
+    "status": "PASS",
+    "environment": "existing dedicated Preview env, mock false; local build only"
+  },
+  "regression": {
+    "db": 47,
+    "roster": 5,
+    "failed": 0
+  },
+  "sql": {
+    "profiles": 28,
+    "enemyStats": 140,
+    "status": "PASS",
+    "rollback": "PASS",
+    "scope": "PGlite isolated minimal fixture; old Production-catalog full bundle validation reused separately"
+  },
+  "structure": {
+    "characters": 60,
+    "skills": 30,
+    "equipment": 42,
+    "protectedFiles": 352,
+    "status": "PASS"
+  },
+  "measurement": {
+    "reusedBattles": 96,
+    "newBattles": 0,
+    "configMastersEngineHashMatch": true
+  },
+  "productionWrites": false,
+  "externalDbWrites": false,
+  "deployments": 0,
+  "preservation": {
+    "tutorialViewer84a": true,
+    "cardAuthority894": true,
+    "characterPresentation894": true
+  }
+}

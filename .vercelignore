@@ -26,3 +26,9 @@ public/promotion/gacha_normal_equipment.png
 # Production migration audit/bundle/rehearsal are local release records
 docs/development/raid-production-preparation
 scripts/raid-production-rehearsal
+
+# Release analysis and integration evidence
+docs/development/raid-launch-balance
+docs/development/raid-launch-integration
+docs/development/raid-prepublication-closeout
+scripts/raid-prepublication-*

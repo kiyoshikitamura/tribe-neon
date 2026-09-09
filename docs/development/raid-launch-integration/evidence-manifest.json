@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "file": "docs/development/raid-launch-integration/bundle-manifest.json",
+      "sha256": "306716a861bfd5d24b06638b6c1be84938b3ac3c6a5aefdb2056c4b2cc002f77"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/proposed-settings-v3.json",
+      "sha256": "cfcf92b60c3ff25e14a98dbb54f6441c9548959d49eb9c8c93da122045beca31"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/README.md",
+      "sha256": "642fc0db6c91c0d75ba568fc1b79c3dc759e8f6599d3d37633a9ebffc56d9af4"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/TABLES.md",
+      "sha256": "b602680755df0e0c8e97fad58f4cff1eb3db0046f07fe92ab129747dbc656800"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/validation-pg.json",
+      "sha256": "986a2825af446203f1a847cce0c03ec91ca37fa6d7a80af2f0007ee5e49e9afc"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/validation.json",
+      "sha256": "b6749f7732002bf10fd82165ebf29a06b10d544c42f6031c338961a36bb11551"
+    }
+  ]
+}

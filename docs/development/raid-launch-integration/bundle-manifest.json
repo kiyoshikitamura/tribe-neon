@@ -1,0 +1,78 @@
+{
+  "sourceCandidate": "6c6b4febe11437bacd528b5765867632513e84b5",
+  "previousProductCandidate": "8c0fa6b2131faaed7b63e172ac12424d3fe8f6be",
+  "previousEvidenceCommit": "f8b104aa1d3366478df685166afb708649261cf9",
+  "status": "LOCAL_REVIEW_ONLY",
+  "order": [
+    "00-baseline-guard",
+    "01-snapshot-dependency",
+    "02-raid-delta",
+    "04-postflight",
+    "06-launch-balance",
+    "07-launch-postflight"
+  ],
+  "original8Unchanged": true,
+  "publicRewardActivationReady": false,
+  "artifacts": [
+    {
+      "file": "docs/development/raid-production-preparation/bundle/00-baseline-guard.sql",
+      "sha256": "cb0b62fe9a52c7a5984258563e394232e9c951fe64fcd010b92355488bf383e1"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/00-readonly-recheck.sql",
+      "sha256": "dce863bc3eef65446f9ec31ba4e06c9e6069899bee068933bfd3206a1814b579"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/01-snapshot-dependency.sql",
+      "sha256": "42076766fddb5fe9aefa3fb14c7dda88ab7b89b7d3ff4d0a7b2f1e9caa1703c5"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/02-raid-delta.sql",
+      "sha256": "8c2d65e3a6ec2c615f3d6efbece9e1be0acb0e05070060b5da19b33dbabffd46"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/03-expiry-cron.sql",
+      "sha256": "d95ca3d4419e0120cf961e8b2ba29272a2d0993410fd82eb612723f09620282c"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/04-postflight.sql",
+      "sha256": "fc1f2ce45e8ce1be2313154593efed58c077e328e77e23724398a6e440490d35"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/05-stop-new-operations.sql",
+      "sha256": "ea307347c3dba800496a1ab6657dab1624d9830d523ecaeb6c06d39d7797bde1"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/review-apply.psql",
+      "sha256": "a72d3297f98ec8ca84e71b172c3480331c4c57f0e2f3e0198eac916a81d8d8a7"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/audit-a/public-settings.json",
+      "sha256": "6f5f4b8b7883e51989554f619338fd9722e38b8229362c0a502c6933b48148e2"
+    },
+    {
+      "file": "config/raid-room/launch-balance.json",
+      "sha256": "a49e10a597b2372d03cf379a90ab9d247fd5ebb0b6a18ac92b17cf9a6d31b184"
+    },
+    {
+      "file": "config/raid-room/launch-balance.sql",
+      "sha256": "09a168716cb3a6ddd65aaed1016c2ba7f01ef670f48d54087cf5c64d2e413aa4"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/bundle/06-launch-balance.sql",
+      "sha256": "3a8403bfa502ea0a695a11c101fc032cda81cbcfe1695ff5e2e376ee3d06a887"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/bundle/07-launch-postflight.sql",
+      "sha256": "995b659590a01850c4259c9caa1dfd51e59eb1b7081f0ca03df63df3585ea6e1"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/bundle/review-apply-v2.psql",
+      "sha256": "e9ba6ebe404064bd5f2368c8aac9c23d19c25ff1eb846d6a279a0bc7bd193e99"
+    },
+    {
+      "file": "docs/development/raid-launch-integration/proposed-settings-v3.json",
+      "sha256": "cfcf92b60c3ff25e14a98dbb54f6441c9548959d49eb9c8c93da122045beca31"
+    }
+  ]
+}
