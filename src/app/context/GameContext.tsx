@@ -33,6 +33,7 @@ import { useNavigation } from "./hooks/useNavigation";
 import { useProfileRequestState } from "./hooks/useProfileRequestState";
 import type { PublicUserProfileModel } from "@/app/components/profile/PublicUserProfile";
 import { EXISTING_GOOGLE_LOGIN_INTENT_KEY, useAuth } from "./hooks/useAuth";
+import { useNewsBadges } from "./hooks/useNewsBadges";
 import { useFriends } from "./hooks/useFriends";
 import { useChat } from "./hooks/useChat";
 import { useInventory } from "./hooks/useInventory";
@@ -631,6 +632,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const loginBonusRequestUserRef = useRef<string | null>(null);
 
   const [newsList, setNewsList] = useState<any[]>([]);
+  const { unreadNewsCount, markNewsRead } = useNewsBadges(session?.user?.id);
   const [selectedNews, setSelectedNews] = useState<any | null>(null);
   const [totalPower, setTotalPower] = useState<number>(0);
   // A displayed zero is valid only after the character and deck data has loaded.
@@ -4388,6 +4390,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     checkAndClaimLoginBonus,
 
     newsList, setNewsList,
+    unreadNewsCount, markNewsRead,
     selectedNews, setSelectedNews,
     guildChats, setGuildChats,
     chatChannel, setChatChannel,

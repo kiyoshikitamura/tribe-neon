@@ -24,6 +24,7 @@ export default function InboxPanel() {
     setInboxPanelTab,
     newsList,
     setNewsList,
+    markNewsRead,
     presents,
     handleClaimPresent,
     handleClaimAllPresents,
@@ -69,7 +70,7 @@ export default function InboxPanel() {
           <div
             key={news.id}
             className="inbox-news-item active-scale-effect"
-            onClick={() => { setSelectedNews(news); playCyberSe("click"); }}
+            onClick={() => { setSelectedNews(news); markNewsRead(news); playCyberSe("click"); }}
           >
             <div className="inbox-news-item-header">
               {news.category === "IMPORTANT" && <span className="news-badge important">重要</span>}

@@ -26,6 +26,7 @@ export default function Header() {
     totalPower,
     totalPowerLoading,
     unclaimedPresentsCount,
+    unreadNewsCount = 0,
     setShowSettingsPanel,
     setShowInboxPanel,
     setShowLoginBonusModal,
@@ -80,7 +81,7 @@ export default function Header() {
           onClick={() => { setMenuOpen(true); playCyberSe("click"); }}
         >
           <span>MENU</span><i aria-hidden="true">☰</i>
-          {unclaimedPresentsCount > 0 && <b className="header-mobile-menu-badge" aria-label={`${unclaimedPresentsCount}件の未受取`}>{unclaimedPresentsCount}</b>}
+          {(unclaimedPresentsCount > 0 || unreadNewsCount > 0) && <b className="header-mobile-menu-badge" aria-label={`未受取${unclaimedPresentsCount || 0}件、未読お知らせ${unreadNewsCount}件`}>{(unclaimedPresentsCount || 0) + unreadNewsCount}</b>}
         </button>
       </div>
 
@@ -125,7 +126,7 @@ export default function Header() {
           <header><strong>MENU</strong><button type="button" aria-label="メニューを閉じる" onClick={() => setMenuOpen(false)}>×</button></header>
           <nav aria-label="ユーティリティ">
             <button type="button" onClick={() => runMenuAction(() => setShowSettingsPanel(true))}><img src="/ui/icon_settings.png" alt="" /><span>設定</span></button>
-            <button type="button" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("news"); })}><img src="/ui/icon_news.png" alt="" /><span>お知らせ</span></button>
+            <button type="button" className="header-news-button" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("news"); })}><img src="/ui/icon_news.png" alt="" /><span>お知らせ</span>{unreadNewsCount > 0 && <b className="header-mobile-menu-badge" aria-label={`未読お知らせ${unreadNewsCount}件`}>{unreadNewsCount}</b>}</button>
             <button type="button" aria-label="プレゼント" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("presents"); })}><img src="/ui/icon_present.png" alt="" /><span>プレゼント</span>{unclaimedPresentsCount > 0 && <b aria-hidden="true">{unclaimedPresentsCount}</b>}</button>
             <button type="button" onClick={() => runMenuAction(() => setShowLoginBonusModal(true))}><img src="/ui/icon_present.png" alt="" /><span>ログインボーナス</span></button>
             <button type="button" onClick={() => runMenuAction(() => navigateTab("bag"))}><img src="/ui/icon_bag.png" alt="" /><span>バッグ</span></button>
