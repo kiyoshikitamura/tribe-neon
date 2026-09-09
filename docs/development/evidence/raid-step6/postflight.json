@@ -1,0 +1,43 @@
+{
+  "time": "2026-09-09T05:14:55.916356+00:00",
+  "ledger": [
+    {
+      "change_id": "raid-preview-step6-four-sql-v1",
+      "postflight": {
+        "checks": "protected-functions/data/controls/daily-RLS-and-ACL",
+        "status": "PASS",
+        "sourceHashes": {
+          "20260908175143_raid_top_aggregate_api.sql": "34e1225b717b267760ebe90495203162630680fb52b67e9c08b0121d4b2d3d18",
+          "20260908175140_raid_top_daily_authority.sql": "36621aa30007457f5e190896ffed90e3a0631e10eafc4cd469007537cb5ca14d",
+          "20260908181251_raid_room_display_projection.sql": "7944c2a068ea7ec78be6ad88823dbdc5aeac2ee0027a7000bc0003b8b7757e73",
+          "20260909023226_raid_remaining_pages_projection.sql": "14cb3052ffe7218730aab65640f0f484634d4cf43f8e4d56158dcc320b3a7ffb"
+        }
+      },
+      "project_ref": "sufvuqdnqohpfzkwxohq",
+      "recorded_at": "2026-09-09T05:13:56.186109+00:00",
+      "execution_id": "c19b5615-aaed-4c29-a3cd-73a2a801729e",
+      "database_role": "postgres",
+      "source_commit": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+      "payload_sha256": "cd7310f1ccc9b3a988fbd0fe8aed56e1015dbe4aa08b30ce5c3ca293e2e85298",
+      "transaction_id": "60392",
+      "baseline_sha256": "da4780ead5dcbe8b6eea113b30ec49a37bcb3c713dc33e57629e5ec5f4b9c058",
+      "operator_identity": "Codex parent",
+      "validation_commit": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+      "approval_reference": "User authorized Raid Preview step6 fixed four SQL"
+    }
+  ],
+  "history": [
+    {
+      "name": "raid_step6_daily_top_display_pages",
+      "version": "20260909051355"
+    }
+  ],
+  "daily_rls": true,
+  "anon_usage": false,
+  "schema_acl": "{postgres=UC/postgres,authenticated=U/postgres}",
+  "daily_count": 0,
+  "history_count": 278,
+  "auth_daily_table": false,
+  "auth_entry_helper": false,
+  "auth_daily_function": false
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "kind": "clear",
+    "room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+    "item_id": "EQUIP_EXP_S",
+    "quantity": 1,
+    "present_id": "f13b7054-787b-42b8-b1c5-b0c42d930d04",
+    "status": "UNCLAIMED",
+    "expire_at": "2026-10-09 05:41:11.161834+00"
+  },
+  {
+    "kind": "clear",
+    "room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+    "item_id": "EQUIP_EXP_S",
+    "quantity": 1,
+    "present_id": "8ddc6497-ef6d-4a10-8f7c-99feb39d07c9",
+    "status": "UNCLAIMED",
+    "expire_at": "2026-10-09 05:41:11.164844+00"
+  },
+  {
+    "kind": "clear",
+    "room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+    "item_id": "EQUIP_EXP_S",
+    "quantity": 1,
+    "present_id": "6ffcc430-9f18-4f29-ab9b-d5405c21bc19",
+    "status": "UNCLAIMED",
+    "expire_at": "2026-10-09 05:41:11.166211+00"
+  },
+  {
+    "kind": "rescue",
+    "room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+    "item_id": "CHAR_EXP_S",
+    "quantity": 1,
+    "present_id": "ddf94463-0a40-4b90-9e1d-31cec61fa3e4",
+    "status": "UNCLAIMED",
+    "expire_at": "2026-10-09 05:41:11.170493+00"
+  }
+]

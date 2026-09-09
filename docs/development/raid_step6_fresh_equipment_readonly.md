@@ -1,0 +1,25 @@
+# Fresh初期装備403 — 読取調査
+
+Previewのみ、外部SELECTのみ。対象source user `4392795b-e528-48ec-b323-900820209506` はauth.usersに存在しis_anonymous=true、public.usersにも存在、所持装備0。匿名Auth sessionも通常authenticated roleで処理されるため、未ログインanon roleとは区別する。
+
+現在user_equipmentsのownerはpostgres、RLS有効。ALL policyはUSING/WITH CHECKともauth.uid()=user_id。authenticatedはSELECT可だがINSERT不可。実ACLはpostgres/anon/service_roleに全権、authenticatedにrDxtmで、INSERT/UPDATE/DELETEなし。HTTPで観測されたpermission denied for table/42501は、このテーブルINSERT grant欠如で説明できる。RLS本人一致以前の拒否であり、UUID不一致や匿名だからRLS除外という証拠はない。
+
+ローカル正式SQL `20260812000121_secure_provisional_progression.sql:194` はauthenticatedのuser_equipments INSERT/DELETEを明示REVOKE。SQL119も装備変更をRPC専用にしてUPDATEをREVOKE。したがってINSERT grant追加で解決する提案はしない。現GameContextの初期装備5件直接INSERTと、既存サーバー権限方針の不一致が原因候補となる。今回Raid4SQL適用前後で装備ACLは一致しており、第6工程による権限後退ではない。
+
+実pg_proc読取ではinitialize_current_player、initialize_new_user、complete_current_tutorial_formation、prepare_current_tutorial_growth等はuser_equipmentsを直接参照せず、初期5件を保存する専用RPCは発見できなかった。装備ガチャ/天井交換はそれぞれauthenticated許可のdefiner経路があるが、初期無償付与の代替として呼び出すものではない。set_character_equipment/bulkは既存装備の装着用で、付与処理ではない。Present内部grantは直接authenticatedに公開されていない。関数bodyの文字列調査であり、全動的呼出を網羅した証明ではない。
+
+影響は、装備0件でbootstrapの初期付与分岐に入るauthenticatedユーザー全体に及び得る。Freshだけの特別権限問題と断定しない。固定候補1a38636由来のpersisted-only修正は拒否後の仮所持をなくすが、DBへの付与成功は解決しない。正規付与authorityの設計・既存仕様との整合は別工程とし、権限や残高・装備を直接書いてPASSにしない。
+
+## QA分類
+
+読取時、上記userのKPI subject `03dd4c1b-f6a2-4213-a391-67f9cecebe09` は存在するが分類periodなし。registered_atは2026-09-09 01:28:03.68576+00。親/B/Cへ通知し、未分類のまま通常HTTP進行しないよう引き継いだ。
+
+既存3役はqa、valid_from=registered_at、valid_to=null。専用分類adminRPCは見つからず、SQL243のkpi_account_classification_periodsにservice_role/adminのみDML許可、SQL244のoverlap triggerが存在。親に対象subjectをlock・source user一致と既存period不在をassertした上で同様のqa periodを追加する最小DMLを提案した。実行は親のみでAは変更していない。実施結果は親の記録を参照する。
+
+親による対象1subject分類DML COMMIT後、Aが別接続SELECTでqa、valid_from=registered_at、valid_to=null、kpi_is_subject_excluded(...,now())=trueを確認。未分類問題は解消。装備INSERT403の権限・付与authority問題は独立して残る。以後の通常QAゲーム進行で生じるデータ変化と、旧Room/通常masterの保護照合を区別する。
+
+## 追加承認後の実HTTP1件（読取調査とは別）
+
+親が専用QA1件だけの通常初期装備POSTを明示許可。2026-09-09 14:20:23 JST、既存private storageStateからメモリ内で通常refresh（HTTP200）し本人IDを確認、実user_characters先頭行を使用したGameContext同一WEAPON_001 payloadを `/rest/v1/user_equipments?select=*` にPOST1回。応答HTTP403/code42501、装備件数before0/after0。残り4件は送信せず、storageState上書き・資格情報保存なし。
+
+証跡 `outputs/step6/fresh-equipment-post.json`、再実行防止guard付き `scripts/raid-step6/verify-fresh-equipment-post.mjs`。実HTTP保存拒否を再現した。候補UI空装備表示・Fresh全体完走を確認したという意味ではない。

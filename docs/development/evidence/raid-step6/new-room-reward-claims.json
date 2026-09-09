@@ -1,0 +1,70 @@
+{
+  "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+  "claims": [
+    {
+      "role": "host",
+      "kind": "clear",
+      "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+      "presentId": "6ffcc430-9f18-4f29-ab9b-d5405c21bc19",
+      "itemId": "EQUIP_EXP_S",
+      "quantity": 1,
+      "beforeQuantity": 1,
+      "phase": "VERIFIED",
+      "claimStatus": 200,
+      "claimCode": null,
+      "afterQuantity": 2,
+      "duplicateStatus": 400,
+      "duplicateCode": "P0001",
+      "afterDuplicateQuantity": 2
+    },
+    {
+      "role": "normal",
+      "kind": "clear",
+      "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+      "presentId": "f13b7054-787b-42b8-b1c5-b0c42d930d04",
+      "itemId": "EQUIP_EXP_S",
+      "quantity": 1,
+      "beforeQuantity": 1,
+      "phase": "VERIFIED",
+      "claimStatus": 200,
+      "claimCode": null,
+      "afterQuantity": 2,
+      "duplicateStatus": 400,
+      "duplicateCode": "P0001",
+      "afterDuplicateQuantity": 2
+    },
+    {
+      "role": "rescue",
+      "kind": "clear",
+      "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+      "presentId": "8ddc6497-ef6d-4a10-8f7c-99feb39d07c9",
+      "itemId": "EQUIP_EXP_S",
+      "quantity": 1,
+      "beforeQuantity": 1,
+      "phase": "VERIFIED",
+      "claimStatus": 200,
+      "claimCode": null,
+      "afterQuantity": 2,
+      "duplicateStatus": 400,
+      "duplicateCode": "P0001",
+      "afterDuplicateQuantity": 2
+    },
+    {
+      "role": "rescue",
+      "kind": "rescue",
+      "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+      "presentId": "ddf94463-0a40-4b90-9e1d-31cec61fa3e4",
+      "itemId": "CHAR_EXP_S",
+      "quantity": 1,
+      "beforeQuantity": 1,
+      "phase": "VERIFIED",
+      "claimStatus": 200,
+      "claimCode": null,
+      "afterQuantity": 2,
+      "duplicateStatus": 400,
+      "duplicateCode": "P0001",
+      "afterDuplicateQuantity": 2
+    }
+  ],
+  "complete": true
+}
