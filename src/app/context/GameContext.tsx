@@ -4029,13 +4029,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return true;
   };
 
-  const handleSaveParty = async () => {
-    const saveError = await persistPartyFormation(selectedMembers.slice(0, 5));
+  const handleSaveParty = async (draft?: string[]) => {
+    const nextParty = (draft ?? selectedMembers).slice(0, 5);
+    const saveError = await persistPartyFormation(nextParty);
     if (saveError) {
       console.warn("Failed to save party:", saveError);
       setErrorMessage("パーティの保存に失敗しました。");
       return false;
     }
+    if (draft) setSelectedMembers(nextParty);
     return true;
   };
 

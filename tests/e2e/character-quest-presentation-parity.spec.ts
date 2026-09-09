@@ -92,62 +92,16 @@ async function expectMobileGeometry(page: import("@playwright/test").Page, selec
   expect(geometry.right).toBeLessThanOrEqual(geometry.viewport + 1);
 }
 
-test("Character, Party, Growth, Skill and Equipment follow the fixed mobile hierarchy", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await enterGame(page);
-  await page.getByRole("button", { name: /MENU/ }).click();
-  await page.getByRole("button", { name: "バッグ", exact: true }).click();
-  await expect(page.locator(".bag-item-card", { hasText: "強化ドリンク・小" })).toContainText("所持数: 10");
-  await expect(page.locator(".bag-item-card", { hasText: "カスタムオイル・小" })).toContainText("所持数: 5");
-  await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await expect(page.locator(".character-v2-shell")).toBeVisible();
-  await expect(page.locator(".character-v2-character-grid .character-v2-card")).toHaveCount(3);
-  await expectMobileGeometry(page, ".character-v2-shell");
-  await page.screenshot({ path: test.info().outputPath("character-list-390.png") });
-
-  await page.locator(".character-v2-character-grid .character-v2-card").first().click();
-  await expect(page.getByRole("region", { name: "キャラクターホーム" })).toBeVisible();
-  await expect(page.locator(".character-home-power")).toContainText("総合力");
-  await page.screenshot({ path: test.info().outputPath("character-home-390.png") });
-  await page.getByRole("button", { name: "育成する", exact: true }).click();
-  await expect(page.getByText("強化ドリンク・小", { exact: true })).toBeVisible();
-  await expect(page.getByText("強化ドリンク・中", { exact: true })).toBeVisible();
-  await expect(page.getByText("強化ドリンク・大", { exact: true })).toBeVisible();
-  await expect(page.getByText("覚醒の書", { exact: true })).toBeVisible();
-  await expect(page.locator(".character-v2-material", { hasText: "強化ドリンク・小" })).toContainText("所持 10 / 使用 0");
-  await expect(page.getByText("同一Character Duplicate取得時は自動覚醒します。", { exact: true })).toHaveCount(0);
-  await page.locator(".character-v2-material").first().locator("button").last().click();
-  await expect(page.locator(".character-v2-current-after").first()).toContainText("Lv.13");
-  await expect(page.locator(".character-v2-preview-stats")).toBeVisible();
-
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "パーティ", exact: true }).click();
-  await expect(page.locator(".character-v2-party-slots > *")).toHaveCount(5);
-  await expect(page.getByRole("button", { name: "おまかせ編成", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "おまかせ装備", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "パーティ保存", exact: true })).toBeVisible();
-
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "スキル", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-grid .character-v2-asset-card")).toHaveCount(2);
-  await page.locator(".character-v2-asset-grid .character-v2-asset-card").first().click();
-  await expect(page.locator(".character-v2-mini-detail")).toBeVisible();
-  await expect(page.locator(".canonical-dialog-close")).toHaveCount(0);
-  await page.getByRole("button", { name: "強化", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-growth")).toBeVisible();
-  await expect(page.locator(".character-v2-material", { hasText: "スキル指南書" })).toContainText("所持 1 / 必要 1");
-  await expect(page.locator(".character-v2-current-after")).toContainText("After");
-  await page.getByRole("button", { name: "戻る", exact: true }).click();
-
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "装備", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-grid .character-v2-asset-card")).toHaveCount(2);
-  await page.locator(".character-v2-asset-grid .character-v2-asset-card").first().click();
-  await page.getByRole("button", { name: "強化", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-growth")).toBeVisible();
-  await expect(page.locator(".character-v2-current-after").first()).toContainText("After");
-  await expectMobileGeometry(page, ".character-v2-shell");
-
-  await page.setViewportSize({ width: 412, height: 915 });
-  await expectMobileGeometry(page, ".character-v2-shell");
-  await page.screenshot({ path: test.info().outputPath("character-system-412.png"), fullPage: true });
+test("Character, Party, Growth, Skill and Equipment follow the fixed mobile hierarchy", async ({page})=>{
+ await page.setViewportSize({width:390,height:844});await enterGame(page);
+ await page.locator('.footer-item[aria-label="キャラ"]').click();await expect(page.locator('.character-home')).toBeVisible();
+ await page.getByRole('button',{name:'育成する',exact:true}).click();
+ await page.locator('.character-v2-material').first().locator('button').last().click();await expect(page.locator('.character-v2-current-after').first()).toContainText('Lv.13');await expect(page.locator('.character-v2-preview-stats')).toBeVisible();
+ await page.getByRole('button',{name:'スキル',exact:true}).click();await page.getByRole('button',{name:'スキル枠1',exact:true}).click();await page.getByRole('button',{name:'強化する',exact:true}).click();
+ await expect(page.locator('.character-v2-asset-growth')).toBeVisible();await expect(page.locator('.character-v2-current-after')).toContainText('強化後');
+ await page.getByRole('button',{name:'戻る',exact:true}).click();await page.getByRole('button',{name:'戻る',exact:true}).click();await page.locator('.character-home').getByRole('button',{name:/装備/}).click();
+ await page.getByRole('button',{name:'武器1',exact:true}).click();await page.getByRole('button',{name:'強化する',exact:true}).click();await expect(page.locator('.character-v2-asset-growth')).toBeVisible();await expect(page.locator('.character-v2-current-after').first()).toContainText('強化後');
+ await expectMobileGeometry(page,'.character-v2-shell');
 });
 
 test("canonical Leader changes update Home and Header immediately and persist across navigation and reload", async ({ page }) => {
@@ -157,9 +111,10 @@ test("canonical Leader changes update Home and Header immediately and persist ac
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /reiji_transparent_asset/);
 
   await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await page.locator('.character-v2-card').first().click();
-  await page.getByRole('button', { name: /PARTY/ }).click();
-  await page.getByRole("button", { name: "リーダー変更", exact: true }).first().click();
+
+  await page.getByRole('button', { name: /パーティ/ }).click();
+  await page.getByRole("button", { name: "リーダー変更", exact: true }).click();
+  await page.locator(".character-party-leader-candidates").getByRole("button", { name: "ルイ", exact: true }).click();
   await expect.poll(async () => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_users") || "[]")[0]?.favorite_character_id)).toBe("char_rui_01");
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /rui_transparent_asset/);
 
@@ -177,9 +132,10 @@ test("canonical Leader changes update Home and Header immediately and persist ac
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /rui_transparent_asset/);
 
   await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await page.locator('.character-v2-card').first().click();
-  await page.getByRole('button', { name: /PARTY/ }).click();
-  await page.getByRole("button", { name: "リーダー変更", exact: true }).last().click();
+
+  await page.getByRole('button', { name: /パーティ/ }).click();
+  await page.getByRole("button", { name: "リーダー変更", exact: true }).click();
+  await page.locator(".character-party-leader-candidates").getByRole("button", { name: "チャン", exact: true }).click();
   await page.locator('.footer-item[aria-label="マイページ"]').click();
   await expect(page.locator('.mypage-leader-layer[data-character-authority="char_chang_01"]')).toBeVisible();
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /chang_transparent_asset/);

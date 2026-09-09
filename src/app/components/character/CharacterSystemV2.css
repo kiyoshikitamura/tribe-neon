@@ -38,3 +38,6 @@
 }
 
 .character-v2-card-power{font-size:10px;color:var(--ui-text-secondary);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+
+/* Growth navigation */
+.character-v2-growth-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.character-v2-growth-tabs button{padding:12px 4px;border:1px solid var(--ui-border);background:#101620;border-radius:6px}.character-v2-growth-tabs button[aria-pressed="true"]{border-color:var(--v2-cyan);color:var(--v2-cyan)}.character-v2-growth-target{position:sticky;top:0;z-index:2;background:#101620}.character-v2-summary-grid button{min-width:0}.character-v2-summary-grid small{display:block;font-size:10px;overflow-wrap:anywhere}
