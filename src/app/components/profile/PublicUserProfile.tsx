@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CharacterPresentation from "../character/CharacterPresentation";
+import UserAvatar from "./UserAvatar";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import OutlawButton from "../ui/OutlawButton";
 import { SkillDetailDialog, SkillIconGrid } from "../skill/SkillPresentation";
@@ -53,6 +54,7 @@ export function publicTitleText(value?: string | null) {
 function ProfileCharacter({ character, leader = false }: { character?: PublicProfileCharacter; leader?: boolean }) {
   const master = CHARACTERS_MASTER.find((entry) => entry.id === character?.characterId);
   const name = master?.jpName || character?.name || "リーダー未設定";
+  if (leader) return <UserAvatar characterId={character?.characterId} src={character?.assetIdentifier} alt={name} className="public-profile-leader-icon" />;
   return <CharacterPresentation
     src={character?.assetIdentifier || (master ? getCharacterTransparentImg(master.name) : undefined)}
     alt={name}
@@ -77,7 +79,7 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
   const bio = publicBioText(profile.bio);
   const title = publicTitleText(profile.titleName);
   const leader = profile.leaderCharacterId ? { characterId: profile.leaderCharacterId } : undefined;
-  const isOtherUser = Boolean(profile.id && profile.id !== currentUserId);
+  const isOtherUser = Boolean(currentUserId && profile.id && profile.id !== currentUserId);
 
   return <><CanonicalDialog size="large" ariaLabel={`${profile.username}の公開プロフィール`} onClose={onClose} loading={profile.status === "loading"}>
     {profile.status === "loading" ? <div className="public-profile-loading" role="status">プロフィールを取得しています…</div>

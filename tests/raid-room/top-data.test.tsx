@@ -15,7 +15,7 @@ test('隔離PG実get_raid_top_v1出力→1RPC loader→実parser→実RaidTopの
  assert.deepEqual(calls,[['get_raid_top_v1']]);assert.equal(loaded.participating.status,'ready');if(loaded.participating.status!=='ready')throw Error('ready');
  const entry=loaded.participating.data[0];assert.equal(entry.enemy.status,'available');if(entry.enemy.status!=='available')throw Error('enemy');assert.equal(entry.enemy.value.roster.length,5);
  assert.equal(entry.room.owner.status,'available');if(entry.room.owner.status==='available')assert.equal(entry.room.owner.value.leaderIconUrl.status,'available');
- const view=render(<RaidTop data={{...loaded,canCreate:true}} onOpenRoom={()=>{}} onChooseEnemy={()=>{}} onBrowse={()=>{}} onRefresh={()=>{}}/>);await view.findByTestId('raid-top');assert.ok(view.getAllByText(entry.enemy.value.bossName).length);assert.ok(view.getByText('救援参加'));
+ const view=render(<RaidTop data={{...loaded,canCreate:true}} onOpenRoom={()=>{}} onChooseEnemy={()=>{}} onBrowse={()=>{}} onRefresh={()=>{}}/>);await view.findByTestId('raid-top');assert.ok(view.getAllByText(entry.enemy.value.bossName).length);assert.deepEqual(entry.membership,{status:'available',value:'rescue'});assert.ok(view.getAllByRole('button',{name:'続きへ'}).length);
 });
 test('RPC例外/不正データを0件にしない',async()=>{for(const response of [{data:null,error:{message:'offline'}},{data:{},error:null}])await assert.rejects(createRaidTopRpcLoader({rpc:async()=>response})());});
 test('Guild scope整合、顔6件、21件pageを拒否し未取得人物を固定値にしない',async()=>{

@@ -10,7 +10,7 @@ const unknown = { status: 'unknown' } as const;
 /** 明示Mock専用。人物/戦況はQAデータ、敵の名前・5体編成・画像は現行マスター。 */
 export function createTopFixture(scenario: TopScenario, now = Date.now(), areaOffset = 0): RaidTopData {
   const enemyAt = (index: number) => RAID_TOP_ENEMIES[(index + areaOffset) % RAID_TOP_ENEMIES.length];
-  const player = (index: number): RaidPlayerSummary => ({ userId: `qa-person-${index}`, name: scenario === 'long-name' ? '確認用の非常に長い名前ABCDEFGHIJKLMN主催者' : `確認用主催者${index + 1}`, leaderIconUrl: known(scenario === 'broken-image' ? '/qa-missing-image.png' : enemyAt(index).leaderImageUrl) });
+  const player = (index: number): RaidPlayerSummary => ({ userId: `qa-person-${index}`, name: scenario === 'long-name' ? '確認用の非常に長い名前ABCDEFGHIJKLMN挑戦者' : `確認用挑戦者${index + 1}`, leaderIconUrl: known(scenario === 'broken-image' ? '/qa-missing-image.png' : enemyAt(index).leaderImageUrl) });
   const entry = (index: number, rescue: boolean): RaidTopEntry => {
     const enemy = enemyAt(index);
     const state = scenario === 'ended' ? (index % 2 ? 'expired' : 'cleared') : 'active';

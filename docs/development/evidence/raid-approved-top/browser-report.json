@@ -1,0 +1,590 @@
+{
+  "url": "http://127.0.0.1:3023/qa/raid-top",
+  "report": [
+    {
+      "scenario": "single",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 336,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "multiple",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "empty",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "loading",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": []
+    },
+    {
+      "scenario": "error",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "再試行",
+          "width": 66.734375,
+          "height": 44
+        },
+        {
+          "text": "再試行",
+          "width": 66.734375,
+          "height": 44
+        },
+        {
+          "text": "再試行",
+          "width": 66.734375,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "unavailable",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "ended",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "戦況を見る",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "戦況を見る",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "戦況を見る",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "long-name",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "no-guild",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "broken-image",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "unknown",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    },
+    {
+      "scenario": "returned",
+      "dimensions": {
+        "client": 362,
+        "scroll": 362,
+        "document": 390,
+        "viewport": 390
+      },
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 54.734375,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 299.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 112,
+          "height": 44
+        },
+        {
+          "text": "開催中を探す ›",
+          "width": 362,
+          "height": 52
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "navigation": "PASS",
+  "returnRefresh": "PASS",
+  "areaMaterials": 7
+}

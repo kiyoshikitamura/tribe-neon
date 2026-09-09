@@ -1,0 +1,5 @@
+/* Existing presentation metadata owns the face position, shared with Character thumbnails
+   portraits. This rule is scoped to identity; card variants are unaffected. */
+.character-presentation.user-avatar{width:100%;height:auto;aspect-ratio:1;border:0;border-radius:var(--ui-radius-sm);background:#101720;box-shadow:none;flex-shrink:0}
+.user-avatar .character-presentation-character{object-fit:cover;object-position:var(--character-thumbnail-x) 0%;transform:scale(var(--character-thumbnail-scale));transform-origin:var(--character-thumbnail-x) 0%}
+.user-avatar .character-presentation-art::before,.user-avatar .character-presentation-light{display:none}

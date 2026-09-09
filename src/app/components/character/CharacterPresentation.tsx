@@ -7,7 +7,7 @@ import { getRarityBadgeAsset, getRarityFrameAsset, type RarityFrameKind } from "
 import { getAttributeBadgeAsset, getAttributeLabel } from "@/utils/attributeAssets";
 import { useScreenReadiness } from "../../hooks/useScreenReadiness";
 
-export type CharacterPresentationVariant = "portrait" | "dialogue" | "dialogue-bust" | "reveal" | "quest" | "battle-leader" | "card" | "gacha-result-compact" | "thumbnail" | "full-body" | "home-hero" | "battle" | "icon";
+export type CharacterPresentationVariant = "portrait" | "dialogue" | "dialogue-bust" | "reveal" | "quest" | "battle-leader" | "card" | "gacha-result-compact" | "thumbnail" | "full-body" | "home-hero" | "battle" | "icon" | "user-avatar";
 
 type Props = {
   src?: string;
@@ -95,8 +95,8 @@ export default function CharacterPresentation({
     assets: visualSources.map((assetSrc) => ({ src: assetSrc, required: false })),
   });
   const visualReady = visualSources.length === 0 || visualReadiness.status === "ready";
-  return (
-    <figure style={presentationStyle} aria-busy={!visualReady} className={`character-presentation character-presentation-${variant} ${rarityClass} ${frameClass} ${visualReady ? "is-visual-ready" : "is-visual-loading"} ${selected ? "is-selected" : ""} ${className}`.trim()}>
+  const content = (
+    <>
       <div className="character-presentation-art" aria-hidden={!visualReady}>
         {backgroundSrc && <img className="character-presentation-background" src={backgroundSrc} alt="" aria-hidden="true" />}
         {src ? <ResilientCharacterImage key={src} src={src} alt={alt} /> : <span className="character-presentation-missing" role="img" aria-label={`${alt}の画像は準備中`} />}
@@ -113,6 +113,9 @@ export default function CharacterPresentation({
           {typeof level === "number" && <span>Lv.{level}</span>}
         </figcaption>
       )}
-    </figure>
+    </>
   );
+  return <figure style={presentationStyle} aria-busy={!visualReady} className={`character-presentation character-presentation-${variant} ${rarityClass} ${frameClass} ${visualReady ? "is-visual-ready" : "is-visual-loading"} ${selected ? "is-selected" : ""} ${className}`.trim()}>
+    {frameKind === "character" ? <div className="character-presentation-frame-layout">{content}</div> : content}
+  </figure>;
 }
