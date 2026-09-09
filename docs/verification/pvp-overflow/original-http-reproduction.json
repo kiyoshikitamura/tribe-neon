@@ -1,0 +1,46 @@
+[
+  {
+    "label": "base",
+    "url": "https://tribe-neon-kgkfs7za0-kiyoshi-kitamura.vercel.app",
+    "responses": [
+      {
+        "status": 400,
+        "request": {
+          "p_user_id": "a8cb4e0c-2138-466d-9ed8-0630151db27c",
+          "p_my_points": 1000,
+          "p_offset": 0
+        },
+        "response": {
+          "code": "22003",
+          "details": null,
+          "hint": null,
+          "message": "integer out of range"
+        }
+      }
+    ]
+  },
+  {
+    "label": "candidate",
+    "url": "https://www.tribe-neon.com",
+    "responses": [
+      {
+        "status": 400,
+        "request": {
+          "p_user_id": "a8cb4e0c-2138-466d-9ed8-0630151db27c",
+          "p_my_points": 1000,
+          "p_offset": 0
+        },
+        "response": {
+          "code": "22003",
+          "details": null,
+          "hint": null,
+          "message": "integer out of range"
+        }
+      }
+    ]
+  },
+  {
+    "raid": "PASS",
+    "myDeck": "PASS"
+  }
+]
