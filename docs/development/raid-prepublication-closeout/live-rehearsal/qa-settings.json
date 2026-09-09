@@ -1,0 +1,144 @@
+{
+  "clear": [
+    {
+      "enabled": true,
+      "difficulty": "beginner",
+      "rule_version": 1,
+      "minimum_contribution_damage": 0
+    },
+    {
+      "enabled": true,
+      "difficulty": "intermediate",
+      "rule_version": 1,
+      "minimum_contribution_damage": 0
+    },
+    {
+      "enabled": true,
+      "difficulty": "advanced",
+      "rule_version": 1,
+      "minimum_contribution_damage": 0
+    },
+    {
+      "enabled": true,
+      "difficulty": "expert",
+      "rule_version": 1,
+      "minimum_contribution_damage": 0
+    }
+  ],
+  "rescue": [
+    {
+      "enabled": true,
+      "difficulty": "beginner",
+      "reward_version": 1
+    },
+    {
+      "enabled": true,
+      "difficulty": "intermediate",
+      "reward_version": 1
+    },
+    {
+      "enabled": true,
+      "difficulty": "advanced",
+      "reward_version": 1
+    },
+    {
+      "enabled": true,
+      "difficulty": "expert",
+      "reward_version": 1
+    }
+  ],
+  "qaUsers": [
+    {
+      "id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "rp": 5,
+      "guild": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "level": 5
+    },
+    {
+      "id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "rp": 5,
+      "guild": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "level": 5
+    },
+    {
+      "id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "rp": 4,
+      "guild": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "level": 5
+    }
+  ],
+  "clearItems": [
+    {
+      "item_id": "EQUIP_EXP_S",
+      "quantity": 1,
+      "difficulty": "beginner"
+    },
+    {
+      "item_id": "EQUIP_EXP_S",
+      "quantity": 1,
+      "difficulty": "intermediate"
+    },
+    {
+      "item_id": "EQUIP_EXP_S",
+      "quantity": 1,
+      "difficulty": "advanced"
+    },
+    {
+      "item_id": "EQUIP_EXP_S",
+      "quantity": 1,
+      "difficulty": "expert"
+    }
+  ],
+  "difficulty": [
+    {
+      "difficulty": "beginner",
+      "rule_version": 1,
+      "minimum_power": null,
+      "rescue_min_battles": 2,
+      "rescue_min_contribution_damage": 16000
+    },
+    {
+      "difficulty": "intermediate",
+      "rule_version": 1,
+      "minimum_power": 160000,
+      "rescue_min_battles": 2,
+      "rescue_min_contribution_damage": 68000
+    },
+    {
+      "difficulty": "advanced",
+      "rule_version": 1,
+      "minimum_power": 200000,
+      "rescue_min_battles": 3,
+      "rescue_min_contribution_damage": 205000
+    },
+    {
+      "difficulty": "expert",
+      "rule_version": 1,
+      "minimum_power": 240000,
+      "rescue_min_battles": 4,
+      "rescue_min_contribution_damage": 290000
+    }
+  ],
+  "rescueItems": [
+    {
+      "item_id": "CHAR_EXP_S",
+      "quantity": 1,
+      "difficulty": "beginner"
+    },
+    {
+      "item_id": "CHAR_EXP_S",
+      "quantity": 1,
+      "difficulty": "intermediate"
+    },
+    {
+      "item_id": "CHAR_EXP_S",
+      "quantity": 1,
+      "difficulty": "advanced"
+    },
+    {
+      "item_id": "CHAR_EXP_S",
+      "quantity": 1,
+      "difficulty": "expert"
+    }
+  ]
+}

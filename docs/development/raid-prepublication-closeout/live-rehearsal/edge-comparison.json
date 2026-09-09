@@ -1,0 +1,37 @@
+{
+  "version": 7,
+  "bundle": "b762e7c25826f9a417c87cf550388e291f2c75d0e278599e6a1d3dcd70fd8b21",
+  "verifyJwt": true,
+  "files": [
+    {
+      "file": "supabase/functions/resolve-battle/index.ts",
+      "liveSha256": "749fc02e9a91cefaf3710326c4e4f0115edbe9828b40f94aba32d55eedff8a0e",
+      "candidateSha256": "749fc02e9a91cefaf3710326c4e4f0115edbe9828b40f94aba32d55eedff8a0e",
+      "equal": true
+    },
+    {
+      "file": "supabase/functions/resolve-battle/engine.ts",
+      "liveSha256": "ef929655b9ab9f9ff310e7174df01ef24682d681e960adf856e30c78087aff97",
+      "candidateSha256": "ef929655b9ab9f9ff310e7174df01ef24682d681e960adf856e30c78087aff97",
+      "equal": true
+    },
+    {
+      "file": "src/domain/battle/canonical_runtime.ts",
+      "liveSha256": "0d07290dbcd727ec10dd086e95b107e1da3d7871515854f306a6ce9ccb46f0df",
+      "candidateSha256": "0d07290dbcd727ec10dd086e95b107e1da3d7871515854f306a6ce9ccb46f0df",
+      "equal": true
+    },
+    {
+      "file": "src/domain/battle/canonical_effects.ts",
+      "liveSha256": "67197b5e59259c68c4908ee30110378e7ed4b34a36d951695d22a126ae79679f",
+      "candidateSha256": "67197b5e59259c68c4908ee30110378e7ed4b34a36d951695d22a126ae79679f",
+      "equal": true
+    },
+    {
+      "file": "supabase/functions/resolve-battle/raid-room-route.ts",
+      "liveSha256": "d81dc62a502dda3d9657521e0020cc8dacd90987e5e2b3e8e801d7ca855f6fa3",
+      "candidateSha256": "d81dc62a502dda3d9657521e0020cc8dacd90987e5e2b3e8e801d7ca855f6fa3",
+      "equal": true
+    }
+  ]
+}

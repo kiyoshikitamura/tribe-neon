@@ -1,0 +1,18 @@
+{
+  "sourceSha": "8c0fa6b2131faaed7b63e172ac12424d3fe8f6be",
+  "project": "prj_He8QAAwvfwm74FWq2Vb8BFHCbEXb",
+  "target": "preview (target omitted)",
+  "autoAssignCustomDomains": false,
+  "alias": [],
+  "gitSourceAbsent": true,
+  "fileCount": 2406,
+  "bytes": 390574858,
+  "envKeys": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_APP_ENV",
+    "NEXT_PUBLIC_USE_MOCK_DB",
+    "NEXT_PUBLIC_RAID_ROOM_UI_ENABLED",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+  ],
+  "gitRefAbsent": true
+}

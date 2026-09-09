@@ -1,0 +1,147 @@
+{
+  "checks": {
+    "difficulty": true,
+    "clear": true,
+    "rescue": true,
+    "clearItems": true,
+    "rescueItems": true
+  },
+  "after": {
+    "at": "2026-09-09T15:16:06.230475+00:00",
+    "clear": [
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      }
+    ],
+    "flags": {
+      "battle": true,
+      "legacy": false,
+      "rescue": true,
+      "creation": true
+    },
+    "rescue": [
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "reward_version": 1
+      }
+    ],
+    "unacked": 0,
+    "variant": {
+      "hp": 34000000,
+      "id": "RAID_ROPPONGI_V1"
+    },
+    "rescueRP": 0,
+    "clearItems": [
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 1,
+        "difficulty": "beginner"
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 1,
+        "difficulty": "intermediate"
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 1,
+        "difficulty": "advanced"
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 1,
+        "difficulty": "expert"
+      }
+    ],
+    "difficulty": [
+      {
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_power": null,
+        "rescue_min_battles": 2,
+        "rescue_min_contribution_damage": 16000
+      },
+      {
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_power": 160000,
+        "rescue_min_battles": 2,
+        "rescue_min_contribution_damage": 68000
+      },
+      {
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_power": 200000,
+        "rescue_min_battles": 3,
+        "rescue_min_contribution_damage": 205000
+      },
+      {
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_power": 240000,
+        "rescue_min_battles": 4,
+        "rescue_min_contribution_damage": 290000
+      }
+    ],
+    "replayCount": 8,
+    "rescueItems": [
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 1,
+        "difficulty": "beginner"
+      },
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 1,
+        "difficulty": "intermediate"
+      },
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 1,
+        "difficulty": "advanced"
+      },
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 1,
+        "difficulty": "expert"
+      }
+    ]
+  }
+}

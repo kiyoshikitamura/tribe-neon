@@ -1,0 +1,788 @@
+{
+  "expectedSource": "raid_prod_rehearsal_1788965164920",
+  "expectedCount": 447,
+  "liveCount": 447,
+  "differences": [
+    {
+      "key": "_raid_room_power_gate_v1(p_difficulty text, p_power bigint)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "_raid_room_power_gate_v1",
+        "args": "p_difficulty text, p_power bigint",
+        "md5": "b0f471fc30ebafc55a8207d451a2f5ed",
+        "acl": [
+          "postgres=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "b0f471fc30ebafc55a8207d451a2f5ed",
+        "args": "p_difficulty text, p_power bigint",
+        "name": "_raid_room_power_gate_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "_raid_room_rescue_gate_v1(p_difficulty text, p_via_rescue boolean, p_finalized_battles bigint, p_contribution_damage bigint, p_room_cleared boolean)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "_raid_room_rescue_gate_v1",
+        "args": "p_difficulty text, p_via_rescue boolean, p_finalized_battles bigint, p_contribution_damage bigint, p_room_cleared boolean",
+        "md5": "fbee753b7d6128418f85c1077ef931bb",
+        "acl": [
+          "postgres=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "fbee753b7d6128418f85c1077ef931bb",
+        "args": "p_difficulty text, p_via_rescue boolean, p_finalized_battles bigint, p_contribution_damage bigint, p_room_cleared boolean",
+        "name": "_raid_room_rescue_gate_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "ensure_initial_equipment_v1()",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "ensure_initial_equipment_v1",
+        "args": "",
+        "md5": "acf815f6c7f97df3d04b18d6533867c8",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=\"\""
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "acf815f6c7f97df3d04b18d6533867c8",
+        "args": "",
+        "name": "ensure_initial_equipment_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=\"\""
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "get_kpi_refresh_run(p_run_id uuid)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "get_kpi_refresh_run",
+        "args": "p_run_id uuid",
+        "md5": "9799e2773032ada8f640bf42923e43ee",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "TABLE(run_id uuid, category text, period_type text, period_start date, period_end date, status text, requested_at timestamp with time zone, started_at timestamp with time zone, finished_at timestamp with time zone, source_watermark timestamp with time zone, error_code text, error_detail text)"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "95fd7f2a1199f01ff497f637672095ff",
+        "args": "p_run_id uuid",
+        "name": "get_kpi_refresh_run",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "TABLE(run_id uuid, category text, period_type text, period_start date, period_end date, status text, requested_at timestamp with time zone, started_at timestamp with time zone, finished_at timestamp with time zone, source_watermark timestamp with time zone, error_code text, error_detail text)"
+      }
+    },
+    {
+      "key": "get_latest_kpi_snapshots(p_category text, p_period_type text, p_period_start date, p_period_end date)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "get_latest_kpi_snapshots",
+        "args": "p_category text, p_period_type text, p_period_start date, p_period_end date",
+        "md5": "9be402fa2964f3f6ef3fc233822e45b4",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "TABLE(run_id uuid, metric_id text, dimension_key jsonb, value numeric, numerator bigint, denominator bigint, value_status text, null_reason text, calculated_at timestamp with time zone, source_watermark timestamp with time zone, finished_at timestamp with time zone)"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "2891c35763495c5cd885a62209c0c7a9",
+        "args": "p_category text, p_period_type text, p_period_start date, p_period_end date",
+        "name": "get_latest_kpi_snapshots",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "TABLE(run_id uuid, metric_id text, dimension_key jsonb, value numeric, numerator bigint, denominator bigint, value_status text, null_reason text, calculated_at timestamp with time zone, source_watermark timestamp with time zone, finished_at timestamp with time zone)"
+      }
+    },
+    {
+      "key": "get_raid_room_battle_result_v1(p_replay_id uuid)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "get_raid_room_battle_result_v1",
+        "args": "p_replay_id uuid",
+        "md5": "5cdd2f59e8da4f9b3b61c1919482ff59",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "5cdd2f59e8da4f9b3b61c1919482ff59",
+        "args": "p_replay_id uuid",
+        "name": "get_raid_room_battle_result_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "get_raid_room_participants_v1(p_room_id uuid, p_limit integer, p_offset integer)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "get_raid_room_participants_v1",
+        "args": "p_room_id uuid, p_limit integer, p_offset integer",
+        "md5": "a39135093bf37ad5a99f9d139096b818",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "md5": "a39135093bf37ad5a99f9d139096b818",
+        "args": "p_room_id uuid, p_limit integer, p_offset integer",
+        "name": "get_raid_room_participants_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "get_raid_room_v1(p_room_id uuid)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "get_raid_room_v1",
+        "args": "p_room_id uuid",
+        "md5": "483edc4a6ff97ecf2aab16ba953680e8",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "md5": "483edc4a6ff97ecf2aab16ba953680e8",
+        "args": "p_room_id uuid",
+        "name": "get_raid_room_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "kpi_ensure_subject(p_user_id uuid, p_registered_at timestamp with time zone, p_registration_type text)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "kpi_ensure_subject",
+        "args": "p_user_id uuid, p_registered_at timestamp with time zone, p_registration_type text",
+        "md5": "fefc78ed9a21136b319ccdbc9c9949ce",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, auth, pg_temp"
+        ],
+        "result": "uuid"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "14499368ed882281efbec073523213e1",
+        "args": "p_user_id uuid, p_registered_at timestamp with time zone, p_registration_type text",
+        "name": "kpi_ensure_subject",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, auth, pg_temp"
+        ],
+        "result": "uuid"
+      }
+    },
+    {
+      "key": "kpi_record_daily_activity(p_user_id uuid, p_occurred_at timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "kpi_record_daily_activity",
+        "args": "p_user_id uuid, p_occurred_at timestamp with time zone",
+        "md5": "d405cd733b81cfe3dfe46848fafe48c1",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "adb47936758d7b0d07a0b2692a7b99b5",
+        "args": "p_user_id uuid, p_occurred_at timestamp with time zone",
+        "name": "kpi_record_daily_activity",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "list_raid_rooms_v1(p_difficulty_id text, p_limit integer, p_offset integer)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "list_raid_rooms_v1",
+        "args": "p_difficulty_id text, p_limit integer, p_offset integer",
+        "md5": "63e8cd67f327018fe0d6769503af4b03",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "md5": "63e8cd67f327018fe0d6769503af4b03",
+        "args": "p_difficulty_id text, p_limit integer, p_offset integer",
+        "name": "list_raid_rooms_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "on_kpi_gacha_completed()",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "on_kpi_gacha_completed",
+        "args": "",
+        "md5": "a1bf1c77bb0ce78543465b279aefd995",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "trigger"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "be3fa56706d89a8b21396cf098b8937e",
+        "args": "",
+        "name": "on_kpi_gacha_completed",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "trigger"
+      }
+    },
+    {
+      "key": "on_kpi_guild_member_joined()",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "on_kpi_guild_member_joined",
+        "args": "",
+        "md5": "832adfc943f17c106f709e113f81d28c",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "trigger"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "c68374d752d5859d4565a0923b57d150",
+        "args": "",
+        "name": "on_kpi_guild_member_joined",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "trigger"
+      }
+    },
+    {
+      "key": "raid_room_projection_v1(p_room_id uuid)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "raid_room_projection_v1",
+        "args": "p_room_id uuid",
+        "md5": "0839c20e092587c1a2395d01b3ee29e9",
+        "acl": [
+          "postgres=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "0839c20e092587c1a2395d01b3ee29e9",
+        "args": "p_room_id uuid",
+        "name": "raid_room_projection_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "jsonb"
+      }
+    },
+    {
+      "key": "record_kpi_acquisition_observation_v1(p_token text, p_event_type text, p_idempotency_key text, p_metadata jsonb, p_source text)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "record_kpi_acquisition_observation_v1",
+        "args": "p_token text, p_event_type text, p_idempotency_key text, p_metadata jsonb, p_source text",
+        "md5": "cf7ade7311619a10281068f2b9ae16d3",
+        "acl": [
+          "postgres=X/postgres",
+          "anon=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "uuid"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "anon=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "44e979464caacdc3e9e17f338c730af2",
+        "args": "p_token text, p_event_type text, p_idempotency_key text, p_metadata jsonb, p_source text",
+        "name": "record_kpi_acquisition_observation_v1",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "uuid"
+      }
+    },
+    {
+      "key": "refresh_kpi_acquisition(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_acquisition",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "md5": "7acb38494789049f57ace6f39626c924",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "15018bcd6f8c2141e6de9f369b84cd0a",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "name": "refresh_kpi_acquisition",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_acquisition_v2(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_acquisition_v2",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "md5": "190dc4326d049a14153030b0e56e3942",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "9d3de280711a947db1a0cd1c1b8c64bb",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "name": "refresh_kpi_acquisition_v2",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_active_timeseries_v2(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_active_timeseries_v2",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "md5": "d78d878a32456736451fc74b5a0dc571",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "32e8e56a3176b009b97b48c30e0f1c66",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "name": "refresh_kpi_active_timeseries_v2",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_content(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_content",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "md5": "650e1b072974d90907dc1d01d582856e",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "c75843220dbb8fc89ac42139cc6e7825",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "name": "refresh_kpi_content",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_guild(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_guild",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "md5": "1fdb76fa1a5882c05d88aab5b02333e4",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "6c4c82ef00d7e10e2326fd64dd70b4b2",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "name": "refresh_kpi_guild",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_guild_timeseries_v2(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_guild_timeseries_v2",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "md5": "838439954493aee720d7de7c2c497a17",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "7d1797e5211d17669a3e598454262ed9",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date, p_watermark timestamp with time zone",
+        "name": "refresh_kpi_guild_timeseries_v2",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_revenue(p_run_id uuid, p_period_type text, p_period_start date, p_period_end date)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_revenue",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date",
+        "md5": "1593e3e7dd9c1a9322796146bf74402b",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "70deb9586b11159415d2a2e9d08ae406",
+        "args": "p_run_id uuid, p_period_type text, p_period_start date, p_period_end date",
+        "name": "refresh_kpi_revenue",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "void"
+      }
+    },
+    {
+      "key": "refresh_kpi_snapshots(p_category text, p_period_type text, p_period_start date, p_period_end date, p_requested_by uuid)",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "refresh_kpi_snapshots",
+        "args": "p_category text, p_period_type text, p_period_start date, p_period_end date, p_requested_by uuid",
+        "md5": "e398f3016921afd9556c45330e52256e",
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "uuid"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "57430f5e50277a74519e692bfb1dd59f",
+        "args": "p_category text, p_period_type text, p_period_start date, p_period_end date, p_requested_by uuid",
+        "name": "refresh_kpi_snapshots",
+        "owner": "postgres",
+        "config": [
+          "search_path=public, pg_temp"
+        ],
+        "result": "uuid"
+      }
+    },
+    {
+      "key": "sync_active_users()",
+      "status": "DIFFERENT",
+      "expected": {
+        "name": "sync_active_users",
+        "args": "",
+        "md5": "9a146370f1178b6f6f436324774efd12",
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "owner": "postgres",
+        "config": [
+          "search_path=public"
+        ],
+        "result": "integer"
+      },
+      "live": {
+        "acl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "md5": "f3767dd0fb22e70a4db2fca11acdbca4",
+        "args": "",
+        "name": "sync_active_users",
+        "owner": "postgres",
+        "config": [
+          "search_path=public"
+        ],
+        "result": "integer"
+      }
+    }
+  ],
+  "liveOnly": []
+}

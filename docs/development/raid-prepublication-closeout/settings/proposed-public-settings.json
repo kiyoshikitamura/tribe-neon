@@ -1,0 +1,195 @@
+{
+  "candidateSha": "8c0fa6b2131faaed7b63e172ac12424d3fe8f6be",
+  "status": "PROPOSED_NOT_APPROVED_NOT_APPLIED",
+  "proposalId": "raid-public-initial-settings-v1",
+  "proposedSettingsVersion": 2,
+  "sourcePolicy": "Confirmed rules retained; numbers below are proposals unless classified CONFIRMED",
+  "difficulties": [
+    {
+      "id": "beginner",
+      "label": "初級",
+      "minimumPower": {
+        "value": null,
+        "status": "CONFIRMED",
+        "source": "specs/raid_room_rescue_v1.md:8"
+      },
+      "clear": {
+        "minimumContributionDamage": 1000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 3
+          }
+        ],
+        "status": "NEW_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 2,
+        "minimumContributionDamage": 16000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 2
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false
+      }
+    },
+    {
+      "id": "intermediate",
+      "label": "中級",
+      "minimumPower": {
+        "value": 160000,
+        "status": "CONFIRMED",
+        "source": "specs/raid_room_rescue_v1.md:8"
+      },
+      "clear": {
+        "minimumContributionDamage": 10000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 5
+          }
+        ],
+        "status": "NEW_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 2,
+        "minimumContributionDamage": 68000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 3
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false
+      }
+    },
+    {
+      "id": "advanced",
+      "label": "上級",
+      "minimumPower": {
+        "value": 200000,
+        "status": "CONFIRMED",
+        "source": "specs/raid_room_rescue_v1.md:8"
+      },
+      "clear": {
+        "minimumContributionDamage": 30000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 8
+          }
+        ],
+        "status": "NEW_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 3,
+        "minimumContributionDamage": 205000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 5
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false
+      }
+    },
+    {
+      "id": "expert",
+      "label": "超級",
+      "minimumPower": {
+        "value": 240000,
+        "status": "CONFIRMED",
+        "source": "specs/raid_room_rescue_v1.md:8"
+      },
+      "clear": {
+        "minimumContributionDamage": 50000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 12
+          }
+        ],
+        "status": "NEW_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 4,
+        "minimumContributionDamage": 290000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 8
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false
+      }
+    }
+  ],
+  "unchanged": {
+    "hp": "preserve 7 observed production master max_hp values, 28M–38M; no scaling/QA shortening",
+    "roomCapacity": 20,
+    "roomLifetimeHours": 24,
+    "raidPointCost": 1,
+    "firstEverEntryCost": 0,
+    "raidPointMaximum": 5,
+    "recoveryHoursPerPoint": 2,
+    "delivery": "Present",
+    "presentExpiryDays": 30,
+    "rankingNewGeneration": false
+  },
+  "qaOnly": {
+    "clearThreshold": 0,
+    "clearReward": "EQUIP_EXP_S x1",
+    "rescueReward": "CHAR_EXP_S x1",
+    "shortHpExamples": [
+      1,
+      25000
+    ],
+    "tinyBoundaryThresholdExamples": [
+      19,
+      37
+    ],
+    "policy": "Not promoted to production. 19/37 are supplied QA examples; not used as proposed values."
+  },
+  "approvalRequired": [
+    "All four proposed clear thresholds",
+    "Existing provisional rescue threshold pairs adopted as public version2",
+    "All four clear and rescue item/quantity rows"
+  ],
+  "applicationPolicy": {
+    "databaseWrites": false,
+    "bundleChanged": false,
+    "approvalBeforeEnable": true,
+    "noAutomaticHistoricalRegrant": true,
+    "reconfigureOnlyAfterActiveRoomsEnd": true
+  }
+}

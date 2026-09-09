@@ -1,0 +1,68 @@
+{
+  "boss": {
+    "id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+    "max_hp": 32000000,
+    "status": "EXPIRED",
+    "base_id": "shinjuku",
+    "boss_id": "RAID_SHINJUKU_V1",
+    "outcome": "TIMEOUT_FAILURE",
+    "cycle_id": "acad6e7c-2706-412d-bb48-2dda1be3a003",
+    "cleared_at": null,
+    "created_at": "2026-09-08T10:40:55.018596+00:00",
+    "current_hp": 32000000,
+    "expires_at": "2026-09-09T10:40:55.031663+00:00",
+    "spawned_at": "2026-09-08T10:40:55.031663+00:00",
+    "raid_day_key": "ROOM:56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+    "respawn_after": null,
+    "rotation_date": "2026-09-08",
+    "boss_master_id": "RAID_SHINJUKU_V1",
+    "raid_variant_id": "RAID_SHINJUKU_V1",
+    "outcome_finalized_at": "2026-09-09T10:41:00.160351+00:00"
+  },
+  "room": {
+    "id": "3972a461-b45f-4b02-8142-75f294461ae3",
+    "created_at": "2026-09-08T10:40:55.031663+00:00",
+    "difficulty_id": "beginner",
+    "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+    "raid_boss_instance_id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d"
+  },
+  "cronRuns": [
+    {
+      "jobid": 13,
+      "status": "succeeded",
+      "end_time": "2026-09-09T10:39:00.087869+00:00",
+      "start_time": "2026-09-09T10:39:00.07511+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "jobid": 13,
+      "status": "succeeded",
+      "end_time": "2026-09-09T10:40:00.137535+00:00",
+      "start_time": "2026-09-09T10:40:00.105948+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "jobid": 13,
+      "status": "succeeded",
+      "end_time": "2026-09-09T10:41:00.165999+00:00",
+      "start_time": "2026-09-09T10:41:00.142082+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "jobid": 13,
+      "status": "succeeded",
+      "end_time": "2026-09-09T10:42:00.128857+00:00",
+      "start_time": "2026-09-09T10:42:00.121595+00:00",
+      "return_message": "1 row"
+    },
+    {
+      "jobid": 13,
+      "status": "succeeded",
+      "end_time": "2026-09-09T10:43:00.169938+00:00",
+      "start_time": "2026-09-09T10:43:00.160487+00:00",
+      "return_message": "1 row"
+    }
+  ],
+  "observedAt": "2026-09-09T15:01:53.925757+00:00",
+  "finalizerMd5": "be4bad717c6bc92feeb816559070b85f"
+}

@@ -7,3 +7,7 @@ docs/development/evidence/raid-room-acceptance-20260908/*.sql text eol=lf
 # Fixed release evidence and SQL bundles must survive checkout byte-for-byte.
 docs/development/raid-production-preparation/** -text
 scripts/raid-production-rehearsal/*.mjs text eol=lf
+
+# Preserve prepublication evidence hashes.
+docs/development/raid-prepublication-closeout/** -text
+scripts/raid-prepublication-*/*.mjs text eol=lf
