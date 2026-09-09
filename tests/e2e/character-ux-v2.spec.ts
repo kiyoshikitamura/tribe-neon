@@ -133,6 +133,7 @@ test('V2 Party draft cancel, confirm and leader authority',async({page})=>{
  await party.getByRole('button',{name:'メンバー変更',exact:true}).click();
  await party.locator('.character-party-draft-slots button').first().click();
  await party.locator('.character-party-candidates').getByRole('button',{name:'ルイ',exact:true}).click();
+ await expect(party.getByRole('button',{name:'変更を確定',exact:true})).toBeInViewport();
  expect(await page.evaluate(()=>localStorage.getItem('mock_db_user_main_formations'))).toBe(before);
  await party.getByRole('button',{name:'取消',exact:true}).click();expect(await page.evaluate(()=>localStorage.getItem('mock_db_user_main_formations'))).toBe(before);
  await party.getByRole('button',{name:'メンバー変更',exact:true}).click();await party.locator('.character-party-draft-slots button').first().click();await party.locator('.character-party-candidates').getByRole('button',{name:'ルイ',exact:true}).click();

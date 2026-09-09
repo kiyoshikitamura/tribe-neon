@@ -34,7 +34,7 @@ export default function CharacterParty({game,characters,onBack}: {game:any;chara
       {record&&master ? <><CharacterPresentation src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false}/><strong>{master.jpName}</strong><small>Lv.{record.level || 1}</small></> : <span className="character-party-empty">＋<small>枠{index+1}</small></span>}
     </button>;
   };
-  const choose=(id:string)=>{if(slot===null)return;setDraft(current=>{const next=[...current];const existing=next.indexOf(id);if(existing>=0 && existing!==slot)next[existing]=next[slot]||"";next[slot]=id;return next;});};
+  const choose=(id:string)=>{if(slot===null)return;setDraft(current=>{const next=[...current];const existing=next.indexOf(id);if(existing>=0 && existing!==slot)next[existing]=next[slot]||"";next[slot]=id;return next;}); requestAnimationFrame(()=>document.querySelector(".character-party-draft-power")?.scrollIntoView({block:"center",behavior:"smooth"}));};
   const changed=JSON.stringify(draft.filter(Boolean))!==JSON.stringify(saved);
   const candidates=characters.filter(record=>{const master=CHARACTERS_MASTER.find(c=>c.id===record.character_id);return master&&(attribute==="ALL"||master.alignment===attribute)&&(rarity==="ALL"||master.rarity===rarity);});
   return <section className="character-v2-view character-v2-party" aria-busy={pending}>
