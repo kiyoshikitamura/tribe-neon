@@ -106,12 +106,10 @@ test("Character, Party, Growth, Skill and Equipment follow the fixed mobile hier
   await page.screenshot({ path: test.info().outputPath("character-list-390.png") });
 
   await page.locator(".character-v2-character-grid .character-v2-card").first().click();
-  for (const label of ["HP", "ATK", "DEF", "SPD", "LUK"]) await expect(page.locator(".character-v2-stats")).toContainText(label);
-  await expect(page.getByText("装備中Skill", { exact: true })).toBeVisible();
-  await expect(page.getByText("装備中アイテム", { exact: true })).toBeVisible();
-  await expect(page.getByText(/^(正義|悪|秩序|混沌)$/)).toBeVisible();
-  await page.screenshot({ path: test.info().outputPath("character-detail-390.png"), fullPage: true });
-  await page.getByRole("button", { name: "強化", exact: true }).click();
+  await expect(page.getByRole("region", { name: "キャラクターホーム" })).toBeVisible();
+  await expect(page.locator(".character-home-power")).toContainText("総合力");
+  await page.screenshot({ path: test.info().outputPath("character-home-390.png") });
+  await page.getByRole("button", { name: "育成する", exact: true }).click();
   await expect(page.getByText("強化ドリンク・小", { exact: true })).toBeVisible();
   await expect(page.getByText("強化ドリンク・中", { exact: true })).toBeVisible();
   await expect(page.getByText("強化ドリンク・大", { exact: true })).toBeVisible();
@@ -159,7 +157,8 @@ test("canonical Leader changes update Home and Header immediately and persist ac
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /reiji_transparent_asset/);
 
   await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "パーティ", exact: true }).click();
+  await page.locator('.character-v2-card').first().click();
+  await page.getByRole('button', { name: /PARTY/ }).click();
   await page.getByRole("button", { name: "リーダー変更", exact: true }).first().click();
   await expect.poll(async () => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_users") || "[]")[0]?.favorite_character_id)).toBe("char_rui_01");
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /rui_transparent_asset/);
@@ -178,7 +177,8 @@ test("canonical Leader changes update Home and Header immediately and persist ac
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /rui_transparent_asset/);
 
   await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "パーティ", exact: true }).click();
+  await page.locator('.character-v2-card').first().click();
+  await page.getByRole('button', { name: /PARTY/ }).click();
   await page.getByRole("button", { name: "リーダー変更", exact: true }).last().click();
   await page.locator('.footer-item[aria-label="マイページ"]').click();
   await expect(page.locator('.mypage-leader-layer[data-character-authority="char_chang_01"]')).toBeVisible();

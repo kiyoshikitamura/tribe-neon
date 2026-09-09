@@ -36,3 +36,5 @@
   padding: 0;
   border: 0;
 }
+
+.character-v2-card-power{font-size:10px;color:var(--ui-text-secondary);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
