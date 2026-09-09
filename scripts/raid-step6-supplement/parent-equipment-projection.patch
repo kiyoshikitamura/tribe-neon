@@ -1,0 +1,82 @@
+--- a/src/app/context/GameContext.tsx
++++ b/src/app/context/GameContext.tsx
+@@ -2003,54 +2003,31 @@
+ 
+       await inventoryProjectionPromise;
+ 
+-      const { data: equipsData } = await supabase
+-        .from("user_equipments")
+-        .select("*")
+-        .eq("user_id", userId)
+-        .order("created_at", { ascending: false });
+-      
+-      if (equipsData) {
+-        let persistedEquips = equipsData;
+-        if (equipsData.length === 0) {
+-          const activeChar = charsData ? charsData[0] : null;
+-          if (activeChar) {
+-            const starterGears = [
+-              { id: `e_weapon_${userId}`, equipment_id: "WEAPON_001", slot_index: 0 },
+-              { id: `e_head_${userId}`, equipment_id: "HEAD_001", slot_index: 2 },
+-              { id: `e_body_${userId}`, equipment_id: "BODY_001", slot_index: 3 },
+-              { id: `e_legs_${userId}`, equipment_id: "LEGS_001", slot_index: 4 },
+-              { id: `e_acc_${userId}`, equipment_id: "ACCESSORY_001", slot_index: 5 }
+-            ];
+-            const seeded: any[] = [];
+-            for (const g of starterGears) {
+-              const row = {
+-                user_id: userId,
+-                equipment_id: g.equipment_id,
+-                level: 1,
+-                plus_val: 0,
+-                equipped_character_id: activeChar.id,
+-                slot_index: g.slot_index,
+-                random_options: [
+-                  { name: "クリティカル率", val: "+5%", unlocked: true },
+-                  { name: "命中率", val: "+8%", unlocked: false },
+-                  { name: "回避率", val: "+6%", unlocked: false },
+-                  { name: "防御貫通力", val: "+12%", unlocked: false }
+-                ]
+-              };
+-              const { data: inserted, error: insertError } = await supabase.from("user_equipments").insert(row).select().maybeSingle();
+-              // Persisted equipment only: a rejected grant must not become owned state.
+-              if (!insertError && inserted) seeded.push(inserted);
+-            }
+-            persistedEquips = seeded;
+-          }
+-        }
+-        setUserEquipmentsList(persistedEquips);
+-        const currentEquip = persistedEquips.find(e => e.id === selectedEquipment?.id) || persistedEquips[0] || null;
+-        setSelectedEquipment(currentEquip);
+-        setEquipmentLevel(currentEquip?.level ?? 1);
+-        setEquipmentLimitBreak(currentEquip?.plus_val ?? 0);
+-        setSubOptions(currentEquip?.random_options || []);
+-      }
++      // LOCAL PROPOSAL: replace equipment bootstrap block, not applied to GameContext.
++      const readPersistedEquipment = () => supabase.from("user_equipments")
++        .select("*").eq("user_id", userId).order("created_at", { ascending: false });
++      const initialEquipment = await readPersistedEquipment();
++      if (currentAuthUserIdRef.current !== userId) return;
++      if (initialEquipment.error || !initialEquipment.data) throw new Error("Equipment projection unavailable");
++      let equipsData = initialEquipment.data;
++      if (equipsData.length === 0 && charsData?.length) {
++        const grant = await supabase.rpc("ensure_initial_equipment_v1");
++        if (currentAuthUserIdRef.current !== userId) return;
++        // Even after a lost response, reconcile persisted rows. Never reconstruct a grant.
++        const refreshedEquipment = await readPersistedEquipment();
++        if (currentAuthUserIdRef.current !== userId) return;
++        if (refreshedEquipment.error || !refreshedEquipment.data) throw new Error("Equipment projection unavailable");
++        equipsData = refreshedEquipment.data;
++        if (grant.error) console.warn("Initial equipment authority unavailable", grant.error.code);
++      }
++      setUserEquipmentsList(equipsData);
++      const currentEquip = equipsData.find(e => e.id === selectedEquipment?.id) || equipsData[0] || null;
++      setSelectedEquipment(currentEquip);
++      setEquipmentLevel(currentEquip?.level ?? 1);
++      setEquipmentLimitBreak(currentEquip?.plus_val ?? 0);
++      setSubOptions(currentEquip?.random_options || []);
++      // Existing next syncUserPower(userId, charsData, equipsData || [], localDeck)
++      // consumes this same persisted projection; no formula change.
+ 
+       // 総合力データの同期
+       if (charsData && charsData.length > 0) {

@@ -1,0 +1,47 @@
+{
+  "at": "2026-09-09T07:38:19.387Z",
+  "status": "PASS",
+  "guildOutsideCases": 2,
+  "activityPublicCases": 2,
+  "identitiesPreserved": true,
+  "endedState": "cleared",
+  "levelRefusalDistinguishedFromPower": true,
+  "normalPower": 78228,
+  "normalRpBefore": 3,
+  "normalRpAfter": 3,
+  "normalPowerHttpRefused": true,
+  "normalPowerUiHttpRefused": true,
+  "publicationIdempotence": true,
+  "actor": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+  "actorLevel": 5,
+  "actorGuildCount": 0,
+  "guildOutsideActivityJoin": "PASS_REAL_UI_HTTP",
+  "joinSameRescueIdRetry": "already_joined/viaRescue true",
+  "freshRaidPointsBefore": 5,
+  "freshRaidPointsAfter": 5,
+  "endedUiJoinDisabled": true,
+  "endedBriefingReason": "room_ended",
+  "endedJoinRpcAttempted": false,
+  "endedScope": "cleared QA room; not naturally expired case",
+  "normalUiError": "generic creation retry message; does not identify insufficient power",
+  "freshEquipment": {
+    "status": 403,
+    "code": "42501"
+  },
+  "freshOverallPass": false,
+  "unclassifiedHttpStatuses": [
+    400,
+    404,
+    406,
+    409,
+    500
+  ],
+  "screens": [
+    "b-outsider-activity.png",
+    "b-outsider-joined.png",
+    "b-outsider-ended-card.png",
+    "b-outsider-ended-detail.png",
+    "b-normal-power-selection.png",
+    "b-normal-power-refused.png"
+  ]
+}

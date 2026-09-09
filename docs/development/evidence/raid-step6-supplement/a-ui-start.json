@@ -1,0 +1,697 @@
+{
+  "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+  "role": "normal",
+  "steps": [
+    "Real UI detail to SETUP without start RPC",
+    "UI new start cost 1; same request retry same Replay no extra cost",
+    "Server same Replay reload without new start/cost",
+    "Actual UI ack returns original Room"
+  ],
+  "startRequests": [
+    {
+      "p_room_id": "513fddee-eac1-481b-8b2b-8d273131bbef",
+      "p_character_ids": [
+        "char_kengo_01",
+        "char_daimon_01",
+        "char_masato_01",
+        "char_naoto_01",
+        "char_ren_male_01"
+      ],
+      "p_tactic": "ATTACK_PRIORITY",
+      "p_request_id": "3ce0079f-7fc9-4348-a128-e71e55c4c896"
+    }
+  ],
+  "resolveIds": [
+    "b481f2d7-80db-425f-9786-123ae7d4f9f8",
+    "b481f2d7-80db-425f-9786-123ae7d4f9f8"
+  ],
+  "ackIds": [
+    "3ce0079f-7fc9-4348-a128-e71e55c4c896"
+  ],
+  "screens": [
+    {
+      "name": "setup",
+      "images": []
+    },
+    {
+      "name": "result",
+      "images": [
+        {
+          "src": "/characters/kengo_transparent_asset.png",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "result-reloaded",
+      "images": [
+        {
+          "src": "/characters/kengo_transparent_asset.png",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "name": "returned-room",
+      "images": [
+        {
+          "src": "/bg/bg_street_shibuya.jpg",
+          "loaded": true
+        },
+        {
+          "src": "/characters/ageha_transparent_asset.png",
+          "loaded": true
+        },
+        {
+          "src": "/characters/kengo_transparent_asset.png",
+          "loaded": true
+        },
+        {
+          "src": "/characters/kengo_transparent_asset.png",
+          "loaded": true
+        },
+        {
+          "src": "/ui/icon_raid.png",
+          "loaded": true
+        },
+        {
+          "src": "/ui/icon_friends.png",
+          "loaded": true
+        },
+        {
+          "src": "/ui/icon_present.png",
+          "loaded": true
+        },
+        {
+          "src": "/ui/icon_friends.png",
+          "loaded": true
+        }
+      ]
+    }
+  ],
+  "beforeSetup": {
+    "raid_points": 4,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:10:10.127Z"
+  },
+  "beforeStart": {
+    "raid_points": 4,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:10:13.767Z"
+  },
+  "startStatus": 200,
+  "receipt": {
+    "cost": 1,
+    "room_id": "513fddee-eac1-481b-8b2b-8d273131bbef",
+    "cost_type": "RAID_POINT",
+    "enemy_snapshot": [
+      {
+        "id": "raid_587bbb99-8220-48ad-8fe3-1ee1d7746b20_1",
+        "name": "アゲハ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 5600000,
+          "atk": 8800,
+          "def": 5500,
+          "luk": 0,
+          "spd": 470
+        },
+        "skills": [
+          {
+            "id": "SKILL_055",
+            "name": "ネオン・アクセル",
+            "target": "SELF",
+            "effects": [
+              {
+                "raw": "TRIGGER ON_BATTLE_START / once per battle",
+                "type": "TRIGGER"
+              },
+              {
+                "raw": "SPD +25% / 3T",
+                "type": "RAW"
+              },
+              {
+                "raw": "ATK +20% / 3T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": null,
+            "activationType": "BATTLE_START",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": "char_ageha_01"
+          }
+        ],
+        "alignment": "CHAOS",
+        "equipment": [],
+        "characterId": "char_ageha_01",
+        "equippedSkillRefs": [
+          "SKILL_055"
+        ]
+      },
+      {
+        "id": "raid_587bbb99-8220-48ad-8fe3-1ee1d7746b20_2",
+        "name": "レオ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 5600000,
+          "atk": 8800,
+          "def": 5500,
+          "luk": 0,
+          "spd": 470
+        },
+        "skills": [
+          {
+            "id": "SKILL_056",
+            "name": "ストリート・フロウ",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 285% ATK",
+                "type": "RAW"
+              },
+              {
+                "raw": "SELF SPD +25% / 3T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": 5,
+            "activationType": "ACTIVE",
+            "availableFromRound": 3,
+            "exclusiveCharacterId": "char_leo_01"
+          }
+        ],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "characterId": "char_leo_01",
+        "equippedSkillRefs": [
+          "SKILL_056"
+        ]
+      },
+      {
+        "id": "raid_587bbb99-8220-48ad-8fe3-1ee1d7746b20_3",
+        "name": "ソラ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 5600000,
+          "atk": 8800,
+          "def": 5500,
+          "luk": 0,
+          "spd": 470
+        },
+        "skills": [
+          {
+            "id": "SKILL_065",
+            "name": "ストリート・ライド",
+            "target": "SELF",
+            "effects": [
+              {
+                "raw": "TRIGGER ON_BATTLE_START / once per battle",
+                "type": "TRIGGER"
+              },
+              {
+                "raw": "SPD +22% / 3T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": null,
+            "activationType": "BATTLE_START",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": "char_sora_01"
+          },
+          {
+            "id": "SKILL_034",
+            "name": "フラッシュバン強襲",
+            "target": "ENEMY_ALL",
+            "effects": [
+              {
+                "raw": "DAMAGE 95% ATK",
+                "type": "RAW"
+              },
+              {
+                "raw": "BLIND 80% / 2T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": 4,
+            "activationType": "ACTIVE",
+            "availableFromRound": 3,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "alignment": "CHAOS",
+        "equipment": [],
+        "characterId": "char_sora_01",
+        "equippedSkillRefs": [
+          "SKILL_065",
+          "SKILL_034"
+        ]
+      },
+      {
+        "id": "raid_587bbb99-8220-48ad-8fe3-1ee1d7746b20_4",
+        "name": "レイナ",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 5600000,
+          "atk": 8800,
+          "def": 5500,
+          "luk": 0,
+          "spd": 470
+        },
+        "skills": [
+          {
+            "id": "SKILL_066",
+            "name": "ハイスピード・ラッシュ",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 215% ATK",
+                "type": "RAW"
+              },
+              {
+                "raw": "SELF SPD +20% / 2T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": 4,
+            "activationType": "ACTIVE",
+            "availableFromRound": 2,
+            "exclusiveCharacterId": "char_reina_01"
+          },
+          {
+            "id": "SKILL_034",
+            "name": "フラッシュバン強襲",
+            "target": "ENEMY_ALL",
+            "effects": [
+              {
+                "raw": "DAMAGE 95% ATK",
+                "type": "RAW"
+              },
+              {
+                "raw": "BLIND 80% / 2T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": 4,
+            "activationType": "ACTIVE",
+            "availableFromRound": 3,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "alignment": "CHAOS",
+        "equipment": [],
+        "characterId": "char_reina_01",
+        "equippedSkillRefs": [
+          "SKILL_066",
+          "SKILL_034"
+        ]
+      },
+      {
+        "id": "raid_587bbb99-8220-48ad-8fe3-1ee1d7746b20_5",
+        "name": "ノア",
+        "team": "ENEMY",
+        "level": 30,
+        "stats": {
+          "hp": 5600000,
+          "atk": 8800,
+          "def": 5500,
+          "luk": 0,
+          "spd": 470
+        },
+        "skills": [
+          {
+            "id": "SKILL_033",
+            "name": "精神統一・明鏡止水",
+            "target": "SELF",
+            "effects": [
+              {
+                "raw": "REMOVE_STATUS all",
+                "type": "RAW"
+              },
+              {
+                "raw": "SPD +25% / 2T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": 4,
+            "activationType": "ACTIVE",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": null
+          },
+          {
+            "id": "SKILL_034",
+            "name": "フラッシュバン強襲",
+            "target": "ENEMY_ALL",
+            "effects": [
+              {
+                "raw": "DAMAGE 95% ATK",
+                "type": "RAW"
+              },
+              {
+                "raw": "BLIND 80% / 2T",
+                "type": "RAW"
+              }
+            ],
+            "cooldown": 4,
+            "activationType": "ACTIVE",
+            "availableFromRound": 3,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "characterId": "char_noa_01",
+        "equippedSkillRefs": [
+          "SKILL_033",
+          "SKILL_034"
+        ]
+      }
+    ],
+    "player_snapshot": [
+      {
+        "id": "player_82360aea-3b72-45b7-90ca-68ac72098632",
+        "name": "ケンゴ",
+        "team": "PLAYER",
+        "level": 7,
+        "stats": {
+          "hp": 24860,
+          "atk": 3921,
+          "def": 2004,
+          "luk": 15,
+          "spd": 187
+        },
+        "rarity": "SSR",
+        "skills": [
+          {
+            "id": "SKILL_001",
+            "name": "ストリートパンチ",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 90% ATK",
+                "type": "RAW"
+              }
+            ],
+            "skillId": "SKILL_001",
+            "cooldown": 3,
+            "plusValue": 0,
+            "slotIndex": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": null
+          }
+        ],
+        "alignment": "EVIL",
+        "equipment": [],
+        "characterId": "char_kengo_01",
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": [
+          {
+            "id": "SKILL_001",
+            "name": "ストリートパンチ",
+            "target": "ENEMY_SINGLE",
+            "effects": [
+              {
+                "raw": "DAMAGE 90% ATK",
+                "type": "RAW"
+              }
+            ],
+            "skillId": "SKILL_001",
+            "cooldown": 3,
+            "plusValue": 0,
+            "slotIndex": 0,
+            "activationType": "ACTIVE",
+            "availableFromRound": 1,
+            "exclusiveCharacterId": null
+          }
+        ]
+      },
+      {
+        "id": "player_88bfdbfc-d805-4676-808d-ddb686aae9d6",
+        "name": "ダイモン",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 9900,
+          "atk": 1240,
+          "def": 760,
+          "luk": 8,
+          "spd": 100
+        },
+        "rarity": "R",
+        "skills": [],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "characterId": "char_daimon_01",
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": []
+      },
+      {
+        "id": "player_8c095d57-4959-4e53-a77a-05400df7fe61",
+        "name": "マサト",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 9000,
+          "atk": 800,
+          "def": 760,
+          "luk": 12,
+          "spd": 92
+        },
+        "rarity": "N",
+        "skills": [],
+        "alignment": "CHAOS",
+        "equipment": [],
+        "characterId": "char_masato_01",
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": []
+      },
+      {
+        "id": "player_73991016-17f0-400c-a2f8-841d9c74ec3a",
+        "name": "ナオト",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 8316,
+          "atk": 972,
+          "def": 745,
+          "luk": 8,
+          "spd": 127
+        },
+        "rarity": "N",
+        "skills": [],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "characterId": "char_naoto_01",
+        "awakeningLevel": 1,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": []
+      },
+      {
+        "id": "player_59677bee-0313-4925-816f-dcc1bdf9955c",
+        "name": "カズヤ",
+        "team": "PLAYER",
+        "level": 1,
+        "stats": {
+          "hp": 13000,
+          "atk": 800,
+          "def": 1150,
+          "luk": 6,
+          "spd": 72
+        },
+        "rarity": "R",
+        "skills": [],
+        "alignment": "JUSTICE",
+        "equipment": [],
+        "characterId": "char_ren_male_01",
+        "awakeningLevel": 0,
+        "combatModifiers": {
+          "criticalDamageBp": 0,
+          "damageReductionBp": 0,
+          "damageDealtNegativeBp": 0,
+          "damageDealtPositiveBp": 0,
+          "criticalRateNegativeBp": 0,
+          "criticalRatePositiveBp": 0
+        },
+        "statusModifiers": {
+          "statusChanceGenericBp": 0,
+          "statusChanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          },
+          "statusResistanceGenericBp": 0,
+          "statusResistanceIndividualBp": {
+            "STUN": 0,
+            "BLEED": 0,
+            "BLIND": 0,
+            "TAUNT": 0,
+            "POISON": 0,
+            "SILENCE": 0
+          }
+        },
+        "equipmentEffects": [],
+        "equippedSkillRefs": []
+      }
+    ],
+    "guild_id_snapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+    "replay_session_id": "b481f2d7-80db-425f-9786-123ae7d4f9f8",
+    "remaining_raid_points": 3
+  },
+  "afterStart": {
+    "raid_points": 3,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:10:15.444Z"
+  },
+  "resendStatus": 200,
+  "resendReplay": "b481f2d7-80db-425f-9786-123ae7d4f9f8",
+  "afterResend": {
+    "raid_points": 3,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:10:16.236Z"
+  },
+  "beforeReload": {
+    "raid_points": 3,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:10:52.912Z"
+  },
+  "afterReload": {
+    "raid_points": 3,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:11:49.563Z"
+  },
+  "afterAck": {
+    "raid_points": 3,
+    "raid_free_entry_consumed": true,
+    "raid_points_last_recovered_at": "2026-09-09T05:18:54.994456+00:00",
+    "readAt": "2026-09-09T07:11:51.629Z"
+  },
+  "complete": true
+}

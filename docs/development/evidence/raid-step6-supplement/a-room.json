@@ -1,0 +1,53 @@
+{
+  "role": "normal",
+  "requestId": "5e8c0dee-51eb-4a98-9f97-d1f61a63d3fc",
+  "variant": "RAID_SHIBUYA_V1",
+  "status": 200,
+  "code": null,
+  "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+  "ownerId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+  "room": {
+    "hp": {
+      "value": {
+        "max": 28000000,
+        "current": 28000000
+      },
+      "status": "available"
+    },
+    "owner": {
+      "value": {
+        "name": "R0908N01",
+        "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "leaderIconUrl": {
+          "status": "unknown"
+        }
+      },
+      "status": "available"
+    },
+    "state": {
+      "value": "active",
+      "status": "available"
+    },
+    "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+    "endedAt": {
+      "value": null,
+      "status": "available"
+    },
+    "createdAt": {
+      "value": "2026-09-09T07:05:25.882034+00:00",
+      "status": "available"
+    },
+    "expiresAt": {
+      "value": "2026-09-10T07:05:25.882034+00:00",
+      "status": "available"
+    },
+    "difficultyId": "beginner",
+    "participantCount": {
+      "value": 1,
+      "status": "available"
+    },
+    "serverEligibility": {
+      "status": "unknown"
+    }
+  }
+}

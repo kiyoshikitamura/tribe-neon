@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-09T07:38:19.387Z",
+  "status": "PASS",
+  "guildOutsideCases": 2,
+  "activityPublicCases": 2,
+  "identitiesPreserved": true,
+  "endedState": "cleared",
+  "levelRefusalDistinguishedFromPower": true,
+  "normalPower": 78228,
+  "normalRpBefore": 3,
+  "normalRpAfter": 3,
+  "normalPowerHttpRefused": true,
+  "normalPowerUiHttpRefused": true,
+  "publicationIdempotence": true
+}

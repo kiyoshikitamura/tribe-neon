@@ -1,0 +1,8 @@
+{
+  "state": "INITIALIZED_CLASSIFIED_QA_LEVEL5",
+  "userId": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+  "isAnonymous": true,
+  "at": "2026-09-09T07:10:00.032Z",
+  "noAutomaticRetry": true,
+  "replacesAuthOnlyActor": "351cc041-43d4-4f6b-b965-7c408952d64c"
+}

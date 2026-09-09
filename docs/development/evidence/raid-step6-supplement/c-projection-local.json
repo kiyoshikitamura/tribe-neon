@@ -1,0 +1,11 @@
+{
+  "results": [
+    "same DB projection for UI and downstream power",
+    "existing equipment no grant",
+    "unknown RPC outcome reconciles persisted rows without new request",
+    "rejected grant no phantom",
+    "read failure not projected as zero",
+    "logout/account switch blocks stale projection"
+  ],
+  "candidateOnly": true
+}
