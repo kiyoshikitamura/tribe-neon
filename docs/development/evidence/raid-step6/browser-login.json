@@ -1,0 +1,444 @@
+[
+  {
+    "role": "host",
+    "login": "PASS",
+    "reload": "PASS",
+    "calls": [
+      {
+        "rpc": "record_kpi_acquisition_landing_v1",
+        "status": 200
+      },
+      {
+        "rpc": "record_kpi_acquisition_observation_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_onboarding_state",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_bbs_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "unlock_eligible_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "sync_current_missions",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "bind_kpi_acquisition_subject_v1",
+        "status": 200
+      },
+      {
+        "rpc": "sync_legacy_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "process_login_bonus",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_power_snapshot",
+        "status": 200
+      },
+      {
+        "rpc": "sync_active_users",
+        "status": 200
+      },
+      {
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "rpc": "record_current_guild_login",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_profiles",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_leader_characters",
+        "status": 200
+      },
+      {
+        "rpc": "get_canonical_quest_progression",
+        "status": 200
+      },
+      {
+        "rpc": "bind_kpi_acquisition_subject_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "get_pending_mission_event_dialog",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_pending_ranking_reward_notification",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_raid_attempt_state",
+        "status": 200
+      },
+      {
+        "rpc": "issue_kpi_mypage_ready_context_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_recent_social_activity_feed",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_profiles",
+        "status": 200
+      },
+      {
+        "rpc": "acknowledge_kpi_first_mypage_access_v1",
+        "status": 409
+      },
+      {
+        "rpc": "get_public_pvp_rankings",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_onboarding_state",
+        "status": 200
+      },
+      {
+        "rpc": "record_kpi_acquisition_landing_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_bbs_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "unlock_eligible_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "bind_kpi_acquisition_subject_v1",
+        "status": 200
+      },
+      {
+        "rpc": "sync_current_missions",
+        "status": 200
+      },
+      {
+        "rpc": "sync_legacy_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "record_kpi_acquisition_observation_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_power_snapshot",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_onboarding_state",
+        "status": 200
+      },
+      {
+        "rpc": "sync_active_users",
+        "status": 200
+      },
+      {
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_power_snapshot",
+        "status": 200
+      },
+      {
+        "rpc": "record_current_guild_login",
+        "status": 200
+      },
+      {
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "rpc": "get_pending_mission_event_dialog",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_pending_ranking_reward_notification",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "get_recent_social_activity_feed",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      }
+    ]
+  },
+  {
+    "role": "rescue",
+    "login": "PASS",
+    "reload": "PASS",
+    "calls": [
+      {
+        "rpc": "record_kpi_acquisition_landing_v1",
+        "status": 200
+      },
+      {
+        "rpc": "record_kpi_acquisition_observation_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_onboarding_state",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_bbs_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "unlock_eligible_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "bind_kpi_acquisition_subject_v1",
+        "status": 200
+      },
+      {
+        "rpc": "sync_legacy_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "process_login_bonus",
+        "status": 200
+      },
+      {
+        "rpc": "sync_current_missions",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "sync_active_users",
+        "status": 200
+      },
+      {
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "rpc": "record_current_guild_login",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_power_snapshot",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_profiles",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_leader_characters",
+        "status": 200
+      },
+      {
+        "rpc": "get_canonical_quest_progression",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_raid_attempt_state",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "bind_kpi_acquisition_subject_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_pending_mission_event_dialog",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_pending_ranking_reward_notification",
+        "status": 200
+      },
+      {
+        "rpc": "get_recent_social_activity_feed",
+        "status": 200
+      },
+      {
+        "rpc": "issue_kpi_mypage_ready_context_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_profiles",
+        "status": 200
+      },
+      {
+        "rpc": "get_public_pvp_rankings",
+        "status": 200
+      },
+      {
+        "rpc": "acknowledge_kpi_first_mypage_access_v1",
+        "status": 409
+      },
+      {
+        "rpc": "record_kpi_acquisition_landing_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_onboarding_state",
+        "status": 200
+      },
+      {
+        "rpc": "get_direct_message_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_bbs_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "get_chat_unread_counts",
+        "status": 200
+      },
+      {
+        "rpc": "unlock_eligible_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "bind_kpi_acquisition_subject_v1",
+        "status": 200
+      },
+      {
+        "rpc": "sync_current_missions",
+        "status": 200
+      },
+      {
+        "rpc": "sync_legacy_user_cosmetics",
+        "status": 200
+      },
+      {
+        "rpc": "record_kpi_acquisition_observation_v1",
+        "status": 200
+      },
+      {
+        "rpc": "get_current_onboarding_state",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_power_snapshot",
+        "status": 200
+      },
+      {
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "get_active_mission_events",
+        "status": 200
+      },
+      {
+        "rpc": "get_pending_mission_event_dialog",
+        "status": 200
+      },
+      {
+        "rpc": "get_recent_social_activity_feed",
+        "status": 200
+      },
+      {
+        "rpc": "get_my_pending_ranking_reward_notification",
+        "status": 200
+      }
+    ]
+  }
+]

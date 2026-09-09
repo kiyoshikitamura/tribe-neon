@@ -1,0 +1,22 @@
+{
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "capturedAt": "2026-09-09T07:13:08.328Z",
+  "readOnly": true,
+  "rows": [
+    {
+      "request_id": "3ce0079f-7fc9-4348-a128-e71e55c4c896",
+      "room_id": "513fddee-eac1-481b-8b2b-8d273131bbef",
+      "replay_session_id": "b481f2d7-80db-425f-9786-123ae7d4f9f8",
+      "created_at": "2026-09-09 07:10:14.678332+00",
+      "recovery_acknowledged_at": "2026-09-09 07:11:50.162332+00",
+      "cost": "1",
+      "cost_type": "RAID_POINT",
+      "receipt_remaining": "3",
+      "finalization_status": "FINALIZED",
+      "replay_cost": "1",
+      "raid_points": 3,
+      "raid_points_last_recovered_at": "2026-09-09 05:18:54.994456+00",
+      "target_actor_request_count": 1
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "engine": "Native PostgreSQL 17 / isolated loopback 55462",
+  "limitations": [
+    "空データから列・制約・関数・triggerを再構成。実ユーザーはコピーしない。",
+    "AuthはGUC参照stub。Cronは実行しない。複数接続・Edge・UI受入ではない。"
+  ],
+  "steps": [
+    {
+      "name": "catalog reconstruction",
+      "status": "PASS",
+      "tables": 202,
+      "functions": 405
+    },
+    {
+      "name": "docs/development/raid-production-preparation/bundle/00-baseline-guard.sql",
+      "status": "PASS",
+      "unmodified": true
+    },
+    {
+      "name": "docs/development/raid-production-preparation/bundle/01-snapshot-dependency.sql",
+      "status": "PASS",
+      "unmodified": true
+    },
+    {
+      "name": "docs/development/raid-production-preparation/bundle/02-raid-delta.sql",
+      "status": "PASS",
+      "unmodified": true
+    },
+    {
+      "name": "docs/development/raid-production-preparation/bundle/04-postflight.sql",
+      "status": "PASS",
+      "unmodified": true
+    },
+    {
+      "name": "Existing non-target function bodies and reconstructed ACL unchanged",
+      "status": "PASS",
+      "count": 379
+    },
+    {
+      "name": "Safe default flags, rewards disabled, new room RLS",
+      "status": "PASS"
+    },
+    {
+      "name": "Atomic rollback restores every reconstructed function and removes new Room schema",
+      "status": "PASS"
+    },
+    {
+      "name": "native psql docs/development/raid-production-preparation/bundle/review-apply.psql raid_commit=false",
+      "status": "PASS",
+      "unmodified": true,
+      "sha256": "a72d3297f98ec8ca84e71b172c3480331c4c57f0e2f3e0198eac916a81d8d8a7"
+    },
+    {
+      "name": "native psql docs/development/raid-production-preparation/bundle/review-apply.psql raid_commit=true",
+      "status": "PASS",
+      "unmodified": true,
+      "sha256": "a72d3297f98ec8ca84e71b172c3480331c4c57f0e2f3e0198eac916a81d8d8a7"
+    },
+    {
+      "name": "native psql docs/development/raid-production-preparation/bundle/05-stop-new-operations.sql raid_commit=true",
+      "status": "PASS",
+      "unmodified": true,
+      "sha256": "ea307347c3dba800496a1ab6657dab1624d9830d523ecaeb6c06d39d7797bde1"
+    },
+    {
+      "name": "Post-stage forward stop persists 4 false flags and preserves existing row counts/Cron metadata",
+      "status": "PASS",
+      "scope": "empty user data; pending replay continuation separately tested in 17-case fixture"
+    }
+  ],
+  "serverVersion": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+  "catalog": {
+    "observedAt": "2026-09-09T14:35:37.041623+00:00",
+    "projectRef": "ktpolnkyyfkowxdmijww",
+    "sha256": "d858719b490b282701a85647126eeab1cd5ec8791795e33e2efeecaaba8f08f2"
+  },
+  "inputs": [
+    {
+      "file": "docs/development/raid-production-preparation/bundle/01-snapshot-dependency.sql",
+      "sha256": "42076766fddb5fe9aefa3fb14c7dda88ab7b89b7d3ff4d0a7b2f1e9caa1703c5"
+    },
+    {
+      "file": "docs/development/raid-production-preparation/bundle/02-raid-delta.sql",
+      "sha256": "8c2d65e3a6ec2c615f3d6efbece9e1be0acb0e05070060b5da19b33dbabffd46"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "00-baseline-guard.sql",
+      "sha256": "cb0b62fe9a52c7a5984258563e394232e9c951fe64fcd010b92355488bf383e1"
+    },
+    {
+      "file": "03-expiry-cron.sql",
+      "sha256": "d95ca3d4419e0120cf961e8b2ba29272a2d0993410fd82eb612723f09620282c"
+    },
+    {
+      "file": "04-postflight.sql",
+      "sha256": "fc1f2ce45e8ce1be2313154593efed58c077e328e77e23724398a6e440490d35"
+    },
+    {
+      "file": "05-stop-new-operations.sql",
+      "sha256": "ea307347c3dba800496a1ab6657dab1624d9830d523ecaeb6c06d39d7797bde1"
+    },
+    {
+      "file": "review-apply.psql",
+      "sha256": "a72d3297f98ec8ca84e71b172c3480331c4c57f0e2f3e0198eac916a81d8d8a7"
+    },
+    {
+      "file": "SHA256SUMS",
+      "sha256": "642b274335305220d12b43d5b1087b2474e9b93050c298eb16b8bb5b7098a2b2"
+    }
+  ],
+  "viewsSha256": "ac04b6a00658839d7cdd3b27dbf1b45b4e22fcc40e613a5ed111216a810dc2d9",
+  "database": "raid_prod_rehearsal_1788965164920",
+  "status": "PARTIAL_PASS"
+}

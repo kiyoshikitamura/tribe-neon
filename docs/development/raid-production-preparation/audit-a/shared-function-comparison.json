@@ -1,0 +1,152 @@
+[
+  {
+    "name": "advance_ranking_season",
+    "args": "p_type text, p_at timestamp with time zone",
+    "productionMd5": "db75cb6d6d3c51ddf8572106354e8a71",
+    "step2Md5": "db75cb6d6d3c51ddf8572106354e8a71"
+  },
+  {
+    "name": "capture_daily_ranking_participation",
+    "args": "",
+    "productionMd5": "6d37f2cf32f9a109e1d58fb47601ef2e",
+    "step2Md5": "6d37f2cf32f9a109e1d58fb47601ef2e"
+  },
+  {
+    "name": "converge_ranking_lifecycle_safety",
+    "args": "p_at timestamp with time zone",
+    "productionMd5": "b9cd6ed53e6bcd61c83d1524bac0f364",
+    "step2Md5": "b9cd6ed53e6bcd61c83d1524bac0f364"
+  },
+  {
+    "name": "finalize_daily_ranking_rewards",
+    "args": "p_ranking_day_key date",
+    "productionMd5": "e127affe804f1e07c0e7decc67f66627",
+    "step2Md5": "e127affe804f1e07c0e7decc67f66627"
+  },
+  {
+    "name": "finalize_expired_raid_instance",
+    "args": "p_instance_id uuid",
+    "productionMd5": "cf6f969c0fead39caf03e938a3c8035a",
+    "step2Md5": "cf6f969c0fead39caf03e938a3c8035a"
+  },
+  {
+    "name": "finalize_raid_battle",
+    "args": "p_replay_id uuid, p_result jsonb",
+    "productionMd5": "4c163c4a20a5d53e582aef6ecbeb8c3b",
+    "step2Md5": "4c163c4a20a5d53e582aef6ecbeb8c3b"
+  },
+  {
+    "name": "finalize_raid_season_rewards",
+    "args": "p_season_id uuid",
+    "productionMd5": "89c6d881f5b0e51f078b4de76db374c2",
+    "step2Md5": "89c6d881f5b0e51f078b4de76db374c2"
+  },
+  {
+    "name": "get_active_raids",
+    "args": "",
+    "productionMd5": "0b7bd71d9f916fac8fc2d8f8cd602f27",
+    "step2Md5": "0b7bd71d9f916fac8fc2d8f8cd602f27"
+  },
+  {
+    "name": "get_active_ranking_seasons",
+    "args": "",
+    "productionMd5": "0f0721eaf180dcf132c8a1e3d9e79530",
+    "step2Md5": "0f0721eaf180dcf132c8a1e3d9e79530"
+  },
+  {
+    "name": "get_raid_rankings",
+    "args": "p_instance_id uuid",
+    "productionMd5": "198b233a6ac618d5818029d6d67ffd02",
+    "step2Md5": "198b233a6ac618d5818029d6d67ffd02"
+  },
+  {
+    "name": "get_raid_rankings",
+    "args": "p_instance_id uuid, p_limit integer, p_offset integer",
+    "productionMd5": "7c2d410943836b817d0bb398fbac589a",
+    "step2Md5": "7c2d410943836b817d0bb398fbac589a"
+  },
+  {
+    "name": "get_raid_season_rankings",
+    "args": "p_limit integer, p_offset integer",
+    "productionMd5": "cd2dc85cd79d886b60b2b799ae36fc6c",
+    "step2Md5": "cd2dc85cd79d886b60b2b799ae36fc6c"
+  },
+  {
+    "name": "grant_canonical_daily_ranking_reward",
+    "args": "p_ranking_day_key date, p_ranking_type text, p_recipient_user_id uuid, p_ranked_entity_id uuid, p_rank_position integer, p_score bigint",
+    "productionMd5": "d26ed8dac8eec639fece475cc09207ed",
+    "step2Md5": "d26ed8dac8eec639fece475cc09207ed"
+  },
+  {
+    "name": "grant_canonical_raid_day_clear_reward",
+    "args": "p_instance_id uuid, p_user_id uuid",
+    "productionMd5": "cdabfc06d5b97cba0eb421b0527209ac",
+    "step2Md5": "cdabfc06d5b97cba0eb421b0527209ac"
+  },
+  {
+    "name": "grant_canonical_raid_reward",
+    "args": "p_instance uuid, p_user uuid, p_type text, p_key text",
+    "productionMd5": "5a3f42643af32b17a44148ce925383d6",
+    "step2Md5": "5a3f42643af32b17a44148ce925383d6"
+  },
+  {
+    "name": "grant_canonical_ranking_season_reward",
+    "args": "p_season_id uuid, p_category text, p_recipient_user_id uuid, p_ranked_entity_id uuid, p_rank_position integer",
+    "productionMd5": "61bf30b7e2c5cec9c5ebff245cc9bb18",
+    "step2Md5": "61bf30b7e2c5cec9c5ebff245cc9bb18"
+  },
+  {
+    "name": "grant_raid_reward",
+    "args": "p_instance_id uuid, p_user_id uuid, p_reward_id integer, p_reason text",
+    "productionMd5": "faef18f9bfda9ee5283f7d4828baf30a",
+    "step2Md5": "faef18f9bfda9ee5283f7d4828baf30a"
+  },
+  {
+    "name": "initialize_current_player",
+    "args": "p_username text",
+    "productionMd5": "6e5b13312b51d1f956fed288b72ea106",
+    "step2Md5": "6e5b13312b51d1f956fed288b72ea106"
+  },
+  {
+    "name": "initialize_current_player",
+    "args": "p_username text, p_invite_code text",
+    "productionMd5": "c50b9a91b3dc7cd968ce11e82acb093d",
+    "step2Md5": "c50b9a91b3dc7cd968ce11e82acb093d"
+  },
+  {
+    "name": "on_canonical_daily_activity_finalized",
+    "args": "",
+    "productionMd5": "bcd652c487ca970f1bb448cfaab67478",
+    "step2Md5": "bcd652c487ca970f1bb448cfaab67478"
+  },
+  {
+    "name": "on_canonical_guild_official_battle_exp",
+    "args": "",
+    "productionMd5": "5895d93648d1f4ca012a05794b5608a9",
+    "step2Md5": "5895d93648d1f4ca012a05794b5608a9"
+  },
+  {
+    "name": "raid_season_reset",
+    "args": "",
+    "productionMd5": "f3a9d94dc4982e5fdec0c6e9711625c9",
+    "step2Md5": "f3a9d94dc4982e5fdec0c6e9711625c9"
+  },
+  {
+    "name": "respawn_cleared_raid_slot",
+    "args": "p_cleared_instance_id uuid",
+    "productionMd5": "6d69b483885138f73d785d5b0799e2d2",
+    "step2Md5": "6d69b483885138f73d785d5b0799e2d2"
+  },
+  {
+    "name": "rotate_daily_raids",
+    "args": "",
+    "productionMd5": "78acdf6b00285ef001ea8c0d753eeab5",
+    "step2Md5": "78acdf6b00285ef001ea8c0d753eeab5"
+  },
+  {
+    "name": "start_raid_battle",
+    "args": "p_instance_id uuid, p_character_ids text[], p_tactic text",
+    "productionMd5": "51c403bd073c8cb3841c366e774ecddc",
+    "step2Md5": "51c403bd073c8cb3841c366e774ecddc"
+  }
+]

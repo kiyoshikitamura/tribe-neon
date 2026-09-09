@@ -1,0 +1,312 @@
+BEGIN
+SET
+SET
+SET
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+CREATE FUNCTION
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE INDEX
+CREATE INDEX
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+REVOKE
+CREATE FUNCTION
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+CREATE TABLE
+ALTER TABLE
+REVOKE
+INSERT 0 4
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+COMMENT
+COMMENT
+COMMENT
+CREATE TABLE
+ALTER TABLE
+REVOKE
+INSERT 0 4
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+CREATE TABLE
+INSERT 0 1
+ALTER TABLE
+REVOKE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+INSERT 0 1
+ALTER TABLE
+REVOKE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+REVOKE
+GRANT
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+GRANT
+ALTER TABLE
+CREATE INDEX
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 1
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+REVOKE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 4
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TABLE
+INSERT 0 4
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE TRIGGER
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE TABLE
+INSERT 0 1
+ALTER TABLE
+REVOKE
+COMMENT
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+REVOKE
+GRANT
+CREATE SCHEMA
+REVOKE
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+REVOKE
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+COMMENT
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+GRANT
+CREATE FUNCTION
+REVOKE
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE SCHEMA
+CREATE TABLE
+ALTER TABLE
+REVOKE
+CREATE FUNCTION
+REVOKE
+GRANT
+GRANT
+CREATE FUNCTION
+REVOKE
+GRANT
+CREATE FUNCTION
+DO
+ nspname |                 proname                  |                                            pg_get_function_identity_arguments                                             | pg_get_function_result | prosecdef |            proconfig            |                     proacl                     
+---------+------------------------------------------+---------------------------------------------------------------------------------------------------------------------------+------------------------+-----------+---------------------------------+------------------------------------------------
+ public  | _issue_raid_room_clear_rewards_v1        | p_room_id uuid                                                                                                            | integer                | t         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _issue_raid_room_rescue_rewards_v1       | p_room_id uuid                                                                                                            | integer                | t         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _raid_room_add_member_v1                 | p_room_id uuid, p_user_id uuid                                                                                            | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _raid_room_clear_reward_progress_v1      | p_room_id uuid, p_user_id uuid                                                                                            | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _raid_room_power_gate_v1                 | p_difficulty text, p_power bigint                                                                                         | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _raid_room_register_v1                   | p_instance_id uuid, p_owner_user_id uuid, p_difficulty_id text                                                            | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _raid_room_rescue_gate_v1                | p_difficulty text, p_via_rescue boolean, p_finalized_battles bigint, p_contribution_damage bigint, p_room_cleared boolean | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | _raid_room_rescue_reward_progress_v1     | p_room_id uuid, p_user_id uuid                                                                                            | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | acknowledge_raid_room_battle_recovery_v1 | p_request_id uuid                                                                                                         | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | cancel_raid_room_battle_request_v1       | p_request_id uuid                                                                                                         | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | create_raid_room_v1                      | p_difficulty_id text, p_raid_variant_id text, p_request_id uuid                                                           | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | finalize_expired_raid_room_v1            | p_room_id uuid                                                                                                            | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,service_role=X/postgres}
+ public  | finalize_expired_raid_rooms_v1           | p_limit integer                                                                                                           | integer                | t         | {search_path=pg_catalog}        | {postgres=X/postgres,service_role=X/postgres}
+ public  | finalize_raid_room_battle_v1             | p_replay_id uuid, p_result jsonb                                                                                          | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,service_role=X/postgres}
+ public  | get_raid_battle_route_v1                 | p_replay_id uuid                                                                                                          | text                   | t         | {search_path=pg_catalog}        | {postgres=X/postgres,service_role=X/postgres}
+ public  | get_raid_room_battle_result_v1           | p_replay_id uuid                                                                                                          | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_battle_start_receipt_v1    | p_request_id uuid                                                                                                         | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_briefing_v1                | p_room_id uuid                                                                                                            | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_clear_reward_v1            | p_room_id uuid                                                                                                            | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_display_v1                 | p_room_id uuid                                                                                                            | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_participants_v1            | p_room_id uuid, p_limit integer, p_offset integer                                                                         | jsonb                  | t         | {"search_path=public, pg_temp"} | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_rescue_reward_v1           | p_room_id uuid                                                                                                            | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_rescue_status_v1           | p_room_id uuid                                                                                                            | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_rescue_v1                  | p_rescue_id uuid                                                                                                          | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | get_raid_room_v1                         | p_room_id uuid                                                                                                            | jsonb                  | t         | {"search_path=public, pg_temp"} | {postgres=X/postgres,authenticated=X/postgres}
+ public  | join_raid_room_rescue_v1                 | p_rescue_id uuid                                                                                                          | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | list_raid_room_battle_recoveries_v1      | p_limit integer                                                                                                           | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | list_raid_room_boss_choices_v1           |                                                                                                                           | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | list_raid_room_cards_v1                  | p_difficulty_id text, p_offset integer                                                                                    | jsonb                  | f         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | list_raid_rooms_v1                       | p_difficulty_id text, p_limit integer, p_offset integer                                                                   | jsonb                  | t         | {"search_path=public, pg_temp"} | {postgres=X/postgres,authenticated=X/postgres}
+ public  | on_raid_room_clear_reward_finalized_v1   |                                                                                                                           | trigger                | t         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | on_raid_room_rescue_reward_finalized_v1  |                                                                                                                           | trigger                | t         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | raid_room_can_read_v1                    | p_room_id uuid                                                                                                            | boolean                | t         | {search_path=pg_catalog}        | {postgres=X/postgres}
+ public  | raid_room_projection_v1                  | p_room_id uuid                                                                                                            | jsonb                  | t         | {"search_path=public, pg_temp"} | {postgres=X/postgres}
+ public  | register_raid_room_v1                    | p_room_id uuid                                                                                                            | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | request_raid_room_rescue_v1              | p_room_id uuid, p_request_id uuid                                                                                         | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+ public  | start_raid_room_battle_v1                | p_room_id uuid, p_character_ids text[], p_tactic text, p_request_id uuid                                                  | jsonb                  | t         | {search_path=pg_catalog}        | {postgres=X/postgres,authenticated=X/postgres}
+(37 rows)
+
+DO
+NOTIFY
+ROLLBACK
+psql:docs/development/raid-production-preparation/bundle/02-raid-delta.sql:3466: NOTICE:  schema "private" already exists, skipping

@@ -1,18 +1,16 @@
 'use client';
 
-import React, { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { RaidParticipantDto, RaidRewardDto } from '../../../domain/raidRoom';
 import type { RaidRoomResource } from '../../../domain/raidRoomClient';
 import CanonicalDialog from '../ui/CanonicalDialog';
 import OutlawButton from '../ui/OutlawButton';
-import { getCharacterPresentationMetadata } from '../character/characterPresentationMetadata';
+import UserAvatar from '../profile/UserAvatar';
 import './RaidRoomDialogs.css';
 
 function ParticipantPortrait({ url }: { url: string }) {
-  const crop = getCharacterPresentationMetadata(url);
-  const style = { '--raid-dialog-portrait-scale': url.startsWith('data:') ? 1 : crop.thumbnailScale, '--raid-dialog-portrait-x': `${crop.thumbnailX}%`, '--raid-dialog-portrait-y': `${crop.thumbnailY}%` } as CSSProperties;
-  return <img src={url} alt="" style={style} onError={event => { event.currentTarget.hidden = true; }} />;
+  return <UserAvatar src={url} alt="" />;
 }
 
 export interface RaidRoomDialogsProps {
@@ -36,6 +34,9 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
   const request = useRef(0);
   const [openingProfile, setOpeningProfile] = useState(false);
   const [profileError, setProfileError] = useState(false);
+  // Opening is complete once the profile shell is visible, not when its data arrives.
+  // This allows close -> participant list -> another profile during a slow request.
+  if (openingProfile && profileOpen) setOpeningProfile(false);
   const key = `${currentUserId ?? ''}:${roomId ?? ''}:${kind ?? ''}`;
   const activeKey = useRef(key);
   const visible = !!kind && !!roomId && !openingProfile && !profileOpen;
@@ -54,7 +55,7 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
     setProfileError(false); setOpeningProfile(true);
     try { await onOpenProfile(userId); }
     catch { if (version === request.current) setProfileError(true); }
-    finally { setOpeningProfile(false); }
+    finally { if (version === request.current) setOpeningProfile(false); }
   };
   if (!visible || !kind || !roomId || typeof document === 'undefined') return null;
   return createPortal(<div className="raid-room-dialogs" ref={host}>
@@ -69,7 +70,7 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
         {participants.status === 'success' && <ul className="raid-room-dialogs__participants">{participants.data?.map(participant => <li key={participant.player.userId}>
           <button type="button" className="raid-room-dialogs__person" disabled={!onOpenProfile} data-profile-user={participant.player.userId} onClick={() => void openProfile(participant.player.userId)} aria-label={`${participant.player.name}のプロフィール`}>
             <span className="raid-room-dialogs__person-head"><span className="raid-room-dialogs__avatar">{participant.player.leaderIconUrl.status === 'available' && participant.player.leaderIconUrl.value && <ParticipantPortrait url={participant.player.leaderIconUrl.value} />}</span>
-            <span className="raid-room-dialogs__identity"><strong>{participant.player.name}</strong><span>{participant.player.userId === ownerUserId ? '主催者' : '参加者'}{participant.player.userId === currentUserId ? '・あなた' : ''}</span><span>{participant.currentGuild.status === 'available' ? participant.currentGuild.value?.name ?? 'Guild未所属' : 'Guild未取得'}</span></span>
+            <span className="raid-room-dialogs__identity"><strong>{participant.player.name}</strong><span>{participant.player.userId === ownerUserId ? '挑戦者' : '参加者'}{participant.player.userId === currentUserId ? '・あなた' : ''}</span><span>{participant.currentGuild.status === 'available' ? participant.currentGuild.value?.name ?? 'Guild未所属' : 'Guild未取得'}</span></span>
             <span className="raid-room-dialogs__chevron" aria-hidden="true">›</span>
             </span><span className="raid-room-dialogs__contribution"><span>貢献 {participant.appliedDamage.status === 'available' ? participant.appliedDamage.value.toLocaleString('ja-JP') : '未取得'}</span><span>{participant.finalizedBattles.status === 'available' ? `${participant.finalizedBattles.value.toLocaleString('ja-JP')}戦` : '戦数未取得'}</span></span>
           </button>

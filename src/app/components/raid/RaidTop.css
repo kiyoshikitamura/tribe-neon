@@ -5,7 +5,7 @@
 .raid-top .outlaw-section-header { margin: 0 0 12px; padding: 4px 0; background: none; border: 0; gap: 8px; }
 .raid-top .section-header-accent { width: 3px; height: 16px; background: var(--ui-combat); box-shadow: none; border-radius: 0; }
 .raid-top .section-header-title { font-family: inherit; font-size: 15px; line-height: 1.5; letter-spacing: .04em; text-shadow: none; }
-.raid-top .section-header-subtitle { font-family: inherit; font-size: 10px; letter-spacing: 0; color: var(--ui-text-secondary); }
+.raid-top .section-header-subtitle { font-family: inherit; font-size: 12px; letter-spacing: 0; color: var(--ui-text-secondary); }
 .raid-top .section-header-texts { flex-wrap: wrap; gap: 4px 8px; }
 .raid-top h3 { margin: 0; font-size: 16px; line-height: 1.45; overflow-wrap: anywhere; }
 .raid-top .outlaw-card { background: var(--ui-bg-surface); border-color: var(--ui-border); box-shadow: none; }
@@ -16,17 +16,22 @@
 .raid-top__arrows { display: flex; gap: 4px; flex-shrink: 0; }
 .raid-top__arrows .outlaw-button { padding: 0; width: 44px; font-size: 24px; }
 .raid-top__joined-list { display: grid; gap: 8px; }
-.raid-top__joined > .outlaw-card-inner { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 12px; }
-.raid-top__joined-visual { background: linear-gradient(160deg, var(--ui-bg-raised), var(--ui-bg-root)); border-radius: 4px; overflow: hidden; min-height: 156px; position: relative; }
+.raid-top__joined > .outlaw-card-inner { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px; }
+.raid-top__joined-visual { background: linear-gradient(160deg, var(--ui-bg-raised), var(--ui-bg-root)); border-radius: 4px; overflow: hidden; height: 96px; position: relative; }
 .raid-top__joined-visual img { width: 100%; height: 100%; position: absolute; object-fit: cover; object-position: 50% 10%; }
 .raid-top__joined-main { min-width: 0; }
-.raid-top__joined-main h3 { font-size: 14px; margin: 4px 0 8px; }
+.raid-top__joined-main h3 { font-size: 14px; margin: 2px 0; }
 .raid-top__eyebrow { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--ui-text-secondary); }
-.raid-top__joined-main .outlaw-button { margin-top: 8px; }
+.raid-top__challenger { margin: 2px 0 6px; font-size: 12px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.raid-top .raid-top__continue { padding-inline: 8px; min-width: 54px; }
+.raid-top__battle--compact .raid-top__hp-label { gap: 4px; }
+.raid-top__battle--compact .raid-top__hp-label strong { font-size: 15px; }
+.raid-top__battle--compact .raid-top__hp { margin: 4px 0; }
+.raid-top__battle--compact .raid-top__battle-meta { font-size: 11px; }
 .raid-top__battle { min-width: 0; }
 .raid-top__hp-label { display: flex; align-items: baseline; gap: 8px; font-size: 11px; }
 .raid-top__hp-label strong { font-size: 20px; line-height: 1.25; font-variant-numeric: tabular-nums; }
-.raid-top__state { margin-left: auto; font-size: 10px; color: var(--ui-text-secondary); text-align: right; }
+.raid-top__state { margin-left: auto; font-size: 11px; color: var(--ui-text-secondary); text-align: right; }
 .raid-top__hp { display: block; width: 100%; height: 6px; margin: 8px 0; border: 0; border-radius: 2px; overflow: hidden; background: var(--ui-bg-root); appearance: none; }
 .raid-top__hp::-webkit-progress-bar { background: var(--ui-bg-root); }
 .raid-top__hp::-webkit-progress-value { background: var(--ui-combat); border-radius: 2px; }
@@ -46,9 +51,9 @@
 .raid-top__caption { font-size: 10px; color: var(--ui-text-secondary); }
 .raid-top__guild { font-size: 11px; color: var(--ui-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .raid-top__avatar { width: 40px; height: 40px; flex: 0 0 40px; display: inline-flex; background: var(--ui-bg-raised); border: 1px solid var(--ui-border); border-radius: 50%; overflow: hidden; }
-.raid-top__avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 16%; }
+.raid-top__avatar > .user-avatar { width: 100%; height: 100%; }
 .raid-top__avatar svg { width: 100%; height: 100%; fill: var(--ui-text-disabled); }
-.raid-top__rescue-visual, .raid-top__target-visual { position: relative; isolation: isolate; overflow: hidden; height: 208px; background: var(--ui-bg-raised); }
+.raid-top__rescue-visual, .raid-top__target-visual { position: relative; isolation: isolate; overflow: hidden; height: 180px; background: var(--ui-bg-raised); }
 .raid-top__background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
 .raid-top__rescue-visual::after, .raid-top__target-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(7,10,16,.98) 0%, rgba(7,10,16,.65) 22%, transparent 70%); z-index: 1; pointer-events: none; }
 .raid-top__leader { position: absolute; right: 2%; top: 0; height: 128%; width: 72%; object-fit: contain; object-position: center top; filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)); }
@@ -61,13 +66,13 @@
 .raid-top__avatar-stack .raid-top__avatar { width: 28px; height: 28px; flex-basis: 28px; margin-left: -4px; }
 .raid-top__page-count { text-align: right; color: var(--ui-text-secondary); font-size: 11px; padding-top: 4px; font-variant-numeric: tabular-nums; }
 .raid-top__targets { display: grid; gap: 12px; }
-.raid-top__target-visual { height: 184px; }
+.raid-top__target-visual { height: 164px; }
 .raid-top__target-visual .raid-top__leader { height: 145%; width: 66%; right: -2%; }
 .raid-top__target-body { padding: 8px 12px 12px; display: flex; align-items: center; gap: 12px; }
 .raid-top__roster { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); flex: 1; min-width: 0; gap: 4px; }
 .raid-top__roster > span { aspect-ratio: 1; min-width: 0; overflow: hidden; border-radius: 4px; background: var(--ui-bg-raised); border: 1px solid var(--ui-border); }
 .raid-top__roster img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
-.raid-top__target-body .outlaw-button { width: 80px; flex: 0 0 80px; padding-inline: 8px; }
+.raid-top__target-body .outlaw-button { width: 112px; flex: 0 0 112px; padding-inline: 8px; }
 .raid-top__browse .outlaw-button { min-height: 52px; }
 .raid-top__browse .outlaw-button-inner { width: 100%; justify-content: space-between; }
 .raid-top__browse .outlaw-button-inner > span { font-size: 24px; }
@@ -80,3 +85,76 @@
 @media (prefers-reduced-motion: reduce) { .raid-top * { scroll-behavior: auto; } }
 /* 共通CharacterPresentationのthumbnail焦点をデータとして受け取る。 */
 .raid-top .raid-top__portrait { object-fit: cover; object-position: var(--raid-portrait-x) var(--raid-portrait-y); transform: scale(var(--raid-portrait-scale)); transform-origin: var(--raid-portrait-x) 12%; }
+
+/* 承認トップの横構成。表示のみを変更し、日次対象・参加区分は既存契約を使う。 */
+.raid-top__section { margin-bottom: 18px; }
+.raid-top .section-header-title { font-size: 18px; font-weight: 800; }
+.raid-top .outlaw-section-header { margin-bottom: 8px; }
+.raid-top .outlaw-card { border-color: #354455; border-radius: 6px; background: linear-gradient(115deg,#111b29,#0b131f); }
+.raid-top__joined > .outlaw-card-inner { grid-template-columns: 70px minmax(0,1fr) 62px; gap: 8px; padding: 6px 8px 6px 0; }
+.raid-top__joined-visual { height: 100%; min-height: 94px; border-radius: 0; background: none; }
+.raid-top__joined-visual img { object-fit: cover; object-position: center 8%; }
+.raid-top__joined-main h3 { font-size: 14px; line-height: 1.3; }
+.raid-top__challenger { margin-bottom: 3px; font-size: 11px; color: #bac5d3; }
+.raid-top__battle--compact { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 4px; }
+.raid-top__battle--compact .raid-top__hp-label { grid-column: 1/-1; }
+.raid-top__battle--compact .raid-top__hp { grid-column: 1/-1; grid-row: 3; }
+.raid-top__battle--compact .raid-top__battle-meta { grid-column: 2; grid-row: 2; font-size: 11px; }
+.raid-top__battle--compact .raid-top__hp-label { grid-row: 2; grid-column: 1; }
+.raid-top__battle--compact .raid-top__state { display: none; }
+.raid-top .raid-top__continue { min-width: 62px; padding: 8px 4px; }
+.raid-top__rescue > .outlaw-card-inner { position: relative; isolation: isolate; display: grid; grid-template-columns: 76px minmax(0,1fr); gap: 0 10px; padding: 10px 10px 10px 0; overflow: hidden; }
+.raid-top__requester-art { grid-column: 1; grid-row: 1/4; position: relative; min-height: 178px; overflow: hidden; background: linear-gradient(90deg,#17212b99,transparent); }
+.raid-top__requester-art > img { position: absolute; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.raid-top__rescue .raid-top__owner { grid-column: 2; padding: 0 0 5px; }
+.raid-top__rescue .raid-top__owner > .raid-top__avatar { display: none; }
+.raid-top__identity strong { color: #83dde5; font-size: 13px; }
+.raid-top__rescue-visual { grid-column: 2; position: static; height: auto; background: none; }
+.raid-top__rescue-visual .raid-top__background { opacity: .35; }
+.raid-top__rescue-visual .raid-top__leader { display: none; }
+.raid-top__rescue-visual::after { background: linear-gradient(90deg,#08111a33,#08111add 75%); z-index: -1; }
+.raid-top__rescue .raid-top__enemy-caption { position: static; margin-bottom: 6px; }
+.raid-top__rescue .raid-top__enemy-caption h3 { font-size: 16px; }
+.raid-top__rescue .raid-top__enemy-caption > span { font-size: 11px; margin: 0 0 2px; }
+.raid-top__rescue-body { grid-column: 2; padding: 0; }
+.raid-top__rescue .raid-top__hp-label strong { font-size: 18px; }
+.raid-top__rescue .raid-top__hp { margin: 4px 0; }
+.raid-top__rescue .raid-top__participants { min-height: 22px; margin: 4px 0 6px; }
+.raid-top__rescue .raid-top__avatar-stack .raid-top__avatar { width: 22px; height: 22px; flex-basis: 22px; }
+.raid-top__rescue-body > .outlaw-button:not(:disabled) { background: linear-gradient(180deg,#70531b,#352408); border-color: #d7b257; color: #fff4d5; }
+.raid-top__targets { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.raid-top__target-visual { height: 182px; }
+.raid-top__target-visual .raid-top__leader { height: 125%; width: 115%; right: -20%; top: 10px; object-position: center top; }
+.raid-top__target-visual::after { background: linear-gradient(90deg,#07101ac7,transparent 90%),linear-gradient(0deg,#07101a,transparent 35%); }
+.raid-top__target .raid-top__enemy-caption { top: 12px; left: 9px; right: 8px; bottom: auto; }
+.raid-top__target .raid-top__enemy-caption > span { font-size: 15px; font-weight: 800; color: white; }
+.raid-top__target .raid-top__enemy-caption h3 { max-width: 78%; font-size: 16px; line-height: 1.4; }
+.raid-top__target-body { flex-direction: column; gap: 6px; padding: 0 7px 8px; }
+.raid-top__roster { width: 100%; gap: 3px; }
+.raid-top__target-body .outlaw-button { width: 100%; flex: auto; padding-inline: 4px; font-size: 13px; letter-spacing: 0; }
+.raid-top__target-body .outlaw-button:not(:disabled) { background: linear-gradient(180deg,#126b7b,#0a3344); border-color: #53c8d8; color: #efffff; }
+.raid-top__browse .outlaw-button { min-height: 64px; padding: 10px 14px; }
+.raid-top__browse .raid-top__browse-copy { display: grid; gap: 4px; text-align: left; }
+.raid-top__browse-copy strong { font-size: 15px; }
+.raid-top__browse-copy small { font-size: 12px; font-weight: 400; color: #a0bdd1; }
+.raid-top__rescue-visual { isolation: auto; }
+.raid-top__joined-visual img { transform: scale(2.15); transform-origin: center 4%; }
+.raid-top__requester-art > img { transform: scale(1.85); transform-origin: center 4%; }
+.raid-top__rescue .raid-top__owner, .raid-top__rescue-body, .raid-top__requester-art { z-index: 2; }
+.raid-top__target-visual .raid-top__leader { transform: scale(1.35); transform-origin: center 10%; }
+.raid-top__target .raid-top__enemy-caption h3 { max-width: 68%; }
+.raid-top__rescue-body { display: grid; grid-template-columns: minmax(0,1fr) 108px; gap: 6px; align-items: end; }
+.raid-top__rescue-body > .outlaw-button { padding-inline: 4px; font-size: 12px; letter-spacing: 0; }
+.raid-top__rescue .raid-top__participants > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.raid-top__rescue .raid-top__battle-meta { flex-wrap: wrap; gap: 0 5px; font-size: 11px; }
+.raid-top__rescue .raid-top__hp-label { flex-wrap: wrap; gap: 2px 5px; }
+.raid-top__rescue .raid-top__state { margin-left: 0; }
+.raid-top__requester-art { min-height: 168px; }
+.raid-top__rescue-body > .raid-top__muted { grid-column: 1/-1; }
+.raid-top__rescue-track--multiple .raid-top__rescue-body { grid-template-columns: minmax(0,1fr); }
+.raid-top__rescue-track--multiple .raid-top__requester-art { min-height: 210px; }
+.raid-top__joined-visual { min-height: 74px; }
+.raid-top__requester-art { min-height: 130px; }
+.raid-top__target-visual { height: 150px; }
+.raid-top__target-visual .raid-top__leader { height: 140%; top: 0; }
+.raid-top__target-body { padding-top: 0; }

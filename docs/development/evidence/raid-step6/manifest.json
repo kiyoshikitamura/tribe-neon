@@ -1,0 +1,396 @@
+{
+  "sourceSha": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+  "sha256Scope": "Git blob bytes: text LF-normalized; PNG unchanged. originalSha256 records the collected worktree bytes before normalization.",
+  "artifacts": [
+    {
+      "file": "driver-manifest.json",
+      "bytes": 986,
+      "sha256": "f548745f59a7ac980e3eebf251960b9fcb2b287196b33a8069b562e11e1da28b",
+      "originalSha256": "f548745f59a7ac980e3eebf251960b9fcb2b287196b33a8069b562e11e1da28b"
+    },
+    {
+      "file": "driver-tool-transaction.sql",
+      "bytes": 145137,
+      "sha256": "28fa2bfddc43fe1a28ca961dfdff965c3723c3a9f46300732af9c0772a418d33",
+      "originalSha256": "28fa2bfddc43fe1a28ca961dfdff965c3723c3a9f46300732af9c0772a418d33"
+    },
+    {
+      "file": "restore-two-functions-review-only.sql",
+      "bytes": 5846,
+      "sha256": "b08ec72a3569d955e3a79fad9f3ab93db75e775c3b7164eb81e115643fe4df32",
+      "originalSha256": "b08ec72a3569d955e3a79fad9f3ab93db75e775c3b7164eb81e115643fe4df32"
+    },
+    {
+      "file": "parent-apply-result.json",
+      "bytes": 1559,
+      "sha256": "0b901127e8083084eedf649260231b6d1706ddea21d38346cbb7d2f7dbaf9fa8",
+      "originalSha256": "c2a01b35aebf8308287440487d37775157f0a0ba72cf8491df9bd536e7fbdc13"
+    },
+    {
+      "file": "postflight.json",
+      "bytes": 1849,
+      "sha256": "df7a4002d7344f78397c7bb260a3ba52bf5b00b331856ac44978dfd2339d6c77",
+      "originalSha256": "df7a4002d7344f78397c7bb260a3ba52bf5b00b331856ac44978dfd2339d6c77"
+    },
+    {
+      "file": "fresh-equipment-post.json",
+      "bytes": 433,
+      "sha256": "326a389ff07d3df1e93d6c4ee10cb753bc65d2a8ad899ab3241a666f7516566c",
+      "originalSha256": "326a389ff07d3df1e93d6c4ee10cb753bc65d2a8ad899ab3241a666f7516566c"
+    },
+    {
+      "file": "qa-hp-fixture-executed.sql",
+      "bytes": 6959,
+      "sha256": "b3b23f038b8c2629453ac7433d76c7e53f8f97da65d002144da34238cba3e373",
+      "originalSha256": "b3b23f038b8c2629453ac7433d76c7e53f8f97da65d002144da34238cba3e373"
+    },
+    {
+      "file": "qa-hp-fixture-result.json",
+      "bytes": 3278,
+      "sha256": "165b01ed8e6344f85bfd7e0e8ee6469be5a3fbb22a8433fe77925fa404e2fab7",
+      "originalSha256": "165b01ed8e6344f85bfd7e0e8ee6469be5a3fbb22a8433fe77925fa404e2fab7"
+    },
+    {
+      "file": "new-room-issued-presents.json",
+      "bytes": 1295,
+      "sha256": "c49a5af902ab2c53afd70a3a7bb22fe898b041893d2090809db9ad82f66c1c70",
+      "originalSha256": "c49a5af902ab2c53afd70a3a7bb22fe898b041893d2090809db9ad82f66c1c70"
+    },
+    {
+      "file": "final-protection-readback.json",
+      "bytes": 10747,
+      "sha256": "65b9e570b92e907e899ed7dec1d46ce1634932d2ee836da206bcfbef0f28229d",
+      "originalSha256": "65b9e570b92e907e899ed7dec1d46ce1634932d2ee836da206bcfbef0f28229d"
+    },
+    {
+      "file": "verification-lint.json",
+      "bytes": 6667,
+      "sha256": "895108a27c732492dc429e8572829ad6ed48d0d0c97c2bbecd7c278816c89a4f",
+      "originalSha256": "895108a27c732492dc429e8572829ad6ed48d0d0c97c2bbecd7c278816c89a4f"
+    },
+    {
+      "file": "deployment-readback.json",
+      "bytes": 744,
+      "sha256": "5b18a4ca9d0d05896ce104f0668714b20bfb3a0a0380f839d7c628e60d03470c",
+      "originalSha256": "5b18a4ca9d0d05896ce104f0668714b20bfb3a0a0380f839d7c628e60d03470c"
+    },
+    {
+      "file": "deployment-final-readback.json",
+      "bytes": 1015,
+      "sha256": "68a1343fb813c0b5c51b922abf07d4f726a000bb9226531460a881d0421b3017",
+      "originalSha256": "68a1343fb813c0b5c51b922abf07d4f726a000bb9226531460a881d0421b3017"
+    },
+    {
+      "file": "edge-source-match.json",
+      "bytes": 1054,
+      "sha256": "0cb1af794367506815b13222d4061816bf90d3be41a0733fd4d8497f4413eeff",
+      "originalSha256": "0cb1af794367506815b13222d4061816bf90d3be41a0733fd4d8497f4413eeff"
+    },
+    {
+      "file": "asset-get-readback.json",
+      "bytes": 3804,
+      "sha256": "6619c15731560bf654be68d639d33dada926ef7d175a379ffbca069053a69776",
+      "originalSha256": "6619c15731560bf654be68d639d33dada926ef7d175a379ffbca069053a69776"
+    },
+    {
+      "file": "preflight-roles.json",
+      "bytes": 2950,
+      "sha256": "38230a65eced671141ca2db51670fd5c1515f4e71d95e22a3834b13602b6c3c2",
+      "originalSha256": "38230a65eced671141ca2db51670fd5c1515f4e71d95e22a3834b13602b6c3c2"
+    },
+    {
+      "file": "top-http.json",
+      "bytes": 1068,
+      "sha256": "e434320886e8c081fa5612b60963c2f821ae9b78435a445906a2b974fe2d573f",
+      "originalSha256": "e434320886e8c081fa5612b60963c2f821ae9b78435a445906a2b974fe2d573f"
+    },
+    {
+      "file": "new-room-state.json",
+      "bytes": 3830,
+      "sha256": "0807897a3d423d3bc131def6e530cbf63fbd2457cd9ebf67966774b5018b18d1",
+      "originalSha256": "0807897a3d423d3bc131def6e530cbf63fbd2457cd9ebf67966774b5018b18d1"
+    },
+    {
+      "file": "new-room-projection.json",
+      "bytes": 716,
+      "sha256": "faf24c3ed6644aa070a608f90f9916e0a7d61d9239e626668dce52e9cc0c9404",
+      "originalSha256": "faf24c3ed6644aa070a608f90f9916e0a7d61d9239e626668dce52e9cc0c9404"
+    },
+    {
+      "file": "outside-daily.json",
+      "bytes": 126,
+      "sha256": "7d524f9eeea9ba77b9daade6792284eba48f2342e7556a215f9198f85d9f2832",
+      "originalSha256": "7d524f9eeea9ba77b9daade6792284eba48f2342e7556a215f9198f85d9f2832"
+    },
+    {
+      "file": "normal-battle.json",
+      "bytes": 42197,
+      "sha256": "2bd1ca0b011152298d2b3a82c4694f41db9038d0297d99d6bfbb508e7d06f32d",
+      "originalSha256": "2bd1ca0b011152298d2b3a82c4694f41db9038d0297d99d6bfbb508e7d06f32d"
+    },
+    {
+      "file": "qualification-host.json",
+      "bytes": 868,
+      "sha256": "5183c47698a1d5825d793e6829df09628b326fba2d034bfea06a597eb31c920c",
+      "originalSha256": "5183c47698a1d5825d793e6829df09628b326fba2d034bfea06a597eb31c920c"
+    },
+    {
+      "file": "qualification-rescue.json",
+      "bytes": 3917,
+      "sha256": "302a438efed097a966d2a593ae9a6803d2568260a08cea3a882a384a17baf71e",
+      "originalSha256": "302a438efed097a966d2a593ae9a6803d2568260a08cea3a882a384a17baf71e"
+    },
+    {
+      "file": "rescue-visibility-http.json",
+      "bytes": 3697,
+      "sha256": "f156532a5e1b6663ec858a6c245ff9e4ca05fc014602813b0979f454cdc7212c",
+      "originalSha256": "f156532a5e1b6663ec858a6c245ff9e4ca05fc014602813b0979f454cdc7212c"
+    },
+    {
+      "file": "browser-login.json",
+      "bytes": 9398,
+      "sha256": "6bbb0e558629d4f4665a3afd00aa8ef514770b4e65e0707e7a03dc88e59f7153",
+      "originalSha256": "6bbb0e558629d4f4665a3afd00aa8ef514770b4e65e0707e7a03dc88e59f7153"
+    },
+    {
+      "file": "normal-recovery-initial.json",
+      "bytes": 15704,
+      "sha256": "cef8cb11f3f35297ed5c2a9f9397b149ec3b73f343be9c2f330455345716042e",
+      "originalSha256": "cef8cb11f3f35297ed5c2a9f9397b149ec3b73f343be9c2f330455345716042e"
+    },
+    {
+      "file": "normal-recovery.json",
+      "bytes": 10720,
+      "sha256": "e6642ea5e946ac784cb38a1c7aa787653e5d34e2606f41cd1040b440a13ace97",
+      "originalSha256": "e6642ea5e946ac784cb38a1c7aa787653e5d34e2606f41cd1040b440a13ace97"
+    },
+    {
+      "file": "host-final-battle.json",
+      "bytes": 38307,
+      "sha256": "f5ae00b383cc3a0fb35177f72c5cd6e67bd19a22991ee612cb79a779fa691cf5",
+      "originalSha256": "f5ae00b383cc3a0fb35177f72c5cd6e67bd19a22991ee612cb79a779fa691cf5"
+    },
+    {
+      "file": "new-room-reward-claims.json",
+      "bytes": 1906,
+      "sha256": "07ad0c16cbc64652b47ad8f529363ce9bb52145cfac1a4db78e7ac61404434b7",
+      "originalSha256": "07ad0c16cbc64652b47ad8f529363ce9bb52145cfac1a4db78e7ac61404434b7"
+    },
+    {
+      "file": "host-final-ui.json",
+      "bytes": 24728,
+      "sha256": "fdfb6080e0bc3a2aea0c50fdedd4d84eac3b2f5dfa1d1e5958a537479f70f849",
+      "originalSha256": "fdfb6080e0bc3a2aea0c50fdedd4d84eac3b2f5dfa1d1e5958a537479f70f849"
+    },
+    {
+      "file": "daily-rescue-ui.json",
+      "bytes": 204,
+      "sha256": "e0b98ee9e2c57c4c67d7925959095647e98dc8adb590948f36845c3247203394",
+      "originalSha256": "e0b98ee9e2c57c4c67d7925959095647e98dc8adb590948f36845c3247203394"
+    },
+    {
+      "file": "normal-daily-rescue-ui.json",
+      "bytes": 2842,
+      "sha256": "3119873a9c68825b62f8299b58cd858f801c6ea5c3852401d619ebde2ae5b34c",
+      "originalSha256": "3119873a9c68825b62f8299b58cd858f801c6ea5c3852401d619ebde2ae5b34c"
+    },
+    {
+      "file": "rescue-daily-rescue-ui.json",
+      "bytes": 1655,
+      "sha256": "057f14fd4076c955fdea9f3c011d0df8f49fb3f2353565ca1412078cc0d26c33",
+      "originalSha256": "057f14fd4076c955fdea9f3c011d0df8f49fb3f2353565ca1412078cc0d26c33"
+    },
+    {
+      "file": "host-cleared-detail.png",
+      "bytes": 166992,
+      "sha256": "14803396b7a4c907c35f089162375d530268a87b27aabe6bc4375e949c543ffe",
+      "originalSha256": "14803396b7a4c907c35f089162375d530268a87b27aabe6bc4375e949c543ffe"
+    },
+    {
+      "file": "host-final-diagnostic.png",
+      "bytes": 227060,
+      "sha256": "fc46e2a33e865990b6cab2ff8744871aecb39c0291b87e8b12f480cbc8637084",
+      "originalSha256": "fc46e2a33e865990b6cab2ff8744871aecb39c0291b87e8b12f480cbc8637084"
+    },
+    {
+      "file": "host-final-result.png",
+      "bytes": 227668,
+      "sha256": "b5344335afd6c8376752c7919236daf11995c2c3bb561df7b11669e2f5204df0",
+      "originalSha256": "b5344335afd6c8376752c7919236daf11995c2c3bb561df7b11669e2f5204df0"
+    },
+    {
+      "file": "host-home.png",
+      "bytes": 335972,
+      "sha256": "5d90a058c6b96b74e27f80c8e62bdd0a2f03851abb977c80c3b2f872e62aa02d",
+      "originalSha256": "5d90a058c6b96b74e27f80c8e62bdd0a2f03851abb977c80c3b2f872e62aa02d"
+    },
+    {
+      "file": "host-participants-restored.png",
+      "bytes": 31365,
+      "sha256": "3ed7c02912eef47e4be33c1ef654008e0d4a921e50ac510d2f473d77cc037091",
+      "originalSha256": "3ed7c02912eef47e4be33c1ef654008e0d4a921e50ac510d2f473d77cc037091"
+    },
+    {
+      "file": "host-public-profile.png",
+      "bytes": 49694,
+      "sha256": "7aa20b28725e38c44939bd3daed9c3321e9e1394237c6576219af0ac5599b49f",
+      "originalSha256": "7aa20b28725e38c44939bd3daed9c3321e9e1394237c6576219af0ac5599b49f"
+    },
+    {
+      "file": "host-rewards-unclaimed-bottom.png",
+      "bytes": 56914,
+      "sha256": "3c927efb0c3adaba6d00ff183b6faef2bb4b52dc04d32f3327c666e585650108",
+      "originalSha256": "3c927efb0c3adaba6d00ff183b6faef2bb4b52dc04d32f3327c666e585650108"
+    },
+    {
+      "file": "host-rewards-unclaimed-top.png",
+      "bytes": 58936,
+      "sha256": "2f97456d1c616e61993823344283365ed5bf841273f06bfdb15c384c15baea84",
+      "originalSha256": "2f97456d1c616e61993823344283365ed5bf841273f06bfdb15c384c15baea84"
+    },
+    {
+      "file": "normal-ack-failed.png",
+      "bytes": 79891,
+      "sha256": "dfa2f7e8e85097d73453be419e340c7642f359fba9f733089ce0d9f9412f1b3b",
+      "originalSha256": "dfa2f7e8e85097d73453be419e340c7642f359fba9f733089ce0d9f9412f1b3b"
+    },
+    {
+      "file": "normal-activity-rescue.png",
+      "bytes": 50794,
+      "sha256": "e620159ffffd8e6b56c101764e652a22d5db71c404f7aff1748b1889fb9acdfa",
+      "originalSha256": "e620159ffffd8e6b56c101764e652a22d5db71c404f7aff1748b1889fb9acdfa"
+    },
+    {
+      "file": "normal-daily-diagnostic.png",
+      "bytes": 50810,
+      "sha256": "bbb46976f394a6a4411f9b3109877a26c92066300fea0dc70368033b58849224",
+      "originalSha256": "bbb46976f394a6a4411f9b3109877a26c92066300fea0dc70368033b58849224"
+    },
+    {
+      "file": "normal-daily-top.png",
+      "bytes": 261337,
+      "sha256": "e92f4926e9309dc7a83d41b479b3835e0c82302c109ac541938097d89802a06b",
+      "originalSha256": "e92f4926e9309dc7a83d41b479b3835e0c82302c109ac541938097d89802a06b"
+    },
+    {
+      "file": "normal-diagnostic.png",
+      "bytes": 79683,
+      "sha256": "1bfc6c6e31fd32cd5b02aa05c25c2b69b887a2306babe014ecdac4cefca56fad",
+      "originalSha256": "1bfc6c6e31fd32cd5b02aa05c25c2b69b887a2306babe014ecdac4cefca56fad"
+    },
+    {
+      "file": "normal-enemy-selection.png",
+      "bytes": 210211,
+      "sha256": "b9dc2d331d47f7764091b37503a700827e955ce110009873e59079018f0ce6fa",
+      "originalSha256": "b9dc2d331d47f7764091b37503a700827e955ce110009873e59079018f0ce6fa"
+    },
+    {
+      "file": "normal-home-loaded.png",
+      "bytes": 309085,
+      "sha256": "5fbb867e79676e2ff176aa26311ca92a8c34371521a6ea1fca31256881f2aeeb",
+      "originalSha256": "5fbb867e79676e2ff176aa26311ca92a8c34371521a6ea1fca31256881f2aeeb"
+    },
+    {
+      "file": "normal-participants-low-restored.png",
+      "bytes": 32144,
+      "sha256": "ea368f5a31f8be67aa0bcd998f9ee5a4122ce08d412242693cf167930d10be8c",
+      "originalSha256": "ea368f5a31f8be67aa0bcd998f9ee5a4122ce08d412242693cf167930d10be8c"
+    },
+    {
+      "file": "normal-profile-low.png",
+      "bytes": 71367,
+      "sha256": "f912094c6558fc4562dc4e8d7f22a0c580af224b81f73906baa9c53161cc5b2f",
+      "originalSha256": "f912094c6558fc4562dc4e8d7f22a0c580af224b81f73906baa9c53161cc5b2f"
+    },
+    {
+      "file": "normal-rescue-target.png",
+      "bytes": 167701,
+      "sha256": "dd252019b701d12368fe399b108c5a787e9d76ee73386d88968b892c3f93171b",
+      "originalSha256": "dd252019b701d12368fe399b108c5a787e9d76ee73386d88968b892c3f93171b"
+    },
+    {
+      "file": "normal-result.png",
+      "bytes": 256502,
+      "sha256": "20e1133969a6cf6d18cd24ec740e0fde5d7c976fe8b694e3396cd13d9351d318",
+      "originalSha256": "20e1133969a6cf6d18cd24ec740e0fde5d7c976fe8b694e3396cd13d9351d318"
+    },
+    {
+      "file": "normal-returned-room.png",
+      "bytes": 66293,
+      "sha256": "aabe7e1868d72395c41716ab57db38bcfdedcec1194f6a46487ae0f75167c939",
+      "originalSha256": "aabe7e1868d72395c41716ab57db38bcfdedcec1194f6a46487ae0f75167c939"
+    },
+    {
+      "file": "normal-rewards-claimed-bottom.png",
+      "bytes": 56867,
+      "sha256": "6467072d5061abd33c50599d7c39eba0530f009afc1b1a533cee284c52de8794",
+      "originalSha256": "6467072d5061abd33c50599d7c39eba0530f009afc1b1a533cee284c52de8794"
+    },
+    {
+      "file": "normal-rewards-claimed.png",
+      "bytes": 58944,
+      "sha256": "5fae12b19c07c3866cc93fea31bb9c4fa1550337b371f3d3379bfefde2140dae",
+      "originalSha256": "5fae12b19c07c3866cc93fea31bb9c4fa1550337b371f3d3379bfefde2140dae"
+    },
+    {
+      "file": "rescue-activity-rescue.png",
+      "bytes": 50890,
+      "sha256": "c1e29ecc444d1826d2df1ef23f7dc0207ec2a61d56c885d2e1addf74be2412cc",
+      "originalSha256": "c1e29ecc444d1826d2df1ef23f7dc0207ec2a61d56c885d2e1addf74be2412cc"
+    },
+    {
+      "file": "rescue-daily-top.png",
+      "bytes": 261697,
+      "sha256": "3a91282f4cd910382115285a68b8c6a98ef40a131b4c8b02e09b38551d8d4e3e",
+      "originalSha256": "3a91282f4cd910382115285a68b8c6a98ef40a131b4c8b02e09b38551d8d4e3e"
+    },
+    {
+      "file": "rescue-enemy-selection.png",
+      "bytes": 210521,
+      "sha256": "22d838d6138f66dd4304db910a998e66bed7b22fe673cb8f2563ec3562634e8d",
+      "originalSha256": "22d838d6138f66dd4304db910a998e66bed7b22fe673cb8f2563ec3562634e8d"
+    },
+    {
+      "file": "rescue-home-loaded.png",
+      "bytes": 314601,
+      "sha256": "1e79286834be8a25f68cbd2d1d377e3164b320e2b9445c4b956d41817f37a237",
+      "originalSha256": "1e79286834be8a25f68cbd2d1d377e3164b320e2b9445c4b956d41817f37a237"
+    },
+    {
+      "file": "rescue-home.png",
+      "bytes": 339959,
+      "sha256": "b76396a875753be4da2c3835946de7205735891b64fd8d94db927ca48867055d",
+      "originalSha256": "b76396a875753be4da2c3835946de7205735891b64fd8d94db927ca48867055d"
+    },
+    {
+      "file": "rescue-participants-low-restored.png",
+      "bytes": 32116,
+      "sha256": "3ee9f0264e70a1ccb0810cca2fa4d34e8919822d7ce7cbd1d46e89445c4297e5",
+      "originalSha256": "3ee9f0264e70a1ccb0810cca2fa4d34e8919822d7ce7cbd1d46e89445c4297e5"
+    },
+    {
+      "file": "rescue-profile-low.png",
+      "bytes": 57448,
+      "sha256": "b9b3b6a3d6e44e2340063e8130e43106bf4bad46a018a58fb9a305c1373f0be8",
+      "originalSha256": "b9b3b6a3d6e44e2340063e8130e43106bf4bad46a018a58fb9a305c1373f0be8"
+    },
+    {
+      "file": "rescue-rescue-target.png",
+      "bytes": 168061,
+      "sha256": "5c0e2509cfc406c0802aabcbc7515f6dd112272f7596bcfddf5d3db0a0dfdd55",
+      "originalSha256": "5c0e2509cfc406c0802aabcbc7515f6dd112272f7596bcfddf5d3db0a0dfdd55"
+    },
+    {
+      "file": "rescue-rewards-claimed-bottom.png",
+      "bytes": 54507,
+      "sha256": "4ffe290257d5eedeb6576237dbb7096a762a79544b1715045ff199c7a885088d",
+      "originalSha256": "4ffe290257d5eedeb6576237dbb7096a762a79544b1715045ff199c7a885088d"
+    },
+    {
+      "file": "rescue-rewards-claimed.png",
+      "bytes": 59195,
+      "sha256": "1e9c544a2a9364592c821aa182861539175878e9496bbd578d2149c0a809bb91",
+      "originalSha256": "1e9c544a2a9364592c821aa182861539175878e9496bbd578d2149c0a809bb91"
+    }
+  ]
+}

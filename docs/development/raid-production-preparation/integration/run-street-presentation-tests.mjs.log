@@ -1,0 +1,17 @@
+✔ Room viewer uses FIX Street UI, 30 rounds and skip; legacy retains its viewer (8.1986ms)
+✔ Room matchup uses FIX VS presentation (0.5867ms)
+✔ Room Result retains raw/applied/contribution/HP and Present guidance in Street layout (2.096ms)
+✔ Room Street skill recognition minimum is retained at accelerated speeds (0.1692ms)
+✔ Resultは同一Roomの確定receiptだけを表示しMVPとcontinueControlを保持 (15.3974ms)
+✔ 旧通知の通常攻撃は同じ対象に命中画像と数字を描画し、非対象には出さない (2.3347ms)
+✔ 旧通知のスキルは予告を先に出し、命中でカットインを退け、クリア時に画像も消す (4.8234ms)
+✔ 回復・シールドは打撃画像にしない (2.5758ms)
+✔ 通常・RaidのReplayはACTOR/IMPACT/RETURNと対象1件の描画を維持 (8.3406ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1028.4274

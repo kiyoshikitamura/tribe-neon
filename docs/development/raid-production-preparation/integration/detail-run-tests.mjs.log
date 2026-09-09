@@ -1,0 +1,93 @@
+✔ ownerは既知のroleを表示し参加者権限を維持 (175.1264ms)
+✔ memberは既知のroleを表示し参加者権限を維持 (32.8589ms)
+✔ rescueは既知のroleを表示し参加者権限を維持 (32.441ms)
+✔ not_joinedは既知のroleを表示し参加者権限を維持 (26.3152ms)
+✔ clearedを0/成功に置換しない (24.2375ms)
+✔ expiredを0/成功に置換しない (14.8208ms)
+✔ errorを0/成功に置換しない (18.9733ms)
+✔ unknownを0/成功に置換しない (14.7702ms)
+An update to RaidRoomDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+✔ no-guildを0/成功に置換しない (14.9104ms)
+✔ 読込中は文字なしspinner (4.6742ms)
+✔ 実プロフィールを開く間一覧を重ねず閉じると同一人/scroll位置へ復元 (135.1991ms)
+✔ プロフィール失敗は一覧に戻り再試行可能 (127.3628ms)
+✔ reward-unconfigured: 報酬予定と発行済みを区別 (12.4664ms)
+✔ reward-planned: 報酬予定と発行済みを区別 (40.3297ms)
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+✔ reward-issued: 報酬予定と発行済みを区別 (57.2633ms)
+✖ 実PG display出力を表示parserへ通し予定へのPresent/別room混入を拒否 (1.1779ms)
+✔ profile DM target and frameless identity self (7.3682ms)
+✔ profile DM target and frameless identity other (9.1364ms)
+✔ profile DM target and frameless identity undefined (6.3487ms)
+✔ close loading A restores list immediately; B survives late A and restores scroll (342.7729ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 19
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2318.739
+
+✖ failing tests:
+
+test at ..\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-tzHCfP\browser.test.cjs:9132:30
+✖ 実PG display出力を表示parserへ通し予定へのPresent/別room混入を拒否 (1.1779ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\game03-raid-production-preparation\outputs\raid-detail\actual-display.json'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-tzHCfP\browser.test.cjs:9135:29)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-09\\game03-raid-production-preparation\\outputs\\raid-detail\\actual-display.json'
+  }

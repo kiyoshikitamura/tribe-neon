@@ -2,6 +2,10 @@
 
 894bcb6を基準に84a1231の未包含の命中差分だけを統合。実Tutorialの通常攻撃/スキル命中、HP/数字同期、カットイン解除、SKIP非表示、Resultから継続までを配信受入工程へ追加。候補SHA・ローカル結果・実接続・人受入は [専用記録](character_release_tutorial_hit_gate.md) で分離管理。単独Deploy・DB変更なし。
 
+# 承認トップ構成への修正 — VALIDATED（ローカル）
+
+基準065e77a、共通素材894bcb6を限定採用。トップ4入口・挑戦者表記・共通Identity/Profile、自己DM非表示。型/Mock build、関連140件PASS。390x844/600の画面・位置保持・報酬スクロール確認。人の実機受入/実配信は未確認。外部変更なし。[報告](raid_approved_top_report.md)。
+
 # レイドUI 第4工程 — VALIDATED（ローカル、Preview/実機未受入）
 
 基準8665d29から専用branchで敵選択・敵情報・開催中一覧・救援・Resultを実装。既存Raid/Character/Setup/Gachaを保持。型/Mock build/lint0errors、Raid242＋共有5＋parser36、隔離PG22群、Setup/Gacha17と既知fixture2件PASS。181枚の画面証跡、未適用3SQL＋新表示SQL1本、接続範囲と残件は [統合報告](raid_step4_report.md)。実HTTP/Preview/物理端末の受入ではない。push/Deploy/外部DB適用/運用変更なし。

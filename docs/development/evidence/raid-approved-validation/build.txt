@@ -1,0 +1,63 @@
+
+> tribe-neon@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.2.10 (webpack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 17.6s
+  Running TypeScript ...
+  Finished TypeScript in 10.1s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/13) ...
+  Generating static pages using 15 workers (3/13)
+  Generating static pages using 15 workers (6/13)
+  Generating static pages using 15 workers (9/13)
+✓ Generating static pages using 15 workers (13/13) in 321ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin/kpi
+├ ƒ /admin/kpi/day/[date]
+├ ƒ /api/admin/kpi/marketing
+├ ƒ /api/admin/kpi/refresh
+├ ƒ /api/admin/kpi/snapshots
+├ ƒ /api/admin/kpi/timeseries
+├ ƒ /api/admin/kpi/v2/acquisition
+├ ƒ /api/admin/kpi/v2/community
+├ ƒ /api/admin/kpi/v2/daily
+├ ƒ /api/admin/kpi/v2/guild
+├ ƒ /api/admin/kpi/v2/marketing
+├ ƒ /api/admin/kpi/v2/post-tutorial
+├ ƒ /api/admin/kpi/v2/retention
+├ ƒ /api/admin/kpi/v2/tutorial
+├ ƒ /api/admin/kpi/v2/validation
+├ ƒ /api/kpi/identity-transition
+├ ○ /auth/callback
+├ ƒ /legal/commercial
+├ ƒ /legal/privacy
+├ ƒ /legal/terms
+├ ƒ /legal/tokusho
+├ ○ /manifest.webmanifest
+├ ○ /open
+├ ƒ /qa/audio
+├ ƒ /qa/battle-flow-v3
+├ ƒ /qa/battle-full-skill-load
+├ ƒ /qa/battle-live
+├ ƒ /qa/battle-presentation-v3
+├ ƒ /qa/presentation
+├ ƒ /qa/raid-detail
+├ ƒ /qa/raid-pages
+├ ƒ /qa/raid-room
+├ ƒ /qa/raid-top
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

@@ -80,7 +80,7 @@ function RescuePanel({ client, roomId, userId, disabled = false, setInteractionB
       <p>送信結果が未確認の救援依頼があります。</p>
       <OutlawButton loadingLabel="" disabled={busy || !userId} aria-label="救援依頼の送信結果を確認" onClick={request}>救援依頼の送信結果を確認</OutlawButton>
     </>}
-    {status && !status.isOwner && !status.viaRescue && <p className="raid-room-muted">救援依頼は主催者が送信します。</p>}
+    {status && !status.isOwner && !status.viaRescue && <p className="raid-room-muted">救援依頼は挑戦者が送信します。</p>}
     {status?.viaRescue && <p className="raid-rescue-panel__contribution">救援参加：{status.finalizedBattles.toLocaleString('ja-JP')}戦 ・ 貢献ダメージ {status.contributionDamage.toLocaleString('ja-JP')}</p>}
     {sent && <p role="status">救援依頼を送信しました。</p>}
     {error && <p role="alert">救援情報または保存情報を確認できませんでした。再度お試しください。</p>}

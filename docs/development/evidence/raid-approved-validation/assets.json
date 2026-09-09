@@ -1,0 +1,135 @@
+{
+  "source": "894bcb6cab5984e59ddd6a52cb41a5dbd19813b3",
+  "files": [
+    {
+      "path": "public/ui/rarity/attribute-badge-chaos.png",
+      "sourceBlob": "960a01e1ca6f3c53d27405ceb21043ef964dd39d",
+      "localBlob": "960a01e1ca6f3c53d27405ceb21043ef964dd39d"
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-evil.png",
+      "sourceBlob": "589d1253022b08240c04f9b35208bb96f85ff71f",
+      "localBlob": "589d1253022b08240c04f9b35208bb96f85ff71f"
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-justice.png",
+      "sourceBlob": "942104d6cbb05cce2dc697ab29f8f7ae5edb644b",
+      "localBlob": "942104d6cbb05cce2dc697ab29f8f7ae5edb644b"
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-order.png",
+      "sourceBlob": "40b172a62cc146729352f0ba4f8661b7b3943971",
+      "localBlob": "40b172a62cc146729352f0ba4f8661b7b3943971"
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-1.png",
+      "sourceBlob": "0ca941229fb1ec3341b735b4f93ea33170dfcefc",
+      "localBlob": "0ca941229fb1ec3341b735b4f93ea33170dfcefc"
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-2.png",
+      "sourceBlob": "22d1111d3c7b817c15cfb8f393e7587f327805ca",
+      "localBlob": "22d1111d3c7b817c15cfb8f393e7587f327805ca"
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-3.png",
+      "sourceBlob": "d3cd9b1b41615dc5c2ed4460f60aba3de0a57a56",
+      "localBlob": "d3cd9b1b41615dc5c2ed4460f60aba3de0a57a56"
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-4.png",
+      "sourceBlob": "27be76f728f18c3dd33e717dcd30b8c08c7cbbf4",
+      "localBlob": "27be76f728f18c3dd33e717dcd30b8c08c7cbbf4"
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-5.png",
+      "sourceBlob": "33baead52052f1341ccdd3d0c8ef51b3e5d9f3a7",
+      "localBlob": "33baead52052f1341ccdd3d0c8ef51b3e5d9f3a7"
+    },
+    {
+      "path": "public/ui/rarity/badge-new.png",
+      "sourceBlob": "186306b362e102d9e059201822946671ce364956",
+      "localBlob": "186306b362e102d9e059201822946671ce364956"
+    },
+    {
+      "path": "public/ui/rarity/character-card-n.png",
+      "sourceBlob": "d725ea28ed525ebe95fea3c3017641f6b34c2a5a",
+      "localBlob": "d725ea28ed525ebe95fea3c3017641f6b34c2a5a"
+    },
+    {
+      "path": "public/ui/rarity/character-card-r.png",
+      "sourceBlob": "afb0c68ee5d36a292f120d829ab0f8ec1e45c274",
+      "localBlob": "afb0c68ee5d36a292f120d829ab0f8ec1e45c274"
+    },
+    {
+      "path": "public/ui/rarity/character-card-sr.png",
+      "sourceBlob": "0a6945b6b2151071a2b101d513894c24cb98d1f6",
+      "localBlob": "0a6945b6b2151071a2b101d513894c24cb98d1f6"
+    },
+    {
+      "path": "public/ui/rarity/character-card-ssr.png",
+      "sourceBlob": "2a1ab25c40611a6b80174f1e561b6f52068c3848",
+      "localBlob": "2a1ab25c40611a6b80174f1e561b6f52068c3848"
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-n.png",
+      "sourceBlob": "d82c19680eb747ec0d0d1d8abd2ceb6b15b3ff72",
+      "localBlob": "d82c19680eb747ec0d0d1d8abd2ceb6b15b3ff72"
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-r.png",
+      "sourceBlob": "fd28f2a343b5a906c32b84c84103cbc2b9d607fd",
+      "localBlob": "fd28f2a343b5a906c32b84c84103cbc2b9d607fd"
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-sr.png",
+      "sourceBlob": "de9296fe9adcdad100676bb77ffc294396aa0d17",
+      "localBlob": "de9296fe9adcdad100676bb77ffc294396aa0d17"
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-ssr.png",
+      "sourceBlob": "146f70a363f320fa80886f12bd7bec5f3d9fa398",
+      "localBlob": "146f70a363f320fa80886f12bd7bec5f3d9fa398"
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-n.png",
+      "sourceBlob": "947692a97c1aa8402e81c1c326946f31fd4859cd",
+      "localBlob": "947692a97c1aa8402e81c1c326946f31fd4859cd"
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-r.png",
+      "sourceBlob": "42682185d97535ba5032ab5e8c439a5320e01908",
+      "localBlob": "42682185d97535ba5032ab5e8c439a5320e01908"
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-sr.png",
+      "sourceBlob": "ba324c157dcd4e524093fed00aec6f87b2cecbf2",
+      "localBlob": "ba324c157dcd4e524093fed00aec6f87b2cecbf2"
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-ssr.png",
+      "sourceBlob": "5f7b0004c834ab79737117050410b9cb0ddd5d85",
+      "localBlob": "5f7b0004c834ab79737117050410b9cb0ddd5d85"
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-n.png",
+      "sourceBlob": "d82c19680eb747ec0d0d1d8abd2ceb6b15b3ff72",
+      "localBlob": "d82c19680eb747ec0d0d1d8abd2ceb6b15b3ff72"
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-r.png",
+      "sourceBlob": "fd28f2a343b5a906c32b84c84103cbc2b9d607fd",
+      "localBlob": "fd28f2a343b5a906c32b84c84103cbc2b9d607fd"
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-sr.png",
+      "sourceBlob": "de9296fe9adcdad100676bb77ffc294396aa0d17",
+      "localBlob": "de9296fe9adcdad100676bb77ffc294396aa0d17"
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-ssr.png",
+      "sourceBlob": "146f70a363f320fa80886f12bd7bec5f3d9fa398",
+      "localBlob": "146f70a363f320fa80886f12bd7bec5f3d9fa398"
+    }
+  ]
+}

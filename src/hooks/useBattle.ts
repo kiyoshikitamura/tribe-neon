@@ -41,6 +41,7 @@ import {
 import { resolveBattleSkillLabel, safeBattleCharacterName } from "@/domain/presentation/battleSkillLabels";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { battleDisplayText } from "@/domain/presentation/battleTerminology";
+import { loadRaidReplayBackground, type RaidReplayBackground } from "@/domain/presentation/raidReplayBackground";
 
 export type { UseBattleOptions, ParticipantState, CardState, SkillLogItem };
 
@@ -418,6 +419,7 @@ async function runBattleStart(context: BattleStartContext,
     let officialRaidWinnerForBattle: "PLAYER" | "ENEMY" | null = null;
     let officialRaidEventsForBattle: ServerBattleEvent[] = [];
     let officialRaidResultForBattle: any | null = null;
+    let raidReplayBackground: RaidReplayBackground | undefined;
     let patrolPresentationEntered = false;
 
     const releaseFailedPatrolTransition = (message: string) => {
@@ -1344,6 +1346,18 @@ async function runBattleStart(context: BattleStartContext,
         if (staleRoomUser()) return;
         const events=serverBattleEvents(resolvedReplay?.events);
         if(resolveError||!resolvedReplay?.winner||!events.length||(roomBriefing && (resolvedReplay.roomId !== roomBriefing.roomId || !["PLAYER", "ENEMY"].includes(resolvedReplay.winner)))){setBattleLoading(false);setErrorMessage("レイド結果をサーバーで確定できませんでした。");return;}
+        if (roomBriefing) {
+          raidReplayBackground = await loadRaidReplayBackground(async (replayId, userId) => {
+            const { data, error } = await supabase.from('battle_replay_sessions')
+              .select('id,battle_mode,source_reference_id,official_context')
+              .eq('id', replayId).eq('requester_user_id', userId).maybeSingle();
+            return { data: data as unknown, error };
+          }, {
+            replayId: replaySessionId, roomId: roomBriefing.roomId, userId: startingRoomUserId,
+            sourceReferenceId: roomBriefing.raidBossInstanceId,
+          }, replayCreation.data, resolvedReplay);
+          if (staleRoomUser()) return;
+        }
         const { data: grantedRewards, error: rewardProjectionError } = roomBriefing
           ? { data: [], error: null }
           : await supabase.rpc("get_current_raid_battle_rewards", { p_replay_id: replaySessionId });
@@ -1440,8 +1454,8 @@ async function runBattleStart(context: BattleStartContext,
       opponentLeaderName: presentationOverride?.opponentLeaderName || opponentLeader?.name,
       opponentTotalPower: presentationOverride?.opponentTotalPower,
       opponentProfile: presentationOverride?.opponentProfile,
-      backgroundPath: presentationOverride?.backgroundPath,
-      backgroundLabel: presentationOverride?.backgroundLabel,
+      backgroundPath: raidReplayBackground?.backgroundPath ?? presentationOverride?.backgroundPath,
+      backgroundLabel: raidReplayBackground?.backgroundLabel ?? presentationOverride?.backgroundLabel,
       opponentSkills: presentationOverride?.opponentSkills,
     };
 

@@ -1,0 +1,86 @@
+[
+  {
+    "src": "/characters/go_transparent_asset.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/character-card-ssr.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_cash.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_dia.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/equipment-frame-n.png",
+    "loaded": true
+  },
+  {
+    "src": "/equipments/weapon_001.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/equipment-frame-n.png",
+    "loaded": true
+  },
+  {
+    "src": "/equipments/head_001.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/equipment-frame-n.png",
+    "loaded": true
+  },
+  {
+    "src": "/equipments/body_001.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/equipment-frame-n.png",
+    "loaded": true
+  },
+  {
+    "src": "/equipments/legs_001.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/equipment-frame-n.png",
+    "loaded": true
+  },
+  {
+    "src": "/equipments/accessory_001.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/rarity/equipment-frame-n.png",
+    "loaded": true
+  },
+  {
+    "src": "/equipments/weapon_001.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_footer_mypage.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_community.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_footer_character.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_footer_gacha.png",
+    "loaded": true
+  },
+  {
+    "src": "/ui/icon_footer_shop.png",
+    "loaded": true
+  }
+]

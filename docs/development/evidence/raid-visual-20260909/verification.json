@@ -1,0 +1,937 @@
+{
+  "scope": "local Mock presentation; external requests blocked",
+  "results": [
+    {
+      "height": 844,
+      "scenario": "approved",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 362,
+          "height": 196.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 108,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 664.6875
+        },
+        {
+          "x": 199,
+          "y": 664.6875
+        }
+      ]
+    },
+    {
+      "height": 844,
+      "scenario": "multiple",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 846.015625
+        },
+        {
+          "x": 199,
+          "y": 846.015625
+        }
+      ]
+    },
+    {
+      "height": 844,
+      "scenario": "empty",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 122
+        },
+        {
+          "x": 199,
+          "y": 122
+        }
+      ]
+    },
+    {
+      "height": 844,
+      "scenario": "long-name",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 264.875
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 264.875
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 264.875
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 864.859375
+        },
+        {
+          "x": 199,
+          "y": 864.859375
+        }
+      ]
+    },
+    {
+      "height": 844,
+      "scenario": "broken-image",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 846.015625
+        },
+        {
+          "x": 199,
+          "y": 846.015625
+        }
+      ]
+    },
+    {
+      "height": 600,
+      "scenario": "approved",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 362,
+          "height": 196.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 108,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 664.6875
+        },
+        {
+          "x": 199,
+          "y": 664.6875
+        }
+      ]
+    },
+    {
+      "height": 600,
+      "scenario": "multiple",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 846.015625
+        },
+        {
+          "x": 199,
+          "y": 846.015625
+        }
+      ]
+    },
+    {
+      "height": 600,
+      "scenario": "empty",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 122
+        },
+        {
+          "x": 199,
+          "y": 122
+        }
+      ]
+    },
+    {
+      "height": 600,
+      "scenario": "long-name",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 264.875
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 264.875
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 264.875
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 864.859375
+        },
+        {
+          "x": 199,
+          "y": 864.859375
+        }
+      ]
+    },
+    {
+      "height": 600,
+      "scenario": "broken-image",
+      "width": 362,
+      "scroll": 362,
+      "cards": [
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__joined",
+          "width": 362,
+          "height": 102.328125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__rescue",
+          "width": 325.796875,
+          "height": 246.03125
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        },
+        {
+          "type": "outlaw-card   raid-top__target",
+          "width": 177,
+          "height": 204
+        }
+      ],
+      "buttons": [
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "続きへ",
+          "width": 62,
+          "height": 44
+        },
+        {
+          "text": "‹",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "›",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "救援に向かう",
+          "width": 227.796875,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "この敵に挑む",
+          "width": 161,
+          "height": 44
+        },
+        {
+          "text": "開催中のレイドを探すほかの挑戦者に加勢する›",
+          "width": 362,
+          "height": 64
+        }
+      ],
+      "targets": [
+        {
+          "x": 14,
+          "y": 846.015625
+        },
+        {
+          "x": 199,
+          "y": 846.015625
+        }
+      ]
+    }
+  ],
+  "navigation": "4 entry callbacks PASS",
+  "errors": []
+}

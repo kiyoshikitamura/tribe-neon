@@ -3,3 +3,7 @@ docs/development/evidence/raid-room-persistent-20260908/*.sql text eol=lf
 scripts/raid-room/*.mjs text eol=lf
 docs/development/evidence/raid-room-connection-20260908/*.sql text eol=lf
 docs/development/evidence/raid-room-acceptance-20260908/*.sql text eol=lf
+
+# Fixed release evidence and SQL bundles must survive checkout byte-for-byte.
+docs/development/raid-production-preparation/** -text
+scripts/raid-production-rehearsal/*.mjs text eol=lf

@@ -1,0 +1,567 @@
+{
+  "rescues": {
+    "data": [
+      {
+        "room": {
+          "hp": {
+            "value": {
+              "max": 28000000,
+              "current": 27989136
+            },
+            "status": "available"
+          },
+          "owner": {
+            "value": {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            "status": "available"
+          },
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+          "endedAt": {
+            "value": null,
+            "status": "available"
+          },
+          "createdAt": {
+            "value": "2026-09-09T07:05:25.882034+00:00",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-10T07:05:25.882034+00:00",
+            "status": "available"
+          },
+          "difficultyId": "beginner",
+          "participantCount": {
+            "value": 3,
+            "status": "available"
+          },
+          "serverEligibility": {
+            "status": "unknown"
+          }
+        },
+        "enemy": {
+          "value": {
+            "variantId": "RAID_SHIBUYA_V1"
+          },
+          "status": "available"
+        },
+        "rescue": {
+          "value": {
+            "scope": "GUILD",
+            "source": "guild_chat",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "rescueId": "104bd824-6f72-4403-8cca-86188a2d7f24"
+          },
+          "status": "available"
+        },
+        "membership": {
+          "value": "rescue",
+          "status": "available"
+        },
+        "ownerGuild": {
+          "value": {
+            "name": "R0908Guild01",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+          },
+          "status": "available"
+        },
+        "participants": {
+          "value": [
+            {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908R01",
+              "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_koharu_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0909OUT",
+              "userId": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kaede_01",
+                "status": "available"
+              }
+            }
+          ],
+          "status": "available"
+        }
+      },
+      {
+        "room": {
+          "hp": {
+            "value": {
+              "max": 32000000,
+              "current": 31964392
+            },
+            "status": "available"
+          },
+          "owner": {
+            "value": {
+              "name": "R0908H01",
+              "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_karen_01",
+                "status": "available"
+              }
+            },
+            "status": "available"
+          },
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "roomId": "c796086c-9596-450c-ba20-1f067c7aff9b",
+          "endedAt": {
+            "value": null,
+            "status": "available"
+          },
+          "createdAt": {
+            "value": "2026-09-08T12:03:41.214526+00:00",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T12:03:41.214526+00:00",
+            "status": "available"
+          },
+          "difficultyId": "beginner",
+          "participantCount": {
+            "value": 3,
+            "status": "available"
+          },
+          "serverEligibility": {
+            "status": "unknown"
+          }
+        },
+        "enemy": {
+          "value": {
+            "variantId": "RAID_SHINJUKU_V1"
+          },
+          "status": "available"
+        },
+        "rescue": {
+          "value": {
+            "scope": "GUILD",
+            "source": "guild_chat",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "rescueId": "42e52826-05ec-4e96-af30-8737daaf46bf"
+          },
+          "status": "available"
+        },
+        "membership": {
+          "value": "rescue",
+          "status": "available"
+        },
+        "ownerGuild": {
+          "value": {
+            "name": "R0908Guild01",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+          },
+          "status": "available"
+        },
+        "participants": {
+          "value": [
+            {
+              "name": "R0908H01",
+              "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_karen_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908R01",
+              "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_koharu_01",
+                "status": "available"
+              }
+            }
+          ],
+          "status": "available"
+        }
+      }
+    ],
+    "status": "ready"
+  },
+  "dailyTargets": {
+    "data": {
+      "dateJst": "2026-09-09",
+      "targets": [
+        {
+          "variantId": "RAID_SHIBUYA_V1"
+        },
+        {
+          "variantId": "RAID_YOKOHAMA_V1"
+        }
+      ]
+    },
+    "status": "ready"
+  },
+  "participating": {
+    "data": [
+      {
+        "room": {
+          "hp": {
+            "value": {
+              "max": 35000000,
+              "current": 35000000
+            },
+            "status": "available"
+          },
+          "owner": {
+            "value": {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            "status": "available"
+          },
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "roomId": "49d374ae-1aeb-4a0b-b95d-0ecda3d3fbd2",
+          "endedAt": {
+            "value": null,
+            "status": "available"
+          },
+          "createdAt": {
+            "value": "2026-09-09T11:59:25.967353+00:00",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-10T11:59:25.967353+00:00",
+            "status": "available"
+          },
+          "difficultyId": "beginner",
+          "participantCount": {
+            "value": 2,
+            "status": "available"
+          },
+          "serverEligibility": {
+            "status": "unknown"
+          }
+        },
+        "enemy": {
+          "value": {
+            "variantId": "RAID_YOKOHAMA_V1"
+          },
+          "status": "available"
+        },
+        "rescue": {
+          "status": "unknown"
+        },
+        "membership": {
+          "value": "member",
+          "status": "available"
+        },
+        "ownerGuild": {
+          "value": {
+            "name": "R0908Guild01",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+          },
+          "status": "available"
+        },
+        "participants": {
+          "value": [
+            {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908R01",
+              "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_koharu_01",
+                "status": "available"
+              }
+            }
+          ],
+          "status": "available"
+        }
+      },
+      {
+        "room": {
+          "hp": {
+            "value": {
+              "max": 28000000,
+              "current": 27989136
+            },
+            "status": "available"
+          },
+          "owner": {
+            "value": {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            "status": "available"
+          },
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+          "endedAt": {
+            "value": null,
+            "status": "available"
+          },
+          "createdAt": {
+            "value": "2026-09-09T07:05:25.882034+00:00",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-10T07:05:25.882034+00:00",
+            "status": "available"
+          },
+          "difficultyId": "beginner",
+          "participantCount": {
+            "value": 3,
+            "status": "available"
+          },
+          "serverEligibility": {
+            "status": "unknown"
+          }
+        },
+        "enemy": {
+          "value": {
+            "variantId": "RAID_SHIBUYA_V1"
+          },
+          "status": "available"
+        },
+        "rescue": {
+          "status": "unknown"
+        },
+        "membership": {
+          "value": "rescue",
+          "status": "available"
+        },
+        "ownerGuild": {
+          "value": {
+            "name": "R0908Guild01",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+          },
+          "status": "available"
+        },
+        "participants": {
+          "value": [
+            {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908R01",
+              "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_koharu_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0909OUT",
+              "userId": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kaede_01",
+                "status": "available"
+              }
+            }
+          ],
+          "status": "available"
+        }
+      },
+      {
+        "room": {
+          "hp": {
+            "value": {
+              "max": 32000000,
+              "current": 31964392
+            },
+            "status": "available"
+          },
+          "owner": {
+            "value": {
+              "name": "R0908H01",
+              "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_karen_01",
+                "status": "available"
+              }
+            },
+            "status": "available"
+          },
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "roomId": "c796086c-9596-450c-ba20-1f067c7aff9b",
+          "endedAt": {
+            "value": null,
+            "status": "available"
+          },
+          "createdAt": {
+            "value": "2026-09-08T12:03:41.214526+00:00",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T12:03:41.214526+00:00",
+            "status": "available"
+          },
+          "difficultyId": "beginner",
+          "participantCount": {
+            "value": 3,
+            "status": "available"
+          },
+          "serverEligibility": {
+            "status": "unknown"
+          }
+        },
+        "enemy": {
+          "value": {
+            "variantId": "RAID_SHINJUKU_V1"
+          },
+          "status": "available"
+        },
+        "rescue": {
+          "status": "unknown"
+        },
+        "membership": {
+          "value": "rescue",
+          "status": "available"
+        },
+        "ownerGuild": {
+          "value": {
+            "name": "R0908Guild01",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+          },
+          "status": "available"
+        },
+        "participants": {
+          "value": [
+            {
+              "name": "R0908H01",
+              "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_karen_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908N01",
+              "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_kengo_01",
+                "status": "available"
+              }
+            },
+            {
+              "name": "R0908R01",
+              "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+              "leaderIconUrl": {
+                "status": "unknown"
+              },
+              "leaderCharacterId": {
+                "value": "char_koharu_01",
+                "status": "available"
+              }
+            }
+          ],
+          "status": "available"
+        }
+      }
+    ],
+    "status": "ready"
+  }
+}

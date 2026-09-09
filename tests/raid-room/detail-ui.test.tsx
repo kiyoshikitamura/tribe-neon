@@ -10,7 +10,7 @@ import PublicUserProfile from '../../src/app/components/profile/PublicUserProfil
 import {createDetailFixture,success,type DetailScenario} from '../../src/app/qa/raid-detail/detailFixture';
 afterEach(cleanup);
 function mount(scenario:DetailScenario){const f=createDetailFixture(scenario,Date.now());const calls:string[]=[];const view=render(<RaidRoomDetail {...f} rescue={undefined} now={Date.now()} busy={false} onParticipants={()=>calls.push('participants')} onRewards={()=>calls.push('rewards')} onEnemyInfo={()=>calls.push('enemy')} action={<button>既存アクション</button>}/>);return {view,calls,f};}
-for(const [scenario,label] of [['owner','主催者'],['member','通常参加'],['rescue','救援参加'],['not_joined','未参加']] as const)test(`${scenario}は既知のroleを表示し参加者権限を維持`,async()=>{const h=mount(scenario);await h.view.findByTestId('raid-room-detail');assert.ok(h.view.getAllByText(label).length);const button=h.view.getByRole('button',{name:'参加者一覧'});assert.equal(button.hasAttribute('disabled'),scenario==='not_joined');if(scenario!=='not_joined'){fireEvent.click(button);assert.deepEqual(h.calls,['participants']);}assert.doesNotMatch(h.view.container.textContent||'',/オンライン|楽勝|討伐困難/);});
+for(const [scenario,label] of [['owner','挑戦者'],['member','通常参加'],['rescue','救援参加'],['not_joined','未参加']] as const)test(`${scenario}は既知のroleを表示し参加者権限を維持`,async()=>{const h=mount(scenario);await h.view.findByTestId('raid-room-detail');assert.ok(h.view.getAllByText(label).length);const button=h.view.getByRole('button',{name:'参加者一覧'});assert.equal(button.hasAttribute('disabled'),scenario==='not_joined');if(scenario!=='not_joined'){fireEvent.click(button);assert.deepEqual(h.calls,['participants']);}assert.doesNotMatch(h.view.container.textContent||'',/オンライン|楽勝|討伐困難/);});
 for(const scenario of ['cleared','expired','error','unknown','no-guild'] as const)test(`${scenario}を0/成功に置換しない`,async()=>{const h=mount(scenario);await h.view.findByTestId('raid-room-detail');if(scenario==='unknown')assert.ok(h.view.getAllByText('未確認').length);if(scenario==='error')assert.ok(h.view.getAllByRole('alert').length);if(scenario==='no-guild')assert.ok(h.view.getByText('Guild未所属'));});
 test('読込中は文字なしspinner',async()=>{const h=mount('loading');assert.ok(h.view.getByRole('status'));assert.equal(h.view.container.textContent,'');});
 function ProfileRoundtrip(){const [f]=useState(()=>createDetailFixture('many',Date.now()));const [profile,setProfile]=useState<string|null>(null);return <><RaidRoomDialogs kind="participants" roomId={f.room.roomId} currentUserId={f.currentUserId} ownerUserId="qa-person-0" participants={f.participants} onClose={()=>{}} onRefresh={()=>{}} onOpenProfile={async id=>{setProfile(id);}} profileOpen={!!profile} rewards={success([])}/>{profile&&<PublicUserProfile profile={{id:profile,status:'ready',username:profile,level:30}} onClose={()=>setProfile(null)} onRetry={()=>{}}/>}</>;}
@@ -25,4 +25,32 @@ test('実PG display出力を表示parserへ通し予定へのPresent/別room混�
  const actual=JSON.parse(readFileSync('outputs/raid-detail/actual-display.json','utf8'));const calls:unknown[]=[];
  const result=await getRaidRoomDisplay({rpc:async(...args)=>{calls.push(args);return {data:actual,error:null};}},actual.roomId);assert.equal(result.membership,'rescue');assert.equal(result.clearPlan.status,'configured');assert.deepEqual(calls,[['get_raid_room_display_v1',{p_room_id:actual.roomId}]]);
  const bad=structuredClone(actual);bad.clearPlan.items[0].presentId='must-not-be-in-plan';await assert.rejects(()=>getRaidRoomDisplay({rpc:async()=>({data:bad,error:null})},actual.roomId));await assert.rejects(()=>getRaidRoomDisplay({rpc:async()=>({data:actual,error:null})},'different-room'));
+});
+
+for(const viewer of ['self','other',undefined])test('profile DM target and frameless identity '+viewer,async()=>{const targets:string[]=[];const view=render(<PublicUserProfile profile={{id:'self',status:'ready',username:'QA',level:1,leaderCharacterId:'char_kengo_01',party:[{characterId:'char_kengo_01'}]}} currentUserId={viewer} onClose={()=>{}} onRetry={()=>{}} onDm={id=>targets.push(id)}/>);if(viewer==='other'){fireEvent.click(view.getByRole('button',{name:'DMを送る'}));assert.deepEqual(targets,['self']);}else assert.equal(view.queryByRole('button',{name:'DMを送る'}),null);assert.equal(view.container.querySelectorAll('.user-avatar .character-presentation-frame').length,0);assert.equal(view.container.querySelectorAll('.user-avatar').length,1);assert.equal(view.container.querySelectorAll('.public-profile-deck-icon .character-presentation-frame-layout').length,1);});
+
+// The profile shell must release the participant list before its slow request settles.
+import { act } from '@testing-library/react';
+import { useProfileRequestState } from '../../src/app/context/hooks/useProfileRequestState';
+test('close loading A restores list immediately; B survives late A and restores scroll', async()=>{
+  const responses=new Map<string,()=>void>();
+  function Harness(){
+    const [f]=useState(()=>createDetailFixture('many',Date.now()));
+    const profile=useProfileRequestState<{id:string;status:'loading'|'ready';username:string;level:number}>('viewer:raid');
+    return <><RaidRoomDialogs kind="participants" roomId={f.room.roomId} currentUserId={f.currentUserId} participants={f.participants} rewards={success([])} onClose={()=>{}} onRefresh={()=>{}} profileOpen={!!profile.value} onOpenProfile={async id=>{const request=profile.begin({id,status:'loading',username:id,level:1});await new Promise<void>(resolve=>responses.set(id,resolve));request.publish({id,status:'ready',username:id,level:1});}}/>{profile.value&&<PublicUserProfile profile={profile.value} onClose={()=>profile.set(null)} onRetry={()=>{}}/>}</>;
+  }
+  const view=render(<Harness/>);
+  document.querySelector<HTMLElement>('.raid-room-dialogs .canonical-dialog-body')!.scrollTop=480;
+  fireEvent.click(view.getByRole('button',{name:'確認用参加者10のプロフィール'}));
+  await view.findByRole('dialog',{name:/公開プロフィール/});
+  fireEvent.click(view.getByRole('button',{name:'閉じる'}));
+  await waitFor(()=>assert.equal(document.querySelector<HTMLElement>('.raid-room-dialogs .canonical-dialog-body')?.scrollTop,480));
+  fireEvent.click(view.getByRole('button',{name:'確認用参加者11のプロフィール'}));
+  await act(async()=>{responses.get('qa-person-10')!();});
+  await view.findByRole('heading',{name:'qa-person-10'});
+  await act(async()=>{responses.get('qa-person-9')!();});
+  assert.ok(view.getByRole('heading',{name:'qa-person-10'}));
+  assert.equal(view.getAllByRole('dialog').length,1);
+  fireEvent.click(view.getByRole('button',{name:'閉じる'}));
+  await waitFor(()=>assert.equal(document.querySelector<HTMLElement>('.raid-room-dialogs .canonical-dialog-body')?.scrollTop,480));
 });

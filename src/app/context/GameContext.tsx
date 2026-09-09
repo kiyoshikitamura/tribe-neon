@@ -30,6 +30,8 @@ import { getCharacterBaseStats, getCharacterTotalStats } from "@/utils/stats_cal
 import { SHOP_PRODUCTS_MASTER, ShopProductItem } from "@/utils/shop_master_data";
 import { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
 import { useNavigation } from "./hooks/useNavigation";
+import { useProfileRequestState } from "./hooks/useProfileRequestState";
+import type { PublicUserProfileModel } from "@/app/components/profile/PublicUserProfile";
 import { EXISTING_GOOGLE_LOGIN_INTENT_KEY, useAuth } from "./hooks/useAuth";
 import { useFriends } from "./hooks/useFriends";
 import { useChat } from "./hooks/useChat";
@@ -607,7 +609,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [authenticatedProjectionOwnerUserId, setAuthenticatedProjectionOwnerUserId] = useState<string>("");
   const [authenticatedProjectionError, setAuthenticatedProjectionError] = useState<string | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
-  const [activePlayerDetail, setActivePlayerDetail] = useState<any | null>(null);
+  const { value: activePlayerDetail, set: setActivePlayerDetail, begin: beginPlayerDetail } = useProfileRequestState<PublicUserProfileModel>(
+    JSON.stringify([session?.user?.id ?? null, session?.user?.is_anonymous ?? null, activeTab, showTitleView, showLegalPage]),
+  );
   const [activeGuildDetail, setActiveGuildDetail] = useState<any | null>(null);
 
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
@@ -710,6 +714,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // ==========================================
   const resetAuthenticatedProjection = (nextUserId: string | null) => {
     if (currentAuthUserIdRef.current === nextUserId) return;
+    setActivePlayerDetail(null);
     currentAuthUserIdRef.current = nextUserId;
     if (readHomeResumeSnapshot()?.userId !== nextUserId) clearHomeResumeSnapshot();
     setAuthenticatedProjectionOwnerUserId("");
@@ -2003,54 +2008,31 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
       await inventoryProjectionPromise;
 
-      const { data: equipsData } = await supabase
-        .from("user_equipments")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
-      
-      if (equipsData) {
-        let persistedEquips = equipsData;
-        if (equipsData.length === 0) {
-          const activeChar = charsData ? charsData[0] : null;
-          if (activeChar) {
-            const starterGears = [
-              { id: `e_weapon_${userId}`, equipment_id: "WEAPON_001", slot_index: 0 },
-              { id: `e_head_${userId}`, equipment_id: "HEAD_001", slot_index: 2 },
-              { id: `e_body_${userId}`, equipment_id: "BODY_001", slot_index: 3 },
-              { id: `e_legs_${userId}`, equipment_id: "LEGS_001", slot_index: 4 },
-              { id: `e_acc_${userId}`, equipment_id: "ACCESSORY_001", slot_index: 5 }
-            ];
-            const seeded: any[] = [];
-            for (const g of starterGears) {
-              const row = {
-                user_id: userId,
-                equipment_id: g.equipment_id,
-                level: 1,
-                plus_val: 0,
-                equipped_character_id: activeChar.id,
-                slot_index: g.slot_index,
-                random_options: [
-                  { name: "クリティカル率", val: "+5%", unlocked: true },
-                  { name: "命中率", val: "+8%", unlocked: false },
-                  { name: "回避率", val: "+6%", unlocked: false },
-                  { name: "防御貫通力", val: "+12%", unlocked: false }
-                ]
-              };
-              const { data: inserted, error: insertError } = await supabase.from("user_equipments").insert(row).select().maybeSingle();
-              // Persisted equipment only: a rejected grant must not become owned state.
-              if (!insertError && inserted) seeded.push(inserted);
-            }
-            persistedEquips = seeded;
-          }
-        }
-        setUserEquipmentsList(persistedEquips);
-        const currentEquip = persistedEquips.find(e => e.id === selectedEquipment?.id) || persistedEquips[0] || null;
-        setSelectedEquipment(currentEquip);
-        setEquipmentLevel(currentEquip?.level ?? 1);
-        setEquipmentLimitBreak(currentEquip?.plus_val ?? 0);
-        setSubOptions(currentEquip?.random_options || []);
+      // Initial equipment is granted by the authenticated authority and projected from saved rows.
+      const readPersistedEquipment = () => supabase.from("user_equipments")
+        .select("*").eq("user_id", userId).order("created_at", { ascending: false });
+      const initialEquipment = await readPersistedEquipment();
+      if (currentAuthUserIdRef.current !== userId) return;
+      if (initialEquipment.error || !initialEquipment.data) throw new Error("Equipment projection unavailable");
+      let equipsData = initialEquipment.data;
+      if (equipsData.length === 0 && charsData?.length) {
+        const grant = await supabase.rpc("ensure_initial_equipment_v1");
+        if (currentAuthUserIdRef.current !== userId) return;
+        // Even after a lost response, reconcile persisted rows. Never reconstruct a grant.
+        const refreshedEquipment = await readPersistedEquipment();
+        if (currentAuthUserIdRef.current !== userId) return;
+        if (refreshedEquipment.error || !refreshedEquipment.data) throw new Error("Equipment projection unavailable");
+        equipsData = refreshedEquipment.data;
+        if (grant.error) console.warn("Initial equipment authority unavailable", grant.error.code);
       }
+      setUserEquipmentsList(equipsData);
+      const currentEquip = equipsData.find(e => e.id === selectedEquipment?.id) || equipsData[0] || null;
+      setSelectedEquipment(currentEquip);
+      setEquipmentLevel(currentEquip?.level ?? 1);
+      setEquipmentLimitBreak(currentEquip?.plus_val ?? 0);
+      setSubOptions(currentEquip?.random_options || []);
+      // Existing next syncUserPower(userId, charsData, equipsData || [], localDeck)
+      // consumes this same persisted projection; no formula change.
 
       // 総合力データの同期
       if (charsData && charsData.length > 0) {
@@ -2770,7 +2752,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const fetchPlayerDetail = async (userId: string) => {
     // タップへの反応を通信完了に依存させない。公開情報を取得後に同じモーダルを更新する。
     setActiveGuildDetail(null);
-    setActivePlayerDetail({
+    const request = beginPlayerDetail({
       id: userId,
       status: "loading",
       username: "プレイヤー情報を取得中",
@@ -2789,6 +2771,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         supabase.rpc("get_public_pvp_rankings", { p_daily: true, p_limit: 100, p_offset: 0 }),
         supabase.rpc("get_public_battle_roster", { p_target_user_id: userId }),
       ]);
+      if (!request.isCurrent()) return;
       if (publicPlayerError) throw publicPlayerError;
       if (profileError) console.warn("Public identity projection unavailable:", profileError.message);
       if (dailyError) console.warn("Public daily PvP rank unavailable:", dailyError.message);
@@ -2796,7 +2779,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const identity = (Array.isArray(profileRows) ? profileRows : [])[0] || {};
       const dailyStanding = (Array.isArray(dailyRows) ? dailyRows : []).find((row: any) => row.user_id === userId);
       const rosterCharacters = Array.isArray(publicRoster?.characters) ? publicRoster.characters : [];
-      setActivePlayerDetail({
+      request.publish({
         id: publicPlayer.user_id,
         status: "ready",
         username: publicPlayer.username,
@@ -2921,8 +2904,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       });
       */
     } catch (e: any) {
+      if (!request.isCurrent()) return;
       console.warn("Failed to fetch player detail:", e.message);
-      setActivePlayerDetail({
+      request.publish({
         id: userId,
         status: "error",
         username: "プロフィール",
@@ -4169,6 +4153,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { setRaidRescueTarget(null); }, [session?.user?.id]);
 
   const navigateTab = (tabName: string, subTab?: string) => {
+    setActivePlayerDetail(null);
     setSelectedNews(null);
     if (tabName === "ranking" && subTab === "raid") {
       nav.navigateTab("raid");

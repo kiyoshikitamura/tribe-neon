@@ -1,0 +1,70 @@
+{
+  "at": "2026-09-09T09:28:35.231Z",
+  "total": 876,
+  "errors": [
+    {
+      "path": "/rest/v1/rpc/get_chat_unread_counts",
+      "method": "POST",
+      "status": 409,
+      "code": "23503",
+      "count": 2
+    },
+    {
+      "path": "/rest/v1/rpc/unlock_eligible_user_cosmetics",
+      "method": "POST",
+      "status": 400,
+      "code": "P0001",
+      "count": 1
+    },
+    {
+      "path": "/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+      "method": "POST",
+      "status": 500,
+      "code": "P0002",
+      "count": 4
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "method": "GET",
+      "status": 406,
+      "code": "PGRST116",
+      "count": 11
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "method": "GET",
+      "status": 406,
+      "code": "PGRST116",
+      "count": 12
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "method": "GET",
+      "status": 404,
+      "code": "PGRST205",
+      "count": 11
+    },
+    {
+      "path": "/rest/v1/news",
+      "method": "GET",
+      "status": 404,
+      "code": "PGRST205",
+      "count": 11
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "method": "POST",
+      "status": 404,
+      "code": "PGRST205",
+      "count": 1
+    }
+  ],
+  "equipmentRpc": [
+    {
+      "path": "/rest/v1/rpc/ensure_initial_equipment_v1",
+      "method": "POST",
+      "status": 200
+    }
+  ],
+  "note": "Browser-only requests. Direct same-user RPC retry and readback recorded separately."
+}

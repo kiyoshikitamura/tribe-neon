@@ -1,0 +1,104 @@
+{
+  "at": "2026-09-09T05:47:43.106Z",
+  "sourceSha": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+  "leaderSource": "public.users.favorite_character_id read-only SELECT; new-room-projection contains role summaries only",
+  "variantId": "RAID_SHIBUYA_V1",
+  "rows": [
+    {
+      "role": "background",
+      "path": "/bg/bg_street_shibuya.jpg",
+      "status": 200,
+      "contentType": "image/jpeg",
+      "bytes": 720647,
+      "sourceBytes": 720647,
+      "sha256": "f040e5c1ca215dae1fa407d62261a47dcc2a7424c873aad123bac16bcc8f6f89",
+      "sourceSha256": "f040e5c1ca215dae1fa407d62261a47dcc2a7424c873aad123bac16bcc8f6f89",
+      "matchesSource": true
+    },
+    {
+      "role": "enemy-hero",
+      "characterId": "char_ageha_01",
+      "path": "/characters/ageha_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 630074,
+      "sourceBytes": 630074,
+      "sha256": "1bc05cde4f2c2133f801ceeaa1580fde465c234d9f7ebdfefc3ebbf362858c87",
+      "sourceSha256": "1bc05cde4f2c2133f801ceeaa1580fde465c234d9f7ebdfefc3ebbf362858c87",
+      "matchesSource": true
+    },
+    {
+      "role": "enemy-roster",
+      "characterId": "char_leo_01",
+      "path": "/characters/leo_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 1034159,
+      "sourceBytes": 1034159,
+      "sha256": "b31e7e271ec8ea7ba294d09e74ec3b3cb02a202a37c85856db91f894f37ee4e7",
+      "sourceSha256": "b31e7e271ec8ea7ba294d09e74ec3b3cb02a202a37c85856db91f894f37ee4e7",
+      "matchesSource": true
+    },
+    {
+      "role": "enemy-roster",
+      "characterId": "char_sora_01",
+      "path": "/characters/sora_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 775443,
+      "sourceBytes": 775443,
+      "sha256": "a61a5cb20d8cba9efac7ade7c4aae6b360349b52596ca4e0dede17df77a78d89",
+      "sourceSha256": "a61a5cb20d8cba9efac7ade7c4aae6b360349b52596ca4e0dede17df77a78d89",
+      "matchesSource": true
+    },
+    {
+      "role": "enemy-roster",
+      "characterId": "char_reina_01",
+      "path": "/characters/reina_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 842375,
+      "sourceBytes": 842375,
+      "sha256": "58ea89ae12af727d10a9c6645ba0f72840a57010f6a1ee542c2c63f42e0c4d67",
+      "sourceSha256": "58ea89ae12af727d10a9c6645ba0f72840a57010f6a1ee542c2c63f42e0c4d67",
+      "matchesSource": true
+    },
+    {
+      "role": "enemy-roster",
+      "characterId": "char_noa_01",
+      "path": "/characters/noa_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 797344,
+      "sourceBytes": 797344,
+      "sha256": "3c5135625dc91c9b4908fca1df68d3d1f88a207609dff3d6b7e684213cc7a853",
+      "sourceSha256": "3c5135625dc91c9b4908fca1df68d3d1f88a207609dff3d6b7e684213cc7a853",
+      "matchesSource": true
+    },
+    {
+      "role": "host-leader",
+      "characterId": "char_karen_01",
+      "path": "/characters/karen_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 603967,
+      "sourceBytes": 603967,
+      "sha256": "d29006e95eb3510695fbbe51424cdd2dd7944dd60c3b8d14f5a77aa45c2d639d",
+      "sourceSha256": "d29006e95eb3510695fbbe51424cdd2dd7944dd60c3b8d14f5a77aa45c2d639d",
+      "matchesSource": true
+    },
+    {
+      "role": "rescue-leader",
+      "characterId": "char_koharu_01",
+      "path": "/characters/koharu_transparent_asset.png",
+      "status": 200,
+      "contentType": "image/png",
+      "bytes": 946103,
+      "sourceBytes": 946103,
+      "sha256": "aa66af225ab44d0489e0c5535498a4dce9a435a700c99df3a1bb14325dcf4539",
+      "sourceSha256": "aa66af225ab44d0489e0c5535498a4dce9a435a700c99df3a1bb14325dcf4539",
+      "matchesSource": true
+    }
+  ],
+  "allPass": true
+}

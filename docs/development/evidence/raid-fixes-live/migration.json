@@ -1,0 +1,68 @@
+{
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "sourceSha": "b7e523b7c4651a8682f5e182733604e5e463316d",
+  "file": "20260909075933_initial_equipment_authority.sql",
+  "sha256": "b96719320722af8bdf18758891a078b942bcc930c91a7dc00fca011738b26125",
+  "guard": "Transaction-local DO checks initializer definition hash and absent RPC/table before exact file SQL",
+  "result": "APPLIED",
+  "historyVersion": "20260909090055",
+  "oldRaidReapplied": false,
+  "before": {
+    "at": "2026-09-09T08:59:37.461132Z",
+    "equipmentCount": 20,
+    "equipmentHash": "0c14f2a12fea755b14f41c9d0a2136f5",
+    "receiptExists": false,
+    "rpcExists": false,
+    "initializerHash": "6e5b13312b51d1f956fed288b72ea106",
+    "legacyQaEquipmentCounts": {
+      "4392795b-e528-48ec-b323-900820209506": 0,
+      "796dfc87-d4dd-42dc-b6c2-5657334cc825": 0,
+      "25975265-f042-4dd1-8ffc-a12f8414a035": 0
+    }
+  },
+  "post": {
+    "at": "2026-09-09T09:01:17.849271+00:00",
+    "history": [
+      {
+        "name": "initial_equipment_authority",
+        "version": "20260909090055"
+      },
+      {
+        "name": "raid_step6_daily_top_display_pages",
+        "version": "20260909051355"
+      },
+      {
+        "name": "pvp_opponents_power_multiply_bigint",
+        "version": "20260909002512"
+      }
+    ],
+    "functions": [
+      {
+        "name": "ensure_initial_equipment_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "public",
+        "definer": false,
+        "arguments": 0
+      },
+      {
+        "name": "ensure_initial_equipment_v1",
+        "config": [
+          "search_path=\"\""
+        ],
+        "schema": "private",
+        "definer": true,
+        "arguments": 0
+      }
+    ],
+    "receiptRls": true,
+    "anonExecute": false,
+    "directInsert": false,
+    "receiptCount": 0,
+    "equipmentHash": "0c14f2a12fea755b14f41c9d0a2136f5",
+    "equipmentCount": 20,
+    "enrollmentPresent": true,
+    "authenticatedExecute": true
+  }
+}

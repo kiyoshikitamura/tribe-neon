@@ -1,0 +1,10 @@
+{
+  "at": "2026-09-09T07:34:54.803Z",
+  "userId": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+  "method": "POST",
+  "path": "/rest/v1/user_equipments",
+  "status": 403,
+  "code": "42501",
+  "trigger": "ordinary reload/resume bootstrap; no manual INSERT",
+  "freshOverallPass": false
+}

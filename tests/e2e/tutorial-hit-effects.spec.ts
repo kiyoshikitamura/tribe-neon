@@ -83,7 +83,7 @@ test('tutorial basic and skill impacts remain synchronized through result and co
         if (kind && !seen.has(kind)) {
             seen.add(kind);
             for (let f = 0; f < 3; f++) {
-                await page.screenshot({ path: 'docs/development/evidence/character-release-tutorial-hit/' + kind + '-hit-' + f + '.png' });
+                await page.screenshot({ path: 'docs/development/raid-production-preparation/integration/' + kind + '-hit-' + f + '.png' });
                 await page.waitForTimeout(75);
             }
         }
@@ -92,7 +92,7 @@ test('tutorial basic and skill impacts remain synchronized through result and co
         await page.waitForTimeout(40);
     }
     const trace = await page.evaluate(() => (window as unknown as TraceWindow).hitTrace);
-    fs.writeFileSync('docs/development/evidence/character-release-tutorial-hit/fixed-trace.json', JSON.stringify(trace));
+    fs.writeFileSync('docs/development/raid-production-preparation/integration/fixed-trace.json', JSON.stringify(trace));
     expect([...seen].sort()).toEqual(['B3', 'B4']);
     expect(trace.filter((x: HitFrame) => x.effects.length && x.cast)).toHaveLength(0);
     expect(trace.filter((x: HitFrame) => x.effects.some((e) => !e.loaded))).toHaveLength(0);
@@ -104,8 +104,8 @@ test('tutorial basic and skill impacts remain synchronized through result and co
     }
     await expect(page.getByRole('button', { name: 'SKIP', exact: true })).toHaveCount(0);
     await expect(page.locator('.battle-result-summary')).toBeVisible();
-    await page.screenshot({ path: 'docs/development/evidence/character-release-tutorial-hit/result.png' });
+    await page.screenshot({ path: 'docs/development/raid-production-preparation/integration/result.png' });
     await page.getByRole('button', { name: '次へ', exact: true }).click();
     await expect(page.locator('[data-acceptance-state="COMPLETION_DIALOGUE"]')).toBeVisible();
-    await page.screenshot({ path: 'docs/development/evidence/character-release-tutorial-hit/continue.png' });
+    await page.screenshot({ path: 'docs/development/raid-production-preparation/integration/continue.png' });
 });

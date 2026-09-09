@@ -79,7 +79,7 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
   const bio = publicBioText(profile.bio);
   const title = publicTitleText(profile.titleName);
   const leader = profile.leaderCharacterId ? { characterId: profile.leaderCharacterId } : undefined;
-  const isOtherUser = Boolean(profile.id && profile.id !== currentUserId);
+  const isOtherUser = Boolean(currentUserId && profile.id && profile.id !== currentUserId);
 
   return <><CanonicalDialog size="large" ariaLabel={`${profile.username}の公開プロフィール`} onClose={onClose} loading={profile.status === "loading"}>
     {profile.status === "loading" ? <div className="public-profile-loading" role="status">プロフィールを取得しています…</div>

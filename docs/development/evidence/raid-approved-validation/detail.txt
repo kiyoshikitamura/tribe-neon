@@ -1,0 +1,77 @@
+✔ ownerは既知のroleを表示し参加者権限を維持 (105.3768ms)
+✔ memberは既知のroleを表示し参加者権限を維持 (22.9858ms)
+✔ rescueは既知のroleを表示し参加者権限を維持 (21.2843ms)
+✔ not_joinedは既知のroleを表示し参加者権限を維持 (19.8148ms)
+✔ clearedを0/成功に置換しない (16.371ms)
+✔ expiredを0/成功に置換しない (12.7455ms)
+✔ errorを0/成功に置換しない (9.4994ms)
+✔ unknownを0/成功に置換しない (20.6073ms)
+An update to RaidRoomDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+✔ no-guildを0/成功に置換しない (15.6804ms)
+✔ 読込中は文字なしspinner (2.9108ms)
+✔ 実プロフィールを開く間一覧を重ねず閉じると同一人/scroll位置へ復元 (97.6759ms)
+✔ プロフィール失敗は一覧に戻り再試行可能 (84.5185ms)
+✔ reward-unconfigured: 報酬予定と発行済みを区別 (14.4134ms)
+✔ reward-planned: 報酬予定と発行済みを区別 (23.3363ms)
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to CharacterPresentation inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+✔ reward-issued: 報酬予定と発行済みを区別 (48.7542ms)
+✔ 実PG display出力を表示parserへ通し予定へのPresent/別room混入を拒否 (3.2449ms)
+✔ profile DM target and frameless identity self (7.2419ms)
+✔ profile DM target and frameless identity other (9.7ms)
+✔ profile DM target and frameless identity undefined (6.4408ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1259.2551

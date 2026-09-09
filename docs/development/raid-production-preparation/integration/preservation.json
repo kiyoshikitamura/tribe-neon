@@ -1,0 +1,150 @@
+{
+  "characterBase": "64c7d388f55bc3a3294a5281b6b12d11761ebe37",
+  "raidBase": "3ec04503024211e720489a56f9bfa6ae7cb5c66f",
+  "hitFix": "84a1231845a5e0a82dce91c4f37267e833c1605f",
+  "raidExact": [
+    {
+      "path": "src/app/components/raid",
+      "equal": true
+    },
+    {
+      "path": "src/hooks/useBattle.ts",
+      "equal": true
+    },
+    {
+      "path": "src/domain/raidRoomClient.ts",
+      "equal": true
+    },
+    {
+      "path": "src/domain/raidRoomRpcTransport.ts",
+      "equal": true
+    },
+    {
+      "path": "src/app/components/profile/PublicUserProfile.tsx",
+      "equal": true
+    }
+  ],
+  "characterExact": [
+    {
+      "path": "src/app/components/character",
+      "equal": true
+    },
+    {
+      "path": "public/ui",
+      "equal": true
+    },
+    {
+      "path": "src/utils/rarityAssets.ts",
+      "equal": true
+    }
+  ],
+  "hitExact": true,
+  "cardHashes": [
+    {
+      "path": "public/ui/rarity/character-card-n.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/character-card-r.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/character-card-sr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/character-card-ssr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-n.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-r.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-sr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/rarity-badge-ssr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-1.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-2.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-3.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-4.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/badge-awakening-plus-5.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/badge-new.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-chaos.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-evil.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-justice.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/attribute-badge-order.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-n.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-n.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-r.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-r.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-sr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-sr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/skill-frame-ssr.png",
+      "equal": true
+    },
+    {
+      "path": "public/ui/rarity/equipment-frame-ssr.png",
+      "equal": true
+    }
+  ],
+  "contextDifferenceFromRaid": "diff --git a/src/app/context/GameContext.tsx b/src/app/context/GameContext.tsx\nindex e7b8c22..f119932 100644\n--- a/src/app/context/GameContext.tsx\n+++ b/src/app/context/GameContext.tsx\n@@ -4038,13 +4038,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {\n     return true;\n   };\n \n-  const handleSaveParty = async () => {\n-    const saveError = await persistPartyFormation(selectedMembers.slice(0, 5));\n+  const handleSaveParty = async (draft?: string[]) => {\n+    const nextParty = (draft ?? selectedMembers).slice(0, 5);\n+    const saveError = await persistPartyFormation(nextParty);\n     if (saveError) {\n       console.warn(\"Failed to save party:\", saveError);\n       setErrorMessage(\"パーティの保存に失敗しました。\");\n       return false;\n     }\n+    if (draft) setSelectedMembers(nextParty);\n     return true;\n   };",
+  "productionWrites": false
+}

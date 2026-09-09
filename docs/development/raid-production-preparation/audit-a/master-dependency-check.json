@@ -1,0 +1,51 @@
+[
+  {
+    "checks": {
+      "variants": [
+        {
+          "members": 5,
+          "variant": "RAID_SHINJUKU_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        },
+        {
+          "members": 5,
+          "variant": "RAID_SHIBUYA_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        },
+        {
+          "members": 5,
+          "variant": "RAID_IKEBUKURO_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        },
+        {
+          "members": 5,
+          "variant": "RAID_ROPPONGI_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        },
+        {
+          "members": 5,
+          "variant": "RAID_AKIHABARA_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        },
+        {
+          "members": 5,
+          "variant": "RAID_KAWASAKI_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        },
+        {
+          "members": 5,
+          "variant": "RAID_YOKOHAMA_V1",
+          "hp_positive": true,
+          "boss_master_exists": true
+        }
+      ],
+      "initial_equipment_master_count": 5
+    }
+  }
+]

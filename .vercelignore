@@ -22,3 +22,7 @@ public/promotion/gacha_sp_skill.png
 public/promotion/gacha_sp_equipment.png
 public/promotion/gacha_normal_skill.png
 public/promotion/gacha_normal_equipment.png
+
+# Production migration audit/bundle/rehearsal are local release records
+docs/development/raid-production-preparation
+scripts/raid-production-rehearsal

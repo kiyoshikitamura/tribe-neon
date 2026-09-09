@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { RaidTopEntry, RaidTopProps, RaidTopResource } from "@/domain/raidTop";
 import type { RaidPlayerSummary } from "@/domain/raidRoom";
 import { getRaidDifficultyLabel } from "@/domain/raidRoomPresentation";
 import { getRaidRoomLifecyclePresentation } from "@/domain/raidRoomLifecyclePresentation";
 import { preloadAssetManifest, type AssetResult } from "@/app/lib/screenAssets";
-import { getCharacterPresentationMetadata } from "../character/characterPresentationMetadata";
 import OutlawButton from "../ui/OutlawButton";
+import UserAvatar from "../profile/UserAvatar";
 import OutlawCard from "../ui/OutlawCard";
 import SectionHeader from "../ui/SectionHeader";
 import "./RaidTop.css";
@@ -19,22 +19,20 @@ type ImageResolver = (url: string) => string;
 function Spinner() {
   return <div className="raid-top__wait" role="status" aria-label="通信中"><span className="spinner" aria-hidden="true" /></div>;
 }
-function Portrait({ url, alt }: { url: string; alt: string }) {
-  const crop = getCharacterPresentationMetadata(url);
-  // 共通キャラクター画像のサムネイル焦点を再利用する。画像はトップ単位で事前ロード済み。
-  const style = { "--raid-portrait-scale": url.startsWith("data:") ? 1 : crop.thumbnailScale, "--raid-portrait-x": `${crop.thumbnailX}%`, "--raid-portrait-y": `${crop.thumbnailY}%` } as CSSProperties;
-  return <img className="raid-top__portrait" src={url} alt={alt} style={style} />;
-}
 function PersonIcon({ player, resolve }: { player?: RaidPlayerSummary; resolve: ImageResolver }) {
   const image = player?.leaderIconUrl.status === "available" ? player.leaderIconUrl.value : null;
   return <span className="raid-top__avatar" title={player?.name}>
-    {image ? <Portrait url={resolve(image)} alt="" /> : <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="11" r="5" /><path d="M6 29v-4a10 10 0 0 1 20 0v4" /></svg>}
+    <UserAvatar src={image ? resolve(image) : FALLBACK} alt="" />
   </span>;
+}
+function challengerName(entry: RaidTopEntry) {
+  if (entry.membership.status === "available" && entry.membership.value === "owner") return "あなた";
+  return entry.room.owner.status === "available" ? entry.room.owner.value.name : "未確認";
 }
 function Owner({ entry, resolve }: { entry: RaidTopEntry; resolve: ImageResolver }) {
   const owner = entry.room.owner.status === "available" ? entry.room.owner.value : undefined;
   const guild = entry.ownerGuild.status === "available" ? entry.ownerGuild.value?.name ?? "Guild未所属" : "Guild未確認";
-  return <div className="raid-top__owner"><PersonIcon player={owner} resolve={resolve} /><div className="raid-top__identity"><span className="raid-top__caption">主催者</span><strong>{owner?.name ?? "主催者未確認"}</strong><span className="raid-top__guild">{guild}</span></div></div>;
+  return <div className="raid-top__owner"><PersonIcon player={owner} resolve={resolve} /><div className="raid-top__identity"><strong>挑戦者：{challengerName(entry)}</strong><span className="raid-top__guild">{guild}</span></div></div>;
 }
 function BattleState({ entry, now, resolve, compact = false }: { entry: RaidTopEntry; now: number | null; resolve: ImageResolver; compact?: boolean }) {
   const { room } = entry;
@@ -42,7 +40,7 @@ function BattleState({ entry, now, resolve, compact = false }: { entry: RaidTopE
   const hp = room.hp.status === "available" && room.hp.value.max > 0 ? room.hp.value : null;
   const percent = hp ? Math.max(0, Math.min(100, hp.current / hp.max * 100)) : null;
   const participants = entry.participants.status === "available" ? entry.participants.value.slice(0, 4) : [];
-  return <div className="raid-top__battle">
+  return <div className={`raid-top__battle${compact ? " raid-top__battle--compact" : ""}`}>
     <div className="raid-top__hp-label"><span>残HP</span><strong>{percent === null ? "未確認" : `${Number(percent.toFixed(1))}%`}</strong><span className="raid-top__state">{lifecycle.stateLabel}</span></div>
     {hp ? <progress className="raid-top__hp" value={Math.max(0, hp.current)} max={hp.max} aria-label="レイド残HP" /> : <div className="raid-top__hp raid-top__hp--unknown" />}
     <div className="raid-top__battle-meta"><span>{lifecycle.remainingLabel}</span>{!compact && <span>参加 {room.participantCount.status === "available" ? `${room.participantCount.value}人` : "未確認"}</span>}</div>
@@ -111,24 +109,25 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
       <ResourceNotice resource={data.participating} onRefresh={onRefresh} disabled={disabled} unavailable="参戦情報は現在確認できません" />
       <div className="raid-top__joined-list">{participating.map(entry => <OutlawCard key={entry.room.roomId} className="raid-top__joined">
         <div className="raid-top__joined-visual">{entry.enemy.status === "available" && <img src={resolve(entry.enemy.value.leaderImageUrl)} alt="" />}</div>
-        <div className="raid-top__joined-main"><div className="raid-top__eyebrow"><span>{getRaidDifficultyLabel(entry.room.difficultyId)}</span><span>{entry.membership.status === "available" ? ({ owner: "主催", member: "参加中", rescue: "救援参加", not_joined: "参加状態未確認" })[entry.membership.value] : "参加状態未確認"}</span></div><h3>{entry.enemy.status === "available" ? entry.enemy.value.bossName : "敵情報未確認"}</h3><BattleState entry={entry} now={now} resolve={resolve} compact /><OutlawButton loadingLabel="" fullWidth onClick={() => onOpenRoom(entry.room.roomId)} disabled={disabled}>戦況を見る</OutlawButton></div>
+        <div className="raid-top__joined-main"><div className="raid-top__eyebrow"><span>{getRaidDifficultyLabel(entry.room.difficultyId)}</span></div><h3>{entry.enemy.status === "available" ? entry.enemy.value.bossName : "敵情報未確認"}</h3><p className="raid-top__challenger" title={`挑戦者：${challengerName(entry)}`}>挑戦者：{challengerName(entry)}</p><BattleState entry={entry} now={now} resolve={resolve} compact /></div>
+        <OutlawButton className="raid-top__continue" loadingLabel="" onClick={() => onOpenRoom(entry.room.roomId)} disabled={disabled}>続きへ</OutlawButton>
       </OutlawCard>)}</div>
     </section>}
-    {showRescues && <section aria-label="仲間からの救援" className="raid-top__section"><div className="raid-top__section-row"><SectionHeader title="仲間からの救援" />{rescues.length > 1 && <div className="raid-top__arrows"><OutlawButton loadingLabel="" aria-label="前の救援" disabled={slide <= 0} onClick={() => move(-1)}>‹</OutlawButton><OutlawButton loadingLabel="" aria-label="次の救援" disabled={slide >= rescues.length - 1} onClick={() => move(1)}>›</OutlawButton></div>}</div>
+    {showRescues && <section aria-label="救援依頼" className="raid-top__section"><div className="raid-top__section-row"><SectionHeader title="救援依頼" subTitle="ほかの挑戦者に加勢する" />{rescues.length > 1 && <div className="raid-top__arrows"><OutlawButton loadingLabel="" aria-label="前の救援" disabled={slide <= 0} onClick={() => move(-1)}>‹</OutlawButton><OutlawButton loadingLabel="" aria-label="次の救援" disabled={slide >= rescues.length - 1} onClick={() => move(1)}>›</OutlawButton></div>}</div>
       <ResourceNotice resource={data.rescues} onRefresh={onRefresh} disabled={disabled} unavailable="救援情報は現在確認できません" />
       <div className={`raid-top__rescue-track ${rescues.length > 1 ? "raid-top__rescue-track--multiple" : ""}`} ref={carousel} onScroll={event => { const track = event.currentTarget; const card = track.firstElementChild as HTMLElement | null; setPosition({ key: rescueKey, index: Math.round(track.scrollLeft / ((card?.offsetWidth ?? track.clientWidth) + 12)) }); }}>
         {rescues.map(entry => <OutlawCard key={`${entry.room.roomId}-${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`} className="raid-top__rescue">
-          <Owner entry={entry} resolve={resolve} />
+          <div className="raid-top__requester-art">{entry.room.owner.status === "available" && entry.room.owner.value.leaderIconUrl.status === "available" && entry.room.owner.value.leaderIconUrl.value ? <img src={resolve(entry.room.owner.value.leaderIconUrl.value)} alt="" /> : <PersonIcon resolve={resolve} />}</div><Owner entry={entry} resolve={resolve} />
           <div className="raid-top__rescue-visual">{entry.enemy.status === "available" && <><img className="raid-top__background" src={resolve(entry.enemy.value.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(entry.enemy.value.leaderImageUrl)} alt="" /></>}<div className="raid-top__enemy-caption"><span>{getRaidDifficultyLabel(entry.room.difficultyId)}{entry.enemy.status === "available" && ` / ${entry.enemy.value.areaName}`}</span><h3>{entry.enemy.status === "available" ? entry.enemy.value.bossName : "敵情報未確認"}</h3></div></div>
           <div className="raid-top__rescue-body"><BattleState entry={entry} now={now} resolve={resolve} />{entry.rescue.status === "unknown" && <p className="raid-top__muted">救援情報を確認できません</p>}<OutlawButton loadingLabel="" fullWidth variant="primary" disabled={disabled || entry.rescue.status === "unknown"} onClick={() => onOpenRoom(entry.room.roomId, entry.rescue.status === "available" ? entry.rescue.value.rescueId : undefined)}>{entry.room.state.status === "available" && entry.room.state.value !== "active" ? "戦況を見る" : "救援に向かう"}</OutlawButton></div>
         </OutlawCard>)}
       </div>{rescues.length > 1 && <div className="raid-top__page-count" aria-live="polite">{Math.min(slide + 1, rescues.length)} / {rescues.length}</div>}
     </section>}
-    <section aria-label="強敵に挑む" className="raid-top__section"><SectionHeader title="強敵に挑む" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
+    <section aria-label="今日の強敵" className="raid-top__section"><SectionHeader title="今日の強敵" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
       <ResourceNotice resource={data.dailyTargets} onRefresh={onRefresh} disabled={disabled} unavailable="本日の対象エリアは未確認です" />
-      {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><div className="raid-top__roster" aria-label="敵編成">{enemy.roster.map((member, index) => <span key={`${member.id}-${index}`} title={member.name}><Portrait url={resolve(member.imageUrl)} alt={member.name} /></span>)}</div><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>挑む</OutlawButton></div></OutlawCard>)}</div>}
+      {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>この敵に挑む</OutlawButton></div></OutlawCard>)}</div>}
       {data.dailyTargets.status === "ready" && !data.canCreate && <p className="raid-top__muted">現在、新たな挑戦は受け付けていません</p>}
     </section>
-    <section aria-label="開催中のレイドを探す" className="raid-top__section raid-top__browse"><OutlawButton loadingLabel="" fullWidth onClick={onBrowse} disabled={disabled}>開催中のレイドを探す <span aria-hidden="true">›</span></OutlawButton></section>
+    <section aria-label="開催中のレイドを探す" className="raid-top__section raid-top__browse"><OutlawButton loadingLabel="" fullWidth onClick={onBrowse} disabled={disabled}><span className="raid-top__browse-copy"><strong>開催中のレイドを探す</strong><small>ほかの挑戦者に加勢する</small></span><span aria-hidden="true">›</span></OutlawButton></section>
   </div>;
 }

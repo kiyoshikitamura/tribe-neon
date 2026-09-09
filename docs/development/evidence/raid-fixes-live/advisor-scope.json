@@ -1,0 +1,16 @@
+[
+  {
+    "name": "rls_enabled_no_policy",
+    "level": "INFO",
+    "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+    "finding": {
+      "detail": "Table \\`private.initial_equipment_receipts\\` has RLS enabled, but no policies exist",
+      "metadata": {
+        "name": "initial_equipment_receipts",
+        "type": "table",
+        "schema": "private"
+      },
+      "observed_at": "2026-09-09T09:02:27.535Z"
+    }
+  }
+]

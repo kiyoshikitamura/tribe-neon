@@ -48,7 +48,7 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
   const owner = room.owner.status === "available" ? room.owner.value : null;
   const role = details?.membership ?? (owner?.userId === currentUserId && currentUserId ? "owner" : brief?.membershipStatus === "joined" ? "joined_unknown" : brief?.membershipStatus === "not_joined" ? "not_joined" : "unknown");
   const isJoined = role === "owner" || role === "member" || role === "rescue" || role === "joined_unknown";
-  const roleLabel = { owner: "主催者", member: "通常参加", rescue: "救援参加", not_joined: "未参加", joined_unknown: "参加中・参加経路未確認", unknown: "参加状態未確認" }[role];
+  const roleLabel = { owner: "挑戦者", member: "通常参加", rescue: "救援参加", not_joined: "未参加", joined_unknown: "参加中・参加経路未確認", unknown: "参加状態未確認" }[role];
   const memberList = participants.status === "success" ? participants.data?.filter(entry => entry.roomId === room.roomId) ?? [] : [];
   const faces = memberList.slice(0, 5);
   const me = currentUserId ? memberList.find(entry => entry.player.userId === currentUserId) : undefined;
@@ -89,7 +89,7 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
       <span className="raid-detail__difficulty">{getRaidDifficultyLabel(room.difficultyId)}</span>
       <div className="raid-detail__hero-caption"><span>{enemy?.areaName ?? "エリア未確認"}</span><h2>{enemy?.bossName ?? brief?.bossName ?? "敵情報未確認"}</h2></div>
     </section>
-    <div className="raid-detail__owner"><Portrait url={resolve(ownerUrl)} name="" /><div className="raid-detail__identity"><span>主催者</span><strong>{owner?.name ?? "主催者未確認"}</strong><span>{guild}</span></div><span className="raid-detail__role" aria-label={`あなたの参加状態：${roleLabel}`}><span>あなた</span>{roleLabel}</span></div>
+    <div className="raid-detail__owner"><Portrait url={resolve(ownerUrl)} name="" /><div className="raid-detail__identity"><span>挑戦者</span><strong>{owner?.name ?? "挑戦者未確認"}</strong><span>{guild}</span></div><span className="raid-detail__role" aria-label={`あなたの参加状態：${roleLabel}`}><span>あなた</span>{roleLabel}</span></div>
     {(briefing.status === "error" || display.status === "error") && <p className="raid-detail__notice" role="alert">{briefing.status === "error" ? "敵・参加条件" : "所属・参加状態"}を取得できませんでした。画面を更新してください。</p>}
     <section className="raid-detail__battle" aria-label="戦況">
       <div className="raid-detail__hp-heading"><span>残HP</span><strong>{percent === null ? "未確認" : `${Number(percent.toFixed(1))}%`}</strong><span className="raid-detail__state">{lifecycle.stateLabel}</span></div>
