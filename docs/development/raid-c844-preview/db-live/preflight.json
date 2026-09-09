@@ -1,0 +1,176 @@
+{
+  "at": "2026-09-09T16:43:39.428057+00:00",
+  "flags": {
+    "battle": true,
+    "legacy": false,
+    "rescue": true,
+    "creation": true
+  },
+  "rooms": [
+    {
+      "id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "boss": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "owner": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "state": "CLEARED",
+      "members": [
+        "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0"
+      ],
+      "expiresAt": "2026-09-09T10:35:48.611071+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "3972a461-b45f-4b02-8142-75f294461ae3",
+      "boss": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+      "owner": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "state": "EXPIRED",
+      "members": [
+        "fadc944c-0b15-472c-be4d-305c26d8163f"
+      ],
+      "expiresAt": "2026-09-09T10:40:55.031663+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+      "boss": "2866c14f-7bc3-4a1f-bc86-32970872e845",
+      "owner": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "state": "EXPIRED",
+      "members": [
+        "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0"
+      ],
+      "expiresAt": "2026-09-09T12:03:41.214526+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "1a7094ff-52b5-4670-893f-082442be9629",
+      "boss": "93457d0a-ef8a-4646-9e1a-6ac3f03e5396",
+      "owner": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "state": "EXPIRED",
+      "members": [
+        "fadc944c-0b15-472c-be4d-305c26d8163f"
+      ],
+      "expiresAt": "2026-09-09T15:21:57.966153+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+      "boss": "2aec4aba-e56b-4e71-bbdf-f08071ec3fa4",
+      "owner": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "state": "CLEARED",
+      "members": [
+        "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0"
+      ],
+      "expiresAt": "2026-09-10T05:15:50.362999+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "513fddee-eac1-481b-8b2b-8d273131bbef",
+      "boss": "587bbb99-8220-48ad-8fe3-1ee1d7746b20",
+      "owner": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "state": "ACTIVE",
+      "members": [
+        "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+        "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+        "fadc944c-0b15-472c-be4d-305c26d8163f"
+      ],
+      "expiresAt": "2026-09-10T07:05:25.882034+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "49d374ae-1aeb-4a0b-b95d-0ecda3d3fbd2",
+      "boss": "dc7dede5-95ff-4f84-a878-d458f1cedaac",
+      "owner": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "state": "ACTIVE",
+      "members": [
+        "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0"
+      ],
+      "expiresAt": "2026-09-10T11:59:25.967353+00:00",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+      "boss": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+      "owner": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "state": "CLEARED",
+      "members": [
+        "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0"
+      ],
+      "expiresAt": "2026-09-10T15:09:39.235867+00:00",
+      "difficulty": "beginner"
+    }
+  ],
+  "profiles": null,
+  "functions": [
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "service_role=X/postgres"
+      ],
+      "args": "p_limit integer",
+      "name": "finalize_expired_raid_rooms_v1",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "schema": "public",
+      "sourceMd5": "835c1a472ef0d003b328afdb0d38d8d3",
+      "definition": "CREATE OR REPLACE FUNCTION public.finalize_expired_raid_rooms_v1(p_limit integer DEFAULT 100)\n RETURNS integer\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n v_room record;\n v_now timestamptz:=clock_timestamp();\n v_count integer:=0;\nbegin\n if p_limit is null or p_limit<1 or p_limit>1000 then\n  raise exception 'batch limit must be between 1 and 1000' using errcode='22023';\n end if;\n for v_room in\n  select r.id from public.raid_rooms r\n  join public.raid_bosses b on b.id=r.raid_boss_instance_id\n  where b.status='ACTIVE' and b.outcome_finalized_at is null and b.expires_at<=v_now\n  order by b.expires_at,b.id limit p_limit for update of b skip locked\n loop\n  perform public.finalize_expired_raid_room_v1(v_room.id);\n  v_count:=v_count+1;\n end loop;\n return v_count;\nend $function$\n",
+      "definitionMd5": "be4bad717c6bc92feeb816559070b85f"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "args": "p_difficulty_id text, p_raid_variant_id text, p_request_id uuid",
+      "name": "create_raid_room_v1",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "schema": "public",
+      "sourceMd5": "f7f5031135f4d227daa22150fa1c847d",
+      "definition": "CREATE OR REPLACE FUNCTION public.create_raid_room_v1(p_difficulty_id text, p_raid_variant_id text, p_request_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n v_uid uuid := auth.uid();\n v_level integer;\n v_enabled boolean;\n v_power bigint;\n v_gate jsonb;\n v_rule public.raid_room_lifecycle_rules%rowtype;\n v_variant public.canonical_raid_variants%rowtype;\n v_request public.raid_room_creation_requests%rowtype;\n v_instance uuid;\n v_room uuid;\n v_now timestamptz;\n v_daily jsonb;\nbegin\n if v_uid is null then raise exception 'authentication required' using errcode='42501'; end if;\n if current_setting('transaction_isolation') <> 'read committed' then\n   raise exception 'read committed required' using errcode='25001';\n end if;\n if p_request_id is null or p_difficulty_id is null or p_raid_variant_id is null\n   or p_difficulty_id not in ('beginner','intermediate','advanced','expert') then\n   raise exception 'invalid creation input' using errcode='22023';\n end if;\n -- 設定無効時は再送も拒否する。作成済みRoomの参照は既存参照RPCを使う。\n select enabled into v_enabled from public.raid_room_creation_settings where singleton for share;\n if v_enabled is distinct from true then\n   raise exception 'room creation disabled' using errcode='55000';\n end if;\n -- ユーザー単位で異なる難度を含む再送を直列化。全生成経路のロック順を揃える。\n select level into v_level from public.users where id=v_uid for no key update;\n if not found then raise exception 'user unavailable' using errcode='42501'; end if;\n select * into v_request from public.raid_room_creation_requests where user_id=v_uid and request_id=p_request_id;\n if found then\n   if v_request.difficulty_id<>p_difficulty_id or v_request.raid_variant_id<>p_raid_variant_id then\n     raise exception 'request payload conflict' using errcode='22023';\n   end if;\n   return public.raid_room_projection_v1(v_request.room_id);\n end if;\n if v_level is null or v_level<5 then raise exception 'raid level requirement' using errcode='42501'; end if;\n -- 難度枠を先にロックし、待機後に総合力と生成時刻を取得する。\n select * into v_rule from public.raid_room_lifecycle_rules where difficulty=p_difficulty_id for update;\n if not found then raise exception 'lifecycle rule unavailable' using errcode='22023'; end if;\n -- 空編成を既存集計関数のcoalesceで0として判定しない。初級には総合力制限がない。\n if p_difficulty_id<>'beginner' and not exists(\n   select 1 from public.user_main_formations where user_id=v_uid\n ) then raise exception 'power unavailable' using errcode='42501'; end if;\n v_power := public.calculate_user_total_power(v_uid);\n if p_difficulty_id<>'beginner' and (v_power is null or v_power<0) then\n   raise exception 'power unavailable' using errcode='42501';\n end if;\n v_gate := public._raid_room_power_gate_v1(p_difficulty_id,v_power);\n if v_gate->>'status' is distinct from 'passed' then\n   raise exception 'raid power requirement' using errcode='42501';\n end if;\n select * into v_variant from public.canonical_raid_variants\n   where raid_variant_id=p_raid_variant_id and is_production_enabled;\n if not found or v_variant.max_hp is null or v_variant.max_hp<=0 then\n   raise exception 'raid variant unavailable' using errcode='22023';\n end if;\n -- Successful same-request receipts above are returned before any new-day target check.\n loop\n  v_daily := private.raid_daily_targets_v1();\n  v_now := clock_timestamp();\n  exit when v_daily->>'dateJst' = ((v_now at time zone 'Asia/Tokyo')::date)::text;\n end loop;\n if not exists(select 1 from jsonb_array_elements(v_daily->'targets') t where t->>'variantId'=p_raid_variant_id) then\n  raise exception 'raid variant outside daily targets' using errcode='22023';\n end if;\n v_instance := gen_random_uuid();\n -- 日次グループとの識別のみ。旧writerを遮断するものではないため設定は無効で出荷。\n insert into public.raid_bosses(id,boss_id,boss_master_id,current_hp,max_hp,base_id,status,\n   spawned_at,expires_at,cycle_id,rotation_date,raid_variant_id,raid_day_key)\n values(v_instance,v_variant.raid_variant_id,v_variant.raid_variant_id,v_variant.max_hp,v_variant.max_hp,\n   lower(v_variant.area_id),'ACTIVE',v_now,v_now+make_interval(hours=>v_rule.duration_hours),\n   gen_random_uuid(),(v_now at time zone 'Asia/Tokyo')::date,v_variant.raid_variant_id,'ROOM:'||v_instance::text);\n v_room := (public._raid_room_register_v1(v_instance,v_uid,p_difficulty_id)->>'roomId')::uuid;\n insert into public.raid_room_creation_requests(user_id,request_id,difficulty_id,raid_variant_id,room_id)\n values(v_uid,p_request_id,p_difficulty_id,p_raid_variant_id,v_room);\n -- Room登録・所有者参加・再送台帳まで同一transaction。資源消費や戦闘開始は行わない。\n return public.raid_room_projection_v1(v_room);\nend $function$\n",
+      "definitionMd5": "bcd931889461adb08a9be67b964c292e"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "args": "p_room_id uuid, p_character_ids text[], p_tactic text, p_request_id uuid",
+      "name": "start_raid_room_battle_v1",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "schema": "public",
+      "sourceMd5": "afe4e4287e39112aea478b4bcc1cf18d",
+      "definition": "CREATE OR REPLACE FUNCTION public.start_raid_room_battle_v1(p_room_id uuid, p_character_ids text[], p_tactic text, p_request_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare v_uid uuid:=auth.uid();v_user public.users%rowtype;v_instance record;v_room public.raid_rooms%rowtype;\n v_request public.raid_room_battle_start_requests%rowtype;v_enabled boolean;v_power bigint;v_gate jsonb;v_response jsonb;\n v_cost integer;v_cost_type text;v_guild uuid;v_players jsonb;v_enemy jsonb:='[]';v_member text;\n v_entry record;v_skill_refs jsonb;v_skills jsonb;v_replay uuid;v_seed bigint;v_slot integer:=0;v_started_at timestamptz;\nbegin\n if v_uid is null then raise exception 'authentication required' using errcode='42501';end if;\n if current_setting('transaction_isolation')<>'read committed' then raise exception 'read committed required' using errcode='25001';end if;\n if p_room_id is null or p_request_id is null or p_tactic is null\n or p_tactic not in('ATTACK_PRIORITY','HEAL_PRIORITY','SKILL_PRIORITY','BALANCED','WEAKNESS_FOCUS')\n or p_character_ids is null or cardinality(p_character_ids) not between 1 and 5\n or array_position(p_character_ids,null) is not null\n or (select count(distinct x) from unnest(p_character_ids) x)<>cardinality(p_character_ids)\n then raise exception 'invalid battle input' using errcode='22023';end if;\n select enabled into v_enabled from public.raid_room_battle_settings where singleton for share;\n if v_enabled is distinct from true then raise exception 'room battle disabled' using errcode='55000';end if;\n select * into v_user from public.users where id=v_uid for no key update;\n if not found then raise exception 'user unavailable' using errcode='42501';end if;\n if exists(select 1 from public.raid_room_battle_request_cancellations where user_id=v_uid and request_id=p_request_id)\n then raise exception 'battle request cancelled' using errcode='23514';end if;\n select * into v_request from public.raid_room_battle_start_requests where user_id=v_uid and request_id=p_request_id;\n if found then\n if v_request.room_id<>p_room_id or v_request.character_ids is distinct from p_character_ids or v_request.tactic<>p_tactic\n then raise exception 'request payload conflict' using errcode='22023';end if;\n return v_request.response;end if;\n if v_user.level is null or v_user.level<5 then raise exception 'raid level requirement' using errcode='42501';end if;\n select * into v_room from public.raid_rooms where id=p_room_id;\n if not found then raise exception 'room unavailable' using errcode='P0002';end if;\n select boss.*,variant.raid_name,variant.atk,variant.def,variant.spd,variant.member_character_ids into v_instance\n from public.raid_bosses boss join public.canonical_raid_variants variant on variant.raid_variant_id=boss.raid_variant_id\n where boss.id=v_room.raid_boss_instance_id and variant.is_production_enabled for update of boss;\n if not found then raise exception 'raid instance unavailable' using errcode='P0002';end if;\n if v_instance.status is distinct from 'ACTIVE' or v_instance.current_hp is null or v_instance.current_hp<=0\n or v_instance.expires_at is null or v_instance.expires_at<=clock_timestamp()\n or v_instance.spawned_at is null or v_instance.spawned_at>clock_timestamp() or v_instance.outcome_finalized_at is not null\n then raise exception 'room ended' using errcode='23514';end if;\n if not exists(select 1 from public.raid_room_members where room_id=p_room_id and user_id=v_uid)\n then raise exception 'room membership required' using errcode='42501';end if;\n v_players:=public.build_server_battle_snapshot(v_uid,p_character_ids,'PLAYER');\n if v_players is null or jsonb_array_length(v_players)<>cardinality(p_character_ids)\n or (select count(distinct x->>'id') from jsonb_array_elements(v_players) x)<>cardinality(p_character_ids)\n then raise exception 'invalid snapshot' using errcode='23514';end if;\n if exists(select 1 from jsonb_array_elements(v_players) x cross join (values('hp'),('atk'),('def')) k(key)\n where jsonb_typeof(x->'stats'->k.key) is distinct from 'number')\n then raise exception 'invalid snapshot stats' using errcode='23514';end if;\n if exists(select 1 from jsonb_array_elements(v_players) x cross join (values('hp'),('atk'),('def')) k(key)\n where (x->'stats'->>k.key)::numeric<0 or (x->'stats'->>k.key)::numeric>2147483647\n or trunc((x->'stats'->>k.key)::numeric)<>(x->'stats'->>k.key)::numeric\n or (k.key='hp' and (x->'stats'->>k.key)::numeric=0))\n then raise exception 'invalid snapshot stats' using errcode='23514';end if;\n select sum((x#>>'{stats,hp}')::bigint+(x#>>'{stats,atk}')::bigint+(x#>>'{stats,def}')::bigint) into v_power\n from jsonb_array_elements(v_players) x;\n v_gate:=public._raid_room_power_gate_v1(v_room.difficulty_id,v_power);\n if v_gate->>'status' is distinct from 'passed' then raise exception 'raid power requirement' using errcode='42501';end if;\n perform public.sync_and_recover_vitality_and_pvp_points(v_uid);\n select * into v_user from public.users where id=v_uid;\n if v_user.raid_free_entry_consumed is false then\n v_cost:=0;v_cost_type:='FREE_FIRST';update public.users set raid_free_entry_consumed=true where id=v_uid;\n elsif v_user.raid_points>=1 then\n v_cost:=1;v_cost_type:='RAID_POINT';update public.users set raid_points=raid_points-1,\n raid_points_last_recovered_at=case when raid_points=5 then now() else raid_points_last_recovered_at end where id=v_uid;\n v_user.raid_points:=v_user.raid_points-1;\n else raise exception 'insufficient Raid points' using errcode='23514';end if;\n select guild_id into v_guild from public.guild_members where user_id=v_uid;\n\n for v_member in select value from jsonb_array_elements_text(v_instance.member_character_ids) loop\n  v_slot:=v_slot+1; select * into v_entry from public.canonical_quest_enemy_pool_entries where version='2026-08-30' and character_id=v_member and difficulty='HARD' order by(local_affinity)desc,weight desc limit 1;\n  v_skill_refs:=coalesce(v_entry.skill_loadout,(select jsonb_agg(skill_id order by skill_id) from(select skill_id from public.canonical_skill_master where version='2026-08-21' and exclusive_character_id=v_member order by skill_id limit 2)s),(select jsonb_agg(skill_id order by skill_id) from(select skill_id from public.canonical_skill_master where version='2026-08-21' and exclusive_character_id is null order by skill_id limit 2)s),'[]'::jsonb);\n  select coalesce(jsonb_agg(jsonb_build_object('id',s.skill_id,'name',s.display_name,'activationType',s.activation_type,'cooldown',s.cooldown,'availableFromRound',s.available_from_round,'target',s.target,'effects',s.effects,'exclusiveCharacterId',s.exclusive_character_id) order by x.ordinality),'[]') into v_skills from jsonb_array_elements_text(v_skill_refs) with ordinality x(skill_id,ordinality) join public.canonical_skill_master s on s.version='2026-08-21' and s.skill_id=x.skill_id;\n  v_enemy:=v_enemy||jsonb_build_array(jsonb_build_object('id','raid_'||v_instance.id||'_'||v_slot,'characterId',v_member,'name',coalesce((select display_name from public.canonical_character_master where version='2026-08-21' and character_id=v_member),v_member),'team','ENEMY','alignment',coalesce((select attribute from public.canonical_character_master where version='2026-08-21' and character_id=v_member),'NEUTRAL'),'level',30,'stats',jsonb_build_object('hp',ceil(v_instance.max_hp::numeric/5),'atk',v_instance.atk,'def',v_instance.def,'spd',v_instance.spd,'luk',0),'equippedSkillRefs',v_skill_refs,'skills',v_skills,'equipment','[]'::jsonb));\n end loop;\n if jsonb_array_length(v_enemy)<>5 then raise exception 'invalid enemy formation' using errcode='23514';end if;\n v_started_at:=clock_timestamp();\n if v_instance.expires_at<=v_started_at then raise exception 'room ended' using errcode='23514';end if;\n v_seed:=floor(random()*2147483646)::bigint+1;\n insert into public.battle_replay_sessions(requester_user_id,battle_mode,source_reference_id,tactic_id,random_seed,player_snapshot,enemy_snapshot,resolution_authority,finalization_status,official_context)\n values(v_uid,'RAID',v_instance.id,p_tactic,v_seed,v_players,v_enemy,'RAID_SERVER','PENDING',\n jsonb_build_object('guildIdSnapshot',v_guild,'costType',v_cost_type,'cost',v_cost,'remainingRaidPoints',v_user.raid_points,\n 'bossHpAtStart',v_instance.current_hp,'bossMaxHp',v_instance.max_hp,'baseId',v_instance.base_id,\n 'raidDayKey',v_instance.raid_day_key,'raidVariantId',v_instance.raid_variant_id,\n 'roomId',p_room_id,'raidRoomVersion',1,'difficultyId',v_room.difficulty_id,'formationPower',v_power,\n 'roomExpiresAt',v_instance.expires_at,'startedAt',v_started_at)) returning id into v_replay;\n v_response:=jsonb_build_object('room_id',p_room_id,'replay_session_id',v_replay,'player_snapshot',v_players,\n 'enemy_snapshot',v_enemy,'cost_type',v_cost_type,'cost',v_cost,'remaining_raid_points',v_user.raid_points,'guild_id_snapshot',v_guild);\n insert into public.raid_room_battle_start_requests(user_id,request_id,room_id,character_ids,tactic,replay_session_id,response)\n values(v_uid,p_request_id,p_room_id,p_character_ids,p_tactic,v_replay,v_response);\n return v_response;\nend $function$\n",
+      "definitionMd5": "5681fbadc02025793f5f683723d2b975"
+    },
+    {
+      "acl": [
+        "postgres=X/postgres",
+        "authenticated=X/postgres"
+      ],
+      "args": "p_variant_id text, p_difficulty_id text",
+      "name": "raid_enemy_info_v1",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "schema": "private",
+      "sourceMd5": "43f7773277bc26690025941df7d011bd",
+      "definition": "CREATE OR REPLACE FUNCTION private.raid_enemy_info_v1(p_variant_id text, p_difficulty_id text)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare v_members jsonb; v_member text; v_refs jsonb; v_skills jsonb; v_map jsonb:='{}'; v_clear jsonb; v_rescue jsonb;\nbegin\n if auth.uid() is null or not exists(select 1 from public.users where id=auth.uid()) then raise exception 'authentication required' using errcode='42501'; end if;\n if p_difficulty_id is null or p_difficulty_id not in ('beginner','intermediate','advanced','expert') then raise exception 'invalid difficulty' using errcode='22023'; end if;\n select member_character_ids into v_members from public.canonical_raid_variants where raid_variant_id=p_variant_id;\n if v_members is null or jsonb_array_length(v_members)<>5 then raise exception 'enemy unavailable' using errcode='P0002'; end if;\n for v_member in select value from jsonb_array_elements_text(v_members) loop\n  -- Match start_raid_room_battle_v1 (SQL260) exactly: HARD entry override, exclusive, then regular skills.\n  select coalesce((select skill_loadout from public.canonical_quest_enemy_pool_entries where version='2026-08-30' and character_id=v_member and difficulty='HARD' order by local_affinity desc,weight desc limit 1),\n   (select jsonb_agg(skill_id order by skill_id) from(select skill_id from public.canonical_skill_master where version='2026-08-21' and exclusive_character_id=v_member order by skill_id limit 2)s),\n   (select jsonb_agg(skill_id order by skill_id) from(select skill_id from public.canonical_skill_master where version='2026-08-21' and exclusive_character_id is null order by skill_id limit 2)s),'[]'::jsonb) into v_refs;\n  select coalesce(jsonb_agg(jsonb_build_object('id',s.skill_id,'name',s.display_name) order by x.ordinality),'[]'::jsonb) into v_skills\n   from jsonb_array_elements_text(v_refs) with ordinality x(id,ordinality) join public.canonical_skill_master s on s.version='2026-08-21' and s.skill_id=x.id;\n  if jsonb_array_length(v_refs)<>jsonb_array_length(v_skills) then raise exception 'enemy skills unavailable' using errcode='P0002'; end if;\n  v_map:=v_map||jsonb_build_object(v_member,v_skills);\n end loop;\n select jsonb_build_object('status',case when r.enabled and count(i.item_id)>0 then 'configured' else 'unconfigured' end,'items',case when r.enabled then coalesce(jsonb_agg(jsonb_build_object('itemId',i.item_id,'quantity',i.quantity) order by i.item_id) filter(where i.item_id is not null),'[]'::jsonb) else '[]'::jsonb end)\n into v_clear from public.raid_room_clear_reward_rules r left join public.raid_room_clear_reward_items i on i.difficulty=r.difficulty where r.difficulty=p_difficulty_id group by r.enabled;\n select jsonb_build_object('status',case when r.enabled and count(i.item_id)>0 then 'configured' else 'unconfigured' end,'items',case when r.enabled then coalesce(jsonb_agg(jsonb_build_object('itemId',i.item_id,'quantity',i.quantity) order by i.item_id) filter(where i.item_id is not null),'[]'::jsonb) else '[]'::jsonb end)\n into v_rescue from public.raid_room_rescue_reward_rules r left join public.raid_room_rescue_reward_items i on i.difficulty=r.difficulty where r.difficulty=p_difficulty_id group by r.enabled;\n return jsonb_build_object('variantId',p_variant_id,'memberCharacterIds',v_members,'skillsByCharacterId',v_map,'clearPlan',coalesce(v_clear,'{\"status\":\"unconfigured\",\"items\":[]}'),'rescuePlan',coalesce(v_rescue,'{\"status\":\"unconfigured\",\"items\":[]}'));\nend $function$\n",
+      "definitionMd5": "553b1311e555b0e8aad071dd3fe7c879"
+    }
+  ],
+  "snapshots": null,
+  "pendingReplays": 0
+}

@@ -1,0 +1,86 @@
+{
+  "at": "2026-09-09T17:02:22.827Z",
+  "candidate": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "project": "sufvuqdnqohpfzkwxohq",
+  "userId": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+  "scope": "QA Admin credentials prepared earlier; real password HTTP and normal authentication completion RPC. Not UI authentication acceptance; no direct gameplay progression writes.",
+  "before": {
+    "ids": [
+      "11e16f02-2cc0-41ad-bb12-a1c322f35bfc",
+      "32965109-d4c2-44f7-93db-d0baae595a1d",
+      "51a23f9f-0f09-4e56-94ae-576d228361ab",
+      "5f3e4964-c4c9-4524-ad55-c63084f58e7e",
+      "d237ac8f-4537-41b1-a1f0-b6e068c01b34"
+    ],
+    "receipt": {
+      "state": "GRANTED",
+      "user_id": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+      "created_at": "2026-09-09T16:46:47.648215+00:00",
+      "completed_at": "2026-09-09T16:47:26.965732+00:00",
+      "equipment_ids": [
+        "11e16f02-2cc0-41ad-bb12-a1c322f35bfc",
+        "32965109-d4c2-44f7-93db-d0baae595a1d",
+        "51a23f9f-0f09-4e56-94ae-576d228361ab",
+        "5f3e4964-c4c9-4524-ad55-c63084f58e7e",
+        "d237ac8f-4537-41b1-a1f0-b6e068c01b34"
+      ]
+    }
+  },
+  "onboardingBefore": {
+    "user_id": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+    "auth_method": "EMAIL",
+    "has_profile": true,
+    "is_anonymous": false,
+    "tutorial_step": "COMPLETE",
+    "gameplay_authorized": false,
+    "authentication_pending": false,
+    "is_legacy_authenticated": false,
+    "identity_integrity_valid": true
+  },
+  "completionResult": "AUTHENTICATION",
+  "onboardingAfter": {
+    "user_id": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+    "auth_method": "EMAIL",
+    "has_profile": true,
+    "is_anonymous": false,
+    "tutorial_step": "AUTHENTICATION",
+    "gameplay_authorized": true,
+    "authentication_pending": false,
+    "is_legacy_authenticated": false,
+    "identity_integrity_valid": true
+  },
+  "reloginOnboarding": {
+    "user_id": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+    "auth_method": "EMAIL",
+    "has_profile": true,
+    "is_anonymous": false,
+    "tutorial_step": "AUTHENTICATION",
+    "gameplay_authorized": true,
+    "authentication_pending": false,
+    "is_legacy_authenticated": false,
+    "identity_integrity_valid": true
+  },
+  "after": {
+    "ids": [
+      "11e16f02-2cc0-41ad-bb12-a1c322f35bfc",
+      "32965109-d4c2-44f7-93db-d0baae595a1d",
+      "51a23f9f-0f09-4e56-94ae-576d228361ab",
+      "5f3e4964-c4c9-4524-ad55-c63084f58e7e",
+      "d237ac8f-4537-41b1-a1f0-b6e068c01b34"
+    ],
+    "receipt": {
+      "state": "GRANTED",
+      "user_id": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+      "created_at": "2026-09-09T16:46:47.648215+00:00",
+      "completed_at": "2026-09-09T16:47:26.965732+00:00",
+      "equipment_ids": [
+        "11e16f02-2cc0-41ad-bb12-a1c322f35bfc",
+        "32965109-d4c2-44f7-93db-d0baae595a1d",
+        "51a23f9f-0f09-4e56-94ae-576d228361ab",
+        "5f3e4964-c4c9-4524-ad55-c63084f58e7e",
+        "d237ac8f-4537-41b1-a1f0-b6e068c01b34"
+      ]
+    }
+  },
+  "status": "PASS"
+}

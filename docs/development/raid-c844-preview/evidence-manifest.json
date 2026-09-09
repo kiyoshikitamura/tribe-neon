@@ -1,0 +1,125 @@
+{
+  "source": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "files": [
+    {
+      "file": "docs/development/raid-c844-preview/db-live/apply-06-manifest.json",
+      "sha256": "aa6d5537448c6e63817b78611bd5ec0bb0c96894763f053a4ec1477ac69abc93"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/apply-06-preview.sql",
+      "sha256": "8311f82a7ca841811b33bd57368989b8619335499c90b1a2852a045c944c5462"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/apply-06-result.json",
+      "sha256": "4a965440f643f158279b5a4081c917bedd91583b14297f203af00ca8c4f5d8c3"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/detailed-readback.json",
+      "sha256": "df41de918f1e86dbcf51d252e2638599afdb9300cbba60b063897ab99e76b486"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/fresh-auth-completion.json",
+      "sha256": "c84f6e4ce7c9903e66ebbdd2d7242738520952de4066e954755f9db7d9ed0508"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/fresh-auth-pending-precheck.json",
+      "sha256": "c4715c98a4802a0900c7153159e8a06cab21470bb29c965295fbc309cc0067ed"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/fresh-auth-preparation.json",
+      "sha256": "e011be51f31567eead55f310b5de29f546c4dcc1e4e05ddb7597b1b7f7b0187b"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/fresh-qa-classification-success.json",
+      "sha256": "97d3f47edec38db88c4b0a1c385cb16c7d2b6ef4f93815e8787c0fd396f8c188"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/fresh-qa-classification.json",
+      "sha256": "504ae39009629be79877e82e78259a8d0671a3e3b8b51d1b43bea378e3d9ec93"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/live-validation.json",
+      "sha256": "ec9fdb3fc2567ce35220fea7cbfa0154645c914ad89c395e63fb8ffa34196eaa"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/original-qa-rules.json",
+      "sha256": "7f29c61b1eedab5429ec557859e57aeced0cb1905a5db9f5c71b038e019b8ae2"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/preflight.json",
+      "sha256": "9fc511569897ae74588caf55fdb58c0dbcaa2df2cccebdc25875f9d592ccbb5a"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/qa-query-log.sql",
+      "sha256": "d5a755ce99cc6744fc85f85e578daca97956d539de13895db7213426aaa132cb"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/REPORT.md",
+      "sha256": "678d6de954ee27d1aaaff5f2e6996f9dccf791012f8f0a4d76c0705475e8c585"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/db-live/ui-relogin-readback.json",
+      "sha256": "7df6804264d5aa45f9196609e984424214b20258701a91eff115fafca823299d"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/deployment/alias-preservation.json",
+      "sha256": "0fcb82c1b4ee337a87f4184e7eda712f750f443d809e7215c34dba295cb7dcec"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/deployment/deployment-state.json",
+      "sha256": "ac8ca6e44fa37349ec131d70cf68af3a57fa36b56f0a17e0f67b697d8969dc44"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/deployment/http-readback.json",
+      "sha256": "f58a246851d450af7d535969e7176cafdf6930ed92cbcffb825b7fb0f1c87783"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/ACCEPTANCE.md",
+      "sha256": "9fd8673c62ed4cb427105ec01a506a8184d41f9070254e8701fd4990cd04de97"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/character-equipment.png",
+      "sha256": "c96a04a8d55fc1f298a425d286112132c64055369cdfdd910923d65637383725"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/character-home.png",
+      "sha256": "29b2fc86fc4bb6b8a3dc5453eb29fa00390e1615b25f65dd6c751d41565eb08a"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/character-party.png",
+      "sha256": "148ec031d7c0a3fa3a75f60236321aadb0b06664ab330502e2aa6c28b1c68ff7"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/hit-B3.png",
+      "sha256": "92edf4ea086f14ffab879ecf4be150e3d641ded762f437ea9318993104976f91"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/hit-B4.png",
+      "sha256": "85e4a1aefa6f2bf9f8cfe4a5849b6de9de2b0ca5fc0f46f24f4d6b2606cfb0ed"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/hit-frames.json",
+      "sha256": "ba37e0bdde4210948590d147e53675b04338e1b2da2516b2d65400a41a72e77d"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/hit-summary.json",
+      "sha256": "1896c64e8026330b46dda8841833dd794bfc852211914861e9008c1540a80dad"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/readonly-observation.sql",
+      "sha256": "96990b0404a38ed0e8d5df48828a694891c6babb8fdcd055716906d25cf412a1"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/result-continuation.png",
+      "sha256": "67f4a8608c580507724e05ccb0a6ac8e51d96afc3729d8dd54d798c8871f87a4"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/fresh-acceptance/result.png",
+      "sha256": "321a361e72c046bc34c8aa3062f33439467fbece5f18c31f4cad255e7e35ebc2"
+    },
+    {
+      "file": "docs/development/raid-c844-preview/README.md",
+      "sha256": "ef4cafcc37c5def617a0f0677befd0eb94346a61782501d636ad8d795fb59b38"
+    }
+  ]
+}

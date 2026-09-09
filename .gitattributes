@@ -16,3 +16,5 @@ scripts/raid-prepublication-*/*.mjs text eol=lf
 config/raid-room/launch-balance.* -text
 docs/development/raid-launch-balance/** -text
 docs/development/raid-launch-integration/** -text
+docs/development/raid-c844-preview/** -text
+scripts/raid-c844-preview-*/*.mjs text eol=lf

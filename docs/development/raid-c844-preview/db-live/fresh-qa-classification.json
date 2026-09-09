@@ -1,0 +1,15 @@
+{
+  "query": "begin;set local lock_timeout='2s';do $qa$ declare s uuid;t timestamptz;begin select subject_id,registered_at into strict s,t from kpi_subjects where source_user_id='2c5fa849-8400-430d-9c3c-516cd928a8c9' and registered_at>='2026-09-09T16:45:00Z' and registered_at<'2026-09-09T16:47:00Z' for update;if exists(select 1 from kpi_account_classification_periods where subject_id=s) then raise exception 'already classified';end if;insert into kpi_account_classification_periods(subject_id,classification,valid_from,reason) values(s,'qa',t,'c844 dedicated Fresh UI acceptance; no gameplay modifications');end $qa$;select s.source_user_id,c.classification,c.valid_from,c.valid_to from kpi_account_classification_periods c join kpi_subjects s using(subject_id) where s.source_user_id='2c5fa849-8400-430d-9c3c-516cd928a8c9';commit;",
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"error\":{\"name\":\"HttpException\",\"message\":\"Failed to run sql query: ERROR:  P0002: query returned no rows\\nCONTEXT:  PL/pgSQL function inline_code_block line 1 at SQL statement\\n\"}}"
+      }
+    ],
+    "structuredContent": {
+      "error_code": "INVALID_ARGUMENT"
+    },
+    "isError": true
+  }
+}

@@ -1,0 +1,696 @@
+{
+  "at": "2026-09-09T16:56:51.196Z",
+  "project": "sufvuqdnqohpfzkwxohq",
+  "candidate": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "rooms": [
+    {
+      "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+      "difficulty": "beginner",
+      "maxHp": 190000,
+      "status": "PASS",
+      "members": [
+        {
+          "characterId": "char_tatsuya_01",
+          "level": 5,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_002",
+              "level": 1,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_001",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_008",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_yoshihiko_01",
+          "level": 5,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_003",
+              "level": 1,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_008",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_gou_01",
+          "level": 5,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_007",
+              "level": 1,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_011",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_kaito_01",
+          "level": 5,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_001",
+              "level": 1,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_019",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_makoto_01",
+          "level": 5,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_002",
+              "level": 1,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_012",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "roomId": "fd0622a0-8fca-45b8-aff1-a0e0c8fb3c90",
+      "difficulty": "intermediate",
+      "maxHp": 2100000,
+      "status": "PASS",
+      "members": [
+        {
+          "characterId": "char_rin_01",
+          "level": 25,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_003",
+              "level": 10,
+              "plus": 0
+            },
+            {
+              "equipmentId": "BODY_003",
+              "level": 10,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_001",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_shion_01",
+          "level": 25,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_007",
+              "level": 10,
+              "plus": 0
+            },
+            {
+              "equipmentId": "BODY_005",
+              "level": 10,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_008",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_chang_01",
+          "level": 25,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_001",
+              "level": 10,
+              "plus": 0
+            },
+            {
+              "equipmentId": "BODY_006",
+              "level": 10,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_011",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_naoto_01",
+          "level": 25,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_002",
+              "level": 10,
+              "plus": 0
+            },
+            {
+              "equipmentId": "BODY_007",
+              "level": 10,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_019",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "level": 25,
+          "awakeningLevel": 0,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_003",
+              "level": 10,
+              "plus": 0
+            },
+            {
+              "equipmentId": "BODY_008",
+              "level": 10,
+              "plus": 0
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_012",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "roomId": "62ba1fd1-e61c-4742-a61c-5214e3c05d58",
+      "difficulty": "advanced",
+      "maxHp": 13500000,
+      "status": "PASS",
+      "members": [
+        {
+          "characterId": "char_seiya_01",
+          "level": 35,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_007",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "BODY_009",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "HEAD_004",
+              "level": 15,
+              "plus": 1
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_001",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 1
+            }
+          ]
+        },
+        {
+          "characterId": "char_taiga_01",
+          "level": 35,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_001",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "BODY_011",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "HEAD_008",
+              "level": 15,
+              "plus": 1
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_008",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 1
+            }
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "level": 35,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_002",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "BODY_012",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "HEAD_001",
+              "level": 15,
+              "plus": 1
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_011",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 1
+            }
+          ]
+        },
+        {
+          "characterId": "char_aoi_01",
+          "level": 35,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_003",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "BODY_013",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "HEAD_004",
+              "level": 15,
+              "plus": 1
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_019",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_028",
+              "plus": 1
+            }
+          ]
+        },
+        {
+          "characterId": "char_daimon_01",
+          "level": 35,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_007",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "BODY_014",
+              "level": 15,
+              "plus": 1
+            },
+            {
+              "equipmentId": "HEAD_008",
+              "level": 15,
+              "plus": 1
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_012",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 1
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "roomId": "c8ef82c4-0bb2-4ec4-9c2e-27457e396435",
+      "difficulty": "expert",
+      "maxHp": 41800000,
+      "status": "PASS",
+      "members": [
+        {
+          "characterId": "char_kaede_01",
+          "level": 45,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_001",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "BODY_001",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "HEAD_001",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "ACCESSORY_025",
+              "level": 20,
+              "plus": 2
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_059",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_001",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 2
+            }
+          ]
+        },
+        {
+          "characterId": "char_miyabi_01",
+          "level": 45,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_002",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "BODY_002",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "HEAD_004",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "ACCESSORY_026",
+              "level": 20,
+              "plus": 2
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_008",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 2
+            }
+          ]
+        },
+        {
+          "characterId": "char_ageha_01",
+          "level": 45,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_003",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "BODY_003",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "HEAD_008",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "ACCESSORY_001",
+              "level": 20,
+              "plus": 2
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_011",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_021",
+              "plus": 2
+            }
+          ]
+        },
+        {
+          "characterId": "char_reina_01",
+          "level": 45,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_007",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "BODY_005",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "HEAD_001",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "ACCESSORY_002",
+              "level": 20,
+              "plus": 2
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_019",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_028",
+              "plus": 2
+            }
+          ]
+        },
+        {
+          "characterId": "char_sora_01",
+          "level": 45,
+          "awakeningLevel": 1,
+          "equipment": [
+            {
+              "equipmentId": "WEAPON_001",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "BODY_006",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "HEAD_004",
+              "level": 20,
+              "plus": 2
+            },
+            {
+              "equipmentId": "ACCESSORY_003",
+              "level": 20,
+              "plus": 2
+            }
+          ],
+          "skills": [
+            {
+              "skillId": "SKILL_012",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_035",
+              "plus": 2
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rp": [
+    {
+      "userId": "d2ef395b-fdab-4a4d-bd3b-42277935f14d",
+      "initial": 5,
+      "cost": 0,
+      "actual": 5,
+      "status": "PASS"
+    },
+    {
+      "userId": "67518b81-ef7b-435b-9c38-e293112f2afc",
+      "initial": 5,
+      "cost": 1,
+      "actual": 4,
+      "status": "PASS"
+    },
+    {
+      "userId": "09b195e4-6bd0-470a-b94e-9a990be08e43",
+      "initial": 5,
+      "cost": 0,
+      "actual": 5,
+      "status": "PASS"
+    },
+    {
+      "userId": "cdf10817-dbfd-4aa3-be17-b32fb38cf56b",
+      "initial": 5,
+      "cost": 0,
+      "actual": 5,
+      "status": "PASS"
+    },
+    {
+      "userId": "74f4715d-5b05-4e05-a2c2-a5d5b8a3a465",
+      "initial": 5,
+      "cost": 1,
+      "actual": 4,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "totalCost": 2
+}
