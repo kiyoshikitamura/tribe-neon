@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useGame } from "../context/GameContext";
-import { VITALITY_MAX } from "@/utils/game_constants";
+import { VITALITY_MAX, RAID_POINT_MAX } from "@/utils/game_constants";
 import { CANONICAL_USER_LEVEL_PROGRESSION } from "@/domain/gameplay/canonical/action_resources";
 import UserIdentityRow from "./profile/UserIdentityRow";
 import "./Header.css";
@@ -15,6 +15,7 @@ export default function Header() {
     cash,
     diamonds,
     vitality,
+    raidPoints,
     vitalityNextRecoveryAt,
     userGuild,
     userTitle,
@@ -83,7 +84,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* 2行目: 所持キャッシュ + 所持ダイヤ + Vitality */}
+      {/* Shared resource balances */}
       <div className="header-mobile-row2">
         {/* 所持キャッシュ */}
         <div className="header-mobile-stat">
@@ -110,6 +111,10 @@ export default function Header() {
           {vitality < VITALITY_MAX && recoverySeconds !== null && (
             <span className="header-mobile-stat-recovery">+1 {Math.floor(recoverySeconds / 60)}:{String(recoverySeconds % 60).padStart(2, "0")}</span>
           )}
+        </div>
+        <div className="header-mobile-stat header-mobile-stat-raid" aria-label={`レイドポイント ${raidPoints}/${RAID_POINT_MAX}`} title="レイドポイント">
+          <span className="header-mobile-stat-label">RP</span>
+          <span className="header-mobile-stat-val">{raidPoints}/{RAID_POINT_MAX}</span>
         </div>
       </div>
 

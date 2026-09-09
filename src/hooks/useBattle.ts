@@ -3122,6 +3122,10 @@ export function useBattle(options: UseBattleOptions) {
             ? (raidWinnerTemp === "PLAYER" ? "VICTORY" : "DEFEAT")
             : result;
     setBattleOutcome(finalResult);
+    if (hasOfficialRaidResult && raidResultTemp?.roomId) {
+      // Publish the committed shared outcome before OUTCOME, including SKIP.
+      setBattleModeResultDetail({ raidReceipt: projectRaidResultReceipt(raidResultTemp) });
+    }
     setBattleState("ENDING");
     setOfficialGvgAttackId(null);
     setOfficialGvgReplayId(null);

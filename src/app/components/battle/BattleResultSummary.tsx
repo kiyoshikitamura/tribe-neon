@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useAudio } from "@/audio/AudioProvider";
+import { raidResultHeadline } from "@/domain/raidResultPresentation";
 import { analyzeBattleResult, type BattleResultParticipant, type BattleResultReplayEvent } from "@/domain/presentation/battleResultScoring";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
@@ -56,6 +57,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
     : modeResult?.resultLabel;
   const isRaidResult = presentationContext?.mode === "RAID";
   const raidReceipt = isRaidResult && modeResult?.raidReceipt && modeResult.raidReceipt.roomId === presentationContext?.raidRoomId ? modeResult.raidReceipt : undefined;
+  const roomHeadline = isRaidResult && presentationContext?.raidRoomId ? raidResultHeadline(raidReceipt, presentationContext.raidRoomId) : null;
   const isStreetResult = !isRaidResult || Boolean(presentationContext?.raidRoomId);
   const resultEvent = [...replayEvents].reverse().find((event) => event.type === "RESULT");
   const resultReasonKey = String(resultEvent?.payload.reason ?? resultEvent?.payload.resultReason ?? resultEvent?.payload.endReason ?? "").toUpperCase();
@@ -72,8 +74,9 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
   useEffect(() => {
     if (announcedRef.current) return;
     announcedRef.current = true;
-    playSe(victory ? "VICTORY" : "DEFEAT");
-  }, [playSe, victory]);
+    if (roomHeadline === '討伐成功') playSe('VICTORY');
+    else if (!roomHeadline) playSe(victory ? "VICTORY" : "DEFEAT");
+  }, [playSe, victory, roomHeadline]);
   useEffect(() => {
     if (!victory || (!rewards && !modeResult?.reward)) return;
     const timer = window.setTimeout(() => playSe("REWARD"), 1280);
@@ -113,9 +116,9 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
   }, [mvp?.participant.id, mvp?.score.damage, mvp?.score.heal, mvp?.score.kills, mvp?.score.shield, mvp?.score.survival]);
   return (
     <section
-      className={`battle-result-summary ${victory ? "is-victory" : "is-defeat"} ${isStreetResult ? "sf-root sf-screen sf-live-result" : ""}`}
+      className={`battle-result-summary ${roomHeadline ? (roomHeadline === '討伐成功' ? 'is-victory' : 'is-raid-neutral') : victory ? "is-victory" : "is-defeat"} ${isStreetResult ? "sf-root sf-screen sf-live-result" : ""}`}
       style={isStreetResult && presentationContext?.backgroundPath ? {"--battle-background-image":`url(\'${presentationContext.backgroundPath}\')`} as React.CSSProperties : undefined}
-      aria-label={victory ? "バトル勝利" : "バトル敗北"}
+      aria-label={roomHeadline ?? (victory ? "バトル勝利" : "バトル敗北")}
       data-result-event-index={resultEvent ? eventIndex(resultEvent, resultEventArrayIndex) : undefined}
       data-result-event-round={resultEvent ? eventRound(resultEvent) : undefined}
       data-displayed-round={displayedRound}
@@ -169,7 +172,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
         </section>
       )}
 </> : <>
-        <header className={`sf-heading sf-outcome ${victory ? "" : "loss"}`}><small>{opponentLabel}</small><h1>{victory ? "VICTORY" : "DEFEAT"}</h1><p>{localizedResultLabel || (victory ? "バトル勝利" : "バトル敗北")}</p></header>
+        <header className={`sf-heading sf-outcome ${roomHeadline || victory ? "" : "loss"}`}><small>{opponentLabel}</small><h1>{roomHeadline ?? (victory ? "VICTORY" : "DEFEAT")}</h1><p>{roomHeadline ? "共有レイドの確定結果" : localizedResultLabel || (victory ? "バトル勝利" : "バトル敗北")}</p></header>
         {roundLimitResult && <p className="battle-result-reason" data-result-reason="ROUND_LIMIT" role="status">制限ラウンド終了による判定結果です</p>}
         {mvp && <><section className="sf-mvp" aria-label={`MVP ${mvp.participant.name} ${mvp.score.total}ポイント`}>{mvpImage && <img src={mvpImage} alt={mvp.participant.name}/>}<div className="sf-mvp-copy"><small>MVP</small><h2>{mvp.participant.name}</h2><strong>{displayedTotal}<span> PT</span></strong><p>{mvpMaster && resolveCharacterGachaQuote(mvpMaster.id)}</p></div></section>
         <div className="sf-highlights"><div><small>与ダメージ</small><b>{mvp.raw.damage.toLocaleString()}</b></div><div><small>撃破</small><b>{mvp.raw.kills}<span>体</span></b></div><div><small>回復</small><b>{mvp.raw.heal.toLocaleString()}</b></div></div></>}

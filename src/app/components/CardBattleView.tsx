@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { raidResultHeadline } from "@/domain/raidResultPresentation";
 import { useGame } from "../context/GameContext";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import StreetBattleSetup from "./battle/StreetBattleSetup";
@@ -147,6 +148,8 @@ export default function CardBattleView() {
 
   if (battleState === "ENDING" || battleState === "OUTCOME" || battleState === "RESULT") {
     const victory = battleOutcome === "VICTORY";
+    const raidHeadline = battleMode === "RAID" && battlePresentationContext?.raidRoomId
+      ? raidResultHeadline(battleModeResultDetail?.raidReceipt, battlePresentationContext.raidRoomId) : null;
     return (
       <div className={`battle-screen ${(battleMode !== "RAID" || isRoomBattle) ? "street-battle-screen" : ""} battle-ending-screen is-${battleState.toLowerCase()}`} style={battleBackgroundStyle} data-battle-outcome={battleOutcome || "PENDING"} data-acceptance-state={battleState === "ENDING" ? "B5" : battleState === "RESULT" ? "B6" : undefined}>
         <div className="battle-ending-backdrop" aria-hidden="true" />
@@ -156,9 +159,9 @@ export default function CardBattleView() {
             <i />
           </div>
         ) : battleState === "OUTCOME" ? (
-          <div className={`battle-outcome-mark ${victory ? "is-victory" : "is-defeat"}`} role="status">
+          <div className={`battle-outcome-mark ${raidHeadline ? (raidHeadline === '討伐成功' ? 'is-victory' : 'is-raid-neutral') : victory ? "is-victory" : "is-defeat"}`} role="status">
             <span>バトル結果</span>
-            <strong>{victory ? "WIN" : "LOSE"}</strong>
+            <strong>{raidHeadline ?? (victory ? "WIN" : "LOSE")}</strong>
           </div>
         ) : (
           <BattleResultSummary
