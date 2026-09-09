@@ -17,4 +17,6 @@ config/raid-room/launch-balance.* -text
 docs/development/raid-launch-balance/** -text
 docs/development/raid-launch-integration/** -text
 docs/development/raid-c844-preview/** -text
+docs/development/raid-production-release/** -text
+scripts/raid-production-release/*.mjs text eol=lf
 scripts/raid-c844-preview-*/*.mjs text eol=lf

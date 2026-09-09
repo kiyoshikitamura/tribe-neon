@@ -34,3 +34,5 @@ docs/development/raid-prepublication-closeout
 scripts/raid-prepublication-*
 docs/development/raid-c844-preview
 scripts/raid-c844-preview-*
+docs/development/raid-production-release
+scripts/raid-production-release

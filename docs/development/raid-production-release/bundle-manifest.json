@@ -1,0 +1,87 @@
+{
+  "candidate": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "reviewedDrift": {
+    "changed": [
+      {
+        "name": "kpi_daily_engagement_v1",
+        "args": "p_from date, p_to date",
+        "new": "e5da97325d85412cccc4d894e57140be",
+        "acl": [
+          "postgres=X/postgres"
+        ],
+        "owner": "postgres"
+      },
+      {
+        "name": "refresh_kpi_overview_saved_results",
+        "args": "p_today date",
+        "old": "7e86ab7e3b15594247190eb49035d63c",
+        "new": "103e6b634a4db1da6ca6e7d870dd63c6",
+        "acl": [
+          "postgres=X/postgres"
+        ],
+        "owner": "postgres"
+      }
+    ],
+    "removed": [],
+    "newMigrations": [
+      {
+        "name": "kpi_social_active_raid_point_daily",
+        "version": "20260909151723"
+      }
+    ]
+  },
+  "dbOrder": [
+    "00-baseline-guard.sql",
+    "01-snapshot-dependency.sql",
+    "02-raid-delta.sql",
+    "04-postflight.sql",
+    "06-launch-balance.sql",
+    "07-launch-postflight.sql"
+  ],
+  "files": [
+    {
+      "file": "00-baseline-guard.sql",
+      "sha256": "8818bf4097697952671ecbacf28016d5ace28f49aa76370a4bd99405c9326e9d"
+    },
+    {
+      "file": "01-snapshot-dependency.sql",
+      "sha256": "42076766fddb5fe9aefa3fb14c7dda88ab7b89b7d3ff4d0a7b2f1e9caa1703c5"
+    },
+    {
+      "file": "02-raid-delta.sql",
+      "sha256": "8c2d65e3a6ec2c615f3d6efbece9e1be0acb0e05070060b5da19b33dbabffd46"
+    },
+    {
+      "file": "03-expiry-cron.sql",
+      "sha256": "d95ca3d4419e0120cf961e8b2ba29272a2d0993410fd82eb612723f09620282c"
+    },
+    {
+      "file": "04-postflight.sql",
+      "sha256": "bf7afb0f926118aca8b7da80ae22c1bdf2bc34672275683cca64790e90a483c7"
+    },
+    {
+      "file": "05-stop-new-operations.sql",
+      "sha256": "ea307347c3dba800496a1ab6657dab1624d9830d523ecaeb6c06d39d7797bde1"
+    },
+    {
+      "file": "06-launch-balance.sql",
+      "sha256": "3a8403bfa502ea0a695a11c101fc032cda81cbcfe1695ff5e2e376ee3d06a887"
+    },
+    {
+      "file": "07-launch-postflight.sql",
+      "sha256": "995b659590a01850c4259c9caa1dfd51e59eb1b7081f0ca03df63df3585ea6e1"
+    },
+    {
+      "file": "08-approved-settings.sql",
+      "sha256": "4cc6c67a4fd218799f6a9f3b9e416a830b011fd929dd1e9c9567f2f9743fd47f"
+    },
+    {
+      "file": "09-open-operations.sql",
+      "sha256": "09013096735bebbc68a7a00bf4cabf6b7c97989430b217ea3bdbcaa995316d77"
+    },
+    {
+      "file": "apply-db.sql",
+      "sha256": "f75231db594d301dbcbab63d44ac7f8670acaaa8f4fe155052281155667f18d1"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+-- User-approved public rules. No QA fixture or account mutation. Run in caller transaction.
+do $guard$ begin if exists(select from raid_room_creation_settings where enabled) or exists(select from raid_room_battle_settings where enabled) or exists(select from raid_room_rescue_settings where enabled) then raise exception 'Already open; review applied state';end if;if exists(select from raid_room_clear_reward_items) or exists(select from raid_room_rescue_reward_items) then raise exception 'Existing reward items; do not overwrite';end if;end $guard$;
+update public.raid_room_difficulty_rules set rescue_min_battles=2,rescue_min_contribution_damage=60000 where difficulty='beginner';
+update public.raid_room_clear_reward_rules set enabled=true,minimum_contribution_damage=10000 where difficulty='beginner';
+update public.raid_room_rescue_reward_rules set enabled=true where difficulty='beginner';
+insert into public.raid_room_clear_reward_items(difficulty,item_id,quantity) values('beginner','EQUIP_EXP_S',3);
+insert into public.raid_room_rescue_reward_items(difficulty,item_id,quantity) values('beginner','CHAR_EXP_S',2);
+update public.raid_room_difficulty_rules set rescue_min_battles=2,rescue_min_contribution_damage=300000 where difficulty='intermediate';
+update public.raid_room_clear_reward_rules set enabled=true,minimum_contribution_damage=50000 where difficulty='intermediate';
+update public.raid_room_rescue_reward_rules set enabled=true where difficulty='intermediate';
+insert into public.raid_room_clear_reward_items(difficulty,item_id,quantity) values('intermediate','EQUIP_EXP_S',5);
+insert into public.raid_room_rescue_reward_items(difficulty,item_id,quantity) values('intermediate','CHAR_EXP_S',3);
+update public.raid_room_difficulty_rules set rescue_min_battles=3,rescue_min_contribution_damage=500000 where difficulty='advanced';
+update public.raid_room_clear_reward_rules set enabled=true,minimum_contribution_damage=60000 where difficulty='advanced';
+update public.raid_room_rescue_reward_rules set enabled=true where difficulty='advanced';
+insert into public.raid_room_clear_reward_items(difficulty,item_id,quantity) values('advanced','EQUIP_EXP_S',8);
+insert into public.raid_room_rescue_reward_items(difficulty,item_id,quantity) values('advanced','CHAR_EXP_S',5);
+update public.raid_room_difficulty_rules set rescue_min_battles=4,rescue_min_contribution_damage=750000 where difficulty='expert';
+update public.raid_room_clear_reward_rules set enabled=true,minimum_contribution_damage=75000 where difficulty='expert';
+update public.raid_room_rescue_reward_rules set enabled=true where difficulty='expert';
+insert into public.raid_room_clear_reward_items(difficulty,item_id,quantity) values('expert','EQUIP_EXP_S',12);
+insert into public.raid_room_rescue_reward_items(difficulty,item_id,quantity) values('expert','CHAR_EXP_S',8);
+do $check$ begin if (select count(*) from raid_room_clear_reward_items)<>4 or (select count(*) from raid_room_rescue_reward_items)<>4 or (select count(*) from raid_room_clear_reward_rules where enabled)<>4 or (select count(*) from raid_room_rescue_reward_rules where enabled)<>4 then raise exception 'Public reward incomplete';end if;end $check$;

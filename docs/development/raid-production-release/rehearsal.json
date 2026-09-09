@@ -1,0 +1,137 @@
+{
+  "engine": "Native PostgreSQL 17 / isolated loopback 55462",
+  "limitations": [
+    "空データから列・制約・関数・triggerを再構成。実ユーザーはコピーしない。",
+    "AuthはGUC参照stub。Cronは実行しない。複数接続・Edge・UI受入ではない。"
+  ],
+  "steps": [
+    {
+      "name": "catalog reconstruction",
+      "status": "PASS",
+      "tables": 202,
+      "functions": 406
+    },
+    {
+      "name": "Latest Production + KPI: exact DB bundle atomic rollback",
+      "status": "PASS"
+    },
+    {
+      "name": "Exact DB bundle COMMIT: 28 profiles, KPI bodies/ACL preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "Approved public settings and operation flag transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "Prepared intake stop preserves data/schema",
+      "status": "PASS"
+    }
+  ],
+  "serverVersion": "PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit",
+  "settings": {
+    "clear": [
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_contribution_damage": 60000
+      },
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_contribution_damage": 10000
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_contribution_damage": 75000
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_contribution_damage": 50000
+      }
+    ],
+    "clearItems": [
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 8,
+        "difficulty": "advanced"
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 3,
+        "difficulty": "beginner"
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 12,
+        "difficulty": "expert"
+      },
+      {
+        "item_id": "EQUIP_EXP_S",
+        "quantity": 5,
+        "difficulty": "intermediate"
+      }
+    ],
+    "difficulty": [
+      {
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_power": 200000,
+        "rescue_min_battles": 3,
+        "rescue_min_contribution_damage": 500000
+      },
+      {
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_power": null,
+        "rescue_min_battles": 2,
+        "rescue_min_contribution_damage": 60000
+      },
+      {
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_power": 240000,
+        "rescue_min_battles": 4,
+        "rescue_min_contribution_damage": 750000
+      },
+      {
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_power": 160000,
+        "rescue_min_battles": 2,
+        "rescue_min_contribution_damage": 300000
+      }
+    ],
+    "rescueItems": [
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 5,
+        "difficulty": "advanced"
+      },
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 2,
+        "difficulty": "beginner"
+      },
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 8,
+        "difficulty": "expert"
+      },
+      {
+        "item_id": "CHAR_EXP_S",
+        "quantity": 3,
+        "difficulty": "intermediate"
+      }
+    ]
+  },
+  "status": "PASS",
+  "database": "raid_prod_rehearsal_1788975965636",
+  "scope": "Only current KPI drift, exact bundle, approved settings, atomic rollback and stop. Existing lifecycle/Edge/UI evidence reused."
+}
