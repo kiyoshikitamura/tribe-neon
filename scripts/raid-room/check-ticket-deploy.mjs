@@ -1,0 +1,23 @@
+import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+const root='docs/development/raid-ticket-recovery',json=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const cache=path.join(process.env.LOCALAPPDATA,'npm-cache/_npx');const cliDir=fs.readdirSync(cache).map(n=>path.join(cache,n,'node_modules/vercel')).find(p=>{try{return json(path.join(p,'package.json')).version==='59.13.1';}catch{return false;}});const require=createRequire(path.join(cliDir,'package.json'));const token=require('@vercel/cli-auth/credentials-store.js').readCliAuthConfig(require('@vercel/cli-config').getGlobalPathConfig()).token;
+const api=async endpoint=>{const r=await fetch('https://api.vercel.com'+endpoint+(endpoint.includes('?')?'&':'?')+'teamId=team_ounFOJd7sfCvcytYCkExbj77',{headers:{Authorization:`Bearer ${token}`}});assert.ok(r.ok);return r.json();};
+const d=await api('/v13/deployments/dpl_9imw6iSPPMz1jk25tu6oCRUygm5K');
+const a=await api('/v4/aliases?projectId=prj_He8QAAwvfwm74FWq2Vb8BFHCbEXb&limit=100');assert.ok(!a.pagination?.next);const aliases=a.aliases.map(x=>({alias:x.alias,deploymentId:x.deploymentId}));
+const before=json('docs/development/raid-ticket-recovery/aliases-before.json');const changes=aliases.filter(x=>before.find(y=>y.alias===x.alias)?.deploymentId!==x.deploymentId);const removed=before.filter(x=>!aliases.some(y=>y.alias===x.alias));
+const state={at:new Date().toISOString(),id:d.id,url:d.url,readyState:d.readyState,source:d.meta?.migrationSourceSha,target:d.target,alias:d.alias,automaticAliases:d.automaticAliases,changes,removed};
+fs.writeFileSync(root+'/deployment-current.json',JSON.stringify(state,null,2));console.log(JSON.stringify(state));
+assert.equal(state.source,'e4edeadefac27371a532740b42189cc166703a5e');assert.equal(removed.length,0);assert.ok(changes.every(x=>['www.tribe-neon.com','tribe-neon.com'].includes(x.alias)&&x.deploymentId===d.id),'Non-game alias changed');
+if(d.readyState!=='READY')process.exit(0);
+const response=await fetch('https://'+d.url);assert.equal(response.status,200);const html=await response.text();const scripts=[...html.matchAll(/<script[^>]+src="([^"]+\.js[^" ]*)"/g)].map(x=>x[1]);
+if(fs.existsSync(root+'/browser-script-urls.json')){for(const s of json(root+'/browser-script-urls.json')){assert.equal(new URL(s).origin,'https://'+d.url);if(!scripts.includes(s))scripts.push(s);}}
+let js='';for(const s of scripts){assert.ok(scripts.length<150);const r=await fetch(new URL(s,'https://'+d.url));assert.equal(r.status,200);const body=await r.text();js+='\n'+body;for(const match of body.matchAll(/static\/chunks\/[A-Za-z0-9_.~-]+\.js/g)){const ref='/_next/'+match[0];if(!scripts.some(x=>new URL(x,'https://'+d.url).pathname===ref))scripts.push(ref);}} 
+const tokens=[...new Set(js.match(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g)??[])];const claims=tokens.map(t=>{try{return JSON.parse(Buffer.from(t.split('.')[1],'base64url').toString());}catch{return {};}});
+console.log(JSON.stringify({scripts:scripts.length,bytes:js.length,jwtCount:claims.length,publishableCount:(js.match(/sb_publishable_[A-Za-z0-9_-]+/g)??[]).length,sensitivePlaceholder:js.includes('[SENSITIVE]'),apiOrigin:js.includes('https://api.tribe-neon.com'),supabaseConfigMention:js.includes('Supabase configuration')}));
+const publicKeys=[...new Set(js.match(/sb_publishable_[A-Za-z0-9_-]+/g)??[])];
+const pat=fs.readFileSync(path.join(os.homedir(),'.supabase/access-token'),'utf8').trim();const keyResponse=await fetch('https://api.supabase.com/v1/projects/ktpolnkyyfkowxdmijww/api-keys',{headers:{Authorization:`Bearer ${pat}`}});assert.ok(keyResponse.ok);const projectKeys=await keyResponse.json();
+assert.ok(publicKeys.length===1&&projectKeys.some(k=>k.api_key===publicKeys[0])||claims.some(c=>c.ref==='ktpolnkyyfkowxdmijww'&&c.role==='anon'),'Production public key mismatch');assert.ok(!claims.some(c=>c.ref&&c.ref!=='ktpolnkyyfkowxdmijww'));assert.ok(js.includes('https://api.tribe-neon.com'));assert.ok(!js.includes('https://sufvuqdnqohpfzkwxohq.supabase.co'));
+const auth=await fetch('https://api.tribe-neon.com/auth/v1/settings',{headers:{apikey:publicKeys[0]??tokens[0]}});assert.equal(auth.status,200,'Live Production auth connection');
+assert.ok(js.includes('レイドチケットで回復しますか？'));assert.ok(js.includes('共有レイドの確定結果'));assert.ok(js.includes('header-mobile-stat-raid'));
+const report={status:'PASS',at:new Date().toISOString(),id:d.id,source:state.source,http:response.status,scriptCount:scripts.length,productionApi:true,productionAnonKey:true,noPreviewKey:true,changes};
+fs.writeFileSync(root+'/frontend-readback.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));
