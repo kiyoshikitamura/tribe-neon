@@ -181,8 +181,8 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     ? (PRODUCTION_MY_PAGE_CREATIVES || []).map((creative) => ({ id: creative.id, title: "", img: creative.assetPath, destination: creative.destination }))
     : qaState?.bannerAuthority === "campaign"
       ? [
-        { id: "gvg-prep", eventId: "GVG_PREP_20260904", title: "", img: "/promotion/mypage_banner_gvg_prep.webp", destination: "mission:SPECIAL" },
-        { id: "guild-power-ranking", eventId: "GVG_PREP_20260904", title: "", img: "/promotion/mypage_banner_guild_power_ranking.webp", destination: "campaign:GUILD_POWER" },
+        { id: "gvg-prep", eventId: "GVG_PREP_20260904", title: "", img: "/promotion/mypage_banner_gvg_prep.webp?v=20260905", destination: "mission:SPECIAL" },
+        { id: "guild-power-ranking", eventId: "GVG_PREP_20260904", title: "", img: "/promotion/mypage_banner_guild_power_ranking.webp?v=20260905", destination: "campaign:GUILD_POWER" },
       ]
       : []);
   const visibleBanners = useMemo(
@@ -271,8 +271,8 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       const campaignOpen = prepEvent?.is_progress_active === true || prepEvent?.progress_open === true;
       const nextBanners: HomeBanner[] = campaignOpen
         ? [
-          { id: "gvg-prep", eventId: "GVG_PREP_20260904", title: "", img: resolvePresentableAssetUrl(prepEvent.banner_image_url) || "/promotion/mypage_banner_gvg_prep.webp", destination: "mission:SPECIAL" },
-          { id: "guild-power-ranking", eventId: "GVG_PREP_20260904", title: "", img: "/promotion/mypage_banner_guild_power_ranking.webp", destination: "campaign:GUILD_POWER" },
+          { id: "gvg-prep", eventId: "GVG_PREP_20260904", title: "", img: resolvePresentableAssetUrl(prepEvent.banner_image_url) || "/promotion/mypage_banner_gvg_prep.webp?v=20260905", destination: "mission:SPECIAL" },
+          { id: "guild-power-ranking", eventId: "GVG_PREP_20260904", title: "", img: "/promotion/mypage_banner_guild_power_ranking.webp?v=20260905", destination: "campaign:GUILD_POWER" },
         ]
         : (PRODUCTION_MY_PAGE_CREATIVES || []).map((creative) => ({ id: creative.id, title: "", img: creative.assetPath, destination: creative.destination }));
       const loadableBanners = nextBanners.filter((banner) => !banner.destination
@@ -818,7 +818,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       >
         <div className="campaign-keyvisual-dialog">
           <img
-            src="/promotion/guild_power_ranking_keyvisual.webp"
+            src="/promotion/guild_power_ranking_keyvisual.webp?v=20260905"
             alt="ギルド総合力ランキング"
             onLoad={(event) => {
               const image = event.currentTarget;

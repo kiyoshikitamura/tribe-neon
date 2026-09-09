@@ -119,7 +119,7 @@ export async function acquisition(service: SupabaseClient, range: NonNullable<Re
     steps: ["TITLE_ARRIVED", "TAP_TO_START", "WORLD_INTRO_STARTED", "WORLD_INTRO_COMPLETED", "NAME_COMPLETED", "GAME_START_BOUND"].map((event_type) => ({ event_type, journeys: null })),
   };
   const [{ data: journeys }, { data: bindings }, { data: allFacts }] = await Promise.all([
-    service.from("kpi_acquisition_journeys").select("journey_id,started_at,source").in("journey_id", ids),
+    service.from("kpi_acquisition_journeys").select("journey_id,started_at,first_arrived_at,source,metadata").in("journey_id", ids),
     service.from("kpi_acquisition_subject_bindings").select("journey_id,subject_id,bound_at").in("journey_id", ids),
     service.from("kpi_acquisition_journey_facts").select("journey_id,event_type,occurred_at").in("journey_id", ids).order("occurred_at", { ascending: false }),
   ]);
@@ -146,6 +146,97 @@ export async function acquisition(service: SupabaseClient, range: NonNullable<Re
     return { event_type: eventType, journeys: count };
   });
   steps.push({ event_type: "GAME_START_BOUND", journeys: numerator });
+
+  const acceptedJourneys = ((journeys || []) as any[])
+    .filter((row) => acceptedIds.includes(row.journey_id));
+  const bindingByJourney = new Map(acceptedBindings
+    .filter((row) => acceptedIds.includes(row.journey_id))
+    .map((row) => [row.journey_id, row]));
+  const downstreamSubjectIds = [...new Set([...bindingByJourney.values()].map((row) => row.subject_id))];
+  const [{ data: tutorialData }, { data: guildData }, { data: chatActivationData }, { data: activityData }] =
+    downstreamSubjectIds.length ? await Promise.all([
+      service.from("kpi_canonical_tutorial_completions_v1")
+        .select("subject_id,completed_at").in("subject_id", downstreamSubjectIds),
+      service.from("kpi_guild_conversion_facts")
+        .select("subject_id,conversion_type,occurred_at").in("subject_id", downstreamSubjectIds),
+      service.from("kpi_guild_chat_activation_facts")
+        .select("subject_id,occurred_at").in("subject_id", downstreamSubjectIds),
+      service.from("kpi_daily_user_activity")
+        .select("subject_id,activity_date,last_active_at").in("subject_id", downstreamSubjectIds)
+        .gte("activity_date", range.from).lte("activity_date", addDays(range.to, 7)).limit(200000),
+    ]) : [
+      { data: [] as any[] }, { data: [] as any[] }, { data: [] as any[] }, { data: [] as any[] },
+    ];
+  const tutorialSubjects = new Set(((tutorialData || []) as any[])
+    .filter((row) => !excluded(periods, row.subject_id, row.completed_at)).map((row) => row.subject_id));
+  const guildSubjects = new Set(((guildData || []) as any[])
+    .filter((row) => !excluded(periods, row.subject_id, row.occurred_at)).map((row) => row.subject_id));
+  const guildJoinSubjects = new Set(((guildData || []) as any[])
+    .filter((row) => row.conversion_type === "JOIN" && !excluded(periods, row.subject_id, row.occurred_at))
+    .map((row) => row.subject_id));
+  const chatActivationSubjects = new Set(((chatActivationData || []) as any[])
+    .filter((row) => !excluded(periods, row.subject_id, row.occurred_at)).map((row) => row.subject_id));
+  const activeDays = new Set(((activityData || []) as any[])
+    .filter((row) => !excluded(periods, row.subject_id, row.last_active_at))
+    .map((row) => `${row.subject_id}:${row.activity_date}`));
+
+  const groupMap = new Map<string, {
+    source: string;
+    campaign: string | null;
+    creative: string | null;
+    journeys: Set<string>;
+    subjects: Set<string>;
+  }>();
+  for (const journey of acceptedJourneys) {
+    const source = journey.metadata?.utm_source || "unknown";
+    const campaign = journey.metadata?.utm_campaign || null;
+    const creative = journey.metadata?.utm_content || null;
+    const key = JSON.stringify([source, campaign, creative]);
+    const group = groupMap.get(key) || {
+      source, campaign, creative, journeys: new Set<string>(), subjects: new Set<string>(),
+    };
+    group.journeys.add(journey.journey_id);
+    const binding = bindingByJourney.get(journey.journey_id);
+    if (binding?.subject_id) group.subjects.add(binding.subject_id);
+    groupMap.set(key, group);
+  }
+  const breakdown = [...groupMap.values()].map((group) => {
+    const groupSubjects = [...group.subjects];
+    const retention = [1, 2, 3, 4, 5, 6, 7].map((day) => {
+      const matureSubjects = groupSubjects.filter((subjectId) => {
+        const registeredAt = subjectById.get(subjectId)?.registered_at;
+        return registeredAt && addDays(jstDate(registeredAt), day) < range.today;
+      });
+      const retained = matureSubjects.filter((subjectId) => {
+        const registeredAt = subjectById.get(subjectId)?.registered_at;
+        return registeredAt && activeDays.has(`${subjectId}:${addDays(jstDate(registeredAt), day)}`);
+      });
+      return {
+        day,
+        numerator: matureSubjects.length ? retained.length : null,
+        denominator: matureSubjects.length || null,
+        value: matureSubjects.length ? retained.length / matureSubjects.length : null,
+        observation_status: matureSubjects.length ? "complete" : "incomplete",
+        reason: matureSubjects.length ? null : "cohort_not_mature",
+      };
+    });
+    return {
+      source: group.source,
+      campaign: group.campaign,
+      creative: group.creative,
+      landing: group.journeys.size,
+      game_start: group.subjects.size,
+      tutorial_complete: groupSubjects.filter((id) => tutorialSubjects.has(id)).length,
+      guild: groupSubjects.filter((id) => guildSubjects.has(id)).length,
+      guild_join: groupSubjects.filter((id) => guildJoinSubjects.has(id)).length,
+      guild_chat_activation: groupSubjects.filter((id) => chatActivationSubjects.has(id)).length,
+      retention,
+    };
+  }).sort((left, right) => right.game_start - left.game_start
+    || right.landing - left.landing
+    || left.source.localeCompare(right.source)
+    || (left.campaign || "").localeCompare(right.campaign || "")
+    || (left.creative || "").localeCompare(right.creative || ""));
   return {
     metric: metric("acquisition.game_start_rate", numerator, acceptedIds.length, 0.8),
     journeys: {
@@ -154,6 +245,7 @@ export async function acquisition(service: SupabaseClient, range: NonNullable<Re
       bound: numerator, unbound: acceptedIds.length - numerator,
     },
     steps,
+    breakdown,
   };
 }
 

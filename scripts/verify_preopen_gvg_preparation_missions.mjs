@@ -5,7 +5,7 @@ const migrationUrl = new URL(
   "../supabase/migrations/20260903000235_preopen_gvg_preparation_missions.sql",
   import.meta.url,
 );
-const sql = await readFile(migrationUrl, "utf8");
+const sql = (await readFile(migrationUrl, "utf8")).replace(/\r\n/g, "\n");
 
 const missionBlock = sql.match(
   /from jsonb_to_recordset\(\$missions\$(.*?)\$missions\$::jsonb\)/s,

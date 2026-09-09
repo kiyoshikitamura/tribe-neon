@@ -1065,6 +1065,19 @@
 .banner-card { height:58px;border-radius:6px;background:#03070e; }
 .banner-bg-img { width:100%;height:100%;object-fit:cover;object-position:center; }
 
+.banner-card[data-banner-id="gvg-prep"],
+.banner-card[data-banner-id="guild-power-ranking"] {
+  height:auto;
+  min-width:0;
+  aspect-ratio:6 / 1;
+  border-radius:0;
+}
+.banner-card[data-banner-id="gvg-prep"] .banner-bg-img,
+.banner-card[data-banner-id="guild-power-ranking"] .banner-bg-img {
+  display:block;
+  object-fit:contain;
+}
+
 .mypage-view .mypage-circle-menu-area {
   position:relative;
   z-index:1;

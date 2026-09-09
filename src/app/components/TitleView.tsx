@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useGame } from "../context/GameContext";
 import "./TitleView.css";
 import { markTitleAssetReady } from "../lib/screenAssets";
 import ConfirmDialog from "./ui/ConfirmDialog";
+import TitleLegalFooter from "./TitleLegalFooter";
 import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
 
 export default function TitleView() {
@@ -103,17 +103,7 @@ export default function TitleView() {
           </div>
         </div>}
 
-        <div className="title-footer">
-          <div className="title-legal-links" onClick={(event) => event.stopPropagation()}>
-            <Link href="/legal/terms">利用規約</Link>
-            <Link href="/legal/privacy">プライバシーポリシー</Link>
-            <Link href="/legal/tokusho">特定商取引法に基づく表記</Link>
-          </div>
-          <div className="title-copyright">
-            <span>v0.1.0</span>
-            <span>© 2026 TRIBE NEON</span>
-          </div>
-        </div>
+        <TitleLegalFooter />
         <ConfirmDialog {...confirmDialogConfig} />
       </div>
     </div>

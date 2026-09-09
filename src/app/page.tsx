@@ -35,6 +35,7 @@ import ConfirmDialog from "./components/ui/ConfirmDialog";
 import GlobalInteractionBlocker from "./components/ui/GlobalInteractionBlocker";
 import PageShell from "./components/ui/PageShell";
 import TitleView from "./components/TitleView";
+import TitleLegalFooter from "./components/TitleLegalFooter";
 import MoveBaseModal from "./components/MoveBaseModal";
 import TutorialWorldIntro from "./components/TutorialWorldIntro";
 import TutorialRuleGuide from "./components/TutorialRuleGuide";
@@ -47,6 +48,7 @@ import { LoginBonusModal } from "./components/LoginBonusModal";
 import RankingRewardNotificationController from "./components/ranking/RankingRewardNotificationController";
 import PrepMissionEventDialogController from "./components/mission/PrepMissionEventDialogController";
 import { markHomeReloadStage, readHomeResumeSnapshot } from "./lib/homeResumePresentation";
+import { initializeAcquisitionAttribution } from "@/utils/acquisitionAttribution";
 
 function AppContent() {
   const { session, authLoading, authenticatedProjectionReady, authenticatedProjectionError, retryAuthenticatedProjection, isSetupRequired, onboardingState, activeTab, showTitleView, battleState,
@@ -63,6 +65,9 @@ function AppContent() {
     setInboxPanelTab,
   } = useGame();
   const [homeResumeSnapshot, setHomeResumeSnapshot] = React.useState<ReturnType<typeof readHomeResumeSnapshot>>(null);
+  React.useEffect(() => {
+    void initializeAcquisitionAttribution();
+  }, []);
   React.useLayoutEffect(() => {
     markHomeReloadStage("reload", 0);
     const snapshot = readHomeResumeSnapshot();
@@ -128,6 +133,7 @@ function AppContent() {
             <BrandedLoading label="起動中" />
           )}
         </div>
+        <TitleLegalFooter boot />
       </div>
     );
   }

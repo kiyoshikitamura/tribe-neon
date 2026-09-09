@@ -1,6 +1,10 @@
 "use client";
 
 import { supabase, usingMockSupabase } from "@/utils/supabase";
+import {
+  bindAcquisitionSubject,
+  recordAcquisitionObservation as recordCanonicalAcquisitionObservation,
+} from "@/utils/acquisitionAttribution";
 
 export type AcquisitionObservation =
   | "TITLE_ARRIVED"
@@ -9,10 +13,7 @@ export type AcquisitionObservation =
   | "WORLD_INTRO_COMPLETED"
   | "NAME_COMPLETED";
 
-const JOURNEY_TOKEN_KEY = "tribe_kpi_acquisition_journey_v1";
-const GAME_START_PENDING_BIND_KEY = "tribe_kpi_game_start_pending_bind_v1";
 const MY_PAGE_CONTEXT_KEY = "tribe_kpi_mypage_context_v1";
-let journeyPromise: Promise<string | null> | null = null;
 
 function randomHex(bytes = 32) {
   const value = new Uint8Array(bytes);
@@ -20,65 +21,13 @@ function randomHex(bytes = 32) {
   return Array.from(value, (part) => part.toString(16).padStart(2, "0")).join("");
 }
 
-function currentJourneyToken() {
-  if (typeof window === "undefined") return null;
-  return window.sessionStorage.getItem(JOURNEY_TOKEN_KEY);
-}
-
-export async function ensureAcquisitionJourney(): Promise<string | null> {
-  if (usingMockSupabase || typeof window === "undefined") return null;
-  const existing = currentJourneyToken();
-  if (existing) return existing;
-  if (journeyPromise) return journeyPromise;
-  journeyPromise = (async () => {
-    const token = randomHex();
-    const { error } = await supabase.rpc("begin_kpi_acquisition_journey_v1", {
-      p_token: token,
-      p_source: "web_v1",
-    });
-    if (error) throw error;
-    window.sessionStorage.setItem(JOURNEY_TOKEN_KEY, token);
-    return token;
-  })().catch((error) => {
-    console.warn("KPI acquisition journey unavailable:", error instanceof Error ? error.message : "unknown");
-    return null;
-  }).finally(() => { journeyPromise = null; });
-  return journeyPromise;
-}
-
 export async function recordAcquisitionObservation(eventType: AcquisitionObservation) {
-  const token = await ensureAcquisitionJourney();
-  if (!token) return false;
-  const { error } = await supabase.rpc("record_kpi_acquisition_observation_v1", {
-    p_token: token,
-    p_event_type: eventType,
-    p_idempotency_key: eventType.toLowerCase(),
-    p_metadata: {},
-    p_source: "web_v1",
-  });
-  if (error) {
-    console.warn(`KPI ${eventType} observation unavailable:`, error.message);
-    return false;
-  }
-  return true;
+  return recordCanonicalAcquisitionObservation(eventType);
 }
 
 export async function bindCurrentAcquisitionJourney(authoritativeGameStartSucceeded = false) {
-  const token = currentJourneyToken();
-  if (!token || usingMockSupabase) return false;
-  if (authoritativeGameStartSucceeded) window.sessionStorage.setItem(GAME_START_PENDING_BIND_KEY, token);
-  if (window.sessionStorage.getItem(GAME_START_PENDING_BIND_KEY) !== token) return false;
-  await recordAcquisitionObservation("NAME_COMPLETED");
-  const { error } = await supabase.rpc("bind_kpi_acquisition_subject_v1", {
-    p_token: token,
-    p_source: "web_v1",
-  });
-  if (error) {
-    console.warn("KPI acquisition binding unavailable:", error.message);
-    return false;
-  }
-  window.sessionStorage.removeItem(GAME_START_PENDING_BIND_KEY);
-  return true;
+  if (authoritativeGameStartSucceeded) await recordAcquisitionObservation("NAME_COMPLETED");
+  return bindAcquisitionSubject();
 }
 
 type StoredMyPageContext = { userId: string; contextId: string; expiresAt: string; requestKey: string };

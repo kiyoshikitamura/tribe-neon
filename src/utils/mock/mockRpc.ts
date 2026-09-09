@@ -514,7 +514,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     return { data: {
       event_key: "PREOPEN_GUILD_POWER_2026",
       starts_at: "2026-09-03T15:00:00.000Z",
-      ends_at: "2026-09-08T15:00:00.000Z",
+      ends_at: "2099-12-30T15:00:00.000Z",
       status: "ACTIVE",
       is_current_context: true,
       server_updated_at: new Date().toISOString(),

@@ -9,6 +9,7 @@ import "./SetupView.css";
 import { featureUiExposure } from "@/domain/operations/operations";
 import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
 import OutlawButton from "./ui/OutlawButton";
+import { recordWorldIntroObservation } from "@/utils/acquisitionAttribution";
 
 type EntryPresentationState = "WORLD_INFORMATION" | "WORLD_TO_AGEHA" | "AGEHA_INTRO" | "NAME_INPUT";
 
@@ -38,6 +39,7 @@ export default function SetupView() {
     nameEntryRef.current = stored === "NAME_INPUT";
     if (stored === "AGEHA_INTRO" || stored === "NAME_INPUT") setPresentationState(stored);
     void recordAcquisitionObservation("WORLD_INTRO_STARTED");
+    if (stored !== "NAME_INPUT") recordWorldIntroObservation("WORLD_INTRO_VIEWED");
   }, [session?.user?.id]);
 
   useEffect(() => {
@@ -81,6 +83,7 @@ export default function SetupView() {
 
   const skipWorldIntro = () => {
     if (nameEntryRef.current) return;
+    recordWorldIntroObservation("WORLD_INTRO_SKIPPED");
     advancePresentation(presentationState === "AGEHA_INTRO" ? "NAME_INPUT" : "AGEHA_INTRO");
   };
 

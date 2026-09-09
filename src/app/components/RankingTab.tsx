@@ -65,14 +65,6 @@ function formatJstTimestamp(value: string | null | undefined) {
   });
 }
 
-function formatJstDay(value: string | null | undefined, subtractMillisecond = false) {
-  if (!value) return null;
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return null;
-  if (subtractMillisecond) date.setTime(date.getTime() - 1);
-  return date.toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo", month: "numeric", day: "numeric" });
-}
-
 function RankingDeck({ characterIds = [] }: { characterIds?: string[] | null }) {
   const canonicalIds = (characterIds || []).filter(Boolean).slice(0, 5);
   if (canonicalIds.length === 0) return null;
@@ -265,12 +257,6 @@ export default function RankingTab() {
   const isPreopenGuildSeason = isGuildSeasonTab && isPreopenGuildPowerSeasonContext(guildSeason);
   const guildSeasonFinalized = Boolean(guildSeason?.finalized_at) || ["FINALIZED", "COMPLETED", "CLOSED"].includes(String(guildSeason?.status || "").toUpperCase());
   const serverUpdatedAt = formatJstTimestamp(guildSeason?.updated_at || guildSeason?.finalized_at);
-  const guildSeasonStartLabel = formatJstDay(guildSeason?.starts_at);
-  const guildSeasonLastDayLabel = formatJstDay(guildSeason?.ends_at, true);
-  const guildSeasonPeriodLabel = guildSeasonStartLabel && guildSeasonLastDayLabel
-    ? `${guildSeasonStartLabel}〜${guildSeasonLastDayLabel}`
-    : "9/4〜9/8";
-  const guildSeasonEndLabel = formatJstTimestamp(guildSeason?.ends_at) || "9/9 0:00";
   const updateLabel = isPreopenGuildSeason && serverUpdatedAt
     ? `最終更新 ${serverUpdatedAt}`
     : `${clock.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })} 更新`;
@@ -313,7 +299,7 @@ export default function RankingTab() {
 
       {isPreopenGuildSeason && <section className={`ranking-guild-season-summary ${guildSeasonFinalized ? "is-finalized" : ""}`} aria-label="プレオープン限定シーズン情報">
         <div><strong>プレオープン限定シーズン</strong><span>{guildSeasonFinalized ? "順位確定" : "集計中"}</span></div>
-        <p className="ranking-guild-season-period">{guildSeasonPeriodLabel} <small>{guildSeasonEndLabel}集計終了</small></p>
+        <p className="ranking-guild-season-period">{guildSeasonFinalized ? "開催終了" : "プレオープン中開催"}</p>
         <p>ギルドメンバー全員の総合力で順位が決まります。仲間を集めて戦力を強化し、限定ギルド装飾を獲得しよう！</p>
       </section>}
 

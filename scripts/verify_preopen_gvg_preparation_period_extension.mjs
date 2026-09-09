@@ -44,7 +44,7 @@ for (const contract of [
 }
 assert.match(
   inventory,
-  /ギルドバトル開幕の準備完了！\\n9月9日の正式オープンを待とう！/,
+  /ギルドバトル開幕の準備完了！\\n正式オープンに備えよう！/,
 );
 assert.doesNotMatch(inventory, /9月8日の正式オープンを待とう！/);
 

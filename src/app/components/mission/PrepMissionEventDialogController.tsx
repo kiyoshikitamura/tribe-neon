@@ -28,7 +28,7 @@ function parsePendingDialog(value: unknown): PendingEventDialog | null {
     eventId,
     jstDate,
     displayName: String(row.display_name || "ギルドバトル準備ミッション"),
-    imageUrl: resolvePresentableAssetUrl(row.dialog_image_url) || (eventId === "GVG_PREP_20260904" ? "/promotion/gvg_preopen_mission_keyvisual.webp" : null),
+    imageUrl: resolvePresentableAssetUrl(row.dialog_image_url) || (eventId === "GVG_PREP_20260904" ? "/promotion/gvg_preopen_mission_keyvisual.webp?v=20260905" : null),
     body: String(row.dialog_body || "正式オープンに備えて戦力を強化しよう！\nミッションを達成して報酬を獲得！"),
     primaryLabel: String(row.primary_cta_label || "準備ミッションを見る"),
     secondaryLabel: String(row.secondary_cta_label || "あとで"),

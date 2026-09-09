@@ -22,7 +22,7 @@ async function advanceEntryToName(page: import("@playwright/test").Page) {
   await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toBeVisible();
 }
 
-test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes formation", async ({ page }) => {
+test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes formation", async ({ page, browserName }) => {
   const userId = "00000000-0000-4000-8000-000000009901";
   await page.addInitScript(({ userId }) => {
     localStorage.setItem("tribe_demo_uuid", userId);
@@ -51,75 +51,62 @@ test("tutorial ten-pull guarantees slot 10 SSR and visible Growth precedes forma
   const newGameCta = page.locator(".title-entry-primary");
   if (await newGameCta.isVisible()) await newGameCta.click();
   await expect(freeCta).toBeEnabled();
+  await page.evaluate(() => {
+    const audit = { oldBackground: false, prematureTextResult: false, spinnerSeen: false };
+    Object.assign(window, { __IPHONE14_GACHA_AUDIT__: audit });
+    new MutationObserver(() => {
+      audit.oldBackground ||= Boolean(document.querySelector('.gacha-common-opening-overlay'));
+      audit.spinnerSeen ||= Boolean(document.querySelector('.cg-loading-spinner'));
+      const loading = document.querySelector('.cg-loading');
+      audit.prematureTextResult ||= Boolean(loading?.textContent?.includes('獲得結果を文字で確認') && !loading.textContent.includes('画像を読み込めませんでした'));
+    }).observe(document.body, { childList: true, subtree: true, attributes: true });
+  });
   await freeCta.click();
-  const pullGate = page.locator("[data-gacha-logo-gate]");
+  const pullGate = page.locator(".cg-opening");
   await expect(pullGate).toBeVisible({ timeout:15_000 });
+  expect(await page.evaluate(() => (window as typeof window & { __IPHONE14_GACHA_AUDIT__: unknown }).__IPHONE14_GACHA_AUDIT__)).toEqual({ oldBackground: false, prematureTextResult: false, spinnerSeen: true });
   await page.screenshot({ path: test.info().outputPath("gacha-start.png") });
   await pullGate.click();
-  await expect(page.getByRole("status", { name: "ガチャ結果を表示中" })).toBeVisible();
-  const reveal = page.locator(".tutorial-gacha-reveal");
-  await expect(reveal).toBeVisible({ timeout:15_000 });
-  const capturedRarities = new Set<string>();
-  for (let index=0; index<9; index+=1) {
-    await expect(reveal.locator(".character-presentation-frame.is-reveal")).toBeVisible();
-    await expect(reveal).toHaveAttribute("data-can-advance", "true");
-    const rarityClass = (await reveal.getAttribute("class"))?.match(/rarity-(n|r|sr|ssr)/)?.[1];
-    if (rarityClass && !capturedRarities.has(rarityClass)) {
-      capturedRarities.add(rarityClass);
-      await page.screenshot({ path: test.info().outputPath(`gacha-reveal-${rarityClass}.png`) });
-    }
-    const currentLabel = await reveal.getAttribute("aria-label");
-    await reveal.evaluate((button: HTMLButtonElement) => button.click());
-    const nextGate = page.locator(".gacha-character-logo-gate");
-    await expect(nextGate).toBeVisible();
-    await nextGate.click();
-    await expect(reveal).not.toHaveAttribute("aria-label", currentLabel || "");
+  const reveal = page.locator(".cg-reveal");
+  for (let index = 0; index < 9; index += 1) {
+    await expect(page.locator(".cg-top>span")).toHaveText(`${index + 1} / 10`);
+    await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "SETTLED");
+    await expect(reveal.locator(".character-presentation-character")).toBeVisible();
+    await expect(reveal.locator(".cg-reveal-copy>blockquote")).not.toBeEmpty();
+    await reveal.click();
   }
-  await expect(reveal).toHaveClass(/is-guaranteed/);
   await expect(reveal).toHaveAttribute("data-presentation-state", "SSR_QUOTE");
-  await expect(reveal.locator(".tutorial-ssr-quote")).not.toContainText("レイジ");
-  await expect(reveal.locator(".tutorial-ssr-quote")).not.toContainText("SSR");
   await expect(reveal).not.toHaveAttribute("data-character-id", /.+/);
-  await expect(reveal.locator(".tutorial-ssr-quote blockquote")).toHaveText("俺の前に立つなら、覚悟くらい決めてこい。");
+  await expect(reveal.locator(".cg-quote-intro blockquote")).toHaveAttribute("aria-label", "俺の前に立つなら、覚悟くらい決めてこい。");
   await page.screenshot({ path: test.info().outputPath("gacha-ssr-quote.png") });
-  await reveal.evaluate((button: HTMLButtonElement) => button.click());
-  await expect(reveal).toHaveAttribute("data-presentation-state", "SSR_FLASH");
-  await expect(reveal).toHaveAttribute("data-presentation-state", "SSR_REVEAL");
+  await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "SETTLED");
   await expect(reveal).toHaveAttribute("data-character-id", "char_reiji_01");
-  await expect(reveal).toHaveAttribute("data-can-advance", "true");
-  await expect(reveal.locator(".character-presentation-frame.is-reveal")).toBeVisible();
   await page.screenshot({ path: test.info().outputPath("gacha-ssr-reveal.png") });
-  await reveal.evaluate((button: HTMLButtonElement) => button.click());
-  await expect(page.locator(".gacha-result-card")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card .character-presentation-frame.is-character")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card .character-presentation-gacha-result-compact")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card .character-presentation-rarity-badge")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card .character-presentation-attribute-badge")).toHaveCount(10);
-  await expect(page.locator(".gacha-result-card .gacha-result-acquisition-badge")).toHaveCount(10);
-  await expect(page.locator('.gacha-result-card[data-ssr-glint="enabled"]')).toHaveCount(1);
-  const glintTiming = await page.locator('.gacha-result-card[data-ssr-glint="enabled"]').evaluate((card) => {
-    const animation = card.getAnimations({ subtree: true }).find((entry) => (entry as CSSAnimation).animationName === "gacha-result-ssr-glint");
-    const timing = animation?.effect?.getComputedTiming();
-    return { playState: animation?.playState, duration: timing?.duration, iterations: timing?.iterations };
-  });
-  expect(glintTiming).toEqual({ playState: "running", duration: 1200, iterations: 1 });
+  await reveal.click();
+  await expect(page.locator(".cg-mini")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .character-presentation-gacha-result-compact")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .cg-rarity-badge")).toHaveCount(10);
+  await expect(page.locator(".cg-mini .cg-mini-name")).toHaveCount(10);
+  await expect(page.locator(".cg-mini.cg-ssr")).toHaveCount(1);
   for (const width of [375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });
-    const layout = await page.locator(".gacha-result-grid").evaluate((grid) => ({ scrollWidth: grid.scrollWidth, clientWidth: grid.clientWidth }));
+    const layout = await page.locator(".cg-grid").evaluate((grid) => ({ scrollWidth: grid.scrollWidth, clientWidth: grid.clientWidth }));
     expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth + 1);
     await page.screenshot({ path: test.info().outputPath(`gacha-ten-pull-result-${width}.png`) });
   }
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send("Emulation.setDeviceMetricsOverride", { width: 430, height: 844, deviceScaleFactor: 2, mobile: false });
-  await page.screenshot({ path: test.info().outputPath("gacha-ten-pull-result-desktop-dpr2.png") });
-  await cdp.send("Emulation.clearDeviceMetricsOverride");
+  if (browserName === "chromium") {
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send("Emulation.setDeviceMetricsOverride", { width: 430, height: 844, deviceScaleFactor: 2, mobile: false });
+    await page.screenshot({ path: test.info().outputPath("gacha-ten-pull-result-desktop-dpr2.png") });
+    await cdp.send("Emulation.clearDeviceMetricsOverride");
+  }
   await page.setViewportSize({ width: 390, height: 844 });
   const payload = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_gacha_execution_history") || "[]")[0]?.result_payload);
   expect(payload.results).toHaveLength(10);
   expect(payload.results[9].rarity).toBe("SSR");
   expect(payload.guaranteed_ssr_slot).toBe(10);
 
-  await page.locator(".gacha-result-next").click();
+  await page.locator(".cg-continue").click();
   await expect(page.locator('[data-acceptance-state="TUTORIAL_SKILL_STEP"]')).toContainText("ストリートパンチ");
   await page.getByRole("button", { name: "育成へ進む" }).click();
   await expect(page.locator('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]')).toContainText("Lv.1 → Lv.7");

@@ -97,6 +97,9 @@
 }
 
 .legal-page-content a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: #80dfff;
   text-underline-offset: 3px;
 }

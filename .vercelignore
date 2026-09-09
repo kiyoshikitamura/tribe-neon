@@ -6,6 +6,8 @@ test-results
 playwright-report
 outputs
 docs/development/evidence
+scratch
+.env*
 
 # Specifications, database artifacts, and local-only source material
 specs
