@@ -13,7 +13,7 @@
 .raid-hp-bar-container { position: relative; display: flex; width: 100%; height: 20px; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 3px; background: rgba(2, 4, 8, .86); }
 .raid-hp-bar-fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #a60035, #ff225e); transition: width .3s ease; }
 .raid-hp-text { position: relative; z-index: 1; color: #fff; font-size: 9px; font-weight: 900; text-shadow: 0 1px 2px #000; }
-.raid-status-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 9px 0; }
+.raid-status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 9px 0; }
 .raid-status-grid .status-metric { min-width: 0; padding: 6px 7px; border: 1px solid rgba(91, 122, 153, .25); background: rgba(3, 7, 13, .68); }
 .raid-status-grid .status-metric small { font-size: 7px; }
 .raid-status-grid .status-metric strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; }

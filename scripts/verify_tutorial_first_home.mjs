@@ -5,6 +5,8 @@ const home = fs.readFileSync("src/app/components/HomeTab.tsx", "utf8");
 const header = fs.readFileSync("src/app/components/Header.tsx", "utf8");
 const context = fs.readFileSync("src/app/context/GameContext.tsx", "utf8");
 const raid = fs.readFileSync("src/app/context/hooks/useRaid.ts", "utf8");
+const raidActivity = fs.readFileSync("src/domain/raidRoomActivity.ts", "utf8");
+const roomTransport = fs.readFileSync("src/domain/raidRoomRpcTransport.ts", "utf8");
 const mock = fs.readFileSync("src/utils/mock/mockRpc.ts", "utf8");
 const manifest = fs.readFileSync("src/app/lib/screenManifests.ts", "utf8");
 const character = fs.readFileSync("src/app/components/CharacterTab.tsx", "utf8");
@@ -17,7 +19,12 @@ for (const town of ["shinjuku", "shibuya", "ikebukuro", "roppongi", "akihabara",
 }
 assert.doesNotMatch(home, /bg_base_|ネオンタワー|ディープドック|ジャンクバザール|キタクラゲート/, "Legacy Home town projection remains active");
 assert.match(context, /setSelectedLeader\(String\(tutorialFormation\.leader_character_id\)\)/, "Tutorial leader must update client state immediately");
-assert.match(context, /supabase\.rpc\("get_active_raids"\)/, "Home Raid state must use the server projection");
+// Room切替後もサーバー一覧を正本とし、旧一覧RPCは旧モード内だけで呼ぶ。
+assert.match(context, /if \(roomUiEnabled\) \{\s*if \(currentAuthUserIdRef\.current === userId\) \{\s*await roomActivityRef\.current\.tracker\.observeTransport\(createRaidRoomRpcTransport\(supabase\)\)\.listRooms\(\);\s*\}\s*\} else \{\s*const activity = await loadRaidActivity\(supabase, false\);/, "Home Raid bootstrap must select the authenticated Room projection or legacy projection");
+assert.doesNotMatch(context, /supabase\.rpc\(["']get_active_raids["']\)/, "Home must not bypass the Raid projection mode switch");
+assert.match(raidActivity, /if \(!roomEnabled\) \{\s*const result = await client\.rpc\('get_active_raids'\);\s*return \{ mode: 'legacy' as const, \.\.\.result \};\s*\}/, "Legacy Raid projection must preserve the server response only in legacy mode");
+assert.match(roomTransport, /listRooms:\s*\(\) => pages\('list_raid_rooms_v1', \{ p_difficulty_id: null \}, 'rooms', room, \(entry\) => entry\.roomId\)/, "Room projection must read all server Room pages");
+assert.match(context, /isRaidActive:\s*roomUiEnabled \? roomActivity\.isActive : raidBossHp > 0 && raidBossSecondsLeft > 0/, "Home Raid activity must follow the selected projection");
 assert.match(raid, /useState<number>\(0\)/, "Raid activity must start inactive");
 assert.doesNotMatch(header, /AP \(Action Point\)|>VIT</, "Header must not expose AP/VIT legacy labels");
 assert.match(header, /aria-label="Vitality"/, "Header must expose the canonical resource name");

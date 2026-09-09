@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { raidRoomRescuePendingKey, readRaidRoomRescuePending, saveRaidRoomRescuePending, clearRaidRoomRescuePending } from '../../src/domain/raidRoomRescuePending.ts';
+const requestA = '11111111-1111-4111-8111-111111111111';
+const requestB = '22222222-2222-4222-8222-222222222222';
+function memory() { const data = new Map(); return {getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value),removeItem:key=>data.delete(key)}; }
+test('救援未確認要求は保存後の再読込でも同じ要求を返す',()=>{ const storage=memory(); assert.equal(readRaidRoomRescuePending('user','room',storage),null); saveRaidRoomRescuePending('user','room',requestA,storage); const value=readRaidRoomRescuePending('user','room',storage); assert.equal(value.requestId,requestA); assert.equal(readRaidRoomRescuePending('user','room',storage).requestId,requestA); });
+test('救援未確認要求はuserとRoomで隔離する',()=>{const storage=memory(); saveRaidRoomRescuePending('user','room',requestA,storage); assert.equal(readRaidRoomRescuePending('other','room',storage),null);assert.equal(readRaidRoomRescuePending('user','other',storage),null); assert.notEqual(raidRoomRescuePendingKey('a:b','c'),raidRoomRescuePendingKey('a','b:c'));});
+test('成功確認した要求だけ削除し古い応答で新しい要求を消さない',()=>{const storage=memory();saveRaidRoomRescuePending('user','room',requestA,storage);assert.throws(()=>saveRaidRoomRescuePending('user','room',requestB,storage));clearRaidRoomRescuePending('user','room',requestA,storage);saveRaidRoomRescuePending('user','room',requestB,storage);assert.throws(()=>clearRaidRoomRescuePending('user','room',requestA,storage));assert.equal(readRaidRoomRescuePending('user','room',storage).requestId,requestB);clearRaidRoomRescuePending('user','room',requestB,storage);assert.equal(readRaidRoomRescuePending('user','room',storage),null);});
+test('保存失敗・読戻し不一致を成功扱いにしない',()=>{const storage=memory();assert.throws(()=>saveRaidRoomRescuePending('user','room',requestA,{...storage,setItem(){throw Error('quota');}}));assert.throws(()=>saveRaidRoomRescuePending('user','room',requestA,{...storage,setItem(){}}));});

@@ -49,10 +49,8 @@ const CATEGORY_DEFINITIONS: Record<RankingRewardCategory, RewardCategoryDefiniti
   power: [{ key: "POWER", title: "個人ランキング" }],
   guild_power: [{ key: "GUILD_POWER", title: "ギルドランキング" }],
   pvp: [{ key: "PVP", title: "個人ランキング" }],
-  raid: [
-    { key: "RAID_PERSONAL", title: "個人ランキング" },
-    { key: "RAID_GUILD", title: "ギルドランキング" },
-  ],
+  // Retain the legacy category input, but never present retired Raid rewards.
+  raid: [],
 };
 
 function isRewardTier(value: unknown): value is [number, number, string, number] {

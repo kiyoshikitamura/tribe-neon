@@ -1,0 +1,32 @@
+-- 既存projection/lifecycle/creation fixtureの拡張。実SQLに必要な列と台帳だけを再現。
+alter table users add column raid_free_entry_consumed boolean default false, add column raid_points_last_recovered_at timestamptz default now();
+alter table raid_bosses add column outcome text, add column cleared_at timestamptz, add column respawn_after timestamptz;
+alter table canonical_raid_variants add column atk int default 10, add column def int default 10, add column spd int default 10, add column member_character_ids jsonb default '["enemy"]';
+create table canonical_raid_boss_master(boss_id text primary key,display_name text,profile_type text,attribute text,reference_level int,skill_loadout jsonb);
+insert into canonical_raid_boss_master select raid_variant_id,raid_name,'PARTY','NEUTRAL',30,'[]' from canonical_raid_variants;
+create table canonical_quest_enemy_pool_entries(version text,character_id text,difficulty text,local_affinity boolean,weight int,skill_loadout jsonb);
+insert into canonical_quest_enemy_pool_entries values('2026-08-30','enemy','HARD',true,1,'[]');
+create table canonical_skill_master(version text,skill_id text,exclusive_character_id text,display_name text,activation_type text,cooldown int,available_from_round int,target text,effects jsonb);
+create table canonical_character_master(version text,character_id text,display_name text,attribute text);
+create table battle_replay_sessions(id uuid primary key default gen_random_uuid(),requester_user_id uuid,battle_mode text,source_reference_id uuid,tactic_id text,random_seed bigint,player_snapshot jsonb,enemy_snapshot jsonb,resolution_authority text,finalization_status text,official_context jsonb,status text default 'PENDING',result jsonb,resolved_at timestamptz,finalized_at timestamptz,finalization_result jsonb);
+create table battle_replay_events(battle_replay_session_id uuid,event_index int,round_number int,event_type text,payload jsonb,primary key(battle_replay_session_id,event_index));
+alter table raid_damage_logs alter column id set default gen_random_uuid(), alter column created_at set default now();
+alter table raid_damage_logs add column boss_id text, add column raid_boss_id text, add column damage bigint, add column damage_dealt bigint, add column battle_replay_session_id uuid unique;
+alter table raid_instance_user_progress add column raid_points_consumed int default 0,add column last_guild_id uuid,add column updated_at timestamptz default now();
+create table presents(id uuid primary key default gen_random_uuid(),user_id uuid,item_id text,quantity int,message text,status text,expire_at timestamptz);
+create table canonical_daily_activity_claims(game_day date,user_id uuid,source_key text,source_ref uuid,reward_payload jsonb,created_at timestamptz,primary key(game_day,user_id,source_key));
+create table raid_clear_reward_claims(raid_day_key text,user_id uuid,reward_type text default 'CLEAR_REWARD',source_instance_id uuid,ticket_roll boolean default false,ticket_item_id text,awakening_roll boolean default false,delivery_status text default 'PENDING',last_error text,created_at timestamptz default now(),delivered_at timestamptz,primary key(raid_day_key,user_id,reward_type));
+create table raid_clear_reward_deliveries(raid_day_key text,user_id uuid,reward_type text,item_id text,quantity int,source_instance_id uuid,delivered_at timestamptz,primary key(raid_day_key,user_id,reward_type,item_id));
+create table canonical_raid_reward_master(version text,reward_type text,reward_key text,item_id text,quantity int);
+insert into canonical_raid_reward_master values('2026-08-22','PROGRESS','1','TEST_ITEM',1);
+create table raid_production_reward_grants(raid_boss_instance_id uuid,user_id uuid,reward_type text,reward_key text,item_id text,quantity int,created_at timestamptz,primary key(raid_boss_instance_id,user_id,reward_type,reward_key,item_id));
+create table raid_rewards_master(id int primary key,reward_item_id text,item_id text,reward_quantity int,quantity int);
+insert into raid_rewards_master values(1,'TEST_ITEM',null,1,null);
+create table raid_reward_grants(raid_boss_instance_id uuid,user_id uuid,reward_id int,reward_reason text,primary key(raid_boss_instance_id,user_id,reward_id,reward_reason));
+-- 専有範囲外の処理は呼出し記録double。戦闘計算・回復・ミッションそのものの検証ではない。
+create table isolation_calls(kind text,user_id uuid);
+create function sync_and_recover_vitality_and_pvp_points(p_uid uuid) returns void language sql as $$ insert into isolation_calls values('recover',p_uid) $$;
+create function build_server_battle_snapshot(p_uid uuid,p_ids text[],p_team text) returns jsonb language sql as $$ select '[{"id":"fixture-player"}]'::jsonb $$;
+create function validate_official_battle_result(p_result jsonb) returns void language plpgsql as $$ begin if p_result->'events' is null then raise exception 'invalid fixture result'; end if; end $$;
+create function evaluate_mission_progress(p_uid uuid,p_type text,p_value int) returns void language sql as $$ insert into isolation_calls values('mission',p_uid) $$;
+create function resolve_canonical_reward_item(p_key text) returns text language sql as $$ select 'TEST_TICKET'::text $$;

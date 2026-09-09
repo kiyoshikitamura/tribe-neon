@@ -1,5 +1,11 @@
 # 企画方針・リリーススコープ決定事項
 
+## レイドランキング廃止（2026-09-08・優先決定）
+
+Product Ownerの訂正と実装継続指示により、レイドの個人/Guild・日次/Seasonランキングおよび順位報酬の新規生成を廃止する。新Roomの貢献を既存ランキングに合算する案は撤回。Room内の参加者・貢献表示、討伐/救援成功報酬は別に扱う。PvP・総合力・Guild総合力等の他ランキングは維持する。
+
+過去の順位履歴・報酬台帳・発行済みPresentは保持する。下記の旧レイドランキング定義と矛盾する場合は本節を優先する。詳細は`raid_room_rescue_v1.md`。実装と実DBへの適用完了は区別する。
+
 ## M9-X Cold Start / Social（2026-08-18）
 
 - Tutorial必須工程は`GACHA -> FORMATION -> QUEST -> SPEED_UP -> NPC_BATTLE`。GrowthはTutorial外のMission Hub POWERへ移す。

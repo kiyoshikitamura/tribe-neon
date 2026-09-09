@@ -607,6 +607,24 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     return { data: { status: String(request.status).toLocaleLowerCase() }, error: null };
   }
 
+  if (funcName === "get_my_raid_contribution_v1") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const bosses = client.getStorage("raid_bosses") || [];
+    const instance = bosses.find((boss: any) => boss.id === params?.p_instance_id);
+    if (!instance) return { data: null, error: { message: "Raid not found", code: "P0002" } };
+    const isRoom = (client.getStorage("raid_rooms") || []).some((room: any) => room.raid_boss_instance_id === instance.id);
+    // SQL261: RoomはInstance、旧Raidは同日分。appliedではなく本人のrawを参照する。
+    const eligibleIds = new Set(bosses.filter((boss: any) => isRoom
+      ? boss.id === instance.id
+      : instance.raid_day_key != null && boss.raid_day_key === instance.raid_day_key
+    ).map((boss: any) => boss.id));
+    const contribution = (client.getStorage("raid_damage_logs") || [])
+      .filter((log: any) => log.user_id === userId && eligibleIds.has(log.raid_boss_instance_id))
+      .reduce((total: number, log: any) => total + Number(log.raw_damage ?? 0), 0);
+    return { data: { contribution }, error: null };
+  }
+
   if (funcName === "get_raid_rankings") {
     const users = client.getStorage("users") || [];
     const guilds = client.getStorage("guilds") || [];

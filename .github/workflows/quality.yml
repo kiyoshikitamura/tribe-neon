@@ -124,3 +124,47 @@ jobs:
             playwright-report/index.html
           if-no-files-found: ignore
           retention-days: 1
+
+  # 既存の広域E2Eが先に打ち切られても、Raid廃止順位/貢献/他カテゴリの回帰を実行する。
+  # 他jobの結果や既存Release Gateを置き換えない。
+  raid-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_APP_ENV: test
+      NEXT_PUBLIC_USE_MOCK_DB: "true"
+      NEXT_PUBLIC_RAID_ROOM_UI_ENABLED: "false"
+      CAPTURE_ACCEPTANCE_VISUALS: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --experimental-strip-types --test tests/raid-room/mock-contribution.test.mjs
+      - name: Cache Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Verify retained Raid contribution and retired ranking
+        run: >-
+          timeout --signal=TERM --kill-after=30s 8m
+          node scripts/run_browser_e2e.mjs
+          tests/e2e/raid-phase3.spec.ts
+          tests/e2e/ranking-phase2.spec.ts
+          tests/e2e/main-shell.spec.ts
+          --workers=2 --retries=0 --max-failures=2
+      - name: Upload Raid regression diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raid-regression-diagnostics
+          path: |
+            test-results/**/test-failed-*.png
+            test-results/**/error-context.md
+          if-no-files-found: ignore
+          retention-days: 1
