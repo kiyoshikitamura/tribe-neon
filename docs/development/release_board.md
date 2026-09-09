@@ -253,3 +253,8 @@ STATUS: MACHINE PASS / HUMAN REVIEW REQUIRED。基準4e50a455から専用ロー�
 ## RAID-CHARACTER 固定候補統合
 
 9fe5909 + a02754c を専用ローカルbranchで統合。最新本番同期ではない。Fresh Mock完走、双方回帰・型/build・lint 0 errors。旧Room活動fixtureのbrowser1件FAIL、実HTTP/Preview/人の実端末受入は未完了。詳細 raid_character_integration_report.md。外部反映なし。
+
+
+## RAID-PREVIEW-STEP5
+
+専用ローカル候補で本番実配信550c022・完成Character1a38636・Raid49222deを統合。型/Mock build/回帰PASS。Preview未適用Raid4本の実履歴・定義を読み取り照合し適用/復旧手順を準備。外部変更なし。実HTTP3役・実Fresh装備403・実機受入を残す。詳細 raid_step5_integration_report.md / raid_step5_preview_plan.md。最新本番同期済みとは扱わない。

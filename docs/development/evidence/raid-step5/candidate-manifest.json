@@ -1,0 +1,25 @@
+{
+  "raidSource": "49222de05d0d9925beb6439c56c03a61b8564af5",
+  "productionReference": "550c02225cbecb6ba6f174ee3fb952bcaae2f6dd",
+  "characterSource": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+  "productIntegration": "86853c6241085fc3fc2a8e46fcf25973b4e1e77e",
+  "externalChanges": false,
+  "sql": [
+    {
+      "path": "supabase/migrations/20260908175140_raid_top_daily_authority.sql",
+      "sha256": "36621aa30007457f5e190896ffed90e3a0631e10eafc4cd469007537cb5ca14d"
+    },
+    {
+      "path": "supabase/migrations/20260908175143_raid_top_aggregate_api.sql",
+      "sha256": "34e1225b717b267760ebe90495203162630680fb52b67e9c08b0121d4b2d3d18"
+    },
+    {
+      "path": "supabase/migrations/20260908181251_raid_room_display_projection.sql",
+      "sha256": "7944c2a068ea7ec78be6ad88823dbdc5aeac2ee0027a7000bc0003b8b7757e73"
+    },
+    {
+      "path": "supabase/migrations/20260909023226_raid_remaining_pages_projection.sql",
+      "sha256": "14cb3052ffe7218730aab65640f0f484634d4cf43f8e4d56158dcc320b3a7ffb"
+    }
+  ]
+}

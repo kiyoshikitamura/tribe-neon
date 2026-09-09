@@ -1,0 +1,23 @@
+[
+  {
+    "name": "verify_battle_presentation_contract",
+    "status": 0
+  },
+  {
+    "name": "verify_ssr_gacha_quotes",
+    "status": 0
+  },
+  {
+    "name": "verify_crawler_metadata",
+    "status": 0,
+    "retry": "explicit localhost:3017 --mode preview; first default 3000 connection refused"
+  },
+  {
+    "name": "verify_world_intro_observations",
+    "status": 0
+  },
+  {
+    "name": "verify_acquisition_attribution",
+    "status": 0
+  }
+]

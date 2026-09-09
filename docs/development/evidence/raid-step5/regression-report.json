@@ -1,0 +1,109 @@
+[
+  {
+    "name": "domain",
+    "status": 0,
+    "pass": "110",
+    "fail": "0"
+  },
+  {
+    "name": "run-browser-tests",
+    "status": 0,
+    "pass": "29",
+    "fail": "0",
+    "initial": {
+      "pass": 15,
+      "fail": 14
+    },
+    "reason": "Stale locator/select expectations and missing JSDOM ResizeObserver; retry button retained while spinner removes accessible text"
+  },
+  {
+    "name": "detail-run-tests",
+    "status": 0,
+    "pass": "16",
+    "fail": "0"
+  },
+  {
+    "name": "top-run-tests",
+    "status": 0,
+    "pass": "16",
+    "fail": "0"
+  },
+  {
+    "name": "top-data-run-tests",
+    "status": 0,
+    "pass": "6",
+    "fail": "0"
+  },
+  {
+    "name": "run-activity-sync-tests",
+    "status": 0,
+    "pass": "16",
+    "fail": "0"
+  },
+  {
+    "name": "run-clear-reward-tests",
+    "status": 0,
+    "pass": "4",
+    "fail": "0"
+  },
+  {
+    "name": "run-use-battle-room-tests",
+    "status": 0,
+    "pass": "20",
+    "fail": "0"
+  },
+  {
+    "name": "run-street-presentation-tests",
+    "status": 0,
+    "pass": "5",
+    "fail": "0"
+  },
+  {
+    "name": "run-ranking-retirement-tests",
+    "status": 0,
+    "pass": "5",
+    "fail": "0"
+  },
+  {
+    "name": "run-ui-cutover-tests",
+    "status": 0,
+    "pass": "3",
+    "fail": "0"
+  },
+  {
+    "name": "pages-run-tests",
+    "status": 0,
+    "pass": "5",
+    "fail": "0"
+  },
+  {
+    "name": "pages-rescue-hook-run-tests",
+    "status": 0,
+    "pass": "3",
+    "fail": "0"
+  },
+  {
+    "name": "pages-data-run-tests",
+    "status": 0,
+    "pass": "4",
+    "fail": "0"
+  },
+  {
+    "name": "integration-shared-run-tests",
+    "status": 0,
+    "pass": "5",
+    "fail": "0"
+  },
+  {
+    "name": "setup",
+    "status": 0,
+    "pass": null,
+    "fail": null
+  },
+  {
+    "name": "initial-equipment",
+    "status": 0,
+    "pass": "8",
+    "fail": "0"
+  }
+]

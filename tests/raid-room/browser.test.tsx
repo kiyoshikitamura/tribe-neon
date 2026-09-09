@@ -34,7 +34,7 @@ async function openRoom(h: ReturnType<typeof harness>) {
   await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
   fireEvent.click(h.ui.getByRole('tab', { name: '中級' }));
   assert.match(h.ui.container.textContent ?? '', /160,000/);
-  fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
+  fireEvent.click(await h.ui.findByRole('button', { name: '戦況を見る' }));
   await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
 }
 
@@ -150,7 +150,7 @@ test('同期の難度・参加者・報酬操作もspinnerのみで操作名を�
     assertSpinnerOnly(tab);
     assert.equal(h.ui.getByRole('tab', { name: '中級' }), tab);
     assert.match(h.ui.container.textContent ?? '', /160,000/);
-  fireEvent.click(await h.ui.findByRole('button', { name: 'レイドを開く' }));
+  fireEvent.click(await h.ui.findByRole('button', { name: '戦況を見る' }));
     await waitFor(() => assert.equal(h.controller.getSnapshot().room.status, 'success'));
     for (const name of ['参加者一覧', '報酬']) {
       const button = h.ui.getByRole('button', { name });
@@ -307,14 +307,15 @@ test('作成の再送IDを保ち、連打抑止・成功Room表示・戦闘未�
     await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
     fireEvent.click(h.ui.getByRole('button', { name: '挑む' }));
     await waitFor(() => assert.equal(h.controller.getSnapshot().bossChoices.status, 'success'));
-    fireEvent.change(h.ui.getByRole('combobox', { name: 'ボス' }), { target: { value: 'boss-a' } });
+    fireEvent.click(await h.ui.findByRole('button', {name: /確認ボス/}));
     fireEvent.click(h.ui.getByRole('button', { name: 'この敵に挑む' }));
     await h.ui.findByRole('alert');
-    fireEvent.click(h.ui.getByRole('button', { name: 'この敵に挑む' }));
-    fireEvent.click(h.ui.getByRole('button', { name: 'この敵に挑む' }));
+    const retryButton = h.ui.getByRole('button', { name: 'この敵に挑む' });
+    fireEvent.click(retryButton);
+    fireEvent.click(retryButton);
     assert.equal(requests.length, 2);
     assert.equal(requests[0].requestId, requests[1].requestId);
-    const button = h.ui.getByRole('button', { name: 'この敵に挑む' });
+    const button = retryButton;
     assert.equal(button.textContent, '');
     assert.equal(button.hasAttribute('disabled'), true);
     await act(async () => pending.resolve(created));
@@ -322,7 +323,7 @@ test('作成の再送IDを保ち、連打抑止・成功Room表示・戦闘未�
     assert.deepEqual(h.battles, []);
     assert.equal(h.controller.getSnapshot().room.data?.serverEligibility.status, 'unknown');
     fireEvent.click(h.ui.getByRole('button', { name: '一覧へ' }));
-    await h.ui.findByRole('button', { name: 'レイドを開く' });
+    await h.ui.findByRole('button', { name: '戦況を見る' });
     assert.equal(h.controller.getSnapshot().rooms.data?.[0].roomId, 'created');
   } finally { h.close(); }
 });
@@ -336,7 +337,7 @@ test('作成payload変更は新ID、候補なしは作成を抑止', async () =>
   try {
     await waitFor(() => assert.equal(h.controller.getSnapshot().rooms.status, 'success'));
     fireEvent.click(h.ui.getByRole('button', { name: '挑む' }));
-    await h.ui.findByText('挑戦できる敵はありません。');
+    await h.ui.findByText('現在、挑戦できる敵はいません。');
     assert.equal(h.ui.getByRole('button', { name: 'この敵に挑む' }).hasAttribute('disabled'), true);
     await act(async () => { await h.controller.createRoom('beginner', 'a'); await h.controller.createRoom('intermediate', 'a'); });
     assert.notEqual(requests[0].requestId, requests[1].requestId);
