@@ -187,3 +187,16 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+/* Keep news actions visible when the full announcement needs vertical scrolling. */
+.canonical-dialog:has(.inbox-news-modal-text) {
+  display: flex;
+  flex-direction: column;
+}
+.canonical-dialog:has(.inbox-news-modal-text) .canonical-dialog-header,
+.canonical-dialog:has(.inbox-news-modal-text) .canonical-dialog-actions {
+  flex-shrink: 0;
+}
+.canonical-dialog:has(.inbox-news-modal-text) .canonical-dialog-body {
+  flex: 1 1 auto;
+}

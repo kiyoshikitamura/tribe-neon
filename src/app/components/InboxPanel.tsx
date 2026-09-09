@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
 import SubTabNav from "./ui/SubTabNav";
@@ -22,6 +23,7 @@ export default function InboxPanel() {
     inboxPanelTab,
     setInboxPanelTab,
     newsList,
+    setNewsList,
     presents,
     handleClaimPresent,
     handleClaimAllPresents,
@@ -31,10 +33,28 @@ export default function InboxPanel() {
 
   const [selectedNews, setSelectedNews] = useState<any | null>(null);
 
+  // Refresh on opening so already logged-in players can read a new release.
+  // Publication and time-window filtering are enforced by news RLS.
+  useEffect(() => {
+    if (!showInboxPanel || inboxPanelTab !== "news") return;
+    let cancelled = false;
+    void supabase.from("news").select("*").order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled || error || !data) return;
+        setNewsList(data.map((news) => ({
+          ...news,
+          id: String(news.id),
+          date: new Date(news.start_at).toLocaleDateString(),
+        })));
+      });
+    return () => { cancelled = true; };
+  }, [showInboxPanel, inboxPanelTab, setNewsList]);
+
   if (!showInboxPanel) return null;
 
   const handleClose = () => {
     if (presentClaimLoading) return;
+    setSelectedNews(null);
     setShowInboxPanel(false);
   };
 
