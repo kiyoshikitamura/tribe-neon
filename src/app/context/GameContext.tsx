@@ -30,6 +30,8 @@ import { getCharacterBaseStats, getCharacterTotalStats } from "@/utils/stats_cal
 import { SHOP_PRODUCTS_MASTER, ShopProductItem } from "@/utils/shop_master_data";
 import { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
 import { useNavigation } from "./hooks/useNavigation";
+import { useProfileRequestState } from "./hooks/useProfileRequestState";
+import type { PublicUserProfileModel } from "@/app/components/profile/PublicUserProfile";
 import { EXISTING_GOOGLE_LOGIN_INTENT_KEY, useAuth } from "./hooks/useAuth";
 import { useFriends } from "./hooks/useFriends";
 import { useChat } from "./hooks/useChat";
@@ -607,7 +609,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [authenticatedProjectionOwnerUserId, setAuthenticatedProjectionOwnerUserId] = useState<string>("");
   const [authenticatedProjectionError, setAuthenticatedProjectionError] = useState<string | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
-  const [activePlayerDetail, setActivePlayerDetail] = useState<any | null>(null);
+  const { value: activePlayerDetail, set: setActivePlayerDetail, begin: beginPlayerDetail } = useProfileRequestState<PublicUserProfileModel>(
+    JSON.stringify([session?.user?.id ?? null, session?.user?.is_anonymous ?? null, activeTab, showTitleView, showLegalPage]),
+  );
   const [activeGuildDetail, setActiveGuildDetail] = useState<any | null>(null);
 
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
@@ -710,6 +714,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // ==========================================
   const resetAuthenticatedProjection = (nextUserId: string | null) => {
     if (currentAuthUserIdRef.current === nextUserId) return;
+    setActivePlayerDetail(null);
     currentAuthUserIdRef.current = nextUserId;
     if (readHomeResumeSnapshot()?.userId !== nextUserId) clearHomeResumeSnapshot();
     setAuthenticatedProjectionOwnerUserId("");
@@ -2747,7 +2752,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const fetchPlayerDetail = async (userId: string) => {
     // タップへの反応を通信完了に依存させない。公開情報を取得後に同じモーダルを更新する。
     setActiveGuildDetail(null);
-    setActivePlayerDetail({
+    const request = beginPlayerDetail({
       id: userId,
       status: "loading",
       username: "プレイヤー情報を取得中",
@@ -2766,6 +2771,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         supabase.rpc("get_public_pvp_rankings", { p_daily: true, p_limit: 100, p_offset: 0 }),
         supabase.rpc("get_public_battle_roster", { p_target_user_id: userId }),
       ]);
+      if (!request.isCurrent()) return;
       if (publicPlayerError) throw publicPlayerError;
       if (profileError) console.warn("Public identity projection unavailable:", profileError.message);
       if (dailyError) console.warn("Public daily PvP rank unavailable:", dailyError.message);
@@ -2773,7 +2779,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const identity = (Array.isArray(profileRows) ? profileRows : [])[0] || {};
       const dailyStanding = (Array.isArray(dailyRows) ? dailyRows : []).find((row: any) => row.user_id === userId);
       const rosterCharacters = Array.isArray(publicRoster?.characters) ? publicRoster.characters : [];
-      setActivePlayerDetail({
+      request.publish({
         id: publicPlayer.user_id,
         status: "ready",
         username: publicPlayer.username,
@@ -2898,8 +2904,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       });
       */
     } catch (e: any) {
+      if (!request.isCurrent()) return;
       console.warn("Failed to fetch player detail:", e.message);
-      setActivePlayerDetail({
+      request.publish({
         id: userId,
         status: "error",
         username: "プロフィール",
@@ -4144,6 +4151,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { setRaidRescueTarget(null); }, [session?.user?.id]);
 
   const navigateTab = (tabName: string, subTab?: string) => {
+    setActivePlayerDetail(null);
     setSelectedNews(null);
     if (tabName === "ranking" && subTab === "raid") {
       nav.navigateTab("raid");

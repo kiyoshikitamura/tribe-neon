@@ -1,0 +1,11 @@
+# 公開プロフィール 非同期応答の失効修正
+
+基準59eea0414855bdadf36c8df4e30ad41ca10fa449、前回証跡76077d2d623d954f645fa1200b4271180efb6ebbから専用branch。
+
+GameContextの公開プロフィール取得を、最新かつ開いている要求だけが表示を更新できる状態管理へ接続。閉じる・DM・Guildへの切替で世代を失効し、遅い成功/失敗応答を破棄する。別ユーザー取得・同じユーザー再試行も古い応答を破棄。画面/タイトル/法務画面/認証主体変更とunmountでも失効する。認証イベントの主体変更時は描画を待たず失効する。
+
+プロフィール取得RPC・公開範囲・データ計算は変更しない。4入口、挑戦者表記、カード/バッジ、DMの既存接続、参加者のスクロール保存、初期装備、Replay背景、ack帰還、報酬処理は保持。
+
+ローカル検証: 新規非同期競合10件、既存詳細UI19件、Replay/ack27件PASS。TypeScript PASS、Mock webpack build PASS。変更対象lint errors0、新hook warnings0。GameContext既存warnings177→176。初回型検証は以前の配信アーカイブがoutputs内に残っていてDenoファイルを検査して失敗。アーカイブだけTEMPへ移動後、通常の型検証がPASS。tsconfigや型ルールの緩和なし。
+
+Card/KPI両担当から、共有変更やPreview操作に競合なしとの回答を取得。今回SQL/Edge/Production/共有alias/Cron/フラグ変更なし。指定候補からの製品差分はGameContextとuseProfileRequestStateだけ。実認証での再確認とバッジの実表示は配信後の証跡で報告し、ローカルPASSを実接続PASSには転記しない。
