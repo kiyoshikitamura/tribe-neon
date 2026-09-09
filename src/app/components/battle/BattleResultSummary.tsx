@@ -11,6 +11,8 @@ import OutlawButton from "../ui/OutlawButton";
 import CharacterPresentation from "../character/CharacterPresentation";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import "./BattleResultSummary.css";
+import "./StreetFlow.css";
+import { resolveCharacterGachaQuote } from "@/domain/presentation/characterGachaQuotes";
 
 type Props = {
   victory: boolean;
@@ -108,7 +110,8 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
   }, [mvp?.participant.id, mvp?.score.damage, mvp?.score.heal, mvp?.score.kills, mvp?.score.shield, mvp?.score.survival]);
   return (
     <section
-      className={`battle-result-summary ${victory ? "is-victory" : "is-defeat"}`}
+      className={`battle-result-summary ${victory ? "is-victory" : "is-defeat"} ${isRaidResult ? "" : "sf-root sf-screen sf-live-result"}`}
+      style={!isRaidResult && presentationContext?.backgroundPath ? {"--battle-background-image":`url(\'${presentationContext.backgroundPath}\')`} as React.CSSProperties : undefined}
       aria-label={victory ? "バトル勝利" : "バトル敗北"}
       data-result-event-index={resultEvent ? eventIndex(resultEvent, resultEventArrayIndex) : undefined}
       data-result-event-round={resultEvent ? eventRound(resultEvent) : undefined}
@@ -120,7 +123,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
       data-final-action-round={finalRoundFor(["ACTION"])}
       data-final-damage-status-defeat-round={finalRoundFor(["DAMAGE", "STATUS", "DEFEAT"])}
     >
-      <header className="battle-result-opponent">
+      {isRaidResult ? <>      <header className="battle-result-opponent">
         <small>{tutorial ? "VS" : "VS 対戦相手"}</small>
         <strong>{opponentLabel}</strong>
         {presentationContext?.opponentLeaderName && <span>敵リーダー　{presentationContext.opponentLeaderName}</span>}
@@ -162,6 +165,15 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           <div><b>{analysis.player.survivors}</b><span>生存人数</span><b>{analysis.enemy.survivors}</b></div>
         </section>
       )}
+</> : <>
+        <header className={`sf-heading sf-outcome ${victory ? "" : "loss"}`}><small>{opponentLabel}</small><h1>{victory ? "VICTORY" : "DEFEAT"}</h1><p>{localizedResultLabel || (victory ? "バトル勝利" : "バトル敗北")}</p></header>
+        {roundLimitResult && <p className="battle-result-reason" data-result-reason="ROUND_LIMIT" role="status">制限ラウンド終了による判定結果です</p>}
+        {mvp && <><section className="sf-mvp" aria-label={`MVP ${mvp.participant.name} ${mvp.score.total}ポイント`}>{mvpImage && <img src={mvpImage} alt={mvp.participant.name}/>}<div className="sf-mvp-copy"><small>MVP</small><h2>{mvp.participant.name}</h2><strong>{displayedTotal}<span> PT</span></strong><p>{mvpMaster && resolveCharacterGachaQuote(mvpMaster.id)}</p></div></section>
+        <div className="sf-highlights"><div><small>与ダメージ</small><b>{mvp.raw.damage.toLocaleString()}</b></div><div><small>撃破</small><b>{mvp.raw.kills}<span>体</span></b></div><div><small>回復</small><b>{mvp.raw.heal.toLocaleString()}</b></div></div></>}
+        {modeResult?.stats?.length ? <section className="battle-result-mode-stats" aria-label="モード戦績">{modeResult.stats.map(stat=><div key={stat.label}><small>{stat.label}</small><strong>{stat.value}</strong></div>)}</section> : null}
+        {!victory && <p className="sf-loss-advice">編成・装備スキル・作戦を見直して再挑戦しましょう。</p>}
+        {mvp && <details className="sf-details"><summary>戦績・MVPスコアの詳細</summary><section className="sf-breakdown"><h2>MVPスコア内訳</h2><dl><div><dt>与ダメージ</dt><dd>{displayedBreakdown.damage} / 40</dd></div><div><dt>撃破</dt><dd>{displayedBreakdown.kills} / 20</dd></div><div><dt>回復</dt><dd>{displayedBreakdown.heal} / 20</dd></div><div><dt>シールド</dt><dd>{displayedBreakdown.shield} / 15</dd></div><div><dt>生存</dt><dd>{displayedBreakdown.survival} / 5</dd></div></dl><h2>チーム戦果比較</h2><p>総ダメージ　味方 {analysis.player.damage.toLocaleString()} / 敵 {analysis.enemy.damage.toLocaleString()}</p><p>撃破数　味方 {analysis.player.kills} / 敵 {analysis.enemy.kills}</p><p>生存人数　味方 {analysis.player.survivors} / 敵 {analysis.enemy.survivors}</p></section></details>}
+      </>}
       {victory && (tutorial || presentationContext?.mode === "PATROL") ? (
         rewards ? (
           <div className="battle-result-canonical-rewards" aria-label="獲得報酬">

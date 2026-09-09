@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import "./GachaFontComparison.css";
 import { flushSync } from "react-dom";
 import BattleMatchupPresentation from "@/app/components/battle/BattleMatchupPresentation";
 import BattleResultSummary from "@/app/components/battle/BattleResultSummary";
@@ -24,6 +25,7 @@ import { GameContext } from "@/app/context/GameContext";
 import { WORLD_STAGES } from "@/app/components/SetupView";
 import { QA_PRESENTATION_SCENARIOS, VISUAL_COMPLIANCE_GATE, type QaPresentationScenarioId } from "@/domain/presentation/qaHarness";
 import { resolveSsrGachaQuote } from "@/domain/presentation/ssrGachaQuotes";
+import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { waitForBrowserPaint } from "@/domain/presentation/browserPaint";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
@@ -315,6 +317,41 @@ function GachaAssetTransitionFixture() {
   </GameContext.Provider>;
 }
 
+function CharacterGachaV3Fixture() {
+  const query = useMemo(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search), []);
+  const font = ["zero", "tetsubin", "torono"].includes(query.get("font") || "") ? query.get("font")! : "";
+  const [fontReady, setFontReady] = useState(!font);
+  const [fontError, setFontError] = useState(false);
+  useEffect(() => {
+    if (!font) return;
+    let cancelled = false;
+    const family = { zero: "TNZero", tetsubin: "TNTetsubin", torono: "TNTorono" }[font]!;
+    document.fonts.load(`32px ${family}`, "新宿").then((loaded) => {
+      if (!cancelled) { setFontReady(loaded.length > 0); setFontError(!loaded.length); }
+    }).catch(() => { if (!cancelled) setFontError(true); });
+    return () => { cancelled = true; };
+  }, [font]);
+  const [scoutAnimationState, setScoutAnimationState] = useState<null | "READY" | "SHOW_RESULTS">("READY");
+  const [destination, setDestination] = useState("");
+  const sequence = query.get("single") === "true" ? [query.get("rarity") || "SSR"] : ["N", "R", "SR", "SSR", "N", "SR", "R", "SSR", "R", "SR"];
+  const results = useMemo(() => sequence.map((rarity, index) => {
+    const characters = CHARACTERS_MASTER.filter((entry) => entry.rarity === rarity);
+    const character = characters[index % characters.length];
+    return { type: "CHARACTER", characterId: character.id, name: character.jpName, rarity,
+      imageUrl: getCharacterTransparentImg(character.name), attributeKey: character.alignment,
+      role: character.homeTown, ...getCharacterBaseStats(character.id, 1, 0),
+      awakeningLevel: index > 4 ? 1 : 0,
+      convertReward: index > 4 ? "覚醒進捗 +1（1/2）" : "新規獲得" };
+  }), []);
+  const game = { scoutAnimationState, setScoutAnimationState, scoutFlashingColor: "GOLD", scoutResults: results,
+    playSe: () => undefined, playCyberSe: () => undefined,
+    onboardingState: { tutorial_step: query.get("tutorial") === "false" ? "COMPLETE" : "AUTO_FORMATION" },
+    navigateTab: (tab: string) => setDestination(tab) };
+  return <GameContext.Provider value={game as any}><div data-gacha-v3-fixture data-destination={destination} data-qa-font={font || undefined} data-qa-font-scope={query.get("fontScope") || "headings"}>
+    <button onClick={() => setScoutAnimationState("READY")}>演出を再生</button>{fontReady ? <CommonModals /> : <p role="status">{fontError ? "比較用フォントを取得できませんでした。再読み込みしてください。" : "比較用フォントを読み込み中…"}</p>}
+  </div></GameContext.Provider>;
+}
+
 function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPMENT"; pulls?: 1 | 10 }) {
   const source = type === "SKILL" ? CANONICAL_SKILL_VIEW : CANONICAL_EQUIPMENT_VIEW;
   const raritySequence = ["N", "R", "SR", "SSR", "N", "R", "SR", "SSR", "R", "SR"];
@@ -495,6 +532,7 @@ function Scenario({ id }: { id: QaPresentationScenarioId }) {
   if (id === "quest-instant-battle") return <QuestTransitionFixture instant />;
   if (id === "auto-formation") return <AutoFormationFixture />;
   if (id === "formation") return <SimpleFixture kind={id} />;
+  if (id === "gacha-character-v3") return <CharacterGachaV3Fixture />;
   if (id === "gacha-production") return <GachaProductionFixture />;
   if (id === "gacha-asset-transition") return <GachaAssetTransitionFixture />;
   if (id === "gacha-authority-loading") return <GachaProductionFixture authorityState="loading" />;
