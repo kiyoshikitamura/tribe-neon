@@ -137,6 +137,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       {!createOpen && <OutlawButton loadingLabel="" disabled={busy} aria-label="更新" onClick={refreshList}>更新</OutlawButton>}
       {!createOpen && snapshot.canCreate && <OutlawButton loadingLabel="" disabled={busy} aria-label="挑む" onClick={async () => {  setCreateOpen(true); await controller.loadBossChoices(); }}>挑む</OutlawButton>}
       {createOpen && <RaidEnemySelection choices={snapshot.bossChoices} selectedVariantId={variantId} difficultyId={difficulty}
+        memberCharacterIds={enemyInfo.status === 'success' && enemyInfo.data?.variantId === variantId ? enemyInfo.data.memberCharacterIds ?? null : null}
         onSelectVariant={id => { setVariantId(id); setInfoVariant(null); controller.resetCreateRequest(); }}
         onSelectDifficulty={id => { setDifficulty(id); controller.resetCreateRequest(); }}
         onConfirm={async () => { const created = await controller.createRoom(difficulty, variantId); if (created) setCreateOpen(false); }}
@@ -206,7 +207,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       renderRewards={renderRewards ? (id, close) => renderRewards(id, close, display.data ?? undefined) : undefined} />
     {enemyOpen && typeof document !== 'undefined' && createPortal(<div className="raid-room-dialogs">
       <CanonicalDialog title="敵情報" onClose={() => setEnemyOpen(false)} actions={[{ label: '閉じる', onClick: () => setEnemyOpen(false) }]}>
-        {activeVariant ? <><RaidEnemyRoster bossMasterId={activeVariant} presentation="detail" skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }} />
+        {activeVariant ? <><RaidEnemyRoster bossMasterId={activeVariant} memberCharacterIds={enemyInfo.status === 'success' && enemyInfo.data?.variantId === activeVariant ? enemyInfo.data.memberCharacterIds ?? null : null} presentation="detail" skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }} />
           {enemyInfo.status === 'loading' && <Spinner />}{enemyInfo.status === 'error' && <p role="alert">使用スキルを取得できませんでした。</p>}</> : <p>敵情報を取得できませんでした。戦況を更新してください。</p>}
       </CanonicalDialog>
     </div>, document.body)}

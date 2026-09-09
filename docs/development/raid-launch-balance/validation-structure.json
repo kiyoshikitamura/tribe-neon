@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "profiles": 28,
+  "characters": 60,
+  "skills": 37,
+  "equipment": 42,
+  "protectedFilesUnchanged": 352,
+  "checks": [
+    "all 7 Areas x 4 difficulties exactly once",
+    "5 distinct valid Characters per party",
+    "party names unchanged",
+    "equipment references/category/owner/level caps valid",
+    "skills references/owner/exclusive limit/slot count valid",
+    "all four fixed power gates unchanged",
+    "common masters, canonical runtime, Replay Edge, existing migrations and release bundle byte-identical"
+  ],
+  "candidateSha256": "b970e7d62381ac68e1ebe86021290a91c7215b3b8147cd16614fa090042bca73"
+}

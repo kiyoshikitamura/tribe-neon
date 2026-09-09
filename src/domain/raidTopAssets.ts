@@ -3,13 +3,15 @@ import { CHARACTERS_MASTER, getCanonicalBattleAreaName, getCanonicalBattleBackgr
 import type { RaidTopEnemy } from './raidTop';
 
 /** 表示素材だけを実マスターから引く。日次選出/戦闘編成の生成には使用しない。 */
-export function resolveRaidTopEnemy(variantId: string): RaidTopEnemy | null {
+export function resolveRaidTopEnemy(variantId: string, memberCharacterIds?: readonly string[] | null): RaidTopEnemy | null {
   const variant = CANONICAL_RAID_PRODUCTION.variants.find((entry) => entry.raidVariantId === variantId);
-  if (!variant) return null;
+  if (!variant || memberCharacterIds === null) return null;
   const baseId = variant.areaId.toLowerCase();
   const areaName = getCanonicalBattleAreaName(baseId);
   const backgroundUrl = getCanonicalBattleBackground(baseId);
-  const roster = variant.memberCharacterIds.map((id) => {
+  const ids = memberCharacterIds ?? variant.memberCharacterIds;
+  if (ids.length !== 5 || new Set(ids).size !== 5) return null;
+  const roster = ids.map((id) => {
     const character = CHARACTERS_MASTER.find((entry) => entry.id === id);
     return character ? { id, name: character.jpName, imageUrl: getCharacterTransparentImg(character.name) } : null;
   });

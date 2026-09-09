@@ -1,0 +1,2245 @@
+{
+  "sha": "f8b104aa1d3366478df685166afb708649261cf9",
+  "protectedFiles": {
+    "config/raid-room/preview-settings.template.json": "e8e524db10ca89b8f0435a2c8a0b1886ec05d0e943e8621ac39d485514a0f5b7",
+    "docs/development/raid-production-preparation/bundle/00-baseline-guard.sql": "cb0b62fe9a52c7a5984258563e394232e9c951fe64fcd010b92355488bf383e1",
+    "docs/development/raid-production-preparation/bundle/00-readonly-recheck.sql": "dce863bc3eef65446f9ec31ba4e06c9e6069899bee068933bfd3206a1814b579",
+    "docs/development/raid-production-preparation/bundle/01-snapshot-dependency.sql": "42076766fddb5fe9aefa3fb14c7dda88ab7b89b7d3ff4d0a7b2f1e9caa1703c5",
+    "docs/development/raid-production-preparation/bundle/02-raid-delta.sql": "8c2d65e3a6ec2c615f3d6efbece9e1be0acb0e05070060b5da19b33dbabffd46",
+    "docs/development/raid-production-preparation/bundle/03-expiry-cron.sql": "d95ca3d4419e0120cf961e8b2ba29272a2d0993410fd82eb612723f09620282c",
+    "docs/development/raid-production-preparation/bundle/04-postflight.sql": "fc1f2ce45e8ce1be2313154593efed58c077e328e77e23724398a6e440490d35",
+    "docs/development/raid-production-preparation/bundle/05-stop-new-operations.sql": "ea307347c3dba800496a1ab6657dab1624d9830d523ecaeb6c06d39d7797bde1",
+    "docs/development/raid-production-preparation/bundle/SHA256SUMS": "642b274335305220d12b43d5b1087b2474e9b93050c298eb16b8bb5b7098a2b2",
+    "docs/development/raid-production-preparation/bundle/review-apply.psql": "a72d3297f98ec8ca84e71b172c3480331c4c57f0e2f3e0198eac916a81d8d8a7",
+    "src/domain/battle/canonical_effects.ts": "7eea585ef12b384d306f89b12d986ec49116df2e437f0f9a0d54551aea386e20",
+    "src/domain/battle/canonical_runtime.ts": "2685fde85b390242ac5e7a676e0a281e00055d31fadd8b85c6a5a373378b9c04",
+    "src/domain/battle/fullSkillLoadFixture.ts": "87173f57b59b5c953998b1339b9c0193dc34ec66aae7c7fa1d3dc39429c85a2d",
+    "src/domain/gameplay/canonical/data/action_resources_20260822.json": "dc06e7a01f5b0be191f57bbd4752393a7c83e9f7c91f62f0c4fc283928c45077",
+    "src/domain/gameplay/canonical/data/activation_budget_20260822.json": "dc0d8aa16a9618aa11556db50ec7f7191b11eded215955af27fb8274b0d87ba7",
+    "src/domain/gameplay/canonical/data/characters_20260821.json": "089f9a3fa1762ce39893ee642f2d3d7b8713c94376d9b116f16a2b89a2b610f9",
+    "src/domain/gameplay/canonical/data/equipment_20260821.json": "06ecfc6ccd2ba229b831be33f74e194fb3d187697455679f34634a9569a8b361",
+    "src/domain/gameplay/canonical/data/equipment_limit_break_20260821.json": "4500f1e87757eb91a755b49f735cbf34c5e795687616652444669c7e387be087",
+    "src/domain/gameplay/canonical/data/equipment_progression_20260821.json": "8b2a60e0d35fd5377af82e56bc7d966f0fe32a971b61caaec4c30e4b05358998",
+    "src/domain/gameplay/canonical/data/formal_open_contracts_20260830.json": "e971fa791ded7dcc236db029a2833f053bbfcfd777f33fc60911cbdadcc473ce",
+    "src/domain/gameplay/canonical/data/gacha_production_20260830.json": "2d03c8a9d1f102a23944494c7a51eabda2ffdc0c1c9533e5888a60938b50221f",
+    "src/domain/gameplay/canonical/data/guild_production_20260823.json": "1b4808403b1b19155240cb470d9676cbe28a9f017c9eae1afe25fb867b146d7c",
+    "src/domain/gameplay/canonical/data/items_20260822.json": "88a3279acb0625ed94120a2d398e773adc73d0f208f87cdea567c16b50563be1",
+    "src/domain/gameplay/canonical/data/login_bonus_20260822.json": "587cbad8242d1ccf5cdca02b955f8bae762afae57b45dbbcd70252de819da6d3",
+    "src/domain/gameplay/canonical/data/login_bonus_20260830.json": "5a285709e17296626c9a3be76c7ea5d0dce59a4a9160c3f7b69ca4b13bd63755",
+    "src/domain/gameplay/canonical/data/missions_20260821.json": "32d75d70c2acfab39e034c8a6e73fe503f89fd63b8255da969e378d1cb004b98",
+    "src/domain/gameplay/canonical/data/missions_20260902.json": "e78ac36200a04e428de8ffa3f2f0accdf1a7ccec0aeda4c984f7aaeb96340441",
+    "src/domain/gameplay/canonical/data/pvp_matchmaking_20260822.json": "bf25d5fbcfc82f63fece7b3d751a32ee103b632aab8d040db38d09a27e94e431",
+    "src/domain/gameplay/canonical/data/pvp_production_20260822.json": "7ee9e1707719c01dcb6f72f65c98baaa8b91818a9b8d5f5e5faf2298ed5023b2",
+    "src/domain/gameplay/canonical/data/pvp_production_20260830.json": "4f349cec0d9ca81ef7513e9a18d392e4d9e6c9983e06ab109489d8c09fc48352",
+    "src/domain/gameplay/canonical/data/pvp_ranking_rewards_20260822.json": "40ed52a23d151865f22b50181f154e17d12a26ca06f0b54aa049039c4de23e9e",
+    "src/domain/gameplay/canonical/data/quest_encounters_20260822.json": "9cf1ac57e13e4cd78eca9955a884b044ce2e28683d58e3514fa8877a87ad6020",
+    "src/domain/gameplay/canonical/data/quest_enemy_pools_20260830.json": "f0d6ed3e81912b3eec8d3abc61c751dbe85aa48508aeb472b7678e643431c6b2",
+    "src/domain/gameplay/canonical/data/quests_20260822.json": "da7a4d7f4dd5c4b7976faf385f935b04a07a9a942459346d2264b841b5b50d45",
+    "src/domain/gameplay/canonical/data/quests_20260830.json": "57d9f2f596c18fd95e535fadd9a9558f56a6f1f93c008b48c0e21545339b3884",
+    "src/domain/gameplay/canonical/data/raid_bosses_20260822.json": "40db741f968911911586a04344b3358cdc3020a29ab0b245e453f86b8d9dd999",
+    "src/domain/gameplay/canonical/data/raid_production_20260822.json": "33fccebc842e319fd0d7a96ef28c46c9dbc5077631a69eb3aca6db6e862f2f6e",
+    "src/domain/gameplay/canonical/data/raid_production_20260830.json": "1cb7ece9fa13d4d09280038ca32cd500838c89d7ac419cc96fd9701ce84c6ffc",
+    "src/domain/gameplay/canonical/data/raid_rewards_20260822.json": "1127fb077fdb26ae45223920ba215a0a242e619a2330b743fc756dc6d11e6fa1",
+    "src/domain/gameplay/canonical/data/raid_rewards_20260830.json": "259cfa81fd688d72095c9d168f3e33a4990a65e733b8fa4c1d2c02d8b2a6308f",
+    "src/domain/gameplay/canonical/data/ranking_competition_20260822.json": "a7805df7e94ed5acb2737fcb69ad4dc07e02eece51e663a4146b135d30179f49",
+    "src/domain/gameplay/canonical/data/ranking_season_rewards_20260830.json": "a9304109e12195e0da5c84aa690cbe109f72143c2f61ef990f1771245ab17b4e",
+    "src/domain/gameplay/canonical/data/reward_supply_20260822.json": "eccaf8615e54803991504fca6a787319cd9b639fd619cf9cac0020a7b19ad1ce",
+    "src/domain/gameplay/canonical/data/skills_20260821.json": "f6fbb525673c9311dc9128aa30a4e4430ebdd18bf2acf41e1a1da512ccfa21e1",
+    "src/domain/gameplay/canonical/data/user_level_progression_20260822.json": "8dd03cdf2124f6fc0ebba0fc83bc0e60b0626f2949e2db2905fdd360534beba2",
+    "supabase/functions/resolve-battle/engine.ts": "5c947b859393d00b6ac347ccc76ff0ab54996787acd247eecd78da194b127abe",
+    "supabase/functions/resolve-battle/engine_test.ts": "97ff89fd64ffa8b806af754b7118074d3f7111978566b66271ab5c4866ea389e",
+    "supabase/functions/resolve-battle/index.ts": "b7274ff2c4587fd768e2ed4b390b848a05cbd8cb819260e5f109f7e0e0b86795",
+    "supabase/functions/resolve-battle/raid-room-route.ts": "e4ff29fb5e82ae6b461c982a82d8e63a7aaceaeab315d9ee478d4d18913c7872",
+    "supabase/migrations/20260731000000_initial_schema.sql": "67fee55020d0c096bf6f4a55824676d5ec9ea84034bd6ff693e4797e62dfc376",
+    "supabase/migrations/20260731000001_rpc_functions.sql": "1cdaa4c6892e2e2f9ffc4f8c25da136d86c6cc5dd45e11cc55254755b0448892",
+    "supabase/migrations/20260731000002_seed_master_data.sql": "8cbbda8bdf1a06029fd579970c29daa13bdb8dd74ea6ebe034745f6094e65ef3",
+    "supabase/migrations/20260803000000_phase2_rpc_functions.sql": "3006d878b6444f171317d83caa1b6380fdff8a0d9cf2ab12b45513d58054d0ab",
+    "supabase/migrations/20260803000001_phase2_rpc_lb_v2.sql": "da1c777b5e81b2fe1ef109bca19b8236712f29b94e689f4f41e57558fcc52001",
+    "supabase/migrations/20260803000002_phase2_rpc_guild.sql": "156a4ee263e31a5bc2e33b94338d01d102a3f0f9a7cd52e297c8d2d1588d306b",
+    "supabase/migrations/20260803000003_phase2_rpc_guild_misc.sql": "2c76f2e2307947f56efeab6dcbc7a01442041084cbffc88940c074b54877b2c9",
+    "supabase/migrations/20260803000004_phase2_rpc_guild_deco.sql": "f7b29a89a2be38c5e15331942cca6ba371a6318876d2df9b3b4b9ec7b293b01c",
+    "supabase/migrations/20260803000005_phase2_rpc_inventory.sql": "6969941c1ae0ca2bace7e40e3d75568e6f947fa69f45a694669ee68cf350eee0",
+    "supabase/migrations/20260803000006_phase2_rpc_inventory2.sql": "161894766691fcd6db3eaf36282a5ac3a1fb3b02fd22f0e0dfa41e14e55e1994",
+    "supabase/migrations/20260803000007_phase2_rpc_patrol.sql": "d749dad677dcb4f09537a8dc8e5df986cab4897b96e8b38bf7ef3a9d0323b03b",
+    "supabase/migrations/20260803000008_phase2_rpc_battle.sql": "d7a91ddc7224da310a5f80ca69a1dc59f0bad08ec452caf9757d7b27974dc4b2",
+    "supabase/migrations/20260803000009_phase2_rpc_raid.sql": "712ab11dc2e2f47786c230e5c18d5c37393dca90c841695a0b944a2e0a793ebd",
+    "supabase/migrations/20260803000010_phase2_rpc_gvg.sql": "d4a925d2edf04e2f56778482e9415253122a97835b571a8b1e33a311beecdb8f",
+    "supabase/migrations/20260803000011_phase3_stubs.sql": "bbab4ffafe573062d87baa949650b96a701544190fef7cb1bf72b6a3d6923b32",
+    "supabase/migrations/20260803000012_phase3_additional.sql": "1441b61974b49a70c00df9a6b468adc5dec0ec36624b6bb0f958ea98302ad5c9",
+    "supabase/migrations/20260804000001_vitality_timer_recovery.sql": "ebf0b09de590ab3d009087040ff00ef1997fce88944a48915f279f3c5b826dbd",
+    "supabase/migrations/20260804000002_gvg_bases_migration.sql": "e24f196a78bdc0898cfb6aa5d53965d42f60ff4de31e14d9e88e03a33c44cc98",
+    "supabase/migrations/20260804000003_gvg_consume_vitality.sql": "4db2c062944daf33f4030f773345a175e5bb8d37490d80fa5b0cfe2d90e1708d",
+    "supabase/migrations/20260804000004_raid_attempts.sql": "995de71fb95a8f4911bb4cd54916842187e4b2e3eeab56a5db18307b6ab67791",
+    "supabase/migrations/20260804000005_raid_consume_rpc.sql": "7ed96833fa3a7dcebad0fb145abdd0177586b3694d38ddab0243fcb0e4659e67",
+    "supabase/migrations/20260804000006_monthly_pass.sql": "e38b1c20f36d235650638d2aee8a4c132bf3dad68966fb8611699d02e6f2e9c5",
+    "supabase/migrations/20260804000007_gacha_banners.sql": "acc351e128ec61a0e73dbb070c408d95b8d5447b72987713b4ec992167f91d39",
+    "supabase/migrations/20260804000008_user_friends.sql": "85a78364701232166dd49a4c572802070f7789227ea6b22655d13586ec2a1fda",
+    "supabase/migrations/20260804000009_has_shown_guild_dialog.sql": "649f31487ffa3595ef0f387ed0bd636fb0eac02b4014d8fd61a0a5a75eff1f5f",
+    "supabase/migrations/20260804000011_distribute_ranking_rewards.sql": "9338ad502e6c031ec520cd86b19ed7b233f8b922ea50c5a19bc29a65b438ea64",
+    "supabase/migrations/20260804000013_daily_reset_rpc.sql": "41c3f13c4fa1111012ae0ac70a743d2099d5a2696760adeeb1c143249c4ea7b0",
+    "supabase/migrations/20260804000014_phase4_season_reset_rpcs.sql": "93ab82ba5dbf039a888a6d793d81e17f08eb50290573ed2deac70f69194ff7f7",
+    "supabase/migrations/20260805000000_dev_rpc_reconciliation.sql": "a83d4520c40ae3aa8a203dac2ce91469aac623e005a722109544ca784232cee7",
+    "supabase/migrations/20260805000001_dev_gacha_charge_rpc.sql": "61cfa32ea9eec9a0adbb211d3827c7cf72f1a273cbccd480a564520d323901a4",
+    "supabase/migrations/20260805000002_character_gacha_rpc.sql": "c87bfc849f196a64ba05b97d3d2d3a41a389f2af51b409555bf423c19ea03042",
+    "supabase/migrations/20260805000003_pvp_opponents_rpc.sql": "3ab2202bec88b94246da5c25e6335cd66ce2283b8dd72a44a37af97912ed854f",
+    "supabase/migrations/20260805000004_skill_equipment_gacha_seed.sql": "5c78f587f470192ea7db50467661fca33bf66b908e8f5ac7ee96bf9854a8fe89",
+    "supabase/migrations/20260805000005_asset_gacha_rpc.sql": "89b14cb0bc8d30c35f058f6acf73e79dd4feb49bdfb655cce0a58bca12e64af4",
+    "supabase/migrations/20260805000006_user_characters_identity_index.sql": "a3dee40f46c95a1ae02f323c0bfa38a1667e4a618184e6d134f3322769648224",
+    "supabase/migrations/20260805000007_exchange_pity_reward_rpc.sql": "d65d94834070c49d3f44182c73018c387d756a66e02989624b2762d56b424d03",
+    "supabase/migrations/20260805000008_public_battle_loadout_rpc.sql": "1cc424e47feaba1ddf06817b55d93c86154615be9f9ff69f96e3f82a98b45dbc",
+    "supabase/migrations/20260805000009_public_battle_roster_rpc.sql": "9b708e91eef7961a14e68895071323ce20322af73cccf1a07c97b5b18a86f7d8",
+    "supabase/migrations/20260805000010_public_battle_roster_by_character_rpc.sql": "fbaaa497624f72d9d8db071296871e9118507b52fc7f6045d340aa87ab70eee2",
+    "supabase/migrations/20260805000011_public_leader_characters_rpc.sql": "bfe1bf032725105b2e836012f78928fc93af524571e1dd1b16d0d7318475db72",
+    "supabase/migrations/20260805000012_owner_rls_user_assets.sql": "3e64ba929fc4b38b7cb97686f0a0747af4bf9e441523ea36e6ab381eb295a969",
+    "supabase/migrations/20260805000013_public_profiles_rpc.sql": "f1683b9e6bc7ea9146823bf0e426c5f1d2cf07e5645183a42f4f828507bd23a7",
+    "supabase/migrations/20260805000014_public_power_rankings_rpc.sql": "1e8f981722b52c9832a839840f655579c8fa335d5f541f2312e8ac4374c6bce5",
+    "supabase/migrations/20260805000015_public_profiles_friend_fields.sql": "479c1eef1bb5fee62219d8b8cd161cdf284f90873e4842a24d0bd40307231074",
+    "supabase/migrations/20260805000016_active_users_rpc.sql": "809646e522f77a840e41118d76384b6e22da7eeac2cf0a8c7722cb5268eca547",
+    "supabase/migrations/20260805000017_users_last_active_at.sql": "c48afaaad87a619a570e79e86b12358379f74a5e76e8e5d853b2b4ebc5236f28",
+    "supabase/migrations/20260805000018_user_setup_status_rpc.sql": "ddb6f00aa02c01702f73e8d3460baa96e73de3adddd934f83d13880d1c4f1445",
+    "supabase/migrations/20260805000019_owner_rls_users.sql": "53d21fd94280cf5afee986b9cc4240ab523c64b62df06f0bcdc5779bd7c1e375",
+    "supabase/migrations/20260805000020_owner_rls_user_progress.sql": "ca51799ab7594b5ce4be523fb4a65855552cd031b79a015a0f9472be3a7a8d33",
+    "supabase/migrations/20260805000021_fix_power_ranking_column.sql": "5386e9f4e3674987590721c91b7380499c7278a20296206876cc189581f75fe2",
+    "supabase/migrations/20260805000022_owner_rls_user_invitations.sql": "48394826d52afabb12b4cc3653c4f8b2a2a9d68d247afec4d2584cc827d8f57d",
+    "supabase/migrations/20260805000023_split_rls_user_power_rankings.sql": "243902945adfb0c3b85758aa98465c3c84c6682b365ed693eb59ff90a0b1895a",
+    "supabase/migrations/20260805000024_owner_rls_payments_presents.sql": "c1d56c6c5a10a84c8b2f3c970beed7b6d02f6d254daddc1e90350749b552a8c5",
+    "supabase/migrations/20260805000025_login_bonus_30_cycle.sql": "31c386b07da83edac52d3ad56e065c0bf493a7c9fcc861132f6c44db7168ebbf",
+    "supabase/migrations/20260805000026_users_username_length.sql": "084c566e4c5ac4d17bf3222072e85db415601e87ecb226dc4f70ac16fe6f7b79",
+    "supabase/migrations/20260805000027_replace_pvp_tickets_with_points.sql": "6e6bd6902e90efe97843399f4d0816c39a3f8aed1ef80c14210a5cc192c25ef2",
+    "supabase/migrations/20260805000028_gvg_session_foundation.sql": "159ec2166dc24d1b5fe5b8736608d8b51a6d4b330451ff35f8c4b4c4b305ca3e",
+    "supabase/migrations/20260805000029_battle_replay_foundation.sql": "ff82928d066a0533fb31f8b201327567fb1d45abe214e2b357aa83a3a789aa3c",
+    "supabase/migrations/20260805000030_gvg_matching_snapshot.sql": "171f449799ec4f1f14477ddf76cbefa3570f5320e7e824f4b1fb8134463e14d6",
+    "supabase/migrations/20260805000031_gvg_damage_resolution.sql": "b022ed5f243a440ee07e2331cdabcd66dc1a0c37a620067c28e898cbddf5484d",
+    "supabase/migrations/20260805000032_gvg_lifecycle.sql": "25f2ef07fae0d864425b33d7a355c9f2f0071a41124a522006a0809cb9bfccba",
+    "supabase/migrations/20260805000033_gvg_matchmaking.sql": "7294c4d3e7b4bd49cb9dd8ab6d2da6868e8064d7928416d1571fca417f53db17",
+    "supabase/migrations/20260805000034_gvg_membership_lock.sql": "3db444ed99b7b5003440a794dab421734b9d72ddaa000f7a2e39e1e24e14c5a8",
+    "supabase/migrations/20260805000035_gvg_read_policy.sql": "9f18b581c4029c3a6cdaa318d1a9cc0f15843d7e26d4d563728884aba8ac6dd5",
+    "supabase/migrations/20260805000036_gvg_timeout_timestamp.sql": "3eb42d3a5bb234125d6f282a5e9abc0b8b1c107408ff396b24e07f5644c41ad7",
+    "supabase/migrations/20260805000037_gvg_defense_lock.sql": "9cd3ab114e5c5434ed5dd5aac6d041fdc2b3ad0a3664d8ecbdc0bb992fca4078",
+    "supabase/migrations/20260805000038_battle_replay_server_seed.sql": "0dad062424b84c6794ec67734b4893e4a782078cfe2cb012770451cf59aab00e",
+    "supabase/migrations/20260805000039_gvg_full_defense_snapshot.sql": "a55cd83927469327c4dec736c5414908b9e9cb9447d4ed84dd8a7dfade40a50d",
+    "supabase/migrations/20260805000040_gvg_matchmaking_candidate.sql": "fa8ba484cf23012725021022a54e1294b3a323585747744f68c2c66b249f7847",
+    "supabase/migrations/20260805000041_title_ownership.sql": "08512fe3f201d9cc67f9c685e0289904d516b2c9fb0d140a0f43336abb0d22d2",
+    "supabase/migrations/20260805000042_equip_owned_title.sql": "3c761a6198df7facb62c525de99c550aa7e47c3d65ff3198cbacf2fd3dfca957",
+    "supabase/migrations/20260805000043_profile_daily_change_limit.sql": "c3611c6bd43907310cd471beae179cd3a1922d6670d6ce9f7a71736dc1eae629",
+    "supabase/migrations/20260805000044_profile_field_validation.sql": "e64d7406ff2586ecc5324fd3cca4885c4d152a0698e2bb31cc1b0bf9839f382d",
+    "supabase/migrations/20260805000045_gvg_attack_log_read_policy.sql": "7e8a1aaeb27f519ecad0f66c5dd1144a9ea1174252531ff1bd2e99b19053a693",
+    "supabase/migrations/20260805000046_enforce_equipped_title_ownership.sql": "669d5fefef060a1328a6f07714a549bd40af91ccd6a623dc9662bf077682f8f9",
+    "supabase/migrations/20260805000047_pvp_defense_tactic_and_opponents.sql": "26fbab1e2de10cdc16845876e79980e250a031bfaa39f80a9f8d200731823f87",
+    "supabase/migrations/20260805000048_raid_completion_xp.sql": "020078dea177f780ae54b30388e8ff93741eb360d8042e1a61e5e894b3bbba2f",
+    "supabase/migrations/20260805000049_gvg_one_pending_attack_per_user.sql": "50ad642570d6a8766c376e2849d005a75b9b5cbf57aeb940cca1ca3f6ec9c33d",
+    "supabase/migrations/20260805000050_tutorial_progress_foundation.sql": "8cf013b6875b104a99eba2718b089b859dfc6803ed509badf55c31819f1432aa",
+    "supabase/migrations/20260805000051_tutorial_free_patrol_instant.sql": "812f7348feddb66fef6e0b8e61225c4d9ea7f5862fb49733558460f3790b0852",
+    "supabase/migrations/20260805000052_tutorial_patrol_battle.sql": "b8f4e3107d3f566dcd82c6221b91f5ede7c8f192b42793443a945b2f73c8e53d",
+    "supabase/migrations/20260805000053_initialize_anonymous_player.sql": "b96f2db76e2adde24e2686fde572d05c046e2454b7b72d12deb88520168b5e41",
+    "supabase/migrations/20260805000054_single_auth_method.sql": "5d01a73cfe9809bc0015f70a72ca2e31c212d55ac7155da01ac30e7b2c56c160",
+    "supabase/migrations/20260805000055_guild_member_cap.sql": "0a4762bb577005c51398553935ba4196a796f4c4faf22087f14cfac83c2a92b9",
+    "supabase/migrations/20260805000056_guild_decoration_permissions.sql": "f4efad84dc20df67ae5b41e8de42428cfcab59f486cf5c9469011cf5d7cdd071",
+    "supabase/migrations/20260805000057_guild_shop_price_validation.sql": "571e30c693e98725aa3b0b03d7cd178863488a5d20ae0a67fd75e8161400d9c4",
+    "supabase/migrations/20260805000058_guild_member_permissions.sql": "5abc7d3746940a96dc9d5a1d872919b1d3627919f068fe989d76c250dea6ef5d",
+    "supabase/migrations/20260805000059_guild_settings_permissions.sql": "972e20123c246d8c00cf63708247239417c5eeada8066a57dbeae16b75d87c2d",
+    "supabase/migrations/20260805000060_guild_creation_and_join_security.sql": "51ffebc78db53ed4d33378260f71c13ed1f3ee873645b92c229c38580d23d062",
+    "supabase/migrations/20260805000061_direct_message_permissions.sql": "791c025985a05a329f453cc24c96a7426fc517cb0e77e84b9c5a3bcf03d5f4cc",
+    "supabase/migrations/20260805000062_bbs_foundation.sql": "d74648aaf658c33af1c4004e183685a8c3c4a38a2ae23af3ac6cd70588277e6f",
+    "supabase/migrations/20260805000063_guild_donation_resolution.sql": "b2f2cc1db2beff32db63cad38639dc62fba8ff432f748944fcd8100b924d77c0",
+    "supabase/migrations/20260805000064_public_profile_guild_affiliation.sql": "6a40140792a2effd52eb77503a0a4062add00f9c38f77a5bf56dc4ad90ad34a3",
+    "supabase/migrations/20260805000065_realtime_community_tables.sql": "2ceedaf9e7f1e33cd0a515b4b078431c45a0d66c7c4e002cdf2f995c7531aaa3",
+    "supabase/migrations/20260805000066_chat_message_foundation.sql": "946cffc6bd30539def39eefe5a1e6a8d4391df2f807e5af93cba7ca9ac136293",
+    "supabase/migrations/20260805000067_gvg_attack_resolution_authorization.sql": "479a5b1d55c37ac2af4477c616e470047e8440d9b1911c608fff71ff76c86c8e",
+    "supabase/migrations/20260806000068_gvg_resolve_from_server_replay.sql": "1b7265f03788ae461758cfebbb19c4bee476e6b39d8caf3a531c7e47c80ae619",
+    "supabase/migrations/20260806000069_cancel_unresolved_gvg_attack.sql": "f4bfbd0a3fadd200c8f5238c61adc47259b3c976ec28b12ea3295fc66e52faea",
+    "supabase/migrations/20260806000070_restore_user_progression_columns.sql": "962773613e7d26a8e98d7565cafe0b8d6ae45a670bda94afc8488d5213b27415",
+    "supabase/migrations/20260806000071_remove_legacy_initialize_new_user_overload.sql": "edec47f2069db669b102fc4d318acfa77ee3d7c9010f1a8f312ab2361bad8cb9",
+    "supabase/migrations/20260806000072_cancel_pending_gvg_replay.sql": "5f8b0d293188b24b79eb21766edcbfeee9fa93529197a0a0d8d4861d72d13b6a",
+    "supabase/migrations/20260806000073_harden_direct_message_rls.sql": "13acb9a7a00054087f8710ef6e55d823d732c3258f8a0d4892eaf6bb91e73a19",
+    "supabase/migrations/20260806000074_add_direct_message_read_state.sql": "1ab03c003432939ef8f0c81f5e8770241a8fdbb08dba2f66753f759520d2746c",
+    "supabase/migrations/20260806000075_add_guild_compatibility_columns.sql": "1bbae2c1a6b5b6b1a5dc9b9f6232a247f4483b6187e3c32672cd2781297400c2",
+    "supabase/migrations/20260806000076_add_progression_compatibility_columns.sql": "2913960f494f57386c65546032ce0fd43b7950ccac85c1a2d5990169f4fb46f6",
+    "supabase/migrations/20260806000077_fix_gvg_snapshot_character_id_types.sql": "0c30add2b759b9d98262f8100a51c5e09d54061a9ff39795dae3ed9fbcdac73c",
+    "supabase/migrations/20260806000078_fix_uuid_present_claim.sql": "0db322675b5a66a2453afa1157cd29466cb5572096d19dc40fbe0731a0508166",
+    "supabase/migrations/20260806000079_fix_claim_all_presents.sql": "4c0a2d9cffcc43088076d3103a8b6e029bfcee5d344483d938876b329593ad48",
+    "supabase/migrations/20260806000080_add_legacy_reward_schema_compatibility.sql": "bb7ab5dd7fec80c7b3aeaf6ec081fbb5c07c71fae2d157add485450107304bc6",
+    "supabase/migrations/20260806000081_resolve_remaining_legacy_lint.sql": "55758d141d5d6bc60bc9c6486fcdd764ea959d477990de33758ac09c3d1bfc7b",
+    "supabase/migrations/20260806000082_retire_incompatible_legacy_rpcs.sql": "293138c25395f38cc8d2d50a425d7beffedbcd8eaa2d1184d310eb51b2122a5c",
+    "supabase/migrations/20260806000083_retire_remaining_legacy_rpc_overloads.sql": "c50cf54eaa2c800bcd466916509bcbca39d67c95c12c555f422b487ede9148c5",
+    "supabase/migrations/20260806000084_reimplement_admin_season_resets.sql": "d6917518e2b77f8d46ef7c7e2897deab98ab17bf3aa9e948c9f312ce71e4d00c",
+    "supabase/migrations/20260806000085_fix_raid_season_reset_schema.sql": "132e1feb9420416d75d9669887ea54cb96d9209835a0955fb77da580cc76da44",
+    "supabase/migrations/20260807000086_google_player_bootstrap_and_qa_fixture.sql": "b4b55bd665044e74f245ce26ab5481837e82440ff30d9e318d9e01079c1dda18",
+    "supabase/migrations/20260807000087_cosmetics_foundation.sql": "45f7e0573ab0ebcd6bf2057fb0782bb8e67643cc5768e50922998d35ba56d723",
+    "supabase/migrations/20260807000088_cosmetics_equip_rpcs.sql": "300b1ed780a4600f3c33d07108f084a7a60f38fa35c04ed5dbe7e8c792957958",
+    "supabase/migrations/20260807000089_cosmetic_ownership_sync.sql": "ddf182fafc0754dbbb1082477fe5710013284fe6a5177608eb13ff01c31498ab",
+    "supabase/migrations/20260807000090_qa_cosmetic_fixture.sql": "a7005d903d5d63331e7d9f603a45991c0290125a3e8ce9d858e7c4786fd60975",
+    "supabase/migrations/20260807000091_fix_qa_cosmetic_fixture_access.sql": "59721a135b64c3e4b5eaeebcd12fac2e2bd87403fc4c0ae848bd965e26ead5df",
+    "supabase/migrations/20260807000092_make_cosmetic_unlock_legacy_safe.sql": "30547f682b65a162ee8a910f461413f569b3f707f477a8cc3398a07d442c7ad1",
+    "supabase/migrations/20260807000093_character_cosmetic_equip.sql": "bde18e63109e4507c7a4273639044e3bffe30275a3c0055874e20d9a3fb45161",
+    "supabase/migrations/20260807000094_home_banner_master.sql": "f8ae1306072c548ec7fdd3f1e5778ee682a622c0d7e66a866681547e2109d934",
+    "supabase/migrations/20260807000095_guild_cosmetic_legacy_sync.sql": "22eabe0041c575c96de1cba29960271c8beb0d65bd5024f66c7eb0cd6e18f420",
+    "supabase/migrations/20260807000096_equip_guild_cosmetic.sql": "8c54caa6395d3bc8620e0bc6b09188de9cb9af57af223a03dbc6dfbc2bc5a89f",
+    "supabase/migrations/20260809000097_secure_competition_decks.sql": "9445f20f800df82f4b84c41a4e73959b218ef4e942320ee2d78701e204ec3d9d",
+    "supabase/migrations/20260809000098_secure_patrol_start.sql": "5581672a1af74000039d9f060cf45a9df333d280f982037b558a3d304c9f5ae2",
+    "supabase/migrations/20260809000099_reload_patrol_rpc_schema.sql": "ff7cfdb86b541842b265a2e4a9187d3f31c0e5940579c4f980a9c8135c89b2ec",
+    "supabase/migrations/20260810000100_secure_patrol_instant_completion.sql": "41f64384c4fabcec2c8ea85e15ff27d7fb45010fe95a688ae3c0de1431c63545",
+    "supabase/migrations/20260810000101_secure_patrol_reward_claim.sql": "c5afe8fc8ef55a5c1ba307aac966ad0ca5cc27790252787e1b0aecda69c52b40",
+    "supabase/migrations/20260810000102_ui1_review_fixture.sql": "c500415387cc3b945da06df713be57c3a108ed6d74b62a2e29f0a1a12dbf5b4a",
+    "supabase/migrations/20260810000103_ui1_runtime_contracts.sql": "cc3606c0dd80428e43b54b29e21633682595cd74e139d2d8436ade5c3232c129",
+    "supabase/migrations/20260812000104_onboarding_state_rpc.sql": "a29cfbe836c9c1eb160cb2a0f59201ab6fb162b5047a5167aea265977dd183a3",
+    "supabase/migrations/20260812000105_initialize_current_player.sql": "1dc62c7948012c7a4ad190ed99e752147db5c87aad2c3ba581e119935efa40bf",
+    "supabase/migrations/20260812000106_complete_authentication_hardening.sql": "4b95c6b9ba810439fdbac24745bde4c528b6f632961028cb1a36a788e70e757c",
+    "supabase/migrations/20260812000107_auth_identity_integrity.sql": "d2f651e48cac5e1c4a422059c6d5194b87451d7d03fb64958a2b8f9b34229d02",
+    "supabase/migrations/20260812000108_m1_rpc_anon_execute_lockdown.sql": "e307e7802171d29f837d3e678c7755ac173a296599cff3e03bf340048e603e9e",
+    "supabase/migrations/20260812000109_tutorial_patrol_instant_flow.sql": "dfcd096285ccbd4bc7fe6bbf444ca2f109dc7f8cf21fc186d1b88c6694720b5f",
+    "supabase/migrations/20260812000110_patrol_reward_claim.sql": "561e9389042ac04f3f18d12f1287baaad533db89a330a2c67a2c18720980b227",
+    "supabase/migrations/20260812000111_patrol_npc_master_read.sql": "89e8392ef0bccf116980bddfa0b3477cceff114c171ad472911d55e0b42966a5",
+    "supabase/migrations/20260812000112_patrol_battle_enemy_rpc.sql": "3781f45c820de431da5fcc67804adffadbc505735bd701b0a263707a98865b4a",
+    "supabase/migrations/20260812000113_tutorial_patrol_enemy_master.sql": "4c31d9900870d5a45cbb498f818eb751626a16fa2012df0cd0845e453707fe65",
+    "supabase/migrations/20260812000114_restore_tutorial_battle_retry.sql": "3297e745c6d1c477a5d8e42d2dd2189b57473ed0d2e5545c75f0f19c141ccebd",
+    "supabase/migrations/20260812000115_patrol_instant_costs.sql": "03a73c6a400a7fe097bc33e59137b96c71514c7edece4336aba92bb83f094f2f",
+    "supabase/migrations/20260812000116_patrol_ap_atomicity.sql": "7b99cdbd15b2e75df26a3470ba919027f4d1edbfc23b1880748797017bc68df3",
+    "supabase/migrations/20260812000117_mandatory_patrol_npc_battles.sql": "21d29230da804aaa6c3650326ebf5e18e06458e60afbc037f954744e2d223dd8",
+    "supabase/migrations/20260812000118_patrol_equipment_snapshot.sql": "20411568541e75df9426af68034ac8155f9dea2db513f919d173a3ab25c99a16",
+    "supabase/migrations/20260812000119_secure_character_equipment_loadout.sql": "0c8abb957e834d1c913c2462d0b16eb87c56bf653b9b45729b512af3ce7f9ebd",
+    "supabase/migrations/20260812000120_secure_character_awakening.sql": "fbf155731644ffa802716ded63c6ae5ffb9e4ba88c2395447528267e7da1b569",
+    "supabase/migrations/20260812000121_secure_provisional_progression.sql": "c6c0741759af8ffb3c4b9888276dfa380a4a2affdcc613ad3d7943c3cd9f6ff4",
+    "supabase/migrations/20260812000122_equipment_level_battle_curve.sql": "75065e74144843761a71c1fa99a40c4f2d0be1f6e132ab40ab6d63d3891e8b91",
+    "supabase/migrations/20260812000123_replaceable_skill_battle_master.sql": "369f3390a177dfc4e46d3f9aa3a52c9618f9e1d954c9bd9467d13ff509f50cf1",
+    "supabase/migrations/20260812000124_secure_character_skill_loadout.sql": "dcd1e30d9fbc4b8bc85050271a7368fbb564960391249f7ef4997b0d0e52c530",
+    "supabase/migrations/20260812000125_normal_gacha_contract.sql": "19b0092ad3250c1dc46a5b1a032be37aa68299cb3b6749e086a6b2c3022cf705",
+    "supabase/migrations/20260812000126_provisional_character_gacha_master.sql": "9a484e5bb37b55487d0439759bda769cf52e5be0469465a02af5b96710f6759e",
+    "supabase/migrations/20260812000127_secure_guild_membership_flow.sql": "f1bbbfca3305261105ce3ae06387f8c73c0d4828c0e04c14de6c0d927536714b",
+    "supabase/migrations/20260812000128_canonical_guild_roles.sql": "10632329f94c3397259db9cee22a141354bb291478e1c7f9b5929ea9c0d3ddda",
+    "supabase/migrations/20260812000129_secure_chat_read_state.sql": "2f6bd9e7b6d5231e8d766b1820fa6954a54b28ee88ca68c7596f6acfc96f435c",
+    "supabase/migrations/20260812000130_secure_bbs_read_state.sql": "62103983fe0fb67d6c1bacb47a66e631dbb4a66fe2129fb49ef2487b71346da9",
+    "supabase/migrations/20260812000131_secure_direct_message_unread.sql": "097ea7d24596c207b15469ffe5046981a9c6a697c7312db61a15714d11e11759",
+    "supabase/migrations/20260812000132_secure_login_bonus_cycle.sql": "493e6cf0787915b3c52171658d358aef39c66fac7ef6f116fafcd40dea6733ff",
+    "supabase/migrations/20260812000133_secure_mission_foundation.sql": "4b421b99f083dda0e673e22c729bc333a4e492f411de452922e68277b3ba54a4",
+    "supabase/migrations/20260812000134_internal_mission_progress_dispatch.sql": "461e215e0a5a68490137d77298bc75e7a8b64dcc9a86ad23fdd13c69f7997b0f",
+    "supabase/migrations/20260812000135_provisional_open_beta_missions.sql": "0d1aadfba9c52867e81fc4beaf5dd4257b62a8f35d9e12bd7b902e0f4784f4ac",
+    "supabase/migrations/20260813000136_m8_critical_economy_rpc_lockdown.sql": "678e7ef20a2f2182f8cb7d194feb09c9a7df03cd58797a54961cf224b73ad674",
+    "supabase/migrations/20260813000137_m8_critical_economy_rpc_lockdown_postflight.sql": "448d31f162da63b9c98e6f834084bdcc0130a92a240cbbf2557807044417622e",
+    "supabase/migrations/20260813000138_m8_secure_gacha_state_tables.sql": "63ad8ca43e36a705f9eff85c67c18757b26514f0ecfd9926ad54b590704ab6dd",
+    "supabase/migrations/20260813000139_m8_retire_unsafe_legacy_mutations.sql": "2823746bc6c14fd4abc38fd86e13cf6741126d0a32fcb3da55b67bb4ca15ca59",
+    "supabase/migrations/20260813000140_remove_client_qa_fixtures.sql": "6f01dc2b0b37f65df621aa30bdc5c89734fc997d8c85d9755ef36d1025c6944a",
+    "supabase/migrations/20260813000141_schema_convergence.sql": "300dd5bef0a80ea3edd3d37b81d7dec2f634d42fc96d1a4d2ab8d08901ed3169",
+    "supabase/migrations/20260813000142_restore_canonical_guild_role_rpc.sql": "9684ee99e7c889824714613c5e7fd62687d4b9c0a893e96f209bd747164818d0",
+    "supabase/migrations/20260813000143_restore_canonical_guild_lifecycle_rpcs.sql": "f5ed7d0091944def31cd9869aad018c4c87649d9a619075ccddd27fa1f2c628d",
+    "supabase/migrations/20260813000144_official_battle_replay_contract.sql": "b806ae7f6e7189671271871a68754efbe5c65e5e4b5a0e0eb53a3ac2d89af3f7",
+    "supabase/migrations/20260813000145_server_authoritative_pvp.sql": "87926fa48dd41c780f0f597ac64c18fcefd576be3438becf0ccab94c918fbc20",
+    "supabase/migrations/20260813000146_server_authoritative_raid.sql": "4521fb1cd0e626f8b7501ed83eaddf1aab142d4dfc08816c97f0d1795774f976",
+    "supabase/migrations/20260813000147_funnel_milestones_and_guild_recommendation.sql": "9ef3064957438bcfbb9a34df7ce46a48c5283f8c48506253976d6afea4424fe6",
+    "supabase/migrations/20260813000148_server_funnel_event_hooks.sql": "f37488a46a500f4ea257a685dc322cd00c5fb3bc47a8c2fd09400708d680aa87",
+    "supabase/migrations/20260813000149_p0_plus_funnel_enhancement.sql": "580fa07c2ba29c5805ba8fab98bd851f639835497ba6255ef14ec5d67263bb87",
+    "supabase/migrations/20260813000150_feature_freeze_friend_time_contracts.sql": "9ad3087a3ccb006d43bba26ca198b94c43e7971a38e98efebc4e6fcef81aa8fb",
+    "supabase/migrations/20260814000151_m9_tutorial_growth_contract.sql": "b123ce1f146fa06f180e73f7faa41efe3efee36d279c00237fe89900ddc02b7e",
+    "supabase/migrations/20260817000152_m9_v0_public_display_contracts.sql": "b826631e1394006710231a2c923e236a4cae495b2327da8343d2bc3d19e64f55",
+    "supabase/migrations/20260817000153_m9_activation_public_guild_and_ranking.sql": "05d082945cc76574f113d16398ab70e25f2019745655f1bbe487251eb1170f8e",
+    "supabase/migrations/20260817000154_ranking_power_p0_foundation.sql": "2b749267b1624aaf8993e8a87829b6f396dcdfee3b6d0a02a2670b21eee27615",
+    "supabase/migrations/20260817000155_jst_midnight_daily_contract.sql": "2be79a28ebb4d7d2123065e3f94b989bbc149cdac50f73fa6afdf96588f35cf6",
+    "supabase/migrations/20260817000156_ranking_source_table_lockdown.sql": "f5640154cc340825908767dbcd6216dfe1d8cb127f408fb61233c94a5fc2446b",
+    "supabase/migrations/20260817000157_retire_direct_pvp_ranking_policy.sql": "dcf40694ee4de7bdf0e5af22caca5c2231298411e6ee7af01cf324327222052d",
+    "supabase/migrations/20260817000158_public_guild_base_snapshot.sql": "4597b6d8caf599d13928e9f1b6883b3796ebb8cf937a35d0e68f6777cab3b1a6",
+    "supabase/migrations/20260817000159_gacha_launch_control_foundation.sql": "8f672a860bf3b30116190459ab3ace5dcf1c5da9bd21ff3b057f80104820c794",
+    "supabase/migrations/20260817000160_gacha_launch_control_rpcs.sql": "19b6279ccbea0e58d5cfaf5ee48626c8b79b066f46264ce9bea211c01a07b3cf",
+    "supabase/migrations/20260818000161_m9x_cold_start_social_foundation.sql": "8f8359c295dcd8385db8142cee39c658023cee96810d0ba8122aa4954eb312fd",
+    "supabase/migrations/20260818000162_m9x_activity_welcome_retention.sql": "39708cd3398d9adc5416a6379faa939528afbec265f4217c1619c6317ca88e5a",
+    "supabase/migrations/20260818000163_m9x_tutorial_formation_runtime_fix.sql": "9cf6b5308642626d8061a14e598f8ac19d3c80648f0ec42ca1b0fee4e5001d13",
+    "supabase/migrations/20260819000164_m9x_tutorial_character_continuity.sql": "219de4af15ff793768e0aab3d4a51d35affc369aa3a982f75b5ae9079e02c6a5",
+    "supabase/migrations/20260819000165_m9x_tutorial_starter_skill.sql": "b104946123e09c50c502a7325ac6ea5a0fc4d20e8191ecddb7b0b98b7e22f5a6",
+    "supabase/migrations/20260820000166_m9x_fresh_player_zero_roster.sql": "a5402b36539e2ca24016e9267cafb20ac3b663a3282c31356eb3e0d2143d523c",
+    "supabase/migrations/20260820000167_m9x_patrol_battle_idempotency.sql": "28f9db4018ec84f6a545dd44098b9166ccd84d94eb6e98cc61f16cee2997c990",
+    "supabase/migrations/20260821000168_gameplay_foundation_canonical.sql": "0eb6a2da4eb82ff1e43d723150dac8cfd7bcade5e5d43eb26635cbc4a7fb1a9d",
+    "supabase/migrations/20260821000169_canonical_character_stats_bigint.sql": "bd2425c8f518384a6163714bd27c4e2b55541e3cd71e1a785c50c5c1d34d25d1",
+    "supabase/migrations/20260821000170_canonical_battle_runtime_snapshot.sql": "37d3cf32e8970b320d3a1ca875742e654d398e626f511e26ffbae0cc52ae23a6",
+    "supabase/migrations/20260821000171_canonical_battle_snapshot_character_id.sql": "65422ae489d646c8b4ac511d6990b6126f6254c61b5c9ac48f7edcf2ca758e17",
+    "supabase/migrations/20260821000172_equipment_level_curve_final.sql": "4cf037b5ac891a3c891a1d80afc3d40dd6c940bfb8783d3f9f9ce542c49870fc",
+    "supabase/migrations/20260821000173_mission_production_master.sql": "2cbee353487f09ae00cefdb0cf71c2e4aaafdb76f7e6f767111c83f442863feb",
+    "supabase/migrations/20260822000174_economy_foundation_canonical.sql": "9f9d02af0e3114c83c6bb2bf63f4a7db448d7a5cc8f1a2241e1b714bb1075e4b",
+    "supabase/migrations/20260822000175_character_awakening_copy_equivalent.sql": "0e4f13625c2bd70453537d9bccfafcf2abe72178e0451716c1a4e05166880ed6",
+    "supabase/migrations/20260822000176_user_level_action_resource_foundation.sql": "0ef53d104af92084fb058250102d797078ae3f6e5489b08d96bde041b13d1404",
+    "supabase/migrations/20260822000177_user_level_rpc_access.sql": "bde9775c6fd1153e7a5dc614e8b22619b0db8d97e5bc3f4126efcfa4c0dcbbe3",
+    "supabase/migrations/20260822000178_action_resource_recovery_projection.sql": "1364fb4c63c1fe314ee1c5f7dbfbcfbfb8606733dc9798d78afe9299c753fe9e",
+    "supabase/migrations/20260822000179_user_level_recovery_ticket_final.sql": "62afdfb93e6fe87722e44ddf37ee979e9514e27f00b7be3539d877bc60ab1ee5",
+    "supabase/migrations/20260822000180_user_level_cap_constraint.sql": "eb95a81cbac45d182de43fc62736fbc4d22de4177efbd7ed2416bbef036c76b7",
+    "supabase/migrations/20260822000181_quest_production_foundation.sql": "4074ec9ffdb955c6b609762a8d0839468861042577bc591591dadf4b35f5da7f",
+    "supabase/migrations/20260822000182_quest_master_read_policies.sql": "e2119aaaa8d53b086a4084aac7e17a7182342c9a402a8738067a9550b1ba49e3",
+    "supabase/migrations/20260822000183_retire_legacy_quest_speedup_rpc.sql": "3c0fd8c7d54a5e4907e1728a7fddb84c6a82910ab022151cdc03dc0ba7ca1b69",
+    "supabase/migrations/20260822000184_pvp_raid_ranking_production.sql": "2792c8ec03e0b76dbe38341c0ab817fb7829002306c89617e329afb3661f9305",
+    "supabase/migrations/20260822000185_quest_gameplay_v2.sql": "3ccfc65b811f649aacb31016bbe8a5a95a328a993d7316ff00fbd5b64df7a87d",
+    "supabase/migrations/20260823000186_guild_production_social_core.sql": "9a218f1fbb4f91898dae5ca3dddfc693cfa6370b72c0bdd1fb675f009c1017ce",
+    "supabase/migrations/20260823000187_guild_production_compatibility_guards.sql": "27c7fed40f597fb45c893c17cf620999d42e2e479a663223967c1ea530374d84",
+    "supabase/migrations/20260823000188_operations_preopen_exposure.sql": "3519741a6a08dbe6d858db636e6abc3c9725c72070119cd939b55fdbd5cccec6",
+    "supabase/migrations/20260823000189_operations_closed_rpc_grants.sql": "d0fede06e16c5f61a2c47cf93c9f128361e9eac69b13bfe9f3e1f171015d7bbd",
+    "supabase/migrations/20260823000190_tutorial_first_home_canonical_reconciliation.sql": "fec1d0ec422a5715e87ff9408663a836c1e96403a79d9a91740a8d9d87b04d3d",
+    "supabase/migrations/20260823000191_remove_noncanonical_character_gacha_pool_rows.sql": "d932d988dabedc8f6ee7092136d64571cdec091c40033847c91b3c12dd096216",
+    "supabase/migrations/20260823000192_tutorial_canonical_growth_before_formation.sql": "b5c565c264659f61d596a0eb4a543d2511392bc5f7c9a494b089507dd8945136",
+    "supabase/migrations/20260823000193_tutorial_growth_milestone_authority.sql": "d3b361b5bad665d0d549dea3032db03513fbf3e71f5375842c432ba2ef8d88b1",
+    "supabase/migrations/20260824000194_reconcile_character_ssr_candidate_pool.sql": "3b9215f6d6aebcb9c9e2459cb27eb1ec84eb6e1f68a74578ac85374c5fbcdf10",
+    "supabase/migrations/20260825000195_tutorial_durability_and_anonymous_cleanup.sql": "5cce730a11b48146a434bed0cec6f64b298151f634ea563dcbafd0b3a03c12b6",
+    "supabase/migrations/20260825000196_account_switch_lifecycle.sql": "f4e8c5a3f2442a55db5b55cf00eaeb4dac02f62e1e7c41e4c7be94125d86d7b7",
+    "supabase/migrations/20260826000197_pvp_opponent_pagination.sql": "873540b2f661b66e6ae65696a264ec961630d5f8435e4db6a54a75b2cbfb4e78",
+    "supabase/migrations/20260826000198_profile_bio_identity_default.sql": "ec6908379ef132cdf25ffeae73d74b5318ad843d50dde5aa5cf827c4b91b6a81",
+    "supabase/migrations/20260827000199_gameplay_reset_authority.sql": "58efbb45d87fcb8651d5602a592853d34864bab5f62e7d1dbc3b4f9806d22984",
+    "supabase/migrations/20260827000200_patrol_replay_idempotency_convergence.sql": "954cb584f538134881ba16636371d09bd7b87bf722734461a37fd75e0afc0f43",
+    "supabase/migrations/20260827000201_ranking_server_projection.sql": "82ba33ad4d52375f26e3c8aeb50682142ce4397a4ba878a3dd4bcf7c077b3b4d",
+    "supabase/migrations/20260827000202_raid_battle_reward_projection.sql": "6ff4a56a60a0fa57f136ca2eb25c97ed1fce18430e392f027d5c8e94d3804dcc",
+    "supabase/migrations/20260827000203_guild_activation_identity_projection.sql": "31c06322a0e836450acfea7817a6fbc8a7b18aff664de4efa68e0b72a5f45b6c",
+    "supabase/migrations/20260828000191_phase5_activation_mission_handoff.sql": "41898df8de5d6e6c31823b2e0c22c4c2eba3e95eb51e5c2fd42f1c76ab843e5c",
+    "supabase/migrations/20260828000204_guild_human_acceptance_projection.sql": "a90ab02cbc9cb9ea05a9b2d5e8a16e0fab7cd180480f231073da144907cdc0d5",
+    "supabase/migrations/20260828000205_guild_attribute_submaster_authority.sql": "bac8bbc75b4ee25acca48c4727bb47edd426c24d48a926ad9149159ed2102936",
+    "supabase/migrations/20260828000206_guild_creation_level5_authority.sql": "25551c07e2040810302e281537bd58a9181a4802958023ba37f6dd7d2c46a078",
+    "supabase/migrations/20260828000207_guild_join_cooldown_authority.sql": "5f1323407e4d3eec3a9dfdfbca60ce2035ac73549553f4d0d895d00c187f0b29",
+    "supabase/migrations/20260828000208_gacha_result_projection_parity.sql": "958589ab053dee4f8fa4aebdb7fa3a47e3d227a62eca7cb17e62d6b4a8c1da84",
+    "supabase/migrations/20260828000209_account_switch_power_projection_delete_guard.sql": "17a16d77c36ceb1e254b77b371742157f95de3fe2d890d7c45fea7baea58d987",
+    "supabase/migrations/20260829000209_canonical_preapply_compatibility_preservation.sql": "7d69e4ea56f9355dee2fe0c2d4ebb6e16edf8f7fa9c48b568f727625a8332d51",
+    "supabase/migrations/20260830000210_canonical_master_freeze_runtime.sql": "b45e2decd16bd0f4144a52bf9cc4cf18c53874a71a7c75d1028e037f64b9b39d",
+    "supabase/migrations/20260830000211_canonical_raid_runtime_reward_convergence.sql": "9c29232b2ecf19985dd950de54bb19c9988561ae1c34ff1a44f8a6b87aea6bc0",
+    "supabase/migrations/20260830000212_existing_patrol_replay_snapshot_convergence.sql": "aedb00f53c5f8aef6439d17d5968d48c6759e363044e30d36f2e17947509428b",
+    "supabase/migrations/20260830000213_canonical_authority_rls_convergence.sql": "7b6fda1d8cefa90ccc172f0a7a8d1a2e3f60e133feae70a4f2a976f9a31ef0b5",
+    "supabase/migrations/20260831000214_canonical_quest_enemy_unique_runtime_ids.sql": "16ccdc2996239ed416f36a3593c40670af246615a80b802acdbbeb1cdcd72756",
+    "supabase/migrations/20260901000215_tutorial_battle_pacing.sql": "469603e46647272778718367c4193bff752be92452ef68ca491044d675b3bd15",
+    "supabase/migrations/20260901000216_pvp_main_formation_matchmaking.sql": "9f565f749e4ea8933f86b3354bc74f7c245dd13d15a4824d4d5495c8a1d33754",
+    "supabase/migrations/20260901000216_tutorial_battle_acceptance_pacing.sql": "13b7e89ff1717dd6af6feb2953a67ab2389d4fdcb4db6d793f89044e0ffbed5b",
+    "supabase/migrations/20260901000217_reattach_tutorial_enemy_projection.sql": "33e3d9d8544b759f6709e7afba11fc7021eef45ff6fe16a9e101264f3512e3ad",
+    "supabase/migrations/20260901000218_tutorial_enemy_hp_half.sql": "fa2f746de25ef4de6551671fbd480d2f21371f804efd72e47dc7b0806086838d",
+    "supabase/migrations/20260901000219_optional_account_authentication.sql": "eb751fc79193a22a4bd29b974ffb22b3a7d41da5c3715cc2fe68c1eedfefe8d4",
+    "supabase/migrations/20260901000220_post_tutorial_loadout_guide.sql": "104a5bc063c559252354702c897f663012ab7d609a43ba391702438f37030262",
+    "supabase/migrations/20260902000221_activation_membership_mission_handoff.sql": "8053da72db9ab97e498fc5991c8110454d5257ab2c8bfd1de71c4944cd9390d4",
+    "supabase/migrations/20260902000222_daily_mission_authority_convergence.sql": "87417aec1cedc9aa2c5e16ac332274202676003e049956af1d685a8d306a12ec",
+    "supabase/migrations/20260902000223_daily_mission_authority_corrections.sql": "04678a536e5b497f6f576617e6183d98665c363b35479227d9b59d62f466e14b",
+    "supabase/migrations/20260902000224_starter_cash_authority.sql": "9d8b83ef08c4990b41fc537d2d4b64fb1c642fd5ad4fc153a5abc7f44184e701",
+    "supabase/migrations/20260902000225_mission_direct_grant_refresh.sql": "f12bab9d57c0658220fdc7133cb0eda30172889d475985c82144fd8aaa714ac7",
+    "supabase/migrations/20260902000226_location_movement_authority.sql": "7a4618ae59f3405bd8a44418d685aa9780d7d5410c0c1cfcbfdca6ef9ba225b5",
+    "supabase/migrations/20260902000227_ranking_season_lifecycle.sql": "fe73bfb78377accb9f0075de7447062e064ca314922400eb78963d5914cfe496",
+    "supabase/migrations/20260902000228_ranking_season_lifecycle_revert.sql": "d565418b5631020c522b15bf1599a83e2d78fa1fa0d6251ba5e09e7834deb65f",
+    "supabase/migrations/20260902000229_ranking_season_lifecycle_authority.sql": "5aae8ed56f49c5ec5c77d59ecac7e0875ecdd2377273eaf654979dd16b5fbea5",
+    "supabase/migrations/20260902000230_ranking_lifecycle_safety_convergence.sql": "85e9021a854379f34e4787780a2c82ada45d8028c9d1c89856f4dd1d7bcf8491",
+    "supabase/migrations/20260902000231_natural_patrol_encounter_authority.sql": "f6fd2e8d2c97c58a286b4ec2c1525bddf3574a55fb604a1cbff6ad2004805110",
+    "supabase/migrations/20260902000232_battle_snapshot_presentation_metadata.sql": "bd02751e51d8bf763fafd00ea224542c750df1202ab272b841475724919d17d3",
+    "supabase/migrations/20260903000233_ranking_reward_notification_contract.sql": "e076cb6b9fc3a3cb255b81480e01e89b1f4449c7987ed9999bd5e9d75677034b",
+    "supabase/migrations/20260903000234_daily_ranking_reward_authority.sql": "a8736764024b4a419b3b45683ffb9d5841dcd53e3044b365d1f5296ccb6f1af7",
+    "supabase/migrations/20260903000235_preopen_gvg_preparation_missions.sql": "5d89c86579234660bdab3bf7d7a4d680bb98c92ba77f3e83c41002c34ea26af0",
+    "supabase/migrations/20260903000236_preopen_gvg_preparation_period_extension.sql": "28dfc65b4d01fdb7ccca93c736c00b4e58129930ca47669450a3f68e7acc48b4",
+    "supabase/migrations/20260903000237_preopen_guild_power_season_authority.sql": "90edd3b253a212594fd38be434773e2fff5702787d47816d819655775909eea5",
+    "supabase/migrations/20260903000238_preopen_promotion_asset_urls.sql": "5c7f9a3595e859d35e5a19eb5c27c8927ec11aa880d166c60501fc1421e15c77",
+    "supabase/migrations/20260904000239_public_ranking_reward_master_projection.sql": "fc5d46a265b271d9f2ce11335bef7562346182cce1049ec74ad9b333f22d52d4",
+    "supabase/migrations/20260904000240_recent_social_activity_authority.sql": "b3a2531bee6af1e1003426f17c58141a7f199649c671405e314e95b347e1c5ab",
+    "supabase/migrations/20260904000242_production_daily_activity_schema_parity.sql": "965627a4e9add387cbb8c6405b4b64d11914e135b5604eabb3d74c2b96a23f2e",
+    "supabase/migrations/20260904000243_kpi_measurement_fact_foundation.sql": "520cc1f82ffb39120ec41830d7bd569c6ecb4bcbc87a5806d81f16aa36a45aea",
+    "supabase/migrations/20260904000244_kpi_measurement_lifecycle_hooks.sql": "b1bf76a1175a42b16348b618503258632073ed18b260621e0f2254b4efd1a3cc",
+    "supabase/migrations/20260904000245_kpi_snapshot_foundation.sql": "0bd0093392bb93eafec567c145e1af41541823436904ef63452ba38fd3f3566f",
+    "supabase/migrations/20260904000246_kpi_snapshot_refresh_rpcs.sql": "62a2343763a1b861b71e6a367fcc60d3112895bc4f3af7b576db3a6cea832a71",
+    "supabase/migrations/20260904000247_kpi_measurement_security.sql": "0491ccdb5bcd1fe17a5cd16cf578022bcdfb0d2fb02cf40fc5def3063c1d5336",
+    "supabase/migrations/20260905000241_preopen_period_extension.sql": "1243bc22deae164f5df567c78c895b80a793722a859f6cc34c98bb7be0f220a7",
+    "supabase/migrations/20260905000248_kpi_timeseries_dashboard.sql": "d7cd2f7cdcc883ca185e3717bb2327a8aa612ae2f20189e34abeb4aa6e0df774",
+    "supabase/migrations/20260906000249_kpi_authority_extensions.sql": "217a0ae675748e7381c3f4b4dbadbb5ab2d2fdd657c939035b770e124615d410",
+    "supabase/migrations/20260907000250_acquisition_attribution_landing_authority.sql": "f6205228a22f9997199af42cbf40d4e4508060c79b24b1bfb462c6719b99e503",
+    "supabase/migrations/20260907000251_world_intro_journey_events.sql": "db6130f0a3d65fd5124e3116d538b9894da025d0e3a05dae58a193e805b847e9",
+    "supabase/migrations/20260908000250_raid_room_read_projection.sql": "8f2bec752e9e9245d4e3d6f4ec08d48b0112cd685b64a76e4cb56981df653eb4",
+    "supabase/migrations/20260908000251_raid_room_condition_rules.sql": "27dc1023675369c9dec4e0f08b59b23eb72ab7c2a25712181d3a9fc154b12ef4",
+    "supabase/migrations/20260908000252_raid_room_lifecycle.sql": "4c3e66d3e3d3a6e08ea2426f6b66227069c18db1f3a5cdd94c862672b266ed3c",
+    "supabase/migrations/20260908000253_raid_room_creation.sql": "982250c894397407c59f01bc87c5e9b2e5be723cb99fb35fd448c9a4fa65a88a",
+    "supabase/migrations/20260908000254_raid_room_legacy_isolation.sql": "9e2c32424f3516ba3a7a1a7f721fbdb0790e4283edf26e485fdff5c3621e4020",
+    "supabase/migrations/20260908000255_raid_room_entry.sql": "fa31ae0c8999b52b178b76e48335f303a5231b88928b5528f9eb4dee69a4aeb5",
+    "supabase/migrations/20260908000256_raid_room_finalization.sql": "57501f1367fc4ce87ed2802402558e97c64d860da7a64d01672f5ad26c79b91a",
+    "supabase/migrations/20260908000257_raid_room_recovery_and_expiry.sql": "973fdeb69937fe9d4073be67ea508184712d0910ae9970a68bcf5305993f6c3b",
+    "supabase/migrations/20260908000258_raid_room_recovery_controls.sql": "4536aa48e6f78173ab71d327408e129abff0399e7a170ef0faa5291928f17a5f",
+    "supabase/migrations/20260908000259_raid_room_rescue.sql": "0273556d99428c6c8e5110efe35ad3b4213412848ccfcc27e2e5b7ca104d7b9d",
+    "supabase/migrations/20260908000260_raid_room_rescue_rewards.sql": "236245992e04be2530a8288e31f82bb90c00a38eadee7f94e3ca5fdbbb0075fb",
+    "supabase/migrations/20260908000261_raid_ranking_retirement.sql": "ac8028bae46299e5527a3943725ac0643e82ca6f4449c07eb60ac2e283cbb9f2",
+    "supabase/migrations/20260908000262_raid_room_clear_rewards.sql": "51a6ec7537db9073d0382bc82f32575b2ed9b17a19a2683c6ff9f79fb8d2323d",
+    "supabase/migrations/20260908000263_raid_legacy_cutover.sql": "27b5bce69af1c48250713f776f46867dc56268835d9b275c548b634676576848",
+    "supabase/migrations/20260908175140_raid_top_daily_authority.sql": "36621aa30007457f5e190896ffed90e3a0631e10eafc4cd469007537cb5ca14d",
+    "supabase/migrations/20260908175143_raid_top_aggregate_api.sql": "34e1225b717b267760ebe90495203162630680fb52b67e9c08b0121d4b2d3d18",
+    "supabase/migrations/20260908181251_raid_room_display_projection.sql": "7944c2a068ea7ec78be6ad88823dbdc5aeac2ee0027a7000bc0003b8b7757e73",
+    "supabase/migrations/20260909003245_pvp_opponents_power_multiply_bigint.sql": "b3dfc9af6853baecb8cac3b7f89e160bbd94067068e9aedcc108ae7562c49186",
+    "supabase/migrations/20260909023226_raid_remaining_pages_projection.sql": "14cb3052ffe7218730aab65640f0f484634d4cf43f8e4d56158dcc320b3a7ffb",
+    "supabase/migrations/20260909075933_initial_equipment_authority.sql": "85a39f8e6c6731c94d0af7231206555ca61b7c96e7c59ad82b887444101b6d84"
+  },
+  "authority": "Repository candidate. No live DB reads; old audit Damage excluded.",
+  "difficulties": {
+    "beginner": null,
+    "intermediate": 160000,
+    "advanced": 200000,
+    "expert": 240000
+  },
+  "settings": {
+    "status": "STAGED_NOT_PUBLICLY_ENABLED",
+    "projectRef": "ktpolnkyyfkowxdmijww",
+    "productionWrites": false,
+    "masterPolicy": "preserve observed Production; no QA HP mutation",
+    "variants": [
+      {
+        "atk": 9500,
+        "def": 6200,
+        "spd": 390,
+        "max_hp": 32000000,
+        "area_id": "SHINJUKU",
+        "version": "2026-08-30",
+        "raid_name": "キングス・クラウン",
+        "raid_variant_id": "RAID_SHINJUKU_V1",
+        "member_character_ids": [
+          "char_reiji_01",
+          "char_mio_01",
+          "char_takuro_01",
+          "char_leon_01",
+          "char_kageyama_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8800,
+        "def": 5500,
+        "spd": 470,
+        "max_hp": 28000000,
+        "area_id": "SHIBUYA",
+        "version": "2026-08-30",
+        "raid_name": "ハイスピード・スターズ",
+        "raid_variant_id": "RAID_SHIBUYA_V1",
+        "member_character_ids": [
+          "char_ageha_01",
+          "char_leo_01",
+          "char_sora_01",
+          "char_reina_01",
+          "char_noa_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8200,
+        "def": 8200,
+        "spd": 340,
+        "max_hp": 36000000,
+        "area_id": "IKEBUKURO",
+        "version": "2026-08-30",
+        "raid_name": "アイアンウォール",
+        "raid_variant_id": "RAID_IKEBUKURO_V1",
+        "member_character_ids": [
+          "char_koharu_01",
+          "char_takeshi_01",
+          "char_momoko_01",
+          "char_riki_01",
+          "char_sakura_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8700,
+        "def": 7700,
+        "spd": 390,
+        "max_hp": 34000000,
+        "area_id": "ROPPONGI",
+        "version": "2026-08-30",
+        "raid_name": "ロイヤル・フラッシュ",
+        "raid_variant_id": "RAID_ROPPONGI_V1",
+        "member_character_ids": [
+          "char_kaede_01",
+          "char_taiga_01",
+          "char_maya_01",
+          "char_seiya_01",
+          "char_cecile_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8400,
+        "def": 6500,
+        "spd": 430,
+        "max_hp": 30000000,
+        "area_id": "AKIHABARA",
+        "version": "2026-08-30",
+        "raid_name": "グリッチ・コード",
+        "raid_variant_id": "RAID_AKIHABARA_V1",
+        "member_character_ids": [
+          "char_karen_01",
+          "char_miyabi_01",
+          "char_alice_01",
+          "char_rui_01",
+          "char_maya_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 10500,
+        "def": 6000,
+        "spd": 350,
+        "max_hp": 38000000,
+        "area_id": "KAWASAKI",
+        "version": "2026-08-30",
+        "raid_name": "ブレイクダウン",
+        "raid_variant_id": "RAID_KAWASAKI_V1",
+        "member_character_ids": [
+          "char_go_01",
+          "char_kengo_01",
+          "char_tetsu_01",
+          "char_lucas_01",
+          "char_riki_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8900,
+        "def": 7200,
+        "spd": 390,
+        "max_hp": 35000000,
+        "area_id": "YOKOHAMA",
+        "version": "2026-08-30",
+        "raid_name": "ブルー・レクイエム",
+        "raid_variant_id": "RAID_YOKOHAMA_V1",
+        "member_character_ids": [
+          "char_genji_01",
+          "char_long_01",
+          "char_sakura_01",
+          "char_cecile_01",
+          "char_taiga_01"
+        ],
+        "is_production_enabled": true
+      }
+    ],
+    "difficulties": [
+      {
+        "difficulty": "beginner",
+        "minimumPower": null,
+        "rescueMinimumBattles": null,
+        "rescueMinimumContributionDamage": null,
+        "clearMinimumContributionDamage": null,
+        "rescueItems": null,
+        "clearItems": null,
+        "rewardEnabled": false
+      },
+      {
+        "difficulty": "intermediate",
+        "minimumPower": 160000,
+        "rescueMinimumBattles": null,
+        "rescueMinimumContributionDamage": null,
+        "clearMinimumContributionDamage": null,
+        "rescueItems": null,
+        "clearItems": null,
+        "rewardEnabled": false
+      },
+      {
+        "difficulty": "advanced",
+        "minimumPower": 200000,
+        "rescueMinimumBattles": null,
+        "rescueMinimumContributionDamage": null,
+        "clearMinimumContributionDamage": null,
+        "rescueItems": null,
+        "clearItems": null,
+        "rewardEnabled": false
+      },
+      {
+        "difficulty": "expert",
+        "minimumPower": 240000,
+        "rescueMinimumBattles": null,
+        "rescueMinimumContributionDamage": null,
+        "clearMinimumContributionDamage": null,
+        "rescueItems": null,
+        "clearItems": null,
+        "rewardEnabled": false
+      }
+    ],
+    "stagedFlags": {
+      "creation": false,
+      "battle": false,
+      "rescue": false,
+      "legacy": true
+    },
+    "intendedCutoverFlags": {
+      "creation": true,
+      "battle": true,
+      "rescue": true,
+      "legacy": false
+    },
+    "cutoverPrerequisites": [
+      "Approved production thresholds and rewards in separately frozen/rehearsed SQL",
+      "Database bundle committed and postflight passed",
+      "Room-compatible resolve-battle Edge readback verified",
+      "Expiry Cron observed successful",
+      "Unified frontend built with NEXT_PUBLIC_RAID_ROOM_UI_ENABLED=true",
+      "Isolated rehearsal release gate passed"
+    ],
+    "roomLifetimeHours": 24,
+    "rescuePublicationLimitPerChannel": 3,
+    "cron": {
+      "name": "raid-room-expiry-minute",
+      "schedule": "* * * * *",
+      "command": "select public.finalize_expired_raid_rooms_v1(100);"
+    }
+  },
+  "rewards": {
+    "version": "2026-08-30",
+    "delivery": "PRESENT_EXACTLY_ONCE",
+    "participation": {
+      "finalizedBattles": 1,
+      "rewards": [
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1
+        }
+      ]
+    },
+    "daily": {
+      "finalizedBattles": 3,
+      "rewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1
+        },
+        {
+          "itemId": "CASH",
+          "quantity": 40
+        }
+      ]
+    },
+    "fullParticipation": {
+      "raidPointsConsumed": 5,
+      "rewards": [
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1
+        }
+      ]
+    },
+    "clear": {
+      "uniqueBoundary": [
+        "raidDayKey",
+        "userId",
+        "CLEAR_REWARD"
+      ],
+      "eligibility": "FINALIZED_BEFORE_INSTANCE_CLEAR",
+      "rewards": [
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 3000
+        },
+        {
+          "itemId": "AWAKENING_BOOK",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ]
+    }
+  },
+  "profiles": [
+    {
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "areaId": "SHINJUKU",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "atk": 9500,
+      "def": 6200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_reiji_01",
+        "char_mio_01",
+        "char_takuro_01",
+        "char_leon_01",
+        "char_kageyama_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_reiji_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_mio_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takuro_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_leon_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_kageyama_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "areaId": "SHINJUKU",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "atk": 9500,
+      "def": 6200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_reiji_01",
+        "char_mio_01",
+        "char_takuro_01",
+        "char_leon_01",
+        "char_kageyama_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_reiji_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_mio_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takuro_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_leon_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_kageyama_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "areaId": "SHINJUKU",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "atk": 9500,
+      "def": 6200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_reiji_01",
+        "char_mio_01",
+        "char_takuro_01",
+        "char_leon_01",
+        "char_kageyama_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_reiji_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_mio_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takuro_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_leon_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_kageyama_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "areaId": "SHINJUKU",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "atk": 9500,
+      "def": 6200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_reiji_01",
+        "char_mio_01",
+        "char_takuro_01",
+        "char_leon_01",
+        "char_kageyama_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_reiji_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_mio_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takuro_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_leon_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_021",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_kageyama_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "areaId": "SHIBUYA",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "atk": 8800,
+      "def": 5500,
+      "spd": 470,
+      "memberCharacterIds": [
+        "char_ageha_01",
+        "char_leo_01",
+        "char_sora_01",
+        "char_reina_01",
+        "char_noa_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_ageha_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_leo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_sora_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_065",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_reina_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_066",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_noa_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "areaId": "SHIBUYA",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "atk": 8800,
+      "def": 5500,
+      "spd": 470,
+      "memberCharacterIds": [
+        "char_ageha_01",
+        "char_leo_01",
+        "char_sora_01",
+        "char_reina_01",
+        "char_noa_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_ageha_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_leo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_sora_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_065",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_reina_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_066",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_noa_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "areaId": "SHIBUYA",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "atk": 8800,
+      "def": 5500,
+      "spd": 470,
+      "memberCharacterIds": [
+        "char_ageha_01",
+        "char_leo_01",
+        "char_sora_01",
+        "char_reina_01",
+        "char_noa_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_ageha_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_leo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_sora_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_065",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_reina_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_066",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_noa_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "areaId": "SHIBUYA",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "atk": 8800,
+      "def": 5500,
+      "spd": 470,
+      "memberCharacterIds": [
+        "char_ageha_01",
+        "char_leo_01",
+        "char_sora_01",
+        "char_reina_01",
+        "char_noa_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_ageha_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_leo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_sora_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_065",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_reina_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_066",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_noa_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "areaId": "IKEBUKURO",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "atk": 8200,
+      "def": 8200,
+      "spd": 340,
+      "memberCharacterIds": [
+        "char_koharu_01",
+        "char_takeshi_01",
+        "char_momoko_01",
+        "char_riki_01",
+        "char_sakura_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_koharu_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takeshi_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_momoko_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "areaId": "IKEBUKURO",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "atk": 8200,
+      "def": 8200,
+      "spd": 340,
+      "memberCharacterIds": [
+        "char_koharu_01",
+        "char_takeshi_01",
+        "char_momoko_01",
+        "char_riki_01",
+        "char_sakura_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_koharu_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takeshi_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_momoko_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "areaId": "IKEBUKURO",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "atk": 8200,
+      "def": 8200,
+      "spd": 340,
+      "memberCharacterIds": [
+        "char_koharu_01",
+        "char_takeshi_01",
+        "char_momoko_01",
+        "char_riki_01",
+        "char_sakura_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_koharu_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takeshi_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_momoko_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "areaId": "IKEBUKURO",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "atk": 8200,
+      "def": 8200,
+      "spd": 340,
+      "memberCharacterIds": [
+        "char_koharu_01",
+        "char_takeshi_01",
+        "char_momoko_01",
+        "char_riki_01",
+        "char_sakura_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_koharu_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_takeshi_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_momoko_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_022",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "areaId": "ROPPONGI",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "atk": 8700,
+      "def": 7700,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_kaede_01",
+        "char_taiga_01",
+        "char_maya_01",
+        "char_seiya_01",
+        "char_cecile_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_kaede_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_seiya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "areaId": "ROPPONGI",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "atk": 8700,
+      "def": 7700,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_kaede_01",
+        "char_taiga_01",
+        "char_maya_01",
+        "char_seiya_01",
+        "char_cecile_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_kaede_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_seiya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "areaId": "ROPPONGI",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "atk": 8700,
+      "def": 7700,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_kaede_01",
+        "char_taiga_01",
+        "char_maya_01",
+        "char_seiya_01",
+        "char_cecile_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_kaede_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_seiya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "areaId": "ROPPONGI",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "atk": 8700,
+      "def": 7700,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_kaede_01",
+        "char_taiga_01",
+        "char_maya_01",
+        "char_seiya_01",
+        "char_cecile_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_kaede_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_seiya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "areaId": "AKIHABARA",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "atk": 8400,
+      "def": 6500,
+      "spd": 430,
+      "memberCharacterIds": [
+        "char_karen_01",
+        "char_miyabi_01",
+        "char_alice_01",
+        "char_rui_01",
+        "char_maya_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_karen_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_miyabi_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_alice_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_067",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_rui_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "areaId": "AKIHABARA",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "atk": 8400,
+      "def": 6500,
+      "spd": 430,
+      "memberCharacterIds": [
+        "char_karen_01",
+        "char_miyabi_01",
+        "char_alice_01",
+        "char_rui_01",
+        "char_maya_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_karen_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_miyabi_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_alice_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_067",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_rui_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "areaId": "AKIHABARA",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "atk": 8400,
+      "def": 6500,
+      "spd": 430,
+      "memberCharacterIds": [
+        "char_karen_01",
+        "char_miyabi_01",
+        "char_alice_01",
+        "char_rui_01",
+        "char_maya_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_karen_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_miyabi_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_alice_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_067",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_rui_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "areaId": "AKIHABARA",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "atk": 8400,
+      "def": 6500,
+      "spd": 430,
+      "memberCharacterIds": [
+        "char_karen_01",
+        "char_miyabi_01",
+        "char_alice_01",
+        "char_rui_01",
+        "char_maya_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_karen_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_miyabi_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_alice_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_067",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_rui_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_025",
+            "SKILL_032"
+          ]
+        },
+        {
+          "characterId": "char_maya_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_068",
+            "SKILL_032"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "areaId": "KAWASAKI",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "atk": 10500,
+      "def": 6000,
+      "spd": 350,
+      "memberCharacterIds": [
+        "char_go_01",
+        "char_kengo_01",
+        "char_tetsu_01",
+        "char_lucas_01",
+        "char_riki_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_go_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_kengo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_tetsu_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_061",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_lucas_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_062",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "areaId": "KAWASAKI",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "atk": 10500,
+      "def": 6000,
+      "spd": 350,
+      "memberCharacterIds": [
+        "char_go_01",
+        "char_kengo_01",
+        "char_tetsu_01",
+        "char_lucas_01",
+        "char_riki_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_go_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_kengo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_tetsu_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_061",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_lucas_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_062",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "areaId": "KAWASAKI",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "atk": 10500,
+      "def": 6000,
+      "spd": 350,
+      "memberCharacterIds": [
+        "char_go_01",
+        "char_kengo_01",
+        "char_tetsu_01",
+        "char_lucas_01",
+        "char_riki_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_go_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_kengo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_tetsu_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_061",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_lucas_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_062",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "areaId": "KAWASAKI",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "atk": 10500,
+      "def": 6000,
+      "spd": 350,
+      "memberCharacterIds": [
+        "char_go_01",
+        "char_kengo_01",
+        "char_tetsu_01",
+        "char_lucas_01",
+        "char_riki_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_go_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_kengo_01",
+          "equipment": [],
+          "skills": null
+        },
+        {
+          "characterId": "char_tetsu_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_061",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_lucas_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_062",
+            "SKILL_027"
+          ]
+        },
+        {
+          "characterId": "char_riki_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_024",
+            "SKILL_031"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "areaId": "YOKOHAMA",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "atk": 8900,
+      "def": 7200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_genji_01",
+        "char_long_01",
+        "char_sakura_01",
+        "char_cecile_01",
+        "char_taiga_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "beginner",
+      "minimumPower": null,
+      "members": [
+        {
+          "characterId": "char_genji_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_063",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_long_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_064",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "areaId": "YOKOHAMA",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "atk": 8900,
+      "def": 7200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_genji_01",
+        "char_long_01",
+        "char_sakura_01",
+        "char_cecile_01",
+        "char_taiga_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "intermediate",
+      "minimumPower": 160000,
+      "members": [
+        {
+          "characterId": "char_genji_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_063",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_long_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_064",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "areaId": "YOKOHAMA",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "atk": 8900,
+      "def": 7200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_genji_01",
+        "char_long_01",
+        "char_sakura_01",
+        "char_cecile_01",
+        "char_taiga_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "advanced",
+      "minimumPower": 200000,
+      "members": [
+        {
+          "characterId": "char_genji_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_063",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_long_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_064",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    },
+    {
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "areaId": "YOKOHAMA",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "atk": 8900,
+      "def": 7200,
+      "spd": 390,
+      "memberCharacterIds": [
+        "char_genji_01",
+        "char_long_01",
+        "char_sakura_01",
+        "char_cecile_01",
+        "char_taiga_01"
+      ],
+      "skillRequired": true,
+      "enabled": true,
+      "difficultyId": "expert",
+      "minimumPower": 240000,
+      "members": [
+        {
+          "characterId": "char_genji_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_063",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_long_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_064",
+            "SKILL_031"
+          ]
+        },
+        {
+          "characterId": "char_sakura_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_069",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_cecile_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_070",
+            "SKILL_026"
+          ]
+        },
+        {
+          "characterId": "char_taiga_01",
+          "equipment": [],
+          "skills": [
+            "SKILL_033",
+            "SKILL_034"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -7,9 +7,9 @@ import PvpDeckPresentation from "../pvp/PvpDeckPresentation";
 import OutlawButton from "../ui/OutlawButton";
 import {RAID_PERSON_FALLBACK,RAID_BACKGROUND_FALLBACK,useRaidPageAssets,RaidPagePortrait,RaidPageSpinner} from "./raidPagePresentation";
 import "./RaidEnemyRoster.css";
-export interface RaidEnemyRosterProps {bossMasterId?:string;raidName?:string;className?:string;presentation?:"compact"|"detail";skillsByCharacterId?:RaidObserved<Readonly<Record<string,readonly {id:string;name:string}[]>>>;}
-export default function RaidEnemyRoster({bossMasterId,raidName,className='',presentation='compact',skillsByCharacterId}:RaidEnemyRosterProps){
- const variant=findCanonicalRaidVariant(bossMasterId,raidName);const enemy=variant?resolveRaidTopEnemy(variant.raidVariantId):null;
+export interface RaidEnemyRosterProps {bossMasterId?:string;raidName?:string;memberCharacterIds?:readonly string[]|null;className?:string;presentation?:"compact"|"detail";skillsByCharacterId?:RaidObserved<Readonly<Record<string,readonly {id:string;name:string}[]>>>;}
+export default function RaidEnemyRoster({bossMasterId,raidName,memberCharacterIds,className='',presentation='compact',skillsByCharacterId}:RaidEnemyRosterProps){
+ const variant=findCanonicalRaidVariant(bossMasterId,raidName);const enemy=variant?resolveRaidTopEnemy(variant.raidVariantId,memberCharacterIds):null;
  const assets=useRaidPageAssets(enemy?[{src:enemy.backgroundUrl,fallbackSrc:RAID_BACKGROUND_FALLBACK},...enemy.roster.map(member=>({src:member.imageUrl,fallbackSrc:RAID_PERSON_FALLBACK}))]:[]);
  if(!assets.ready)return <RaidPageSpinner/>;
  if(!enemy)return <p className="raid-enemy-roster__notice">敵の編成情報は未取得です。</p>;

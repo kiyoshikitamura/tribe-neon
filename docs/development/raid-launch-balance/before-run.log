@@ -1,0 +1,534 @@
+[
+  {
+    "areaId": "SHINJUKU",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 2,
+      "max": 2
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 2,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "SHINJUKU",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 20747,
+      "average": 20948.333333333332,
+      "max": 21298
+    },
+    "rounds": {
+      "min": 4,
+      "max": 4
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 2618.6877010331546
+  },
+  {
+    "areaId": "SHINJUKU",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 29926,
+      "average": 36044.333333333336,
+      "max": 41609
+    },
+    "rounds": {
+      "min": 5,
+      "max": 5
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 631.3213049362051
+  },
+  {
+    "areaId": "SHINJUKU",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 50177,
+      "average": 50691.333333333336,
+      "max": 51511
+    },
+    "rounds": {
+      "min": 5,
+      "max": 6
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 183.64265244073758
+  },
+  {
+    "areaId": "SHIBUYA",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 2,
+      "max": 2
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 2,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "SHIBUYA",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 22080,
+      "average": 22600.666666666668,
+      "max": 23052
+    },
+    "rounds": {
+      "min": 4,
+      "max": 4
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 2123.8311554231436
+  },
+  {
+    "areaId": "SHIBUYA",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 37358,
+      "average": 43574,
+      "max": 47029
+    },
+    "rounds": {
+      "min": 5,
+      "max": 5
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 456.94935308007325
+  },
+  {
+    "areaId": "SHIBUYA",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 51276,
+      "average": 67595.66666666667,
+      "max": 76164
+    },
+    "rounds": {
+      "min": 6,
+      "max": 7
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 120.50261425221356
+  },
+  {
+    "areaId": "IKEBUKURO",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 2,
+      "max": 3
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 3,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "IKEBUKURO",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 30558,
+      "average": 32388,
+      "max": 33518
+    },
+    "rounds": {
+      "min": 6,
+      "max": 8
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 1905.4676335150584
+  },
+  {
+    "areaId": "IKEBUKURO",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 48202,
+      "average": 51253.666666666664,
+      "max": 55481
+    },
+    "rounds": {
+      "min": 9,
+      "max": 9
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 499.4764602207322
+  },
+  {
+    "areaId": "IKEBUKURO",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 88903,
+      "average": 96896,
+      "max": 105673
+    },
+    "rounds": {
+      "min": 9,
+      "max": 12
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 108.08214242824546
+  },
+  {
+    "areaId": "ROPPONGI",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 2,
+      "max": 2
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 3,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "ROPPONGI",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 25847,
+      "average": 27331.666666666668,
+      "max": 28480
+    },
+    "rounds": {
+      "min": 5,
+      "max": 5
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 2132.5342137586786
+  },
+  {
+    "areaId": "ROPPONGI",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 40882,
+      "average": 42996,
+      "max": 45649
+    },
+    "rounds": {
+      "min": 6,
+      "max": 6
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 562.326211223783
+  },
+  {
+    "areaId": "ROPPONGI",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 78171,
+      "average": 81082.33333333333,
+      "max": 84247
+    },
+    "rounds": {
+      "min": 7,
+      "max": 8
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 121.98599478195938
+  },
+  {
+    "areaId": "AKIHABARA",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 2,
+      "max": 2
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 3,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "AKIHABARA",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 22529,
+      "average": 24001.333333333332,
+      "max": 25871
+    },
+    "rounds": {
+      "min": 5,
+      "max": 5
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 2142.7381018514848
+  },
+  {
+    "areaId": "AKIHABARA",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 43422,
+      "average": 47484,
+      "max": 50505
+    },
+    "rounds": {
+      "min": 6,
+      "max": 6
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 449.27414146519527
+  },
+  {
+    "areaId": "AKIHABARA",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 71853,
+      "average": 76913.66666666667,
+      "max": 86912
+    },
+    "rounds": {
+      "min": 8,
+      "max": 8
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 113.46842642537815
+  },
+  {
+    "areaId": "KAWASAKI",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 2,
+      "max": 2
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 2,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "KAWASAKI",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 21819,
+      "average": 22454.333333333332,
+      "max": 23058
+    },
+    "rounds": {
+      "min": 4,
+      "max": 4
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 2901.126307150386
+  },
+  {
+    "areaId": "KAWASAKI",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 30660,
+      "average": 33391.333333333336,
+      "max": 38018
+    },
+    "rounds": {
+      "min": 4,
+      "max": 5
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 4,
+    "uniformSupplyHours": 809.258556777873
+  },
+  {
+    "areaId": "KAWASAKI",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 73072,
+      "average": 74875.66666666667,
+      "max": 76816
+    },
+    "rounds": {
+      "min": 5,
+      "max": 6
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 147.6386915359078
+  },
+  {
+    "areaId": "YOKOHAMA",
+    "difficultyId": "beginner",
+    "damage": {
+      "min": 0,
+      "average": 0,
+      "max": 0
+    },
+    "rounds": {
+      "min": 3,
+      "max": 3
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 3,
+    "uniformSupplyHours": null
+  },
+  {
+    "areaId": "YOKOHAMA",
+    "difficultyId": "intermediate",
+    "damage": {
+      "min": 23444,
+      "average": 36918.333333333336,
+      "max": 56572
+    },
+    "rounds": {
+      "min": 7,
+      "max": 8
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 1625.208794185364
+  },
+  {
+    "areaId": "YOKOHAMA",
+    "difficultyId": "advanced",
+    "damage": {
+      "min": 60279,
+      "average": 63185,
+      "max": 68601
+    },
+    "rounds": {
+      "min": 8,
+      "max": 8
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 393.9050231682977
+  },
+  {
+    "areaId": "YOKOHAMA",
+    "difficultyId": "expert",
+    "damage": {
+      "min": 72817,
+      "average": 80646,
+      "max": 93500
+    },
+    "rounds": {
+      "min": 9,
+      "max": 10
+    },
+    "survivors": {
+      "min": 0,
+      "max": 0
+    },
+    "minimumPlayersActed": 5,
+    "uniformSupplyHours": 126.25323242092827
+  }
+]
