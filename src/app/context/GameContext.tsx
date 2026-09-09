@@ -1986,6 +1986,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         .order("created_at", { ascending: false });
       
       if (equipsData) {
+        let persistedEquips = equipsData;
         if (equipsData.length === 0) {
           const activeChar = charsData ? charsData[0] : null;
           if (activeChar) {
@@ -2012,34 +2013,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
                   { name: "防御貫通力", val: "+12%", unlocked: false }
                 ]
               };
-              const { data: inserted } = await supabase.from("user_equipments").insert(row).select().maybeSingle();
-              if (inserted) seeded.push(inserted);
-              else seeded.push({ id: g.id, ...row });
+              const { data: inserted, error: insertError } = await supabase.from("user_equipments").insert(row).select().maybeSingle();
+              // Persisted equipment only: a rejected grant must not become owned state.
+              if (!insertError && inserted) seeded.push(inserted);
             }
-            setUserEquipmentsList(seeded);
-            setSelectedEquipment(seeded[0]);
-            setEquipmentLevel(seeded[0].level);
-            setEquipmentLimitBreak(seeded[0].plus_val);
-            if (seeded[0].random_options) setSubOptions(seeded[0].random_options);
-          }
-        } else {
-          setUserEquipmentsList(equipsData);
-          
-          if (selectedEquipment) {
-            const currentEquip = equipsData.find(e => e.id === selectedEquipment.id);
-            if (currentEquip) {
-              setSelectedEquipment(currentEquip);
-              setEquipmentLevel(currentEquip.level);
-              setEquipmentLimitBreak(currentEquip.plus_val);
-              if (currentEquip.random_options) setSubOptions(currentEquip.random_options);
-            }
-          } else {
-            setSelectedEquipment(equipsData[0]);
-            setEquipmentLevel(equipsData[0].level);
-            setEquipmentLimitBreak(equipsData[0].plus_val);
-            if (equipsData[0].random_options) setSubOptions(equipsData[0].random_options);
+            persistedEquips = seeded;
           }
         }
+        setUserEquipmentsList(persistedEquips);
+        const currentEquip = persistedEquips.find(e => e.id === selectedEquipment?.id) || persistedEquips[0] || null;
+        setSelectedEquipment(currentEquip);
+        setEquipmentLevel(currentEquip?.level ?? 1);
+        setEquipmentLimitBreak(currentEquip?.plus_val ?? 0);
+        setSubOptions(currentEquip?.random_options || []);
       }
 
       // 総合力データの同期

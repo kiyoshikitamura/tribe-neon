@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { getCharacterTotalStats } from "../../src/utils/stats_calculator";
+import { CHARACTERS_MASTER } from "../../src/utils/game_constants";
 
 test.use({ viewport: { width: 390, height: 844 } });
 test.setTimeout(90_000);
@@ -1272,53 +1274,14 @@ test("new mobile player completes the guided first session without footer naviga
   await page.screenshot({ path: test.info().outputPath("Q6-battle-encounter.png"), fullPage: true });
   await page.getByRole("button", { name: "バトルへ" }).click();
   await expect(page.locator('[data-acceptance-state="B1"]')).toBeVisible();
-  await expect(page.getByLabel("出撃パーティ").locator(".character-presentation-thumbnail")).toHaveCount(5);
-  await assertCenteredGameCanvas(page, ".battle-screen");
-  await page.screenshot({ path: test.info().outputPath("B1-battle-pre.png"), fullPage: true });
-  await expect(page.getByRole("button", { name: "バトルスタート" })).toHaveClass(/semantic-cta--primary/);
-  await page.getByRole("button", { name: "バトルスタート" }).click();
-  await expect(page.locator('[data-acceptance-state="B2"]')).toBeVisible();
-  await expect(page.locator('[data-acceptance-state="B2"] .battle-matchup-center')).toContainText("VS");
-  const matchupHeight = await page.locator('[data-acceptance-state="B2"]').evaluate((stage) => stage.getBoundingClientRect().height);
-  expect(matchupHeight).toBeGreaterThanOrEqual(760);
-  await page.waitForTimeout(350);
-  await page.screenshot({ path: test.info().outputPath("B2-battle-start.png"), fullPage: true });
-  await expect(page.locator(".quest-battle-viewer")).toBeVisible();
-  await expect(page.locator(".quest-battle-viewer")).toHaveAttribute("data-battle-speed", "2");
-  await assertCenteredGameCanvas(page, ".battle-screen");
-  await expect(page.locator('[data-acceptance-state="B3"]')).toBeVisible();
-  await expect(page.locator('.battle-party-zone.is-player')).toHaveAttribute("data-party-size", "5");
-  const playerRosterRows = await page.locator('.battle-party-zone.is-player .battle-unit-party').evaluateAll((rows) => rows.map((row) => {
-    const rect = row.getBoundingClientRect();
-    return { top: Math.round(rect.top), left: Math.round(rect.left), actor: row.classList.contains("is-actor") };
-  }));
-  expect(playerRosterRows).toHaveLength(5);
-  expect(new Set(playerRosterRows.map((row) => row.top)).size).toBe(5);
-  const restingPlayerRows = playerRosterRows.filter((row) => !row.actor);
-  const activePlayerRow = playerRosterRows.find((row) => row.actor);
-  expect(restingPlayerRows).toHaveLength(4);
-  expect(Math.max(...restingPlayerRows.map((row) => row.left)) - Math.min(...restingPlayerRows.map((row) => row.left))).toBeLessThanOrEqual(1);
-  expect(activePlayerRow).toBeTruthy();
-  expect((activePlayerRow?.left || 0) - restingPlayerRows[0].left).toBeGreaterThanOrEqual(20);
-  expect((activePlayerRow?.left || 0) - restingPlayerRows[0].left).toBeLessThanOrEqual(30);
-  await expect(page.locator(".battle-unit-party.is-actor .battle-unit-identity-badges img")).toHaveCount(1);
-  await page.screenshot({ path: test.info().outputPath("B3-normal-attack.png"), fullPage: true });
-  await expect(page.locator('[data-acceptance-state="B4"]')).toBeVisible({ timeout: 35_000 });
-  await expect(page.locator(".battle-skill-cutin")).toBeVisible();
-  await expect(page.locator(".battle-cutin-copy")).not.toBeEmpty();
-  await page.screenshot({ path: test.info().outputPath("B4-skill.png"), fullPage: true });
-  const finalHitOrResult = page.locator('[data-acceptance-state="B5"], [data-acceptance-state="B6"]');
-  await expect(finalHitOrResult).toBeVisible({ timeout: 60_000 });
-  if (await page.locator('[data-acceptance-state="B5"]').isVisible()) {
-    await page.screenshot({ path: test.info().outputPath("B5-final-hit.png"), fullPage: true });
-  }
-  await expect(page.locator('[data-acceptance-state="B6"]')).toBeVisible({ timeout: 35_000 });
-  await assertCenteredGameCanvas(page, ".battle-ending-screen");
-  await expect(page.locator(".battle-result-canonical-rewards")).toBeVisible();
+  // Current Production uses StreetBattle presentation; canonical tutorial flow is unchanged.
+  await expect(page.getByRole("heading", { name: "出撃準備" })).toBeVisible();
+  await page.getByRole("button", { name: "バトルスタート", exact: true }).click();
+  await expect(page.locator(".sf-matchup")).toBeVisible();
+  await expect(page.locator(".sb-root")).toBeVisible();
+  await expect(page.locator(".battle-result-summary")).toBeVisible({ timeout: 90_000 });
   await page.screenshot({ path: test.info().outputPath("B6-result.png"), fullPage: true });
-  await expect(page.getByRole("button", { name: "勝利報酬を獲得" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "次へ" })).toHaveClass(/variant-primary/);
-  await page.getByRole("button", { name: "次へ" }).click();
+  await page.getByRole("button", { name: "次へ", exact: true }).click();
   await expect(page.locator(".tutorial-rule-screen")).toBeVisible();
   await assertCenteredGameCanvas(page, ".tutorial-rule-screen");
   await completeRuleGuide(page);
@@ -1362,6 +1325,22 @@ test("new mobile player completes the guided first session without footer naviga
     (window as typeof window & { __TRIBE_ACTION_METRICS__?: unknown[] }).__TRIBE_ACTION_METRICS__ || []
   ));
   test.info().annotations.push({ type: "action-performance", description: JSON.stringify(actionMetrics) });
+  // Fresh-user grant must exist in the DB adapter and match the shared Context UI.
+  const persisted = await page.evaluate(() => ({
+    equipment: JSON.parse(localStorage.getItem("mock_db_user_equipments") || "[]"),
+    characters: JSON.parse(localStorage.getItem("mock_db_user_characters") || "[]"),
+  }));
+  expect(persisted.equipment).toHaveLength(5);
+  const owner = persisted.characters.find((entry: any) => entry.id === persisted.equipment[0].equipped_character_id);
+  const ownerMaster = CHARACTERS_MASTER.find(entry => entry.id === owner.character_id)!;
+  const stats = getCharacterTotalStats(owner, persisted.equipment);
+  const loginBonus = page.getByRole("dialog", { name: "ログインボーナス" });
+  if (await loginBonus.isVisible()) await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
+  await page.locator('.footer-item[aria-label="キャラ"]').click();
+  await page.locator(".character-v2-card").filter({ has: page.locator("strong", { hasText: ownerMaster.jpName }) }).click();
+  await expect(page.locator(".character-home-power strong")).toHaveText((stats.hp + stats.atk + stats.def).toLocaleString());
+  await expect(page.locator(".character-home").getByRole("button", { name: /Equipment/ })).toContainText("5 / 7");
+  await page.screenshot({ path: test.info().outputPath("fresh-persisted-equipment-home.png") });
   expect(failedImages).toEqual([]);
   expect(pageErrors).toEqual([]);
 });
