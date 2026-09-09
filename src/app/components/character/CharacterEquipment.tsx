@@ -6,6 +6,7 @@ import { CANONICAL_EQUIPMENT_VIEW } from "@/utils/equipments_master_data";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import CharacterPresentation from "./CharacterPresentation";
 import OutlawButton from "../ui/OutlawButton";
+import CharacterStatusBadges from "./CharacterStatusBadges";
 import "./CharacterEquipment.css";
 const statKeys = ["hp", "atk", "def", "spd", "luk"] as const;
 type Stats = ReturnType<typeof getCharacterTotalStats>;
@@ -26,7 +27,7 @@ export default function CharacterEquipment({ character, master, equipment, busy,
   }, [character.id, total.hp, total.atk, total.def, total.spd, total.luk]);
   const power = (stats: Stats) => stats.hp + stats.atk + stats.def;
   return <>
-    <div className="character-equipment-identity"><h2>{master.jpName}</h2><span>{master.rarity} / Lv.{character.level || 1}</span><strong>総合力 {power(total).toLocaleString()}</strong></div>
+    <div className="character-equipment-identity"><h2>{master.jpName}</h2><div><CharacterStatusBadges rarity={master.rarity} awakeningLevel={character.awakening_level || 0} /></div><span>Lv.{character.level || 1}</span><strong>総合力 {power(total).toLocaleString()}</strong></div>
     <div className="character-equipment-stage">
       <img className="character-equipment-background" src={getCharacterLocationBackground(master.homeTown)} alt="" />
       <CharacterPresentation src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="full-body" rarity={master.rarity} frameKind={false} metadata={false} />

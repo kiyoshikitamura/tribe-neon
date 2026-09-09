@@ -1,0 +1,14 @@
+.character-status-badges { display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px; max-width:100%; vertical-align:middle; }
+.character-status-badge { display:inline-block; width:56px; height:28px; max-width:100%; object-fit:contain; vertical-align:middle; flex-shrink:0; }
+/* The supplied rarity PNG has transparent space above/below its metal plate. */
+.character-status-badge.is-rarity { width:64px; height:24px; object-fit:cover; }
+.character-status-unawakened { display:inline-block; padding:3px 8px; border:1px solid var(--ui-border,#555); border-radius:4px; color:var(--ui-text-secondary); font-size:11px; }
+.character-v2-card .character-status-badge { width:32px; height:18px; }
+.character-v2-card .character-status-badge.is-rarity { width:40px; }
+.character-party-card .character-status-badges { justify-content:center; }
+.character-party-card .character-status-badge { width:32px; height:18px; }
+.character-party-card .character-status-badge.is-rarity { width:36px; }
+.character-party-draft-slots .character-status-badge { width:26px; height:15px; }
+.character-v2-filters .character-status-badge { width:40px; height:22px; }
+.character-v2-current-after .character-status-badge { justify-self:center; }
+.character-party-draft-slots .character-status-badge.is-rarity { width:26px; }

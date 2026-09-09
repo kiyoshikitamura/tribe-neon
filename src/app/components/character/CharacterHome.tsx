@@ -7,6 +7,7 @@ import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import type { CharacterRuntimeRecord, EquipmentRuntimeRecord } from "@/utils/stats_calculator";
 import CharacterPresentation from "./CharacterPresentation";
 import OutlawButton from "../ui/OutlawButton";
+import CharacterStatusBadges from "./CharacterStatusBadges";
 import "./CharacterHome.css";
 
 // Selection uses a Master ID; equipment ownership uses the instance UUID.
@@ -72,10 +73,10 @@ export default function CharacterHome({ character, master, power, equipment, use
       if (Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy) * 1.5) onSwitch(dx < 0 ? 1 : -1);
     }} onPointerCancel={() => { gesture.current = null; }}>
       <img className="character-home-background" src={getCharacterLocationBackground(master.homeTown)} alt="" aria-hidden="true" />
-      <CharacterPresentation key={character.id} src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="full-body" rarity={master.rarity} frameKind={false} metadata={false} />
+      <CharacterPresentation key={character.id} src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="dialogue-bust" rarity={master.rarity} frameKind={false} metadata={false} />
     </div>
     <div className="character-home-information">
-      <div className="character-home-identity"><span className="character-home-rarity">{master.rarity}</span><h1>{master.jpName}</h1><p><span>Lv.{character.level || 1}</span><span>覚醒 +{character.awakening_level || 0}</span></p></div>
+      <div className="character-home-identity"><CharacterStatusBadges rarity={master.rarity} awakeningLevel={character.awakening_level || 0} /><h1>{master.jpName}</h1><p><span>Lv.{character.level || 1}</span></p></div>
       <div className="character-home-power"><span>総合力</span><strong>{power.toLocaleString()}</strong></div>
       <OutlawButton variant="primary" fullWidth onClick={onGrowth}>育成する</OutlawButton>
       <div className="character-home-destinations">
