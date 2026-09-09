@@ -17,7 +17,7 @@
       "maxHp": 220000,
       "enemySnapshot": [
         {
-          "id": "raid_b5296904-f8e1-4b6e-8458-260f290853f7_1",
+          "id": "raid_9f668832-af75-4935-b7ac-0840a4762a19_1",
           "name": "トモヤ",
           "team": "ENEMY",
           "level": 5,
@@ -74,8 +74,8 @@
           ]
         },
         {
-          "id": "raid_b5296904-f8e1-4b6e-8458-260f290853f7_2",
-          "name": "ジフン",
+          "id": "raid_9f668832-af75-4935-b7ac-0840a4762a19_2",
+          "name": "ダイスケ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -100,7 +100,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -110,15 +110,15 @@
               "equipmentId": "WEAPON_002"
             }
           ],
-          "characterId": "char_jihoon_01",
+          "characterId": "char_gou_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008"
           ]
         },
         {
-          "id": "raid_b5296904-f8e1-4b6e-8458-260f290853f7_3",
-          "name": "セリカ",
+          "id": "raid_9f668832-af75-4935-b7ac-0840a4762a19_3",
+          "name": "ケンジ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -143,7 +143,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "金属バット",
@@ -153,15 +153,15 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_serika_01",
+          "characterId": "char_kenji_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011"
           ]
         },
         {
-          "id": "raid_b5296904-f8e1-4b6e-8458-260f290853f7_4",
-          "name": "シン",
+          "id": "raid_9f668832-af75-4935-b7ac-0840a4762a19_4",
+          "name": "ジフン",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -197,15 +197,15 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_shin_01",
+          "characterId": "char_jihoon_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_b5296904-f8e1-4b6e-8458-260f290853f7_5",
-          "name": "ユウキ",
+          "id": "raid_9f668832-af75-4935-b7ac-0840a4762a19_5",
+          "name": "セリカ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -230,7 +230,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -240,7 +240,7 @@
               "equipmentId": "WEAPON_001"
             }
           ],
-          "characterId": "char_yuki_01",
+          "characterId": "char_serika_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012"
@@ -250,15 +250,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shinjuku",
-        "roomId": "eb43befc-b7db-47cb-8662-1b9688f24b5e",
+        "roomId": "be68f709-6b10-421d-ae30-7ead3434be93",
         "costType": "FREE_FIRST",
         "bossMaxHp": 220000,
-        "startedAt": "2026-09-10T00:49:54.663+09:00",
-        "raidDayKey": "ROOM:b5296904-f8e1-4b6e-8458-260f290853f7",
+        "startedAt": "2026-09-10T01:17:01.875+09:00",
+        "raidDayKey": "ROOM:9f668832-af75-4935-b7ac-0840a4762a19",
         "difficultyId": "beginner",
         "bossHpAtStart": 220000,
         "raidVariantId": "RAID_SHINJUKU_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.647+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.856+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -268,15 +268,15 @@
     {
       "areaId": "SHINJUKU",
       "difficultyId": "intermediate",
-      "maxHp": 3900000,
+      "maxHp": 3500000,
       "enemySnapshot": [
         {
-          "id": "raid_66b52772-c9a0-41e2-bcda-7c11aeaf5f56_1",
+          "id": "raid_e86ad9e9-a97c-49ed-8dbf-a8845a7dfa6c_1",
           "name": "シン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 783821,
+            "hp": 703821,
             "atk": 2015,
             "def": 4018,
             "luk": 0,
@@ -335,12 +335,12 @@
           ]
         },
         {
-          "id": "raid_66b52772-c9a0-41e2-bcda-7c11aeaf5f56_2",
+          "id": "raid_e86ad9e9-a97c-49ed-8dbf-a8845a7dfa6c_2",
           "name": "ユウキ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 784094,
+            "hp": 704094,
             "atk": 2000,
             "def": 4100,
             "luk": 0,
@@ -399,12 +399,12 @@
           ]
         },
         {
-          "id": "raid_66b52772-c9a0-41e2-bcda-7c11aeaf5f56_3",
-          "name": "カゲヤマ",
+          "id": "raid_e86ad9e9-a97c-49ed-8dbf-a8845a7dfa6c_3",
+          "name": "レン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 783930,
+            "hp": 703930,
             "atk": 1957,
             "def": 4182,
             "luk": 0,
@@ -438,7 +438,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -455,7 +455,7 @@
               "equipmentId": "BODY_009"
             }
           ],
-          "characterId": "char_kageyama_01",
+          "characterId": "char_ren_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -463,12 +463,12 @@
           ]
         },
         {
-          "id": "raid_66b52772-c9a0-41e2-bcda-7c11aeaf5f56_4",
-          "name": "レオン",
+          "id": "raid_e86ad9e9-a97c-49ed-8dbf-a8845a7dfa6c_4",
+          "name": "マサト",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 784148,
+            "hp": 704148,
             "atk": 1751,
             "def": 4073,
             "luk": 0,
@@ -503,7 +503,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -520,7 +520,7 @@
               "equipmentId": "BODY_011"
             }
           ],
-          "characterId": "char_leon_01",
+          "characterId": "char_masato_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -528,12 +528,12 @@
           ]
         },
         {
-          "id": "raid_66b52772-c9a0-41e2-bcda-7c11aeaf5f56_5",
-          "name": "タクロウ",
+          "id": "raid_e86ad9e9-a97c-49ed-8dbf-a8845a7dfa6c_5",
+          "name": "カゲヤマ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 784531,
+            "hp": 704531,
             "atk": 1945,
             "def": 4127,
             "luk": 0,
@@ -567,7 +567,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -584,7 +584,7 @@
               "equipmentId": "BODY_012"
             }
           ],
-          "characterId": "char_takuro_01",
+          "characterId": "char_kageyama_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -595,15 +595,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shinjuku",
-        "roomId": "f34b6552-48d0-4061-bb7d-3d127a01e8a6",
+        "roomId": "673c6697-344f-4b28-a204-ee3f2161632a",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 3900000,
-        "startedAt": "2026-09-10T00:49:54.675+09:00",
-        "raidDayKey": "ROOM:66b52772-c9a0-41e2-bcda-7c11aeaf5f56",
+        "bossMaxHp": 3500000,
+        "startedAt": "2026-09-10T01:17:01.888+09:00",
+        "raidDayKey": "ROOM:e86ad9e9-a97c-49ed-8dbf-a8845a7dfa6c",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 3900000,
+        "bossHpAtStart": 3500000,
         "raidVariantId": "RAID_SHINJUKU_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.669+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.881+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -613,15 +613,15 @@
     {
       "areaId": "SHINJUKU",
       "difficultyId": "advanced",
-      "maxHp": 10900000,
+      "maxHp": 15200000,
       "enemySnapshot": [
         {
-          "id": "raid_726c42fb-96eb-457d-9387-b7a4f7753be7_1",
+          "id": "raid_0b44d759-013e-4bb0-a6d5-a99e4494391a_1",
           "name": "レオン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2187012,
+            "hp": 3047012,
             "atk": 2223,
             "def": 5713,
             "luk": 0,
@@ -702,12 +702,12 @@
           ]
         },
         {
-          "id": "raid_726c42fb-96eb-457d-9387-b7a4f7753be7_2",
+          "id": "raid_0b44d759-013e-4bb0-a6d5-a99e4494391a_2",
           "name": "タクロウ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2189032,
+            "hp": 3049032,
             "atk": 2178,
             "def": 5891,
             "luk": 0,
@@ -789,12 +789,12 @@
           ]
         },
         {
-          "id": "raid_726c42fb-96eb-457d-9387-b7a4f7753be7_3",
-          "name": "ミオ",
+          "id": "raid_0b44d759-013e-4bb0-a6d5-a99e4494391a_3",
+          "name": "ロン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2184456,
+            "hp": 3044456,
             "atk": 1954,
             "def": 5297,
             "luk": 0,
@@ -867,7 +867,7 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_mio_01",
+          "characterId": "char_long_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -876,33 +876,18 @@
           ]
         },
         {
-          "id": "raid_726c42fb-96eb-457d-9387-b7a4f7753be7_4",
-          "name": "レイジ",
+          "id": "raid_0b44d759-013e-4bb0-a6d5-a99e4494391a_4",
+          "name": "ユウジ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2184991,
+            "hp": 3044991,
             "atk": 1940,
             "def": 5326,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_054",
-              "name": "覇王の威圧",
-              "target": "ATTACKER_WHO_DAMAGED_SELF",
-              "effects": [
-                "TRIGGER ON_DAMAGE_TAKEN",
-                "COUNTER 150% ATK",
-                "MAX 1 activation / round"
-              ],
-              "cooldown": null,
-              "plusValue": 1,
-              "activationType": "ON_DAMAGE_TAKEN",
-              "availableFromRound": 1,
-              "exclusiveCharacterId": "char_reiji_01"
-            },
             {
               "id": "SKILL_019",
               "name": "バーストラッシュ",
@@ -946,7 +931,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -970,22 +955,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_reiji_01",
+          "characterId": "char_yuji_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_054",
             "SKILL_019",
             "SKILL_026",
             "SKILL_032"
           ]
         },
         {
-          "id": "raid_726c42fb-96eb-457d-9387-b7a4f7753be7_5",
-          "name": "トモヤ",
+          "id": "raid_0b44d759-013e-4bb0-a6d5-a99e4494391a_5",
+          "name": "ユキナ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2186417,
+            "hp": 3046417,
             "atk": 2148,
             "def": 5356,
             "luk": 0,
@@ -1034,7 +1018,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "金属バット",
@@ -1058,7 +1042,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_tomoya_01",
+          "characterId": "char_yukina_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -1070,15 +1054,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shinjuku",
-        "roomId": "3e66c29f-3c62-4ec7-bb7d-bc8eb538d64f",
+        "roomId": "2275ff5b-9d03-422c-9309-5c51d65c16e3",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 10900000,
-        "startedAt": "2026-09-10T00:49:54.686+09:00",
-        "raidDayKey": "ROOM:726c42fb-96eb-457d-9387-b7a4f7753be7",
+        "bossMaxHp": 15200000,
+        "startedAt": "2026-09-10T01:17:01.901+09:00",
+        "raidDayKey": "ROOM:0b44d759-013e-4bb0-a6d5-a99e4494391a",
         "difficultyId": "advanced",
-        "bossHpAtStart": 10900000,
+        "bossHpAtStart": 15200000,
         "raidVariantId": "RAID_SHINJUKU_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.679+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.893+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -1088,36 +1072,21 @@
     {
       "areaId": "SHINJUKU",
       "difficultyId": "expert",
-      "maxHp": 25200000,
+      "maxHp": 28700000,
       "enemySnapshot": [
         {
-          "id": "raid_07a49998-c36e-45a8-aeb6-63731dbbb63f_1",
-          "name": "レイジ",
+          "id": "raid_66ed24e7-6146-4afe-a463-1edde03e76b0_1",
+          "name": "ミオ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5045479,
+            "hp": 5745479,
             "atk": 2807,
             "def": 6951,
             "luk": 0,
             "spd": 135
           },
           "skills": [
-            {
-              "id": "SKILL_054",
-              "name": "覇王の威圧",
-              "target": "ATTACKER_WHO_DAMAGED_SELF",
-              "effects": [
-                "TRIGGER ON_DAMAGE_TAKEN",
-                "COUNTER 150% ATK",
-                "MAX 1 activation / round"
-              ],
-              "cooldown": null,
-              "plusValue": 2,
-              "activationType": "ON_DAMAGE_TAKEN",
-              "availableFromRound": 1,
-              "exclusiveCharacterId": "char_reiji_01"
-            },
             {
               "id": "SKILL_001",
               "name": "ストリートパンチ",
@@ -1159,7 +1128,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -1190,22 +1159,21 @@
               "equipmentId": "ACCESSORY_016"
             }
           ],
-          "characterId": "char_reiji_01",
+          "characterId": "char_mio_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_054",
             "SKILL_001",
             "SKILL_026",
             "SKILL_021"
           ]
         },
         {
-          "id": "raid_07a49998-c36e-45a8-aeb6-63731dbbb63f_2",
-          "name": "トモヤ",
+          "id": "raid_66ed24e7-6146-4afe-a463-1edde03e76b0_2",
+          "name": "レイジ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5046123,
+            "hp": 5746123,
             "atk": 2180,
             "def": 6790,
             "luk": 5,
@@ -1254,7 +1222,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -1285,7 +1253,7 @@
               "equipmentId": "ACCESSORY_017"
             }
           ],
-          "characterId": "char_tomoya_01",
+          "characterId": "char_reiji_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -1294,12 +1262,12 @@
           ]
         },
         {
-          "id": "raid_07a49998-c36e-45a8-aeb6-63731dbbb63f_3",
-          "name": "ジフン",
+          "id": "raid_66ed24e7-6146-4afe-a463-1edde03e76b0_3",
+          "name": "アゲハ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5049476,
+            "hp": 5749476,
             "atk": 2164,
             "def": 7466,
             "luk": 0,
@@ -1348,7 +1316,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -1379,7 +1347,7 @@
               "equipmentId": "ACCESSORY_018"
             }
           ],
-          "characterId": "char_jihoon_01",
+          "characterId": "char_ageha_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -1388,12 +1356,12 @@
           ]
         },
         {
-          "id": "raid_07a49998-c36e-45a8-aeb6-63731dbbb63f_4",
-          "name": "セリカ",
+          "id": "raid_66ed24e7-6146-4afe-a463-1edde03e76b0_4",
+          "name": "ゲンジ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5047091,
+            "hp": 5747091,
             "atk": 2406,
             "def": 7209,
             "luk": 3,
@@ -1443,7 +1411,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "金属バット",
@@ -1474,7 +1442,7 @@
               "equipmentId": "ACCESSORY_019"
             }
           ],
-          "characterId": "char_serika_01",
+          "characterId": "char_genji_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -1483,12 +1451,12 @@
           ]
         },
         {
-          "id": "raid_07a49998-c36e-45a8-aeb6-63731dbbb63f_5",
-          "name": "シン",
+          "id": "raid_66ed24e7-6146-4afe-a463-1edde03e76b0_5",
+          "name": "ルーカス",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5047219,
+            "hp": 5747219,
             "atk": 2341,
             "def": 7305,
             "luk": 0,
@@ -1537,7 +1505,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -1568,7 +1536,7 @@
               "equipmentId": "ACCESSORY_020"
             }
           ],
-          "characterId": "char_shin_01",
+          "characterId": "char_lucas_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -1580,15 +1548,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shinjuku",
-        "roomId": "af3b8a89-c349-4660-9ae5-27888f4e09ad",
+        "roomId": "6b796b26-95af-4b1f-9955-1b4eebff2f25",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 25200000,
-        "startedAt": "2026-09-10T00:49:54.697+09:00",
-        "raidDayKey": "ROOM:07a49998-c36e-45a8-aeb6-63731dbbb63f",
+        "bossMaxHp": 28700000,
+        "startedAt": "2026-09-10T01:17:01.916+09:00",
+        "raidDayKey": "ROOM:66ed24e7-6146-4afe-a463-1edde03e76b0",
         "difficultyId": "expert",
-        "bossHpAtStart": 25200000,
+        "bossHpAtStart": 28700000,
         "raidVariantId": "RAID_SHINJUKU_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.69+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.907+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -1601,7 +1569,7 @@
       "maxHp": 200000,
       "enemySnapshot": [
         {
-          "id": "raid_b58e3e01-f14a-46da-b5ff-ea95097f6e10_1",
+          "id": "raid_7f1191f2-1362-4965-a6d3-92637ac7620e_1",
           "name": "ナオト",
           "team": "ENEMY",
           "level": 5,
@@ -1658,8 +1626,8 @@
           ]
         },
         {
-          "id": "raid_b58e3e01-f14a-46da-b5ff-ea95097f6e10_2",
-          "name": "ミナミ",
+          "id": "raid_7f1191f2-1362-4965-a6d3-92637ac7620e_2",
+          "name": "マサト",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -1684,7 +1652,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -1694,15 +1662,15 @@
               "equipmentId": "WEAPON_001"
             }
           ],
-          "characterId": "char_minami_01",
+          "characterId": "char_masato_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008"
           ]
         },
         {
-          "id": "raid_b58e3e01-f14a-46da-b5ff-ea95097f6e10_3",
-          "name": "カズヤ",
+          "id": "raid_7f1191f2-1362-4965-a6d3-92637ac7620e_3",
+          "name": "サワット",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -1727,7 +1695,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -1737,15 +1705,15 @@
               "equipmentId": "WEAPON_002"
             }
           ],
-          "characterId": "char_ren_male_01",
+          "characterId": "char_sawat_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011"
           ]
         },
         {
-          "id": "raid_b58e3e01-f14a-46da-b5ff-ea95097f6e10_4",
-          "name": "ユキナ",
+          "id": "raid_7f1191f2-1362-4965-a6d3-92637ac7620e_4",
+          "name": "ミナミ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -1771,7 +1739,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "金属バット",
@@ -1781,15 +1749,15 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_yukina_01",
+          "characterId": "char_minami_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_b58e3e01-f14a-46da-b5ff-ea95097f6e10_5",
-          "name": "マルティナ",
+          "id": "raid_7f1191f2-1362-4965-a6d3-92637ac7620e_5",
+          "name": "カズヤ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -1814,7 +1782,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -1824,7 +1792,7 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_martina_01",
+          "characterId": "char_ren_male_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012"
@@ -1834,15 +1802,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shibuya",
-        "roomId": "7b9aedc1-256e-47bc-861d-5e3af9026ce7",
+        "roomId": "65e3bc5d-69a2-4eb5-952e-8afef67e3fdc",
         "costType": "FREE_FIRST",
         "bossMaxHp": 200000,
-        "startedAt": "2026-09-10T00:49:54.706+09:00",
-        "raidDayKey": "ROOM:b58e3e01-f14a-46da-b5ff-ea95097f6e10",
+        "startedAt": "2026-09-10T01:17:01.927+09:00",
+        "raidDayKey": "ROOM:7f1191f2-1362-4965-a6d3-92637ac7620e",
         "difficultyId": "beginner",
         "bossHpAtStart": 200000,
         "raidVariantId": "RAID_SHIBUYA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.701+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.921+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -1852,15 +1820,15 @@
     {
       "areaId": "SHIBUYA",
       "difficultyId": "intermediate",
-      "maxHp": 4300000,
+      "maxHp": 3600000,
       "enemySnapshot": [
         {
-          "id": "raid_450937c1-b319-4f25-a16c-9c59d7c59851_1",
+          "id": "raid_d5f0c629-cb71-44bb-89c8-8d9ddbbc62d6_1",
           "name": "ユキナ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 864148,
+            "hp": 724148,
             "atk": 1961,
             "def": 4073,
             "luk": 0,
@@ -1919,12 +1887,12 @@
           ]
         },
         {
-          "id": "raid_450937c1-b319-4f25-a16c-9c59d7c59851_2",
-          "name": "マルティナ",
+          "id": "raid_d5f0c629-cb71-44bb-89c8-8d9ddbbc62d6_2",
+          "name": "リン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 864531,
+            "hp": 724531,
             "atk": 1945,
             "def": 4127,
             "luk": 0,
@@ -1958,7 +1926,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -1975,7 +1943,7 @@
               "equipmentId": "BODY_012"
             }
           ],
-          "characterId": "char_martina_01",
+          "characterId": "char_rin_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -1983,12 +1951,12 @@
           ]
         },
         {
-          "id": "raid_450937c1-b319-4f25-a16c-9c59d7c59851_3",
-          "name": "ノア",
+          "id": "raid_d5f0c629-cb71-44bb-89c8-8d9ddbbc62d6_3",
+          "name": "シオン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 864258,
+            "hp": 724258,
             "atk": 1930,
             "def": 4155,
             "luk": 0,
@@ -2022,7 +1990,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "金属バット",
@@ -2039,7 +2007,7 @@
               "equipmentId": "BODY_013"
             }
           ],
-          "characterId": "char_noa_01",
+          "characterId": "char_shion_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -2047,12 +2015,12 @@
           ]
         },
         {
-          "id": "raid_450937c1-b319-4f25-a16c-9c59d7c59851_4",
-          "name": "レイナ",
+          "id": "raid_d5f0c629-cb71-44bb-89c8-8d9ddbbc62d6_4",
+          "name": "ダイスケ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 864913,
+            "hp": 724913,
             "atk": 1887,
             "def": 4318,
             "luk": 0,
@@ -2087,7 +2055,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -2104,7 +2072,7 @@
               "equipmentId": "BODY_014"
             }
           ],
-          "characterId": "char_reina_01",
+          "characterId": "char_gou_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -2112,12 +2080,12 @@
           ]
         },
         {
-          "id": "raid_450937c1-b319-4f25-a16c-9c59d7c59851_5",
-          "name": "ソラ",
+          "id": "raid_d5f0c629-cb71-44bb-89c8-8d9ddbbc62d6_5",
+          "name": "マルティナ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 862183,
+            "hp": 722183,
             "atk": 1891,
             "def": 3772,
             "luk": 0,
@@ -2168,7 +2136,7 @@
               "equipmentId": "BODY_001"
             }
           ],
-          "characterId": "char_sora_01",
+          "characterId": "char_martina_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -2179,15 +2147,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shibuya",
-        "roomId": "cdfcffa8-4da5-4236-a80d-e18fa6a1d18b",
+        "roomId": "33258843-f48f-411f-b500-0ccc5ffe1689",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 4300000,
-        "startedAt": "2026-09-10T00:49:54.716+09:00",
-        "raidDayKey": "ROOM:450937c1-b319-4f25-a16c-9c59d7c59851",
+        "bossMaxHp": 3600000,
+        "startedAt": "2026-09-10T01:17:01.938+09:00",
+        "raidDayKey": "ROOM:d5f0c629-cb71-44bb-89c8-8d9ddbbc62d6",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 4300000,
+        "bossHpAtStart": 3600000,
         "raidVariantId": "RAID_SHIBUYA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.71+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.931+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -2197,35 +2165,21 @@
     {
       "areaId": "SHIBUYA",
       "difficultyId": "advanced",
-      "maxHp": 12600000,
+      "maxHp": 15800000,
       "enemySnapshot": [
         {
-          "id": "raid_df5fd0a1-a9ae-4332-9256-8f0f08175445_1",
-          "name": "レイナ",
+          "id": "raid_f5dd8323-19e4-42da-8c2e-17fadcba0596_1",
+          "name": "ノア",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2524991,
+            "hp": 3164991,
             "atk": 2164,
             "def": 5326,
             "luk": 0,
             "spd": 120
           },
           "skills": [
-            {
-              "id": "SKILL_066",
-              "name": "ハイスピード・ラッシュ",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE 215% ATK",
-                "SELF SPD +20% / 2T"
-              ],
-              "cooldown": 4,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 2,
-              "exclusiveCharacterId": "char_reina_01"
-            },
             {
               "id": "SKILL_001",
               "name": "ストリートパンチ",
@@ -2268,7 +2222,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -2292,22 +2246,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_reina_01",
+          "characterId": "char_noa_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_066",
             "SKILL_001",
             "SKILL_033",
             "SKILL_028"
           ]
         },
         {
-          "id": "raid_df5fd0a1-a9ae-4332-9256-8f0f08175445_2",
-          "name": "ソラ",
+          "id": "raid_f5dd8323-19e4-42da-8c2e-17fadcba0596_2",
+          "name": "レイナ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2526417,
+            "hp": 3166417,
             "atk": 2148,
             "def": 5356,
             "luk": 0,
@@ -2315,18 +2268,18 @@
           },
           "skills": [
             {
-              "id": "SKILL_065",
-              "name": "ストリート・ライド",
-              "target": "SELF",
+              "id": "SKILL_066",
+              "name": "ハイスピード・ラッシュ",
+              "target": "ENEMY_SINGLE",
               "effects": [
-                "TRIGGER ON_BATTLE_START / once per battle",
-                "SPD +22% / 3T"
+                "DAMAGE 215% ATK",
+                "SELF SPD +20% / 2T"
               ],
-              "cooldown": null,
+              "cooldown": 4,
               "plusValue": 1,
-              "activationType": "BATTLE_START",
-              "availableFromRound": 1,
-              "exclusiveCharacterId": "char_sora_01"
+              "activationType": "ACTIVE",
+              "availableFromRound": 2,
+              "exclusiveCharacterId": "char_reina_01"
             },
             {
               "id": "SKILL_008",
@@ -2394,22 +2347,22 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_sora_01",
+          "characterId": "char_reina_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_065",
+            "SKILL_066",
             "SKILL_008",
             "SKILL_033",
             "SKILL_027"
           ]
         },
         {
-          "id": "raid_df5fd0a1-a9ae-4332-9256-8f0f08175445_3",
-          "name": "アゲハ",
+          "id": "raid_f5dd8323-19e4-42da-8c2e-17fadcba0596_3",
+          "name": "ソラ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2525050,
+            "hp": 3165050,
             "atk": 2103,
             "def": 5415,
             "luk": 0,
@@ -2417,19 +2370,18 @@
           },
           "skills": [
             {
-              "id": "SKILL_055",
-              "name": "ネオン・アクセル",
+              "id": "SKILL_065",
+              "name": "ストリート・ライド",
               "target": "SELF",
               "effects": [
                 "TRIGGER ON_BATTLE_START / once per battle",
-                "SPD +25% / 3T",
-                "ATK +20% / 3T"
+                "SPD +22% / 3T"
               ],
               "cooldown": null,
               "plusValue": 1,
               "activationType": "BATTLE_START",
               "availableFromRound": 1,
-              "exclusiveCharacterId": "char_ageha_01"
+              "exclusiveCharacterId": "char_sora_01"
             },
             {
               "id": "SKILL_011",
@@ -2497,42 +2449,28 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_ageha_01",
+          "characterId": "char_sora_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_055",
+            "SKILL_065",
             "SKILL_011",
             "SKILL_033",
             "SKILL_032"
           ]
         },
         {
-          "id": "raid_df5fd0a1-a9ae-4332-9256-8f0f08175445_4",
-          "name": "レオ",
+          "id": "raid_f5dd8323-19e4-42da-8c2e-17fadcba0596_4",
+          "name": "セリカ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2525645,
+            "hp": 3165645,
             "atk": 1880,
             "def": 5267,
             "luk": 0,
             "spd": 120
           },
           "skills": [
-            {
-              "id": "SKILL_056",
-              "name": "ストリート・フロウ",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE 285% ATK",
-                "SELF SPD +25% / 3T"
-              ],
-              "cooldown": 5,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 3,
-              "exclusiveCharacterId": "char_leo_01"
-            },
             {
               "id": "SKILL_019",
               "name": "バーストラッシュ",
@@ -2576,7 +2514,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -2600,22 +2538,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_leo_01",
+          "characterId": "char_serika_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_056",
             "SKILL_019",
             "SKILL_033",
             "SKILL_034"
           ]
         },
         {
-          "id": "raid_df5fd0a1-a9ae-4332-9256-8f0f08175445_5",
-          "name": "ナオト",
+          "id": "raid_f5dd8323-19e4-42da-8c2e-17fadcba0596_5",
+          "name": "シン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2527843,
+            "hp": 3167843,
             "atk": 2089,
             "def": 5564,
             "luk": 0,
@@ -2663,7 +2600,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -2687,7 +2624,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_naoto_01",
+          "characterId": "char_shin_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -2699,15 +2636,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shibuya",
-        "roomId": "6d582768-ea26-4268-9fae-7630f44cb422",
+        "roomId": "5f8b7173-571d-4756-8c6c-d62a950b6403",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 12600000,
-        "startedAt": "2026-09-10T00:49:54.725+09:00",
-        "raidDayKey": "ROOM:df5fd0a1-a9ae-4332-9256-8f0f08175445",
+        "bossMaxHp": 15800000,
+        "startedAt": "2026-09-10T01:17:01.949+09:00",
+        "raidDayKey": "ROOM:f5dd8323-19e4-42da-8c2e-17fadcba0596",
         "difficultyId": "advanced",
-        "bossHpAtStart": 12600000,
+        "bossHpAtStart": 15800000,
         "raidVariantId": "RAID_SHIBUYA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.719+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.942+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -2717,15 +2654,15 @@
     {
       "areaId": "SHIBUYA",
       "difficultyId": "expert",
-      "maxHp": 30500000,
+      "maxHp": 31300000,
       "enemySnapshot": [
         {
-          "id": "raid_6590304a-f506-4d79-8c7e-4ed74ff6f8b1_1",
+          "id": "raid_30e031c2-f9d3-47eb-9e4b-ba4bda7f70c5_1",
           "name": "レオ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 6107091,
+            "hp": 6267091,
             "atk": 2646,
             "def": 7209,
             "luk": 3,
@@ -2829,12 +2766,12 @@
           ]
         },
         {
-          "id": "raid_6590304a-f506-4d79-8c7e-4ed74ff6f8b1_2",
-          "name": "ナオト",
+          "id": "raid_30e031c2-f9d3-47eb-9e4b-ba4bda7f70c5_2",
+          "name": "ゴウ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 6107219,
+            "hp": 6267219,
             "atk": 2341,
             "def": 7305,
             "luk": 0,
@@ -2883,7 +2820,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -2914,7 +2851,7 @@
               "equipmentId": "ACCESSORY_020"
             }
           ],
-          "characterId": "char_naoto_01",
+          "characterId": "char_go_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -2923,12 +2860,12 @@
           ]
         },
         {
-          "id": "raid_6590304a-f506-4d79-8c7e-4ed74ff6f8b1_3",
-          "name": "ミナミ",
+          "id": "raid_30e031c2-f9d3-47eb-9e4b-ba4bda7f70c5_3",
+          "name": "カエデ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 6108896,
+            "hp": 6268896,
             "atk": 2100,
             "def": 7176,
             "luk": 5,
@@ -2977,7 +2914,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -3008,7 +2945,7 @@
               "equipmentId": "ACCESSORY_021"
             }
           ],
-          "characterId": "char_minami_01",
+          "characterId": "char_kaede_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -3017,12 +2954,12 @@
           ]
         },
         {
-          "id": "raid_6590304a-f506-4d79-8c7e-4ed74ff6f8b1_4",
-          "name": "カズヤ",
+          "id": "raid_30e031c2-f9d3-47eb-9e4b-ba4bda7f70c5_4",
+          "name": "レオン",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 6109217,
+            "hp": 6269217,
             "atk": 2084,
             "def": 7402,
             "luk": 0,
@@ -3072,7 +3009,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -3103,7 +3040,7 @@
               "equipmentId": "ACCESSORY_022"
             }
           ],
-          "characterId": "char_ren_male_01",
+          "characterId": "char_leon_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -3112,12 +3049,12 @@
           ]
         },
         {
-          "id": "raid_6590304a-f506-4d79-8c7e-4ed74ff6f8b1_5",
-          "name": "ユキナ",
+          "id": "raid_30e031c2-f9d3-47eb-9e4b-ba4bda7f70c5_5",
+          "name": "マヤ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 6108573,
+            "hp": 6268573,
             "atk": 2309,
             "def": 7273,
             "luk": 0,
@@ -3165,7 +3102,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "金属バット",
@@ -3196,7 +3133,7 @@
               "equipmentId": "ACCESSORY_023"
             }
           ],
-          "characterId": "char_yukina_01",
+          "characterId": "char_maya_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -3208,15 +3145,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "shibuya",
-        "roomId": "39a15086-0d19-4f30-b5fb-cc9de847d50b",
+        "roomId": "ac8032e0-9a10-4c2b-9738-ec17788d1786",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 30500000,
-        "startedAt": "2026-09-10T00:49:54.734+09:00",
-        "raidDayKey": "ROOM:6590304a-f506-4d79-8c7e-4ed74ff6f8b1",
+        "bossMaxHp": 31300000,
+        "startedAt": "2026-09-10T01:17:01.96+09:00",
+        "raidDayKey": "ROOM:30e031c2-f9d3-47eb-9e4b-ba4bda7f70c5",
         "difficultyId": "expert",
-        "bossHpAtStart": 30500000,
+        "bossHpAtStart": 31300000,
         "raidVariantId": "RAID_SHIBUYA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.729+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.953+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -3229,8 +3166,8 @@
       "maxHp": 210000,
       "enemySnapshot": [
         {
-          "id": "raid_17933533-0f2e-4f49-8fc8-b73e605d21a9_1",
-          "name": "ケンジ",
+          "id": "raid_09d5b8e4-9b95-4f59-8c09-0011d6363174_1",
+          "name": "シュン",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -3278,7 +3215,7 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_kenji_01",
+          "characterId": "char_shun_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -3286,8 +3223,8 @@
           ]
         },
         {
-          "id": "raid_17933533-0f2e-4f49-8fc8-b73e605d21a9_2",
-          "name": "シュン",
+          "id": "raid_09d5b8e4-9b95-4f59-8c09-0011d6363174_2",
+          "name": "ソウタ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -3312,7 +3249,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -3322,15 +3259,15 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_shun_01",
+          "characterId": "char_souta_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008"
           ]
         },
         {
-          "id": "raid_17933533-0f2e-4f49-8fc8-b73e605d21a9_3",
-          "name": "チャン",
+          "id": "raid_09d5b8e4-9b95-4f59-8c09-0011d6363174_3",
+          "name": "タツヤ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -3365,15 +3302,15 @@
               "equipmentId": "WEAPON_001"
             }
           ],
-          "characterId": "char_chang_01",
+          "characterId": "char_tatsuya_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011"
           ]
         },
         {
-          "id": "raid_17933533-0f2e-4f49-8fc8-b73e605d21a9_4",
-          "name": "モモコ",
+          "id": "raid_09d5b8e4-9b95-4f59-8c09-0011d6363174_4",
+          "name": "チャン",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -3399,7 +3336,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -3409,15 +3346,15 @@
               "equipmentId": "WEAPON_002"
             }
           ],
-          "characterId": "char_momoko_01",
+          "characterId": "char_chang_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_17933533-0f2e-4f49-8fc8-b73e605d21a9_5",
-          "name": "タケシ",
+          "id": "raid_09d5b8e4-9b95-4f59-8c09-0011d6363174_5",
+          "name": "モモコ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
@@ -3452,7 +3389,7 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_takeshi_01",
+          "characterId": "char_momoko_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012"
@@ -3462,15 +3399,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "ikebukuro",
-        "roomId": "ae3a713d-07b6-45f8-8cb6-f563b013f752",
+        "roomId": "b348965c-f60a-43c1-abf6-a849c39a9447",
         "costType": "FREE_FIRST",
         "bossMaxHp": 210000,
-        "startedAt": "2026-09-10T00:49:54.741+09:00",
-        "raidDayKey": "ROOM:17933533-0f2e-4f49-8fc8-b73e605d21a9",
+        "startedAt": "2026-09-10T01:17:01.968+09:00",
+        "raidDayKey": "ROOM:09d5b8e4-9b95-4f59-8c09-0011d6363174",
         "difficultyId": "beginner",
         "bossHpAtStart": 210000,
         "raidVariantId": "RAID_IKEBUKURO_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.738+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.964+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -3480,15 +3417,15 @@
     {
       "areaId": "IKEBUKURO",
       "difficultyId": "intermediate",
-      "maxHp": 4300000,
+      "maxHp": 4000000,
       "enemySnapshot": [
         {
-          "id": "raid_5482ee86-b131-40fa-a647-b281a2c7767d_1",
-          "name": "モモコ",
+          "id": "raid_a207c1f3-ba35-4a4f-97fb-08d173ffdc9c_1",
+          "name": "ケンジ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 864913,
+            "hp": 804913,
             "atk": 2097,
             "def": 4843,
             "luk": 0,
@@ -3539,7 +3476,7 @@
               "equipmentId": "BODY_014"
             }
           ],
-          "characterId": "char_momoko_01",
+          "characterId": "char_kenji_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -3547,12 +3484,12 @@
           ]
         },
         {
-          "id": "raid_5482ee86-b131-40fa-a647-b281a2c7767d_2",
-          "name": "タケシ",
+          "id": "raid_a207c1f3-ba35-4a4f-97fb-08d173ffdc9c_2",
+          "name": "アオイ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 862183,
+            "hp": 802183,
             "atk": 1891,
             "def": 4297,
             "luk": 0,
@@ -3586,7 +3523,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -3603,7 +3540,7 @@
               "equipmentId": "BODY_001"
             }
           ],
-          "characterId": "char_takeshi_01",
+          "characterId": "char_aoi_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -3611,12 +3548,12 @@
           ]
         },
         {
-          "id": "raid_5482ee86-b131-40fa-a647-b281a2c7767d_3",
-          "name": "コハル",
+          "id": "raid_a207c1f3-ba35-4a4f-97fb-08d173ffdc9c_3",
+          "name": "ダイモン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 862402,
+            "hp": 802402,
             "atk": 1875,
             "def": 4325,
             "luk": 0,
@@ -3667,7 +3604,7 @@
               "equipmentId": "BODY_002"
             }
           ],
-          "characterId": "char_koharu_01",
+          "characterId": "char_daimon_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -3675,12 +3612,12 @@
           ]
         },
         {
-          "id": "raid_5482ee86-b131-40fa-a647-b281a2c7767d_4",
-          "name": "ケンジ",
+          "id": "raid_a207c1f3-ba35-4a4f-97fb-08d173ffdc9c_4",
+          "name": "ジフン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 862511,
+            "hp": 802511,
             "atk": 1860,
             "def": 4352,
             "luk": 0,
@@ -3715,7 +3652,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "金属バット",
@@ -3732,7 +3669,7 @@
               "equipmentId": "BODY_003"
             }
           ],
-          "characterId": "char_kenji_01",
+          "characterId": "char_jihoon_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -3740,12 +3677,12 @@
           ]
         },
         {
-          "id": "raid_5482ee86-b131-40fa-a647-b281a2c7767d_5",
-          "name": "シュン",
+          "id": "raid_a207c1f3-ba35-4a4f-97fb-08d173ffdc9c_5",
+          "name": "タケシ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 862729,
+            "hp": 802729,
             "atk": 2027,
             "def": 4407,
             "luk": 0,
@@ -3796,7 +3733,7 @@
               "equipmentId": "BODY_005"
             }
           ],
-          "characterId": "char_shun_01",
+          "characterId": "char_takeshi_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -3807,15 +3744,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "ikebukuro",
-        "roomId": "95ef7715-e29d-423d-9387-6198a29090ff",
+        "roomId": "ff956ee7-bd7c-483a-947e-3eb63afbbbf8",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 4300000,
-        "startedAt": "2026-09-10T00:49:54.749+09:00",
-        "raidDayKey": "ROOM:5482ee86-b131-40fa-a647-b281a2c7767d",
+        "bossMaxHp": 4000000,
+        "startedAt": "2026-09-10T01:17:01.976+09:00",
+        "raidDayKey": "ROOM:a207c1f3-ba35-4a4f-97fb-08d173ffdc9c",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 4300000,
+        "bossHpAtStart": 4000000,
         "raidVariantId": "RAID_IKEBUKURO_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.745+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.972+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -3825,15 +3762,15 @@
     {
       "areaId": "IKEBUKURO",
       "difficultyId": "advanced",
-      "maxHp": 10100000,
+      "maxHp": 11500000,
       "enemySnapshot": [
         {
-          "id": "raid_cb739d81-8052-46d3-b46d-a449a16d39dc_1",
-          "name": "ケンジ",
+          "id": "raid_03dea171-477b-4570-97c9-ff12ac85ff61_1",
+          "name": "マヤ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2025645,
+            "hp": 2305645,
             "atk": 2104,
             "def": 6017,
             "luk": 0,
@@ -3882,7 +3819,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -3906,7 +3843,7 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_kenji_01",
+          "characterId": "char_maya_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -3915,12 +3852,12 @@
           ]
         },
         {
-          "id": "raid_cb739d81-8052-46d3-b46d-a449a16d39dc_2",
-          "name": "シュン",
+          "id": "raid_03dea171-477b-4570-97c9-ff12ac85ff61_2",
+          "name": "リキ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2027843,
+            "hp": 2307843,
             "atk": 2089,
             "def": 6314,
             "luk": 0,
@@ -3993,7 +3930,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_shun_01",
+          "characterId": "char_riki_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -4002,12 +3939,12 @@
           ]
         },
         {
-          "id": "raid_cb739d81-8052-46d3-b46d-a449a16d39dc_3",
-          "name": "チャン",
+          "id": "raid_03dea171-477b-4570-97c9-ff12ac85ff61_3",
+          "name": "ルイ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2026536,
+            "hp": 2306536,
             "atk": 2073,
             "def": 6403,
             "luk": 0,
@@ -4056,7 +3993,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "金属バット",
@@ -4080,7 +4017,7 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_chang_01",
+          "characterId": "char_rui_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -4089,12 +4026,12 @@
           ]
         },
         {
-          "id": "raid_cb739d81-8052-46d3-b46d-a449a16d39dc_4",
-          "name": "モモコ",
+          "id": "raid_03dea171-477b-4570-97c9-ff12ac85ff61_4",
+          "name": "ユウキ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2026655,
+            "hp": 2306655,
             "atk": 2029,
             "def": 6492,
             "luk": 0,
@@ -4167,7 +4104,7 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_momoko_01",
+          "characterId": "char_yuki_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -4176,12 +4113,12 @@
           ]
         },
         {
-          "id": "raid_cb739d81-8052-46d3-b46d-a449a16d39dc_5",
-          "name": "タケシ",
+          "id": "raid_03dea171-477b-4570-97c9-ff12ac85ff61_5",
+          "name": "ジョー",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2028200,
+            "hp": 2308200,
             "atk": 2029,
             "def": 6373,
             "luk": 0,
@@ -4216,7 +4153,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -4240,7 +4177,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_takeshi_01",
+          "characterId": "char_joe_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -4251,15 +4188,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "ikebukuro",
-        "roomId": "b8191dfd-eb9a-416c-ad05-fdd52ff47047",
+        "roomId": "01c4d6ff-2115-4472-a6ae-c3f55d4feb5c",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 10100000,
-        "startedAt": "2026-09-10T00:49:54.757+09:00",
-        "raidDayKey": "ROOM:cb739d81-8052-46d3-b46d-a449a16d39dc",
+        "bossMaxHp": 11500000,
+        "startedAt": "2026-09-10T01:17:01.986+09:00",
+        "raidDayKey": "ROOM:03dea171-477b-4570-97c9-ff12ac85ff61",
         "difficultyId": "advanced",
-        "bossHpAtStart": 10100000,
+        "bossHpAtStart": 11500000,
         "raidVariantId": "RAID_IKEBUKURO_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.752+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.98+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -4269,15 +4206,15 @@
     {
       "areaId": "IKEBUKURO",
       "difficultyId": "expert",
-      "maxHp": 29700000,
+      "maxHp": 31500000,
       "enemySnapshot": [
         {
-          "id": "raid_1b900c56-8586-413f-80fb-92addc692582_1",
-          "name": "モモコ",
+          "id": "raid_a9c0bdd0-7730-46a3-bcd3-551b656183e5_1",
+          "name": "コハル",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5949217,
+            "hp": 6309217,
             "atk": 2324,
             "def": 8377,
             "luk": 0,
@@ -4357,7 +4294,7 @@
               "equipmentId": "ACCESSORY_022"
             }
           ],
-          "characterId": "char_momoko_01",
+          "characterId": "char_koharu_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -4366,12 +4303,12 @@
           ]
         },
         {
-          "id": "raid_1b900c56-8586-413f-80fb-92addc692582_2",
-          "name": "タケシ",
+          "id": "raid_a9c0bdd0-7730-46a3-bcd3-551b656183e5_2",
+          "name": "カレン",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5948573,
+            "hp": 6308573,
             "atk": 2309,
             "def": 8248,
             "luk": 0,
@@ -4420,7 +4357,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "金属バット",
@@ -4451,7 +4388,7 @@
               "equipmentId": "ACCESSORY_023"
             }
           ],
-          "characterId": "char_takeshi_01",
+          "characterId": "char_karen_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -4460,12 +4397,12 @@
           ]
         },
         {
-          "id": "raid_1b900c56-8586-413f-80fb-92addc692582_3",
-          "name": "コハル",
+          "id": "raid_a9c0bdd0-7730-46a3-bcd3-551b656183e5_3",
+          "name": "ケンゴ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5949799,
+            "hp": 6309799,
             "atk": 2551,
             "def": 8442,
             "luk": 3,
@@ -4514,7 +4451,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -4545,7 +4482,7 @@
               "equipmentId": "ACCESSORY_024"
             }
           ],
-          "characterId": "char_koharu_01",
+          "characterId": "char_kengo_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -4554,12 +4491,12 @@
           ]
         },
         {
-          "id": "raid_1b900c56-8586-413f-80fb-92addc692582_4",
-          "name": "ケンジ",
+          "id": "raid_a9c0bdd0-7730-46a3-bcd3-551b656183e5_4",
+          "name": "マルティナ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5944834,
+            "hp": 6304834,
             "atk": 2471,
             "def": 7797,
             "luk": 0,
@@ -4608,7 +4545,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -4639,7 +4576,7 @@
               "equipmentId": "ACCESSORY_025"
             }
           ],
-          "characterId": "char_kenji_01",
+          "characterId": "char_martina_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -4648,12 +4585,12 @@
           ]
         },
         {
-          "id": "raid_1b900c56-8586-413f-80fb-92addc692582_5",
-          "name": "シュン",
+          "id": "raid_a9c0bdd0-7730-46a3-bcd3-551b656183e5_5",
+          "name": "ノア",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5947348,
+            "hp": 6307348,
             "atk": 2244,
             "def": 7829,
             "luk": 3,
@@ -4719,7 +4656,7 @@
               "equipmentId": "ACCESSORY_026"
             }
           ],
-          "characterId": "char_shun_01",
+          "characterId": "char_noa_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -4730,15 +4667,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "ikebukuro",
-        "roomId": "fdd28cf9-7199-4dd5-b215-6eff26197d2b",
+        "roomId": "fa4bb8f6-e6f5-46ac-98fe-6133ed1ffb68",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 29700000,
-        "startedAt": "2026-09-10T00:49:54.766+09:00",
-        "raidDayKey": "ROOM:1b900c56-8586-413f-80fb-92addc692582",
+        "bossMaxHp": 31500000,
+        "startedAt": "2026-09-10T01:17:01.996+09:00",
+        "raidDayKey": "ROOM:a9c0bdd0-7730-46a3-bcd3-551b656183e5",
         "difficultyId": "expert",
-        "bossHpAtStart": 29700000,
+        "bossHpAtStart": 31500000,
         "raidVariantId": "RAID_IKEBUKURO_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.761+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:01.99+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -4748,15 +4685,15 @@
     {
       "areaId": "ROPPONGI",
       "difficultyId": "beginner",
-      "maxHp": 200000,
+      "maxHp": 190000,
       "enemySnapshot": [
         {
-          "id": "raid_8fc66c00-99c0-48bb-b741-22116ce52281_1",
+          "id": "raid_02d9bc6f-4182-46f1-8d93-2cc8fcfb33ed_1",
           "name": "タツヤ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 40000,
+            "hp": 38000,
             "atk": 605,
             "def": 1000,
             "luk": 0,
@@ -4808,12 +4745,12 @@
           ]
         },
         {
-          "id": "raid_8fc66c00-99c0-48bb-b741-22116ce52281_2",
-          "name": "カイト",
+          "id": "raid_02d9bc6f-4182-46f1-8d93-2cc8fcfb33ed_2",
+          "name": "ヨシヒコ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 40000,
+            "hp": 38000,
             "atk": 650,
             "def": 1000,
             "luk": 0,
@@ -4844,19 +4781,19 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_kaito_01",
+          "characterId": "char_yoshihiko_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008"
           ]
         },
         {
-          "id": "raid_8fc66c00-99c0-48bb-b741-22116ce52281_3",
-          "name": "マコト",
+          "id": "raid_02d9bc6f-4182-46f1-8d93-2cc8fcfb33ed_3",
+          "name": "ダイスケ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 40000,
+            "hp": 38000,
             "atk": 670,
             "def": 1000,
             "luk": 0,
@@ -4877,7 +4814,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -4887,19 +4824,19 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_makoto_01",
+          "characterId": "char_gou_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011"
           ]
         },
         {
-          "id": "raid_8fc66c00-99c0-48bb-b741-22116ce52281_4",
-          "name": "リン",
+          "id": "raid_02d9bc6f-4182-46f1-8d93-2cc8fcfb33ed_4",
+          "name": "カイト",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 40000,
+            "hp": 38000,
             "atk": 540,
             "def": 1000,
             "luk": 0,
@@ -4921,7 +4858,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -4931,19 +4868,19 @@
               "equipmentId": "WEAPON_001"
             }
           ],
-          "characterId": "char_rin_01",
+          "characterId": "char_kaito_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_8fc66c00-99c0-48bb-b741-22116ce52281_5",
-          "name": "シオン",
+          "id": "raid_02d9bc6f-4182-46f1-8d93-2cc8fcfb33ed_5",
+          "name": "マコト",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 40000,
+            "hp": 38000,
             "atk": 600,
             "def": 1000,
             "luk": 0,
@@ -4974,7 +4911,7 @@
               "equipmentId": "WEAPON_002"
             }
           ],
-          "characterId": "char_shion_01",
+          "characterId": "char_makoto_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012"
@@ -4984,15 +4921,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "roppongi",
-        "roomId": "52305bc4-12fb-4509-abea-279beebb8e50",
+        "roomId": "f2f3bd78-f7db-44f4-bc0d-ef6e43eb5863",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 200000,
-        "startedAt": "2026-09-10T00:49:54.773+09:00",
-        "raidDayKey": "ROOM:8fc66c00-99c0-48bb-b741-22116ce52281",
+        "bossMaxHp": 190000,
+        "startedAt": "2026-09-10T01:17:02.004+09:00",
+        "raidDayKey": "ROOM:02d9bc6f-4182-46f1-8d93-2cc8fcfb33ed",
         "difficultyId": "beginner",
-        "bossHpAtStart": 200000,
+        "bossHpAtStart": 190000,
         "raidVariantId": "RAID_ROPPONGI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.77+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -5002,15 +4939,15 @@
     {
       "areaId": "ROPPONGI",
       "difficultyId": "intermediate",
-      "maxHp": 2000000,
+      "maxHp": 2100000,
       "enemySnapshot": [
         {
-          "id": "raid_80a791e2-c2eb-4c61-ac30-0ffeb7f24d59_1",
+          "id": "raid_88ebff19-605a-47fa-a7dc-9759fc1cb443_1",
           "name": "リン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 402511,
+            "hp": 422511,
             "atk": 2070,
             "def": 3827,
             "luk": 0,
@@ -5069,12 +5006,12 @@
           ]
         },
         {
-          "id": "raid_80a791e2-c2eb-4c61-ac30-0ffeb7f24d59_2",
+          "id": "raid_88ebff19-605a-47fa-a7dc-9759fc1cb443_2",
           "name": "シオン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 402729,
+            "hp": 422729,
             "atk": 2027,
             "def": 3882,
             "luk": 0,
@@ -5133,12 +5070,12 @@
           ]
         },
         {
-          "id": "raid_80a791e2-c2eb-4c61-ac30-0ffeb7f24d59_3",
-          "name": "セシル",
+          "id": "raid_88ebff19-605a-47fa-a7dc-9759fc1cb443_3",
+          "name": "チャン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 403002,
+            "hp": 423002,
             "atk": 1821,
             "def": 3745,
             "luk": 0,
@@ -5172,7 +5109,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -5189,7 +5126,7 @@
               "equipmentId": "BODY_006"
             }
           ],
-          "characterId": "char_cecile_01",
+          "characterId": "char_chang_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -5197,12 +5134,12 @@
           ]
         },
         {
-          "id": "raid_80a791e2-c2eb-4c61-ac30-0ffeb7f24d59_4",
-          "name": "マヤ",
+          "id": "raid_88ebff19-605a-47fa-a7dc-9759fc1cb443_4",
+          "name": "ナオト",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 403821,
+            "hp": 423821,
             "atk": 1805,
             "def": 4018,
             "luk": 0,
@@ -5237,7 +5174,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -5254,7 +5191,7 @@
               "equipmentId": "BODY_007"
             }
           ],
-          "characterId": "char_maya_01",
+          "characterId": "char_naoto_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -5262,12 +5199,12 @@
           ]
         },
         {
-          "id": "raid_80a791e2-c2eb-4c61-ac30-0ffeb7f24d59_5",
-          "name": "セイヤ",
+          "id": "raid_88ebff19-605a-47fa-a7dc-9759fc1cb443_5",
+          "name": "セシル",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 404094,
+            "hp": 424094,
             "atk": 2000,
             "def": 4100,
             "luk": 0,
@@ -5301,7 +5238,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "金属バット",
@@ -5318,7 +5255,7 @@
               "equipmentId": "BODY_008"
             }
           ],
-          "characterId": "char_seiya_01",
+          "characterId": "char_cecile_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -5329,15 +5266,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "roppongi",
-        "roomId": "5bf67f87-13d3-4fa0-90eb-8e372ba81ec0",
+        "roomId": "22a1bf50-8bb9-4f3c-bf48-de6d3d047443",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 2000000,
-        "startedAt": "2026-09-10T00:49:54.781+09:00",
-        "raidDayKey": "ROOM:80a791e2-c2eb-4c61-ac30-0ffeb7f24d59",
+        "bossMaxHp": 2100000,
+        "startedAt": "2026-09-10T01:17:02.012+09:00",
+        "raidDayKey": "ROOM:88ebff19-605a-47fa-a7dc-9759fc1cb443",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 2000000,
+        "bossHpAtStart": 2100000,
         "raidVariantId": "RAID_ROPPONGI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.777+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.008+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -5347,35 +5284,21 @@
     {
       "areaId": "ROPPONGI",
       "difficultyId": "advanced",
-      "maxHp": 12200000,
+      "maxHp": 13500000,
       "enemySnapshot": [
         {
-          "id": "raid_a6f17601-0aef-456c-965e-52eefa5f45cc_1",
-          "name": "マヤ",
+          "id": "raid_80124411-eba0-40b0-a46b-8ca493b1c7ad_1",
+          "name": "セイヤ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2446655,
+            "hp": 2706655,
             "atk": 2253,
             "def": 5742,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_068",
-              "name": "オール・イン",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE 200% ATK",
-                "30% chance: DAMAGE 300% ATK"
-              ],
-              "cooldown": 4,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 2,
-              "exclusiveCharacterId": "char_maya_01"
-            },
             {
               "id": "SKILL_001",
               "name": "ストリートパンチ",
@@ -5418,7 +5341,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -5442,22 +5365,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_maya_01",
+          "characterId": "char_seiya_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_068",
             "SKILL_001",
             "SKILL_035",
             "SKILL_032"
           ]
         },
         {
-          "id": "raid_a6f17601-0aef-456c-965e-52eefa5f45cc_2",
-          "name": "セイヤ",
+          "id": "raid_80124411-eba0-40b0-a46b-8ca493b1c7ad_2",
+          "name": "タイガ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2448200,
+            "hp": 2708200,
             "atk": 2029,
             "def": 5623,
             "luk": 0,
@@ -5530,7 +5452,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_seiya_01",
+          "characterId": "char_taiga_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -5539,12 +5461,12 @@
           ]
         },
         {
-          "id": "raid_a6f17601-0aef-456c-965e-52eefa5f45cc_3",
-          "name": "タイガ",
+          "id": "raid_80124411-eba0-40b0-a46b-8ca493b1c7ad_3",
+          "name": "サクラ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2447011,
+            "hp": 2707011,
             "atk": 2014,
             "def": 5683,
             "luk": 0,
@@ -5592,7 +5514,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -5616,7 +5538,7 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_taiga_01",
+          "characterId": "char_sakura_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -5625,33 +5547,18 @@
           ]
         },
         {
-          "id": "raid_a6f17601-0aef-456c-965e-52eefa5f45cc_4",
-          "name": "カエデ",
+          "id": "raid_80124411-eba0-40b0-a46b-8ca493b1c7ad_4",
+          "name": "アオイ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2447012,
+            "hp": 2707012,
             "atk": 1999,
             "def": 5713,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_059",
-              "name": "夜の女王",
-              "target": "ALLY_ALL",
-              "effects": [
-                "TRIGGER ON_BATTLE_START / once per battle",
-                "ATK +18% / 3T",
-                "DEF +18% / 3T"
-              ],
-              "cooldown": null,
-              "plusValue": 1,
-              "activationType": "BATTLE_START",
-              "availableFromRound": 1,
-              "exclusiveCharacterId": "char_kaede_01"
-            },
             {
               "id": "SKILL_019",
               "name": "バーストラッシュ",
@@ -5695,7 +5602,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "金属バット",
@@ -5719,22 +5626,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_kaede_01",
+          "characterId": "char_aoi_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_059",
             "SKILL_019",
             "SKILL_035",
             "SKILL_028"
           ]
         },
         {
-          "id": "raid_a6f17601-0aef-456c-965e-52eefa5f45cc_5",
-          "name": "タツヤ",
+          "id": "raid_80124411-eba0-40b0-a46b-8ca493b1c7ad_5",
+          "name": "ダイモン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 2449032,
+            "hp": 2709032,
             "atk": 2178,
             "def": 5891,
             "luk": 0,
@@ -5783,7 +5689,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -5807,7 +5713,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_tatsuya_01",
+          "characterId": "char_daimon_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -5819,15 +5725,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "roppongi",
-        "roomId": "69f0aadd-fed9-49f5-817b-7f306fae3d32",
+        "roomId": "1419a030-1628-44f2-ac48-fbf5acdc09fb",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 12200000,
-        "startedAt": "2026-09-10T00:49:54.789+09:00",
-        "raidDayKey": "ROOM:a6f17601-0aef-456c-965e-52eefa5f45cc",
+        "bossMaxHp": 13500000,
+        "startedAt": "2026-09-10T01:17:02.021+09:00",
+        "raidDayKey": "ROOM:80124411-eba0-40b0-a46b-8ca493b1c7ad",
         "difficultyId": "advanced",
-        "bossHpAtStart": 12200000,
+        "bossHpAtStart": 13500000,
         "raidVariantId": "RAID_ROPPONGI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.784+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.016+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -5837,15 +5743,15 @@
     {
       "areaId": "ROPPONGI",
       "difficultyId": "expert",
-      "maxHp": 44000000,
+      "maxHp": 41800000,
       "enemySnapshot": [
         {
-          "id": "raid_19b1ae51-ab55-47f5-baf5-d20a81ee3aee_1",
+          "id": "raid_c7df9ad2-f9ba-4b65-99ff-4c1b5a1d3360_1",
           "name": "カエデ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 8804834,
+            "hp": 8364834,
             "atk": 2711,
             "def": 6822,
             "luk": 0,
@@ -5950,12 +5856,12 @@
           ]
         },
         {
-          "id": "raid_19b1ae51-ab55-47f5-baf5-d20a81ee3aee_2",
-          "name": "タツヤ",
+          "id": "raid_c7df9ad2-f9ba-4b65-99ff-4c1b5a1d3360_2",
+          "name": "ミヤビ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 8807348,
+            "hp": 8367348,
             "atk": 2244,
             "def": 6854,
             "luk": 3,
@@ -6004,7 +5910,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -6035,7 +5941,7 @@
               "equipmentId": "ACCESSORY_026"
             }
           ],
-          "characterId": "char_tatsuya_01",
+          "characterId": "char_miyabi_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -6044,12 +5950,12 @@
           ]
         },
         {
-          "id": "raid_19b1ae51-ab55-47f5-baf5-d20a81ee3aee_3",
-          "name": "カイト",
+          "id": "raid_c7df9ad2-f9ba-4b65-99ff-4c1b5a1d3360_3",
+          "name": "アゲハ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 8806962,
+            "hp": 8366962,
             "atk": 2229,
             "def": 6886,
             "luk": 1,
@@ -6128,7 +6034,7 @@
               "equipmentId": "ACCESSORY_001"
             }
           ],
-          "characterId": "char_kaito_01",
+          "characterId": "char_ageha_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -6137,12 +6043,12 @@
           ]
         },
         {
-          "id": "raid_19b1ae51-ab55-47f5-baf5-d20a81ee3aee_4",
-          "name": "マコト",
+          "id": "raid_c7df9ad2-f9ba-4b65-99ff-4c1b5a1d3360_4",
+          "name": "レイナ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 8805479,
+            "hp": 8365479,
             "atk": 2181,
             "def": 6951,
             "luk": 1,
@@ -6192,7 +6098,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -6223,7 +6129,7 @@
               "equipmentId": "ACCESSORY_002"
             }
           ],
-          "characterId": "char_makoto_01",
+          "characterId": "char_reina_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -6232,12 +6138,12 @@
           ]
         },
         {
-          "id": "raid_19b1ae51-ab55-47f5-baf5-d20a81ee3aee_5",
-          "name": "リン",
+          "id": "raid_c7df9ad2-f9ba-4b65-99ff-4c1b5a1d3360_5",
+          "name": "ソラ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 8806896,
+            "hp": 8366896,
             "atk": 2180,
             "def": 6790,
             "luk": 0,
@@ -6286,7 +6192,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -6317,7 +6223,7 @@
               "equipmentId": "ACCESSORY_003"
             }
           ],
-          "characterId": "char_rin_01",
+          "characterId": "char_sora_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -6329,15 +6235,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "roppongi",
-        "roomId": "3999a5f2-d194-42f7-bffc-1db2c814fc83",
+        "roomId": "d9c92217-8fb6-4847-8d68-aa1f87611a3e",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 44000000,
-        "startedAt": "2026-09-10T00:49:54.798+09:00",
-        "raidDayKey": "ROOM:19b1ae51-ab55-47f5-baf5-d20a81ee3aee",
+        "bossMaxHp": 41800000,
+        "startedAt": "2026-09-10T01:17:02.032+09:00",
+        "raidDayKey": "ROOM:c7df9ad2-f9ba-4b65-99ff-4c1b5a1d3360",
         "difficultyId": "expert",
-        "bossHpAtStart": 44000000,
+        "bossHpAtStart": 41800000,
         "raidVariantId": "RAID_ROPPONGI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.792+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.025+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -6350,7 +6256,7 @@
       "maxHp": 210000,
       "enemySnapshot": [
         {
-          "id": "raid_a917d03e-050f-41e9-b761-fe47bfe2e2bd_1",
+          "id": "raid_e44e20c8-971d-4084-963b-794e9d6a756d_1",
           "name": "マサト",
           "team": "ENEMY",
           "level": 5,
@@ -6407,7 +6313,7 @@
           ]
         },
         {
-          "id": "raid_a917d03e-050f-41e9-b761-fe47bfe2e2bd_2",
+          "id": "raid_e44e20c8-971d-4084-963b-794e9d6a756d_2",
           "name": "ソウタ",
           "team": "ENEMY",
           "level": 5,
@@ -6450,7 +6356,7 @@
           ]
         },
         {
-          "id": "raid_a917d03e-050f-41e9-b761-fe47bfe2e2bd_3",
+          "id": "raid_e44e20c8-971d-4084-963b-794e9d6a756d_3",
           "name": "ヨシヒコ",
           "team": "ENEMY",
           "level": 5,
@@ -6493,7 +6399,7 @@
           ]
         },
         {
-          "id": "raid_a917d03e-050f-41e9-b761-fe47bfe2e2bd_4",
+          "id": "raid_e44e20c8-971d-4084-963b-794e9d6a756d_4",
           "name": "アオイ",
           "team": "ENEMY",
           "level": 5,
@@ -6537,7 +6443,7 @@
           ]
         },
         {
-          "id": "raid_a917d03e-050f-41e9-b761-fe47bfe2e2bd_5",
+          "id": "raid_e44e20c8-971d-4084-963b-794e9d6a756d_5",
           "name": "メイ",
           "team": "ENEMY",
           "level": 5,
@@ -6583,15 +6489,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "akihabara",
-        "roomId": "f93b7822-8ec7-4c07-9d5e-f9ad7be9e142",
+        "roomId": "a177bebe-22bc-4ecb-81d9-2d90d2deaded",
         "costType": "FREE_FIRST",
         "bossMaxHp": 210000,
-        "startedAt": "2026-09-10T00:49:54.804+09:00",
-        "raidDayKey": "ROOM:a917d03e-050f-41e9-b761-fe47bfe2e2bd",
+        "startedAt": "2026-09-10T01:17:02.04+09:00",
+        "raidDayKey": "ROOM:e44e20c8-971d-4084-963b-794e9d6a756d",
         "difficultyId": "beginner",
         "bossHpAtStart": 210000,
         "raidVariantId": "RAID_AKIHABARA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.801+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.036+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -6601,15 +6507,15 @@
     {
       "areaId": "AKIHABARA",
       "difficultyId": "intermediate",
-      "maxHp": 4100000,
+      "maxHp": 4300000,
       "enemySnapshot": [
         {
-          "id": "raid_aa30e5f8-2689-4f1e-bdde-e3a50af9194f_1",
-          "name": "アオイ",
+          "id": "raid_df344882-1a56-4b03-94a4-717684df5b33_1",
+          "name": "レン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 823821,
+            "hp": 863821,
             "atk": 2015,
             "def": 4018,
             "luk": 0,
@@ -6660,7 +6566,7 @@
               "equipmentId": "BODY_007"
             }
           ],
-          "characterId": "char_aoi_01",
+          "characterId": "char_ren_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -6668,12 +6574,12 @@
           ]
         },
         {
-          "id": "raid_aa30e5f8-2689-4f1e-bdde-e3a50af9194f_2",
-          "name": "メイ",
+          "id": "raid_df344882-1a56-4b03-94a4-717684df5b33_2",
+          "name": "ジョー",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 824094,
+            "hp": 864094,
             "atk": 2000,
             "def": 4100,
             "luk": 0,
@@ -6707,7 +6613,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "金属バット",
@@ -6724,7 +6630,7 @@
               "equipmentId": "BODY_008"
             }
           ],
-          "characterId": "char_mei_01",
+          "characterId": "char_joe_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -6732,12 +6638,12 @@
           ]
         },
         {
-          "id": "raid_aa30e5f8-2689-4f1e-bdde-e3a50af9194f_3",
-          "name": "レン",
+          "id": "raid_df344882-1a56-4b03-94a4-717684df5b33_3",
+          "name": "カイト",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 823930,
+            "hp": 863930,
             "atk": 1957,
             "def": 4182,
             "luk": 0,
@@ -6788,7 +6694,7 @@
               "equipmentId": "BODY_009"
             }
           ],
-          "characterId": "char_ren_01",
+          "characterId": "char_kaito_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -6796,12 +6702,12 @@
           ]
         },
         {
-          "id": "raid_aa30e5f8-2689-4f1e-bdde-e3a50af9194f_4",
-          "name": "アリス",
+          "id": "raid_df344882-1a56-4b03-94a4-717684df5b33_4",
+          "name": "シュン",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 824148,
+            "hp": 864148,
             "atk": 1751,
             "def": 4073,
             "luk": 0,
@@ -6836,7 +6742,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -6853,7 +6759,7 @@
               "equipmentId": "BODY_011"
             }
           ],
-          "characterId": "char_alice_01",
+          "characterId": "char_shun_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -6861,12 +6767,12 @@
           ]
         },
         {
-          "id": "raid_aa30e5f8-2689-4f1e-bdde-e3a50af9194f_5",
-          "name": "ルイ",
+          "id": "raid_df344882-1a56-4b03-94a4-717684df5b33_5",
+          "name": "アリス",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 824531,
+            "hp": 864531,
             "atk": 1945,
             "def": 4127,
             "luk": 0,
@@ -6917,7 +6823,7 @@
               "equipmentId": "BODY_012"
             }
           ],
-          "characterId": "char_rui_01",
+          "characterId": "char_alice_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -6928,15 +6834,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "akihabara",
-        "roomId": "36d9445a-fd86-43e9-9b98-916ddfd87bab",
+        "roomId": "e4015e7c-7efb-4e48-92f9-fa8261d540a3",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 4100000,
-        "startedAt": "2026-09-10T00:49:54.811+09:00",
-        "raidDayKey": "ROOM:aa30e5f8-2689-4f1e-bdde-e3a50af9194f",
+        "bossMaxHp": 4300000,
+        "startedAt": "2026-09-10T01:17:02.048+09:00",
+        "raidDayKey": "ROOM:df344882-1a56-4b03-94a4-717684df5b33",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 4100000,
+        "bossHpAtStart": 4300000,
         "raidVariantId": "RAID_AKIHABARA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.807+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.043+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -6946,35 +6852,21 @@
     {
       "areaId": "AKIHABARA",
       "difficultyId": "advanced",
-      "maxHp": 5300000,
+      "maxHp": 5700000,
       "enemySnapshot": [
         {
-          "id": "raid_7bbdaf0a-f93f-479e-827d-c975dc8a8bfe_1",
-          "name": "アリス",
+          "id": "raid_945beab5-3e0e-4e88-b65a-9f39d3703495_1",
+          "name": "ルイ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1067012,
+            "hp": 1147012,
             "atk": 2223,
             "def": 5713,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_067",
-              "name": "システム・ジャック",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "SILENCE 60% / 1T",
-                "SPD -20% / 2T"
-              ],
-              "cooldown": 4,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 3,
-              "exclusiveCharacterId": "char_alice_01"
-            },
             {
               "id": "SKILL_001",
               "name": "ストリートパンチ",
@@ -7041,22 +6933,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_alice_01",
+          "characterId": "char_rui_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_067",
             "SKILL_001",
             "SKILL_030",
             "SKILL_034"
           ]
         },
         {
-          "id": "raid_7bbdaf0a-f93f-479e-827d-c975dc8a8bfe_2",
-          "name": "ルイ",
+          "id": "raid_945beab5-3e0e-4e88-b65a-9f39d3703495_2",
+          "name": "テツ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1069032,
+            "hp": 1149032,
             "atk": 2178,
             "def": 5891,
             "luk": 0,
@@ -7104,7 +6995,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -7128,7 +7019,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_rui_01",
+          "characterId": "char_tetsu_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -7137,12 +7028,12 @@
           ]
         },
         {
-          "id": "raid_7bbdaf0a-f93f-479e-827d-c975dc8a8bfe_3",
-          "name": "カレン",
+          "id": "raid_945beab5-3e0e-4e88-b65a-9f39d3703495_3",
+          "name": "セシル",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1064456,
+            "hp": 1144456,
             "atk": 1954,
             "def": 5297,
             "luk": 0,
@@ -7150,18 +7041,18 @@
           },
           "skills": [
             {
-              "id": "SKILL_057",
-              "name": "運命の悪戯",
+              "id": "SKILL_070",
+              "name": "ミッドナイト・コール",
               "target": "ENEMY_SINGLE",
               "effects": [
-                "DAMAGE 260% ATK",
-                "BLIND 95% / 2T"
+                "ATK -22% / 2T",
+                "BLIND 80% / 2T"
               ],
-              "cooldown": 5,
+              "cooldown": 4,
               "plusValue": 1,
               "activationType": "ACTIVE",
               "availableFromRound": 3,
-              "exclusiveCharacterId": "char_karen_01"
+              "exclusiveCharacterId": "char_cecile_01"
             },
             {
               "id": "SKILL_011",
@@ -7205,7 +7096,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -7229,43 +7120,28 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_karen_01",
+          "characterId": "char_cecile_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_057",
+            "SKILL_070",
             "SKILL_011",
             "SKILL_030",
             "SKILL_028"
           ]
         },
         {
-          "id": "raid_7bbdaf0a-f93f-479e-827d-c975dc8a8bfe_4",
-          "name": "ミヤビ",
+          "id": "raid_945beab5-3e0e-4e88-b65a-9f39d3703495_4",
+          "name": "チャン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1064991,
+            "hp": 1144991,
             "atk": 1940,
             "def": 5326,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_058",
-              "name": "宵闇の幻惑",
-              "target": "ENEMY_ALL",
-              "effects": [
-                "BLIND 95% / 2T",
-                "SILENCE 75% / 1T",
-                "SPD -25% / 2T"
-              ],
-              "cooldown": 5,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 4,
-              "exclusiveCharacterId": "char_miyabi_01"
-            },
             {
               "id": "SKILL_019",
               "name": "バーストラッシュ",
@@ -7309,7 +7185,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -7333,22 +7209,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_miyabi_01",
+          "characterId": "char_chang_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_058",
             "SKILL_019",
             "SKILL_030",
             "SKILL_027"
           ]
         },
         {
-          "id": "raid_7bbdaf0a-f93f-479e-827d-c975dc8a8bfe_5",
-          "name": "マサト",
+          "id": "raid_945beab5-3e0e-4e88-b65a-9f39d3703495_5",
+          "name": "ジフン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1066417,
+            "hp": 1146417,
             "atk": 2148,
             "def": 5356,
             "luk": 0,
@@ -7397,7 +7272,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "金属バット",
@@ -7421,7 +7296,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_masato_01",
+          "characterId": "char_jihoon_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -7433,15 +7308,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "akihabara",
-        "roomId": "59c96539-0372-490a-804b-d417a5420dd4",
+        "roomId": "43b15e6d-e06e-49ca-ab26-fe00352c7e4e",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 5300000,
-        "startedAt": "2026-09-10T00:49:54.819+09:00",
-        "raidDayKey": "ROOM:7bbdaf0a-f93f-479e-827d-c975dc8a8bfe",
+        "bossMaxHp": 5700000,
+        "startedAt": "2026-09-10T01:17:02.058+09:00",
+        "raidDayKey": "ROOM:945beab5-3e0e-4e88-b65a-9f39d3703495",
         "difficultyId": "advanced",
-        "bossHpAtStart": 5300000,
+        "bossHpAtStart": 5700000,
         "raidVariantId": "RAID_AKIHABARA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.814+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.052+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -7451,15 +7326,15 @@
     {
       "areaId": "AKIHABARA",
       "difficultyId": "expert",
-      "maxHp": 15800000,
+      "maxHp": 15100000,
       "enemySnapshot": [
         {
-          "id": "raid_94ec92ae-f6b7-44d1-9062-f674826e8173_1",
-          "name": "ミヤビ",
+          "id": "raid_7fca58de-693d-48a6-a83d-d988870b3de3_1",
+          "name": "カレン",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 3165479,
+            "hp": 3025479,
             "atk": 2421,
             "def": 6951,
             "luk": 1,
@@ -7467,19 +7342,18 @@
           },
           "skills": [
             {
-              "id": "SKILL_058",
-              "name": "宵闇の幻惑",
-              "target": "ENEMY_ALL",
+              "id": "SKILL_057",
+              "name": "運命の悪戯",
+              "target": "ENEMY_SINGLE",
               "effects": [
-                "BLIND 95% / 2T",
-                "SILENCE 75% / 1T",
-                "SPD -25% / 2T"
+                "DAMAGE 260% ATK",
+                "BLIND 95% / 2T"
               ],
               "cooldown": 5,
               "plusValue": 2,
               "activationType": "ACTIVE",
-              "availableFromRound": 4,
-              "exclusiveCharacterId": "char_miyabi_01"
+              "availableFromRound": 3,
+              "exclusiveCharacterId": "char_karen_01"
             },
             {
               "id": "SKILL_001",
@@ -7523,7 +7397,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -7554,22 +7428,22 @@
               "equipmentId": "ACCESSORY_002"
             }
           ],
-          "characterId": "char_miyabi_01",
+          "characterId": "char_karen_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_058",
+            "SKILL_057",
             "SKILL_001",
             "SKILL_030",
             "SKILL_034"
           ]
         },
         {
-          "id": "raid_94ec92ae-f6b7-44d1-9062-f674826e8173_2",
-          "name": "マサト",
+          "id": "raid_7fca58de-693d-48a6-a83d-d988870b3de3_2",
+          "name": "ミヤビ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 3166896,
+            "hp": 3026896,
             "atk": 2180,
             "def": 6790,
             "luk": 0,
@@ -7617,7 +7491,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -7648,7 +7522,7 @@
               "equipmentId": "ACCESSORY_003"
             }
           ],
-          "characterId": "char_masato_01",
+          "characterId": "char_miyabi_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -7657,12 +7531,12 @@
           ]
         },
         {
-          "id": "raid_94ec92ae-f6b7-44d1-9062-f674826e8173_3",
-          "name": "ソウタ",
+          "id": "raid_7fca58de-693d-48a6-a83d-d988870b3de3_3",
+          "name": "ゴウ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 3168509,
+            "hp": 3028509,
             "atk": 2325,
             "def": 7112,
             "luk": 0,
@@ -7711,7 +7585,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -7742,7 +7616,7 @@
               "equipmentId": "ACCESSORY_004"
             }
           ],
-          "characterId": "char_souta_01",
+          "characterId": "char_go_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -7751,12 +7625,12 @@
           ]
         },
         {
-          "id": "raid_94ec92ae-f6b7-44d1-9062-f674826e8173_4",
-          "name": "ヨシヒコ",
+          "id": "raid_7fca58de-693d-48a6-a83d-d988870b3de3_4",
+          "name": "セイヤ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 3167091,
+            "hp": 3027091,
             "atk": 2149,
             "def": 7209,
             "luk": 0,
@@ -7806,7 +7680,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "金属バット",
@@ -7837,7 +7711,7 @@
               "equipmentId": "ACCESSORY_005"
             }
           ],
-          "characterId": "char_yoshihiko_01",
+          "characterId": "char_seiya_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -7846,12 +7720,12 @@
           ]
         },
         {
-          "id": "raid_94ec92ae-f6b7-44d1-9062-f674826e8173_5",
-          "name": "アオイ",
+          "id": "raid_7fca58de-693d-48a6-a83d-d988870b3de3_5",
+          "name": "タイガ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 3167219,
+            "hp": 3027219,
             "atk": 2341,
             "def": 7305,
             "luk": 2,
@@ -7900,7 +7774,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "CHAOS",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -7931,7 +7805,7 @@
               "equipmentId": "ACCESSORY_006"
             }
           ],
-          "characterId": "char_aoi_01",
+          "characterId": "char_taiga_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -7943,15 +7817,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "akihabara",
-        "roomId": "a404e35e-e3ae-406e-9445-a52d18ec51d9",
+        "roomId": "4c2ae851-5bbe-4537-872f-04a8c1450592",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 15800000,
-        "startedAt": "2026-09-10T00:49:54.827+09:00",
-        "raidDayKey": "ROOM:94ec92ae-f6b7-44d1-9062-f674826e8173",
+        "bossMaxHp": 15100000,
+        "startedAt": "2026-09-10T01:17:02.069+09:00",
+        "raidDayKey": "ROOM:7fca58de-693d-48a6-a83d-d988870b3de3",
         "difficultyId": "expert",
-        "bossHpAtStart": 15800000,
+        "bossHpAtStart": 15100000,
         "raidVariantId": "RAID_AKIHABARA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.822+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.062+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -7961,15 +7835,15 @@
     {
       "areaId": "KAWASAKI",
       "difficultyId": "beginner",
-      "maxHp": 190000,
+      "maxHp": 180000,
       "enemySnapshot": [
         {
-          "id": "raid_c3b12ea5-7fc1-44c9-96c3-a13330dfee5f_1",
-          "name": "ダイスケ",
+          "id": "raid_423f4f55-13c6-4c39-a0bc-69b5687ac6a0_1",
+          "name": "ダイモン",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 38000,
+            "hp": 36000,
             "atk": 691,
             "def": 1000,
             "luk": 0,
@@ -8003,7 +7877,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -8013,7 +7887,7 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_gou_01",
+          "characterId": "char_daimon_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -8021,12 +7895,12 @@
           ]
         },
         {
-          "id": "raid_c3b12ea5-7fc1-44c9-96c3-a13330dfee5f_2",
-          "name": "ダイモン",
+          "id": "raid_423f4f55-13c6-4c39-a0bc-69b5687ac6a0_2",
+          "name": "ケンジ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 38000,
+            "hp": 36000,
             "atk": 560,
             "def": 1000,
             "luk": 0,
@@ -8057,19 +7931,19 @@
               "equipmentId": "WEAPON_001"
             }
           ],
-          "characterId": "char_daimon_01",
+          "characterId": "char_kenji_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008"
           ]
         },
         {
-          "id": "raid_c3b12ea5-7fc1-44c9-96c3-a13330dfee5f_3",
-          "name": "ジョー",
+          "id": "raid_423f4f55-13c6-4c39-a0bc-69b5687ac6a0_3",
+          "name": "ナオト",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 38000,
+            "hp": 36000,
             "atk": 605,
             "def": 1000,
             "luk": 0,
@@ -8090,7 +7964,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -8100,19 +7974,19 @@
               "equipmentId": "WEAPON_002"
             }
           ],
-          "characterId": "char_joe_01",
+          "characterId": "char_naoto_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011"
           ]
         },
         {
-          "id": "raid_c3b12ea5-7fc1-44c9-96c3-a13330dfee5f_4",
-          "name": "マーク",
+          "id": "raid_423f4f55-13c6-4c39-a0bc-69b5687ac6a0_4",
+          "name": "サワット",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 38000,
+            "hp": 36000,
             "atk": 649,
             "def": 1000,
             "luk": 0,
@@ -8134,7 +8008,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "金属バット",
@@ -8144,19 +8018,19 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_mark_01",
+          "characterId": "char_sawat_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_c3b12ea5-7fc1-44c9-96c3-a13330dfee5f_5",
-          "name": "ルーカス",
+          "id": "raid_423f4f55-13c6-4c39-a0bc-69b5687ac6a0_5",
+          "name": "ジョー",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 38000,
+            "hp": 36000,
             "atk": 685,
             "def": 1000,
             "luk": 0,
@@ -8177,7 +8051,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -8187,7 +8061,7 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_lucas_01",
+          "characterId": "char_joe_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012"
@@ -8197,15 +8071,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "kawasaki",
-        "roomId": "ef68711c-ea94-4c0e-910c-2aa7a6ed43c5",
+        "roomId": "8932b742-43fa-4acf-b59c-e446fe3ac867",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 190000,
-        "startedAt": "2026-09-10T00:49:54.834+09:00",
-        "raidDayKey": "ROOM:c3b12ea5-7fc1-44c9-96c3-a13330dfee5f",
+        "bossMaxHp": 180000,
+        "startedAt": "2026-09-10T01:17:02.078+09:00",
+        "raidDayKey": "ROOM:423f4f55-13c6-4c39-a0bc-69b5687ac6a0",
         "difficultyId": "beginner",
-        "bossHpAtStart": 190000,
+        "bossHpAtStart": 180000,
         "raidVariantId": "RAID_KAWASAKI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.831+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.074+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -8215,15 +8089,15 @@
     {
       "areaId": "KAWASAKI",
       "difficultyId": "intermediate",
-      "maxHp": 3000000,
+      "maxHp": 2400000,
       "enemySnapshot": [
         {
-          "id": "raid_153430e9-40b9-4d3f-b5a9-46a097ec0f19_1",
+          "id": "raid_82fdf17a-792a-4da3-a6df-d0a393ba6e02_1",
           "name": "マーク",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 604148,
+            "hp": 484148,
             "atk": 2108,
             "def": 4073,
             "luk": 0,
@@ -8283,12 +8157,12 @@
           ]
         },
         {
-          "id": "raid_153430e9-40b9-4d3f-b5a9-46a097ec0f19_2",
-          "name": "ルーカス",
+          "id": "raid_82fdf17a-792a-4da3-a6df-d0a393ba6e02_2",
+          "name": "マコト",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 604531,
+            "hp": 484531,
             "atk": 2085,
             "def": 4127,
             "luk": 0,
@@ -8323,7 +8197,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -8340,7 +8214,7 @@
               "equipmentId": "BODY_012"
             }
           ],
-          "characterId": "char_lucas_01",
+          "characterId": "char_makoto_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -8348,12 +8222,12 @@
           ]
         },
         {
-          "id": "raid_153430e9-40b9-4d3f-b5a9-46a097ec0f19_3",
-          "name": "リキ",
+          "id": "raid_82fdf17a-792a-4da3-a6df-d0a393ba6e02_3",
+          "name": "メイ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 604258,
+            "hp": 484258,
             "atk": 2063,
             "def": 4155,
             "luk": 0,
@@ -8388,7 +8262,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "金属バット",
@@ -8405,7 +8279,7 @@
               "equipmentId": "BODY_013"
             }
           ],
-          "characterId": "char_riki_01",
+          "characterId": "char_mei_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -8413,12 +8287,12 @@
           ]
         },
         {
-          "id": "raid_153430e9-40b9-4d3f-b5a9-46a097ec0f19_4",
-          "name": "テツ",
+          "id": "raid_82fdf17a-792a-4da3-a6df-d0a393ba6e02_4",
+          "name": "ソウタ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 604913,
+            "hp": 484913,
             "atk": 2013,
             "def": 4318,
             "luk": 0,
@@ -8440,7 +8314,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -8457,19 +8331,19 @@
               "equipmentId": "BODY_014"
             }
           ],
-          "characterId": "char_tetsu_01",
+          "characterId": "char_souta_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_153430e9-40b9-4d3f-b5a9-46a097ec0f19_5",
-          "name": "ゴウ",
+          "id": "raid_82fdf17a-792a-4da3-a6df-d0a393ba6e02_5",
+          "name": "ルーカス",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 602183,
+            "hp": 482183,
             "atk": 2031,
             "def": 3772,
             "luk": 0,
@@ -8504,7 +8378,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -8521,7 +8395,7 @@
               "equipmentId": "BODY_001"
             }
           ],
-          "characterId": "char_go_01",
+          "characterId": "char_lucas_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -8532,15 +8406,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "kawasaki",
-        "roomId": "8f6aec42-e8bc-4f8f-ab70-1d2d866772a3",
+        "roomId": "cda5fcfb-25a3-4f25-8960-5b3f75e69f94",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 3000000,
-        "startedAt": "2026-09-10T00:49:54.842+09:00",
-        "raidDayKey": "ROOM:153430e9-40b9-4d3f-b5a9-46a097ec0f19",
+        "bossMaxHp": 2400000,
+        "startedAt": "2026-09-10T01:17:02.087+09:00",
+        "raidDayKey": "ROOM:82fdf17a-792a-4da3-a6df-d0a393ba6e02",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 3000000,
+        "bossHpAtStart": 2400000,
         "raidVariantId": "RAID_KAWASAKI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.838+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.082+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -8550,35 +8424,21 @@
     {
       "areaId": "KAWASAKI",
       "difficultyId": "advanced",
-      "maxHp": 4700000,
+      "maxHp": 7700000,
       "enemySnapshot": [
         {
-          "id": "raid_55efa726-dcc2-4882-90da-4124018d9465_1",
-          "name": "テツ",
+          "id": "raid_3af6bc44-22a7-4749-9c62-16bf3498930c_1",
+          "name": "リキ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 944991,
+            "hp": 1544991,
             "atk": 2321,
             "def": 5326,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_061",
-              "name": "鉄拳制圧",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE 210% ATK",
-                "DEF -22% / 2T"
-              ],
-              "cooldown": 4,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 2,
-              "exclusiveCharacterId": "char_tetsu_01"
-            },
             {
               "id": "SKILL_001",
               "name": "ストリートパンチ",
@@ -8620,7 +8480,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -8644,22 +8504,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_tetsu_01",
+          "characterId": "char_riki_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_061",
             "SKILL_001",
             "SKILL_027",
             "SKILL_021"
           ]
         },
         {
-          "id": "raid_55efa726-dcc2-4882-90da-4124018d9465_2",
-          "name": "ゴウ",
+          "id": "raid_3af6bc44-22a7-4749-9c62-16bf3498930c_2",
+          "name": "テツ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 946417,
+            "hp": 1546417,
             "atk": 2298,
             "def": 5356,
             "luk": 0,
@@ -8667,18 +8526,18 @@
           },
           "skills": [
             {
-              "id": "SKILL_051",
-              "name": "剛拳・一撃必倒",
+              "id": "SKILL_061",
+              "name": "鉄拳制圧",
               "target": "ENEMY_SINGLE",
               "effects": [
-                "DAMAGE 320% ATK",
-                "IGNORE_DEF 55%"
+                "DAMAGE 210% ATK",
+                "DEF -22% / 2T"
               ],
-              "cooldown": 5,
+              "cooldown": 4,
               "plusValue": 1,
               "activationType": "ACTIVE",
-              "availableFromRound": 3,
-              "exclusiveCharacterId": "char_go_01"
+              "availableFromRound": 2,
+              "exclusiveCharacterId": "char_tetsu_01"
             },
             {
               "id": "SKILL_008",
@@ -8746,22 +8605,22 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_go_01",
+          "characterId": "char_tetsu_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_051",
+            "SKILL_061",
             "SKILL_008",
             "SKILL_027",
             "SKILL_028"
           ]
         },
         {
-          "id": "raid_55efa726-dcc2-4882-90da-4124018d9465_3",
-          "name": "ケンゴ",
+          "id": "raid_3af6bc44-22a7-4749-9c62-16bf3498930c_3",
+          "name": "アリス",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 945050,
+            "hp": 1545050,
             "atk": 2246,
             "def": 5415,
             "luk": 0,
@@ -8769,18 +8628,18 @@
           },
           "skills": [
             {
-              "id": "SKILL_052",
-              "name": "修羅の猛攻",
+              "id": "SKILL_067",
+              "name": "システム・ジャック",
               "target": "ENEMY_SINGLE",
               "effects": [
-                "DAMAGE 280% ATK",
-                "LIFESTEAL 45%"
+                "SILENCE 60% / 1T",
+                "SPD -20% / 2T"
               ],
-              "cooldown": 5,
+              "cooldown": 4,
               "plusValue": 1,
               "activationType": "ACTIVE",
               "availableFromRound": 3,
-              "exclusiveCharacterId": "char_kengo_01"
+              "exclusiveCharacterId": "char_alice_01"
             },
             {
               "id": "SKILL_011",
@@ -8810,7 +8669,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -8834,21 +8693,21 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_kengo_01",
+          "characterId": "char_alice_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_052",
+            "SKILL_067",
             "SKILL_011",
             "SKILL_027"
           ]
         },
         {
-          "id": "raid_55efa726-dcc2-4882-90da-4124018d9465_4",
-          "name": "ダイスケ",
+          "id": "raid_3af6bc44-22a7-4749-9c62-16bf3498930c_4",
+          "name": "カイト",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 945645,
+            "hp": 1545645,
             "atk": 2014,
             "def": 5267,
             "luk": 0,
@@ -8898,7 +8757,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -8922,7 +8781,7 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_gou_01",
+          "characterId": "char_kaito_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -8931,12 +8790,12 @@
           ]
         },
         {
-          "id": "raid_55efa726-dcc2-4882-90da-4124018d9465_5",
-          "name": "ダイモン",
+          "id": "raid_3af6bc44-22a7-4749-9c62-16bf3498930c_5",
+          "name": "ミナミ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 947843,
+            "hp": 1547843,
             "atk": 2239,
             "def": 5564,
             "luk": 0,
@@ -9009,7 +8868,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_daimon_01",
+          "characterId": "char_minami_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -9021,15 +8880,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "kawasaki",
-        "roomId": "4de1d8ad-3ffd-4037-a2fd-f91f436e8b28",
+        "roomId": "e51353d2-bc90-4f5c-bf62-f5fcd8f7d22f",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 4700000,
-        "startedAt": "2026-09-10T00:49:54.85+09:00",
-        "raidDayKey": "ROOM:55efa726-dcc2-4882-90da-4124018d9465",
+        "bossMaxHp": 7700000,
+        "startedAt": "2026-09-10T01:17:02.097+09:00",
+        "raidDayKey": "ROOM:3af6bc44-22a7-4749-9c62-16bf3498930c",
         "difficultyId": "advanced",
-        "bossHpAtStart": 4700000,
+        "bossHpAtStart": 7700000,
         "raidVariantId": "RAID_KAWASAKI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.845+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.091+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -9039,15 +8898,15 @@
     {
       "areaId": "KAWASAKI",
       "difficultyId": "expert",
-      "maxHp": 27700000,
+      "maxHp": 31800000,
       "enemySnapshot": [
         {
-          "id": "raid_1db31e29-a190-4f59-afa9-60364a938da8_1",
-          "name": "ダイスケ",
+          "id": "raid_cb48593e-40fe-43ae-a306-a428ed0443c5_1",
+          "name": "ケンゴ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5547091,
+            "hp": 6367091,
             "atk": 2557,
             "def": 7209,
             "luk": 0,
@@ -9126,7 +8985,7 @@
               "equipmentId": "ACCESSORY_005"
             }
           ],
-          "characterId": "char_gou_01",
+          "characterId": "char_kengo_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -9135,12 +8994,12 @@
           ]
         },
         {
-          "id": "raid_1db31e29-a190-4f59-afa9-60364a938da8_2",
-          "name": "ダイモン",
+          "id": "raid_cb48593e-40fe-43ae-a306-a428ed0443c5_2",
+          "name": "コハル",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5547219,
+            "hp": 6367219,
             "atk": 2501,
             "def": 7305,
             "luk": 2,
@@ -9220,7 +9079,7 @@
               "equipmentId": "ACCESSORY_006"
             }
           ],
-          "characterId": "char_daimon_01",
+          "characterId": "char_koharu_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -9229,12 +9088,12 @@
           ]
         },
         {
-          "id": "raid_1db31e29-a190-4f59-afa9-60364a938da8_3",
-          "name": "ジョー",
+          "id": "raid_cb48593e-40fe-43ae-a306-a428ed0443c5_3",
+          "name": "レオ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5548896,
+            "hp": 6368896,
             "atk": 2252,
             "def": 7304,
             "luk": 0,
@@ -9269,7 +9128,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -9300,7 +9159,7 @@
               "equipmentId": "ACCESSORY_007"
             }
           ],
-          "characterId": "char_joe_01",
+          "characterId": "char_leo_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -9308,12 +9167,12 @@
           ]
         },
         {
-          "id": "raid_1db31e29-a190-4f59-afa9-60364a938da8_4",
-          "name": "マーク",
+          "id": "raid_cb48593e-40fe-43ae-a306-a428ed0443c5_4",
+          "name": "タケシ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5547606,
+            "hp": 6367606,
             "atk": 2228,
             "def": 7241,
             "luk": 1,
@@ -9363,7 +9222,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -9394,7 +9253,7 @@
               "equipmentId": "ACCESSORY_008"
             }
           ],
-          "characterId": "char_mark_01",
+          "characterId": "char_takeshi_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -9403,31 +9262,18 @@
           ]
         },
         {
-          "id": "raid_1db31e29-a190-4f59-afa9-60364a938da8_5",
-          "name": "ルーカス",
+          "id": "raid_cb48593e-40fe-43ae-a306-a428ed0443c5_5",
+          "name": "タクロウ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5548637,
+            "hp": 6368637,
             "atk": 2469,
             "def": 7273,
             "luk": 0,
             "spd": 135
           },
           "skills": [
-            {
-              "id": "SKILL_062",
-              "name": "ラスト・ブロー",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE scaling: HP100%=190% ATK; HP50%=215% ATK; HP25%=240% ATK; linear interpolation; HP<=25%=240% ATK"
-              ],
-              "cooldown": 4,
-              "plusValue": 2,
-              "activationType": "ACTIVE",
-              "availableFromRound": 2,
-              "exclusiveCharacterId": "char_lucas_01"
-            },
             {
               "id": "SKILL_012",
               "name": "大旋風パイプ",
@@ -9470,7 +9316,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "JUSTICE",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "金属バット",
@@ -9501,10 +9347,9 @@
               "equipmentId": "ACCESSORY_009"
             }
           ],
-          "characterId": "char_lucas_01",
+          "characterId": "char_takuro_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_062",
             "SKILL_012",
             "SKILL_027",
             "SKILL_034"
@@ -9514,15 +9359,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "kawasaki",
-        "roomId": "d5020c0f-210c-4f9d-a4c5-945b4210b03d",
+        "roomId": "1bdf6e02-cff7-49e1-9e0f-45468772a2a4",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 27700000,
-        "startedAt": "2026-09-10T00:49:54.859+09:00",
-        "raidDayKey": "ROOM:1db31e29-a190-4f59-afa9-60364a938da8",
+        "bossMaxHp": 31800000,
+        "startedAt": "2026-09-10T01:17:02.106+09:00",
+        "raidDayKey": "ROOM:cb48593e-40fe-43ae-a306-a428ed0443c5",
         "difficultyId": "expert",
-        "bossHpAtStart": 27700000,
+        "bossHpAtStart": 31800000,
         "raidVariantId": "RAID_KAWASAKI_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.853+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.1+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -9532,15 +9377,15 @@
     {
       "areaId": "YOKOHAMA",
       "difficultyId": "beginner",
-      "maxHp": 210000,
+      "maxHp": 220000,
       "enemySnapshot": [
         {
-          "id": "raid_f94fea52-e34b-4a34-89bd-b28078254b67_1",
+          "id": "raid_9ab1189f-937b-4f9b-b57b-6763b4f3e977_1",
           "name": "サワット",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 42000,
+            "hp": 44000,
             "atk": 655,
             "def": 1000,
             "luk": 0,
@@ -9592,12 +9437,12 @@
           ]
         },
         {
-          "id": "raid_f94fea52-e34b-4a34-89bd-b28078254b67_2",
-          "name": "ユウジ",
+          "id": "raid_9ab1189f-937b-4f9b-b57b-6763b4f3e977_2",
+          "name": "シュン",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 42000,
+            "hp": 44000,
             "atk": 675,
             "def": 1000,
             "luk": 0,
@@ -9618,7 +9463,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -9628,19 +9473,19 @@
               "equipmentId": "WEAPON_007"
             }
           ],
-          "characterId": "char_yuji_01",
+          "characterId": "char_shun_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008"
           ]
         },
         {
-          "id": "raid_f94fea52-e34b-4a34-89bd-b28078254b67_3",
-          "name": "ゲンジ",
+          "id": "raid_9ab1189f-937b-4f9b-b57b-6763b4f3e977_3",
+          "name": "トモヤ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 42000,
+            "hp": 44000,
             "atk": 545,
             "def": 1000,
             "luk": 0,
@@ -9661,7 +9506,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -9671,19 +9516,19 @@
               "equipmentId": "WEAPON_001"
             }
           ],
-          "characterId": "char_genji_01",
+          "characterId": "char_tomoya_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011"
           ]
         },
         {
-          "id": "raid_f94fea52-e34b-4a34-89bd-b28078254b67_4",
-          "name": "ロン",
+          "id": "raid_9ab1189f-937b-4f9b-b57b-6763b4f3e977_4",
+          "name": "ユウジ",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 42000,
+            "hp": 44000,
             "atk": 590,
             "def": 1000,
             "luk": 0,
@@ -9705,7 +9550,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -9715,19 +9560,19 @@
               "equipmentId": "WEAPON_002"
             }
           ],
-          "characterId": "char_long_01",
+          "characterId": "char_yuji_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019"
           ]
         },
         {
-          "id": "raid_f94fea52-e34b-4a34-89bd-b28078254b67_5",
-          "name": "サクラ",
+          "id": "raid_9ab1189f-937b-4f9b-b57b-6763b4f3e977_5",
+          "name": "マーク",
           "team": "ENEMY",
           "level": 5,
           "stats": {
-            "hp": 42000,
+            "hp": 44000,
             "atk": 650,
             "def": 1000,
             "luk": 0,
@@ -9758,7 +9603,7 @@
               "equipmentId": "WEAPON_003"
             }
           ],
-          "characterId": "char_sakura_01",
+          "characterId": "char_mark_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012"
@@ -9768,15 +9613,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "yokohama",
-        "roomId": "2ba5ebe0-9406-4876-b474-dca61200d65a",
+        "roomId": "7efab66d-caff-430c-9846-bcffb5944724",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 210000,
-        "startedAt": "2026-09-10T00:49:54.865+09:00",
-        "raidDayKey": "ROOM:f94fea52-e34b-4a34-89bd-b28078254b67",
+        "bossMaxHp": 220000,
+        "startedAt": "2026-09-10T01:17:02.114+09:00",
+        "raidDayKey": "ROOM:9ab1189f-937b-4f9b-b57b-6763b4f3e977",
         "difficultyId": "beginner",
-        "bossHpAtStart": 210000,
+        "bossHpAtStart": 220000,
         "raidVariantId": "RAID_YOKOHAMA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.862+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.111+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -9786,15 +9631,15 @@
     {
       "areaId": "YOKOHAMA",
       "difficultyId": "intermediate",
-      "maxHp": 3600000,
+      "maxHp": 4000000,
       "enemySnapshot": [
         {
-          "id": "raid_e8035719-9770-4a7f-bbb4-a593a436e859_1",
-          "name": "ロン",
+          "id": "raid_d547235e-0aed-45a6-a538-a3ba9d60896b_1",
+          "name": "ゲンジ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 724913,
+            "hp": 804913,
             "atk": 2097,
             "def": 4318,
             "luk": 0,
@@ -9845,7 +9690,7 @@
               "equipmentId": "BODY_014"
             }
           ],
-          "characterId": "char_long_01",
+          "characterId": "char_genji_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -9853,12 +9698,12 @@
           ]
         },
         {
-          "id": "raid_e8035719-9770-4a7f-bbb4-a593a436e859_2",
-          "name": "サクラ",
+          "id": "raid_d547235e-0aed-45a6-a538-a3ba9d60896b_2",
+          "name": "ミナミ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 722183,
+            "hp": 802183,
             "atk": 1891,
             "def": 3772,
             "luk": 0,
@@ -9892,7 +9737,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -9909,7 +9754,7 @@
               "equipmentId": "BODY_001"
             }
           ],
-          "characterId": "char_sakura_01",
+          "characterId": "char_minami_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -9917,12 +9762,12 @@
           ]
         },
         {
-          "id": "raid_e8035719-9770-4a7f-bbb4-a593a436e859_3",
-          "name": "サワット",
+          "id": "raid_d547235e-0aed-45a6-a538-a3ba9d60896b_3",
+          "name": "モモコ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 722402,
+            "hp": 802402,
             "atk": 1875,
             "def": 3800,
             "luk": 0,
@@ -9956,7 +9801,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -9973,7 +9818,7 @@
               "equipmentId": "BODY_002"
             }
           ],
-          "characterId": "char_sawat_01",
+          "characterId": "char_momoko_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -9981,12 +9826,12 @@
           ]
         },
         {
-          "id": "raid_e8035719-9770-4a7f-bbb4-a593a436e859_4",
-          "name": "ユウジ",
+          "id": "raid_d547235e-0aed-45a6-a538-a3ba9d60896b_4",
+          "name": "カズヤ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 722511,
+            "hp": 802511,
             "atk": 1860,
             "def": 3827,
             "luk": 0,
@@ -10021,7 +9866,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "金属バット",
@@ -10038,7 +9883,7 @@
               "equipmentId": "BODY_003"
             }
           ],
-          "characterId": "char_yuji_01",
+          "characterId": "char_ren_male_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -10046,12 +9891,12 @@
           ]
         },
         {
-          "id": "raid_e8035719-9770-4a7f-bbb4-a593a436e859_5",
-          "name": "ゲンジ",
+          "id": "raid_d547235e-0aed-45a6-a538-a3ba9d60896b_5",
+          "name": "タツヤ",
           "team": "ENEMY",
           "level": 25,
           "stats": {
-            "hp": 722729,
+            "hp": 802729,
             "atk": 2027,
             "def": 3882,
             "luk": 0,
@@ -10085,7 +9930,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -10102,7 +9947,7 @@
               "equipmentId": "BODY_005"
             }
           ],
-          "characterId": "char_genji_01",
+          "characterId": "char_tatsuya_01",
           "awakeningLevel": 0,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -10113,15 +9958,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "yokohama",
-        "roomId": "d9795e82-fcb6-443b-a9c1-83c5e9c9408f",
+        "roomId": "394d968d-1691-429d-94e4-b0903334c4c9",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 3600000,
-        "startedAt": "2026-09-10T00:49:54.873+09:00",
-        "raidDayKey": "ROOM:e8035719-9770-4a7f-bbb4-a593a436e859",
+        "bossMaxHp": 4000000,
+        "startedAt": "2026-09-10T01:17:02.123+09:00",
+        "raidDayKey": "ROOM:d547235e-0aed-45a6-a538-a3ba9d60896b",
         "difficultyId": "intermediate",
-        "bossHpAtStart": 3600000,
+        "bossHpAtStart": 4000000,
         "raidVariantId": "RAID_YOKOHAMA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.869+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.118+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -10131,15 +9976,15 @@
     {
       "areaId": "YOKOHAMA",
       "difficultyId": "advanced",
-      "maxHp": 8100000,
+      "maxHp": 9900000,
       "enemySnapshot": [
         {
-          "id": "raid_021c30f4-6b8c-4237-8d3a-5b8851f91cfb_1",
-          "name": "ユウジ",
+          "id": "raid_58106fdc-7912-40b6-8bca-85d52a0ae3fc_1",
+          "name": "ロン",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1625645,
+            "hp": 1985645,
             "atk": 2104,
             "def": 5267,
             "luk": 0,
@@ -10188,7 +10033,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -10212,7 +10057,7 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_yuji_01",
+          "characterId": "char_long_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_001",
@@ -10221,12 +10066,12 @@
           ]
         },
         {
-          "id": "raid_021c30f4-6b8c-4237-8d3a-5b8851f91cfb_2",
-          "name": "ゲンジ",
+          "id": "raid_58106fdc-7912-40b6-8bca-85d52a0ae3fc_2",
+          "name": "サクラ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1627843,
+            "hp": 1987843,
             "atk": 2089,
             "def": 5564,
             "luk": 0,
@@ -10275,7 +10120,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "EVIL",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -10299,7 +10144,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_genji_01",
+          "characterId": "char_sakura_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -10308,12 +10153,12 @@
           ]
         },
         {
-          "id": "raid_021c30f4-6b8c-4237-8d3a-5b8851f91cfb_3",
-          "name": "ロン",
+          "id": "raid_58106fdc-7912-40b6-8bca-85d52a0ae3fc_3",
+          "name": "カゲヤマ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1626536,
+            "hp": 1986536,
             "atk": 2073,
             "def": 5653,
             "luk": 0,
@@ -10372,7 +10217,7 @@
               "equipmentId": "HEAD_001"
             }
           ],
-          "characterId": "char_long_01",
+          "characterId": "char_kageyama_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -10380,32 +10225,18 @@
           ]
         },
         {
-          "id": "raid_021c30f4-6b8c-4237-8d3a-5b8851f91cfb_4",
-          "name": "サクラ",
+          "id": "raid_58106fdc-7912-40b6-8bca-85d52a0ae3fc_4",
+          "name": "マコト",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1626655,
+            "hp": 1986655,
             "atk": 2029,
             "def": 5742,
             "luk": 0,
             "spd": 110
           },
           "skills": [
-            {
-              "id": "SKILL_069",
-              "name": "紅蓮の一撃",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE 205% ATK",
-                "BLEED 95% / 3T"
-              ],
-              "cooldown": 4,
-              "plusValue": 1,
-              "activationType": "ACTIVE",
-              "availableFromRound": 2,
-              "exclusiveCharacterId": "char_sakura_01"
-            },
             {
               "id": "SKILL_019",
               "name": "バーストラッシュ",
@@ -10449,7 +10280,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -10473,22 +10304,21 @@
               "equipmentId": "HEAD_004"
             }
           ],
-          "characterId": "char_sakura_01",
+          "characterId": "char_makoto_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_069",
             "SKILL_019",
             "SKILL_032",
             "SKILL_034"
           ]
         },
         {
-          "id": "raid_021c30f4-6b8c-4237-8d3a-5b8851f91cfb_5",
-          "name": "サワット",
+          "id": "raid_58106fdc-7912-40b6-8bca-85d52a0ae3fc_5",
+          "name": "メイ",
           "team": "ENEMY",
           "level": 35,
           "stats": {
-            "hp": 1628200,
+            "hp": 1988200,
             "atk": 2029,
             "def": 5623,
             "luk": 0,
@@ -10536,7 +10366,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -10560,7 +10390,7 @@
               "equipmentId": "HEAD_008"
             }
           ],
-          "characterId": "char_sawat_01",
+          "characterId": "char_mei_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -10572,15 +10402,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "yokohama",
-        "roomId": "f8908950-1593-4320-9d2f-473e52ae4b5e",
+        "roomId": "56bb927b-2874-436c-9ef8-3aff118aa156",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 8100000,
-        "startedAt": "2026-09-10T00:49:54.881+09:00",
-        "raidDayKey": "ROOM:021c30f4-6b8c-4237-8d3a-5b8851f91cfb",
+        "bossMaxHp": 9900000,
+        "startedAt": "2026-09-10T01:17:02.133+09:00",
+        "raidDayKey": "ROOM:58106fdc-7912-40b6-8bca-85d52a0ae3fc",
         "difficultyId": "advanced",
-        "bossHpAtStart": 8100000,
+        "bossHpAtStart": 9900000,
         "raidVariantId": "RAID_YOKOHAMA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.876+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.128+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,
@@ -10590,35 +10420,21 @@
     {
       "areaId": "YOKOHAMA",
       "difficultyId": "expert",
-      "maxHp": 28000000,
+      "maxHp": 31500000,
       "enemySnapshot": [
         {
-          "id": "raid_aa286771-fa9c-410a-b274-f110583070da_1",
-          "name": "サクラ",
+          "id": "raid_5af7156a-13f7-4678-aa65-0e28a8d96c41_1",
+          "name": "ミオ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5607606,
+            "hp": 6307606,
             "atk": 2324,
             "def": 7241,
             "luk": 1,
             "spd": 141
           },
           "skills": [
-            {
-              "id": "SKILL_069",
-              "name": "紅蓮の一撃",
-              "target": "ENEMY_SINGLE",
-              "effects": [
-                "DAMAGE 205% ATK",
-                "BLEED 95% / 3T"
-              ],
-              "cooldown": 4,
-              "plusValue": 2,
-              "activationType": "ACTIVE",
-              "availableFromRound": 2,
-              "exclusiveCharacterId": "char_sakura_01"
-            },
             {
               "id": "SKILL_001",
               "name": "ストリートパンチ",
@@ -10661,7 +10477,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "ORDER",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -10692,22 +10508,21 @@
               "equipmentId": "ACCESSORY_008"
             }
           ],
-          "characterId": "char_sakura_01",
+          "characterId": "char_mio_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
-            "SKILL_069",
             "SKILL_001",
             "SKILL_032",
             "SKILL_028"
           ]
         },
         {
-          "id": "raid_aa286771-fa9c-410a-b274-f110583070da_2",
-          "name": "サワット",
+          "id": "raid_5af7156a-13f7-4678-aa65-0e28a8d96c41_2",
+          "name": "レイジ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5608637,
+            "hp": 6308637,
             "atk": 2309,
             "def": 7273,
             "luk": 0,
@@ -10756,7 +10571,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "金属バット",
@@ -10787,7 +10602,7 @@
               "equipmentId": "ACCESSORY_009"
             }
           ],
-          "characterId": "char_sawat_01",
+          "characterId": "char_reiji_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_008",
@@ -10796,12 +10611,12 @@
           ]
         },
         {
-          "id": "raid_aa286771-fa9c-410a-b274-f110583070da_3",
-          "name": "ユウジ",
+          "id": "raid_5af7156a-13f7-4678-aa65-0e28a8d96c41_3",
+          "name": "アゲハ",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5609799,
+            "hp": 6309799,
             "atk": 2261,
             "def": 7563,
             "luk": 1,
@@ -10836,7 +10651,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "EVIL",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "鉄パイプ",
@@ -10867,7 +10682,7 @@
               "equipmentId": "ACCESSORY_010"
             }
           ],
-          "characterId": "char_yuji_01",
+          "characterId": "char_ageha_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_011",
@@ -10875,12 +10690,12 @@
           ]
         },
         {
-          "id": "raid_aa286771-fa9c-410a-b274-f110583070da_4",
-          "name": "ゲンジ",
+          "id": "raid_5af7156a-13f7-4678-aa65-0e28a8d96c41_4",
+          "name": "アリス",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5605349,
+            "hp": 6305349,
             "atk": 2020,
             "def": 6822,
             "luk": 0,
@@ -10930,7 +10745,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "CHAOS",
           "equipment": [
             {
               "name": "ストリートナイフ",
@@ -10961,7 +10776,7 @@
               "equipmentId": "ACCESSORY_011"
             }
           ],
-          "characterId": "char_genji_01",
+          "characterId": "char_alice_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_019",
@@ -10970,12 +10785,12 @@
           ]
         },
         {
-          "id": "raid_aa286771-fa9c-410a-b274-f110583070da_5",
-          "name": "ロン",
+          "id": "raid_5af7156a-13f7-4678-aa65-0e28a8d96c41_5",
+          "name": "セシル",
           "team": "ENEMY",
           "level": 45,
           "stats": {
-            "hp": 5605414,
+            "hp": 6305414,
             "atk": 2244,
             "def": 6854,
             "luk": 3,
@@ -11023,7 +10838,7 @@
               "exclusiveCharacterId": null
             }
           ],
-          "alignment": "ORDER",
+          "alignment": "JUSTICE",
           "equipment": [
             {
               "name": "9mmハンドガン",
@@ -11054,7 +10869,7 @@
               "equipmentId": "ACCESSORY_012"
             }
           ],
-          "characterId": "char_long_01",
+          "characterId": "char_cecile_01",
           "awakeningLevel": 1,
           "equippedSkillRefs": [
             "SKILL_012",
@@ -11066,15 +10881,15 @@
       "officialContext": {
         "cost": 0,
         "baseId": "yokohama",
-        "roomId": "dd849427-0e38-4128-8ea2-3efa15f4164f",
+        "roomId": "724810c8-7e90-44a3-b65f-5de5973aa416",
         "costType": "FREE_FIRST",
-        "bossMaxHp": 28000000,
-        "startedAt": "2026-09-10T00:49:54.889+09:00",
-        "raidDayKey": "ROOM:aa286771-fa9c-410a-b274-f110583070da",
+        "bossMaxHp": 31500000,
+        "startedAt": "2026-09-10T01:17:02.143+09:00",
+        "raidDayKey": "ROOM:5af7156a-13f7-4678-aa65-0e28a8d96c41",
         "difficultyId": "expert",
-        "bossHpAtStart": 28000000,
+        "bossHpAtStart": 31500000,
         "raidVariantId": "RAID_YOKOHAMA_V1",
-        "roomExpiresAt": "2026-09-11T00:49:54.884+09:00",
+        "roomExpiresAt": "2026-09-11T01:17:02.137+09:00",
         "formationPower": 300000,
         "guildIdSnapshot": null,
         "raidRoomVersion": 1,

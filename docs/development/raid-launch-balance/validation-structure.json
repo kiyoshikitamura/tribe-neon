@@ -2,7 +2,7 @@
   "status": "PASS",
   "profiles": 28,
   "characters": 60,
-  "skills": 37,
+  "skills": 30,
   "equipment": 42,
   "protectedFilesUnchanged": 352,
   "checks": [
@@ -14,5 +14,5 @@
     "all four fixed power gates unchanged",
     "common masters, canonical runtime, Replay Edge, existing migrations and release bundle byte-identical"
   ],
-  "candidateSha256": "b970e7d62381ac68e1ebe86021290a91c7215b3b8147cd16614fa090042bca73"
+  "candidateSha256": "a49e10a597b2372d03cf379a90ab9d247fd5ebb0b6a18ac92b17cf9a6d31b184"
 }

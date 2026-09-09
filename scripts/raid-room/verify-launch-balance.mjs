@@ -22,6 +22,13 @@ if(process.argv.includes('--baseline')){
  fs.writeFileSync(baselineFile,JSON.stringify(baseline,null,2)+'\n');console.log('Baseline saved: 28 effective profiles; '+protectedFiles.length+' protected files');
 }
 const baseline=json(baselineFile),candidate=json('config/raid-room/launch-balance.json');
+const primaryRarity={beginner:'N',intermediate:'R',advanced:'SR',expert:'SSR'};
+assert.equal(new Set(candidate.profiles.map(p=>p.members.map(m=>m.characterId).sort().join(','))).size,28,'All roster sets must differ');
+for(const area of new Set(candidate.profiles.map(p=>p.areaId))){
+ const members=candidate.profiles.filter(p=>p.areaId===area).flatMap(p=>p.members);
+ assert.equal(new Set(members.map(m=>m.characterId)).size,20,area+' must have 20 distinct Characters');
+}
+for(const p of candidate.profiles)assert.equal(p.members.filter(m=>characters.characters.find(c=>c.character_id===m.characterId)?.rarity===primaryRarity[p.difficultyId]).length,3,p.areaId+'/'+p.difficultyId+' rarity majority');
 assert.equal(candidate.profiles.length,28);
 const expected=new Set(variants.flatMap(v=>Object.keys(gates).map(d=>v.raidVariantId+'/'+d)));
 const ids=new Set(),seenChars=new Set(),seenSkills=new Set(),seenEquipment=new Set();

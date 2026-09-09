@@ -1,5 +1,7 @@
 # Raid 公開初期値・1巡調整
 
+**このページのHP・実測は前候補の記録です。最新のレアリティ別28編成、HP、検証結果は [レアリティ編成更新](rarity-revision/README.md) を参照してください。** `config/raid-room/launch-balance.json` と直下の `validation-*.json` は最新候補に対応します。
+
 2026-09-10。基準 f8b104aa1d3366478df685166afb708649261cf9（製品候補8c0fa6bの証跡commit）。ローカルcommit用の調整。外部DB適用・Deploy・本番公開なし。
 
 ## 現候補の抽出と方針
