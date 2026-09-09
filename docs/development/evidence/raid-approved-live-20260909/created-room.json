@@ -1,0 +1,47 @@
+{
+  "status": 200,
+  "data": {
+    "hp": {
+      "value": {
+        "max": 35000000,
+        "current": 35000000
+      },
+      "status": "available"
+    },
+    "owner": {
+      "value": {
+        "name": "R0908N01",
+        "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "leaderIconUrl": {
+          "status": "unknown"
+        }
+      },
+      "status": "available"
+    },
+    "state": {
+      "value": "active",
+      "status": "available"
+    },
+    "roomId": "49d374ae-1aeb-4a0b-b95d-0ecda3d3fbd2",
+    "endedAt": {
+      "value": null,
+      "status": "available"
+    },
+    "createdAt": {
+      "value": "2026-09-09T11:59:25.967353+00:00",
+      "status": "available"
+    },
+    "expiresAt": {
+      "value": "2026-09-10T11:59:25.967353+00:00",
+      "status": "available"
+    },
+    "difficultyId": "beginner",
+    "participantCount": {
+      "value": 1,
+      "status": "available"
+    },
+    "serverEligibility": {
+      "status": "unknown"
+    }
+  }
+}
