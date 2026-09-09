@@ -176,7 +176,7 @@ export default function BattleUnitPortrait({
       aria-label={`${participant.name} HP ${hp} / ${maxHp}${actor ? " 行動中" : ""}${target ? " 対象" : ""}`}
     >
       <div className={`battle-unit-art ${iconReactionClasses}`.trim()}>
-        <CharacterPresentation src={imageSrc} alt={participant.name} variant="battle" rarity={rarity || participant.rarity} frameKind="character" metadata={false} className={`character-presentation-battle-${frame}`} />
+        <CharacterPresentation src={imageSrc} alt={participant.name} variant="battle" rarity={rarity || participant.rarity} frameKind={false} metadata={false} className={`character-presentation-battle-${frame}`} />
         {reaction && <BattleTargetReaction group={reaction} side={side} advantage={advantage} />}
         {participant.isDead && <span className="battle-unit-defeated">戦闘不能</span>}
       </div>

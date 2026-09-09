@@ -776,7 +776,7 @@
   backdrop-filter: blur(4px);
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.6);
 }
-.production-rarity-item-frame{position:absolute;z-index:1;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
+.production-rarity-item-frame{position:absolute;z-index:3;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
 .production-equipment-art{position:relative;z-index:2;width:42px;height:42px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 3px 7px rgba(0,0,0,.55))}
 .char-material-copy{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px}.char-material-art{width:22px;height:22px;object-fit:contain}
 .char-equip-slot>*:not(.production-rarity-item-frame),
@@ -784,13 +784,8 @@
 .char-tile-item>*:not(.production-rarity-item-frame),
 .char-progression-candidates button>*:not(.production-rarity-item-frame){position:relative;z-index:2}
 
-.slot-ssr {
-  border: 1.5px solid var(--neon-gold) !important;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(15, 20, 30, 0.9)) !important;
-  animation: ssr-slot-glow 2.5s infinite ease-in-out;
-  overflow: hidden;
-}
-.slot-ssr::after { content: ""; position: absolute; inset: -35% auto -35% -70%; width: 42%; transform: rotate(18deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.05), rgba(255,239,168,.92), rgba(255,255,255,.05), transparent); animation: ssr-slot-sheen 3.8s ease-in-out infinite; pointer-events: none; }
+
+
 
 @keyframes ssr-slot-glow {
   0%, 100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.3), inset 0 2px 6px rgba(0, 0, 0, 0.5); }
@@ -799,19 +794,13 @@
 @keyframes ssr-slot-sheen { 0%, 45% { left: -70%; opacity: 0; } 49% { opacity: 1; } 64% { left: 130%; opacity: .9; } 68%, 100% { left: 130%; opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .char-loadout-max .char-layer-bg, .char-loadout-max .char-layer-bg::after, .char-max-loadout-effect, .char-max-loadout-effect::before, .char-max-loadout-effect::after, .slot-ssr { animation: none; }
-  .slot-ssr::after { animation: none; opacity: 0; }
+  .char-loadout-max .char-layer-bg, .char-loadout-max .char-layer-bg::after, .char-max-loadout-effect, .char-max-loadout-effect::before, .char-max-loadout-effect::after { animation: none; }
+
 }
 
-.slot-sr {
-  border: 1.5px solid var(--neon-magenta) !important;
-  background: linear-gradient(135deg, rgba(255, 0, 127, 0.12), rgba(15, 20, 30, 0.9)) !important;
-}
 
-.slot-r {
-  border: 1.5px solid var(--neon-cyan) !important;
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(15, 20, 30, 0.9)) !important;
-}
+
+
 
 .slot-n {
   border: 1.5px solid rgba(160, 160, 170, 0.3) !important;
@@ -1524,9 +1513,9 @@
   box-shadow: 0 0 12px rgba(255, 0, 128, 0.5) !important;
 }
 
-.skill-rarity-r { border-color: #4f9dff !important; }
-.skill-rarity-sr { border-color: #bb71ff !important; box-shadow: 0 0 8px rgba(187, 113, 255, 0.35); }
-.skill-rarity-ssr { border-color: var(--neon-gold) !important; box-shadow: 0 0 10px rgba(255, 215, 0, 0.45); }
+
+
+
 
 .char-skill-locked {
   opacity: 0.4;
@@ -1568,9 +1557,7 @@
   z-index: 10;
 }
 
-.skill-tier-silver { border-color: #c0c0c0 !important; animation: pulse-silver 2s infinite ease-in-out; }
-.skill-tier-gold { border-color: var(--neon-gold) !important; animation: pulse-gold 2s infinite ease-in-out; }
-.skill-tier-max { border-color: var(--neon-magenta) !important; animation: pulse-rainbow 1.5s infinite linear; }
+
 
 @keyframes pulse-silver { 0%, 100% { box-shadow: 0 0 4px rgba(192, 192, 192, 0.3); } 50% { box-shadow: 0 0 10px rgba(192, 192, 192, 0.7); } }
 @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 4px rgba(255, 215, 0, 0.4); } 50% { box-shadow: 0 0 12px rgba(255, 215, 0, 0.8); } }
@@ -1889,3 +1876,11 @@
   min-height: 52px;
   pointer-events: auto;
 }
+
+/* PNG owns static rarity; explicit selected states keep their existing rules. */
+.char-equip-slot:has(> .production-rarity-item-frame),.char-skill-card:has(> .production-rarity-item-frame),.char-tile-item:has(> .production-rarity-item-frame){border-color:transparent;box-shadow:none;background:#0a0d12}
+.char-equip-slot.selected,.char-skill-card.selected,.char-tile-item.selected{outline:2px solid var(--neon-cyan);outline-offset:1px}
+.production-rarity-item-frame{filter:none;transform:none}
+
+.char-equip-slot>span,.char-skill-card>span,.char-tile-item>span{z-index:4}
+.char-equip-slot.is-selecting,.char-skill-card.is-selecting,.char-tile-item.is-selected{outline:2px solid var(--neon-cyan);outline-offset:1px}

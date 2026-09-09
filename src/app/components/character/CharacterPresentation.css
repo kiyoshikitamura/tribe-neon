@@ -40,7 +40,7 @@
 
 .character-presentation-art { position: absolute; inset: 0; overflow: hidden; }
 .character-presentation.has-rarity-frame.is-frame-reveal .character-presentation-art { inset: 8.5% 11% 9%; }
-.character-presentation.has-rarity-frame.is-frame-character .character-presentation-art { inset: 9% 10% 10%; }
+
 .character-presentation-art::before {
   content: "";
   position: absolute;
@@ -59,8 +59,7 @@
 .character-presentation-art .character-presentation-background { position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transform:none;filter:saturate(.82) brightness(.62); }
 .character-presentation-light { position: absolute; z-index: 2; inset: auto 10% 0; height: 1px; background: var(--character-accent); box-shadow: 0 0 12px var(--character-accent); }
 .character-presentation-frame { position:absolute;z-index:4;inset:0;width:100%;height:100%;pointer-events:none; }
-.character-presentation-frame.is-reveal,
-.character-presentation-frame.is-character { object-fit:fill; }
+.character-presentation-frame.is-reveal { object-fit:fill; }
 .character-presentation-rarity-badge { position:absolute;z-index:5;top:3px;left:3px;width:clamp(30px,32%,54px);height:auto;pointer-events:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.72)); }
 .character-presentation-attribute-badge { position:absolute;z-index:6;top:3px;right:3px;width:clamp(22px,23%,38px);height:auto;pointer-events:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.72)); }
 .character-presentation.has-rarity-frame.is-frame-reveal .character-presentation-rarity-badge { top:9%;left:11.5%; }
@@ -136,3 +135,21 @@
   .character-presentation * { animation: none !important; }
 }
 .character-presentation.is-visual-loading > :is(.character-presentation-art,.character-presentation-frame,.character-presentation-rarity-badge,.character-presentation-attribute-badge){visibility:hidden}
+
+/* TOKYO NIGHT STREET: native Character canvas and shared N opening.
+   Size containment fits portrait content into existing fixed-size host screens. */
+.character-presentation.has-rarity-frame.is-frame-character{container-type:size;aspect-ratio:5/7;border:0;border-radius:0;background:transparent;box-shadow:none}
+.character-presentation-frame-layout{position:absolute;inset:0;margin:auto;width:min(100cqw,calc(100cqh * 5 / 7));height:auto;aspect-ratio:5/7;max-height:100%;isolation:isolate}
+.character-presentation-frame-layout .character-presentation-art{inset:8.81% 11.33% 8.1% 7.33%;clip-path:polygon(6% 0,94% 0,100% 5%,100% 95%,94% 100%,6% 100%,0 95%,0 5%)}
+.character-presentation-frame.is-character{object-fit:contain;transform:none;filter:none}
+.character-presentation-frame-layout .character-presentation-art::before{display:none}
+.character-presentation-frame-layout .character-presentation-light{display:none}
+.character-presentation-frame-layout .character-presentation-rarity-badge{filter:none}
+.character-presentation-frame-layout .character-presentation-meta{z-index:5;color:#e6e8e9}
+.character-presentation-frame-layout .character-presentation-rarity{color:#e6e8e9}
+.character-presentation-frame-layout .character-presentation-badge{z-index:7}
+.character-presentation.is-frame-character.is-selected{outline:2px solid var(--neon-cyan);outline-offset:1px;box-shadow:none}
+.character-presentation.is-visual-loading > .character-presentation-frame-layout{visibility:hidden}
+.character-presentation-battle .character-presentation-light,.user-identity-leader-face .character-presentation-light{display:none}
+.character-presentation-full-body:not(.has-rarity-frame){border:0;background:transparent;box-shadow:none}
+.character-presentation-full-body:not(.has-rarity-frame) .character-presentation-art::before,.character-presentation-full-body:not(.has-rarity-frame) .character-presentation-light{display:none}

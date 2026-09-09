@@ -17,7 +17,7 @@ export default function UserIdentityRow({ userName, guildName, title, leaderChar
   const master = CHARACTERS_MASTER.find((entry) => entry.id === leaderCharacterId);
   const content = <>
     {identityReady
-      ? <CharacterPresentation src={leaderImageSrc || (master ? getCharacterTransparentImg(master.name) : undefined)} alt={`${userName}のリーダー`} variant="thumbnail" rarity={master?.rarity} frameKind="character" metadata={false} className="user-identity-leader-face" />
+      ? <CharacterPresentation src={leaderImageSrc || (master ? getCharacterTransparentImg(master.name) : undefined)} alt={`${userName}のリーダー`} variant="thumbnail" rarity={master?.rarity} frameKind={false} metadata={false} className="user-identity-leader-face" />
       : <span className="user-identity-leader-loading" role="status" aria-label="リーダーを読み込み中" />}
     <span><strong>{userName}</strong>{guildName ? <small>TRIBE {guildName}</small> : <small>未所属</small>}{title ? <small>{title}</small> : null}</span>
   </>;

@@ -7,6 +7,9 @@ test.setTimeout(90_000);
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
+    // Fresh tutorial journeys have no outstanding Raid battle. Re-seed after
+    // localStorage.clear()/reload when the Preview Raid room UI is enabled.
+    localStorage.setItem("mock_rpc_fixture:empty_raid_recoveries", "true");
     localStorage.setItem("mock_db_gacha_masters", JSON.stringify([{
       id: "CHAR_NORMAL",
       name: "ノーマルガチャ",

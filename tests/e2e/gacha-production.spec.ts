@@ -150,8 +150,9 @@ for (const resultType of ["skill", "equipment"] as const) {
     await expect(result.locator(`.gacha-result-rarity-frame[src*="${resultType}-frame-ssr.png"]`)).toHaveCount(2);
     await expect(result.locator('.gacha-result-asset-badge.is-new[src*="badge-new.png"]')).toHaveCount(3);
     await expect(result.locator('.gacha-result-asset-badge.is-progression[aria-label="限界突破 +3"]')).toBeVisible();
-    await expect(result.locator('.gacha-result-asset-badge.is-progression img[src*="badge-awakening-plus-3.png"]')).toBeVisible();
-    await expect(result.locator('.gacha-result-card.rarity-ssr[data-ssr-glint="enabled"]')).toHaveCount(2);
+    await expect(result.locator('.gacha-result-asset-badge.is-progression[aria-label="限界突破 +3"]')).toHaveText('+3');
+    await expect(result.locator('.gacha-result-asset-badge.is-progression img')).toHaveCount(0);
+    await expect(result.locator('.gacha-result-card[data-ssr-glint="enabled"]')).toHaveCount(0);
     const geometry = await result.locator(".gacha-result-panel").evaluate((node) => ({
       scrollWidth: node.scrollWidth,
       clientWidth: node.clientWidth,

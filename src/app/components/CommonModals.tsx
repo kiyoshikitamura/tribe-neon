@@ -8,7 +8,7 @@ import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import CharacterPresentation from "./character/CharacterPresentation";
 import OutlawButton from "./ui/OutlawButton";
 import TutorialNavigator from "./TutorialNavigator";
-import { getAcquisitionBadgeAsset, getAwakeningBadgeAsset, getRarityFrameAsset } from "@/utils/rarityAssets";
+import { getAcquisitionBadgeAsset, getRarityFrameAsset } from "@/utils/rarityAssets";
 import { GACHA_RARITY_ASSETS } from "../lib/screenManifests";
 import { preloadAssetManifest } from "../lib/screenAssets";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
@@ -244,7 +244,7 @@ export default function CommonModals() {
                   <article
                     key={`${res.name}-${idx}`}
                     data-acquisition={res.convertReward === "新規獲得" ? "NEW" : "DUPLICATE"}
-                    data-ssr-glint={String(res.rarity).toUpperCase() === "SSR" ? "enabled" : undefined}
+                    data-ssr-glint={res.type === "CHARACTER" && String(res.rarity).toUpperCase() === "SSR" ? "enabled" : undefined}
                     style={{ "--gacha-result-glint-delay": `${(idx % 5) * -0.17}s` } as React.CSSProperties}
                     className={`gacha-result-card rarity-${String(res.rarity).toLowerCase()} ${res.convertReward === "新規獲得" ? "is-new" : "is-duplicate"}`}
                   >
@@ -273,11 +273,7 @@ export default function CommonModals() {
                             <img className="gacha-result-asset-badge is-new" src={getAcquisitionBadgeAsset("NEW") || ""} alt="NEW" />
                           ) : assetProgressionLevel(res) ? (
                             <span className="gacha-result-asset-badge is-progression" aria-label={`限界突破 +${assetProgressionLevel(res)}`}>
-                              {getAwakeningBadgeAsset(assetProgressionLevel(res)) ? (
-                                <img src={getAwakeningBadgeAsset(assetProgressionLevel(res)) || ""} alt="" aria-hidden="true" />
-                              ) : (
-                                <b>+{assetProgressionLevel(res)}</b>
-                              )}
+                              <b>+{assetProgressionLevel(res)}</b>
                             </span>
                           ) : null}
                         </div>

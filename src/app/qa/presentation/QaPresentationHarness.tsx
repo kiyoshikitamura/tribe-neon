@@ -353,7 +353,7 @@ function CharacterGachaV3Fixture() {
   </div></GameContext.Provider>;
 }
 
-function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPMENT"; pulls?: 1 | 10 }) {
+function GachaAssetResultFixture({ type, pulls = 10, auditLevels = false }: { type: "SKILL" | "EQUIPMENT"; pulls?: 1 | 10; auditLevels?: boolean }) {
   const source = type === "SKILL" ? CANONICAL_SKILL_VIEW : CANONICAL_EQUIPMENT_VIEW;
   const raritySequence = ["N", "R", "SR", "SSR", "N", "R", "SR", "SSR", "R", "SR"];
   const results = raritySequence.slice(0, pulls).map((rarity, index) => {
@@ -365,8 +365,8 @@ function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPM
       rarity,
       assetPath: type === "SKILL" ? getCanonicalSkillIcon(item.id) : item.assetPath,
       converted: false,
-      progressionLevel: index < 3 ? null : index === 8 ? 3 : 1,
-      convertReward: index < 3 ? "新規獲得" : index === 8 ? "限界突破 +3" : "限界突破 +1",
+      progressionLevel: auditLevels ? index + 1 : index < 3 ? null : index === 8 ? 3 : 1,
+      convertReward: auditLevels ? `限界突破 +${index + 1}` : index < 3 ? "新規獲得" : index === 8 ? "限界突破 +3" : "限界突破 +1",
     };
   });
   const game = {
@@ -529,6 +529,7 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
 }
 
 function Scenario({ id }: { id: QaPresentationScenarioId }) {
+  if (id === "card-visual-geometry") return <div data-card-visual-geometry style={{display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:8}}>{["N","R","SR","SSR"].map(rarity => <CharacterPresentation key={rarity} src={getCharacterTransparentImg(CHARACTERS_MASTER[0].name)} alt={rarity} variant="thumbnail" rarity={rarity} frameKind="character" metadata={false} />)}</div>;
   if (id === "gacha-character-v3") return <CharacterGachaV3Fixture />;
   if (id.startsWith("first-home-")) return <ProductionHomeFixture scenario={id as HomeScenario} />;
   if (id === "gacha-ssr-reveal") return <SsrRevealFixture />;
@@ -550,6 +551,8 @@ function Scenario({ id }: { id: QaPresentationScenarioId }) {
   if (id === "gacha-authority-loading") return <GachaProductionFixture authorityState="loading" />;
   if (id === "gacha-entitlement-empty") return <GachaProductionFixture authorityState="consumed" />;
   if (id === "gacha-resource-empty") return <GachaProductionFixture resourcesAvailable={false} />;
+  if (id === "card-visual-skill-levels") return <GachaAssetResultFixture type="SKILL" auditLevels />;
+  if (id === "card-visual-equipment-levels") return <GachaAssetResultFixture type="EQUIPMENT" auditLevels />;
   if (id === "gacha-skill-result") return <GachaAssetResultFixture type="SKILL" />;
   if (id === "gacha-skill-result-one") return <GachaAssetResultFixture type="SKILL" pulls={1} />;
   if (id === "gacha-equipment-result") return <GachaAssetResultFixture type="EQUIPMENT" />;
@@ -571,6 +574,6 @@ export default function QaPresentationHarness() {
     if (QA_PRESENTATION_SCENARIOS.some(([id]) => id === requested)) setScenario(requested as QaPresentationScenarioId);
   }, []);
   const label = useMemo(() => QA_PRESENTATION_SCENARIOS.find(([id]) => id === scenario)?.[1], [scenario]);
-  const fullscreenHome = scenario.startsWith("first-home-") || scenario.startsWith("gacha-production") || scenario.startsWith("gacha-asset-") || scenario.startsWith("gacha-authority-") || scenario.startsWith("gacha-entitlement-") || scenario.startsWith("gacha-skill-") || scenario.startsWith("gacha-equipment-");
+  const fullscreenHome = scenario.startsWith("card-visual-") || scenario.startsWith("first-home-") || scenario.startsWith("gacha-production") || scenario.startsWith("gacha-asset-") || scenario.startsWith("gacha-authority-") || scenario.startsWith("gacha-entitlement-") || scenario.startsWith("gacha-skill-") || scenario.startsWith("gacha-equipment-");
   return <main className={`qa-harness${fullscreenHome ? " is-home-preview" : ""}`} data-qa-harness="presentation"><header><div><small>PREVIEW / DEVELOPMENT ONLY</small><h1>Human QA Harness</h1><p>{label}</p></div><a href="#compliance">Visual Compliance</a></header><nav aria-label="QA scenarios">{QA_PRESENTATION_SCENARIOS.map(([id, name]) => <button key={id} className={scenario === id ? "is-active" : ""} aria-pressed={scenario === id} onClick={() => setScenario(id)} data-scenario-id={id}>{name}</button>)}</nav><section className="qa-stage" data-active-scenario={scenario}><Scenario key={scenario} id={scenario} /></section><section id="compliance" className="qa-compliance"><h2>Visual Compliance Precheck</h2><p>客観的Contractは自動検証。見た目の品質はHuman ReviewまでPASSにしません。</p>{VISUAL_COMPLIANCE_GATE.map((item) => <article key={item.id} data-compliance-id={item.id} data-status={item.status}><div><strong>{item.specification}</strong><small>AUTO {item.automatedPrecheck}</small></div><b>{item.status}</b><p>{item.evidence}</p></article>)}</section></main>;
 }

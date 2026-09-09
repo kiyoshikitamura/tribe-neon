@@ -845,15 +845,10 @@ export default function CharacterTab() {
                     
                     const limitBreakPlus = previewSkillRecord?.plus_val || 0;
 
-                    let tierClass = "";
-                    if (limitBreakPlus >= 10) tierClass = "skill-tier-max";
-                    else if (limitBreakPlus >= 6) tierClass = "skill-tier-gold";
-                    else if (limitBreakPlus >= 3) tierClass = "skill-tier-silver";
-
                     return (
                       <div
                         key={slotIdx}
-                        className={`char-skill-card skill-rarity-${skillRarity} ${tierClass} ${!isUnlocked ? "char-skill-locked" : ""} ${selectedSkillSlotIdx === slotIdx ? "is-selecting" : ""} active-scale-effect`}
+                        className={`char-skill-card skill-rarity-${skillRarity} ${!isUnlocked ? "char-skill-locked" : ""} ${selectedSkillSlotIdx === slotIdx ? "is-selecting" : ""} active-scale-effect`}
                         onClick={() => {
                           if (isUnlocked) {
                             setSelectedSkillSlotIdx(slotIdx);
