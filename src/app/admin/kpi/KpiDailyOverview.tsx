@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { OverviewMetric, OverviewRow } from "@/utils/kpiMonthly";
+import KpiSourceOverview, { type SourceOverview } from "./KpiSourceOverview";
 
-type OverviewResponse = { rows: OverviewRow[]; timezone: string; updated_at?: string | null; stale?: boolean; missing_periods?: number };
+type OverviewResponse = { rows: (OverviewRow & { acquisition_source_v1?: SourceOverview })[]; timezone: string; updated_at?: string | null; stale?: boolean; missing_periods?: number };
 const number = (value?: number | null) => value == null ? "—" : value.toLocaleString("ja-JP");
 const updated = (value?: string | null) => value ? new Intl.DateTimeFormat("ja-JP", { timeZone:"Asia/Tokyo", dateStyle:"short", timeStyle:"short" }).format(new Date(value)) : "未集計";
 const dataEnvironment = process.env.NEXT_PUBLIC_KPI_DATA_ENV === "production" ? "Production" : "Preview";
@@ -55,6 +56,7 @@ function PeriodTable({ mode, month, onMonth }: { mode: "daily" | "monthly"; mont
         </table>
       </div>
       {!data.rows.length && <p className="v2-empty">対象期間がありません。</p>}
+      <KpiSourceOverview periods={data.rows} />
     </>}
   </>;
 }
