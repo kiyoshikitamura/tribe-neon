@@ -32,7 +32,7 @@
 .raid-detail__battle-facts span { color: var(--ui-text-secondary); font-size: 10px; }
 .raid-detail__faces { display: flex; gap: 4px; margin-top: 12px; }
 .raid-detail__faces .raid-detail__portrait { width: 32px; height: 32px; flex-basis: 32px; }
-.raid-detail__entrances { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.raid-detail__entrances { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
 .raid-detail__entrances .outlaw-button { width: 100%; min-width: 0; min-height: 72px; padding: 8px 4px; font-size: 12px; }
 .raid-detail__entrances .outlaw-button-inner { flex-direction: column; gap: 4px; }
 .raid-detail__entrances img { width: 28px; height: 28px; object-fit: contain; }

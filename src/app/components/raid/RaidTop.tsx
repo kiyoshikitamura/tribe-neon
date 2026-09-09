@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { RaidTopEntry, RaidTopProps, RaidTopResource } from "@/domain/raidTop";
 import type { RaidPlayerSummary } from "@/domain/raidRoom";
 import { getRaidDifficultyLabel } from "@/domain/raidRoomPresentation";
@@ -54,8 +54,7 @@ function ResourceNotice({ resource, onRefresh, unavailable, disabled }: { resour
 }
 
 export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onRefresh, disabled }: RaidTopProps) {
-  const carousel = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ key: "", index: 0 });
+  const [rescueChoice, setRescueChoice] = useState({key:"", index:0});
   const [now, setNow] = useState<number | null>(null);
   const [retry, setRetry] = useState(0);
   const manifest = useMemo(() => {
@@ -91,19 +90,11 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
   const showParticipating = data.participating.status !== "ready" || participating.length > 0;
   const showRescues = data.rescues.status !== "ready" || rescues.length > 0;
   const rescueKey = rescues.map(entry => `${entry.room.roomId}:${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`).join("|");
-  useEffect(() => {
-    if (carousel.current) carousel.current.scrollLeft = 0;
-  }, [rescueKey]);
-  const slide = position.key === rescueKey ? Math.min(position.index, Math.max(0, rescues.length - 1)) : 0;
+  useEffect(() => { setRescueChoice({key:rescueKey,index:Math.floor(Math.random()*Math.max(1,rescues.length))}); }, [rescueKey, rescues.length]);
+  const shownRescues = rescues.length ? [rescues[rescueChoice.key===rescueKey ? Math.min(rescueChoice.index,rescues.length-1) : 0]] : [];
   const resolve: ImageResolver = url => assets?.results.find(result => result.requestedSrc === url)?.resolvedSrc ?? FALLBACK;
   if ([data.participating, data.rescues, data.dailyTargets].some(resource => resource.status === "loading") || assets?.key !== assetKey) return <Spinner />;
   if (assets.results.some(result => result.status === "failed")) return <div className="raid-top__notice" role="alert"><p>画像を取得できませんでした</p><OutlawButton loadingLabel="" onClick={() => { setAssets(null); setRetry(value => value + 1); }}>再試行</OutlawButton></div>;
-  const move = (direction: number) => {
-    const track = carousel.current;
-    if (!track) return;
-    const card = track.firstElementChild as HTMLElement | null;
-    track.scrollBy({ left: direction * ((card?.offsetWidth ?? track.clientWidth) + 12), behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
-  };
   return <div className="raid-top" data-testid="raid-top">
     {showParticipating && <section aria-label="参戦中" className="raid-top__section"><SectionHeader title="参戦中" />
       <ResourceNotice resource={data.participating} onRefresh={onRefresh} disabled={disabled} unavailable="参戦情報は現在確認できません" />
@@ -113,15 +104,15 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
         <OutlawButton className="raid-top__continue" loadingLabel="" onClick={() => onOpenRoom(entry.room.roomId)} disabled={disabled}>続きへ</OutlawButton>
       </OutlawCard>)}</div>
     </section>}
-    {showRescues && <section aria-label="救援依頼" className="raid-top__section"><div className="raid-top__section-row"><SectionHeader title="救援依頼" subTitle="ほかの挑戦者に加勢する" />{rescues.length > 1 && <div className="raid-top__arrows"><OutlawButton loadingLabel="" aria-label="前の救援" disabled={slide <= 0} onClick={() => move(-1)}>‹</OutlawButton><OutlawButton loadingLabel="" aria-label="次の救援" disabled={slide >= rescues.length - 1} onClick={() => move(1)}>›</OutlawButton></div>}</div>
+    {showRescues && <section aria-label="救援依頼" className="raid-top__section"><div className="raid-top__section-row"><SectionHeader title="救援依頼" subTitle="ほかの挑戦者に加勢する" /></div>
       <ResourceNotice resource={data.rescues} onRefresh={onRefresh} disabled={disabled} unavailable="救援情報は現在確認できません" />
-      <div className={`raid-top__rescue-track ${rescues.length > 1 ? "raid-top__rescue-track--multiple" : ""}`} ref={carousel} onScroll={event => { const track = event.currentTarget; const card = track.firstElementChild as HTMLElement | null; setPosition({ key: rescueKey, index: Math.round(track.scrollLeft / ((card?.offsetWidth ?? track.clientWidth) + 12)) }); }}>
-        {rescues.map(entry => <OutlawCard key={`${entry.room.roomId}-${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`} className="raid-top__rescue">
+      <div className="raid-top__rescue-track">
+        {shownRescues.map(entry => <OutlawCard key={`${entry.room.roomId}-${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`} className="raid-top__rescue">
           <div className="raid-top__requester-art">{entry.room.owner.status === "available" && entry.room.owner.value.leaderIconUrl.status === "available" && entry.room.owner.value.leaderIconUrl.value ? <img src={resolve(entry.room.owner.value.leaderIconUrl.value)} alt="" /> : <PersonIcon resolve={resolve} />}</div><Owner entry={entry} resolve={resolve} />
           <div className="raid-top__rescue-visual">{entry.enemy.status === "available" && <><img className="raid-top__background" src={resolve(entry.enemy.value.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(entry.enemy.value.leaderImageUrl)} alt="" /></>}<div className="raid-top__enemy-caption"><span>{getRaidDifficultyLabel(entry.room.difficultyId)}{entry.enemy.status === "available" && ` / ${entry.enemy.value.areaName}`}</span><h3>{entry.enemy.status === "available" ? entry.enemy.value.bossName : "敵情報未確認"}</h3></div></div>
           <div className="raid-top__rescue-body"><BattleState entry={entry} now={now} resolve={resolve} />{entry.rescue.status === "unknown" && <p className="raid-top__muted">救援情報を確認できません</p>}<OutlawButton loadingLabel="" fullWidth variant="primary" disabled={disabled || entry.rescue.status === "unknown"} onClick={() => onOpenRoom(entry.room.roomId, entry.rescue.status === "available" ? entry.rescue.value.rescueId : undefined)}>{entry.room.state.status === "available" && entry.room.state.value !== "active" ? "戦況を見る" : "救援に向かう"}</OutlawButton></div>
         </OutlawCard>)}
-      </div>{rescues.length > 1 && <div className="raid-top__page-count" aria-live="polite">{Math.min(slide + 1, rescues.length)} / {rescues.length}</div>}
+      </div>
     </section>}
     <section aria-label="今日の強敵" className="raid-top__section"><SectionHeader title="今日の強敵" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
       <ResourceNotice resource={data.dailyTargets} onRefresh={onRefresh} disabled={disabled} unavailable="本日の対象エリアは未確認です" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import type { RaidParticipantDto, RaidRoomDto } from "@/domain/raidRoom";
 import type { RaidRoomBriefing, RaidRoomResource } from "@/domain/raidRoomClient";
 import type { RaidRoomDisplay } from "@/domain/raidRoomDisplay";
@@ -11,6 +12,7 @@ import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_cons
 import { preloadAssetManifest, type AssetResult } from "@/app/lib/screenAssets";
 import { getCharacterPresentationMetadata } from "../character/characterPresentationMetadata";
 import OutlawButton from "../ui/OutlawButton";
+import CanonicalDialog from "../ui/CanonicalDialog";
 import OutlawCard from "../ui/OutlawCard";
 import SectionHeader from "../ui/SectionHeader";
 import "./RaidRoomDetail.css";
@@ -42,6 +44,7 @@ function Portrait({ url, name }: { url: string; name: string }) {
 }
 
 export default function RaidRoomDetail({ room, briefing, display, participants, currentUserId, now, busy, onParticipants, onRewards, onEnemyInfo, action, rescue }: RaidRoomDetailProps) {
+  const [rescueOpen, setRescueOpen] = useState(false);
   const details = display.status === "success" && display.data?.roomId === room.roomId ? display.data : null;
   const brief = briefing.status === "success" && briefing.data?.roomId === room.roomId ? briefing.data : null;
   const enemy = brief?.raidVariantId ? resolveRaidTopEnemy(brief.raidVariantId) : null;
@@ -89,7 +92,6 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
       <span className="raid-detail__difficulty">{getRaidDifficultyLabel(room.difficultyId)}</span>
       <div className="raid-detail__hero-caption"><span>{enemy?.areaName ?? "エリア未確認"}</span><h2>{enemy?.bossName ?? brief?.bossName ?? "敵情報未確認"}</h2></div>
     </section>
-    <div className="raid-detail__owner"><Portrait url={resolve(ownerUrl)} name="" /><div className="raid-detail__identity"><span>挑戦者</span><strong>{owner?.name ?? "挑戦者未確認"}</strong><span>{guild}</span></div><span className="raid-detail__role" aria-label={`あなたの参加状態：${roleLabel}`}><span>あなた</span>{roleLabel}</span></div>
     {(briefing.status === "error" || display.status === "error") && <p className="raid-detail__notice" role="alert">{briefing.status === "error" ? "敵・参加条件" : "所属・参加状態"}を取得できませんでした。画面を更新してください。</p>}
     <section className="raid-detail__battle" aria-label="戦況">
       <div className="raid-detail__hp-heading"><span>残HP</span><strong>{percent === null ? "未確認" : `${Number(percent.toFixed(1))}%`}</strong><span className="raid-detail__state">{lifecycle.stateLabel}</span></div>
@@ -98,10 +100,10 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
       <div className="raid-detail__battle-facts"><div><strong>{lifecycle.remainingLabel}</strong><span>{Number.isFinite(expires) ? `期限 ${new Date(expires).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })} JST` : "期限未確認"}</span></div><div><strong>{room.participantCount.status === "available" ? `${number(room.participantCount.value)}人` : "未確認"}</strong><span>登録参加者</span></div></div>
       {faces.length > 0 && <div className="raid-detail__faces" aria-label="登録参加者のリーダー">{faceImages.map(person => <Portrait key={person.id} url={resolve(person.url)} name={person.name} />)}</div>}
     </section>
-    <nav className="raid-detail__entrances" aria-label="レイドの詳細情報">{ENTRANCES.map(entry => <OutlawButton key={entry.id} loadingLabel="" disabled={busy || (entry.id === "participants" && !isJoined)} aria-label={entry.label === "参加者" ? "参加者一覧" : entry.label} onClick={entry.id === "participants" ? onParticipants : entry.id === "rewards" ? onRewards : onEnemyInfo}><img src={resolve(entry.icon)} alt="" /><span>{entry.label}</span></OutlawButton>)}</nav>
+    <nav className="raid-detail__entrances" aria-label="レイドの詳細情報">{ENTRANCES.map(entry => <OutlawButton key={entry.id} loadingLabel="" disabled={busy || (entry.id === "participants" && !isJoined)} aria-label={entry.label === "参加者" ? "参加者一覧" : entry.label} onClick={entry.id === "participants" ? onParticipants : entry.id === "rewards" ? onRewards : onEnemyInfo}><img src={resolve(entry.icon)} alt="" /><span>{entry.label}</span></OutlawButton>)}{rescue && <OutlawButton loadingLabel="" disabled={busy} aria-label="救援" onClick={() => setRescueOpen(true)}><img src={resolve("/ui/icon_friends.png")} alt="" /><span>救援</span></OutlawButton>}</nav>
     {!isJoined && <p className="raid-detail__hint">参加者の詳細は参戦後に確認できます。</p>}
     {isJoined && <OutlawCard className="raid-detail__contribution"><SectionHeader title="あなたの貢献" />{participants.status === "loading" ? <Spinner /> : <><div className="raid-detail__contribution-values"><div><span>貢献ダメージ</span><strong>{me?.appliedDamage.status === "available" ? number(me.appliedDamage.value) : "未確認"}</strong></div><div><span>戦闘回数</span><strong>{me?.finalizedBattles.status === "available" ? `${number(me.finalizedBattles.value)}戦` : "未確認"}</strong></div></div>{participants.status === "error" && <p className="raid-detail__notice" role="alert">貢献情報を取得できませんでした。</p>}</>}</OutlawCard>}
     <div className="raid-detail__action">{action}</div>
-    {rescue && <div className="raid-detail__rescue">{rescue}</div>}
+    {rescue && rescueOpen && createPortal(<CanonicalDialog title="救援" onClose={() => setRescueOpen(false)} actions={[{label:"閉じる",semantic:"secondary",onClick:()=>setRescueOpen(false)}]}>{rescue}</CanonicalDialog>, document.body)}
   </div>;
 }

@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useMemo, useRef } from 'react';
+import RaidRoomRescuePanel from '@/app/components/raid/RaidRoomRescuePanel';
 import RaidRoomBrowser from '@/app/components/raid/RaidRoomBrowser';
 import { createRaidRoomController } from '@/domain/raidRoomClient';
 import { RAID_TOP_ENEMIES } from '@/domain/raidTopAssets';
@@ -33,5 +34,5 @@ export default function IntegratedPages({ scenario, now, onAction }: { scenario:
   },[scenario,now,onAction]);
   const connections=useRef(new Map<typeof connection,number>());
   useEffect(()=>{const counts=connections.current;counts.set(connection,(counts.get(connection)??0)+1);return()=>{counts.set(connection,(counts.get(connection)??0)-1);queueMicrotask(()=>{if(!counts.get(connection)){connection.controller.dispose();counts.delete(connection);}});};},[connection]);
-  return <RaidRoomBrowser controller={connection.controller} currentUserId={connection.fixture.currentUserId} loadDisplay={connection.loadDisplay} loadListPage={connection.loadListPage} loadEnemyInfo={connection.loadEnemyInfo} resolveRewardName={id=>ITEMS_MASTER_DATA.find(item=>item.id===id)?.name} onBattleReady={()=>onAction('battle')} onBriefingReady={()=>onAction('briefing')} setInteractionBlocking={()=>{}} />;
+  return <RaidRoomBrowser renderRescue={(room,disabled)=><RaidRoomRescuePanel roomId={room.roomId} userId={connection.fixture.currentUserId} disabled={disabled} setInteractionBlocking={()=>{}} client={{getLink:async()=>({roomId:room.roomId,rescueId:'qa-rescue',channel:'ACTIVITY',guildId:null}),join:async()=>({roomId:room.roomId,membershipStatus:'joined',viaRescue:true}),getStatus:async()=>({roomId:room.roomId,isOwner:true,requestEnabled:true,activityCount:0,guildCount:0,maxPerChannel:3,viaRescue:false,finalizedBattles:0,contributionDamage:0}),request:async(roomId,requestId)=>({roomId,requestId,activityCount:1,guildCount:1,maxPerChannel:3,publications:[]})}} />} controller={connection.controller} currentUserId={connection.fixture.currentUserId} loadDisplay={connection.loadDisplay} loadListPage={connection.loadListPage} loadEnemyInfo={connection.loadEnemyInfo} resolveRewardName={id=>ITEMS_MASTER_DATA.find(item=>item.id===id)?.name} onBattleReady={()=>onAction('battle')} onBriefingReady={()=>onAction('briefing')} setInteractionBlocking={()=>{}} />;
 }

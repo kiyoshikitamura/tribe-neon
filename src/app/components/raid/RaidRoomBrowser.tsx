@@ -1,4 +1,5 @@
 "use client";
+import SectionHeader from "../ui/SectionHeader";
 
 import React, { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { getRaidJoinRequirementMessage } from '../../../domain/raidRoomJoinPresentation';
@@ -126,16 +127,13 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       }}
       onBrowse={() => { setCreateOpen(false);  setBrowseOpen(true); }}
       onRefresh={() => onTopRefresh?.()} /> : <>
-    {!snapshot.selectedRoomId && <p className="raid-room-muted">開始から24時間、または撃破で終了します。</p>}
     {!snapshot.selectedRoomId ? <>
       {topData && <OutlawButton loadingLabel="" disabled={busy} onClick={() => void returnToTop()}>トップへ</OutlawButton>}
-      {!createOpen && <><div className="raid-room-tabs" role="tablist" aria-label="難易度">
+      {!createOpen && <><SectionHeader title="開催中のレイド" /><div className="raid-room-list-toolbar"><div className="raid-room-tabs" role="tablist" aria-label="難易度">
         {RAID_DIFFICULTIES.map((entry) => <OutlawButton loadingLabel="" key={entry.id} aria-label={entry.label} role="tab" aria-selected={difficulty === entry.id} disabled={busy} variant={difficulty === entry.id ? "primary" : "secondary"} onClick={() => { if (difficulty !== entry.id) { setDifficulty(entry.id); setPageOffset(0); controller.resetCreateRequest(); } }}>{entry.label}</OutlawButton>)}
-      </div>
+      </div><OutlawButton loadingLabel="" disabled={busy} aria-label="更新" onClick={refreshList}>更新</OutlawButton></div>
       <p className="raid-room-requirement">{getRaidParticipationRequirement(difficulty)}</p>
       {getRaidParticipationRequirement(difficulty) !== getRaidRecommendedPowerLabel(difficulty) && <p className="raid-room-muted">{getRaidRecommendedPowerLabel(difficulty)}</p>}</>}
-      {!createOpen && <OutlawButton loadingLabel="" disabled={busy} aria-label="更新" onClick={refreshList}>更新</OutlawButton>}
-      {!createOpen && snapshot.canCreate && <OutlawButton loadingLabel="" disabled={busy} aria-label="挑む" onClick={async () => {  setCreateOpen(true); await controller.loadBossChoices(); }}>挑む</OutlawButton>}
       {createOpen && <RaidEnemySelection choices={snapshot.bossChoices} selectedVariantId={variantId} difficultyId={difficulty}
         memberCharacterIds={enemyInfo.status === 'success' && enemyInfo.data?.variantId === variantId ? enemyInfo.data.memberCharacterIds ?? null : null}
         onSelectVariant={id => { setVariantId(id); setInfoVariant(null); controller.resetCreateRequest(); }}
