@@ -1,3 +1,4 @@
+import { getRaidJoinRequirementMessage, RaidRoomRequirementError } from './raidRoomJoinPresentation.ts';
 import { createRaidRoomRescueClient } from './raidRoomRescue.ts';
 import { RaidRoomStoppedError } from './raidRoomErrors.ts';
 import type { RaidObserved, RaidParticipantDto, RaidPlayerSummary, RaidRewardDto, RaidRoomDto, RaidServerEligibility } from './raidRoom';
@@ -130,6 +131,24 @@ export function createRaidRoomRpcTransport(client: RaidRoomRpcClient, authoritie
     if (!result || result.error != null) {
       const error = result?.error as { code?: string; message?: string } | undefined;
       if (name === 'create_raid_room_v1' && error?.code === '55000' && error.message === 'room creation disabled') throw new RaidRoomStoppedError();
+      if (name === 'create_raid_room_v1') {
+        if (error?.code === '42501' && error.message === 'raid level requirement') throw new RaidRoomRequirementError('挑むにはプレイヤーLv5以上が必要です。');
+        if (error?.code === '42501' && error.message === 'power unavailable') throw new RaidRoomRequirementError('現在の総合力を確認できません。メイン編成を確認して、もう一度お試しください。');
+        if (error?.code === '42501' && error.message === 'raid power requirement') {
+          let actualPower: number | null = null;
+          // 拒否後に一度だけ補完する。読み取りの失敗を総合力0として扱わない。
+          try {
+            const snapshot = await client.rpc('get_my_power_snapshot', {});
+            if (!snapshot.error) {
+              const value = object(snapshot.data).total_power;
+              if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) actualPower = value;
+            }
+          } catch { /* 現在値未確認のまま、元のサーバー拒否を表示する。 */ }
+          const minimumPower = RAID_DIFFICULTIES.find(entry => entry.id === args.p_difficulty_id)?.minimumPower ?? null;
+          throw new RaidRoomRequirementError(getRaidJoinRequirementMessage({ status: 'failed', reason: 'below_minimum', actualPower, minimumPower })!);
+        }
+        if (error?.code === '22023' && error.message === 'raid variant outside daily targets') throw new RaidRoomRequirementError('この敵は現在の対象ではありません。対象エリアを更新して選び直してください。');
+      }
       throw new Error('Raid room request failed');
     }
     return result.data;

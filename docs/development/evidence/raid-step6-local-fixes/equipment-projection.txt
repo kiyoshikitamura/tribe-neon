@@ -1,0 +1,16 @@
+✔ rejected grant and empty persisted read purge stale phantom list and selection (1.7048ms)
+✔ successful authority uses exact persisted records for UI and power (0.2372ms)
+✔ failed or lost RPC response keeps only separately confirmed persisted rows (0.1741ms)
+✔ empty RPC response without persisted records never invents equipment (0.1657ms)
+✔ RPC data accompanied by error is never treated as a persisted row (0.1598ms)
+✔ empty owned roster clears previously selected equipment without a grant (0.134ms)
+✔ reload/relogin with persisted equipment does not call grant authority (0.1829ms)
+✔ failed repeated bootstrap stays empty and read failure is not a zero projection (0.6096ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10.4589

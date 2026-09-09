@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { getRaidJoinRequirementMessage } from '../../../domain/raidRoomJoinPresentation';
 import RaidEnemySelection from './RaidEnemySelection';
 import RaidRoomListCard from './RaidRoomListCard';
 import { useRaidPageResource } from './useRaidPageResource';
@@ -190,7 +191,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
           </> : <OutlawButton loadingLabel="" fullWidth variant="primary" aria-label="参加する" isLoading={snapshot.registering}
             disabled={busy || !briefing || briefing.joinEligibility.status !== "passed" || !!lifecycle?.blockJoin}
             onClick={() => { if (room && !getRaidRoomLifecyclePresentation(room, Date.now()).blockJoin) void controller.registerParticipation(); }}>参加する</OutlawButton>}
-          {briefing?.membershipStatus === "not_joined" && briefing.joinEligibility.status !== "passed" && <p>参加条件を満たしているか確認してください。</p>}
+          {briefing?.membershipStatus === "not_joined" && briefing.joinEligibility.status !== "passed" && <p role="status">{getRaidJoinRequirementMessage(briefing.joinEligibility)}</p>}
         </> : <OutlawButton loadingLabel="" fullWidth variant="primary" disabled={busy || battleReference !== null || !lifecycle || lifecycle.blockJoin || !eligibility.canJoin} isLoading={snapshot.joining || transitioning} aria-label={joinLabel} onClick={join}>{joinLabel}</OutlawButton>}
         </>} />}
       {snapshot.registrationError && <p role="alert">{snapshot.registrationError.replaceAll('Room', 'レイド')}</p>}

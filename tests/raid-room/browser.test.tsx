@@ -436,3 +436,12 @@ test('別userへ切替後に遅れた救援送信応答は混入しない',async
 });
 
 test('既知の作成停止は専用文言を画面へ表示する',async()=>{const h=harness({listBossChoices:async()=>[{raidVariantId:'a',name:'検証ボス'}],createRoom:async()=>{throw new RaidRoomStoppedError();}});try{await waitFor(()=>assert.equal(h.controller.getSnapshot().rooms.status,'success'));fireEvent.click(h.ui.getByRole('button',{name:'挑む'}));await act(async()=>{await h.controller.createRoom('beginner','a');});await h.ui.findByText('レイドの新規作成は現在停止中です。再開後にお試しください。');}finally{h.close();}});
+
+for (const entry of [
+  {status:'failed' as const,reason:'level_requirement',message:'参戦にはプレイヤーLv5以上が必要です。'},
+  {status:'failed' as const,reason:'below_minimum',message:'総合力が参加条件に届いていません。必要総合力：160,000以上／現在の総合力：78,228'},
+  {status:'unknown' as const,reason:'below_minimum',message:'参加条件を確認できません。レイドを更新してください。'},
+]) test('参加拒否の理由を表示し登録を許可しない: '+entry.reason+'/'+entry.status,async()=>{
+  let calls=0;const h=harness({getBriefing:async roomId=>({roomId,raidBossInstanceId:'instance-a',raidVariantId:null,bossName:'確認ボス',baseId:null,membershipStatus:'not_joined',joinEligibility:{status:entry.status,reason:entry.reason,actualPower:78228,minimumPower:160000},battleStartEnabled:true}),registerParticipation:async roomId=>{calls++;return {roomId,membershipStatus:'joined'};}});
+  try{await act(async()=>{await h.controller.selectRoom('room-a');});await h.ui.findByText(entry.message);const button=h.ui.getByRole('button',{name:'参加する'});assert.equal((button as HTMLButtonElement).disabled,true);fireEvent.click(button);assert.equal(calls,0);}finally{h.close();}
+});

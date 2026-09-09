@@ -1,3 +1,4 @@
+import { RaidRoomRequirementError } from './raidRoomJoinPresentation.ts';
 import type { RaidDifficultyId, RaidParticipantDto, RaidRewardDto, RaidRoomDto } from './raidRoom';
 import { RaidRoomStoppedError } from './raidRoomErrors.ts';
 
@@ -198,7 +199,8 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
       } catch (error) {
         update({ createError: error instanceof RaidRoomStoppedError
           ? 'レイドの新規作成は現在停止中です。再開後にお試しください。'
-          : '作成できませんでした。時間をおいて同じ内容で再度お試しください。' });
+          : error instanceof RaidRoomRequirementError ? error.displayMessage
+          : '挑戦を受け付けられませんでした。時間をおいて同じ内容で再度お試しください。' });
         return null;
       } finally { createPending = false; update({ creating: false }); }
     },

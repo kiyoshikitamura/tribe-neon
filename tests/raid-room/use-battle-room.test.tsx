@@ -2,6 +2,7 @@ import test,{afterEach,beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {renderHook,act,cleanup} from '@testing-library/react';
 import {useBattle} from '../../src/hooks/useBattle';
+import { RAID_REPLAY_NEUTRAL_BACKGROUND, resolveRaidReplayBackground, loadRaidReplayBackground } from '../../src/domain/presentation/raidReplayBackground';
 beforeEach(()=>window.localStorage.clear());
 afterEach(cleanup);
 const noop=()=>{};
@@ -19,6 +20,49 @@ function setup(failures=0,throws=0,userId='user',readReceipt:any=null,existingSe
  return {hook:renderHook(()=>useBattle(options)),calls,errors,receipt,options,remount:()=>renderHook(()=>useBattle(options))};
 }
 const count=(calls:any[],name:string)=>calls.filter(c=>c[0]===name).length;
+const savedReplay=(context:unknown={roomId:'room',raidVariantId:'RAID_SHIBUYA_V1',baseId:'RAID_SHIBUYA_V1'})=>({id:'replay',battle_mode:'RAID',source_reference_id:'instance',official_context:context});
+function supplyReplayBackground(x:ReturnType<typeof setup>,result:unknown){
+ const client=(globalThis as unknown as {__raidClient:{from:(name:string)=>unknown}}).__raidClient,from=client.from;
+ client.from=(name:string)=>{if(name!=='battle_replay_sessions')return from(name);const filters:Array<[string,string]>=[];const chain={select(columns:string){x.calls.push(['read:replay-background',columns,filters]);return chain},eq(column:string,value:string){filters.push([column,value]);return chain},async maybeSingle(){if(result instanceof Error)throw result;return result}};return chain;};
+}
+
+test('保存Replayの7エリアだけを背景へ対応付け、未知/別Roomを推測しない',()=>{
+ for(const area of ['SHINJUKU','SHIBUYA','IKEBUKURO','ROPPONGI','AKIHABARA','KAWASAKI','YOKOHAMA'])assert.equal(resolveRaidReplayBackground({roomId:'room',raidVariantId:`RAID_${area}_V1`},'room').backgroundPath,`/bg/bg_street_${area.toLowerCase()}.jpg`);
+ for(const context of [null,{}, {roomId:'other',raidVariantId:'RAID_SHIBUYA_V1'},{roomId:'room',raidVariantId:'UNKNOWN',baseId:'shibuya'}])assert.equal(resolveRaidReplayBackground(context,'room').backgroundPath,RAID_REPLAY_NEUTRAL_BACKGROUND);
+ assert.equal(resolveRaidReplayBackground({roomId:'room',baseId:'SHIBUYA'},'room').backgroundPath,'/bg/bg_street_shibuya.jpg');
+});
+
+test('通常確定後の背景は現在overrideより保存Replay優先・本人idで単件参照',async()=>{
+ const x=setup();supplyReplayBackground(x,{data:savedReplay(),error:null});
+ await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing,{backgroundPath:'/bg/bg_street_yokohama.jpg',backgroundLabel:'現在の表示'})});
+ assert.equal(count(x.calls,'read:replay-background'),0,'unstarted preparation has no Replay');
+ await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+ assert.equal(x.hook.result.current.battlePresentationContext?.backgroundPath,'/bg/bg_street_shibuya.jpg');
+ assert.equal(x.hook.result.current.battlePresentationContext?.backgroundLabel,'渋谷');
+ const reads=x.calls.filter(c=>c[0]==='read:replay-background');assert.equal(reads.length,1);assert.deepEqual(reads[0][2],[['id','replay'],['requester_user_id','user']]);
+});
+
+test('再読込も同じ保存Replay背景で再開し、追加開始/日次対象参照なし',async()=>{
+ const first=setup(2);await act(async()=>{await first.hook.result.current.prepareRaidRoomBattle(briefing,{backgroundPath:'/bg/bg_street_yokohama.jpg'})});await act(async()=>{await first.hook.result.current.confirmPreparedRaidBattle()});first.hook.unmount();
+ const second=setup(0,0,'user',first.receipt);supplyReplayBackground(second,{data:savedReplay(),error:null});
+ await act(async()=>{assert.equal(await second.hook.result.current.resumePendingRaidRoomBattle(),true)});
+ assert.equal(second.hook.result.current.battlePresentationContext?.backgroundPath,'/bg/bg_street_shibuya.jpg');assert.equal(count(second.calls,'start_raid_room_battle_v1'),0);assert.equal(count(second.calls,'list_raid_room_boss_choices_v1'),0);assert.equal(count(second.calls,'read:replay-background'),1);
+});
+
+test('既にreceiptに含まれる保存contextは再取得しない',async()=>{
+ const x=setup();(x.receipt as typeof x.receipt & {official_context:unknown}).official_context=savedReplay().official_context;supplyReplayBackground(x,Error('must not read'));
+ await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing)});await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+ assert.equal(x.hook.result.current.battlePresentationContext?.backgroundPath,'/bg/bg_street_shibuya.jpg');assert.equal(count(x.calls,'read:replay-background'),0);
+});
+
+test('Replay背景の失敗/未知/identity不一致は中立背景、戦闘とRESULT/帰還を止めない',async()=>{
+ for(const result of [{data:null,error:{code:'42501'}},Error('network'),{data:savedReplay(null),error:null},{data:{...savedReplay(),id:'other'},error:null},{data:{...savedReplay(),source_reference_id:'other'},error:null},{data:{...savedReplay(),battle_mode:'PVP'},error:null}]){
+  window.localStorage.clear();const x=setup();supplyReplayBackground(x,result);
+  await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing,{backgroundPath:'/bg/bg_street_yokohama.jpg'})});await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+  assert.equal(x.hook.result.current.battlePresentationContext?.backgroundPath,RAID_REPLAY_NEUTRAL_BACKGROUND);assert.equal(count(x.calls,'start_raid_room_battle_v1'),1);assert.equal(count(x.calls,'resolve-battle'),1);
+  await act(async()=>{await x.hook.result.current.endBattleSession('DEFEAT')});await act(async()=>{await x.hook.result.current.completeBattleResult()});assert.equal(x.hook.result.current.battleState,null);assert.deepEqual(x.calls.filter(c=>c[0]==='raidReturn'),[['raidReturn','room']]);x.hook.unmount();
+ }
+});
 test('実useBattle Room準備キャンセルでstart/resolveなし',async()=>{const {hook,calls,errors}=setup();await act(async()=>{await hook.result.current.prepareRaidRoomBattle(briefing)});assert.equal(hook.result.current.battleState,'SETUP',JSON.stringify(errors));act(()=>{assert.equal(hook.result.current.cancelPreparedRaidBattle(),true)});assert.equal(hook.result.current.battleState,null);assert.equal(count(calls,'start_raid_room_battle_v1'),0);assert.equal(count(calls,'resolve-battle'),0);});
 test('実useBattle RoomconfirmはRoom start/resolve、旧開始/報酬なし',async()=>{const {hook,calls,errors}=setup();await act(async()=>{await hook.result.current.prepareRaidRoomBattle(briefing)});let ok;await act(async()=>{ok=await hook.result.current.confirmPreparedRaidBattle()});assert.equal(ok,true,JSON.stringify(errors));assert.equal(count(calls,'start_raid_room_battle_v1'),1);assert.equal(count(calls,'resolve-battle'),1);assert.equal(count(calls,'start_raid_battle'),0);assert.equal(count(calls,'get_current_raid_battle_rewards'),0);});
 test('実useBattle resolve失敗後は同Replay再試行、再開始なし',async()=>{const {hook,calls,errors}=setup(2);await act(async()=>{await hook.result.current.prepareRaidRoomBattle(briefing)});let ok;await act(async()=>{ok=await hook.result.current.confirmPreparedRaidBattle()});assert.equal(ok,false);await act(async()=>{ok=await hook.result.current.confirmPreparedRaidBattle()});assert.equal(ok,true,JSON.stringify(errors));assert.equal(count(calls,'start_raid_room_battle_v1'),1);assert.equal(count(calls,'resolve-battle'),3);assert.deepEqual([...new Set(calls.filter(c=>c[0]==='resolve-battle').map(c=>c[1].body.replaySessionId))],['replay']);});
@@ -80,4 +124,18 @@ test('互換table不在でもRoom RESULT確認後にackし、失敗時は結果�
  assert.equal(count(x.calls,'raidReturn'),0); client.rpc=originalRpc;
  await act(async()=>{await x.hook.result.current.completeBattleResult()});assert.equal(x.hook.result.current.battleState,null);assert.equal(window.localStorage.length,0);assert.equal(count(x.calls,'start_raid_room_battle_v1'),1);assert.equal(count(x.calls,'resolve-battle'),1);
  assert.deepEqual(x.calls.filter(c=>c[0]==='raidReturn'),[['raidReturn','room']]);
+});
+
+test('resolved saved result avoids another read',async()=>{
+ const x=setup(),client=(globalThis as unknown as {__raidClient:{functions:{invoke:(...args:unknown[])=>Promise<{data:Record<string,unknown>}>}}}).__raidClient,invoke=client.functions.invoke;
+ client.functions.invoke=async (...args:unknown[])=>{const response=await invoke(...args);response.data={...response.data,mode:'RAID',raidInstanceId:'instance',raidVariantId:'RAID_SHIBUYA_V1',baseId:'shibuya'};return response};
+ supplyReplayBackground(x,Error('must not read'));
+ await act(async()=>{await x.hook.result.current.prepareRaidRoomBattle(briefing,{backgroundPath:'/bg/bg_street_yokohama.jpg'})});await act(async()=>{assert.equal(await x.hook.result.current.confirmPreparedRaidBattle(),true)});
+ assert.equal(x.hook.result.current.battlePresentationContext?.backgroundPath,'/bg/bg_street_shibuya.jpg');assert.equal(count(x.calls,'read:replay-background'),0);
+ const background=await loadRaidReplayBackground(()=>{throw Error('must not read')},{replayId:'replay',roomId:'room',userId:'user',sourceReferenceId:'instance'},null,{mode:'RAID',roomId:'room',raidInstanceId:'instance',raidVariantId:'UNKNOWN',baseId:'shibuya'});
+ assert.equal(background.backgroundPath,RAID_REPLAY_NEUTRAL_BACKGROUND);
+});
+test('unresponsive background read uses neutral after deadline',async()=>{
+ const background=await loadRaidReplayBackground(()=>new Promise(()=>{}),{replayId:'replay',roomId:'room',userId:'user',sourceReferenceId:'instance'});
+ assert.equal(background.backgroundPath,RAID_REPLAY_NEUTRAL_BACKGROUND);
 });

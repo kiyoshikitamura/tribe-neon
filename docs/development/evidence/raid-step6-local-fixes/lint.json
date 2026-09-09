@@ -1,0 +1,143 @@
+{
+  "files": 19,
+  "errors": 0,
+  "warnings": 335,
+  "baselineWarnings": 336,
+  "added": 0,
+  "comparison": "rule/message/source-line multiset against 648a513; shifted line numbers ignored",
+  "results": [
+    {
+      "file": "scripts/verify_initial_equipment_state.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "src/app/components/raid/RaidRoomBrowser.tsx",
+      "errors": 0,
+      "warnings": 1,
+      "baselineWarnings": 1,
+      "added": []
+    },
+    {
+      "file": "src/app/context/GameContext.tsx",
+      "errors": 0,
+      "warnings": 177,
+      "baselineWarnings": 178,
+      "added": []
+    },
+    {
+      "file": "src/domain/raidRoomClient.ts",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "src/domain/raidRoomRpcTransport.ts",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "src/hooks/useBattle.ts",
+      "errors": 0,
+      "warnings": 118,
+      "baselineWarnings": 118,
+      "added": []
+    },
+    {
+      "file": "tests/raid-room/browser.test.tsx",
+      "errors": 0,
+      "warnings": 5,
+      "baselineWarnings": 5,
+      "added": []
+    },
+    {
+      "file": "tests/raid-room/use-battle-room.test.tsx",
+      "errors": 0,
+      "warnings": 34,
+      "baselineWarnings": 34,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/a-visual.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/b-background-visual.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/c-authority-test.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/c-equipment-vertical.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/parent-collect.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/parent-lint.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/parent-regression.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "scripts/raid-step6-local-fixes/parent-typecheck.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "src/domain/presentation/raidReplayBackground.ts",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "src/domain/raidRoomJoinPresentation.ts",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    },
+    {
+      "file": "tests/raid-room/requirement-presentation.test.mjs",
+      "errors": 0,
+      "warnings": 0,
+      "baselineWarnings": 0,
+      "added": []
+    }
+  ]
+}

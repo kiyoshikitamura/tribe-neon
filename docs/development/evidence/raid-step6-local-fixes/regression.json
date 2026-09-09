@@ -1,0 +1,64 @@
+{
+  "localOnly": true,
+  "results": [
+    {
+      "name": "raid-errors",
+      "args": [
+        "--experimental-strip-types",
+        "--test",
+        "tests/raid-room/requirement-presentation.test.mjs",
+        "tests/raid-room/client.test.mjs",
+        "tests/raid-room/rpc-transport.test.mjs",
+        "tests/raid-room/power-gate.test.mjs"
+      ],
+      "exitCode": 0,
+      "pass": 54,
+      "fail": 0
+    },
+    {
+      "name": "raid-browser",
+      "args": [
+        "tests/raid-room/run-browser-tests.mjs"
+      ],
+      "exitCode": 0,
+      "pass": 32,
+      "fail": 0
+    },
+    {
+      "name": "raid-replay",
+      "args": [
+        "tests/raid-room/run-use-battle-room-tests.mjs"
+      ],
+      "exitCode": 0,
+      "pass": 27,
+      "fail": 0
+    },
+    {
+      "name": "equipment-projection",
+      "args": [
+        "scripts/verify_initial_equipment_state.mjs"
+      ],
+      "exitCode": 0,
+      "pass": 8,
+      "fail": 0
+    },
+    {
+      "name": "equipment-sql",
+      "args": [
+        "scripts/raid-step6-local-fixes/c-authority-test.mjs"
+      ],
+      "exitCode": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "equipment-vertical",
+      "args": [
+        "scripts/raid-step6-local-fixes/c-equipment-vertical.mjs"
+      ],
+      "exitCode": 0,
+      "pass": 0,
+      "fail": 0
+    }
+  ]
+}
