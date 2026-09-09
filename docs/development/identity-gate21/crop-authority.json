@@ -1,0 +1,602 @@
+[
+  {
+    "id": "char_go_01",
+    "name": "ゴウ",
+    "source": "/characters/go_transparent_asset.png",
+    "scale": 2.05,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_kengo_01",
+    "name": "ケンゴ",
+    "source": "/characters/kengo_transparent_asset.png",
+    "scale": 2.05,
+    "x": 51,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_koharu_01",
+    "name": "コハル",
+    "source": "/characters/koharu_transparent_asset.png",
+    "scale": 2.05,
+    "x": 49,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_reiji_01",
+    "name": "レイジ",
+    "source": "/characters/reiji_transparent_asset.png",
+    "scale": 2.15,
+    "x": 52,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_ageha_01",
+    "name": "アゲハ",
+    "source": "/characters/ageha_transparent_asset.png",
+    "scale": 2,
+    "x": 48,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_leo_01",
+    "name": "レオ",
+    "source": "/characters/leo_transparent_asset.png",
+    "scale": 2.05,
+    "x": 54,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_karen_01",
+    "name": "カレン",
+    "source": "/characters/karen_transparent_asset.png",
+    "scale": 2.05,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_miyabi_01",
+    "name": "ミヤビ",
+    "source": "/characters/miyabi_transparent_asset.png",
+    "scale": 2.05,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_kaede_01",
+    "name": "カエデ",
+    "source": "/characters/kaede_transparent_asset.png",
+    "scale": 2.05,
+    "x": 49,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_mio_01",
+    "name": "ミオ",
+    "source": "/characters/mio_transparent_asset.png",
+    "scale": 2.05,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_tetsu_01",
+    "name": "テツ",
+    "source": "/characters/tetsu_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_takuro_01",
+    "name": "タクロウ",
+    "source": "/characters/takuro_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_lucas_01",
+    "name": "ルーカス",
+    "source": "/characters/lucas_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_leon_01",
+    "name": "レオン",
+    "source": "/characters/leon_transparent_asset.png",
+    "scale": 2.05,
+    "x": 54,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_takeshi_01",
+    "name": "タケシ",
+    "source": "/characters/takeshi_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_genji_01",
+    "name": "ゲンジ",
+    "source": "/characters/genji_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_riki_01",
+    "name": "リキ",
+    "source": "/characters/riki_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_long_01",
+    "name": "ロン",
+    "source": "/characters/long_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_sora_01",
+    "name": "ソラ",
+    "source": "/characters/sora_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_reina_01",
+    "name": "レイナ",
+    "source": "/characters/reina_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_noa_01",
+    "name": "ノア",
+    "source": "/characters/noa_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_taiga_01",
+    "name": "タイガ",
+    "source": "/characters/taiga_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_alice_01",
+    "name": "アリス",
+    "source": "/characters/alice_transparent_asset.png",
+    "scale": 2.15,
+    "x": 47,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_rui_01",
+    "name": "ルイ",
+    "source": "/characters/rui_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_maya_01",
+    "name": "マヤ",
+    "source": "/characters/maya_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_seiya_01",
+    "name": "セイヤ",
+    "source": "/characters/seiya_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_sakura_01",
+    "name": "サクラ",
+    "source": "/characters/sakura_transparent_asset.png",
+    "scale": 2.15,
+    "x": 52,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_martina_01",
+    "name": "マルティナ",
+    "source": "/characters/martina_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_kageyama_01",
+    "name": "カゲヤマ",
+    "source": "/characters/kageyama_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_cecile_01",
+    "name": "セシル",
+    "source": "/characters/cecile_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_chang_01",
+    "name": "チャン",
+    "source": "/characters/chang_transparent_asset.png",
+    "scale": 2.15,
+    "x": 51,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_daimon_01",
+    "name": "ダイモン",
+    "source": "/characters/daimon_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_mark_01",
+    "name": "マーク",
+    "source": "/characters/mark_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_yuji_01",
+    "name": "ユウジ",
+    "source": "/characters/yuuji_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_joe_01",
+    "name": "ジョー",
+    "source": "/characters/joe_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_ren_male_01",
+    "name": "カズヤ",
+    "source": "/characters/ren_male_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_shin_01",
+    "name": "シン",
+    "source": "/characters/shin_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_yuki_01",
+    "name": "ユウキ",
+    "source": "/characters/yuki_transparent_asset.png",
+    "scale": 2.15,
+    "x": 49,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_jihoon_01",
+    "name": "ジフン",
+    "source": "/characters/jihoon_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_kaito_01",
+    "name": "カイト",
+    "source": "/characters/kaito_transparent_asset.png",
+    "scale": 2.15,
+    "x": 51,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_minami_01",
+    "name": "ミナミ",
+    "source": "/characters/minami_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_yukina_01",
+    "name": "ユキナ",
+    "source": "/characters/yukina_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_aoi_01",
+    "name": "アオイ",
+    "source": "/characters/aoi_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_mei_01",
+    "name": "メイ",
+    "source": "/characters/mei_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_ren_01",
+    "name": "レン",
+    "source": "/characters/ren_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_serika_01",
+    "name": "セリカ",
+    "source": "/characters/serika_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_makoto_01",
+    "name": "マコト",
+    "source": "/characters/makoto_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_momoko_01",
+    "name": "モモコ",
+    "source": "/characters/momoko_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_rin_01",
+    "name": "リン",
+    "source": "/characters/rin_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_shion_01",
+    "name": "シオン",
+    "source": "/characters/shion_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_gou_01",
+    "name": "ダイスケ",
+    "source": "/characters/gou_transparent_asset.png",
+    "scale": 2.05,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_kenji_01",
+    "name": "ケンジ",
+    "source": "/characters/kenji_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_shun_01",
+    "name": "シュン",
+    "source": "/characters/shun_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_tatsuya_01",
+    "name": "タツヤ",
+    "source": "/characters/tatsuya_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_naoto_01",
+    "name": "ナオト",
+    "source": "/characters/naoto_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_sawat_01",
+    "name": "サワット",
+    "source": "/characters/sawat_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_masato_01",
+    "name": "マサト",
+    "source": "/characters/masato_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_yoshihiko_01",
+    "name": "ヨシヒコ",
+    "source": "/characters/yoshihiko_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_souta_01",
+    "name": "ソウタ",
+    "source": "/characters/souta_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  },
+  {
+    "id": "char_tomoya_01",
+    "name": "トモヤ",
+    "source": "/characters/tomoya_transparent_asset.png",
+    "scale": 2.15,
+    "x": 50,
+    "y": 0,
+    "originY": 0,
+    "authority": "existing thumbnail metadata; common avatar top anchor"
+  }
+]

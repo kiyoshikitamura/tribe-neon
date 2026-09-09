@@ -6,6 +6,7 @@ import FullScreenPanel from "./ui/FullScreenPanel";
 import SubTabNav from "./ui/SubTabNav";
 import OutlawButton from "./ui/OutlawButton";
 import UserIdentityRow from "./profile/UserIdentityRow";
+import { supabase } from "@/utils/supabase";
 import { buildDirectMessageConversations } from "../context/hooks/directMessageConversations";
 import "./TribeChatModal.css";
 
@@ -41,6 +42,24 @@ export default function TribeChatModal() {
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const safeDirectMessages = directMessages || [];
   const safeGuildChats = guildChats || [];
+  const [chatProfiles, setChatProfiles] = useState<Record<string, any>>({});
+  const chatActorKey = showTribeChatPanel && chatChannel === "GLOBAL"
+    ? [...new Set(safeGuildChats.map((msg: any) => msg.user_id || msg.author_id).filter(Boolean))].sort().join("|") : "";
+  useEffect(() => {
+    let active = true;
+    setChatProfiles({});
+    if (chatActorKey && session?.user?.id) void (async () => {
+      const ids = chatActorKey.split("|");
+      const profiles: Record<string, any> = {};
+      for (let offset = 0; offset < ids.length; offset += 100) {
+        const { data, error } = await supabase.rpc("get_public_profiles", { p_user_ids: ids.slice(offset, offset + 100) });
+        if (!active) return;
+        if (!error) for (const profile of data || []) profiles[profile.user_id || profile.id] = profile;
+      }
+      if (active) setChatProfiles(profiles);
+    })();
+    return () => { active = false; };
+  }, [chatActorKey, session?.user?.id]);
   const rescueCards = useRaidRescueCards(safeGuildChats.map((msg: { raid_rescue_id?: string }) => msg.raid_rescue_id), showTribeChatPanel && chatChannel !== "DM");
   const dmConversations = buildDirectMessageConversations(
     safeDirectMessages,
@@ -221,7 +240,8 @@ export default function TribeChatModal() {
               safeGuildChats.map((msg: any, idx: number) => {
                 const isSelf = msg.user_id === session?.user?.id;
                 const member = guildMembersList?.find((entry: any) => entry.user_id === (msg.user_id || msg.author_id));
-                const leaderCharacterId = member?.users?.favorite_character_id || null;
+                const identity = chatChannel === "GLOBAL" ? chatProfiles[msg.user_id || msg.author_id] : member?.users;
+                const leaderCharacterId = identity?.favorite_character_id || null;
                 const timeStr = msg?.created_at
                   ? new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                   : "";
@@ -229,8 +249,8 @@ export default function TribeChatModal() {
                   <div key={idx} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
                     <div className="tribe-msg-header">
                       <div className="tribe-msg-identity"><UserIdentityRow
-                        userName={member?.users?.username || msg.author_name || "ユーザー"}
-                        guildName={userGuild?.name || null}
+                        userName={identity?.username || msg.author_name || "ユーザー"}
+                        guildName={chatChannel === "GLOBAL" ? identity?.guild_name || null : userGuild?.name || null}
                         leaderCharacterId={leaderCharacterId}
                         onOpen={msg.user_id ? () => fetchPlayerDetail(msg.user_id) : undefined}
                         variant="compact"

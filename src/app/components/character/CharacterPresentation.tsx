@@ -7,7 +7,7 @@ import { getRarityBadgeAsset, getRarityFrameAsset, type RarityFrameKind } from "
 import { getAttributeBadgeAsset, getAttributeLabel } from "@/utils/attributeAssets";
 import { useScreenReadiness } from "../../hooks/useScreenReadiness";
 
-export type CharacterPresentationVariant = "portrait" | "dialogue" | "dialogue-bust" | "reveal" | "quest" | "battle-leader" | "card" | "gacha-result-compact" | "thumbnail" | "full-body" | "home-hero" | "battle" | "icon";
+export type CharacterPresentationVariant = "portrait" | "dialogue" | "dialogue-bust" | "reveal" | "quest" | "battle-leader" | "card" | "gacha-result-compact" | "thumbnail" | "full-body" | "home-hero" | "battle" | "icon" | "user-avatar";
 
 type Props = {
   src?: string;
