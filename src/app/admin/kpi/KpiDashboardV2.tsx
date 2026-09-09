@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import KpiDailyFunnel from "./KpiDailyFunnel";
 
 type Status = "PASS" | "FAIL" | "NOT_READY" | "UNAVAILABLE";
 type Metric = { metric_key: string; numerator: number | null; denominator: number | null; value: number | null; target: number | null; status: Status; coverage?: unknown; observation_status?: string; as_of?: string; reason?: string | null };
@@ -38,16 +39,6 @@ function MetricCard({ label, metric, definition, format = "percent" }: { label: 
 }
 function Section({ id, eyebrow, title, children }: { id?: string; eyebrow: string; title: string; children: React.ReactNode }) {
   return <section id={id} className="v2-section"><header><span>{eyebrow}</span><h2>{title}</h2></header>{children}</section>;
-}
-
-function DailyActualSummary({ row }: { row?: any }) {
-  const actual = (label: string, metric?: any, detail?: React.ReactNode) => <article><span>{label}</span><strong className="actual-pair">{metric?.numerator == null || metric?.denominator == null || metric.denominator === 0 ? "—" : `${n(metric.numerator)} / ${n(metric.denominator)}人`}</strong><b className="actual-rate">{pct(metric?.value)}</b>{detail}<small className="actual-authority">計測方式：{metric?.authority_label || (metric?.authority === "canonical" ? "Canonical" : metric?.authority === "membership_periods" ? "Guild Membership" : metric?.authority?.includes("legacy") ? "旧計測" : "—")}</small></article>;
-  return <section className="v2-section daily-actual-summary"><header><span>DAILY ACTUALS</span><h2>日次実数</h2></header><div className="v2-stat-grid">
-    <article><span>新規ユーザー</span><strong className="actual-pair">{row ? `${n(row.new_users)}人` : "—"}</strong><small className="actual-authority">計測方式：kpi_subjects</small></article>
-    {actual("チュートリアル突破", row?.tutorial)}
-    {actual("ギルド設立・加入", row?.guild, row?.guild?.create != null && row?.guild?.join != null ? <small>設立 {n(row.guild.create)}人 · 加入 {n(row.guild.join)}人</small> : null)}
-    {actual("ギルドチャット", row?.chat)}
-  </div></section>;
 }
 
 export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
@@ -102,14 +93,13 @@ export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
     {errors.length > 0 && <div className="v2-alert" role="alert"><strong>一部Authorityを取得できません</strong><span>{errors.join(" / ")}</span><button type="button" onClick={() => void load()}>再試行</button></div>}
     {loading && !data && <div className="v2-loading" aria-live="polite"><span />Canonical KPIを読み込んでいます…</div>}
 
-    {fixedDate && <DailyActualSummary row={data?.daily?.rows?.find((row: any) => row.date === fixedDate)} />}
+    <KpiDailyFunnel row={data?.daily?.rows?.find((row: any) => row.date === (fixedDate || to))} />
 
     <Section eyebrow="01 / VALIDATION STATUS" title="Validation Status"><div className="v2-phase-grid">{phases.map((phase) => <article key={phase.label}><StatusBadge status={phase.status} /><h3>{phase.label}</h3><p>{phase.note}</p></article>)}</div></Section>
     <Section eyebrow="02 / CURRENT RELEASE GATE" title="Current Release Gate"><div className="v2-card-grid">
       <MetricCard label="Marketing" metric={marketingGateMetric} format="yen" definition="CPC ≤ ¥28.5 AND Clicks ≥ 350 / JST day" />
       <MetricCard label="Acquisition" metric={validation?.acquisition} definition="Game Start bound journey / Title Arrival journey" />
       <MetricCard label="Tutorial" metric={validation?.tutorial} definition="既存完了・MyPage到達の重複除外UU / Game Start UU" />
-      <MetricCard label="Activation" metric={validation?.guild_chat_activation} definition="Guild Chat activated subject / Guild Conversion subject" />
       <MetricCard label="Retention D1" metric={retentionSummary} definition="Latest 3 mature cohorts · UU weighted" />
       <MetricCard label="Community" metric={communityMetric} definition="Effective Active Guild ≥18 / 3 consecutive completed JST days" />
     </div></Section>
@@ -117,7 +107,7 @@ export default function KpiDashboardV2({ fixedDate }: { fixedDate?: string }) {
     <Section eyebrow="04 / ACQUISITION" title="Acquisition Funnel"><div className="v2-funnel">{(data?.acquisition?.steps || []).map((step: any, index: number, all: any[]) => { const first = all[0]?.journeys; const previous = all[index - 1]?.journeys; return <article key={step.event_type}><span>{index + 1}</span><div><h3>{labels[step.event_type]}</h3><strong>{n(step.journeys)}</strong><small>Prev {previous == null || previous === 0 ? "—" : pct(step.journeys / previous)} · Title {first == null || first === 0 ? "—" : pct(step.journeys / first)}</small></div></article>; })}</div>{data?.acquisition?.measurement_status === "NOT_MEASURED" && <p className="v2-measurement-note">計測開始前 / データ不足</p>}<p className="v2-definition">Primary Gate: bound Game Start journeys / TITLE_ARRIVED journeys ≥ 80%。X ClickはMarketing Authorityとして分離。</p></Section>
     <Section eyebrow="05 / TUTORIAL" title="Tutorial Funnel"><div className="v2-funnel">{(data?.tutorial?.steps || []).map((step: any, index: number) => <article key={step.fact_type} className={step.observation_status === "partial" ? "is-partial" : ""}><span>{index + 1}</span><div><h3>{labels[step.fact_type]}</h3><strong>{n(step.subjects)}</strong><small>{step.observation_status === "partial" ? "PARTIAL COVERAGE" : "Canonical Authority"}</small></div></article>)}</div><p className="v2-definition">Canonical completeはFIRST_MYPAGE_ACCESS_CONFIRMEDのみ。legacy COMPLETEはnumeratorに含みません。Gate 60% / Strong 70%。</p></Section>
     <Section eyebrow="06 / POST TUTORIAL" title="Post Tutorial Activation"><div className="v2-stat-grid">{(data?.postTutorial?.metrics || []).map((item: any) => <article key={item.key}><span>{item.label || item.key}</span><strong>{n(item.uu)} UU</strong><small>{item.key === "SKILL_NORMAL" || item.key === "EQUIP_NORMAL" ? item.key : item.observation_status === "unavailable" ? "AUTHORITY UNAVAILABLE" : "First use after tutorial"}</small></article>)}</div></Section>
-    <Section eyebrow="07 / GUILD" title="Guild Funnel"><div className="v2-guild-flow"><article><span>Tutorial Complete</span><strong>{n(data?.guild?.conversion?.denominator)}</strong></article><i>→</i><article><span>Guild Conversion</span><strong>{n(data?.guild?.conversion?.numerator)}</strong><small>CREATE {n(data?.guild?.create)} / JOIN {n(data?.guild?.join)}</small></article><i>→</i><article><span>Chat Activation</span><strong>{n(data?.guild?.chat_activation?.numerator)}</strong><small>{pct(data?.guild?.chat_activation?.value)} · PASS 30%</small></article></div></Section>
+    <Section eyebrow="07 / GUILD" title="Guild Funnel"><div className="v2-guild-flow"><article><span>Tutorial Complete</span><strong>{n(data?.guild?.conversion?.denominator)}</strong></article><i>→</i><article><span>Guild Conversion</span><strong>{n(data?.guild?.conversion?.numerator)}</strong><small>CREATE {n(data?.guild?.create)} / JOIN {n(data?.guild?.join)}</small></article></div></Section>
     <Section eyebrow="08 / RETENTION" title="JST Classic Retention"><div className="v2-retention-scroll"><table className="v2-retention"><thead><tr><th>Cohort Date</th><th>Game Start UU</th>{[1,2,3,4,5].map((d) => <th key={d}>D{d}<small>{[38,30,26,23,21][d-1]}%</small></th>)}</tr></thead><tbody>{(data?.retention?.cohorts || []).map((cohort: any) => <tr key={cohort.cohort_date}><td>{cohort.cohort_date}</td><td>{n(cohort.game_start_uu)}</td>{cohort.days.map((day: any) => <td key={day.day}>{day.observation_status === "incomplete" ? <><b>—</b><small>NOT READY</small></> : <><b>{pct(day.value)}</b><small>{n(day.numerator)} / {n(day.denominator)}</small></>}</td>)}</tr>)}</tbody></table></div>{!data?.retention?.cohorts?.length && <p className="v2-empty">対象cohortがありません。</p>}<h3>Formal Open · latest 3 mature cohorts (UU weighted)</h3><div className="v2-stat-grid">{[1,2,3,4,5].map((day) => { const item = formalRetention[`d${day}`]; return <article key={day}><span>D{day} weighted</span><strong>{pct(item?.value)}</strong><StatusBadge status={item?.status} /><small>{n(item?.numerator)} / {n(item?.denominator)} · mature {n(item?.mature_cohort_count)} · {item?.cohorts_used?.join(", ") || "—"}</small></article>; })}</div><p className="v2-definition">Identity: subject_id（AUTH_LINK_SAME_SUBJECTは継続。ACCOUNT_SWITCH_TO_EXISTINGはmergeせず、diagnostic {n(data?.retention?.account_switch_diagnostic_count)}件）</p></Section>
     <Section eyebrow="09 / COMMUNITY" title="Community"><div className="v2-stat-grid">{[["Guild Active UU", latestCommunity?.guild_active_uu], ["Active Guild", latestCommunity?.active_guild_count], ["Guild Chat Active UU", latestCommunity?.guild_chat_active_uu], ["Chat messages", latestCommunity?.guild_chat_message_count], ["Effective Active Guild", latestCommunity?.effective_active_guild_count]].map(([label, value]) => <article key={String(label)}><span>{label}</span><strong>{n(value)}</strong><small>{label === "Effective Active Guild" ? "Target 18" : latestCommunity?.date || "NOT READY"}</small></article>)}</div><div className="v2-readiness"><StatusBadge status={communityContinuity?.status} /><div><h3>Effective Active Guild continuity</h3><p>Target 18 / 3 consecutive completed JST days · current {n(communityContinuity?.current_consecutive_days)} days</p></div></div></Section>
     <Section eyebrow="10 / FORMAL OPEN" title="Formal Open Readiness"><div className="v2-readiness"><StatusBadge status={formalOpen?.status || "NOT_READY"} /><div><h3>{formalOpen?.status === "GO" ? "GO — Decision Support" : formalOpen?.status === "FAIL" ? "Threshold not met" : "Observation not ready"}</h3><p>{formalOpen?.reasons?.length ? formalOpen.reasons.join(" / ") : "All canonical gates passed"}。DashboardからPayment/GvG等を操作しません。</p></div></div></Section>

@@ -174,7 +174,8 @@
     "verify:preopen-reward-addendum": "node scripts/verify_preopen_reward_addendum_contract.mjs",
     "audit:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs --allow-known-blockers",
     "verify:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs",
-    "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs"
+    "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs",
+    "verify:kpi-engagement": "node scripts/verify_kpi_engagement.mjs && node scripts/verify_kpi_engagement_ui.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
@@ -184,6 +185,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "@playwright/test": "^1.62.1",
     "@types/node": "^20",
     "@types/react": "^19",

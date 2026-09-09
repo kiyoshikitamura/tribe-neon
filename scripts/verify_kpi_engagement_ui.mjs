@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import ts from 'typescript';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+const require=createRequire(import.meta.url),mod={exports:{}};
+const source=readFileSync('src/app/admin/kpi/KpiDailyFunnel.tsx','utf8');
+const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+new Function('require','module','exports',js)(require,mod,mod.exports);
+const metric=(n,d)=>({numerator:n,denominator:d,value:d?n/d:null,status:d?'OBSERVED':'NOT_READY'});
+const row={date:'2026-09-09',new_users:100,active_users:100,tutorial:metric(60,100),guild:metric(40,60),raid_point_consumption:metric(32,100),social_active:metric(18,40)};
+const html=renderToStaticMarkup(React.createElement(mod.exports.default,{row}));
+const labels=['Tutorial突破率','Raid Point消化率','Guild加入率','Social Active率'];
+assert.deepEqual(labels.map(x=>html.indexOf(x)),labels.map(x=>html.indexOf(x)).sort((a,b)=>a-b));
+assert.ok(labels.every(x=>html.includes(x)));assert.match(html,/32 \/ 100/);assert.match(html,/32\.0%/);assert.match(html,/18 \/ 40/);assert.match(html,/45\.0%/);
+const empty=renderToStaticMarkup(React.createElement(mod.exports.default,{row:{...row,raid_point_consumption:metric(0,0),social_active:undefined}}));
+assert.doesNotMatch(empty,/NaN|Infinity/);assert.match(empty,/対象なし/);assert.match(empty,/未集計/);
+for(const f of ['KpiDailyOverview.tsx','KpiDashboardV2.tsx']) {const text=readFileSync('src/app/admin/kpi/'+f,'utf8');assert.doesNotMatch(text,/Guild Chat Activation|label="Activation"|row\??\.chat|<span>Chat Activation/);assert.match(text,/KpiDailyFunnel/);}
+const css=readFileSync('src/app/admin/kpi/kpi-dashboard.css','utf8');
+mkdirSync('test-results',{recursive:true});
+writeFileSync('test-results/kpi-engagement-ui.html','<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KPI実装表示確認（fixture）</title><style>body{margin:0;background:#0a111a;font-family:Arial,sans-serif;padding:24px}'+css+'</style><main class="kpi-shell">'+html+'</main></html>');
+console.log('PASS rendered UI: card order / numerator denominator percentage / zero missing / old Activation hidden');

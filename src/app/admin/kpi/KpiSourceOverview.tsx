@@ -34,7 +34,7 @@ export default function KpiSourceOverview({periods}:{periods:Array<{date:string;
       </tbody></table></div>
       <p>Game Start率：Landing由来Game Start / Journey。Tutorial突破率：完了 / Game Start。Guild加入率：Canonical JOIN / Game Start。D1・D3：成熟Game Start cohortの活動率。</p>
       <p>Unknownのうち未確定 {coverage?.unbound}人、確定unknown {data.sources.unknown.coverage.canonical_unknown}人。旧分類 {coverage?.legacy}人、登録後初観測 {coverage?.late}人。</p>
-      <p>Guild Joinは既存Canonical JOIN factを使用し、通常一覧のmembership fallbackとは区別します。Raid 50%消化UU：—（未計測）。</p>
+      <p>Guild Joinは既存Canonical JOIN factを使用し、通常一覧のmembership fallbackとは区別します。</p>
     </>}
   </section>;
 }

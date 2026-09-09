@@ -7,6 +7,7 @@ export type OverviewRow = {
   date: string; new_users: number | null; tutorial: OverviewMetric;
   guild: OverviewMetric & { create?: number | null; join?: number | null };
   chat: OverviewMetric; retention: Array<OverviewMetric & { day: number }>;
+  social_active?: OverviewMetric; raid_point_consumption?: OverviewMetric;
   from?: string; to?: string; partial?: boolean;
   active_users?: number | null; total_registered?: number | null;
   active_guilds?: number | null; effective_active_guilds?: number | null;
