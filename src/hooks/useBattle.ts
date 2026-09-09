@@ -1,4 +1,6 @@
 "use client";
+
+import { projectRaidResultReceipt, type RaidResultReceipt } from '@/domain/raidResultPresentation';
 import type { RaidRoomBriefing } from "../domain/raidRoomClient";
 import { readRaidRoomPending, saveRaidRoomPending, clearRaidRoomPending, type RaidRoomBattlePayload } from "../domain/raidRoomBattlePending";
 import { createRaidRoomBattleAttempt } from "../domain/raidRoomBattleAttempt";
@@ -112,6 +114,7 @@ export type BattlePresentationContext = {
   }>;
 };
 export type BattleModeResultDetail = {
+  raidReceipt?: RaidResultReceipt;
   resultLabel?: string;
   stats?: Array<{ label: string; value: string }>;
   reward?: string;
@@ -3236,6 +3239,7 @@ export function useBattle(options: UseBattleOptions) {
       if (hasOfficialRaidResult && raidResultTemp) {
         await syncBootstrapData(session.user.id);
         setBattleModeResultDetail({
+          raidReceipt: projectRaidResultReceipt(raidResultTemp),
           stats: [
             ...(raidResultTemp.roomId ? [
               { label: "今回の個人ダメージ", value: Number(raidResultTemp.rawDamage || 0).toLocaleString() },
@@ -3244,7 +3248,7 @@ export function useBattle(options: UseBattleOptions) {
             { label: "累計貢献ダメージ", value: Number(raidResultTemp.personalContribution || 0).toLocaleString() },
             { label: "ボス残りHP", value: Number(raidResultTemp.remainingBossHp || 0).toLocaleString() },
           ],
-          reward: raidResultTemp.roomId ? "討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。" : raidResultTemp.rewardProjectionUnavailable
+          reward: raidResultTemp.roomId ? "討伐・救援報酬はレイドの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。" : raidResultTemp.rewardProjectionUnavailable
             ? "報酬はサーバーで確定済み"
             : Array.isArray(raidResultTemp.grantedRewards) && raidResultTemp.grantedRewards.length > 0
               ? "獲得報酬"

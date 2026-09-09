@@ -4,6 +4,7 @@ import type { RaidRoomTransport } from './raidRoomClient';
 export interface RaidRoomActivityTracker {
   getSnapshot(): number;
   subscribe(listener: () => void): () => void;
+  observePage<T extends { entries: readonly { room: RaidRoomDto }[] }>(load: () => Promise<T>): Promise<T>;
   observeTransport(transport: RaidRoomTransport): RaidRoomTransport;
 }
 
@@ -34,6 +35,14 @@ export function createRaidRoomActivityTracker(isCurrent = () => true, now = () =
   return {
     getSnapshot: () => activeUntil,
     subscribe(listener) { listeners.add(listener); return () => { listeners.delete(listener); }; },
+    async observePage(load) {
+      const revision = ++sequence;
+      const result = await load();
+      // A page is a partial observation: absence cannot prove a room has ended.
+      // Preserve other pages/difficulties; newer details and account changes win.
+      result.entries.forEach(entry => acceptRoom(entry.room, revision));
+      return result;
+    },
     observeTransport(transport) {
       return {
         ...transport,

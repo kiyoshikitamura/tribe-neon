@@ -1,6 +1,7 @@
 "use client";
 
 import RaidRescueLink from './raid/RaidRescueLink';
+import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import React from "react";
 import { useGame } from "../context/GameContext";
 import "./PCLeftChat.css";
@@ -21,6 +22,7 @@ export default function PCLeftChat() {
     playCyberSe
   } = useGame();
 
+  const rescueCards = useRaidRescueCards((guildChats || []).map((msg: { raid_rescue_id?: string }) => msg.raid_rescue_id), true);
   const chatMessagesEndRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -77,7 +79,7 @@ export default function PCLeftChat() {
                 <span className={`pc-msg-sender ${isSelf ? "self" : "other"}`}>
                   [{msg.author_name}]:
                 </span>
-                <span className="pc-msg-text">{msg.content}<RaidRescueLink rescueId={msg.raid_rescue_id} /></span>
+                <div className="pc-msg-text">{msg.content}<RaidRescueLink rescueId={msg.raid_rescue_id} entry={rescueCards.byId.get(msg.raid_rescue_id)} status={rescueCards.statusFor(msg.raid_rescue_id)} source={chatChannel === "GUILD" ? "guild_chat" : "activity"} /></div>
               </div>
             );
           })

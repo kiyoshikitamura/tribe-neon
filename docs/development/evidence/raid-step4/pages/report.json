@@ -1,0 +1,188 @@
+{
+  "report": [
+    {
+      "view": "selection",
+      "width": 375,
+      "height": 844,
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "view": "enemy",
+      "width": 375,
+      "height": 844,
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "view": "list",
+      "width": 375,
+      "height": 844,
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "view": "rescue",
+      "width": 375,
+      "height": 844,
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "view": "result",
+      "width": 375,
+      "height": 844,
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "view": "selection",
+      "width": 390,
+      "height": 844,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "enemy",
+      "width": 390,
+      "height": 844,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "list",
+      "width": 390,
+      "height": 844,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "rescue",
+      "width": 390,
+      "height": 844,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "result",
+      "width": 390,
+      "height": 844,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "selection",
+      "width": 430,
+      "height": 844,
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "view": "enemy",
+      "width": 430,
+      "height": 844,
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "view": "list",
+      "width": 430,
+      "height": 844,
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "view": "rescue",
+      "width": 430,
+      "height": 844,
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "view": "result",
+      "width": 430,
+      "height": 844,
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "view": "selection",
+      "width": 390,
+      "height": 600,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "enemy",
+      "width": 390,
+      "height": 600,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "list",
+      "width": 390,
+      "height": 600,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "rescue",
+      "width": 390,
+      "height": 600,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "view": "result",
+      "width": 390,
+      "height": 600,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    }
+  ],
+  "errors": [],
+  "selectDoesNotCreate": "PASS",
+  "rescueReference": "PASS",
+  "personalDefeatVsRoomState": "PASS"
+}

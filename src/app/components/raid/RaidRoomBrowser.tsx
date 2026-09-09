@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, useSyncExternalStore } from "react";
-import { RAID_DIFFICULTIES, type RaidDifficultyId, type RaidObserved, type RaidPlayerSummary, type RaidRoomDto } from "../../../domain/raidRoom";
-import { getRaidDifficultyLabel, getRaidEligibilityPresentation, getRaidParticipationRequirement, getRaidRecommendedPowerLabel } from "../../../domain/raidRoomPresentation";
+import React, { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import RaidEnemySelection from './RaidEnemySelection';
+import RaidRoomListCard from './RaidRoomListCard';
+import { useRaidPageResource } from './useRaidPageResource';
+import type { RaidListLoader, RaidEnemyLoader } from '../../../domain/raidPages';
+import { RAID_DIFFICULTIES, type RaidDifficultyId, type RaidRoomDto } from "../../../domain/raidRoom";
+import { getRaidEligibilityPresentation, getRaidParticipationRequirement, getRaidRecommendedPowerLabel } from "../../../domain/raidRoomPresentation";
 import { getRaidRoomLifecyclePresentation } from "../../../domain/raidRoomLifecyclePresentation";
 import type { RaidBattleReference, RaidRoomController, RaidRoomBriefing } from "../../../domain/raidRoomClient";
 import OutlawButton from "../ui/OutlawButton";
-import OutlawCard from "../ui/OutlawCard";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import RaidTop from "./RaidTop";
 import RaidRoomDetail from './RaidRoomDetail';
@@ -34,37 +37,13 @@ export interface RaidRoomBrowserProps {
   topData?: RaidTopData;
   onTopRefresh?: () => void;
   listRefreshRevision?: number;
-}
-
-const count = (value: RaidObserved<number>) => value.status === "available" ? value.value.toLocaleString("ja-JP") : "未確認";
-
-function Player({ player }: { player: RaidPlayerSummary }) {
-  return <span className="raid-room-player">
-    {player.leaderIconUrl.status === "available" && player.leaderIconUrl.value
-      ? <img src={player.leaderIconUrl.value} alt="" width={32} height={32} />
-      : <span className="raid-room-avatar-placeholder" aria-hidden="true" />}
-    <span>{player.name}</span>
-  </span>;
-}
-
-function RoomSummary({ room, now }: { room: RaidRoomDto; now: number | null }) {
-  const lifecycle = getRaidRoomLifecyclePresentation(room, now);
-  const hp = room.hp.status === "available" ? room.hp.value : null;
-  return <>
-    <div className="raid-room-row"><strong>{getRaidDifficultyLabel(room.difficultyId)}</strong><span>{lifecycle.stateLabel}</span></div>
-    <div className="raid-room-owner">主催者 {room.owner.status === "available" ? <Player player={room.owner.value} /> : "未確認"}</div>
-    <div>参加者 {count(room.participantCount)} / 20人</div>
-    <div>レイドHP {hp ? `${hp.current.toLocaleString("ja-JP")} / ${hp.max.toLocaleString("ja-JP")}` : "未確認"}</div>
-    {hp && hp.max > 0 && <progress className="raid-room-hp" aria-label="レイドHP" value={Math.max(0, hp.current)} max={hp.max} />}
-    <div className="raid-room-muted">{lifecycle.remainingLabel}</div>
-    <div className="raid-room-muted">期限 {room.expiresAt.status === "available" && Number.isFinite(Date.parse(room.expiresAt.value))
-      ? new Date(room.expiresAt.value).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) + " JST" : "未確認"}</div>
-  </>;
+  loadListPage?: RaidListLoader;
+  loadEnemyInfo?: RaidEnemyLoader;
 }
 
 function Spinner() { return <div className="raid-room-wait" role="status" aria-label="通信中"><span className="spinner" aria-hidden="true" /></div>; }
 
-export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue, renderRewards, topData, onTopRefresh, listRefreshRevision, loadDisplay, currentUserId, onOpenProfile, profileOpen }: RaidRoomBrowserProps) {
+export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingReady, setInteractionBlocking, resolveRewardName, renderRescue, renderRewards, topData, onTopRefresh, listRefreshRevision, loadDisplay, currentUserId, onOpenProfile, profileOpen, loadListPage, loadEnemyInfo }: RaidRoomBrowserProps) {
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot);
   // SSRとhydration初回は同じ未取得値。マウント後にだけ端末時計を参照する。
   const [now, setNow] = useState<number | null>(null);
@@ -78,24 +57,34 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
   const [difficulty, setDifficulty] = useState<RaidDifficultyId>("beginner");
   const [createOpen, setCreateOpen] = useState(false);
   const [browseOpen, setBrowseOpen] = useState(false);
-  const [topVariantId, setTopVariantId] = useState<string | null>(null);
+
   const [variantId, setVariantId] = useState("");
   const [dialog, setDialog] = useState<"participants" | "rewards" | null>(null);
   const [enemyOpen, setEnemyOpen] = useState(false);
+  const [infoVariant, setInfoVariant] = useState<string | null>(null);
+  const [pageOffset, setPageOffset] = useState(0);
+  const [pageRevision, setPageRevision] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [transitionError, setTransitionError] = useState<string | null>(null);
   const [battleReference, setBattleReference] = useState<RaidBattleReference | null>(null);
   const busy = snapshot.registering || snapshot.creating || snapshot.bossChoices.status === "loading" || snapshot.joining || transitioning || [snapshot.rooms, snapshot.room, snapshot.participants, snapshot.rewards, snapshot.briefing].some((entry) => entry.status === "loading");
   // 全体一覧は明示的に探す時だけ取得。トップや敵の確認だけでは全ページを走査しない。
   const listingVisible = !snapshot.selectedRoomId && (!topData || browseOpen) && !createOpen;
-  useEffect(() => { if (listingVisible) void controller.loadRooms(); }, [controller, listingVisible, listRefreshRevision]);
+  useEffect(() => { if (listingVisible && !loadListPage) void controller.loadRooms(); }, [controller, listingVisible, listRefreshRevision, loadListPage]);
   useEffect(() => { setInteractionBlocking(busy); return () => setInteractionBlocking(false); }, [busy, setInteractionBlocking]);
-  useEffect(() => { setDialog(null); setEnemyOpen(false); setTransitionError(null); setBattleReference(null); }, [snapshot.selectedRoomId]);
+  useEffect(() => { setDialog(null); setEnemyOpen(false); setInfoVariant(null); setTransitionError(null); setBattleReference(null); }, [snapshot.selectedRoomId]);
 
   const room = snapshot.room.status === "success" ? snapshot.room.data : null;
   const display = useRaidRoomDisplay(snapshot.selectedRoomId, room, currentUserId, loadDisplay);
   const displayParticipants = { ...snapshot.participants, data: snapshot.participants.data?.map(entry => ({ ...entry, player: withRaidLeader(entry.player, display.data) })) ?? null };
   const briefing = snapshot.briefing.status === 'success' ? snapshot.briefing.data : null;
+  const pageLoader = useCallback(() => loadListPage!(difficulty, pageOffset), [loadListPage, difficulty, pageOffset]);
+  const listPage = useRaidPageResource(listingVisible ? `${currentUserId}:${difficulty}:${pageOffset}:${pageRevision}:${listRefreshRevision}` : null, loadListPage ? pageLoader : undefined);
+  const activeVariant = infoVariant ?? (createOpen ? variantId : briefing?.raidVariantId) ?? '';
+  const infoDifficulty = createOpen ? difficulty : room?.difficultyId ?? difficulty;
+  const infoLoader = useCallback(() => loadEnemyInfo!(activeVariant, infoDifficulty), [loadEnemyInfo, activeVariant, infoDifficulty]);
+  const enemyInfo = useRaidPageResource((createOpen || enemyOpen) && activeVariant ? `${currentUserId}:${activeVariant}:${infoDifficulty}:${pageRevision}` : null, loadEnemyInfo ? infoLoader : undefined);
+  const refreshList = () => loadListPage ? setPageRevision(value => value + 1) : void controller.loadRooms();
   const eligibility = getRaidEligibilityPresentation(room?.serverEligibility);
   const lifecycle = room ? getRaidRoomLifecyclePresentation(room, now) : null;
   const joinLabel = lifecycle?.joinBlockLabel ?? eligibility.label;
@@ -121,7 +110,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
 
   const showTop = !!topData && !browseOpen && !snapshot.selectedRoomId;
   const returnToTop = async () => {
-    setBrowseOpen(false); setCreateOpen(false); setTopVariantId(null);
+    setBrowseOpen(false); setCreateOpen(false);
     await controller.selectRoom(null);
     onTopRefresh?.();
   };
@@ -130,51 +119,45 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       onOpenRoom={(roomId, rescueId) => { void controller.selectRoom(roomId, rescueId); }}
       onChooseEnemy={(enemy) => {
         if (!topData.canCreate || busy) return;
-        setVariantId(enemy.variantId); setTopVariantId(enemy.variantId);
+        setVariantId(enemy.variantId);
         controller.resetCreateRequest(); setBrowseOpen(true); setCreateOpen(true);
         void controller.loadBossChoices();
       }}
-      onBrowse={() => { setCreateOpen(false); setTopVariantId(null); setBrowseOpen(true); }}
+      onBrowse={() => { setCreateOpen(false);  setBrowseOpen(true); }}
       onRefresh={() => onTopRefresh?.()} /> : <>
     {!snapshot.selectedRoomId && <p className="raid-room-muted">開始から24時間、または撃破で終了します。</p>}
     {!snapshot.selectedRoomId ? <>
       {topData && <OutlawButton loadingLabel="" disabled={busy} onClick={() => void returnToTop()}>トップへ</OutlawButton>}
-      <div className="raid-room-tabs" role="tablist" aria-label="難易度">
-        {RAID_DIFFICULTIES.map((entry) => <OutlawButton loadingLabel="" key={entry.id} aria-label={entry.label} role="tab" aria-selected={difficulty === entry.id} disabled={busy} variant={difficulty === entry.id ? "primary" : "secondary"} onClick={() => { if (difficulty !== entry.id) { setDifficulty(entry.id); controller.resetCreateRequest(); } }}>{entry.label}</OutlawButton>)}
+      {!createOpen && <><div className="raid-room-tabs" role="tablist" aria-label="難易度">
+        {RAID_DIFFICULTIES.map((entry) => <OutlawButton loadingLabel="" key={entry.id} aria-label={entry.label} role="tab" aria-selected={difficulty === entry.id} disabled={busy} variant={difficulty === entry.id ? "primary" : "secondary"} onClick={() => { if (difficulty !== entry.id) { setDifficulty(entry.id); setPageOffset(0); controller.resetCreateRequest(); } }}>{entry.label}</OutlawButton>)}
       </div>
       <p className="raid-room-requirement">{getRaidParticipationRequirement(difficulty)}</p>
-      <p className="raid-room-muted">{getRaidRecommendedPowerLabel(difficulty)}</p>
-      {!createOpen && <OutlawButton loadingLabel="" disabled={busy} aria-label="更新" onClick={() => controller.loadRooms()}>更新</OutlawButton>}
-      {!createOpen && snapshot.canCreate && <OutlawButton loadingLabel="" disabled={busy} aria-label="挑む" onClick={async () => { setTopVariantId(null); setCreateOpen(true); await controller.loadBossChoices(); }}>挑む</OutlawButton>}
-      {createOpen && <OutlawCard>
-        <p>敵と難易度を確認してください。戦闘時のRP消費は別です。</p>
-        {snapshot.bossChoices.status === "loading" && <Spinner />}
-        {snapshot.bossChoices.status === "error" && <><p role="alert">ボス候補を取得できませんでした。</p><OutlawButton loadingLabel="" disabled={busy} aria-label="ボス候補を再取得" onClick={() => controller.loadBossChoices()}>再取得</OutlawButton></>}
-        {snapshot.bossChoices.status === "success" && <label className="raid-room-boss-choice">ボス
-          <select aria-label="ボス" disabled={busy} value={variantId} onChange={event => { setVariantId(event.target.value); controller.resetCreateRequest(); }}>
-            <option value="">選択してください</option>
-            {snapshot.bossChoices.data?.filter(boss => !topVariantId || boss.raidVariantId === topVariantId).map(boss => <option key={boss.raidVariantId} value={boss.raidVariantId}>{boss.name}</option>)}
-          </select>
-        </label>}
-        {snapshot.bossChoices.status === "success" && snapshot.bossChoices.data?.length === 0 && <p>挑戦できる敵はありません。</p>}
-        <OutlawButton loadingLabel="" aria-label="この敵に挑む" isLoading={snapshot.creating} disabled={busy || !snapshot.bossChoices.data?.some(boss => boss.raidVariantId === variantId)} onClick={async () => {
-          const created = await controller.createRoom(difficulty, variantId);
-          if (created) setCreateOpen(false);
-        }}>この敵に挑む</OutlawButton>
-        <OutlawButton loadingLabel="" aria-label="選択を閉じる" disabled={busy} onClick={() => { setCreateOpen(false); setTopVariantId(null); }}>閉じる</OutlawButton>
-        {snapshot.createError && <p role="alert">{snapshot.createError.replaceAll('Room', 'レイド')}</p>}
-      </OutlawCard>}
+      {getRaidParticipationRequirement(difficulty) !== getRaidRecommendedPowerLabel(difficulty) && <p className="raid-room-muted">{getRaidRecommendedPowerLabel(difficulty)}</p>}</>}
+      {!createOpen && <OutlawButton loadingLabel="" disabled={busy} aria-label="更新" onClick={refreshList}>更新</OutlawButton>}
+      {!createOpen && snapshot.canCreate && <OutlawButton loadingLabel="" disabled={busy} aria-label="挑む" onClick={async () => {  setCreateOpen(true); await controller.loadBossChoices(); }}>挑む</OutlawButton>}
+      {createOpen && <RaidEnemySelection choices={snapshot.bossChoices} selectedVariantId={variantId} difficultyId={difficulty}
+        onSelectVariant={id => { setVariantId(id); setInfoVariant(null); controller.resetCreateRequest(); }}
+        onSelectDifficulty={id => { setDifficulty(id); controller.resetCreateRequest(); }}
+        onConfirm={async () => { const created = await controller.createRoom(difficulty, variantId); if (created) setCreateOpen(false); }}
+        onCancel={() => { setCreateOpen(false); setInfoVariant(null); }} onRetry={() => void controller.loadBossChoices()}
+        onEnemyInfo={id => { setInfoVariant(id); setEnemyOpen(true); }} busy={busy} canConfirm={snapshot.canCreate} error={snapshot.createError}
+        skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data?.variantId === variantId ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }}
+        rewardPlan={{ ...enemyInfo, data: enemyInfo.data?.clearPlan ?? null }} resolveRewardName={resolveRewardName} />}
       {!createOpen && <>
-      {(snapshot.rooms.status === "loading") && <Spinner />}
-      {snapshot.rooms.status === "idle" && <p>レイド情報は未取得です。</p>}
-      {snapshot.rooms.status === "error" && <p role="alert">レイド一覧を取得できませんでした。更新して再度お試しください。</p>}
-      {snapshot.rooms.status === "success" && <div className="raid-room-list">
-        {snapshot.rooms.data?.filter((entry) => entry.difficultyId === difficulty).map((entry) => <OutlawCard key={entry.roomId}>
-          <RoomSummary room={entry} now={now} />
-          <OutlawButton loadingLabel="" fullWidth disabled={busy} aria-label="レイドを開く" onClick={() => controller.selectRoom(entry.roomId)}>レイドを開く</OutlawButton>
-        </OutlawCard>)}
-        {!snapshot.rooms.data?.some((entry) => entry.difficultyId === difficulty) && <p>この難易度のレイドはありません。</p>}
-      </div>}
+      {loadListPage ? <>
+        {listPage.status === 'loading' && <Spinner />}
+        {listPage.status === 'error' && <p role="alert">レイド一覧を取得できませんでした。更新して再度お試しください。</p>}
+        {listPage.status === 'success' && <div className="raid-room-list">{listPage.data?.entries.map(entry => <RaidRoomListCard key={entry.room.roomId} room={entry.room} now={now} enemy={entry.enemy} ownerGuild={entry.ownerGuild} membership={entry.membership} onOpen={id => void controller.selectRoom(id)} busy={busy} />)}
+          {!listPage.data?.entries.length && <p>この難易度のレイドはありません。</p>}</div>}
+        <div className="raid-room-row">{pageOffset > 0 && <OutlawButton loadingLabel="" onClick={() => setPageOffset(value => Math.max(0,value-20))}>前へ</OutlawButton>}
+          {listPage.data?.nextOffset != null && <OutlawButton loadingLabel="" onClick={() => setPageOffset(listPage.data!.nextOffset!)}>次へ</OutlawButton>}</div>
+      </> : <>
+        {snapshot.rooms.status === 'loading' && <Spinner />}
+        {snapshot.rooms.status === 'idle' && <p>レイド情報は未取得です。</p>}
+        {snapshot.rooms.status === 'error' && <p role="alert">レイド一覧を取得できませんでした。更新して再度お試しください。</p>}
+        {snapshot.rooms.status === 'success' && <div className="raid-room-list">{snapshot.rooms.data?.filter(entry => entry.difficultyId === difficulty).map(entry => <RaidRoomListCard key={entry.roomId} room={entry} now={now} onOpen={id => void controller.selectRoom(id)} busy={busy} />)}
+          {!snapshot.rooms.data?.some(entry => entry.difficultyId === difficulty) && <p>この難易度のレイドはありません。</p>}</div>}
+      </>}
       </>}
     </> : <>
       <div className="raid-room-row">
@@ -220,9 +203,10 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       participants={displayParticipants} rewards={snapshot.rewards} onClose={() => setDialog(null)} onRefresh={() => void controller.refreshRoom()}
       onOpenProfile={onOpenProfile} profileOpen={profileOpen} resolveRewardName={resolveRewardName}
       renderRewards={renderRewards ? (id, close) => renderRewards(id, close, display.data ?? undefined) : undefined} />
-    {enemyOpen && room && typeof document !== 'undefined' && createPortal(<div className="raid-room-dialogs">
+    {enemyOpen && typeof document !== 'undefined' && createPortal(<div className="raid-room-dialogs">
       <CanonicalDialog title="敵情報" onClose={() => setEnemyOpen(false)} actions={[{ label: '閉じる', onClick: () => setEnemyOpen(false) }]}>
-        {briefing?.raidVariantId ? <RaidEnemyRoster bossMasterId={briefing.raidVariantId} /> : <p>敵情報を取得できませんでした。戦況を更新してください。</p>}
+        {activeVariant ? <><RaidEnemyRoster bossMasterId={activeVariant} presentation="detail" skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }} />
+          {enemyInfo.status === 'loading' && <Spinner />}{enemyInfo.status === 'error' && <p role="alert">使用スキルを取得できませんでした。</p>}</> : <p>敵情報を取得できませんでした。戦況を更新してください。</p>}
       </CanonicalDialog>
     </div>, document.body)}
   </section>;

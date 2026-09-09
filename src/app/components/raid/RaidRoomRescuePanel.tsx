@@ -3,6 +3,8 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { RaidRoomRescueClient, RaidRoomRescueStatus } from '../../../domain/raidRoomRescue';
 import { clearRaidRoomRescuePending, readRaidRoomRescuePending, saveRaidRoomRescuePending } from '../../../domain/raidRoomRescuePending';
 import OutlawButton from '../ui/OutlawButton';
+import OutlawCard from '../ui/OutlawCard';
+import './RaidRoomRescuePanel.css';
 
 type Props = { client: RaidRoomRescueClient; roomId: string; userId?: string; disabled?: boolean; setInteractionBlocking: (value: boolean) => void };
 export default function RaidRoomRescuePanel(props: Props) {
@@ -66,20 +68,22 @@ function RescuePanel({ client, roomId, userId, disabled = false, setInteractionB
   useEffect(() => () => {
     if (ownsBlock.current) { ownsBlock.current = false; blocking.current(false); }
   }, []);
-  return <div aria-label="救援">
+  return <OutlawCard className="raid-rescue-panel"><section aria-label="救援"><header className="raid-rescue-panel__heading"><img src="/ui/icon_friends.png" alt="" /><h3>{status?.isOwner ? '仲間に救援を求める' : '救援状況'}</h3></header>
     {busy && <span className="spinner" role="status" aria-label="通信中" />}
     {status?.isOwner && <>
-      <p>救援依頼：全体 {status.activityCount} / 3 ・ ギルド {status.guildCount} / 3</p>
-      <p className="raid-room-muted">全体アクティビティと所属ギルドへ送信します。未所属の場合は全体のみです。</p>
+      <dl className="raid-rescue-panel__channels"><div><dt>全体アクティビティ</dt><dd>{status.activityCount} / {status.maxPerChannel}<small>残り{status.maxPerChannel - status.activityCount}回</small></dd></div><div><dt>所属Guild</dt><dd>{status.guildCount} / {status.maxPerChannel}<small>残り{status.maxPerChannel - status.guildCount}回</small></dd></div></dl>
+      <p className="raid-room-muted">全体アクティビティと依頼時の所属Guildへ送信します。未所属の場合は全体のみです。公開先ごとに3回までです。</p>
+      {!pendingId && (!status.requestEnabled || disabled) && <p className="raid-room-muted">現在は新しい救援を依頼できません。</p>}
       {!pendingId && <OutlawButton loadingLabel="" disabled={busy || disabled || !userId || !status.requestEnabled} aria-label="救援を依頼" onClick={request}>救援を依頼</OutlawButton>}
     </>}
     {pendingId && <>
       <p>送信結果が未確認の救援依頼があります。</p>
       <OutlawButton loadingLabel="" disabled={busy || !userId} aria-label="救援依頼の送信結果を確認" onClick={request}>救援依頼の送信結果を確認</OutlawButton>
     </>}
-    {status?.viaRescue && <p>救援参加：{status.finalizedBattles.toLocaleString('ja-JP')}戦 ・ 貢献ダメージ {status.contributionDamage.toLocaleString('ja-JP')}</p>}
+    {status && !status.isOwner && !status.viaRescue && <p className="raid-room-muted">救援依頼は主催者が送信します。</p>}
+    {status?.viaRescue && <p className="raid-rescue-panel__contribution">救援参加：{status.finalizedBattles.toLocaleString('ja-JP')}戦 ・ 貢献ダメージ {status.contributionDamage.toLocaleString('ja-JP')}</p>}
     {sent && <p role="status">救援依頼を送信しました。</p>}
     {error && <p role="alert">救援情報または保存情報を確認できませんでした。再度お試しください。</p>}
     <OutlawButton loadingLabel="" disabled={busy} aria-label="救援情報を更新" onClick={refresh}>救援情報を更新</OutlawButton>
-  </div>;
+  </section></OutlawCard>;
 }

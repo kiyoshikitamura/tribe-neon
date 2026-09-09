@@ -1,5 +1,6 @@
 "use client";
 import RaidRescueLink from './raid/RaidRescueLink';
+import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import { getRaidRescueActivityId } from '../../domain/raidRoomRescue';
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
@@ -553,6 +554,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     }
   ];
 
+  const rescueCards = useRaidRescueCards(visibleSocialActivities.map(getRaidRescueActivityId), showActivityLog);
   const latestActivity = visibleSocialActivities[0];
   const activityText = latestActivity ? activityDescription(latestActivity) : null;
 
@@ -623,7 +625,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
             />
             <div className="mypage-activity-log-detail">
               <strong>{activityDescription(activity)}</strong>
-              <RaidRescueLink rescueId={getRaidRescueActivityId(activity)} onOpen={() => setShowActivityLog(false)} />
+              <RaidRescueLink rescueId={getRaidRescueActivityId(activity)} entry={rescueCards.byId.get(getRaidRescueActivityId(activity) ?? "")} status={rescueCards.statusFor(getRaidRescueActivityId(activity))} source="activity" onOpen={() => setShowActivityLog(false)} />
               {activity.created_at && <time dateTime={activity.created_at}>{activityTimeLabel(activity.created_at)}</time>}
             </div>
           </article>)}

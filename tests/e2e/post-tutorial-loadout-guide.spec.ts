@@ -27,7 +27,14 @@ test.beforeEach(async ({ page }) => {
       { id: "SKILL_NORMAL", gacha_type: "SKILL", cost_cash: 100, cost_diamond: 10 },
       { id: "EQUIP_NORMAL", gacha_type: "EQUIPMENT", cost_cash: 100, cost_diamond: 10 },
     ]));
-    localStorage.setItem("mock_db_raid_bosses", JSON.stringify([{ id: "raid-guide", boss_master_id: "BOSS_001", current_hp: 1000, max_hp: 1000, status: "ACTIVE", expires_at: new Date(Date.now() + 86400000).toISOString() }]));
+    // Room UI consumes the read RPC projection, not the retired legacy boss activity row.
+    localStorage.setItem("mock_rpc_fixture:raid_rooms", JSON.stringify([{
+      roomId:"raid-guide",difficultyId:"beginner",owner:{status:"unknown"},
+      state:{status:"available",value:"active"},createdAt:{status:"available",value:now},
+      expiresAt:{status:"available",value:new Date(Date.now()+86400000).toISOString()},
+      endedAt:{status:"available",value:null},hp:{status:"available",value:{current:1000,max:1000}},
+      participantCount:{status:"available",value:1},serverEligibility:{status:"unknown"},
+    }]));
   }, { userId });
 });
 

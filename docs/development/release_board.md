@@ -1,3 +1,7 @@
+# レイドUI 第4工程 — VALIDATED（ローカル、Preview/実機未受入）
+
+基準8665d29から専用branchで敵選択・敵情報・開催中一覧・救援・Resultを実装。既存Raid/Character/Setup/Gachaを保持。型/Mock build/lint0errors、Raid242＋共有5＋parser36、隔離PG22群、Setup/Gacha17と既知fixture2件PASS。181枚の画面証跡、未適用3SQL＋新表示SQL1本、接続範囲と残件は [統合報告](raid_step4_report.md)。実HTTP/Preview/物理端末の受入ではない。push/Deploy/外部DB適用/運用変更なし。
+
 # レイドトップ第2工程 — VALIDATED（隔離DB・表示境界、Preview未接続）
 
 RAID-TOP-A/B/C/P-02。基準c397df2から専用ローカルbranchで日次2エリア正本・集約API・画面接続を実装。実PG10群＋同時性2群、追加TS6件、既存関連205件、型/Mock build PASS。隔離PGの実SQL返値を実loader/parser/表示へ通した検証であり、PostgREST/GoTrue/Preview/実機の接続完了ではない。日次→集約→frontendの適用順と残件は [統合報告](raid_top_step2_report.md)。ローカルcommitのみ、外部適用・運用変更なし。

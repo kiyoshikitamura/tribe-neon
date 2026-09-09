@@ -7,6 +7,7 @@ import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import type { BattleModeResultDetail, BattlePresentationContext } from "@/hooks/useBattle";
 
+import RaidResultDetails from "../raid/RaidResultDetails";
 import OutlawButton from "../ui/OutlawButton";
 import CharacterPresentation from "../character/CharacterPresentation";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
@@ -54,6 +55,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
     ? (victory ? "クエストクリア" : "クエスト失敗")
     : modeResult?.resultLabel;
   const isRaidResult = presentationContext?.mode === "RAID";
+  const raidReceipt = isRaidResult && modeResult?.raidReceipt && modeResult.raidReceipt.roomId === presentationContext?.raidRoomId ? modeResult.raidReceipt : undefined;
   const isStreetResult = !isRaidResult || Boolean(presentationContext?.raidRoomId);
   const resultEvent = [...replayEvents].reverse().find((event) => event.type === "RESULT");
   const resultReasonKey = String(resultEvent?.payload.reason ?? resultEvent?.payload.resultReason ?? resultEvent?.payload.endReason ?? "").toUpperCase();
@@ -171,7 +173,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
         {roundLimitResult && <p className="battle-result-reason" data-result-reason="ROUND_LIMIT" role="status">制限ラウンド終了による判定結果です</p>}
         {mvp && <><section className="sf-mvp" aria-label={`MVP ${mvp.participant.name} ${mvp.score.total}ポイント`}>{mvpImage && <img src={mvpImage} alt={mvp.participant.name}/>}<div className="sf-mvp-copy"><small>MVP</small><h2>{mvp.participant.name}</h2><strong>{displayedTotal}<span> PT</span></strong><p>{mvpMaster && resolveCharacterGachaQuote(mvpMaster.id)}</p></div></section>
         <div className="sf-highlights"><div><small>与ダメージ</small><b>{mvp.raw.damage.toLocaleString()}</b></div><div><small>撃破</small><b>{mvp.raw.kills}<span>体</span></b></div><div><small>回復</small><b>{mvp.raw.heal.toLocaleString()}</b></div></div></>}
-        {modeResult?.stats?.length ? <section className="battle-result-mode-stats" aria-label="モード戦績">{modeResult.stats.map(stat=><div key={stat.label}><small>{stat.label}</small><strong>{stat.value}</strong></div>)}</section> : null}
+        {isRaidResult ? <RaidResultDetails victory={victory} modeResult={modeResult} roomState={raidReceipt?.roomState} lateFinalization={raidReceipt?.lateFinalization} /> : modeResult?.stats?.length ? <section className="battle-result-mode-stats" aria-label="モード戦績">{modeResult.stats.map(stat=><div key={stat.label}><small>{stat.label}</small><strong>{stat.value}</strong></div>)}</section> : null}
         {!victory && !isRaidResult && <p className="sf-loss-advice">編成・装備スキル・作戦を見直して再挑戦しましょう。</p>}
         {mvp && <details className="sf-details"><summary>戦績・MVPスコアの詳細</summary><section className="sf-breakdown"><h2>MVPスコア内訳</h2><dl><div><dt>与ダメージ</dt><dd>{displayedBreakdown.damage} / 40</dd></div><div><dt>撃破</dt><dd>{displayedBreakdown.kills} / 20</dd></div><div><dt>回復</dt><dd>{displayedBreakdown.heal} / 20</dd></div><div><dt>シールド</dt><dd>{displayedBreakdown.shield} / 15</dd></div><div><dt>生存</dt><dd>{displayedBreakdown.survival} / 5</dd></div></dl><h2>チーム戦果比較</h2><p>総ダメージ　味方 {analysis.player.damage.toLocaleString()} / 敵 {analysis.enemy.damage.toLocaleString()}</p><p>撃破数　味方 {analysis.player.kills} / 敵 {analysis.enemy.kills}</p><p>生存人数　味方 {analysis.player.survivors} / 敵 {analysis.enemy.survivors}</p></section></details>}
       </>}
@@ -195,7 +197,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
             </span>}
           </div>
         ) : <div className="battle-result-settling" role="status"><span>報酬データを準備中</span><i aria-hidden="true" /></div>
-      ) : (
+      ) : isRaidResult && presentationContext?.raidRoomId ? null : (
         <div className="battle-result-mode-reward">
           <strong>{modeResult?.reward || (victory ? "勝利" : "敗北")}</strong>
           {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`}>

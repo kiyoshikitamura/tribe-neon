@@ -1,0 +1,65 @@
+{
+  "base": {
+    "errors": 0,
+    "warnings": 1857
+  },
+  "current": {
+    "errors": 0,
+    "warnings": 1865
+  },
+  "scope": "eslint . --ignore-pattern outputs/**; generated local runtime bundles excluded in both trees",
+  "comparison": "per relative file/rule/first message line multiplicity; embedded absolute paths and shifted excerpts ignored",
+  "added": [
+    {
+      "file": "src/app/components/raid/RaidEnemyRoster.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 1
+    },
+    {
+      "file": "src/app/components/raid/RaidEnemySelection.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 2
+    },
+    {
+      "file": "src/app/components/raid/RaidRescueLink.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 2
+    },
+    {
+      "file": "src/app/components/raid/RaidRoomListCard.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 2
+    },
+    {
+      "file": "src/app/components/raid/RaidRoomRescuePanel.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 1
+    },
+    {
+      "file": "src/app/components/raid/raidPagePresentation.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 1
+    }
+  ],
+  "removed": [
+    {
+      "file": "src/app/components/raid/RaidRoomBrowser.tsx",
+      "rule": "@next/next/no-img-element",
+      "message": "Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element",
+      "severity": 1,
+      "count": 1
+    }
+  ]
+}

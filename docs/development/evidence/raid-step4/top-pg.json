@@ -1,0 +1,47 @@
+{
+  "database": "raid_top_test_1788921950114_24768",
+  "engine": "PostgreSQL 17 isolated localhost 55462",
+  "results": [
+    {
+      "name": "同時12要求・異なるユーザーでも日次2エリアが一致し正本1行",
+      "status": "PASS"
+    },
+    {
+      "name": "空一覧readyは0件、匿名/偽ユーザーは認証失敗",
+      "status": "PASS"
+    },
+    {
+      "name": "選択肢とtopの日次正本一致・対象外新規拒否・対象内受付",
+      "status": "PASS"
+    },
+    {
+      "name": "参加者・owner所属・顔最大5・本人roleの一括投影",
+      "status": "PASS"
+    },
+    {
+      "name": "最新閲覧可能救援1件/Guild非所属はACTIVITYへ、同GuildのみGUILD",
+      "status": "PASS"
+    },
+    {
+      "name": "非所属Guildリンク閲覧と参加拒否・救援参加role保持",
+      "status": "PASS"
+    },
+    {
+      "name": "JST境界・日跨ぎ成功再送・前日の参加と救援は日次対象外でも継続",
+      "status": "PASS"
+    },
+    {
+      "name": "20件上限・撃破/HP0/期限終了をトップから除外、元期限は24時間",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated/anonのprivate table書込と内部日次直接呼出しを拒否",
+      "status": "PASS"
+    },
+    {
+      "name": "日次master不足は55000失敗で空readyを返さず、テストclockは復元済み",
+      "status": "PASS"
+    }
+  ],
+  "limitation": "Minimal existing schema fixture; no PostgREST/GoTrue. Boundary clock replacement only inside test DB and restored."
+}

@@ -1,0 +1,22 @@
+{
+  "database": "raid_top_test_1788921952136_33544",
+  "results": [
+    {
+      "name": "owner/no Guild and unconfigured plans are observed independently from issued Presents",
+      "status": "PASS"
+    },
+    {
+      "name": "outsider sees only owner leader; member/rescue roles use existing join authorities",
+      "status": "PASS"
+    },
+    {
+      "name": "configured plans have no Present identity/status and do not issue or mutate battle data",
+      "status": "PASS"
+    },
+    {
+      "name": "unknown room/anonymous/nonexistent user and private table reads are denied",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Isolated PG17 minimal surrounding fixture; real migrations and roles; no HTTP Auth/Preview"
+}

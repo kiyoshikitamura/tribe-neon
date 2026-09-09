@@ -185,6 +185,19 @@ const applyMockCharacterAwakeningEquivalent = (character: any) => {
 };
 
 export async function executeMockRpc(client: any, funcName: string, params: any): Promise<any> {
+  // Explicit Room projection fixture for local navigation regression only.
+  if (funcName === "list_raid_rooms_v1" && typeof window !== "undefined") {
+    const fixture = localStorage.getItem("mock_rpc_fixture:raid_rooms");
+    if (fixture !== null) {
+      const rows = JSON.parse(fixture);
+      if (!Array.isArray(rows)) return { data: null, error: { code: "22023", message: "Invalid Room fixture" } };
+      const offset = params?.p_offset ?? 0;
+      const limit = params?.p_limit ?? 20;
+      if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 1 || limit > 100) return { data: null, error: { code: "22023", message: "Invalid pagination" } };
+      const selected = rows.filter(row => !params?.p_difficulty_id || row.difficultyId === params.p_difficulty_id);
+      return { data: { rooms: selected.slice(offset, offset + limit), nextOffset: offset + limit < selected.length ? offset + limit : null }, error: null };
+    }
+  }
   // Explicit fresh-user test fixture only. This does not model stored Raid
   // recovery or replace the real RPC/ack authority; absent fixture stays unsupported.
   if (funcName === "list_raid_room_battle_recoveries_v1" && typeof window !== "undefined"

@@ -1,4 +1,5 @@
 import RaidRescueLink from './raid/RaidRescueLink';
+import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import React, { useState, useRef, useEffect } from "react";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
@@ -40,6 +41,7 @@ export default function TribeChatModal() {
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const safeDirectMessages = directMessages || [];
   const safeGuildChats = guildChats || [];
+  const rescueCards = useRaidRescueCards(safeGuildChats.map((msg: { raid_rescue_id?: string }) => msg.raid_rescue_id), showTribeChatPanel && chatChannel !== "DM");
   const dmConversations = buildDirectMessageConversations(
     safeDirectMessages,
     session?.user?.id || "",
@@ -238,7 +240,7 @@ export default function TribeChatModal() {
                     {msg.reply_to_message_id && (
                       <div className="tribe-msg-reply-source">返信先のメッセージ</div>
                     )}
-                    <div className="tribe-msg-bubble">{msg.content || ""}<RaidRescueLink rescueId={msg.raid_rescue_id} /></div>
+                    <div className="tribe-msg-bubble">{msg.content || ""}<RaidRescueLink rescueId={msg.raid_rescue_id} entry={rescueCards.byId.get(msg.raid_rescue_id)} status={rescueCards.statusFor(msg.raid_rescue_id)} source={chatChannel === "GUILD" ? "guild_chat" : "activity"} /></div>
                     {!msg.is_system && (
                       <button type="button" className="tribe-msg-reply" onClick={() => setChatReplyTo(msg)}>返信</button>
                     )}

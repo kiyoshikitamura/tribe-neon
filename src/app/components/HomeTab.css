@@ -1130,3 +1130,7 @@
   .circle-menu-img { width:38px;height:38px; }
   .circle-menu-label strong { font-size:9px; }
 }
+
+/* Rescue entries need the full feed width for identity and battle information. */
+.mypage-activity-log-row:has(.raid-rescue-link){grid-template-columns:minmax(0,1fr);align-items:start}
+.mypage-activity-log-row:has(.raid-rescue-link) .mypage-activity-log-detail{justify-items:stretch;text-align:left;min-width:0}

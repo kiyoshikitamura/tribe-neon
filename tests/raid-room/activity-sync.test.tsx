@@ -8,6 +8,7 @@ import { useRaidRoomActivity } from '../../src/app/context/hooks/useRaidRoomActi
 import type { RaidRoomTransport } from '../../src/domain/raidRoomClient';
 import type { RaidRoomDto } from '../../src/domain/raidRoom';
 import { deferred, roomFixture } from './fixtures';
+import { createTopFixture } from '../../src/app/qa/raid-top/topFixture';
 import { unavailableRaidTopData } from '../../src/domain/raidTopData';
 
 afterEach(cleanup);
@@ -116,18 +117,22 @@ test('作成receiptより新しい同Roomの終了詳細を受信済みなら開
 
 test('実ConnectedBrowserは明示一覧後の更新・戦闘終了revisionを通知へ接続する', async () => {
   const tracker = createRaidRoomActivityTracker(() => true, () => now);
-  let rooms: RaidRoomDto[] = [active]; const calls: string[] = [];
-  const rpcClient = { rpc: async (name: string) => { calls.push(name); if (name === 'get_raid_top_v1') return { data: unavailableRaidTopData(false), error: null }; assert.equal(name, 'list_raid_rooms_v1'); return { data: { rooms, nextOffset: null }, error: null }; } };
+  let rooms: RaidRoomDto[] = [{...active,difficultyId:'beginner'}]; const calls: string[] = [];
+  const top=createTopFixture('single',now);if(top.participating.status!=='ready')throw Error('fixture');const entry=top.participating.data[0];
+  const rpcClient = { rpc: async (name: string) => { calls.push(name); if (name === 'get_raid_top_v1') return { data: unavailableRaidTopData(false), error: null }; assert.equal(name, 'list_raid_room_cards_v1'); return { data: { entries:rooms.map(room=>({...entry,room})), nextOffset: null }, error: null }; } };
   const props = { rpcClient, activityTracker: tracker, userId: 'A', onBattleReady() {}, setInteractionBlocking() {} };
   const view = render(<RaidRoomConnectedBrowser {...props} refreshRevision={0}/>);
   await view.findByTestId('raid-top'); assert.deepEqual(calls, ['get_raid_top_v1']);
   fireEvent.click(view.getByRole('button', { name: /開催中のレイドを探す/ }));
   await waitFor(() => assert.equal(tracker.getSnapshot(), expiry));
   rooms = []; fireEvent.click(view.getByRole('button', { name: '更新' }));
-  await waitFor(() => assert.equal(tracker.getSnapshot(), 0));
-  rooms = [active]; view.rerender(<RaidRoomConnectedBrowser {...props} refreshRevision={1}/>);
+  await waitFor(() => assert.equal(calls.filter(name=>name==='list_raid_room_cards_v1').length,2));
+  assert.equal(tracker.getSnapshot(), expiry);
+  await act(async()=>{await tracker.observeTransport(transport({getRoom:async()=>ended})).getRoom('room-a');});
+  assert.equal(tracker.getSnapshot(),0);
+  rooms = [{...active,difficultyId:'beginner'}]; view.rerender(<RaidRoomConnectedBrowser {...props} refreshRevision={1}/>);
   await waitFor(() => assert.equal(tracker.getSnapshot(), expiry));
-  assert.equal(calls.filter(name => name === 'list_raid_rooms_v1').length, 3);
+  assert.equal(calls.filter(name => name === 'list_raid_room_cards_v1').length, 3);
   assert.equal(calls.filter(name => name === 'get_raid_top_v1').length, 2);
 });
 
@@ -146,4 +151,19 @@ test('StrictMode再setupで通知が動作しunmount後の応答を破棄する'
   view.unmount();
   delayed.resolve(ended); await pending;
   assert.equal(tracker.getSnapshot(), before);
+});
+
+
+test('ページ観測は他難易度と別ページを保持し空ページで終了断定しない',async()=>{
+ const tracker=createRaidRoomActivityTracker(()=>true,()=>now);
+ await tracker.observePage(async()=>({entries:[{room:active}]}));
+ await tracker.observePage(async()=>({entries:[{room:roomFixture('other',{difficultyId:'beginner',expiresAt:{status:'available',value:new Date(expiry+1000).toISOString()}})}]}));
+ await tracker.observePage(async()=>({entries:[]}));assert.equal(tracker.getSnapshot(),expiry+1000);
+ await tracker.observeTransport(transport({getRoom:async()=>roomFixture('other',{state:{status:'available',value:'cleared'}})})).getRoom('other');assert.equal(tracker.getSnapshot(),expiry);
+});
+test('遅延ページは新詳細終了と後発全一覧とauth切替を巻き戻さない',async()=>{
+ let current=true;const tracker=createRaidRoomActivityTracker(()=>current,()=>now);const late=deferred<{entries:{room:RaidRoomDto}[]}>();
+ const request=tracker.observePage(()=>late.promise);await tracker.observeTransport(transport({getRoom:async()=>ended})).getRoom('room-a');late.resolve({entries:[{room:active}]});await request;assert.equal(tracker.getSnapshot(),0);
+ const later=deferred<{entries:{room:RaidRoomDto}[]}>();const pending=tracker.observePage(()=>later.promise);await tracker.observeTransport(transport({listRooms:async()=>[]})).listRooms();later.resolve({entries:[{room:active}]});await pending;assert.equal(tracker.getSnapshot(),0);
+ const auth=deferred<{entries:{room:RaidRoomDto}[]}>();const old=tracker.observePage(()=>auth.promise);current=false;auth.resolve({entries:[{room:active}]});await old;assert.equal(tracker.getSnapshot(),0);
 });

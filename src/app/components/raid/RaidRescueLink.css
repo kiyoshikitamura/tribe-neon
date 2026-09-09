@@ -1,0 +1,19 @@
+.raid-rescue-link{display:block;box-sizing:border-box;max-width:100%;min-width:0;margin:10px 0;padding:12px;border:1px solid var(--ui-border);border-radius:10px;background:var(--ui-bg-raised);color:var(--ui-text-primary);font-family:var(--font-ui);text-align:left}
+.raid-rescue-link__origin{font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--ui-text-secondary);margin-bottom:8px}
+.raid-rescue-link__owner{display:flex;gap:8px;align-items:center;margin-bottom:8px;min-width:0}
+.raid-rescue-link__owner>span:last-child{display:grid;min-width:0;gap:2px}
+.raid-rescue-link strong{font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.raid-rescue-link small{font-size:10px;color:var(--ui-text-secondary);overflow-wrap:anywhere}
+.raid-rescue-link__avatar{width:32px;height:32px;flex:0 0 32px;border:1px solid var(--ui-border);border-radius:50%;overflow:hidden;background:rgba(255,255,255,.05)}
+.raid-rescue-link__avatar img{width:100%;height:100%;object-fit:cover;object-position:var(--rescue-face-x) var(--rescue-face-y);transform:scale(var(--rescue-face-scale));transform-origin:var(--rescue-face-x) 12%}
+.raid-rescue-link__enemy{display:flex;gap:8px;min-width:0;align-items:center;background:rgba(255,255,255,.02);border-radius:6px;overflow:hidden}
+.raid-rescue-link__enemy>img{width:56px;height:66px;object-fit:cover;object-position:50% 12%;flex:0 0 56px}
+.raid-rescue-link__enemy>div{display:grid;gap:4px;min-width:0;padding:5px 6px}
+.raid-rescue-link__hp{display:grid;gap:4px;margin-top:8px;font-size:11px}
+.raid-rescue-link__hp progress{width:100%;height:5px;accent-color:#b24e4e;border:0;border-radius:3px;overflow:hidden}
+.raid-rescue-link__battle{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--ui-text-secondary);margin:7px 0 10px;flex-wrap:wrap}
+.raid-rescue-link__unknown{font-size:11px;line-height:1.6;margin:6px 0 10px}
+.raid-rescue-link .outlaw-button{min-height:44px;font-size:12px}
+
+.raid-rescue-link__spinner{display:inline-block;width:20px;height:20px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:raid-rescue-spin .8s linear infinite}
+@keyframes raid-rescue-spin{to{transform:rotate(360deg)}}
