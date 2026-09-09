@@ -9,3 +9,5 @@ GameContextの公開プロフィール取得を、最新かつ開いている要
 ローカル検証: 新規非同期競合10件、既存詳細UI19件、Replay/ack27件PASS。TypeScript PASS、Mock webpack build PASS。変更対象lint errors0、新hook warnings0。GameContext既存warnings177→176。初回型検証は以前の配信アーカイブがoutputs内に残っていてDenoファイルを検査して失敗。アーカイブだけTEMPへ移動後、通常の型検証がPASS。tsconfigや型ルールの緩和なし。
 
 Card/KPI両担当から、共有変更やPreview操作に競合なしとの回答を取得。今回SQL/Edge/Production/共有alias/Cron/フラグ変更なし。指定候補からの製品差分はGameContextとuseProfileRequestStateだけ。実認証での再確認とバッジの実表示は配信後の証跡で報告し、ローカルPASSを実接続PASSには転記しない。
+
+追加統合: RaidRoomDialogsはプロフィールの表示開始を待機完了として扱う。データ取得Promiseを待ち続けて参加者一覧を隠すことをやめ、読込中のクローズ直後から別ユーザーを選べる。古いPromiseのfinallyも世代が一致する時だけ処理する。実コンポーネントと専用hookを組み合わせたA close B late A / scroll480復帰の回帰を追加し、詳細UI20件PASS。Mock build/型も再実行PASS、同ダイアログlint0/0。

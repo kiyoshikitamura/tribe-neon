@@ -28,3 +28,29 @@ test('実PG display出力を表示parserへ通し予定へのPresent/別room混�
 });
 
 for(const viewer of ['self','other',undefined])test('profile DM target and frameless identity '+viewer,async()=>{const targets:string[]=[];const view=render(<PublicUserProfile profile={{id:'self',status:'ready',username:'QA',level:1,leaderCharacterId:'char_kengo_01',party:[{characterId:'char_kengo_01'}]}} currentUserId={viewer} onClose={()=>{}} onRetry={()=>{}} onDm={id=>targets.push(id)}/>);if(viewer==='other'){fireEvent.click(view.getByRole('button',{name:'DMを送る'}));assert.deepEqual(targets,['self']);}else assert.equal(view.queryByRole('button',{name:'DMを送る'}),null);assert.equal(view.container.querySelectorAll('.user-avatar .character-presentation-frame').length,0);assert.equal(view.container.querySelectorAll('.user-avatar').length,1);assert.equal(view.container.querySelectorAll('.public-profile-deck-icon .character-presentation-frame-layout').length,1);});
+
+// The profile shell must release the participant list before its slow request settles.
+import { act } from '@testing-library/react';
+import { useProfileRequestState } from '../../src/app/context/hooks/useProfileRequestState';
+test('close loading A restores list immediately; B survives late A and restores scroll', async()=>{
+  const responses=new Map<string,()=>void>();
+  function Harness(){
+    const [f]=useState(()=>createDetailFixture('many',Date.now()));
+    const profile=useProfileRequestState<{id:string;status:'loading'|'ready';username:string;level:number}>('viewer:raid');
+    return <><RaidRoomDialogs kind="participants" roomId={f.room.roomId} currentUserId={f.currentUserId} participants={f.participants} rewards={success([])} onClose={()=>{}} onRefresh={()=>{}} profileOpen={!!profile.value} onOpenProfile={async id=>{const request=profile.begin({id,status:'loading',username:id,level:1});await new Promise<void>(resolve=>responses.set(id,resolve));request.publish({id,status:'ready',username:id,level:1});}}/>{profile.value&&<PublicUserProfile profile={profile.value} onClose={()=>profile.set(null)} onRetry={()=>{}}/>}</>;
+  }
+  const view=render(<Harness/>);
+  document.querySelector<HTMLElement>('.raid-room-dialogs .canonical-dialog-body')!.scrollTop=480;
+  fireEvent.click(view.getByRole('button',{name:'確認用参加者10のプロフィール'}));
+  await view.findByRole('dialog',{name:/公開プロフィール/});
+  fireEvent.click(view.getByRole('button',{name:'閉じる'}));
+  await waitFor(()=>assert.equal(document.querySelector<HTMLElement>('.raid-room-dialogs .canonical-dialog-body')?.scrollTop,480));
+  fireEvent.click(view.getByRole('button',{name:'確認用参加者11のプロフィール'}));
+  await act(async()=>{responses.get('qa-person-10')!();});
+  await view.findByRole('heading',{name:'qa-person-10'});
+  await act(async()=>{responses.get('qa-person-9')!();});
+  assert.ok(view.getByRole('heading',{name:'qa-person-10'}));
+  assert.equal(view.getAllByRole('dialog').length,1);
+  fireEvent.click(view.getByRole('button',{name:'閉じる'}));
+  await waitFor(()=>assert.equal(document.querySelector<HTMLElement>('.raid-room-dialogs .canonical-dialog-body')?.scrollTop,480));
+});

@@ -34,6 +34,9 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
   const request = useRef(0);
   const [openingProfile, setOpeningProfile] = useState(false);
   const [profileError, setProfileError] = useState(false);
+  // Opening is complete once the profile shell is visible, not when its data arrives.
+  // This allows close -> participant list -> another profile during a slow request.
+  if (openingProfile && profileOpen) setOpeningProfile(false);
   const key = `${currentUserId ?? ''}:${roomId ?? ''}:${kind ?? ''}`;
   const activeKey = useRef(key);
   const visible = !!kind && !!roomId && !openingProfile && !profileOpen;
@@ -52,7 +55,7 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
     setProfileError(false); setOpeningProfile(true);
     try { await onOpenProfile(userId); }
     catch { if (version === request.current) setProfileError(true); }
-    finally { setOpeningProfile(false); }
+    finally { if (version === request.current) setOpeningProfile(false); }
   };
   if (!visible || !kind || !roomId || typeof document === 'undefined') return null;
   return createPortal(<div className="raid-room-dialogs" ref={host}>
