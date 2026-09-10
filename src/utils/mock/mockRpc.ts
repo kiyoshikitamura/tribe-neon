@@ -2586,7 +2586,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       const allProgress = client.getStorage("tutorial_progress") || [];
       let progress = allProgress.find((entry: any) => entry.user_id === userId);
       if (!progress) {
-        progress = { user_id: userId, step_id: "FREE_GACHA" };
+        progress = { user_id: userId, step_id: "WORLD_INTRO" };
         allProgress.push(progress);
         client.setStorage("tutorial_progress", allProgress);
       }
@@ -2615,10 +2615,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
 
     const progress = client.getStorage("tutorial_progress") || [];
     if (!progress.some((entry: any) => entry.user_id === userId)) {
-      progress.push({ user_id: userId, step_id: "FREE_GACHA" });
+      progress.push({ user_id: userId, step_id: "WORLD_INTRO" });
       client.setStorage("tutorial_progress", progress);
     }
-    return { data: { status: "success", tutorial_step: "FREE_GACHA" }, error: null };
+    return { data: { status: "success", tutorial_step: "WORLD_INTRO" }, error: null };
   }
 
   if (funcName === "buy_normal_shop_product") {

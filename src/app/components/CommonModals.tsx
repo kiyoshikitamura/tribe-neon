@@ -193,7 +193,7 @@ export default function CommonModals() {
 
       {/* 🎰 ガチャ演出モーダル (FLASHING / SHOW_RESULTS) */}
       {scoutAnimationState !== null && isCharacterReveal && (scoutAnimationState === "READY" || scoutAnimationState === "SHOW_RESULTS") ? (
-        <CharacterGachaPresentation results={scoutResults} tutorial={["AUTO_FORMATION", "TUTORIAL_BATTLE"].includes(onboardingState?.tutorial_step || "")}
+        <CharacterGachaPresentation results={scoutResults} tutorial={onboardingState?.tutorial_step === "AUTO_FORMATION"}
           onReveal={() => setScoutAnimationState("SHOW_RESULTS")} playSound={playSe}
           onClose={() => { setScoutAnimationState(null); playCyberSe("click"); if (onboardingState?.tutorial_step === "AUTO_FORMATION") navigateTab("character"); }} />
       ) : scoutAnimationState !== null && (scoutPresentationCategory === "CHARACTER" || isCharacterReveal || onboardingState?.tutorial_step === "FREE_GACHA") ? (
@@ -231,8 +231,8 @@ export default function CommonModals() {
             </div>
           ) : (
             <div className="gacha-result-panel">
-              {["AUTO_FORMATION", "TUTORIAL_BATTLE"].includes(onboardingState?.tutorial_step || "") && (
-                <TutorialNavigator message={onboardingState?.tutorial_step === "TUTORIAL_BATTLE" ? "いいじゃん。その仲間たちで、まずはバトルを体験してみよ。" : "いいじゃん。じゃ、この中から一緒に動くメンバーを決めよ。"} />
+              {onboardingState?.tutorial_step === "AUTO_FORMATION" && (
+                <TutorialNavigator message="いいじゃん。じゃ、この中から一緒に動くメンバーを決めよ。" />
               )}
               <header className="gacha-result-heading">
                 <h3>ガチャ結果</h3>
@@ -297,7 +297,7 @@ export default function CommonModals() {
                   }
                 }}
               >
-                {onboardingState?.tutorial_step === "AUTO_FORMATION" ? "編成へ進む" : onboardingState?.tutorial_step === "TUTORIAL_BATTLE" ? "バトルへ進む" : "ガチャへ戻る"}
+                {onboardingState?.tutorial_step === "AUTO_FORMATION" ? "編成へ進む" : "ガチャへ戻る"}
               </button>
             </div>
           )}
