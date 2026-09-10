@@ -184,10 +184,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
               : <OutlawButton loadingLabel="" fullWidth disabled={busy || !!lifecycle?.blockJoin} aria-label="出撃準備" onClick={async () => {
                 setTransitioning(true); setTransitionError(null);
                 try { await onBriefingReady(briefing); }
-                catch (error) {
-                  console.error("[Raid Prepare] transition rejected", { roomId: room.roomId, error });
-                  setTransitionError("出撃準備を開けませんでした。もう一度お試しください。");
-                }
+                catch { setTransitionError("出撃準備を開けませんでした。もう一度お試しください。"); }
                 finally { setTransitioning(false); }
               }}>出撃準備</OutlawButton>}
           </> : <OutlawButton loadingLabel="" fullWidth variant="primary" aria-label="参加する" isLoading={snapshot.registering}

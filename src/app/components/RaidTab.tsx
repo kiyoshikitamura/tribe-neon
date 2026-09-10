@@ -181,14 +181,6 @@ export default function RaidTab() {
     if (!userId) return false;
     const { data: attempt, error: attemptError } = await supabase.rpc("get_current_raid_attempt_state");
     if (presentOwnerRef.current !== userId) return false;
-    if (attemptError) {
-      console.error("[Raid Prepare] get_current_raid_attempt_state failed", {
-        code: attemptError.code || null,
-        message: attemptError.message || null,
-        details: attemptError.details || null,
-        hint: attemptError.hint || null,
-      });
-    }
     if (attemptError || !attempt || !Number.isFinite(Number(attempt.raidPoints))) throw new Error("RPを確認できませんでした。");
     setRaidPoints(Number(attempt.raidPoints));
     setRaidFirstEntryFree(Boolean(attempt.firstEntryFree));
@@ -204,15 +196,9 @@ export default function RaidTab() {
   };
 
   const openRoomBriefing = async (briefing: RaidRoomBriefing) => {
-    try {
-      const background = await preloadAsset({ src: getCanonicalBattleBackground(briefing.baseId || "") || "/bg/bg_street_shinjuku.jpg", fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true });
-      console.info("[Raid Prepare] background", { roomId: briefing.roomId, baseId: briefing.baseId || null, status: background.status, resolvedSrc: background.resolvedSrc });
-      if (!background.resolvedSrc) throw new Error("戦場の背景を取得できませんでした。");
-      await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" }, checkRoomEntryResource);
-    } catch (error) {
-      console.error("[Raid Prepare] failed", { roomId: briefing.roomId, error });
-      throw error;
-    }
+    const background = await preloadAsset({ src: getCanonicalBattleBackground(briefing.baseId || "") || "/bg/bg_street_shinjuku.jpg", fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true });
+    if (!background.resolvedSrc) throw new Error("戦場の背景を取得できませんでした。");
+    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" }, checkRoomEntryResource);
   };
 
   return <>

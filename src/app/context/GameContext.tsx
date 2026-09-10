@@ -4650,7 +4650,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     activeBanners, setActiveBanners,
     userItems, setUserItems,
     inventoryProjectionOwnerUserId,
-    raidPoints, setRaidPoints, raidFirstEntryFree, raidTopRefreshRevision, raidRoomReturnTarget, raidRescueTarget, openRaidRescue, raidRoomActivityTracker: roomActivity.tracker,
+    raidPoints, setRaidPoints, raidFirstEntryFree, setRaidFirstEntryFree, raidTopRefreshRevision, raidRoomReturnTarget, raidRescueTarget, openRaidRescue, raidRoomActivityTracker: roomActivity.tracker,
     monthlyPassActive, setMonthlyPassActive,
     monthlyPassClaimedToday, setMonthlyPassClaimedToday,
     handlePurchaseMonthlyPass, handleClaimDailyPassReward,
