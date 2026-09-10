@@ -838,6 +838,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       if (nextState?.user_id !== userId || (currentAuthUserIdRef.current && currentAuthUserIdRef.current !== userId)) {
         throw new Error("Authenticated player projection did not match the active session.");
       }
+      if (nextState.has_profile && ["WORLD_INTRO", "AUTO_FORMATION", "DISPATCH", "FREE_INSTANT", "RULE_GUIDE"].includes(nextState.tutorial_step || "")) {
+        const { data: resumed, error: resumeError } = await supabase.rpc("resume_short_tutorial");
+        if (resumeError) throw resumeError;
+        nextState = { ...nextState, tutorial_step: resumed?.tutorial_step || nextState.tutorial_step };
+      }
       const emailIntent = readEmailOnboardingIntent();
       if (emailIntent && emailIntent.userId !== userId) {
         await supabase.auth.signOut();
@@ -867,10 +872,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         if (!hasPendingEncounter && hasClaimedEncounter) {
           const { data: resumedBattle, error: resumeBattleError } = await supabase.rpc("advance_tutorial_progress", {
             p_expected_step: "TUTORIAL_BATTLE",
-            p_next_step: "RULE_GUIDE",
+            p_next_step: "COMPLETE",
           });
           if (!resumeBattleError) {
-            nextState = { ...nextState, tutorial_step: resumedBattle || "RULE_GUIDE" };
+            nextState = { ...nextState, tutorial_step: resumedBattle || "COMPLETE" };
           }
         }
       }
@@ -1061,12 +1066,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     try {
       const { data, error } = await supabase.rpc("advance_tutorial_progress", {
         p_expected_step: "TUTORIAL_BATTLE",
-        p_next_step: "RULE_GUIDE",
+        p_next_step: "COMPLETE",
       });
       if (error) throw error;
       setShowPatrolRewardModal(false);
       setLastPatrolRewards(null);
-      setOnboardingState((current: any) => current ? { ...current, tutorial_step: data || "RULE_GUIDE" } : current);
+      setOnboardingState((current: any) => current ? { ...current, tutorial_step: data || "COMPLETE" } : current);
       battle.completeBattleResult();
     } catch (error: any) {
       setErrorMessage(`チュートリアルを進められませんでした。${error?.message ? `（${error.message}）` : ""}`);
@@ -2185,6 +2190,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setShowTitleView(false);
         return true;
       }
+      let resolvedState = state;
+      if (["WORLD_INTRO", "AUTO_FORMATION", "DISPATCH", "FREE_INSTANT", "RULE_GUIDE"].includes(state.tutorial_step || "")) {
+        const { data: resumed, error: shortResumeError } = await supabase.rpc("resume_short_tutorial");
+        if (shortResumeError) throw shortResumeError;
+        resolvedState = { ...state, tutorial_step: resumed?.tutorial_step || state.tutorial_step };
+      }
       if (profileError || profile?.id !== userId) throw profileError || new Error("Resume profile mismatch");
       const recovery = Array.isArray(recovered) ? recovered[0] : recovered;
       if (recovery) {
@@ -2214,13 +2225,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setTotalPower(Number(power?.total_power || 0));
       setTotalPowerLoading(false);
       setAuthenticatedProjectionOwnerUserId(userId);
-      setOnboardingState(state);
+      setOnboardingState(resolvedState);
       const requiresEmailCompletion = Boolean(!state.is_anonymous
         && state.has_profile
-        && state.tutorial_step === "COMPLETE"
-        && state.auth_method === "EMAIL"
-        && state.identity_integrity_valid
-        && !state.gameplay_authorized);
+        && resolvedState.tutorial_step === "COMPLETE"
+        && resolvedState.auth_method === "EMAIL"
+        && resolvedState.identity_integrity_valid
+        && !resolvedState.gameplay_authorized);
       if (requiresEmailCompletion) {
         setActiveTab("home");
         setShowAccountAuthenticationModal(true);
@@ -2228,7 +2239,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         void syncBootstrapData(userId).catch((bootstrapError) => console.warn("Background resume bootstrap failed:", bootstrapError));
         return true;
       }
-      if (state.tutorial_step === "TUTORIAL_BATTLE") {
+      if (resolvedState.tutorial_step === "TUTORIAL_BATTLE") {
         const { data: resumablePatrol } = await supabase
           .from("user_patrols")
           .select("id")
@@ -2240,9 +2251,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           .maybeSingle();
         if (resumablePatrol?.id) await battle.resumeActiveBattleSession(resumablePatrol.id);
       }
-      if (state.tutorial_step === "FREE_GACHA") setActiveTab("gacha");
-      else if (state.tutorial_step === "AUTO_FORMATION") setActiveTab("character");
-      else if (["DISPATCH", "FREE_INSTANT", "TUTORIAL_BATTLE"].includes(state.tutorial_step || "")) setActiveTab("patrol");
+      if (resolvedState.tutorial_step === "FREE_GACHA") setActiveTab("gacha");
+      else if (resolvedState.tutorial_step === "AUTO_FORMATION") setActiveTab("character");
+      else if (["DISPATCH", "FREE_INSTANT", "TUTORIAL_BATTLE"].includes(resolvedState.tutorial_step || "")) setActiveTab("patrol");
       else if (!battle.battleState) setActiveTab("home");
       setShowTitleView(false);
       void syncBootstrapData(userId).catch((bootstrapError) => console.warn("Background resume bootstrap failed:", bootstrapError));
@@ -3438,14 +3449,18 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           .then(() => reportScoutTiming("bootstrap_complete"))
           .catch((bootstrapError) => console.warn("Post-gacha bootstrap failed:", bootstrapError));
         if (useCurrency === "FREE" && scoutType === "CHAR_NORMAL" && scoutCount === 10) {
-          const { data: nextTutorialStep, error: tutorialAdvanceError } = await supabase.rpc("advance_tutorial_progress", {
+          const { error: tutorialAdvanceError } = await supabase.rpc("advance_tutorial_progress", {
             p_expected_step: "FREE_GACHA",
             p_next_step: "AUTO_FORMATION"
           });
           if (!tutorialAdvanceError) {
+            const { data: shortened, error: shortenedError } = await supabase.rpc("resume_short_tutorial");
+            if (shortenedError) throw shortenedError;
+            await bootstrapPromise;
+            await syncBootstrapData(session.user.id);
             setOnboardingState(current => current ? {
               ...current,
-              tutorial_step: nextTutorialStep || "AUTO_FORMATION"
+              tutorial_step: shortened?.tutorial_step || "TUTORIAL_BATTLE"
             } : current);
           }
         }
@@ -3520,14 +3535,18 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         .then(() => reportScoutTiming("bootstrap_complete"))
         .catch((bootstrapError) => console.warn("Post-gacha bootstrap failed:", bootstrapError));
       if (useCurrency === "FREE" && scoutType === "SKILL_NORMAL" && scoutCount === 10) {
-        const { data: nextTutorialStep, error: tutorialAdvanceError } = await supabase.rpc("advance_tutorial_progress", {
+        const { error: tutorialAdvanceError } = await supabase.rpc("advance_tutorial_progress", {
           p_expected_step: "FREE_GACHA",
           p_next_step: "AUTO_FORMATION"
         });
         if (!tutorialAdvanceError) {
+          const { data: shortened, error: shortenedError } = await supabase.rpc("resume_short_tutorial");
+          if (shortenedError) throw shortenedError;
+          await bootstrapPromise;
+          await syncBootstrapData(session.user.id);
           setOnboardingState(current => current ? {
             ...current,
-            tutorial_step: nextTutorialStep || "AUTO_FORMATION"
+            tutorial_step: shortened?.tutorial_step || "TUTORIAL_BATTLE"
           } : current);
         }
       }

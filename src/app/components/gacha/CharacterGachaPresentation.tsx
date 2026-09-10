@@ -89,7 +89,7 @@ export default function CharacterGachaPresentation(props: Props) {
   ] });
   if (textOnly) return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="獲得結果">
     <h2>獲得結果</h2><ol>{props.results.map((result, index) => <li key={index}>{result.rarity} {result.name} / {outcome(result)}</li>)}</ol>
-    <OutlawButton onClick={props.onClose}>{props.tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
+    <OutlawButton onClick={props.onClose}>{props.tutorial ? "バトルへ進む" : "ガチャへ戻る"}</OutlawButton>
   </section></div>;
   if (readiness.status !== "ready" || !fontReady) return <div className="cg-overlay"><section className="cg-loading" role="dialog" aria-modal="true" aria-label="ガチャ演出の準備">
     {readiness.status === "error" ? <p role="status">画像を読み込めませんでした</p> : <i className="cg-loading-spinner" role="status" aria-label="ガチャ演出を準備中" />}
@@ -232,7 +232,7 @@ function ReadyCharacterGacha({ results, tutorial, onReveal, onClose, playSound, 
           </button>)}
         </div>
         <p className="cg-summary-hint">仲間をタップして詳細を見る</p>
-        <OutlawButton variant="primary" className="cg-continue" onClick={() => callbacks.current.onClose()}>{tutorial ? "編成へ進む" : "ガチャへ戻る"}</OutlawButton>
+        <OutlawButton variant="primary" className="cg-continue" onClick={() => callbacks.current.onClose()}>{tutorial ? "バトルへ進む" : "ガチャへ戻る"}</OutlawButton>
       </section> : <button type="button" className={`cg-reveal ${stage === "SETTLED" ? "is-settled" : ""}`} onClick={tap} aria-label={stage === "QUOTE" ? "セリフを表示して登場演出へ" : `${current.name} ${reviewing ? "一覧へ戻る" : "タップして次へ"}`} data-character-id={stage === "QUOTE" ? undefined : current.characterId} data-presentation-state={stage === "QUOTE" ? "SSR_QUOTE" : `${rarity}_REVEAL`}>
         {stage === "QUOTE" ? <div className="cg-quote-intro"><span aria-hidden="true">SSR</span><blockquote aria-label={quote}><span aria-hidden="true">{quote.slice(0, reducedMotion ? quote.length : letters)}</span></blockquote><small>{letters < quote.length ? "タップで全文表示" : "TAP"}</small></div> : <div className="cg-reveal-content" key={index}>
           <div className="cg-portrait"><StandingArt result={current} /></div>

@@ -20,7 +20,7 @@ requireText("src/app/components/MissionPanel.tsx", "loadingLabel=\"受取中…\
 requireText("src/app/components/InboxPanel.tsx", "isLoading={presentClaimLoading}", "present claim-all feedback");
 requireText("src/app/components/TribeChatModal.tsx", "loadingLabel=\"送信中…\"", "guild chat feedback");
 requireText("src/app/components/HomeTab.tsx", "tutorialStep === \"AUTO_FORMATION\" ? \"character\" : \"patrol\"", "tutorial formation to first quest CTA");
-requireText("src/app/components/HomeTab.tsx", "title: \"ミッションを進めよう\"", "one-line final Mission handoff CTA");
+requireText("src/app/components/HomeTab.tsx", "title: \"ミッションを確認\"", "one-line final Mission handoff CTA");
 requireText("src/app/components/HomeTab.tsx", "return null;", "completed joined Home omits the large CTA");
 forbidText("src/app/components/HomeTab.tsx", "key: \"mission_reward\"", "mission reward must remain a compact badge rather than a large Home CTA");
 requireText("src/app/components/GuildTab.tsx", "おすすめギルド", "guild recommendation section");

@@ -152,8 +152,9 @@ for (const viewport of viewports) {
     const activity = page.locator(".mypage-live-ticker--visual");
     await expect(activity).toContainText("ACTIVITY");
     await expect(activity).toHaveAttribute("aria-label", "アクティビティ履歴を開く");
-    await expect(activity.locator(".user-identity-row")).toContainText("KAI");
-    await expect(activity).toContainText("SSRを獲得");
+    await expect(activity.locator(".user-identity-row")).toContainText("NEON-R");
+    await expect(activity).toContainText("「NEON CREW」を設立しました");
+    await expect(activity).not.toContainText("SSRを獲得");
     await expect(page.locator(".mypage-leader-layer.is-ssr")).toBeVisible();
     await expect(page.locator(".mypage-visual-area")).not.toHaveClass(/mypage-event-raid/);
     await expect(page.locator(".header-mobile")).not.toContainText("自然回復停止");
@@ -348,9 +349,9 @@ test("raid discovery stays out of the Home stage while the authoritative raid ba
 
   await openHomeScenario(page, "first-home-raid");
   await expect(page.locator(".mypage-event-chip.raid")).toHaveCount(0);
-  await expect(page.locator(".banner-dots .dot")).toHaveCount(5);
-  await expect(page.locator(".mypage-live-ticker--visual")).toContainText("KAI");
-  await expect(page.locator(".mypage-live-ticker--visual")).toContainText("SSRを獲得");
+  await expect(page.locator(".banner-dots .dot")).toHaveCount(4);
+  await expect(page.locator(".mypage-live-ticker--visual")).toContainText("NEON-R");
+  await expect(page.locator(".mypage-live-ticker--visual")).toContainText("「NEON CREW」を設立しました");
   await expect(page.locator(".mypage-power-panel")).toHaveCount(0);
   await page.locator(".mypage-current-location").click();
   await expect(page.getByRole("dialog", { name: "拠点移動" }).getByText("強敵襲来", { exact: true })).toBeVisible();
@@ -592,14 +593,17 @@ test("Activity uses shared identity and respects reduced motion", async ({ page 
   await page.setViewportSize({ width: 390, height: 844 });
   await openHomeScenario(page, "first-home-fresh");
   const ticker = page.locator(".mypage-live-ticker--visual");
-  await expect(ticker.locator(".user-identity-row .character-presentation-thumbnail")).toBeVisible();
-  const underlyingActivityIcon = ticker.locator(".character-presentation-thumbnail");
+  await expect(ticker.locator(".user-identity-row")).toContainText("NEON-R");
+  const underlyingActivityIcon = ticker.locator(".user-identity-row img");
   await ticker.click();
   const dialog = page.getByRole("dialog", { name: "アクティビティ履歴" });
   await expect(dialog).toBeVisible();
-  await expect(dialog.locator(".mypage-activity-log-row")).toHaveCount(12);
-  await expect(dialog.locator("time")).toHaveCount(12);
-  await expect(dialog.locator(".mypage-activity-log-row").first()).toHaveAttribute("data-activity-id", "qa-activity-z");
+  await expect(dialog.locator(".mypage-activity-log-row")).toHaveCount(7);
+  await expect(dialog.locator("time")).toHaveCount(7);
+  await expect(dialog.locator(".mypage-activity-log-row").first()).toHaveAttribute("data-activity-id", "qa-activity-y");
+  await expect(dialog.locator('[data-activity-id="qa-activity-z"]')).toHaveCount(0);
+  await expect(dialog.locator('[data-activity-id="qa-activity-raid"]')).toContainText("RAID OWNER");
+  await expect(dialog.locator('[data-activity-id="qa-activity-raid"]')).toContainText("雷神連合総長が撃破されました");
   await expect(dialog.locator('[data-activity-id="qa-activity-expired"]')).toHaveCount(0);
   const dialogGeometry = await dialog.evaluate((node) => {
     const header = node.querySelector<HTMLElement>(".canonical-dialog-header")!;
@@ -612,7 +616,7 @@ test("Activity uses shared identity and respects reduced motion", async ({ page 
     const firstRect = firstRow.getBoundingClientRect();
     const footerRect = footer.getBoundingClientRect();
     const overlay = node.parentElement!;
-    const activityIcon = document.querySelector<HTMLElement>(".mypage-live-ticker--visual .character-presentation-thumbnail")!;
+    const activityIcon = document.querySelector<HTMLElement>(".mypage-live-ticker--visual .user-identity-row img")!;
     const activityIconRect = activityIcon.getBoundingClientRect();
     const overlayStyle = getComputedStyle(overlay);
     const dialogStyle = getComputedStyle(node);
@@ -644,7 +648,7 @@ test("Activity uses shared identity and respects reduced motion", async ({ page 
     };
   });
   expect(dialogGeometry.bodyClips).toBe(true);
-  expect(dialogGeometry.scrollerScrolls).toBe(true);
+  expect(dialogGeometry.scrollerScrolls).toBe(false);
   expect(dialogGeometry.headerOverlap).toBe(0);
   expect(dialogGeometry.bodyStartsBelowHeader).toBe(true);
   expect(dialogGeometry.bodyEndsAboveFooter).toBe(true);
@@ -677,8 +681,8 @@ test("Activity uses shared identity and respects reduced motion", async ({ page 
   });
   expect(clippedScrollGeometry.activityInsideHeader).toBe(false);
   expect(clippedScrollGeometry.footerOverlap).toBe(0);
-  await dialog.getByRole("button", { name: "KAIのプロフィールを開く", exact: true }).click();
-  await expect(page.locator('[data-opened-profile-id="other-user"]')).toBeAttached();
+  await dialog.getByRole("button", { name: "NEON-Rのプロフィールを開く", exact: true }).click();
+  await expect(page.locator('[data-opened-profile-id="qa-self"]')).toBeAttached();
   await expect(dialog.locator(".character-presentation-missing").first()).toBeVisible();
   expect(await ticker.evaluate((node) => getComputedStyle(node).animationName)).toContain("mypage-activity-enter");
   await page.screenshot({ path: "test-results/first-home-activity-log-390x844.png", fullPage: false });
@@ -724,16 +728,16 @@ test("Activity self identity opens the current user profile authority", async ({
   expect(clipGeometry.lastRowClearsFooter).toBe(true);
   expect(clipGeometry.overlayAnimation).toBe("none");
   expect(clipGeometry.horizontalOverflow).toBeLessThanOrEqual(1);
-  const identity = dialog.getByRole("button", { name: "NEON-Rのプロフィールを開く", exact: true });
-  await expect(identity.locator(".character-presentation-thumbnail")).toBeVisible();
+  const identity = dialog.getByRole("button", { name: "KAIのプロフィールを開く", exact: true });
+  await expect(identity).toBeVisible();
   await identity.click();
-  await expect(page.locator('[data-opened-profile-id="qa-self"]')).toBeAttached();
+  await expect(page.locator('[data-opened-profile-id="other-user"]')).toBeAttached();
 });
 
-test("normal Home keeps the Phase 5 Guild CTA contract", async ({ page }) => {
+test("normal Home never forces Guild membership after the canonical guide", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openHomeScenario(page, "first-home-guild-out");
-  await expect(page.getByRole("button", { name: /ギルドに加入しよう/ })).toBeVisible();
+  await expect(page.locator(".mypage-primary-cta")).toHaveCount(0);
   await openHomeScenario(page, "first-home-guild-in");
   await expect(page.locator(".mypage-primary-cta")).toHaveCount(0);
 });
@@ -754,17 +758,19 @@ test("joined Home never renders a Guild discovery CTA before or after authority 
   expect(await page.evaluate(() => (window as Window & { __HOME_CTA_OBSERVED__?: string[] }).__HOME_CTA_OBSERVED__ ?? [])).not.toContain("ギルドに加入しよう");
 });
 
-test("unaffiliated and pending Guild CTAs wait for their authoritative projections", async ({ page }) => {
+test("unaffiliated and pending Guild projections do not become forced CTAs", async ({ page }) => {
   await page.setViewportSize({ width: 412, height: 915 });
   await openHomeScenario(page, "first-home-guild-out");
   await expect(page.locator('[data-home-scenario="first-home-guild-out"]')).toHaveAttribute("data-cta-authority-ready", "false");
   await expect(page.locator(".mypage-primary-cta")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /ギルドに加入しよう/ })).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('[data-home-scenario="first-home-guild-out"]')).toHaveAttribute("data-cta-authority-ready", "true", { timeout: 3000 });
+  await expect(page.locator(".mypage-primary-cta")).toHaveCount(0);
 
   await openHomeScenario(page, "first-home-guild-pending");
   await expect(page.locator('[data-home-scenario="first-home-guild-pending"]')).toHaveAttribute("data-cta-authority-ready", "false");
   await expect(page.locator(".mypage-primary-cta")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /ギルド申請を確認/ })).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('[data-home-scenario="first-home-guild-pending"]')).toHaveAttribute("data-cta-authority-ready", "true", { timeout: 3000 });
+  await expect(page.locator(".mypage-primary-cta")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /ギルドに加入しよう/ })).toHaveCount(0);
 });
 

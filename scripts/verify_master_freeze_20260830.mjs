@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 
 const readJson = async (name) => JSON.parse(await readFile(new URL(`../src/domain/gameplay/canonical/data/${name}`, import.meta.url), "utf8"));
 const quests = await readJson("quests_20260830.json");
-const missions = await readJson("missions_20260902.json");
+const missions = await readJson("missions_20260910.json");
 const login = await readJson("login_bonus_20260830.json");
 const gacha = await readJson("gacha_production_20260830.json");
 const enemies = await readJson("quest_enemy_pools_20260830.json");
@@ -17,8 +17,8 @@ assert.equal(quests.quests.length, 21);
 assert.deepEqual([quests.difficultyContracts.EASY.durationSec,quests.difficultyContracts.NORMAL.durationSec,quests.difficultyContracts.HARD.durationSec],[300,3600,10800]);
 assert.deepEqual([quests.difficultyContracts.EASY.vitalityCost,quests.difficultyContracts.NORMAL.vitalityCost,quests.difficultyContracts.HARD.vitalityCost],[3,10,20]);
 assert.equal(quests.difficultyContracts.HARD.dailyFirstClearCash,20);
-assert.equal(missions.missions.length,47);
-assert.equal(missions.missions.filter((mission)=>mission.isEnabled&&mission.preopen).length,40);
+assert.equal(missions.missions.length,48);
+assert.equal(missions.missions.filter((mission)=>mission.isEnabled&&mission.preopen).length,41);
 assert.deepEqual([...new Set(missions.missions.map((m)=>m.category))].sort(),["DAILY","NORMAL"]);
 assert.equal(missions.missions.filter((m)=>m.displayGroup==="PROGRESS").reduce((sum,m)=>sum+m.cashReward,0),2000);
 assert.equal(missions.missions.filter((m)=>m.displayGroup!=="PROGRESS").reduce((sum,m)=>sum+m.cashReward,0),5300);
@@ -53,4 +53,4 @@ for (const required of [
 
 const signature = /primary key\(raid_day_key,user_id,reward_type\)/g;
 assert.equal([...sql.matchAll(signature)].length >= 1,true);
-console.log(JSON.stringify({status:"PASS",quests:21,missions:47,raidVariants:7,raidClearBoundary:"raid_day_key+user_id+CLEAR_REWARD"},null,2));
+console.log(JSON.stringify({status:"PASS",quests:21,missions:48,raidVariants:7,raidClearBoundary:"raid_day_key+user_id+CLEAR_REWARD"},null,2));

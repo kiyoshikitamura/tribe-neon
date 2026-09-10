@@ -1184,13 +1184,13 @@ test("tutorial completion resumes through account save and exposes the Home next
     button.click();
   });
 
-  await expect(page.locator(".mypage-primary-cta")).toContainText("無料スキル／装備ガチャを引こう");
+  await expect(page.locator(".mypage-primary-cta")).toContainText("無料ガチャ");
   await expect(page.locator(".footer-mobile")).toBeVisible();
   await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("AUTHENTICATION");
 
   await page.reload();
   await resumeRuleGuide(page);
-  await expect(page.locator(".mypage-primary-cta")).toContainText("無料スキル／装備ガチャを引こう");
+  await expect(page.locator(".mypage-primary-cta")).toContainText("無料ガチャ");
   await expect(page.getByText("ゲームデータを保存")).toBeHidden();
 });
 
@@ -1303,7 +1303,7 @@ test("new mobile player completes the guided first session without footer naviga
   await page.waitForTimeout(750);
   await expect(page.getByText("クエスト結果")).toHaveCount(0);
   await expect(page.locator(".mypage-primary-cta")).toHaveClass(/semantic-cta--primary/);
-  await expect(page.locator(".mypage-primary-cta")).toContainText("無料スキル／装備ガチャを引こう");
+  await expect(page.locator(".mypage-primary-cta")).toContainText("無料ガチャ");
   await expect(page.locator(".footer-mobile")).toBeVisible();
   for (const width of [375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });

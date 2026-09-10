@@ -37,8 +37,6 @@ import PageShell from "./components/ui/PageShell";
 import TitleView from "./components/TitleView";
 import TitleLegalFooter from "./components/TitleLegalFooter";
 import MoveBaseModal from "./components/MoveBaseModal";
-import TutorialWorldIntro from "./components/TutorialWorldIntro";
-import TutorialRuleGuide from "./components/TutorialRuleGuide";
 import AccountAuthenticationModal from "./components/TutorialAuthentication";
 import AuthenticationReminderModal from "./components/AuthenticationReminderModal";
 import BrandedLoading from "./components/ui/BrandedLoading";
@@ -270,8 +268,6 @@ function AppContent() {
             {/* Layer 5: システムオーバーレイ */}
             <AdvView />
             <CardBattleView />
-            <TutorialWorldIntro />
-            <TutorialRuleGuide />
             <AuthenticationReminderModal />
             <AccountAuthenticationModal />
 

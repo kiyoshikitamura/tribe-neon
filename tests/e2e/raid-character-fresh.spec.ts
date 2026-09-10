@@ -246,7 +246,7 @@ test("fresh Mock journey with canonical masters and no progression seeds", async
   await expect(page.locator(".mypage-primary-cta")).toBeVisible();
   await page.waitForTimeout(750);
   await expect(page.getByText("クエスト結果")).toHaveCount(0);
-  await expect(page.locator(".mypage-primary-cta")).toContainText("無料スキル／装備ガチャを引こう");
+  await expect(page.locator(".mypage-primary-cta")).toContainText("無料ガチャ");
   await expect(page.locator(".footer-mobile")).toBeVisible();
   for (const width of [375, 390, 430]) {
     await page.setViewportSize({ width, height: 844 });

@@ -496,7 +496,7 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     playCyberSe: noop,
     fetchPlayerDetail: (userId: string) => setOpenedProfileId(userId),
   };
-  const guideMilestones = ["first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout"];
+  const guideMilestones = ["first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout", "post_tutorial_quest"];
   const milestones = activationComplete
     ? [...guideMilestones, "first_pvp", "ranking_viewed", "first_raid", "guild_activation", "activation_mission_handoff"]
     : raidActive ? [...guideMilestones, "first_pvp", "ranking_viewed"] : guideMilestones;
@@ -504,9 +504,10 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
   const activityNow = Date.parse("2026-08-28T11:00:00+09:00");
   const activities = [
     { id: "qa-activity-z", activity_type: "SSR_CHARACTER", actor_user_id: activityIsSelf ? "qa-self" : "other-user", actor_display_name: activityIsSelf ? "NEON-R" : "KAI", actor_favorite_character_id: activityIsSelf ? homeLeader.id : "char_reiji_01", actor_guild_name: "NIGHT CREW", created_at: new Date(activityNow - 5 * 60_000).toISOString() },
-    { id: "qa-activity-y", activity_type: "GUILD_CREATED", actor_user_id: activityIsSelf ? "other-user" : "qa-self", actor_display_name: activityIsSelf ? "KAI" : "NEON-R", actor_favorite_character_id: activityIsSelf ? "char_reiji_01" : homeLeader.id, actor_guild_name: "NEON CREW", created_at: new Date(activityNow - 5 * 60_000).toISOString() },
+    { id: "qa-activity-y", activity_type: "GUILD_CREATED", actor_user_id: activityIsSelf ? "other-user" : "qa-self", actor_display_name: activityIsSelf ? "KAI" : "NEON-R", actor_favorite_character_id: activityIsSelf ? "char_reiji_01" : homeLeader.id, actor_guild_name: "NEON CREW", display_payload: { guild_name: "NEON CREW" }, created_at: new Date(activityNow - 5 * 60_000).toISOString() },
+    { id: "qa-activity-raid", activity_type: "RAID_BOSS_DEFEATED", actor_user_id: "raid-owner", actor_display_name: "RAID OWNER", actor_favorite_character_id: "char_reiji_01", actor_guild_name: null, display_payload: { boss_name: "雷神連合総長", room_id: "qa-room" }, created_at: new Date(activityNow - 10 * 60_000).toISOString() },
     { id: "qa-activity-x", activity_type: "POWER_RANK_1", actor_user_id: "favorite-missing-user", actor_display_name: "NOIR", actor_favorite_character_id: null, actor_guild_name: null, created_at: new Date(activityNow - 30 * 60_000).toISOString() },
-    ...Array.from({ length: 9 }, (_, index) => ({ id: `qa-activity-${index + 4}`, activity_type: index % 2 === 0 ? "SSR_CHARACTER" : "GUILD_CREATED", actor_user_id: `log-user-${index}`, actor_display_name: `PLAYER-${index + 1}`, actor_favorite_character_id: index % 3 === 0 ? null : "char_alice_01", actor_guild_name: index % 2 === 0 ? "NEON CREW" : null, created_at: new Date(activityNow - (index + 1) * 60 * 60_000).toISOString() })),
+    ...Array.from({ length: 9 }, (_, index) => ({ id: `qa-activity-${index + 4}`, activity_type: index % 2 === 0 ? "SSR_CHARACTER" : "GUILD_CREATED", actor_user_id: `log-user-${index}`, actor_display_name: `PLAYER-${index + 1}`, actor_favorite_character_id: index % 3 === 0 ? null : "char_alice_01", actor_guild_name: index % 2 === 0 ? "NEON CREW" : null, display_payload: index % 2 === 0 ? {} : { guild_name: `TRIBE-${index + 1}` }, created_at: new Date(activityNow - (index + 1) * 60 * 60_000).toISOString() })),
     { id: "qa-activity-expired", activity_type: "GUILD_CREATED", actor_user_id: "expired-user", actor_display_name: "OLD USER", actor_favorite_character_id: null, actor_guild_name: null, created_at: new Date(activityNow - 25 * 60 * 60_000).toISOString() },
   ];
   return <GameContext.Provider value={game}>

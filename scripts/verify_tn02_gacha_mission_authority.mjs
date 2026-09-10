@@ -165,7 +165,7 @@ const [migration, correction, panel, missionMaster] = await Promise.all([
   readFile(new URL("../supabase/migrations/20260902000222_daily_mission_authority_convergence.sql", import.meta.url), "utf8"),
   readFile(new URL("../supabase/migrations/20260902000223_daily_mission_authority_corrections.sql", import.meta.url), "utf8"),
   readFile(new URL("../src/app/components/MissionPanel.tsx", import.meta.url), "utf8"),
-  readFile(new URL("../src/domain/gameplay/canonical/data/missions_20260902.json", import.meta.url), "utf8"),
+  readFile(new URL("../src/domain/gameplay/canonical/data/missions_20260910.json", import.meta.url), "utf8"),
 ]);
 for (const contract of [
   "consume_tutorial_character_daily_free_gacha_trigger",
@@ -187,7 +187,7 @@ for (const detail of ["mission.description", "mission.reward_item", "mission.rew
   assert(panel.includes(detail), `Normal mission details are missing: ${detail}`);
 }
 const parsedMaster = JSON.parse(missionMaster);
-assert.equal(parsedMaster.version, "2026-09-02");
+assert.equal(parsedMaster.version, "2026-09-10");
 assert.equal(parsedMaster.missions.find((entry) => entry.id === "MIS_D_006")?.title, "ギルドで発言しよう");
 
 console.log("TN-02 gacha/mission authority verification: PASS");

@@ -346,12 +346,12 @@ export default function PatrolTab() {
     try {
       const { error } = await supabase.rpc("advance_tutorial_progress", {
         p_expected_step: "TUTORIAL_BATTLE",
-        p_next_step: "RULE_GUIDE",
+        p_next_step: "COMPLETE",
       });
       if (error) return;
       setShowPatrolRewardModal(false);
       setLastPatrolRewards(null);
-      setOnboardingState((current: any) => current ? { ...current, tutorial_step: "RULE_GUIDE" } : current);
+      setOnboardingState((current: any) => current ? { ...current, tutorial_step: "COMPLETE" } : current);
     } finally {
       rewardTransitionRef.current = false;
       setRewardTransitionWorking(false);
@@ -828,7 +828,7 @@ export default function PatrolTab() {
             </div>
 
             {tutorialStep === "TUTORIAL_BATTLE" && (
-              <TutorialNavigator message={<>これで基本は大丈夫。<br />でも、この街でできることはまだまだあるよ。最後に、それだけ見てこ。</>} />
+              <TutorialNavigator message={<>バトル完了。これでチュートリアルは終わりだよ。</>} />
             )}
 
             <OutlawButton 
@@ -839,7 +839,7 @@ export default function PatrolTab() {
               isLoading={rewardTransitionWorking}
               loadingLabel="結果を更新中..."
             >
-              {tutorialStep === "TUTORIAL_BATTLE" ? "次へ" : "閉じる"}
+              {tutorialStep === "TUTORIAL_BATTLE" ? "チュートリアル完了" : "閉じる"}
             </OutlawButton>
           </OutlawCard>
         </div>

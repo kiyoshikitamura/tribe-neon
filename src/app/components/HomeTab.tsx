@@ -86,6 +86,11 @@ type HomeActivity = {
   actor_display_name?: string | null;
   actor_favorite_character_id?: string | null;
   actor_guild_name?: string | null;
+  display_payload?: {
+    guild_name?: string | null;
+    boss_name?: string | null;
+    room_id?: string | null;
+  } | null;
   created_at?: string | null;
   [key: string]: unknown;
 };
@@ -102,10 +107,17 @@ type HomeBanner = {
 
 function activityDescription(activity: HomeActivity) {
   if (activity.activity_type === "RAID_HELP_REQUEST") return "レイドの救援を依頼";
-  if (activity.activity_type === "GUILD_CREATED") return "TRIBEを結成";
+  if (activity.activity_type === "RAID_BOSS_DEFEATED") return activity.display_payload?.boss_name
+    ? `${activity.display_payload.boss_name}が撃破されました`
+    : "レイドボスが撃破されました";
+  if (activity.activity_type === "GUILD_CREATED") return activity.display_payload?.guild_name
+    ? `「${activity.display_payload.guild_name}」を設立しました`
+    : "ギルドを設立しました";
   if (activity.activity_type === "POWER_RANK_1") return "総戦力ランキング1位に到達";
-  return "SSRを獲得";
+  return "";
 }
+
+const VISIBLE_ACTIVITY_TYPES = new Set(["RAID_HELP_REQUEST", "RAID_BOSS_DEFEATED", "GUILD_CREATED", "POWER_RANK_1"]);
 
 function activityTimeLabel(value?: string | null) {
   if (!value) return "";
@@ -143,10 +155,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     session,
     activePatrols,
     onboardingState,
-    userGuildMember,
-    pendingGuildJoinRequests,
     guildMembershipAuthorityReady,
-    guildDiscoveryState,
     featureOperatingStates,
     fetchPlayerDetail,
     setErrorMessage,
@@ -329,7 +338,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
         setFunnelAuthorityOwnerUserId(session.user.id);
       });
     return () => { active = false; };
-  }, [qaState?.funnelMilestones, session?.user?.id, userGuildMember?.guild_id]);
+  }, [qaState?.funnelMilestones, session?.user?.id]);
 
   useEffect(() => {
     if (qaState?.socialActivities) return;
@@ -339,7 +348,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       const { data, error } = await supabase.rpc("get_recent_social_activity_feed", { p_limit: 20 });
       if (error || !active) return;
       const visible = normalizeRecentActivities((data || []) as HomeActivity[])
-        .filter((event: HomeActivity) => !["FRIEND", "GVG", "SHOP", "PAYMENT"].includes(String(event.activity_type || "").toUpperCase()));
+        .filter((event: HomeActivity) => VISIBLE_ACTIVITY_TYPES.has(String(event.activity_type || "").toUpperCase()));
       const actorIds = [...new Set(visible.map((event: HomeActivity) => event.actor_user_id).filter((id): id is string => Boolean(id)))];
       const profilesById = new Map<string, { username?: string | null; favorite_character_id?: string | null; guild_name?: string | null }>();
       if (actorIds.length > 0) {
@@ -364,7 +373,8 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
 
   const socialActivityNowMs = qaState?.socialActivityNowMs ?? activityWindowNow;
   const visibleSocialActivities = useMemo(
-    () => normalizeRecentActivities(socialActivities, socialActivityNowMs),
+    () => normalizeRecentActivities(socialActivities, socialActivityNowMs)
+      .filter((activity) => VISIBLE_ACTIVITY_TYPES.has(String(activity.activity_type || "").toUpperCase())),
     [socialActivities, socialActivityNowMs],
   );
 
@@ -392,30 +402,27 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       ? qaState.ctaAuthorityReady !== false
       : Boolean(session?.user?.id
         && onboardingState
-        && funnelAuthorityOwnerUserId === session.user.id
-        && guildMembershipAuthorityReady);
+        && funnelAuthorityOwnerUserId === session.user.id);
     if (!ctaAuthorityReady) return null;
     const tutorialStep = onboardingState?.tutorial_step;
     if (tutorialStep && !onboardingState?.gameplay_authorized) return { key: "tutorial", title: "チュートリアルを続ける", tab: tutorialStep === "FREE_GACHA" ? "gacha" : tutorialStep === "AUTO_FORMATION" ? "character" : "patrol" };
-    if (!funnelMilestones.has("first_free_skill_ten_pull")) return { key: "first_free_asset_gacha", title: "無料スキル／装備ガチャを引こう", tab: "gacha" };
-    if (!funnelMilestones.has("first_free_equipment_ten_pull")) return { key: "first_free_asset_gacha", title: "無料スキル／装備ガチャを引こう", tab: "gacha" };
-    if (!funnelMilestones.has("first_main_loadout")) return { key: "first_main_loadout", title: "装備を整えよう", tab: "character" };
-    if (!funnelMilestones.has("first_pvp")) return { key: "first_pvp", title: "最初のバトルへ挑戦", tab: "pvp" };
-    if (!funnelMilestones.has("first_raid") && isRaidActive) return { key: "first_raid", title: "開催中レイドへ", tab: "raid" };
-    if (!userGuildMember) {
-      if (pendingGuildJoinRequests.length > 0) return { key: "guild_pending", title: "ギルド申請を確認", tab: "guild" };
-      const discoveryState = qaState?.guildDiscoveryState || guildDiscoveryState;
-      if (discoveryState === "empty") return { key: "guild_creation", title: "ギルドを設立しよう", tab: "guild" };
-      if (discoveryState === "available") return { key: "guild_discovery", title: "ギルドに加入しよう", tab: "guild" };
-      return null;
-    }
+    if (!funnelMilestones.has("first_free_skill_ten_pull")) return { key: "first_free_asset_gacha", title: "無料ガチャ", tab: "gacha" };
+    if (!funnelMilestones.has("first_free_equipment_ten_pull")) return { key: "first_free_asset_gacha", title: "無料ガチャ", tab: "gacha" };
+    const usesCharacterDialog = funnelMilestones.has("character_setup_dialog_eligible");
+    const characterGuideComplete = usesCharacterDialog
+      ? funnelMilestones.has("character_setup_dialog_consumed")
+      : funnelMilestones.has("first_main_loadout");
+    if (!characterGuideComplete) return { key: "character_setup", title: "キャラ装備", tab: "character" };
+    if (!funnelMilestones.has("post_tutorial_quest")) return { key: "post_tutorial_quest", title: "CASHをゲット", tab: "patrol" };
+    if (!funnelMilestones.has("first_pvp")) return { key: "first_pvp", title: "腕試しをしよう", tab: "pvp" };
+    if (!funnelMilestones.has("first_raid")) return { key: "first_raid", title: "強敵に挑戦", tab: "raid" };
     if (!funnelMilestones.has("activation_mission_handoff")) return {
       key: "activation_mission_handoff",
-      title: "ミッションを進めよう",
+      title: "ミッションを確認",
       action: "mission_handoff",
     };
     return null;
-  }, [funnelMilestones, funnelAuthorityOwnerUserId, guildDiscoveryState, guildMembershipAuthorityReady, onboardingState, pendingGuildJoinRequests.length, qaState, session, userGuildMember, isRaidActive]);
+  }, [funnelMilestones, funnelAuthorityOwnerUserId, onboardingState, qaState, session]);
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -452,7 +459,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       if (primaryCta.key === "first_free_asset_gacha") {
         setGuideGachaCategory(funnelMilestones.has("first_free_skill_ten_pull") ? "EQUIPMENT" : "SKILL");
       }
-      navigateTab(primaryCta.tab, primaryCta.key === "first_main_loadout" ? "party" : undefined);
+      navigateTab(primaryCta.tab, primaryCta.key === "character_setup" ? "party" : undefined);
     }
     playCyberSe("click");
   };

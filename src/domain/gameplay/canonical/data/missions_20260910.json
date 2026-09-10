@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-02",
+  "version": "2026-09-10",
   "authority": "M6_Mission_Canonical",
   "missions": [
     {
@@ -93,6 +93,36 @@
       "isProvisional": false,
       "preopen": true,
       "cta": null
+    },
+    {
+      "id": "MIS_D_010",
+      "category": "DAILY",
+      "displayGroup": "BATTLE",
+      "triggerType": "PVP_FINALIZED_BATTLE_COUNT",
+      "title": "バトルを2回行う",
+      "description": "バトルを2回行う",
+      "targetValue": 2,
+      "conditionParams": {
+        "cta_tab": "pvp",
+        "cta_label": "バトルへ"
+      },
+      "rewardItemId": "RAID_POINT_TICKET",
+      "rewardQuantity": 1,
+      "cashReward": 0,
+      "prerequisiteMissionId": null,
+      "nextMissionId": null,
+      "displayOrder": 45,
+      "repeatRule": "DAILY_RESET",
+      "claimRule": "EXACTLY_ONCE",
+      "isEnabled": true,
+      "isRepeatable": true,
+      "isProvisional": false,
+      "preopen": true,
+      "cta": {
+        "tab": "pvp",
+        "action": null,
+        "label": "バトルへ"
+      }
     },
     {
       "id": "MIS_D_005",

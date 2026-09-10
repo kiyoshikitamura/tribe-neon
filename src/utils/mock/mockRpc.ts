@@ -415,10 +415,12 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
   if (funcName === "complete_activation_mission_handoff") {
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
     if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
-    const members = client.getStorage("guild_members") || [];
     const milestones = client.getStorage("user_funnel_milestones") || [];
-    const isGuildMember = members.some((entry: any) => entry.user_id === userId);
-    if (!isGuildMember) {
+    const requiredMilestones = [
+      "first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout",
+      "post_tutorial_quest", "first_pvp", "first_raid",
+    ];
+    if (requiredMilestones.some((milestone) => !milestones.some((entry: any) => entry.user_id === userId && entry.milestone === milestone))) {
       return { data: null, error: { message: "activation prerequisites not met", code: "55000" } };
     }
     if (!milestones.some((entry: any) => entry.user_id === userId && entry.milestone === "activation_mission_handoff")) {
@@ -820,6 +822,68 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       skillCount: skills.filter((entry: any) => entry.equipped_character_id === character.id).length,
       equipmentCount: equipments.filter((entry: any) => entry.equipped_character_id === character.id).length,
     })) }, error: null };
+  }
+
+  if (funcName === "get_character_setup_dialog_state") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const milestones = client.getStorage("user_funnel_milestones") || [];
+    return { data: {
+      eligible: milestones.some((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_eligible"),
+      consumed: milestones.some((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_consumed"),
+    }, error: null };
+  }
+
+  if (funcName === "complete_character_setup_dialog") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const action = String(params?.p_action || "").toUpperCase();
+    const milestones = client.getStorage("user_funnel_milestones") || [];
+    if (!userId || !milestones.some((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_eligible")) {
+      return { data: null, error: { message: "character setup dialog is unavailable", code: "42501" } };
+    }
+    const consumed = milestones.find((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_consumed");
+    if (consumed) return { data: { status: "already_consumed", result: consumed.metadata }, error: null };
+    const before = Number((client.getStorage("user_power_rankings") || []).find((row: any) => row.user_id === userId)?.total_power || 0);
+    let partyCount = 0;
+    let equipmentCount = 0;
+    if (action === "AUTO_SETUP") {
+      const formationResult = await executeMockRpc(client, "save_recommended_main_formation", {});
+      if (formationResult.error) return formationResult;
+      const allCharacters = client.getStorage("user_characters") || [];
+      const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+      const party = formation.map((row: any) => allCharacters.find((entry: any) => entry.user_id === userId && entry.id === row.user_character_id)).filter(Boolean);
+      partyCount = party.length;
+      const partyIds = new Set(party.map((entry: any) => entry.id));
+      const equipments = client.getStorage("user_equipments") || [];
+      equipments.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
+      const categories = ["WEAPON", "WEAPON", "HEAD", "BODY", "LEGS", "ACCESSORY", "ACCESSORY"];
+      for (let slot = 0; slot < categories.length; slot += 1) {
+        const members = slot % 2 === 0 ? party : party.slice().reverse();
+        for (const character of members) {
+          const candidate = equipments.filter((entry: any) => {
+            const master = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (entry.equipment_id || entry.equipment_master_id));
+            return entry.user_id === userId && !entry.equipped_character_id && master?.category === categories[slot]
+              && (!master.exclusive_character_id || master.exclusive_character_id === character.character_id);
+          }).sort((left: any, right: any) => {
+            const lm = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (left.equipment_id || left.equipment_master_id))!;
+            const rm = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (right.equipment_id || right.equipment_master_id))!;
+            const score = (owned: any, master: any) => (["hp", "atk", "def"] as const).reduce((sum, key) => sum + canonicalEquipmentFlatStat(master.base_stats[key], Number(owned.level || 1), Number(owned.plus_val || 0)), 0);
+            return Number(rm.exclusive_character_id === character.character_id) - Number(lm.exclusive_character_id === character.character_id)
+              || score(right, rm) - score(left, lm) || String(left.id).localeCompare(String(right.id));
+          })[0];
+          if (candidate) { candidate.equipped_character_id = character.id; candidate.slot_index = slot; equipmentCount += 1; }
+        }
+      }
+      client.setStorage("user_equipments", equipments);
+      recordMockLifetimeMilestone(client, userId, "first_main_loadout", { source: "character_setup_dialog", equipmentCount });
+    } else if (action !== "LATER") {
+      return { data: null, error: { message: "invalid dialog action", code: "22023" } };
+    }
+    const characters = client.getStorage("user_characters") || [];
+    const equipments = client.getStorage("user_equipments") || [];
+    const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId);
+    const after = formation.reduce((sum: number, row: any) => sum + mockCharacterPower(characters.find((character: any) => character.id === row.user_character_id) || {}, equipments), 0);
+    recordMockLifetimeMilestone(client, userId, "character_setup_dialog_consumed", { action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount });
+    return { data: { status: "success", action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount }, error: null };
   }
 
   if (funcName === "get_current_main_formation") {
@@ -1502,21 +1566,57 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (!userId) return { data: null, error: { message: "Authentication is required" } };
     const progress = client.getStorage("tutorial_progress") || [];
     if (!progress.some((entry: any) => entry.user_id === userId)) {
-      progress.push({ user_id: userId, step_id: "WORLD_INTRO" });
+      progress.push({ user_id: userId, step_id: "FREE_GACHA" });
       client.setStorage("tutorial_progress", progress);
     }
-    return { data: "WORLD_INTRO", error: null };
+    return { data: progress.find((entry: any) => entry.user_id === userId)?.step_id || "FREE_GACHA", error: null };
   }
 
   if (funcName === "advance_tutorial_progress") {
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
     const progress = client.getStorage("tutorial_progress") || [];
     const entry = progress.find((value: any) => value.user_id === userId);
-    if (!entry || entry.step_id !== params.p_expected_step) return { data: null, error: { message: "Unexpected tutorial step" } };
+    if (!userId || !entry || entry.step_id !== params.p_expected_step) return { data: null, error: { message: "Unexpected tutorial step" } };
     entry.step_id = params.p_next_step;
-    if (params.p_next_step === "COMPLETE") entry.authentication_pending = false;
+    if (params.p_next_step === "COMPLETE") {
+      entry.authentication_pending = false;
+      recordMockLifetimeMilestone(client, userId, "tutorial_complete", { source: "tutorial_progress" });
+      recordMockLifetimeMilestone(client, userId, "character_setup_dialog_eligible", { flow: "short_tutorial_v1" });
+    }
     client.setStorage("tutorial_progress", progress);
     return { data: entry.step_id, error: null };
+  }
+
+  if (funcName === "resume_short_tutorial") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const progressRows = client.getStorage("tutorial_progress") || [];
+    const progress = progressRows.find((row: any) => row.user_id === userId);
+    if (!userId || !progress) return { data: null, error: { message: "Tutorial has not started", code: "P0002" } };
+    if (progress.step_id === "WORLD_INTRO") progress.step_id = "FREE_GACHA";
+    if (progress.step_id === "RULE_GUIDE") {
+      progress.step_id = "COMPLETE";
+      recordMockLifetimeMilestone(client, userId, "tutorial_complete", { source: "tutorial_progress" });
+      recordMockLifetimeMilestone(client, userId, "character_setup_dialog_eligible", { flow: "short_tutorial_v1" });
+    }
+    if (progress.step_id === "AUTO_FORMATION") {
+      const saved = await executeMockRpc(client, "save_recommended_main_formation", {});
+      if (saved.error) return saved;
+      progress.step_id = "DISPATCH";
+    }
+    let patrol = (client.getStorage("user_patrols") || []).find((row: any) => row.user_id === userId && row.status !== "COMPLETED" && (row.course_id || row.quest_id) === "q_shinjuku_1");
+    if (progress.step_id === "DISPATCH") {
+      if (!patrol) {
+        const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+        const owned = client.getStorage("user_characters") || [];
+        const character = owned.find((row: any) => row.id === formation[0]?.user_character_id);
+        patrol = { id: `tutorial-patrol-${userId}`, user_id: userId, course_id: "q_shinjuku_1", character_id: character?.character_id, status: "ONGOING", has_battle_event: true, battle_resolved: false, started_at: new Date().toISOString(), expires_at: new Date().toISOString() };
+        const patrols = client.getStorage("user_patrols") || []; patrols.push(patrol); client.setStorage("user_patrols", patrols);
+      }
+      progress.step_id = "FREE_INSTANT";
+    }
+    if (progress.step_id === "FREE_INSTANT") { if (patrol) patrol.status = "CLAIMABLE"; progress.step_id = "TUTORIAL_BATTLE"; }
+    client.setStorage("tutorial_progress", progressRows);
+    return { data: { status: "ready", tutorial_step: progress.step_id, patrol_id: patrol?.id || null }, error: null };
   }
 
   if (funcName === "prepare_current_tutorial_growth") {
@@ -2486,7 +2586,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       const allProgress = client.getStorage("tutorial_progress") || [];
       let progress = allProgress.find((entry: any) => entry.user_id === userId);
       if (!progress) {
-        progress = { user_id: userId, step_id: "WORLD_INTRO" };
+        progress = { user_id: userId, step_id: "FREE_GACHA" };
         allProgress.push(progress);
         client.setStorage("tutorial_progress", allProgress);
       }
@@ -2515,10 +2615,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
 
     const progress = client.getStorage("tutorial_progress") || [];
     if (!progress.some((entry: any) => entry.user_id === userId)) {
-      progress.push({ user_id: userId, step_id: "WORLD_INTRO" });
+      progress.push({ user_id: userId, step_id: "FREE_GACHA" });
       client.setStorage("tutorial_progress", progress);
     }
-    return { data: { status: "success", tutorial_step: "WORLD_INTRO" }, error: null };
+    return { data: { status: "success", tutorial_step: "FREE_GACHA" }, error: null };
   }
 
   if (funcName === "buy_normal_shop_product") {
@@ -3192,6 +3292,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("presents", presents);
     client.setStorage("user_patrols", patrols);
     evaluateMockMissionProgress(client, userId, "PATROL_CLEAR", 1);
+    const guideMilestones = client.getStorage("user_funnel_milestones") || [];
+    if (guideMilestones.some((entry: any) => entry.user_id === userId && entry.milestone === "first_main_loadout")) {
+      recordMockLifetimeMilestone(client, userId, "post_tutorial_quest", { source: "quest_claim", patrolId: p_patrol_id });
+    }
     recordMockFunnelMilestone(client, userId, "first_battle", { source: "patrol" });
     return {
       data: {
@@ -3306,10 +3410,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("users", users);
     const progressRows = client.getStorage("tutorial_progress") || [];
     const progress = progressRows.find((row: any) => row.user_id === userId);
-    if (progress) Object.assign(progress, { step_id: "WORLD_INTRO", completed_at: null });
-    else progressRows.push({ user_id: userId, step_id: "WORLD_INTRO" });
+    if (progress) Object.assign(progress, { step_id: "FREE_GACHA", completed_at: null });
+    else progressRows.push({ user_id: userId, step_id: "FREE_GACHA" });
     client.setStorage("tutorial_progress", progressRows);
-    const result = { status: "success", tutorial_step: "WORLD_INTRO", request_id: params.p_request_id };
+    const result = { status: "success", tutorial_step: "FREE_GACHA", request_id: params.p_request_id };
     requests.push({ request_id: params.p_request_id, user_id: userId, status: "COMPLETED", result });
     client.setStorage("gameplay_reset_requests", requests);
     return { data: result, error: null };

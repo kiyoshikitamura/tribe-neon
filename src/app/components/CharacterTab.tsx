@@ -88,7 +88,9 @@ export default function CharacterTab() {
     onboardingState,
     scoutAnimationState,
     syncBootstrapData,
-    setConfirmDialogConfig
+    setConfirmDialogConfig,
+    totalPower,
+    setErrorMessage
   } = useGame();
 
   // ボトムシートモーダル状態: null (閉じ) | "STATUS" | "SKILL" | "GEAR"
@@ -109,6 +111,9 @@ export default function CharacterTab() {
   const [tutorialGrowth, setTutorialGrowth] = useState<any>(null);
   const [tutorialGrowthPending, setTutorialGrowthPending] = useState(false);
   const [skillDisplayById, setSkillDisplayById] = useState<Record<string, any>>({});
+  const [characterSetupDialogOpen, setCharacterSetupDialogOpen] = useState(false);
+  const [characterSetupPending, setCharacterSetupPending] = useState(false);
+  const [characterSetupResult, setCharacterSetupResult] = useState<any>(null);
   const formationSubmittingRef = useRef(false);
   const tutorialFormationContinueRef = useRef<(() => void) | null>(null);
   const tutorialFormationContinueRequestedRef = useRef(false);
@@ -134,6 +139,39 @@ export default function CharacterTab() {
     });
     return () => { cancelled = true; };
   }, [session?.user?.id, ownedSkillMasterIds.join("|")]);
+
+  useEffect(() => {
+    if (!session?.user?.id || !onboardingState?.gameplay_authorized || isTutorialStep) {
+      setCharacterSetupDialogOpen(false);
+      return;
+    }
+    let active = true;
+    void supabase.rpc("get_character_setup_dialog_state").then(({ data, error }) => {
+      if (!active || error) return;
+      setCharacterSetupDialogOpen(data?.eligible === true && data?.consumed !== true);
+    });
+    return () => { active = false; };
+  }, [isTutorialStep, onboardingState?.gameplay_authorized, session?.user?.id]);
+
+  const completeCharacterSetupDialog = async (action: "AUTO_SETUP" | "LATER") => {
+    if (characterSetupPending || !session?.user?.id) return;
+    setCharacterSetupPending(true);
+    try {
+      const { data, error } = await supabase.rpc("complete_character_setup_dialog", { p_action: action });
+      if (error) throw error;
+      setCharacterSetupDialogOpen(false);
+      if (action === "AUTO_SETUP" && data?.status === "success") {
+        await syncBootstrapData(session.user.id);
+        setCharacterSetupResult(data);
+      }
+      playCyberSe("click");
+    } catch (error: any) {
+      console.warn("Character setup dialog failed:", error);
+      setErrorMessage(error?.message || "おすすめ設定を完了できませんでした。");
+    } finally {
+      setCharacterSetupPending(false);
+    }
+  };
 
   useEffect(() => {
     if (onboardingState?.tutorial_step !== "AUTO_FORMATION") {
@@ -337,7 +375,30 @@ export default function CharacterTab() {
 
   const leftSlots = GEAR_SLOTS_MASTER.slice(0, 3);
   const rightSlots = GEAR_SLOTS_MASTER.slice(3, 7);
-  if (!isTutorialStep) return <CharacterSystemV2 />;
+  if (!isTutorialStep) return <>
+    <CharacterSystemV2 />
+    {characterSetupDialogOpen && <CanonicalDialog
+      title="おすすめパーティと装備を設定しますか？"
+      ariaLabel="キャラクターページ初回おすすめ設定"
+      actions={[
+        { label: characterSetupPending ? "設定中..." : "おすすめ設定する", semantic: "primary", disabled: characterSetupPending, onClick: () => void completeCharacterSetupDialog("AUTO_SETUP") },
+        { label: "あとで", semantic: "secondary", disabled: characterSetupPending, onClick: () => void completeCharacterSetupDialog("LATER") },
+      ]}
+    >
+      今のキャラクターから、おすすめの編成と装備を自動で設定します。
+      {Number(totalPower || 0) > 0 && <small className="character-setup-current-power">現在の総合力 {Number(totalPower).toLocaleString()}</small>}
+    </CanonicalDialog>}
+    {characterSetupResult && <CanonicalDialog
+      title="おすすめ設定が完了しました"
+      actions={[{ label: "確認する", semantic: "primary", onClick: () => setCharacterSetupResult(null) }]}
+    >
+      <div className="character-setup-result" data-acceptance-state="CHARACTER_SETUP_COMPLETE">
+        <p>パーティと装備をCharacter Pageへ反映しました。</p>
+        <strong>総合力 {Number(characterSetupResult.powerBefore || 0).toLocaleString()} → {Number(characterSetupResult.powerAfter || 0).toLocaleString()}</strong>
+        <small>Party {Number(characterSetupResult.partyCount || 0)}人 / Equipment {Number(characterSetupResult.equipmentCount || 0)}件</small>
+      </div>
+    </CanonicalDialog>}
+  </>;
   if (!activeCharRecord || !activeCharMaster) {
     return <div className="char-tab-container char-data-unavailable" role="status">キャラクターデータを確認しています。</div>;
   }

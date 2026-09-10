@@ -58,10 +58,10 @@ async function addMilestones(page: import("@playwright/test").Page, ...names: st
   }, { userId, names });
 }
 
-test("guide resumes Skill, Equipment, loadout and PvP in order without view completion", async ({ page }) => {
+test("guide resumes free gacha, loadout and Quest in canonical order without view completion", async ({ page }) => {
   await enterGame(page);
   const primary = page.locator(".mypage-primary-cta");
-  await expect(primary).toContainText("無料スキル／装備ガチャを引こう");
+  await expect(primary).toContainText("無料ガチャ");
   await primary.click();
   await expect(page.locator('[data-gacha-category="SKILL"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("初心者ガイド：スキルの無料10連を引こう")).toBeVisible();
@@ -70,54 +70,53 @@ test("guide resumes Skill, Equipment, loadout and PvP in order without view comp
 
   await addMilestones(page, "first_free_skill_ten_pull");
   await page.getByRole("button", { name: "マイページ", exact: true }).click();
-  await expect(primary).toContainText("無料スキル／装備ガチャを引こう");
+  await expect(primary).toContainText("無料ガチャ");
   await primary.click();
   await expect(page.locator('[data-gacha-category="EQUIPMENT"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("初心者ガイド：装備の無料10連を引こう")).toBeVisible();
 
   await addMilestones(page, "first_free_equipment_ten_pull");
   await page.getByRole("button", { name: "マイページ", exact: true }).click();
-  await expect(primary).toContainText("装備を整えよう");
+  await expect(primary).toContainText("キャラ装備");
   await primary.click();
   await expect(page.getByRole("button", { name: "キャラ", exact: true })).toHaveClass(/active/);
   await expect(page.locator(".character-v2-party")).toBeVisible();
   await expect(page.getByRole("button", { name: "おまかせ編成", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "おまかせ装備", exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "マイページ", exact: true }).click();
   await page.getByRole("button", { name: "キャラ", exact: true }).click();
   await expect(page.locator(".character-v2-party")).toHaveCount(0);
-  await expect(page.getByText("所持キャラクター", { exact: true })).toBeVisible();
   persisted = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_user_funnel_milestones") || "[]"));
   expect(persisted.some((row: any) => row.milestone === "first_main_loadout")).toBeFalsy();
 
   await addMilestones(page, "first_main_loadout");
   await page.reload();
   await enterGame(page);
-  await expect(primary).toContainText("最初のバトルへ挑戦");
+  await expect(primary).toContainText("CASHをゲット");
   await expect(primary).not.toContainText("ランキングを確認");
 });
 
-test("post-loadout guide keeps PvP, Raid, Guild and Mission handoff", async ({ page }) => {
+test("post-loadout guide keeps Quest, Battle, Raid and Mission handoff without Guild", async ({ page }) => {
   await enterGame(page);
-  await addMilestones(page, "first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout", "first_pvp");
+  await addMilestones(page, "first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout");
   await page.reload();
   await enterGame(page);
   const primary = page.locator(".mypage-primary-cta");
-  await expect(primary).toContainText("開催中レイドへ");
+  await expect(primary).toContainText("CASHをゲット");
 
-  await addMilestones(page, "first_raid");
-  await page.getByRole("button", { name: "キャラ", exact: true }).click();
-  await page.getByRole("button", { name: "マイページ", exact: true }).click();
-  await expect(primary).toContainText("ギルドに加入しよう");
-
-  await page.evaluate(({ userId }) => {
-    const guildId = "30000000-0000-4000-8000-000000002218";
-    localStorage.setItem("mock_db_guilds", JSON.stringify([{ id: guildId, name: "GUIDE TRIBE", leader_id: userId, level: 5 }]));
-    localStorage.setItem("mock_db_guild_members", JSON.stringify([{ id: "guide-member", guild_id: guildId, user_id: userId, role: "MASTER" }]));
-    sessionStorage.setItem(`tribe-neon:guild-welcome-shown:${userId}:${guildId}`, "1");
-  }, { userId });
+  await addMilestones(page, "post_tutorial_quest");
   await page.reload();
   await enterGame(page);
-  await expect(primary).toContainText("ミッションを進めよう");
+  await expect(primary).toContainText("腕試しをしよう");
+
+  await addMilestones(page, "first_pvp");
+  await page.reload();
+  await enterGame(page);
+  await expect(primary).toContainText("強敵に挑戦");
+
+  await addMilestones(page, "first_raid");
+  await page.reload();
+  await enterGame(page);
+  await expect(primary).toContainText("ミッションを確認");
+  await expect(page.getByText(/ギルドに加入しよう|ギルドを設立しよう/, { exact: true })).toHaveCount(0);
 });

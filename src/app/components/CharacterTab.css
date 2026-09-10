@@ -1884,3 +1884,5 @@
 
 .char-equip-slot>span,.char-skill-card>span,.char-tile-item>span{z-index:4}
 .char-equip-slot.is-selecting,.char-skill-card.is-selecting,.char-tile-item.is-selected{outline:2px solid var(--neon-cyan);outline-offset:1px}
+.character-setup-current-power{display:block;margin-top:12px;color:var(--ui-text-primary);font-weight:700}
+.character-setup-result{display:grid;gap:10px}.character-setup-result p{margin:0}.character-setup-result strong{color:var(--ui-accent);font-size:18px}.character-setup-result small{color:var(--ui-text-secondary)}

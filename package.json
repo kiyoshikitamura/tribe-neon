@@ -178,7 +178,9 @@
     "verify:preopen-reward-addendum": "node scripts/verify_preopen_reward_addendum_contract.mjs",
     "audit:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs --allow-known-blockers",
     "verify:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs",
-    "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs"
+    "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs",
+    "verify:game03-daily-cta-activity": "node --experimental-strip-types scripts/verify_game03_daily_cta_activity.mjs",
+    "verify:game03-short-tutorial-character-setup": "node --experimental-strip-types scripts/verify_game03_short_tutorial_character_setup.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

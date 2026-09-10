@@ -23,6 +23,7 @@ test.beforeEach(async ({ page }, testInfo) => {
       { user_id: me, milestone: "first_free_skill_ten_pull", occurrence_count: 1 },
       { user_id: me, milestone: "first_free_equipment_ten_pull", occurrence_count: 1 },
       { user_id: me, milestone: "first_main_loadout", occurrence_count: 1 },
+      { user_id: me, milestone: "post_tutorial_quest", occurrence_count: 1 },
       { user_id: me, milestone: "first_pvp", occurrence_count: 1 },
     ]));
     localStorage.setItem("mock_db_guilds", JSON.stringify([
@@ -52,9 +53,9 @@ async function enterGame(page: import("@playwright/test").Page) {
   if (await loginBonusClose.isVisible()) await loginBonusClose.click();
 }
 
-test("First PvP milestone resumes through Raid and public Guild discovery without requiring Ranking", async ({ page }) => {
+test("First PvP milestone resumes through Raid without requiring Ranking or Guild", async ({ page }) => {
   await enterGame(page);
-  await expect(page.locator(".mypage-primary-cta")).toContainText("開催中レイドへ");
+  await expect(page.locator(".mypage-primary-cta")).toContainText("強敵に挑戦");
   await page.locator(".mypage-primary-cta").click();
   await expect(page.locator(".raid-view")).toBeVisible();
 

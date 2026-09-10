@@ -257,7 +257,7 @@ export function useAuth(
       void bindCurrentAcquisitionJourney(true);
       setErrorMessage(null);
       actionPerformance.mark("response");
-      const tutorialStep = typeof data?.tutorial_step === "string" ? data.tutorial_step : "WORLD_INTRO";
+      const tutorialStep = typeof data?.tutorial_step === "string" ? data.tutorial_step : "FREE_GACHA";
       // The successful initialization response is authoritative. Project the
       // next tutorial state atomically so the generic game shell cannot flash
       // between the name screen and the world-introduction overlay.
