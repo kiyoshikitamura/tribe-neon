@@ -39,6 +39,7 @@ export default function RaidRescueLink({ rescueId, onOpen, entry, source, status
   const expires = card?.room.expiresAt.status === 'available' ? Date.parse(card.room.expiresAt.value) : null;
   const expired = state === 'expired' || (now !== null && expires !== null && expires <= now);
   const ended = state === 'cleared' || expired;
+  const canJoin = Boolean(card && state === 'active' && !expired);
   const minutes = now !== null && expires !== null ? Math.max(0, Math.ceil((expires - now) / 60000)) : null;
   const origin = card?.rescue.status === 'available' ? card.rescue.value.source : source;
   return <section className="raid-rescue-link" aria-label="レイド救援" data-rescue-id={rescueId} data-room-id={card?.room.roomId}>
@@ -49,6 +50,7 @@ export default function RaidRescueLink({ rescueId, onOpen, entry, source, status
       <div className="raid-rescue-link__hp"><span>残HP {rate === null ? '未取得' : `${Math.ceil(rate)}%`}</span>{rate !== null && <progress max={100} value={rate} aria-label="残HP" />}</div>
       <div className="raid-rescue-link__battle"><span>{state === 'cleared' ? '撃破済み' : expired ? '期限終了' : minutes === null ? '残り時間未取得' : `残り${Math.floor(minutes / 60)}時間${minutes % 60}分`}</span><span>{card.room.participantCount.status === 'available' ? `登録${card.room.participantCount.value}人` : '人数未取得'}</span></div>
     </> : <p className="raid-rescue-link__unknown">{status === 'loading' ? <span className="raid-rescue-link__spinner" role="status" aria-label="読み込み中" /> : status === 'error' ? '戦況を取得できませんでした' : status === 'success' ? '戦況を表示できません。公開先や所属を確認してください' : '対象レイドの戦況を確認できます。'}</p>}
-    <OutlawButton loadingLabel="" fullWidth aria-label="救援先を開く" onClick={() => { openRaidRescue(rescueId); onOpen?.(); }}>{ended ? '戦況を見る' : '救援に向かう'}</OutlawButton>
+    {canJoin ? <OutlawButton loadingLabel="" fullWidth aria-label="救援に向かう" onClick={() => { openRaidRescue(rescueId); onOpen?.(); }}>救援に向かう</OutlawButton>
+      : ended ? <OutlawButton loadingLabel="" fullWidth aria-label="戦況を見る" disabled>戦況を見る</OutlawButton> : null}
   </section>;
 }

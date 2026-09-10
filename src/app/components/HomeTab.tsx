@@ -134,7 +134,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     setDmRecipientId,
     navigateTab,
     playCyberSe,
-    openRaidRescue,
     selectedBgMode,
     titleEquipped,
     ownedTitles,
@@ -576,16 +575,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const rescueCards = useRaidRescueCards(visibleSocialActivities.map(getRaidRescueActivityId), showActivityLog);
   const latestActivity = visibleSocialActivities[0];
   const activityText = latestActivity ? activityDescription(latestActivity) : null;
-  const latestRescueId = latestActivity ? getRaidRescueActivityId(latestActivity) : null;
-
-  const handleLatestActivityTap = () => {
-    if (latestRescueId) {
-      openRaidRescue(latestRescueId);
-    } else {
-      setShowActivityLog(true);
-    }
-    playCyberSe("click");
-  };
 
   const handleActivityLogTap = () => {
     setShowActivityLog(true);
@@ -617,14 +606,15 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       <section
         key={latestActivity?.id || "empty"}
         className={`mypage-live-ticker mypage-live-ticker--visual ${homeEventState}`}
+        onClick={handleActivityLogTap}
       >
         <span className="mypage-live-ticker-label">ACTIVITY</span>
         {latestActivity ? <>
           <button
             type="button"
             className="mypage-live-ticker-body"
-            aria-label={latestRescueId ? "救援依頼を開く" : "アクティビティを開く"}
-            onClick={handleLatestActivityTap}
+            aria-label="アクティビティ履歴を開く"
+            onClick={(event) => { event.stopPropagation(); handleActivityLogTap(); }}
           >
             <UserIdentityRow
               variant="compact"
@@ -638,7 +628,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
             type="button"
             className="mypage-live-ticker-arrow"
             aria-label="アクティビティ履歴を開く"
-            onClick={handleActivityLogTap}
+            onClick={(event) => { event.stopPropagation(); handleActivityLogTap(); }}
           >
             ▼
           </button>
