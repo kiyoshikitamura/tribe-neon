@@ -175,7 +175,8 @@
     "audit:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs --allow-known-blockers",
     "verify:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs",
     "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs",
-    "verify:kpi-engagement": "node scripts/verify_kpi_engagement.mjs && node scripts/verify_kpi_engagement_ui.mjs"
+    "verify:kpi-engagement": "node scripts/verify_kpi_engagement.mjs && node scripts/verify_kpi_engagement_ui.mjs",
+    "verify:kpi-manual-refresh": "node scripts/verify_kpi_manual_refresh.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

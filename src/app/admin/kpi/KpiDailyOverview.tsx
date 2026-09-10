@@ -28,22 +28,41 @@ function PeriodTable({ mode, month, onMonth }: { mode: "daily" | "monthly"; mont
   const [data, setData] = useState<OverviewResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const [refreshToken, setRefreshToken] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
   const label = mode === "daily" ? "日次" : "月次";
   useEffect(() => {
     const controller = new AbortController();
     const today = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Tokyo" }).format(new Date());
     const monthEnd = month ? new Date(Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5)), 0)).toISOString().slice(0, 10) : "";
-    const query = mode === "daily" && month ? `?from=${month}-01&to=${monthEnd > today ? today : monthEnd}` : "";
+    const queryParts = mode === "daily" && month ? [`from=${month}-01`, `to=${monthEnd > today ? today : monthEnd}`] : [];
+    if (refreshToken) queryParts.push(`refresh=${encodeURIComponent(refreshToken)}`);
+    const query = queryParts.length ? `?${queryParts.join("&")}` : "";
     fetch(`/api/admin/kpi/v2/${mode}${query}`, { cache: "no-store", signal: controller.signal })
       .then(async (response) => { const body = await response.json(); if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`); return body; })
       .then(setData).catch((reason) => { if (reason?.name !== "AbortError") setError(reason instanceof Error ? reason.message : "unavailable"); });
     return () => controller.abort();
-  }, [mode, month, attempt]);
+  }, [mode, month, attempt, refreshToken]);
+  async function refreshNow() {
+    if (refreshing) return;
+    setRefreshing(true); setRefreshMessage(null); setError(null);
+    try {
+      const response = await fetch("/api/admin/kpi/v2/refresh", { method: "POST", cache: "no-store" });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(body.error || `HTTP ${response.status}`);
+      setRefreshToken(body.refreshToken || new Date().toISOString());
+      setAttempt((value) => value + 1);
+      setRefreshMessage(`手動更新完了 · ${updated(body.refreshToken)} JST`);
+    } catch (reason) {
+      setRefreshMessage(reason instanceof Error ? reason.message : "更新できませんでした。");
+    } finally { setRefreshing(false); }
+  }
   return <>
     {error && <div className="v2-alert" role="alert"><strong>{label}KPIを取得できません</strong><span>{error}</span><button type="button" onClick={() => { setError(null); setAttempt((value) => value + 1); }}>再試行</button></div>}
     {!data && !error && <div className="v2-loading" role="status" aria-label={`${label}KPIを取得中`}><span /></div>}
     {data && <>
-      <div className="daily-saved-status" role="status">最終集計 {updated(data.updated_at)} JST · 30分ごとに更新{data.stale && <strong> 更新待ち／遅延あり</strong>}{!!data.missing_periods && <span> · {data.missing_periods}期間が未集計</span>}<small>表示時は保存済み結果を読み取ります。</small></div>
+      <div className="daily-saved-status" role="status"><span>最終集計 {updated(data.updated_at)} JST · 30分ごとに更新{data.stale && <strong> 更新待ち／遅延あり</strong>}{!!data.missing_periods && <span> · {data.missing_periods}期間が未集計</span>}</span><button className="daily-refresh-button" type="button" onClick={() => void refreshNow()} disabled={refreshing}>{refreshing ? "更新中…" : "最新値に更新"}</button><small>表示時は保存済み結果を読み取ります。手動更新は現在のJST日までを再集計します。{refreshMessage && <> {refreshMessage}</>}</small></div>
       {mode === "daily" && <KpiDailyFunnel row={data.rows[0]} />}
       <div className="daily-desktop daily-period-table" role="region" aria-label={`${label}KPI一覧・横スクロール`} data-period={mode} tabIndex={0}>
         <table><thead><tr><th scope="col">{mode === "daily" ? "日付" : "月"}</th><th scope="col">新規ユーザー</th>{mode === "monthly" && <th scope="col">累計登録ユーザー</th>}<th scope="col">{mode === "daily" ? "DAU" : "MAU"}</th><th scope="col">Tutorial Complete</th>{mode === "daily" && <th scope="col">Raid Point消化率</th>}<th scope="col">Guild Conversion</th>{mode === "daily" && <th scope="col">Social Active率</th>}{mode === "daily" && [1, 2, 3, 4, 5].map((day) => <th scope="col" key={day}>D{day}</th>)}{(mode === "daily" ? ["DPU", "DPUR", "Revenue", "DARPPU", "DARPU"] : ["MPU", "MPUR", "Revenue", "MARPPU", "MARPU", "Active Guild", "Effective Active Guild"]).map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>

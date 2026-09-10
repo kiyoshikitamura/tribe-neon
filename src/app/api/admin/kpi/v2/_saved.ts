@@ -7,7 +7,7 @@ type SavedRecord = { period_start: string; generated_at: string; generation_id: 
 export const SAVED_DEFINITION = "kpi-overview-saved-v1";
 
 // 認証済みAPI内でのみ使用。閲覧では保存テーブルのSELECTだけを実行する。
-export async function readSavedOverview(period: string, from: string, to: string, origin: string): Promise<SavedRecord[]> {
+export async function readSavedOverview(period: string, from: string, to: string, origin: string, _cacheBust = ""): Promise<SavedRecord[]> {
   const service = serviceClient();
   if (!service || origin !== process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()) throw new Error("KPI configuration unavailable");
   const { data, error } = await service.from("kpi_overview_saved_results")
@@ -27,7 +27,8 @@ export async function savedOverviewResponse(request: NextRequest, period: "daily
   try {
     const from = period === "monthly" ? range.from.slice(0, 7) + "-01" : range.from;
     const to = period === "monthly" ? range.to.slice(0, 7) + "-01" : range.to;
-    const saved = await cachedRead(period, from, to, origin);
+    const cacheBust = request.nextUrl.searchParams.get("refresh") || "";
+    const saved = await cachedRead(period, from, to, origin, cacheBust);
     const byDate = new Map(saved.map((row) => [row.period_start, row]));
     const keys: string[] = [];
     for (let date = from; date <= to;) {
