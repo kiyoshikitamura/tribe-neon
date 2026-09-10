@@ -102,6 +102,7 @@ type HomeBanner = {
 
 function activityDescription(activity: HomeActivity) {
   if (activity.activity_type === "RAID_HELP_REQUEST") return "レイドの救援を依頼";
+  if (["SSR_CHARACTER", "SSR_SKILL", "SSR_EQUIPMENT"].includes(String(activity.activity_type))) return "SSRを獲得";
   if (activity.activity_type === "GUILD_CREATED") return "TRIBEを結成";
   if (activity.activity_type === "POWER_RANK_1") return "総戦力ランキング1位に到達";
   return "SSRを獲得";

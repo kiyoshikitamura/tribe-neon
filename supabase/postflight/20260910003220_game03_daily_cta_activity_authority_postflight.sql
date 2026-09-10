@@ -14,11 +14,11 @@ begin
     where domain='MISSION' and version='2026-09-10' and is_production_enabled
   ) then raise exception 'Mission freeze 2026-09-10 is not enabled'; end if;
 
-  if exists(
+  if not exists(
     select 1 from pg_trigger
     where tgrelid='public.gacha_execution_history'::regclass
       and tgname='m9x_gacha_activity_trigger' and not tgisinternal and tgenabled<>'D'
-  ) then raise exception 'SSR Activity source remains enabled'; end if;
+  ) then raise exception 'SSR Activity source is disabled'; end if;
 
   if not exists(
     select 1 from pg_trigger
@@ -28,10 +28,13 @@ begin
 
   select pg_get_functiondef('public.get_recent_social_activity_feed(integer)'::regprocedure)
   into v_feed_definition;
-  if v_feed_definition not like '%RAID_BOSS_DEFEATED%'
+  if v_feed_definition not like '%SSR_CHARACTER%'
+    or v_feed_definition not like '%SSR_SKILL%'
+    or v_feed_definition not like '%SSR_EQUIPMENT%'
+    or v_feed_definition not like '%RAID_BOSS_DEFEATED%'
     or v_feed_definition not like '%GUILD_CREATED%'
     or v_feed_definition not like '%POWER_RANK_1%'
-    or v_feed_definition like '%SSR_CHARACTER%' then
+    then
     raise exception 'Activity projection allowlist mismatch';
   end if;
 end;
