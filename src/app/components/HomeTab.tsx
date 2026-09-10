@@ -146,6 +146,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     setDmRecipientId,
     navigateTab,
     playCyberSe,
+    openRaidRescue,
     selectedBgMode,
     titleEquipped,
     ownedTitles,
@@ -583,6 +584,21 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const rescueCards = useRaidRescueCards(visibleSocialActivities.map(getRaidRescueActivityId), showActivityLog);
   const latestActivity = visibleSocialActivities[0];
   const activityText = latestActivity ? activityDescription(latestActivity) : null;
+  const latestRescueId = latestActivity ? getRaidRescueActivityId(latestActivity) : null;
+
+  const handleLatestActivityTap = () => {
+    if (latestRescueId) {
+      openRaidRescue(latestRescueId);
+    } else {
+      setShowActivityLog(true);
+    }
+    playCyberSe("click");
+  };
+
+  const handleActivityLogTap = () => {
+    setShowActivityLog(true);
+    playCyberSe("click");
+  };
 
   const interiorName = PROFILE_INTERIORS.find((item) => item.id === interiorItem)?.name;
   const homeEventState = isRaidActive ? "raid" : "calm";
@@ -609,27 +625,31 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       <section
         key={latestActivity?.id || "empty"}
         className={`mypage-live-ticker mypage-live-ticker--visual ${homeEventState}`}
-        aria-label="アクティビティ履歴を開く"
-        role="button"
-        tabIndex={0}
-        onClick={() => { setShowActivityLog(true); playCyberSe("click"); }}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            setShowActivityLog(true);
-            playCyberSe("click");
-          }
-        }}
       >
         <span className="mypage-live-ticker-label">ACTIVITY</span>
         {latestActivity ? <>
-          <UserIdentityRow
-            variant="compact"
-            userName={String(latestActivity.actor_display_name || "プレイヤー")}
-            guildName={latestActivity.actor_guild_name}
-            leaderCharacterId={latestActivity.actor_favorite_character_id}
-          />
-          <span className="mypage-live-ticker-text">{activityText}</span>
-          <span className="mypage-live-ticker-arrow" aria-hidden="true">›</span>
+          <button
+            type="button"
+            className="mypage-live-ticker-body"
+            aria-label={latestRescueId ? "救援依頼を開く" : "アクティビティを開く"}
+            onClick={handleLatestActivityTap}
+          >
+            <UserIdentityRow
+              variant="compact"
+              userName={String(latestActivity.actor_display_name || "プレイヤー")}
+              guildName={latestActivity.actor_guild_name}
+              leaderCharacterId={latestActivity.actor_favorite_character_id}
+            />
+            <span className="mypage-live-ticker-text">{activityText}</span>
+          </button>
+          <button
+            type="button"
+            className="mypage-live-ticker-arrow"
+            aria-label="アクティビティ履歴を開く"
+            onClick={handleActivityLogTap}
+          >
+            ▼
+          </button>
         </> : <span className="mypage-live-ticker-text">まだ街の動きはありません</span>}
       </section>
 

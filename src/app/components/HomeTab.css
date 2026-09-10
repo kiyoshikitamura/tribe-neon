@@ -614,14 +614,16 @@
   border: 1px solid rgba(0, 240, 255, 0.28);
   border-radius: 5px;
   text-align: left;
-  cursor: pointer;
+  cursor: default;
 }
 .mypage-live-ticker.raid { border-color: rgba(255, 91, 66, .72); background: linear-gradient(90deg, rgba(255, 72, 48, .17), rgba(28, 15, 19, .9)); }
 .mypage-live-ticker.gvg { border-color: rgba(200, 92, 255, .72); background: linear-gradient(90deg, rgba(180, 57, 255, .17), rgba(25, 14, 31, .9)); }
 
 .mypage-live-ticker-label { flex:0 0 auto;color:#00f0ff;font-family:var(--font-display);font-size:8px;font-weight:900;letter-spacing:.12em; }
 .mypage-live-ticker-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-size: 10px; font-weight: 700; }
-.mypage-live-ticker-arrow { color: #00f0ff; font-size: 17px; line-height: 1; }
+.mypage-live-ticker-body { display:flex;align-items:center;gap:8px;min-width:0;flex:1;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer; }
+.mypage-live-ticker-body:focus-visible,.mypage-live-ticker-arrow:focus-visible { outline:2px solid #00f0ff;outline-offset:2px; }
+.mypage-live-ticker-arrow { display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;min-width:44px;min-height:42px;margin:-1px -4px -1px 0;padding:0;border:0;background:transparent;color:#00f0ff;font-size:12px;line-height:1;cursor:pointer; }
 .mypage-live-ticker--visual { position:relative;z-index:12;flex:0 0 auto;width:auto;min-height:42px;margin:2px 8px;background:rgba(4,10,18,.88);backdrop-filter:blur(6px);animation:mypage-activity-enter .34s cubic-bezier(.22,.8,.25,1) both; }
 .mypage-live-ticker .user-identity-row { min-width:0;max-width:42%; }
 .mypage-live-ticker .user-identity-row.is-compact { grid-template-columns:30px minmax(0,1fr);gap:6px; }
