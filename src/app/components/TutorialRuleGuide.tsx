@@ -16,7 +16,12 @@ export default function TutorialRuleGuide() {
   const [error, setError] = useState<string | null>(null);
   const [phase, setPhase] = useState<"AGEHA_END" | "FINAL_GUIDE">("AGEHA_END");
   const workingRef = useRef(false);
+  const mountedRef = useRef(true);
   const tutorialStep = onboardingState?.tutorial_step;
+
+  useEffect(() => () => {
+    mountedRef.current = false;
+  }, []);
 
   useEffect(() => {
     if (tutorialStep === "RULE_GUIDE") {
@@ -43,21 +48,40 @@ export default function TutorialRuleGuide() {
     setWorking(true);
     setError(null);
     playCyberSe("click");
+    const isAnonymous = Boolean(onboardingState?.is_anonymous);
     try {
       const { error: progressError } = await supabase.rpc("advance_tutorial_progress", { p_expected_step: "RULE_GUIDE", p_next_step: "COMPLETE" });
       if (progressError) {
-        setError("進行を保存できませんでした。通信状態を確認して、もう一度お試しください。");
+        if (mountedRef.current) setError("進行を保存できませんでした。通信状態を確認して、もう一度お試しください。");
         return;
       }
       const { data: authoritativeState, error: stateError } = await supabase.rpc("get_current_onboarding_state");
-      if (stateError || !authoritativeState) {
-        setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
+      const completionState = authoritativeState as {
+        tutorial_step?: string;
+        authentication_pending?: boolean;
+        gameplay_authorized?: boolean;
+      } | null;
+      const validAnonymousCompletion = Boolean(
+        completionState
+        && completionState.tutorial_step === "COMPLETE"
+        && completionState.authentication_pending === true
+        && completionState.gameplay_authorized === true,
+      );
+      const validAuthenticatedCompletion = Boolean(
+        completionState
+        && completionState.tutorial_step === "COMPLETE"
+        && completionState.gameplay_authorized === true,
+      );
+      if (stateError || !completionState || (isAnonymous ? !validAnonymousCompletion : !validAuthenticatedCompletion)) {
+        if (mountedRef.current) setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
         return;
       }
-      setOnboardingState(authoritativeState);
+      // This is the single handoff point: only the verified server projection
+      // can close the guide and expose the normal shell.
+      if (mountedRef.current) setOnboardingState(completionState);
     } finally {
       workingRef.current = false;
-      setWorking(false);
+      if (mountedRef.current) setWorking(false);
     }
   };
 
