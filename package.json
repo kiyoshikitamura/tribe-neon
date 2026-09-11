@@ -180,7 +180,9 @@
     "verify:release-db-readiness": "node scripts/verify_release_db_migration_readiness.mjs",
     "verify:kpi-tutorial-union": "node --experimental-strip-types scripts/verify_kpi_tutorial_union.mjs",
     "verify:game03-daily-cta-activity": "node --experimental-strip-types scripts/verify_game03_daily_cta_activity.mjs",
-    "verify:game03-short-tutorial-character-setup": "node --experimental-strip-types scripts/verify_game03_short_tutorial_character_setup.mjs"
+    "verify:game03-short-tutorial-character-setup": "node --experimental-strip-types scripts/verify_game03_short_tutorial_character_setup.mjs",
+    "verify:gacha-stage1-normalization": "node scripts/verify_gacha_stage1_normalization.mjs",
+    "verify:gacha-stage1:preview": "node scripts/verify_gacha_stage1_preview.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
