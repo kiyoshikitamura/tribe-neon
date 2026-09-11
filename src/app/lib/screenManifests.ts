@@ -105,7 +105,7 @@ export const TUTORIAL_STEP_ASSET_MANIFESTS: Record<string, AssetRequest[]> = {
   WORLD_INTRO: requiredAssets([
     "/branding/tutorial/tutorial_world_street_bg.png",
     "/characters/reiji_transparent_asset.png", "/characters/ageha_transparent_asset.png",
-    "/characters/gou_transparent_asset.png", "/characters/karen_transparent_asset.png",
+    "/characters/go_transparent_asset.png", "/characters/karen_transparent_asset.png",
     "/characters/kaede_transparent_asset.png", "/branding/tribe-neon-logo.png",
   ]),
   FREE_GACHA: requiredAssets([

@@ -23,7 +23,7 @@ export const WORLD_STAGES: readonly WorldStage[] = [
     characters: [
       { name: "レイジ", src: "/characters/reiji_transparent_asset.png" },
       { name: "アゲハ", src: "/characters/ageha_transparent_asset.png" },
-      { name: "ゴウ", src: "/characters/gou_transparent_asset.png" },
+      { name: "ゴウ", src: "/characters/go_transparent_asset.png" },
     ],
   },
   {
@@ -43,7 +43,7 @@ const WORLD_INTRO_ASSETS = [
   "/branding/tutorial/tutorial_world_street_bg.png",
   "/characters/reiji_transparent_asset.png",
   "/characters/ageha_transparent_asset.png",
-  "/characters/gou_transparent_asset.png",
+  "/characters/go_transparent_asset.png",
   "/characters/karen_transparent_asset.png",
   "/characters/kaede_transparent_asset.png",
   "/branding/tribe-neon-logo.png",
