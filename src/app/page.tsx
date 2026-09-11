@@ -77,6 +77,43 @@ function AppContent() {
   const tutorialStep = onboardingState?.tutorial_step;
   const isMandatoryTutorial = Boolean(tutorialStep && !onboardingState?.gameplay_authorized);
 
+  React.useEffect(() => {
+    if (process.env.NEXT_PUBLIC_APP_ENV !== "preview" || typeof window === "undefined") return;
+    const capture = (label: string) => {
+      const footer = document.querySelector<HTMLElement>(".footer-mobile");
+      const style = footer ? window.getComputedStyle(footer) : null;
+      const snapshot = {
+        label,
+        at: new Date().toISOString(),
+        tutorialStep,
+        onboardingTutorialStep: onboardingState?.tutorial_step ?? null,
+        authentication_pending: onboardingState?.authentication_pending ?? null,
+        gameplay_authorized: onboardingState?.gameplay_authorized ?? null,
+        battleState: battleState ?? null,
+        isMandatoryTutorial,
+        battleStateBoolean: Boolean(battleState),
+        footerRenderResult: !isMandatoryTutorial && !battleState,
+        activeTab,
+        showTitleView,
+        authLoading,
+        isSetupRequired,
+        footerDomExists: Boolean(footer),
+        footerDisplay: style?.display ?? null,
+        footerVisibility: style?.visibility ?? null,
+        footerPosition: style?.position ?? null,
+        footerZIndex: style?.zIndex ?? null,
+        overlayCount: document.querySelectorAll(".modal-overlay, .outlaw-interaction-blocker").length,
+      };
+      const diagnostics = ((window as any).__TRIBE_FOOTER_DIAGNOSTICS__ ||= { timeline: [], changes: [] });
+      diagnostics.timeline.push(snapshot);
+      if (diagnostics.timeline.length > 80) diagnostics.timeline.splice(0, diagnostics.timeline.length - 80);
+      console.info("[preview-footer-diagnostics]", snapshot);
+    };
+    capture("immediate");
+    const timers = [250, 1000, 3000, 10000].map((delay) => window.setTimeout(() => capture(`${delay}ms`), delay));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [activeTab, authLoading, battleState, isMandatoryTutorial, isSetupRequired, onboardingState, showTitleView, tutorialStep]);
+
   React.useLayoutEffect(() => {
     const resetCanvasOrigin = () => {
       window.scrollTo({ left: 0, top: 0 });
