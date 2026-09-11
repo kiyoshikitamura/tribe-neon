@@ -344,6 +344,24 @@ try {
   trace = [...trace, ...browserState.trace];
   if (!userId) throw new Error("The anonymous Preview user id could not be resolved from the browser session.");
   if (browserState.errorDialogs.length) throw new Error(`Unexpected error UI: ${browserState.errorDialogs.join(" | ")}`);
+  const browserState = await page.evaluate(() => {
+    const authKey = Object.keys(localStorage).find((key) => /^sb-.*-auth-token$/.test(key));
+    let storedUserId = null;
+    if (authKey) {
+      try { storedUserId = JSON.parse(localStorage.getItem(authKey) || "null")?.user?.id || null; } catch { /* audit below */ }
+    }
+    return {
+      userId: storedUserId,
+      trace: window.__TRIBE_TUTORIAL_JOURNEY_TRACE__ || [],
+      actionMetrics: window.__TRIBE_ACTION_METRICS__ || [],
+      battlePresentation: window.__TRIBE_BATTLE_PRESENTATION__ || { history: [] },
+      errorDialogs: Array.from(document.querySelectorAll(".modal-card.border-danger,[role=alert]")).map((node) => node.textContent?.trim()).filter(Boolean),
+    };
+  });
+  userId = browserState.userId;
+  trace = [...trace, ...browserState.trace];
+  if (!userId) throw new Error("The anonymous Preview user id could not be resolved from the browser session.");
+  if (browserState.errorDialogs.length) throw new Error(`Unexpected error UI: ${browserState.errorDialogs.join(" | ")}`);
   if (pageErrors.length) throw new Error(`Browser page errors: ${pageErrors.join(" | ")}`);
   if (stateSequence.join(">") !== "Q1>Q2>Q3>Q4>Q5>Q6>B1>B2>B3>B4>B5>B6>ACCOUNT_AUTHENTICATION") {
     throw new Error(`Unexpected UI state sequence: ${stateSequence.join(">")}`);
