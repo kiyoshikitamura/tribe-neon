@@ -8,6 +8,26 @@ import {
   type DirectMessageRow,
 } from "./directMessageConversations";
 
+function getChatSendErrorMessage(error: unknown) {
+  const message = String((error as { message?: unknown })?.message || "").toLowerCase();
+  if (message.includes("reply target is unavailable")) {
+    return "返信先が現在のチャンネルで利用できないため、返信を解除して送信してください。";
+  }
+  if (message.includes("chat cooldown is active")) {
+    return "送信間隔が短すぎます。少し待ってからもう一度お試しください。";
+  }
+  if (message.includes("guild membership required")) {
+    return "ギルドメンバーのみギルドチャットへ送信できます。";
+  }
+  if (message.includes("invalid chat message")) {
+    return "メッセージは1〜140文字で入力してください。";
+  }
+  if (message.includes("jwt") || message.includes("session") || message.includes("auth")) {
+    return "セッションを確認できませんでした。画面を更新して、もう一度お試しください。";
+  }
+  return "メッセージを送信できませんでした。入力内容を確認して、もう一度お試しください。";
+}
+
 export function useChat(
   session: any,
   username: string,
@@ -366,7 +386,7 @@ export function useChat(
     } catch (err: any) {
       setGuildChats((previous) => previous.filter((message) => message.id !== temporaryMessageId));
       console.warn(err.message);
-      setErrorMessage("メッセージを送信できませんでした。入力内容を確認して、もう一度お試しください。");
+      setErrorMessage(getChatSendErrorMessage(err));
     } finally {
       setChatSending(false);
     }

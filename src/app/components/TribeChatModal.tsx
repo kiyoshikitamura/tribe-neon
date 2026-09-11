@@ -115,6 +115,7 @@ export default function TribeChatModal() {
   };
 
   const handleClose = () => {
+    setChatReplyTo(null);
     if (chatChannel === "DM") {
       setDmRecipientId(null);
       setLocalDmText("");
@@ -134,6 +135,7 @@ export default function TribeChatModal() {
           ]}
           activeTabId={chatChannel}
           onSelect={(id) => {
+            setChatReplyTo(null);
             if (id === "DM") {
               setDmRecipientId(null);
               setLocalDmText("");
@@ -147,6 +149,7 @@ export default function TribeChatModal() {
             variant="ghost"
             className="tribe-bbs-link"
             onClick={() => {
+              setChatReplyTo(null);
               setDmRecipientId(null);
               setLocalDmText("");
               setShowTribeChatPanel(false);
