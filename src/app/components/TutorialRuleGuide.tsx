@@ -49,7 +49,12 @@ export default function TutorialRuleGuide() {
         setError("進行を保存できませんでした。通信状態を確認して、もう一度お試しください。");
         return;
       }
-      setOnboardingState((current: any) => current ? { ...current, tutorial_step: "COMPLETE" } : current);
+      const { data: authoritativeState, error: stateError } = await supabase.rpc("get_current_onboarding_state");
+      if (stateError || !authoritativeState) {
+        setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
+        return;
+      }
+      setOnboardingState(authoritativeState);
     } finally {
       workingRef.current = false;
       setWorking(false);
