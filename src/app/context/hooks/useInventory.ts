@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { supabase, usingMockSupabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
 import { VITALITY_OVERFLOW_MAX } from "@/utils/game_constants";
 import { canUseEnergyDrink } from "@/domain/gameplay/canonical/action_resources";
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
@@ -213,14 +213,6 @@ export function useInventory(
 
     try {
       const targetPresent = presents.find(p => p.id === id);
-      if (usingMockSupabase && id === "p_swr") {
-        setDiamonds(d => d + 50);
-        const res = await supabase.rpc("add_test_diamonds", { p_user_id: session.user.id });
-        if (res.error || res.data?.error) console.warn(res.error || res.data?.error);
-        setPresents(prev => prev.filter(p => p.id !== id));
-        return;
-      }
-
       const res = await supabase.rpc("claim_present", {
         p_present_id: id
       });
@@ -266,16 +258,6 @@ export function useInventory(
     playCyberSe("gacha");
 
     try {
-      let hasSwr = false;
-      unclaimed.forEach(p => {
-        if (p.id === "p_swr") hasSwr = true;
-      });
-
-      if (usingMockSupabase && hasSwr) {
-        const resSwr = await supabase.rpc("add_test_diamonds", { p_user_id: session.user.id });
-        if (resSwr.error || resSwr.data?.error) console.warn(resSwr.error || resSwr.data?.error);
-      }
-
       const res = await supabase.rpc("claim_all_presents");
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
