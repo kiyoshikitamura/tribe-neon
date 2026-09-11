@@ -217,6 +217,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [diamonds, setDiamonds] = useState<number>(200);
   const [vitality, setVitality] = useState<number>(100);
   const [vitalityNextRecoveryAt, setVitalityNextRecoveryAt] = useState<string | null>(null);
+  const [questSkipsAuthorityOwner, setQuestSkipsAuthorityOwner] = useState<string | null>(null);
+  useEffect(() => { setQuestSkipsAuthorityOwner(null); }, [session?.user?.id]);
   const [pvpNextRecoveryAt, setPvpNextRecoveryAt] = useState<string | null>(null);
   const [monthlyPassActive, setMonthlyPassActive] = useState<boolean>(false);
   const [monthlyPassClaimedToday, setMonthlyPassClaimedToday] = useState<boolean>(false);
@@ -438,6 +440,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     selectedCourse, setSelectedCourse,
     selectedMembers, setSelectedMembers,
     selectedPatrolMember, setSelectedPatrolMember,
+    questSelectionRequest, requestQuestSelection,
     dailyCashSkips, setDailyCashSkips, dailyPaidSkips, setDailyPaidSkips,
     dailyCashSkipsResetDate, setDailyCashSkipsResetDate,
     activePatrols, setActivePatrols,
@@ -1195,6 +1198,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       releaseBootstrap();
       return;
     }
+    setQuestSkipsAuthorityOwner(null);
     const patrolRevisionAtStart = patrolStateRevisionRef.current;
     let coreProjectionReady = false;
     let localGuildRec: any = null;
@@ -1435,6 +1439,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setDailyCashSkips(userProfile.quest_free_skips_count ?? userProfile.daily_cash_skips_count ?? 0);
         setDailyPaidSkips(userProfile.quest_paid_skips_count ?? 0);
         setDailyCashSkipsResetDate(userProfile.quest_skips_reset_date || userProfile.daily_cash_skips_reset_date || null);
+        if (!userProfileError && userProfile.id === userId && currentAuthUserIdRef.current === userId) setQuestSkipsAuthorityOwner(userId);
         setCurrentBaseId(userProfile.current_base_id || "shinjuku");
         setLastGuildLeftAt(userProfile.last_guild_left_at);
         setGiftCode(userProfile.gift_code || null);
@@ -4324,6 +4329,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     selectedCourse, setSelectedCourse,
     selectedMembers, setSelectedMembers,
     selectedPatrolMember, setSelectedPatrolMember,
+    questSelectionRequest, requestQuestSelection,
+    questSkipsAuthorityReady: !!session?.user?.id && questSkipsAuthorityOwner === session.user.id,
     dailyCashSkips, setDailyCashSkips, dailyPaidSkips, setDailyPaidSkips,
     dailyCashSkipsResetDate, setDailyCashSkipsResetDate,
     activePatrols, setActivePatrols,

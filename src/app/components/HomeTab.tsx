@@ -8,6 +8,7 @@ import { useGame } from "../context/GameContext";
 import { supabase } from "@/utils/supabase";
 import { resolveAvailableMyPageCreatives } from "@/domain/presentation/production_creatives";
 import { HOME_ACTION_PRESENTATION_SLOTS } from "@/domain/presentation/homeActionPresentation";
+import { describeHomeActivity, resolveHomeInitialCta } from "@/domain/presentation/homeInitialGuide";
 import { resolveHomeCharacterDialogueLines } from "@/domain/presentation/homeCharacterDialogue";
 import { isDestinationAvailable } from "@/domain/operations/operations";
 import { resolvePresentableAssetUrl } from "@/utils/assetPresentation";
@@ -101,10 +102,7 @@ type HomeBanner = {
 };
 
 function activityDescription(activity: HomeActivity) {
-  if (activity.activity_type === "RAID_HELP_REQUEST") return "レイドの救援を依頼";
-  if (activity.activity_type === "GUILD_CREATED") return "TRIBEを結成";
-  if (activity.activity_type === "POWER_RANK_1") return "総戦力ランキング1位に到達";
-  return "SSRを獲得";
+  return describeHomeActivity(activity.activity_type);
 }
 
 function activityTimeLabel(value?: string | null) {
@@ -142,12 +140,9 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     equippedFrontEffect,
     isRaidActive,
     session,
-    activePatrols,
     onboardingState,
     userGuildMember,
-    pendingGuildJoinRequests,
     guildMembershipAuthorityReady,
-    guildDiscoveryState,
     featureOperatingStates,
     fetchPlayerDetail,
     setErrorMessage,
@@ -385,37 +380,16 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     return () => window.clearTimeout(timer);
   }, [activityWindowNow, qaState?.socialActivityNowMs, socialActivities]);
 
-  const primaryCta = useMemo<{
-    key: string; title: string; tab?: string; action?: "guild_chat" | "mission_handoff";
-  } | null>(() => {
-    const ctaAuthorityReady = qaState
-      ? qaState.ctaAuthorityReady !== false
-      : Boolean(session?.user?.id
-        && onboardingState
-        && funnelAuthorityOwnerUserId === session.user.id
-        && guildMembershipAuthorityReady);
-    if (!ctaAuthorityReady) return null;
-    const tutorialStep = onboardingState?.tutorial_step;
-    if (tutorialStep && !onboardingState?.gameplay_authorized) return { key: "tutorial", title: "チュートリアルを続ける", tab: tutorialStep === "FREE_GACHA" ? "gacha" : tutorialStep === "AUTO_FORMATION" ? "character" : "patrol" };
-    if (!funnelMilestones.has("first_free_skill_ten_pull")) return { key: "first_free_asset_gacha", title: "無料スキル／装備ガチャを引こう", tab: "gacha" };
-    if (!funnelMilestones.has("first_free_equipment_ten_pull")) return { key: "first_free_asset_gacha", title: "無料スキル／装備ガチャを引こう", tab: "gacha" };
-    if (!funnelMilestones.has("first_main_loadout")) return { key: "first_main_loadout", title: "装備を整えよう", tab: "character" };
-    if (!funnelMilestones.has("first_pvp")) return { key: "first_pvp", title: "最初のバトルへ挑戦", tab: "pvp" };
-    if (!funnelMilestones.has("first_raid") && isRaidActive) return { key: "first_raid", title: "開催中レイドへ", tab: "raid" };
-    if (!userGuildMember) {
-      if (pendingGuildJoinRequests.length > 0) return { key: "guild_pending", title: "ギルド申請を確認", tab: "guild" };
-      const discoveryState = qaState?.guildDiscoveryState || guildDiscoveryState;
-      if (discoveryState === "empty") return { key: "guild_creation", title: "ギルドを設立しよう", tab: "guild" };
-      if (discoveryState === "available") return { key: "guild_discovery", title: "ギルドに加入しよう", tab: "guild" };
-      return null;
-    }
-    if (!funnelMilestones.has("activation_mission_handoff")) return {
-      key: "activation_mission_handoff",
-      title: "ミッションを進めよう",
-      action: "mission_handoff",
-    };
-    return null;
-  }, [funnelMilestones, funnelAuthorityOwnerUserId, guildDiscoveryState, guildMembershipAuthorityReady, onboardingState, pendingGuildJoinRequests.length, qaState, session, userGuildMember, isRaidActive]);
+  const primaryCta = useMemo(() => resolveHomeInitialCta({
+    ready: qaState ? qaState.ctaAuthorityReady !== false : Boolean(
+      session?.user?.id && onboardingState && funnelAuthorityOwnerUserId === session.user.id
+    ),
+    tutorialStep: onboardingState?.tutorial_step,
+    gameplayAuthorized: onboardingState?.gameplay_authorized,
+    milestones: funnelMilestones,
+    // false also represents an uninitialised room projection; do not claim no raid.
+    raidAvailability: isRaidActive ? "active" : "unknown",
+  }), [funnelMilestones, funnelAuthorityOwnerUserId, onboardingState, qaState, session?.user?.id, isRaidActive]);
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -424,14 +398,20 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   }, [primaryCta, session?.user?.id]);
 
   const openPrimaryCta = async () => {
-    if (activationHandoffPending || !primaryCta) return;
+    if (activationHandoffPending || !primaryCta || primaryCta.disabled) return;
     void supabase.rpc("record_client_funnel_event", { p_event_name: "home_primary_cta_click", p_source_screen: "home", p_source_cta: primaryCta.key, p_object_id: null, p_metadata: {} });
     if (primaryCta.action === "mission_handoff") {
       setActivationHandoffPending(true);
       const { error } = await supabase.rpc("complete_activation_mission_handoff");
       if (error) {
+        // Refresh once; a stale projection must not trap the user in retries.
+        const { data: latest, error: refreshError } = await supabase.from("user_funnel_milestones")
+          .select("milestone").eq("user_id", session.user.id);
+        if (!refreshError && latest) setFunnelMilestones(new Set(latest.map((row) => row.milestone)));
         setActivationHandoffPending(false);
-        setErrorMessage("ミッションへの案内を完了できませんでした。もう一度お試しください。");
+        setErrorMessage(refreshError
+          ? "最新状態を確認できませんでした。ミッションは画面のミッションから開けます。"
+          : "案内の状態を確認しました。ミッションは画面のミッションから開けます。");
         return;
       }
       const { data, error: projectionError } = await supabase.from("user_funnel_milestones")
@@ -594,7 +574,12 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
 
   const interiorName = PROFILE_INTERIORS.find((item) => item.id === interiorItem)?.name;
   const homeEventState = isRaidActive ? "raid" : "calm";
-  const completedPatrolsCount = activePatrols?.filter((patrol: { secondsLeft?: number }) => (patrol.secondsLeft || 0) <= 0).length || 0;
+  // Only display facts with established authority. Quest/BP initial values are
+  // not read-ready projections, so they intentionally have no guessed status.
+  const actionStatus: Partial<Record<string, string>> = {
+    ...(isRaidActive ? { raid: "開催中" } : {}),
+    ...(guildMembershipAuthorityReady ? { guild: userGuildMember?.guild_id ? "所属中" : "加入する" } : {}),
+  };
   const handleLeaderTap = () => {
     if (!leaderCharacterId || leaderDialogueLines.length === 0) return;
     const text = leaderDialogueLines[Math.floor(Math.random() * leaderDialogueLines.length)];
@@ -756,29 +741,29 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       </div>
 
       <div className="mypage-lower-content">
-        <nav className="mypage-circle-menu-area" data-home-action-assets="production-delivered" aria-label="メインコンテンツ">
+        <nav className="mypage-circle-menu-area" data-home-action-assets="existing-fallback" aria-label="メインコンテンツ">
           {HOME_ACTION_PRESENTATION_SLOTS.map((action) => {
-            const upcoming = action.exposure === "UPCOMING";
+            const status = actionStatus[action.id];
+            const highlighted = !primaryCta?.disabled && primaryCta?.tab === action.destination;
             return (
               <button
                 key={action.id}
-                className={`circle-menu-btn ${action.id} ${upcoming ? "upcoming" : "active-scale-effect"}`}
-                disabled={upcoming}
-                aria-label={upcoming ? `${action.label}は準備中です` : action.label}
+                className={`circle-menu-btn ${action.id} active-scale-effect${highlighted ? " recommended" : ""}`}
+                aria-label={status ? `${action.label}、${status}` : action.label}
                 data-action-slot={action.id}
                 data-asset-delivery={action.deliveryStatus.toLowerCase()}
-                onClick={upcoming ? undefined : () => { if (action.destination) navigateTab(action.destination); playCyberSe("click"); }}
+                data-recommended={highlighted ? "true" : undefined}
+                onClick={() => navigateTab(action.destination)}
               >
                 <img src={action.assetPath} alt="" className="circle-menu-img" aria-hidden="true" />
                 <span className="circle-menu-label"><strong>{action.label}</strong></span>
-                {action.id === "conquest" && completedPatrolsCount > 0 && <span className="circle-menu-alert-badge">{completedPatrolsCount}</span>}
-                {upcoming && <span className="circle-menu-state-overlay">準備中</span>}
+                <span className="circle-menu-status">{status || ""}</span>
               </button>
             );
           })}
         </nav>
 
-        {primaryCta && <button className="mypage-primary-cta semantic-cta semantic-cta--primary active-scale-effect" onClick={() => void openPrimaryCta()} disabled={activationHandoffPending} aria-busy={activationHandoffPending}>
+        {primaryCta && <button className="mypage-primary-cta semantic-cta semantic-cta--primary active-scale-effect" onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
           <strong>{activationHandoffPending ? "確認中…" : primaryCta.title}</strong>
           <b aria-hidden="true">›</b>
         </button>}

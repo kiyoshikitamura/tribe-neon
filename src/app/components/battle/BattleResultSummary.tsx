@@ -28,6 +28,7 @@ type Props = {
   displayedRound?: number;
   onContinue: () => void | Promise<void>;
   continueControl?: ReactNode;
+  onRepeatQuest?: () => void | Promise<void>;
 };
 
 const toParticipant = (entry: any, isEnemy: boolean): BattleResultParticipant => ({
@@ -37,7 +38,7 @@ const toParticipant = (entry: any, isEnemy: boolean): BattleResultParticipant =>
   isEnemy,
 });
 
-export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, continueControl }: Props) {
+export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, continueControl, onRepeatQuest }: Props) {
   const { playSe } = useAudio();
   const announcedRef = useRef(false);
   const analysis = useMemo(() => analyzeBattleResult(
@@ -193,11 +194,11 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
               <b>PLAYER XP</b>
               <em>×{Number(rewards.totalXp).toLocaleString()}</em>
             </span>}
-            {rewards.dropItemName && Number(rewards.dropItemQty || 0) > 0 && <span>
-              <CanonicalItemIcon itemId={String(rewards.dropItemName)} alt={canonicalItemName(String(rewards.dropItemName))} />
-              <b>{canonicalItemName(String(rewards.dropItemName))}</b>
-              <em>×{Number(rewards.dropItemQty).toLocaleString()}</em>
-            </span>}
+            {(Array.isArray(rewards.awardedItems) ? rewards.awardedItems : rewards.dropItemName ? [{ item_id: rewards.dropItemName, quantity: rewards.dropItemQty }] : []).map((item: any, index: number) => Number(item.quantity) > 0 && <span key={`${item.item_id}-${index}`}>
+              <CanonicalItemIcon itemId={String(item.item_id)} alt={canonicalItemName(String(item.item_id))} />
+              <b>{canonicalItemName(String(item.item_id))}</b>
+              <em>×{Number(item.quantity).toLocaleString()}</em>
+            </span>)}
           </div>
         ) : <div className="battle-result-settling" role="status"><span>報酬データを準備中</span><i aria-hidden="true" /></div>
       ) : isRaidResult && presentationContext?.raidRoomId ? null : (
@@ -211,6 +212,8 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           {modeResult?.note && <p>{modeResult.note}</p>}
         </div>
       )}
+      {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・PLAYER XPは反映済みです。アイテムはプレゼントへ配送されます。受取期限はプレゼントで確認してください。</p>}
+      {!tutorial && presentationContext?.mode === "PATROL" && rewards && onRepeatQuest && <OutlawButton variant="primary" onClick={onRepeatQuest}>同じクエストへ</OutlawButton>}
       {continueControl ?? <OutlawButton variant={victory ? "primary" : "secondary"} onClick={onContinue} className="battle-result-continue" disabled={victory && (tutorial || presentationContext?.mode === "PATROL") && !rewards}>
         {victory && (tutorial || presentationContext?.mode === "PATROL") ? (rewards ? "次へ" : "報酬確定中…") : modeResult?.continueLabel || "次へ"}
       </OutlawButton>}

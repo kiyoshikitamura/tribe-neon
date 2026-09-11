@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { beginActionPerformance } from "@/utils/actionPerformance";
 import { traceTutorialJourney } from "@/utils/tutorialJourneyTrace";
@@ -21,6 +21,9 @@ export function usePatrol(
   invalidatePatrolBootstrap: () => void
 ) {
   const [selectedCourse, setSelectedCourse] = useState<string>("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1");
+  const [questSelectionRequest, setQuestSelectionRequest] = useState<{ courseId: string; revision: number } | null>(null);
+  useEffect(() => { setQuestSelectionRequest(null); }, [session?.user?.id]);
+  const requestQuestSelection = (courseId: string | null) => setQuestSelectionRequest(previous => courseId ? ({ courseId, revision: (previous?.revision || 0) + 1 }) : null);
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [selectedPatrolMember, setSelectedPatrolMember] = useState<string | null>(null);
   const [dailyCashSkips, setDailyCashSkips] = useState<number>(0);
@@ -408,6 +411,8 @@ export function usePatrol(
 
       const rewardSummary = {
         patrolId,
+        courseId: targetPatrol.courseId,
+        awardedItems,
         isTutorialReward: options?.isTutorialReward === true,
         courseName: res.data?.course_name || "クエスト",
         baseCash: Number(res.data?.cash || 0),
@@ -472,6 +477,7 @@ export function usePatrol(
     selectedPatrolMember, setSelectedPatrolMember,
     dailyCashSkips, setDailyCashSkips, dailyPaidSkips, setDailyPaidSkips,
     dailyCashSkipsResetDate, setDailyCashSkipsResetDate,
+    questSelectionRequest, requestQuestSelection,
     activePatrols, setActivePatrols,
     patrolLogs, setPatrolLogs,
     patrolCourses, setPatrolCourses,

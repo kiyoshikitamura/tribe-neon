@@ -1,20 +1,19 @@
-export type HomeActionPresentationId = "guild" | "fight" | "conquest" | "war";
+export type HomeActionPresentationId = "guild" | "fight" | "conquest" | "raid";
 
 export type HomeActionPresentationSlot = Readonly<{
   id: HomeActionPresentationId;
   label: string;
-  destination: "guild" | "pvp" | "patrol" | null;
+  destination: "guild" | "pvp" | "patrol" | "raid";
   assetPath: string;
   deliveryStatus: "EXISTING_FALLBACK" | "PRODUCTION_DELIVERED";
   exposure: "ACTIVE" | "UPCOMING";
 }>;
 
-// Canonical Home FA transparent navigation set. Internal ids and routes remain
-// stable; the supplied 2026-08-30 assets contain artwork only, so labels and
-// state badges stay in the frontend presentation layer.
+// Existing meaningful artwork is a temporary fallback pending the new icon set.
+// Labels and status remain frontend text, independent of the final artwork.
 export const HOME_ACTION_PRESENTATION_SLOTS: readonly HomeActionPresentationSlot[] = [
-  { id: "guild", label: "ギルド", destination: "guild", assetPath: "/menu/home_nav_guild.png", deliveryStatus: "PRODUCTION_DELIVERED", exposure: "ACTIVE" },
-  { id: "fight", label: "バトル", destination: "pvp", assetPath: "/menu/home_nav_pvp.png", deliveryStatus: "PRODUCTION_DELIVERED", exposure: "ACTIVE" },
-  { id: "conquest", label: "クエスト", destination: "patrol", assetPath: "/menu/home_nav_quest.png", deliveryStatus: "PRODUCTION_DELIVERED", exposure: "ACTIVE" },
-  { id: "war", label: "ギルドバトル", destination: null, assetPath: "/menu/home_nav_gvg.png", deliveryStatus: "PRODUCTION_DELIVERED", exposure: "UPCOMING" },
+  { id: "conquest", label: "クエスト", destination: "patrol", assetPath: "/menu/home_nav_quest.png", deliveryStatus: "EXISTING_FALLBACK", exposure: "ACTIVE" },
+  { id: "fight", label: "バトル", destination: "pvp", assetPath: "/menu/home_nav_pvp.png", deliveryStatus: "EXISTING_FALLBACK", exposure: "ACTIVE" },
+  { id: "raid", label: "レイド", destination: "raid", assetPath: "/menu/home_nav_raid.png", deliveryStatus: "EXISTING_FALLBACK", exposure: "ACTIVE" },
+  { id: "guild", label: "ギルド", destination: "guild", assetPath: "/menu/home_nav_guild.png", deliveryStatus: "EXISTING_FALLBACK", exposure: "ACTIVE" },
 ] as const;

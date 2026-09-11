@@ -1151,3 +1151,15 @@
 /* Rescue entries need the full feed width for identity and battle information. */
 .mypage-activity-log-row:has(.raid-rescue-link){grid-template-columns:minmax(0,1fr);align-items:start}
 .mypage-activity-log-row:has(.raid-rescue-link) .mypage-activity-log-detail{justify-items:stretch;text-align:left;min-width:0}
+
+/* Four persistent entries: preserve the existing menu/stage/banner geometry. */
+.mypage-circle-menu-area > .circle-menu-btn { justify-content:center; gap:1px; overflow:hidden; }
+.mypage-circle-menu-area .circle-menu-img { width:28px; height:28px; flex:0 0 28px; }
+.mypage-circle-menu-area .circle-menu-label { flex:0 0 16px; line-height:16px; }
+.mypage-circle-menu-area .circle-menu-label strong { font-size:11px; }
+.circle-menu-status { display:block; max-width:100%; height:12px; flex:0 0 12px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:10px; line-height:12px; color:#bfccd6; }
+.mypage-circle-menu-area > .circle-menu-btn.recommended { box-shadow:inset 0 0 0 1px #81cfdb; background:rgba(81,163,182,.12) !important; }
+.mypage-primary-cta:disabled { cursor:default; }
+@media (max-width:340px) {
+  .circle-menu-status { visibility:hidden; }
+}
