@@ -120,18 +120,30 @@ try {
   const legacyTitleTap = await visible(".title-tap-text", 30_000);
   await legacyTitleTap.click();
   await (await visible(".title-entry-primary")).click();
-
   await visible('[data-entry-state="WORLD_INFORMATION"]');
+  userId = await page.evaluate(() => {
+    const authKey = Object.keys(localStorage).find((key) => /^sb-.*-auth-token$/.test(key));
+    if (!authKey) return null;
+    try { return JSON.parse(localStorage.getItem(authKey) || "null")?.user?.id || null; } catch { return null; }
+  });
+
   const worldCharacters = [];
   for (const expected of ["レイジ", "アゲハ", "ゴウ"]) {
     await page.waitForFunction((name) => document.querySelector('[data-world-stage="1"]')?.getAttribute("data-character") === name, expected, { timeout: 10_000 });
     worldCharacters.push(expected);
   }
+  await page.locator('[data-world-stage="1"] .setup-world-character').first().waitFor({ state: "visible", timeout: 10_000 });
+  await page.waitForFunction(() => document.querySelectorAll('[data-world-stage="1"] .setup-world-character').length === 3);
+  await page.waitForFunction(() => !(document.querySelector('[data-world-stage="1"] .setup-world-tap')?.disabled));
+  await page.screenshot({ path: path.join(artifactsDirectory, "preview-world-page-1.png"), fullPage: true });
   await (await visible('[data-world-stage="1"] .setup-world-tap', 10_000)).click();
   for (const expected of ["カレン", "カエデ"]) {
     await page.waitForFunction((name) => document.querySelector('[data-world-stage="2"]')?.getAttribute("data-character") === name, expected, { timeout: 10_000 });
     worldCharacters.push(expected);
   }
+  await page.waitForFunction(() => document.querySelectorAll('[data-world-stage="2"] .setup-world-character').length === 2);
+  await page.waitForFunction(() => !(document.querySelector('[data-world-stage="2"] .setup-world-tap')?.disabled));
+  await page.screenshot({ path: path.join(artifactsDirectory, "preview-world-page-2.png"), fullPage: true });
   await (await visible('[data-world-stage="2"] .setup-world-tap', 10_000)).click();
   await visible('[data-world-stage="3"] .setup-world-logo', 10_000);
   await page.waitForFunction(() => {
@@ -305,7 +317,7 @@ try {
   await page.locator('[data-acceptance-state="B6"] button').click();
 
   const agehaEnd = await visible('[data-acceptance-state="AGEHA_END_MESSAGE"]', 20_000);
-  if (!((await agehaEnd.textContent()) || "").includes("これで基本はバッチリ！")) throw new Error("Ageha Tutorial end message is missing.");
+  await page.waitForFunction(() => document.querySelector('[data-acceptance-state="AGEHA_END_MESSAGE"]')?.textContent?.includes("あとは街に出て、好きに遊んでみて。"), undefined, { timeout: 10_000 });
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-ageha-end-message.png"), fullPage: true });
   await agehaEnd.getByRole("button", { name: "次へ" }).click();
   await visible('[data-acceptance-state="FINAL_GUIDE"]', 20_000);

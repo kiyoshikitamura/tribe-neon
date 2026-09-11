@@ -175,7 +175,6 @@ export default function SetupView() {
             {visibleCharacters.map((character, index) => (
               <div key={`${worldStage}-${character.name}`} className={`setup-world-character is-character-${index}`}>
                 <CharacterPresentation src={character.src} alt={character.name} variant="dialogue-bust" metadata={false} />
-                <span>{character.name}</span>
               </div>
             ))}
           </div>
