@@ -785,11 +785,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
+        const hadSession = currentAuthUserIdRef.current !== null;
         lastValidatedAuthUserIdRef.current = null;
         resetAuthenticatedProjection(null);
         setSession(null);
         setOnboardingState(null);
         setIsSetupRequired(false);
+        setAuthLoading(false);
+        if (hadSession) {
+          setShowTitleView(true);
+        }
         return;
       }
       const authUserChanged = currentAuthUserIdRef.current !== session.user.id;
@@ -835,7 +840,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const { data, error } = await supabase.rpc("get_current_onboarding_state");
       if (error) throw error;
       let nextState = data as import("./hooks/useAuth").OnboardingState;
-      if (nextState?.user_id !== userId || (currentAuthUserIdRef.current && currentAuthUserIdRef.current !== userId)) {
+      if (nextState?.user_id !== userId || currentAuthUserIdRef.current !== userId) {
         throw new Error("Authenticated player projection did not match the active session.");
       }
       const emailIntent = readEmailOnboardingIntent();
@@ -933,7 +938,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       } catch (err) {
         console.warn("Check setup required failed:", err);
         setTotalPowerLoading(false);
-        if (!currentAuthUserIdRef.current || currentAuthUserIdRef.current === userId) {
+        if (currentAuthUserIdRef.current === userId) {
           // A core onboarding projection failure is not an unfinished load and
           // must never be treated as a ready player. Keep the account ownership
           // guard closed, but give the player a canonical retry path instead of
@@ -1068,6 +1073,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setLastPatrolRewards(null);
       setOnboardingState((current: any) => current ? { ...current, tutorial_step: data || "RULE_GUIDE" } : current);
       battle.completeBattleResult();
+      battle.setBattleSpeed(2);
     } catch (error: any) {
       setErrorMessage(`チュートリアルを進められませんでした。${error?.message ? `（${error.message}）` : ""}`);
     } finally {
@@ -1191,7 +1197,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     let releaseBootstrap!: () => void;
     bootstrapSerialRef.current = new Promise<void>((resolve) => { releaseBootstrap = resolve; });
     await previousBootstrap;
-    if (currentAuthUserIdRef.current && currentAuthUserIdRef.current !== userId) {
+    if (currentAuthUserIdRef.current !== userId) {
       releaseBootstrap();
       return;
     }
@@ -1230,7 +1236,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       supabase.from("mission_reward_components").select("mission_id,item_id,quantity,reward_order").order("reward_order", { ascending: true }),
       supabase.rpc("get_active_mission_events"),
     ]).then(([presentsResult, missionMasterResult, userMissionResult, rewardComponentResult, activeEventResult]) => {
-      if (currentAuthUserIdRef.current && currentAuthUserIdRef.current !== userId) return;
+      if (currentAuthUserIdRef.current !== userId) return;
       if (presentsResult.data) {
         setPresents(presentsResult.data.map((present) => {
           const diffMs = new Date(present.expire_at).getTime() - Date.now();
@@ -1651,7 +1657,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // Core account-owned projections (profile/identity, wallet, Gacha
       // entitlement and Guild membership) are now resolved for the same UID.
       // Remaining gameplay bootstrap work may continue without holding the UI.
-      if ((!currentAuthUserIdRef.current || currentAuthUserIdRef.current === userId) && userProfile?.id === userId) {
+      if (currentAuthUserIdRef.current === userId && userProfile?.id === userId) {
         setAuthenticatedProjectionOwnerUserId(userId);
         setAuthenticatedProjectionError(null);
         coreProjectionReady = true;
@@ -2147,7 +2153,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     } catch (err: any) {
       console.warn("Sync error:", err.message);
-      if (!coreProjectionReady && (!currentAuthUserIdRef.current || currentAuthUserIdRef.current === userId)) {
+      if (!coreProjectionReady && currentAuthUserIdRef.current === userId) {
         setAuthenticatedProjectionError("プレイヤーデータを確認できませんでした。再度お試しください。");
       }
     } finally {
@@ -2412,27 +2418,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     return () => clearInterval(timer);
   }, [activePatrols, session]);
-
-  // SWR追加プレゼントフェッチ
-  useEffect(() => {
-    if (session && showInboxPanel && inboxPanelTab === "presents" && !presentsPrefetched) {
-      setPresentsSyncing(true);
-      const timer = setTimeout(() => {
-        setPresentsSyncing(false);
-        setPresentsPrefetched(true);
-        setPresents((prev) => {
-          if (!prev.some(p => p.id === "p_swr")) {
-            return [
-              ...prev,
-              { id: "p_swr", title: "SWR同期追加: アンケート協力のお礼", desc: "アンケート回答のお礼ダイヤ", reward: "ダイヤ +50", itemId: "DIAMOND", qty: 50, expireText: "期限: あと23時間", status: "UNCLAIMED", loading: false }
-            ];
-          }
-          return prev;
-        });
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [showInboxPanel, inboxPanelTab, presentsPrefetched, session]);
 
   // ==========================================
   // 5. 認証 ＆ 初期セットアップハンドラ (useAuthフックへ移譲)
@@ -4015,21 +4000,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
     const nextParty = [charId, ...selectedMembers.filter((id) => id !== charId)];
-    const saveError = await persistPartyFormation(nextParty);
-    if (saveError) {
-      console.warn("Failed to update party leader:", saveError);
-      setErrorMessage("パーティリーダーの変更に失敗しました。");
-      return false;
-    }
-    const { error: identityLeaderError } = await supabase
-      .from("users")
-      .update({ favorite_character_id: charId })
-      .eq("id", session.user.id);
-    if (identityLeaderError) {
-      console.warn("Failed to update identity leader:", identityLeaderError);
+    const { data: identityLeader, error: identityLeaderError } = await supabase.rpc("set_main_formation_leader", {
+      p_character_id: charId,
+    });
+    if (identityLeaderError || identityLeader?.status !== "success") {
+      console.warn("Failed to update identity leader:", identityLeaderError || identityLeader);
       setErrorMessage("リーダーの変更に失敗しました。");
       return false;
     }
+    setTotalPower(Number(identityLeader?.total_power || totalPower || 0));
     const identityRefreshed = await refreshIdentityLeaderAuthority(session.user.id);
     if (!identityRefreshed) {
       setErrorMessage("リーダーの最新状態を確認できませんでした。");

@@ -102,7 +102,12 @@ const requiredAssets = (paths: string[]): AssetRequest[] => paths.map((src) => (
 // Block only on assets used by the current tutorial screen, then reveal the
 // complete screen atomically.
 export const TUTORIAL_STEP_ASSET_MANIFESTS: Record<string, AssetRequest[]> = {
-  WORLD_INTRO: requiredAssets(["/bg/bg_street_shinjuku.jpg", "/characters/ageha_transparent_asset.png"]),
+  WORLD_INTRO: requiredAssets([
+    "/branding/tutorial/tutorial_world_street_bg.png",
+    "/characters/reiji_transparent_asset.png", "/characters/ageha_transparent_asset.png",
+    "/characters/gou_transparent_asset.png", "/characters/karen_transparent_asset.png",
+    "/characters/kaede_transparent_asset.png", "/branding/tribe-neon-logo.png",
+  ]),
   FREE_GACHA: requiredAssets([
     ...FRAME_ASSETS,
     "/gacha/bg_gacha_normal.jpg", "/gacha/bg_gacha_sr.jpg", "/gacha/bg_gacha_ssr.jpg",
@@ -116,8 +121,9 @@ export const TUTORIAL_STEP_ASSET_MANIFESTS: Record<string, AssetRequest[]> = {
     "/effects/cutin_bg_sr.png", "/effects/cutin_bg_ssr.png",
   ]),
   RULE_GUIDE: requiredAssets([
-    "/characters/ageha_transparent_asset.png", "/branding/tutorial/world.webp",
-    "/branding/tutorial/power.webp", "/branding/tutorial/tribe.webp",
+    "/characters/ageha_transparent_asset.png",
+    "/branding/tutorial/tutorial_world_street_bg.png",
+    "/branding/tutorial/tutorial_final_guide_bg.png",
   ]),
 };
 

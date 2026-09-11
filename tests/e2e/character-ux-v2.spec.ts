@@ -159,6 +159,9 @@ test('V2 Party draft cancel, confirm and leader authority',async({page})=>{
  expect(await page.evaluate(()=>localStorage.getItem('mock_db_user_main_formations'))).not.toBe(before);
  await party.getByRole('button',{name:'リーダー変更',exact:true}).click();await expect(party.locator('.character-party-leader-candidates button')).toHaveCount(3);await party.locator('.character-party-leader-candidates').getByRole('button',{name:'レイジ',exact:true}).click();await expect(party.locator('.character-party-leader')).toContainText('レイジ');
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('mock_db_users')||'[]')[0].favorite_character_id)).toBe('char_reiji_01');
+ await page.reload();await enterGame(page);await page.locator('.footer-item[aria-label="キャラ"]').click();await page.locator('.character-home').getByRole('button',{name:/パーティ/}).click();
+ await expect(page.locator('.character-party-leader')).toContainText('レイジ');
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('mock_db_users')||'[]')[0].favorite_character_id)).toBe('char_reiji_01');
 });
 test('V2 low-height equipment and party remain scrollable',async({page})=>{
  await page.setViewportSize({width:390,height:667});await enterGame(page);await page.locator('.footer-item[aria-label="キャラ"]').click();

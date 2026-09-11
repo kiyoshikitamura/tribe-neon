@@ -1,5 +1,11 @@
 .tutorial-rule-landing-guard,.tutorial-rule-screen{position:absolute;z-index:20000;inset:0}.tutorial-rule-landing-guard{background:rgba(1,4,10,.08);pointer-events:all}
 .tutorial-rule-screen{display:grid;place-items:center;width:100%;height:100%;overflow:hidden;padding:max(0px,env(safe-area-inset-top,0px)) max(0px,env(safe-area-inset-right,0px)) max(0px,env(safe-area-inset-bottom,0px)) max(0px,env(safe-area-inset-left,0px));color:#fff;background:#010308;animation:tutorial-final-in .3s ease both}
+.tutorial-ageha-end-screen{padding:calc(env(safe-area-inset-top,0px) + 14px) 14px calc(env(safe-area-inset-bottom,0px) + 14px);background:#02050b url('/branding/tutorial/tutorial_world_street_bg.png') center/cover no-repeat}
+.tutorial-ageha-end-screen::before{position:absolute;inset:0;content:"";background:linear-gradient(180deg,rgba(1,4,10,.15),rgba(1,4,10,.42) 48%,rgba(1,4,10,.92));pointer-events:none}
+.tutorial-ageha-end-frame{position:relative;display:grid;grid-template-rows:minmax(220px,1fr) auto auto;align-items:end;gap:10px;width:min(100%,430px);height:100%;overflow:hidden}
+.tutorial-ageha-end-character{align-self:stretch;height:100%;min-height:0;margin:0 -14px -28px;overflow:hidden;mask-image:linear-gradient(180deg,#000 0 82%,transparent)}.tutorial-ageha-end-character .character-presentation{width:100%;height:100%;animation:tutorial-ageha-end-in .5s ease-out both}
+.tutorial-ageha-end-dialogue{position:relative;z-index:2;padding:15px 16px;border:1px solid rgba(255,255,255,.34);border-radius:14px;background:rgba(3,8,15,.92);box-shadow:0 14px 40px rgba(0,0,0,.52);font-size:var(--ui-font-body);line-height:1.7}.tutorial-ageha-end-dialogue>strong{display:block;margin-bottom:6px;color:#dffcff;font-size:var(--ui-font-caption);font-weight:900;letter-spacing:.1em}.tutorial-ageha-end-dialogue .tutorial-typewriter{white-space:pre-line}
+.tutorial-ageha-end-cta{position:relative;z-index:2;width:100%;min-height:52px}
 .tutorial-final-guide-frame{position:relative;width:min(100%,calc((100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))*941/1672));max-width:941px;aspect-ratio:941/1672;overflow:hidden;background:#010308}
 .tutorial-final-guide-frame>img{display:block;width:100%;height:100%;object-fit:contain}
 .tutorial-final-guide-cta{position:absolute;z-index:2;left:23%;right:23%;bottom:2.1%;height:10%;min-height:48px;border:0;border-radius:12px;background:rgba(0,0,0,.01);box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -7,4 +13,5 @@
 .tutorial-final-guide-error{position:absolute;z-index:3;right:7%;bottom:13%;left:7%;padding:9px 12px;border-radius:8px;color:#fff;background:rgba(120,10,34,.92);font-size:12px;line-height:1.5;text-align:center}
 .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 @keyframes tutorial-final-in{from{opacity:0}to{opacity:1}}
+@keyframes tutorial-ageha-end-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.tutorial-rule-screen{animation:none}}

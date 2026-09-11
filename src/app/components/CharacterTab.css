@@ -1034,7 +1034,8 @@
 
 .char-party-modal-backdrop:has(.tutorial-character-step) { align-items:stretch; padding:0; background:#060b13; backdrop-filter:none; }
 .tutorial-character-step .tutorial-navigator { margin:0 0 10px; }
-.tutorial-learning-step [data-acceptance-state="TUTORIAL_SKILL_STEP"]{display:grid;min-height:100%;grid-template-rows:auto 1fr auto;gap:14px}
+.tutorial-learning-step [data-acceptance-state="TUTORIAL_SKILL_STEP"]{display:grid;min-height:100%;grid-template-rows:auto auto 1fr auto;gap:12px}
+.tutorial-skill-heading{margin:0;color:#f5f7fa;font-size:14px;font-weight:900;letter-spacing:.04em;text-align:left}
 .tutorial-learning-step [data-acceptance-state="TUTORIAL_SKILL_STEP"]>.semantic-cta{width:100%;min-height:52px;align-self:end}
 .tutorial-skill-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-self:center;gap:8px;width:100%}.tutorial-skill-row article{display:grid;min-width:0;justify-items:center;align-content:center;gap:6px;padding:12px 5px;border:1px solid rgba(0,240,255,.34);border-radius:9px;background:rgba(3,9,17,.88);text-align:center}.tutorial-skill-row .shared-skill-icon{width:min(19vw,72px);height:min(19vw,72px)}.tutorial-skill-row small{color:var(--ui-text-secondary);font-size:8px;letter-spacing:.03em}.tutorial-skill-row strong{min-height:3em;color:#fff;font-size:clamp(10px,2.8vw,13px);line-height:1.45;overflow-wrap:anywhere}
 .tutorial-character-step .char-party-modal-slots > button,

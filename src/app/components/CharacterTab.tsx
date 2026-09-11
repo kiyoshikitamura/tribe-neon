@@ -379,6 +379,7 @@ export default function CharacterTab() {
           <section className="char-party-modal tutorial-character-step tutorial-learning-step" aria-label="おすすめスキル設定">
             <div data-acceptance-state="TUTORIAL_SKILL_STEP">
               <TutorialNavigator message={<>おすすめのスキルを選んでおいたから、装備させるね。</>} />
+              <h2 className="tutorial-skill-heading">おすすめスキル</h2>
               <div className="tutorial-skill-row" aria-label="おすすめスキル3種">
                 {tutorialSkillMasters.map((skill: any) => (
                   <article key={skill.id} data-skill-id={skill.id}>

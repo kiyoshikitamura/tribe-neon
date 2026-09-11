@@ -10,6 +10,7 @@ import { featureUiExposure } from "@/domain/operations/operations";
 import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
 import OutlawButton from "./ui/OutlawButton";
 import { recordWorldIntroObservation } from "@/utils/acquisitionAttribution";
+import { useAssetTierPreloader } from "../hooks/useImagePreloader";
 
 type EntryPresentationState = "WORLD_INFORMATION" | "WORLD_TO_AGEHA" | "AGEHA_INTRO" | "NAME_INPUT";
 type WorldCharacter = { name: string; src: string };
@@ -38,18 +39,30 @@ export const WORLD_STAGES: readonly WorldStage[] = [
 
 const AGEHA_INTRO_COPY = `ようこそ、TRIBE NEONへ！
 私はアゲハ。まず、キミの名前を教えて？`;
-const CHARACTER_SCENE_MS = 1500;
+const WORLD_INTRO_ASSETS = [
+  "/branding/tutorial/tutorial_world_street_bg.png",
+  "/characters/reiji_transparent_asset.png",
+  "/characters/ageha_transparent_asset.png",
+  "/characters/gou_transparent_asset.png",
+  "/characters/karen_transparent_asset.png",
+  "/characters/kaede_transparent_asset.png",
+  "/branding/tribe-neon-logo.png",
+].map((src) => ({ src, required: true }));
+const BACKGROUND_HOLD_MS = 450;
+const CHARACTER_REVEAL_INTERVAL_MS = 850;
+const LOGO_HOLD_MS = 650;
 const entryStateKey = (userId?: string) => `tribe_entry_presentation:${userId || "anonymous"}`;
 const worldStageKey = (userId?: string) => `tribe_world_page:${userId || "anonymous"}`;
 
 export default function SetupView() {
   const [presentationState, setPresentationState] = useState<EntryPresentationState>("WORLD_INFORMATION");
   const [worldStage, setWorldStage] = useState(0);
-  const [worldCharacterIndex, setWorldCharacterIndex] = useState(0);
+  const [visibleCharacterCount, setVisibleCharacterCount] = useState(0);
   const [worldStageComplete, setWorldStageComplete] = useState(false);
   const submitRef = useRef(false);
   const nameEntryRef = useRef(false);
   const { session, setupUsername, setSetupUsername, setSetupGiftCode, setupLoading, handleInitializeUser, handleFirstUserInteraction, errorMessage, setErrorMessage } = useGame();
+  const worldAssets = useAssetTierPreloader(WORLD_INTRO_ASSETS, "TUTORIAL_CRITICAL");
 
   useEffect(() => {
     let stored: string | null = null;
@@ -87,20 +100,23 @@ export default function SetupView() {
 
   useEffect(() => {
     if (presentationState !== "WORLD_INFORMATION") return;
-    setWorldCharacterIndex(0);
-    setWorldStageComplete(WORLD_STAGES[worldStage].characters.length === 0);
+    setVisibleCharacterCount(0);
+    setWorldStageComplete(false);
   }, [presentationState, worldStage]);
 
   useEffect(() => {
-    if (presentationState !== "WORLD_INFORMATION") return;
+    if (presentationState !== "WORLD_INFORMATION" || !worldAssets.ready || worldStageComplete) return;
     const characters = WORLD_STAGES[worldStage].characters;
-    if (characters.length === 0 || worldStageComplete) return;
+    if (characters.length === 0) {
+      const timer = window.setTimeout(() => setWorldStageComplete(true), LOGO_HOLD_MS);
+      return () => window.clearTimeout(timer);
+    }
     const timer = window.setTimeout(() => {
-      if (worldCharacterIndex < characters.length - 1) setWorldCharacterIndex((current) => current + 1);
+      if (visibleCharacterCount < characters.length) setVisibleCharacterCount((current) => current + 1);
       else setWorldStageComplete(true);
-    }, CHARACTER_SCENE_MS);
+    }, visibleCharacterCount === 0 ? BACKGROUND_HOLD_MS : CHARACTER_REVEAL_INTERVAL_MS);
     return () => window.clearTimeout(timer);
-  }, [presentationState, worldCharacterIndex, worldStage, worldStageComplete]);
+  }, [presentationState, visibleCharacterCount, worldAssets.ready, worldStage, worldStageComplete]);
 
   const advancePresentation = (nextState: EntryPresentationState) => {
     if (nameEntryRef.current) return;
@@ -136,7 +152,17 @@ export default function SetupView() {
   };
 
   const stage = WORLD_STAGES[worldStage];
-  const activeCharacter = stage.characters[worldCharacterIndex];
+  const visibleCharacters = stage.characters.slice(0, visibleCharacterCount);
+  const activeCharacter = visibleCharacters.at(-1);
+
+  if (!worldAssets.ready) {
+    return <div className="setup-preload-screen" role="status" aria-live="polite">
+      {worldAssets.settled && worldAssets.requiredFailed ? <>
+        <strong>チュートリアル画像を読み込めませんでした</strong>
+        <button className="semantic-cta semantic-cta--primary" onClick={() => window.location.reload()}>再読み込み</button>
+      </> : <span>画面を準備中</span>}
+    </div>;
+  }
 
   return (
     <div className={`setup-container scroll-container ${presentationState === "NAME_INPUT" ? "is-registration" : "is-world-entry"}`} onClick={handleFirstUserInteraction} data-entry-state={presentationState}>
@@ -145,12 +171,14 @@ export default function SetupView() {
       {presentationState === "WORLD_INFORMATION" ? (
         <section className={`setup-world-presentation is-stage-${worldStage + 1}`} aria-label={`World Introduction Page ${worldStage + 1}`} data-world-stage={worldStage + 1} data-character={activeCharacter?.name || "none"}>
           <div className="setup-world-motion" aria-hidden="true" />
-          {activeCharacter && !worldStageComplete && (
-            <div key={`${worldStage}-${worldCharacterIndex}`} className="setup-world-character" aria-live="polite">
-              <CharacterPresentation src={activeCharacter.src} alt={activeCharacter.name} variant="full-body" metadata={false} />
-              <span>{activeCharacter.name}</span>
-            </div>
-          )}
+          <div className="setup-world-cast" aria-live="polite">
+            {visibleCharacters.map((character, index) => (
+              <div key={`${worldStage}-${character.name}`} className={`setup-world-character is-character-${index}`}>
+                <CharacterPresentation src={character.src} alt={character.name} variant="dialogue-bust" metadata={false} />
+                <span>{character.name}</span>
+              </div>
+            ))}
+          </div>
           {worldStage === 2 && <img className="setup-world-logo" src="/branding/tribe-neon-logo.png" alt="TRIBE NEON" />}
           <div className="setup-world-copy"><TypewriterText key={worldStage} text={stage.text} speedMs={34} /></div>
           <div className="setup-world-progress" aria-label={`${worldStage + 1} / ${WORLD_STAGES.length}`}>{WORLD_STAGES.map((_, index) => <i key={index} className={index === worldStage ? "is-active" : ""} />)}</div>

@@ -127,6 +127,10 @@ async function resumeRuleGuide(page: import("@playwright/test").Page) {
   if (await titleAction.isVisible()) await titleAction.click();
   await expect(continueAction).toBeVisible();
   await continueAction.click();
+  const agehaEnd = page.locator('[data-acceptance-state="AGEHA_END_MESSAGE"]');
+  await expect(agehaEnd).toContainText("これで基本はバッチリ！");
+  await expect(agehaEnd).toContainText("あとは街に出て、好きに遊んでみて。");
+  await agehaEnd.getByRole("button", { name: "次へ" }).click();
 }
 
 function tutorialEncounterSnapshot(encounterId: string) {
@@ -209,6 +213,11 @@ async function completeTutorialAutoFormation(page: import("@playwright/test").Pa
 }
 
 async function completeRuleGuide(page: import("@playwright/test").Page) {
+  const agehaEnd = page.locator('[data-acceptance-state="AGEHA_END_MESSAGE"]');
+  if (await agehaEnd.isVisible()) {
+    await expect(agehaEnd.locator(".tutorial-ageha-end-character img")).toBeVisible();
+    await agehaEnd.getByRole("button", { name: "次へ" }).click();
+  }
   await expect(page.locator('[data-acceptance-state="FINAL_GUIDE"]')).toBeVisible();
   await page.getByRole("button", { name: "街へ出る →" }).click();
   await expect(page.locator(".modal-overlay.background-black-95 .modal-card")).toBeVisible();
@@ -764,7 +773,7 @@ test("first quest connects dispatch, official battle, and one reward to the comp
   await page.setViewportSize({ width: 375, height: 844 });
   const battleViewer = page.locator(".sb-root");
   await expect(battleViewer).toBeVisible();
-  await expect(battleViewer).toHaveAttribute("data-battle-speed", "2");
+  await expect(battleViewer).toHaveAttribute("data-battle-speed", "1");
   await expect(page.locator(".battle-log-box")).toHaveCount(0);
   await expect(page.locator(".battle-timeline-slot")).toHaveCount(0);
   await expect(page.getByLabel("味方パーティ").locator(".sb-unit")).toHaveCount(1);
@@ -898,6 +907,9 @@ test("first quest connects dispatch, official battle, and one reward to the comp
 
   await page.getByRole("button", { name: "次へ" }).click();
   await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("RULE_GUIDE");
+  const agehaEnd = page.locator('[data-acceptance-state="AGEHA_END_MESSAGE"]');
+  await expect(agehaEnd).toContainText("これで基本はバッチリ！");
+  await agehaEnd.getByRole("button", { name: "次へ" }).click();
   await expect(page.locator('[data-acceptance-state="FINAL_GUIDE"]')).toBeVisible();
 });
 

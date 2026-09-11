@@ -1605,6 +1605,9 @@ export function useBattle(options: UseBattleOptions) {
   const roomRecoveryRef = useRef<Promise<boolean> | null>(null);
   const roomPresentationUserRef = useRef<string | null>(null);
   const previousRoomUserRef = useRef(session?.user?.id);
+  useEffect(() => {
+    if (tutorialBattleActive) setBattleSpeed(1);
+  }, [tutorialBattleActive]);
   useLayoutEffect(() => {
     roomUserRef.current = session?.user?.id;
     if (previousRoomUserRef.current === session?.user?.id) return;

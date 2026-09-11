@@ -1,4 +1,6 @@
 const TUTORIAL_COMPLETION_ASSETS = [
+  "/characters/ageha_transparent_asset.png",
+  "/branding/tutorial/tutorial_world_street_bg.png",
   "/branding/tutorial/tutorial_final_guide_bg.png",
 ] as const;
 

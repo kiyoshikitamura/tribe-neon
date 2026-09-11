@@ -289,11 +289,7 @@ try {
   await page.locator('[data-acceptance-state="B1"] .start-battle-btn').click();
   await recordState("B2");
   await visible(".sb-root", 30_000);
-  const speedToggle = page.locator(".sb-controls button").filter({ hasText: /^×[123]$/ }).first();
-  if ((await speedToggle.textContent())?.trim() === "×1") {
-    await speedToggle.click();
-  }
-  await page.locator('.sb-root[data-battle-speed="2"]').waitFor({ state: "visible", timeout: 10_000 });
+  await page.locator('.sb-root[data-battle-speed="1"]').waitFor({ state: "visible", timeout: 10_000 });
   await page.waitForFunction(() => (window.__TRIBE_BATTLE_PRESENTATION__?.history || []).some((entry) => entry?.kind === "normal" && entry?.actionCompleteAt), undefined, { timeout: 45_000, polling: 50 });
   stateSequence.push("B3");
   await resumeAfterReload("BATTLE_IN_PROGRESS");
@@ -308,6 +304,10 @@ try {
   completedBattlePresentation = await page.evaluate(() => window.__TRIBE_BATTLE_PRESENTATION__ || { history: [] });
   await page.locator('[data-acceptance-state="B6"] button').click();
 
+  const agehaEnd = await visible('[data-acceptance-state="AGEHA_END_MESSAGE"]', 20_000);
+  if (!((await agehaEnd.textContent()) || "").includes("これで基本はバッチリ！")) throw new Error("Ageha Tutorial end message is missing.");
+  await page.screenshot({ path: path.join(artifactsDirectory, "preview-ageha-end-message.png"), fullPage: true });
+  await agehaEnd.getByRole("button", { name: "次へ" }).click();
   await visible('[data-acceptance-state="FINAL_GUIDE"]', 20_000);
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-final-guide.png"), fullPage: true });
   await page.getByRole("button", { name: "街へ出る →" }).click();
@@ -354,6 +354,32 @@ try {
 
   let selfScopedReplayContract = null;
   if (selfScopedQa) {
+    const { data: formationBefore, error: formationBeforeError } = await admin.rpc("get_current_main_formation");
+    if (formationBeforeError || !Array.isArray(formationBefore?.characters) || formationBefore.characters.length < 2) {
+      throw new Error(`Leader acceptance formation is unavailable: ${JSON.stringify({ formationBeforeError, formationBefore })}`);
+    }
+    const leaderCandidate = formationBefore.characters[1].character_id;
+    const { data: leaderResult, error: leaderError } = await admin.rpc("set_main_formation_leader", { p_character_id: leaderCandidate });
+    if (leaderError || leaderResult?.status !== "success") throw new Error(`Leader change failed: ${JSON.stringify(leaderError || leaderResult)}`);
+    const { data: activeSession } = await admin.auth.getSession();
+    const reloadClient = createClient(supabaseUrl, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+    const reloadSession = activeSession?.session;
+    if (!reloadSession?.access_token || !reloadSession?.refresh_token) throw new Error("Leader reload session is unavailable.");
+    const { error: reloadSessionError } = await reloadClient.auth.setSession({ access_token: reloadSession.access_token, refresh_token: reloadSession.refresh_token });
+    if (reloadSessionError) throw reloadSessionError;
+    const [{ data: formationAfter, error: formationAfterError }, { data: profileAfter, error: profileAfterError }] = await Promise.all([
+      reloadClient.rpc("get_current_main_formation"),
+      reloadClient.from("users").select("favorite_character_id").eq("id", userId).single(),
+    ]);
+    if (formationAfterError || profileAfterError || formationAfter?.characters?.[0]?.character_id !== leaderCandidate || profileAfter?.favorite_character_id !== leaderCandidate) {
+      throw new Error(`Leader reload persistence failed: ${JSON.stringify({ formationAfterError, profileAfterError, formationAfter, profileAfter, leaderCandidate })}`);
+    }
+    const leaderChangeAudit = {
+      before: formationBefore.characters[0].character_id,
+      after: leaderCandidate,
+      reloadFormationLeader: formationAfter.characters[0].character_id,
+      reloadIdentityLeader: profileAfter.favorite_character_id,
+    };
     const { data: replay, error: replayError } = await admin.from("battle_replay_sessions")
       .select("player_snapshot,enemy_snapshot,result")
       .eq("requester_user_id", userId)
@@ -400,6 +426,7 @@ try {
       resumeAudits,
       acquisitionAudit,
       worldCharacters,
+      leaderChangeAudit,
       replayContract: selfScopedReplayContract,
       artifact: path.join(artifactsDirectory, "preview-B1.png"),
     };

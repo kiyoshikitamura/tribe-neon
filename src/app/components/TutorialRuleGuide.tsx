@@ -4,20 +4,38 @@ import { useEffect, useRef, useState } from "react";
 import { useGame } from "../context/GameContext";
 import { supabase } from "@/utils/supabase";
 import { getTutorialCompletionAssetStatus, preloadTutorialCompletionAssets } from "../lib/tutorialCompletionAssets";
+import CharacterPresentation from "./character/CharacterPresentation";
+import TypewriterText from "./tutorial/TypewriterText";
 import "./TutorialRuleGuide.css";
+
+const AGEHA_END_MESSAGE = "これで基本はバッチリ！\nあとは街に出て、好きに遊んでみて。";
 
 export default function TutorialRuleGuide() {
   const { onboardingState, setOnboardingState, playCyberSe } = useGame();
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [phase, setPhase] = useState<"AGEHA_END" | "FINAL_GUIDE">("AGEHA_END");
   const workingRef = useRef(false);
   const tutorialStep = onboardingState?.tutorial_step;
 
   useEffect(() => {
-    if (tutorialStep === "RULE_GUIDE") void preloadTutorialCompletionAssets();
+    if (tutorialStep === "RULE_GUIDE") {
+      setPhase("AGEHA_END");
+      void preloadTutorialCompletionAssets();
+    }
   }, [tutorialStep]);
 
   if (tutorialStep !== "RULE_GUIDE") return null;
+
+  if (phase === "AGEHA_END") {
+    return <div className="tutorial-rule-screen tutorial-ageha-end-screen" role="dialog" aria-modal="true" aria-label="アゲハのチュートリアル終了案内" data-acceptance-state="AGEHA_END_MESSAGE">
+      <section className="tutorial-ageha-end-frame">
+        <div className="tutorial-ageha-end-character" aria-hidden="true"><CharacterPresentation src="/characters/ageha_transparent_asset.png" alt="" variant="dialogue-bust" metadata={false} /></div>
+        <div className="tutorial-ageha-end-dialogue"><strong>アゲハ</strong><TypewriterText text={AGEHA_END_MESSAGE} speedMs={34} /></div>
+        <button className="semantic-cta semantic-cta--primary tutorial-ageha-end-cta" onClick={() => { playCyberSe("click"); setPhase("FINAL_GUIDE"); }}>次へ</button>
+      </section>
+    </div>;
+  }
 
   const complete = async () => {
     if (workingRef.current) return;

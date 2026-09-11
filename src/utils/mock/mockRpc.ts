@@ -4641,6 +4641,27 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("users", users);
     return { data: { status: "success" }, error: null };
   }
+  if (funcName === "set_main_formation_leader") {
+    const characterId = params.p_character_id;
+    const userId = typeof window === "undefined" ? "" : localStorage.getItem("tribe_demo_uuid") || "";
+    const users = client.getStorage("users") || [];
+    const characters = client.getStorage("user_characters") || [];
+    const allFormations = client.getStorage("user_main_formations") || [];
+    const owned = characters.find((entry: any) => entry.user_id === userId && entry.character_id === characterId);
+    const formation = allFormations.filter((entry: any) => entry.user_id === userId);
+    if (!owned || !formation.some((entry: any) => entry.user_character_id === owned.id)) {
+      return { data: null, error: { code: "23514", message: "leader must belong to the current main formation" } };
+    }
+    const ordered = formation.sort((left: any, right: any) => Number(left.slot) - Number(right.slot));
+    const selected = ordered.find((entry: any) => entry.user_character_id === owned.id);
+    const reordered = [selected, ...ordered.filter((entry: any) => entry !== selected)];
+    reordered.forEach((entry: any, index: number) => { entry.slot = index + 1; });
+    const user = users.find((entry: any) => entry.id === userId);
+    if (user) user.favorite_character_id = characterId;
+    client.setStorage("users", users);
+    client.setStorage("user_main_formations", allFormations);
+    return { data: { status: "success", leader_character_id: characterId, character_ids: reordered.map((entry: any) => characters.find((ownedEntry: any) => ownedEntry.id === entry.user_character_id)?.character_id).filter(Boolean) }, error: null };
+  }
 
   if (funcName === "buy_avatar_part") {
     const { p_user_id, p_currency_type, p_price } = params;
