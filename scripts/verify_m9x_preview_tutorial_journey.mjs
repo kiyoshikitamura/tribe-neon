@@ -134,6 +134,11 @@ try {
   }
   await (await visible('[data-world-stage="2"] .setup-world-tap', 10_000)).click();
   await visible('[data-world-stage="3"] .setup-world-logo', 10_000);
+  await page.waitForFunction(() => {
+    const logo = document.querySelector('[data-world-stage="3"] .setup-world-logo');
+    return logo instanceof HTMLImageElement && logo.complete && logo.naturalWidth > 0;
+  }, undefined, { timeout: 10_000 });
+  await page.waitForTimeout(700);
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-world-introduction.png"), fullPage: true });
   await (await visible('[data-world-stage="3"] .setup-world-tap', 10_000)).click();
   await visible('[data-entry-state="AGEHA_INTRO"]');
@@ -191,6 +196,8 @@ try {
   for (const skillId of ["SKILL_001", "SKILL_003", "SKILL_022"]) {
     if (await skillStep.locator(`[data-skill-id="${skillId}"]`).count() !== 1) throw new Error(`Missing tutorial Skill card: ${skillId}`);
   }
+  await page.waitForFunction(() => Array.from(document.querySelectorAll('[data-acceptance-state="TUTORIAL_SKILL_STEP"] .shared-skill-icon img'))
+    .filter((image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0).length === 3, undefined, { timeout: 10_000 });
   if (await page.locator('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]').count()) throw new Error("Level Up Tutorial must not be rendered.");
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-tutorial-skills.png"), fullPage: true });
   await page.getByRole("button", { name: "装備する" }).click();
@@ -345,7 +352,33 @@ try {
     if (!metric.targetId) throw new Error(`Missing ${kind} target presentation identity: ${JSON.stringify(metric)}`);
   }
 
+  let selfScopedReplayContract = null;
   if (selfScopedQa) {
+    const { data: replay, error: replayError } = await admin.from("battle_replay_sessions")
+      .select("player_snapshot,enemy_snapshot,result")
+      .eq("requester_user_id", userId)
+      .eq("battle_mode", "QUEST")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+    if (replayError) throw new Error(`Self-scoped replay query failed: ${JSON.stringify(replayError)}`);
+    const events = Array.isArray(replay?.result?.events) ? replay.result.events : [];
+    const actionIndex = (skillId, actorId) => events.findIndex((event) => event.type === "ACTION" && event.payload?.skillId === skillId && (!actorId || event.payload?.actorId === actorId));
+    const openingIndex = actionIndex("SKILL_001");
+    const enemyAttackIndex = actionIndex("BASIC_ATTACK", replay?.enemy_snapshot?.[0]?.id);
+    const healActionIndex = actionIndex("SKILL_003");
+    const healEventIndex = events.findIndex((event, index) => index > healActionIndex && event.type === "HEAL" && Number(event.payload?.effectiveAmount || 0) > 0);
+    const finisherIndex = actionIndex("SKILL_022");
+    const finisherRound = Number(events[finisherIndex]?.round);
+    const defeatedEnemyCount = new Set(events.slice(finisherIndex + 1)
+      .filter((event) => event.type === "DEFEAT" && String(event.payload?.targetId || "").startsWith("enemy_"))
+      .map((event) => event.payload.targetId)).size;
+    if (!(openingIndex >= 0 && enemyAttackIndex > openingIndex && healActionIndex > enemyAttackIndex
+        && healEventIndex > healActionIndex && finisherIndex > healEventIndex && finisherRound === 2
+        && defeatedEnemyCount === (replay?.enemy_snapshot || []).length && replay?.result?.winner === "PLAYER")) {
+      throw new Error(`Self-scoped authored battle contract failed: ${JSON.stringify({ openingIndex, enemyAttackIndex, healActionIndex, healEventIndex, finisherIndex, finisherRound, defeatedEnemyCount, enemyCount: replay?.enemy_snapshot?.length, winner: replay?.result?.winner })}`);
+    }
+    selfScopedReplayContract = { openingIndex, enemyAttackIndex, healActionIndex, healEventIndex, finisherIndex, finisherRound, defeatedEnemyCount, winner: replay.result.winner };
     const report = {
       status: "PASS",
       previewUrl,
@@ -367,6 +400,7 @@ try {
       resumeAudits,
       acquisitionAudit,
       worldCharacters,
+      replayContract: selfScopedReplayContract,
       artifact: path.join(artifactsDirectory, "preview-B1.png"),
     };
     await writeFile(path.join(artifactsDirectory, "preview-journey-report.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -380,23 +414,29 @@ try {
   if (skillError || replayError || skillGachaError) {
     throw new Error(`Preview contract query failed: ${JSON.stringify({ skillError, replayError, skillGachaError })}`);
   }
-  const starterSkills = (skills || []).filter((skill) => skill.skill_card_id === "SKILL_001");
-  if (starterSkills.length !== 1 || Number(starterSkills[0].plus_val) !== 0 || Number(starterSkills[0].slot_index) !== 0) {
-    throw new Error(`Invalid tutorial starter skill ownership: ${JSON.stringify(starterSkills)}`);
+  const starterSkills = (skills || []).filter((skill) => ["SKILL_001", "SKILL_003", "SKILL_022"].includes(skill.skill_card_id));
+  if (starterSkills.length !== 3 || new Set(starterSkills.map((skill) => skill.skill_card_id)).size !== 3
+      || starterSkills.some((skill) => Number(skill.plus_val) !== 0 || Number(skill.slot_index) !== 0 || !skill.equipped_character_id)) {
+    throw new Error(`Invalid tutorial Skill ownership: ${JSON.stringify(starterSkills)}`);
   }
   if (skillGachaCount !== 0) throw new Error("Tutorial starter skill incorrectly created Skill Gacha history.");
-  const leader = replay?.player_snapshot?.[0];
   const events = Array.isArray(replay?.result?.events) ? replay.result.events : [];
-  const leaderActions = events.filter((event) => event.type === "ACTION" && event.payload?.actorId === leader?.id);
-  const basicActionIndex = events.findIndex((event) => event === leaderActions.find((action) => action.payload?.skillId === "BASIC_ATTACK"));
-  const skillAction = leaderActions.find((action) => action.payload?.skillId && action.payload.skillId !== "BASIC_ATTACK");
-  const skillActionIndex = events.findIndex((event) => event === skillAction);
-  const skillImpactIndex = events.findIndex((event, index) => index > skillActionIndex && ["DAMAGE", "HEAL", "EFFECT", "STATUS"].includes(event.type) && event.payload?.actorId === leader?.id);
-  if (basicActionIndex < 0 || skillActionIndex < 0 || skillImpactIndex <= skillActionIndex) {
-    throw new Error(`Authoritative tutorial sequence is incomplete: ${JSON.stringify(leaderActions)}`);
+  const actionIndex = (skillId, actorId) => events.findIndex((event) => event.type === "ACTION" && event.payload?.skillId === skillId && (!actorId || event.payload?.actorId === actorId));
+  const openingIndex = actionIndex("SKILL_001");
+  const firstEnemyId = replay?.enemy_snapshot?.[0]?.id;
+  const enemyAttackIndex = actionIndex("BASIC_ATTACK", firstEnemyId);
+  const healActionIndex = actionIndex("SKILL_003");
+  const healEventIndex = events.findIndex((event, index) => index > healActionIndex && event.type === "HEAL" && Number(event.payload?.effectiveAmount || 0) > 0);
+  const finisherIndex = actionIndex("SKILL_022");
+  const finisherEvent = events[finisherIndex];
+  const defeatedAfterFinisher = new Set(events.slice(finisherIndex + 1)
+    .filter((event) => event.type === "DEFEAT" && String(event.payload?.targetId || "").startsWith("enemy_"))
+    .map((event) => event.payload.targetId));
+  if (!(openingIndex >= 0 && enemyAttackIndex > openingIndex && healActionIndex > enemyAttackIndex
+      && healEventIndex > healActionIndex && finisherIndex > healEventIndex
+      && Number(finisherEvent?.round) === 2 && defeatedAfterFinisher.size === (replay?.enemy_snapshot || []).length)) {
+    throw new Error(`Authored Tutorial Battle sequence is incomplete: ${JSON.stringify({ openingIndex, enemyAttackIndex, healActionIndex, healEventIndex, finisherIndex, finisherRound: finisherEvent?.round, defeatedAfterFinisher: [...defeatedAfterFinisher] })}`);
   }
-  const firstDefeatIndex = events.findIndex((event) => event.type === "DEFEAT" && String(event.payload?.targetId || "").startsWith("enemy_"));
-  if (firstDefeatIndex >= 0 && firstDefeatIndex < skillImpactIndex) throw new Error("Tutorial enemy was defeated before the Skill impact.");
   if (replay?.result?.winner !== "PLAYER") throw new Error("Tutorial expected winner was not preserved.");
 
   const initialCharacters = acquisitionAudit.INITIAL_CHARACTER?.characters || [];
@@ -506,8 +546,8 @@ try {
     trace,
     battleNetworkTrace,
     resumeAudits,
-    starterSkill: { skillId: starterSkills[0].skill_card_id, plusValue: starterSkills[0].plus_val, slotIndex: starterSkills[0].slot_index },
-    replayContract: { basicActionIndex, skillActionIndex, skillImpactIndex, winner: replay.result.winner },
+    starterSkills: starterSkills.map((skill) => ({ skillId: skill.skill_card_id, plusValue: skill.plus_val, slotIndex: skill.slot_index, characterId: skill.equipped_character_id })),
+    replayContract: { openingIndex, enemyAttackIndex, healActionIndex, healEventIndex, finisherIndex, finisherRound: finisherEvent.round, defeatedEnemyCount: defeatedAfterFinisher.size, winner: replay.result.winner },
     battleResolveContract: { patrol: finalPatrol, replay: canonicalReplay, dispatchResponseCount: dispatchResponses.length, createResponseCount: createResponses.length, resolveResponseCount: resolveResponses.length },
     acquisitionAudit,
     worldCharacters,
