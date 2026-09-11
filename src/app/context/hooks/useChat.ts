@@ -8,6 +8,8 @@ import {
   type DirectMessageRow,
 } from "./directMessageConversations";
 
+const GUILD_CHAT_REFRESH_TIMEOUT_MS = 12_000;
+
 function getChatSendErrorMessage(error: unknown) {
   const message = String((error as { message?: unknown })?.message || "").toLowerCase();
   if (message.includes("reply target is unavailable")) {
@@ -376,12 +378,16 @@ export function useChat(
       setChatReplyTo(null);
       setChatCooldown(chatChannel === "GUILD" ? 3 : 10);
       if (chatChannel === "GUILD") {
-        try {
-          await refreshAfterGuildChat(session.user.id);
-        } catch (refreshError) {
-          // メッセージは確定済みなので、表示同期の失敗を送信失敗として扱わない。
-          console.warn("Guild chat mission projection refresh failed:", refreshError);
-        }
+        // The chat RPC has already committed at this point. Keep the send UI
+        // independent from the broader bootstrap refresh, which may be slow or
+        // remain pending because it serves unrelated projections.
+        const refreshTimeout = new Promise<void>((_, reject) => {
+          setTimeout(() => reject(new Error("guild chat post-send refresh timed out")), GUILD_CHAT_REFRESH_TIMEOUT_MS);
+        });
+        void Promise.race([refreshAfterGuildChat(session.user.id), refreshTimeout]).catch((refreshError) => {
+          // A refresh failure must not roll back a message that was already sent.
+          console.warn("Guild chat post-send refresh failed:", refreshError);
+        });
       }
     } catch (err: any) {
       setGuildChats((previous) => previous.filter((message) => message.id !== temporaryMessageId));
