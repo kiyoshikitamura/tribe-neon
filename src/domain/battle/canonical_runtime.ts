@@ -51,6 +51,8 @@ export interface BattleSkill {
 export interface BattleUnitInput {
   id: string; characterId?: string; name: string; team: BattleTeam; alignment: Alignment;
   stats: BattleStats; skills: BattleSkill[];
+  /** Snapshot-only gate used by authored encounters; absent in normal play. */
+  turnAvailableFromRound?: number;
   level?: number;
   awakeningLevel?: number;
   rarity?: string;
@@ -497,6 +499,7 @@ export function resolveCanonicalBattle(input: DeterministicBattleInput): Determi
     const order = [...alive(players), ...alive(enemies)].sort((a, b) => effectiveStat(b, "SPD") - effectiveStat(a, "SPD") || a.team.localeCompare(b.team) || a.id.localeCompare(b.id));
     for (const actor of order) {
       if (actor.hp <= 0 || !alive(players).length || !alive(enemies).length) continue;
+      if (round < Math.max(1, Number(actor.turnAvailableFromRound ?? 1))) continue;
       context.action += 1;
       if (hasStatus(actor, "STUN")) emit(events, round, "ACTION", { actorId: actor.id, action: "STUN_SKIP" });
       else {

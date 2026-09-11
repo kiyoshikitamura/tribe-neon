@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 
 const uiFiles = [
   "src/app/components/SetupView.tsx",
+  "src/app/components/SetupView.css",
   "src/app/components/TitleView.tsx",
   "src/app/components/AuthView.tsx",
   "src/app/components/TutorialWorldIntro.tsx",
@@ -13,6 +14,7 @@ const uiFiles = [
   "src/app/components/TutorialBattlePrompt.tsx",
   "src/app/components/CardBattleView.tsx",
   "src/app/components/TutorialRuleGuide.tsx",
+  "src/app/components/TutorialRuleGuide.css",
   "src/app/components/HomeTab.tsx",
   "src/app/components/GuildTab.tsx",
   "src/app/components/TribeChatModal.tsx",
@@ -57,40 +59,48 @@ for (const retiredClientPath of [
 }
 
 const requiredFragments = [
-  "ここは、誰のルールも",
-  "力を持つ奴が、",
-  "ここで生き残るために、",
-  "どこまで上へ行くか。",
-  "この街で生きる覚悟はあるか。",
-  "はじめまして。アゲハだよ。",
+  "/branding/tutorial/tutorial_world_street_bg.png",
+  "この街には、",
+  "いろんな生き方をしてる奴がいる。",
+  "見た目も、性格も、戦い方も違う。",
+  "誰と出会うかは、お前次第だ。",
+  "この街で、お前のTRIBEが始まる。",
+  "ようこそ、TRIBE NEONへ！",
+  "私はアゲハ。まず、キミの名前を教えて？",
+  "この街、一人でやってくのは結構大変なんだ。",
+  "まずは仲間を集めよっか。",
   "ここでは、ガチャで仲間を増やせるよ。",
-  "いいじゃん。じゃ、この中から一緒に動くメンバーを決めよ。",
-  "バトルに出るメンバーはここで決めるよ。",
+  "おすすめのスキルを選んでおいたから、装備させるね。",
+  "SKILL_001",
+  "SKILL_003",
+  "SKILL_022",
+  "装備する",
   "次はクエストね。まずはこの子を新宿に行かせてみよ。",
   "本当なら、あとは帰ってくるまで待つんだけど――",
   "こんな感じ。クエストを進めながら、少しずつ強くなってくよ。",
   "あ、バトルになったみたい。",
-  "これで基本は大丈夫。",
-  "いろんな奴が、この街で生きてる。",
-  "仲間を集めて、もっと強くなる。",
-  "気の合う奴らと、TRIBEへ。",
+  "/branding/tutorial/tutorial_final_guide_bg.png",
+  "街へ出る →",
 ];
 const missing = requiredFragments.filter((value) => !combined.includes(value));
 if (missing.length > 0) {
   throw new Error(`M9-X required Package copy missing: ${missing.join(" / ")}`);
 }
 
-const gachaReveal = sources["src/app/components/CommonModals.tsx"];
-for (const fragment of [
-  "tutorial-gacha-reveal-parameters",
-  "<dt>HP</dt>",
-  "<dt>ATK</dt>",
-  "<dt>DEF</dt>",
+const setupView = sources["src/app/components/SetupView.tsx"];
+for (const characterPath of [
+  "/characters/reiji_transparent_asset.png",
+  "/characters/ageha_transparent_asset.png",
+  "/characters/gou_transparent_asset.png",
+  "/characters/karen_transparent_asset.png",
+  "/characters/kaede_transparent_asset.png",
 ]) {
-  if (!gachaReveal.includes(fragment)) throw new Error(`Tutorial Gacha parameter contract missing: ${fragment}`);
+  if (!setupView.includes(characterPath)) throw new Error(`World Introduction Character missing: ${characterPath}`);
 }
-for (const forbiddenParameter of ["<dt>SPD</dt>", "<dt>LUK</dt>", "primaryStat", "primary_parameter"]) {
-  if (gachaReveal.includes(forbiddenParameter)) throw new Error(`Forbidden Tutorial Gacha parameter contract detected: ${forbiddenParameter}`);
+
+const finalGuide = sources["src/app/components/TutorialRuleGuide.tsx"];
+for (const duplicateCopy of ["ここからは、仲間と遊ぼう。", "レイドで助け合い、ギルドでつながる。", "あとは、キミの自由だ。"] ) {
+  if (finalGuide.includes(`>${duplicateCopy}<`)) throw new Error(`Final Guide baked copy must not be redrawn: ${duplicateCopy}`);
 }
 
 console.log(`M9-X specification source gate PASS (${uiFiles.length} UI files, ${requiredFragments.length} required fragments)`);

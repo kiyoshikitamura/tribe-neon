@@ -23,7 +23,7 @@ localStorage.setItem("tribe_demo_uuid", newUser);
 set("users", []);
 set("tutorial_progress", []);
 let result = await rpc("initialize_current_player", { p_username: "短縮QA" });
-assert.equal(result.data?.tutorial_step, "FREE_GACHA", "new players must skip World Introduction UI state");
+assert.equal(result.data?.tutorial_step, "WORLD_INTRO", "new players must enter the accepted World Introduction handoff");
 
 set("user_characters", [{ id: "short-owned-1", user_id: newUser, character_id: firstCharacter.character_id, level: 1, awakening_level: 0 }]);
 set("user_main_formations", []);
@@ -32,18 +32,36 @@ set("user_equipments", []);
 set("user_skills", []);
 set("user_patrols", []);
 set("user_funnel_milestones", []);
-client.getStorage("tutorial_progress")[0].step_id = "AUTO_FORMATION";
-result = await rpc("resume_short_tutorial");
-assert.equal(result.data?.tutorial_step, "TUTORIAL_BATTLE", "removed formation/dispatch/instant UI states must resume at Battle");
-assert.equal(client.getStorage("user_main_formations").length, 1, "owned-character shortage must form safely");
-assert.equal(client.getStorage("user_skills").length, 0, "short tutorial must not auto-set Skills");
-assert.equal(client.getStorage("user_patrols")[0]?.has_battle_event, true, "tutorial Battle authority must be prepared");
+result = await rpc("start_tutorial_progress");
+assert.equal(result.data, "WORLD_INTRO", "resume must preserve the accepted initial step");
 
+result = await rpc("advance_tutorial_progress", { p_expected_step: "WORLD_INTRO", p_next_step: "AUTO_FORMATION" });
+assert.equal(result.error?.message, "Invalid tutorial transition", "steps must not be skipped");
+assert.equal(client.getStorage("tutorial_progress")[0].step_id, "WORLD_INTRO");
+
+result = await rpc("advance_tutorial_progress", { p_expected_step: "WORLD_INTRO", p_next_step: "FREE_GACHA" });
+assert.equal(result.data, "FREE_GACHA");
+result = await rpc("advance_tutorial_progress", { p_expected_step: "FREE_GACHA", p_next_step: "AUTO_FORMATION" });
+assert.equal(result.data, "AUTO_FORMATION");
+result = await rpc("resume_short_tutorial");
+assert.equal(result.data?.tutorial_step, "AUTO_FORMATION", "the compatibility RPC must be observation-only");
+assert.equal(client.getStorage("user_main_formations").length, 0, "the compatibility RPC must not form a party");
+assert.equal(client.getStorage("user_patrols").length, 0, "the compatibility RPC must not complete Quest steps");
+
+client.getStorage("tutorial_progress")[0].step_id = "TUTORIAL_BATTLE";
 result = await rpc("advance_tutorial_progress", { p_expected_step: "TUTORIAL_BATTLE", p_next_step: "COMPLETE" });
+assert.equal(result.error?.message, "Invalid tutorial transition", "Battle must hand off to the accepted post-Battle guide");
+assert.equal(client.getStorage("tutorial_progress")[0].step_id, "TUTORIAL_BATTLE");
+result = await rpc("advance_tutorial_progress", { p_expected_step: "TUTORIAL_BATTLE", p_next_step: "RULE_GUIDE" });
+assert.equal(result.data, "RULE_GUIDE");
+result = await rpc("advance_tutorial_progress", { p_expected_step: "RULE_GUIDE", p_next_step: "COMPLETE" });
 assert.equal(result.data, "COMPLETE");
 assert(client.getStorage("user_funnel_milestones").some((row) => row.user_id === newUser && row.milestone === "tutorial_complete"));
-assert(client.getStorage("user_funnel_milestones").some((row) => row.user_id === newUser && row.milestone === "character_setup_dialog_eligible"));
+assert(!client.getStorage("user_funnel_milestones").some((row) => row.user_id === newUser && row.milestone === "character_setup_dialog_eligible"), "accepted-flow completion must not opt users into the short-flow dialog");
 
+result = await rpc("get_character_setup_dialog_state");
+assert.deepEqual(result.data, { eligible: false, consumed: false });
+client.getStorage("user_funnel_milestones").push({ user_id: newUser, milestone: "character_setup_dialog_eligible", metadata: { flow: "short_tutorial_v1" } });
 result = await rpc("get_character_setup_dialog_state");
 assert.deepEqual(result.data, { eligible: true, consumed: false });
 result = await rpc("complete_character_setup_dialog", { p_action: "AUTO_SETUP" });
@@ -70,4 +88,4 @@ result = await rpc("get_character_setup_dialog_state");
 assert.deepEqual(result.data, { eligible: false, consumed: false }, "already-completed users must not receive the new dialog");
 
 assert(firstEquipment, "canonical Equipment fixture must exist");
-console.log("GAME03 short tutorial + Character setup verification: PASS");
+console.log("GAME03 accepted tutorial restore + Character setup compatibility verification: PASS");

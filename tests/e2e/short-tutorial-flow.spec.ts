@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.use({ viewport: { width: 390, height: 844 } });
 
-test("fresh start omits World Introduction and enters Free Gacha after name", async ({ page }) => {
+test("fresh start preserves Ageha handoffs and enters Free Gacha through World Introduction", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("mock_rpc_fixture:empty_raid_recoveries", "true");
     localStorage.setItem("mock_db_gacha_masters", JSON.stringify([{ id: "CHAR_NORMAL", name: "ノーマルガチャ", gacha_type: "CHARACTER", cost_cash: 1000, cost_diamond: 100, is_active: true }]));
@@ -17,15 +17,19 @@ test("fresh start omits World Introduction and enters Free Gacha after name", as
   await page.goto("/");
   await page.getByRole("button", { name: "TAP TO START" }).click();
   await page.getByRole("button", { name: "はじめから" }).click();
-  await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toBeVisible();
-  await expect(page.locator('[data-entry-state="WORLD_INFORMATION"]')).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "SKIP" })).toHaveCount(0);
+  await expect(page.locator('[data-entry-state="WORLD_INFORMATION"]')).toBeVisible();
+  await page.getByRole("button", { name: "SKIP" }).click();
+  await expect(page.locator('[data-entry-state="AGEHA_INTRO"]')).toContainText("ようこそ、TRIBE NEONへ！");
+  await page.locator(".setup-ageha-presentation .setup-primary-action").click();
+  await expect(page.locator('[data-entry-state="NAME_INPUT"]')).toContainText("キミの名前を教えて？");
   await page.getByLabel("プレイヤー名（8文字まで）").fill("短縮QA");
   await page.getByRole("button", { name: "この名前で始める" }).click();
+  await expect(page.locator(".tutorial-world")).toContainText("まずは仲間を集めよっか。");
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("WORLD_INTRO");
+  await page.locator(".tutorial-world-next-cta").click();
   await expect(page.getByRole("button", { name: "無料10連を引く" })).toBeVisible();
   const step = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id);
   expect(step).toBe("FREE_GACHA");
-  await expect(page.locator(".tutorial-world")).toHaveCount(0);
   await page.getByRole("button", { name: "無料10連を引く" }).click();
   await expect(page.locator(".cg-opening")).toBeVisible({ timeout: 15_000 });
   await page.locator(".cg-opening").click();
@@ -35,14 +39,14 @@ test("fresh start omits World Introduction and enters Free Gacha after name", as
     await expect(page.locator(".cg-shell")).toHaveAttribute("data-stage", "SETTLED", { timeout: 5_000 });
     await reveal.click();
   }
-  await expect(page.getByRole("button", { name: "バトルへ進む" })).toBeVisible();
-  await page.getByRole("button", { name: "バトルへ進む" }).click();
-  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("TUTORIAL_BATTLE");
-  await expect(page.locator('[data-acceptance-state="TUTORIAL_SKILL_STEP"]')).toHaveCount(0);
-  await expect(page.locator('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]')).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "編成へ進む" })).toBeVisible();
+  await page.getByRole("button", { name: "編成へ進む" }).click();
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("AUTO_FORMATION");
+  await expect(page.getByRole("button", { name: "おすすめ編成にする" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "バトルへ進む" })).toHaveCount(0);
 });
 
-test("legacy removed formation step resumes directly at Tutorial Battle", async ({ page }) => {
+test("AUTO_FORMATION resume remains on the accepted Character tutorial", async ({ page }) => {
   const userId = "00000000-0000-4000-8000-000000003120";
   await page.addInitScript(({ userId }) => {
     const now = new Date().toISOString();
@@ -65,8 +69,8 @@ test("legacy removed formation step resumes directly at Tutorial Battle", async 
   const continuation = page.getByRole("button", { name: /続きから|チュートリアルを続ける/ });
   await expect(continuation).toBeVisible();
   await continuation.click();
-  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("TUTORIAL_BATTLE");
-  await expect(page.locator('[data-acceptance-state="TUTORIAL_SKILL_STEP"]')).toHaveCount(0);
-  await expect(page.locator('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]')).toHaveCount(0);
-  await expect(page.locator(".tutorial-world")).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]?.step_id)).toBe("AUTO_FORMATION");
+  await expect(page.locator(".char-tab-container")).toBeVisible();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_user_patrols") || "[]").length)).toBe(0);
+  await expect(page.getByRole("button", { name: "バトル開始" })).toHaveCount(0);
 });

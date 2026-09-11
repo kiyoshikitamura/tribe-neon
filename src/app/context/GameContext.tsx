@@ -4092,6 +4092,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           setSelectedLeader(String(tutorialFormation.leader_character_id));
         }
         setUpgradeSelectedCharId(committedParty[0]);
+        // Project the equipment and Skill rows committed by the same authority
+        // before the player reaches Quest/Battle. The wider bootstrap remains a
+        // background reconciliation, but these loadout rows must not lag behind
+        // the Character tutorial handoff.
+        const [tutorialEquipmentProjection, tutorialSkillProjection] = await Promise.all([
+          supabase.from("user_equipments").select("*").eq("user_id", session.user.id).order("created_at", { ascending: false }),
+          supabase.from("user_skills").select("*").eq("user_id", session.user.id),
+        ]);
+        if (tutorialEquipmentProjection.error || tutorialSkillProjection.error) {
+          console.warn("Tutorial loadout projection failed:", tutorialEquipmentProjection.error || tutorialSkillProjection.error);
+          setErrorMessage("チュートリアル装備の反映を確認できませんでした。");
+          return false;
+        }
+        setUserEquipmentsList(tutorialEquipmentProjection.data || []);
+        setUserSkillsList(tutorialSkillProjection.data || []);
         // Register the explicit-continuation owner before exposing the completion
         // panel. Otherwise a fast tap during the presentation delay is lost.
         const tutorialContinue = waitForTutorialContinue?.(tutorialFormation);

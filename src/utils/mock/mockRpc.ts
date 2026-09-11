@@ -1566,10 +1566,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (!userId) return { data: null, error: { message: "Authentication is required" } };
     const progress = client.getStorage("tutorial_progress") || [];
     if (!progress.some((entry: any) => entry.user_id === userId)) {
-      progress.push({ user_id: userId, step_id: "FREE_GACHA" });
+      progress.push({ user_id: userId, step_id: "WORLD_INTRO" });
       client.setStorage("tutorial_progress", progress);
     }
-    return { data: progress.find((entry: any) => entry.user_id === userId)?.step_id || "FREE_GACHA", error: null };
+    return { data: progress.find((entry: any) => entry.user_id === userId)?.step_id || "WORLD_INTRO", error: null };
   }
 
   if (funcName === "advance_tutorial_progress") {
@@ -1577,11 +1577,22 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const progress = client.getStorage("tutorial_progress") || [];
     const entry = progress.find((value: any) => value.user_id === userId);
     if (!userId || !entry || entry.step_id !== params.p_expected_step) return { data: null, error: { message: "Unexpected tutorial step" } };
+    const allowedTransitions = new Set([
+      "WORLD_INTRO:FREE_GACHA",
+      "FREE_GACHA:AUTO_FORMATION",
+      "AUTO_FORMATION:DISPATCH",
+      "DISPATCH:FREE_INSTANT",
+      "FREE_INSTANT:TUTORIAL_BATTLE",
+      "TUTORIAL_BATTLE:RULE_GUIDE",
+      "RULE_GUIDE:COMPLETE",
+    ]);
+    if (!allowedTransitions.has(`${params.p_expected_step}:${params.p_next_step}`)) {
+      return { data: null, error: { message: "Invalid tutorial transition" } };
+    }
     entry.step_id = params.p_next_step;
     if (params.p_next_step === "COMPLETE") {
       entry.authentication_pending = false;
       recordMockLifetimeMilestone(client, userId, "tutorial_complete", { source: "tutorial_progress" });
-      recordMockLifetimeMilestone(client, userId, "character_setup_dialog_eligible", { flow: "short_tutorial_v1" });
     }
     client.setStorage("tutorial_progress", progress);
     return { data: entry.step_id, error: null };
@@ -1592,31 +1603,58 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const progressRows = client.getStorage("tutorial_progress") || [];
     const progress = progressRows.find((row: any) => row.user_id === userId);
     if (!userId || !progress) return { data: null, error: { message: "Tutorial has not started", code: "P0002" } };
-    if (progress.step_id === "WORLD_INTRO") progress.step_id = "FREE_GACHA";
-    if (progress.step_id === "RULE_GUIDE") {
-      progress.step_id = "COMPLETE";
-      recordMockLifetimeMilestone(client, userId, "tutorial_complete", { source: "tutorial_progress" });
-      recordMockLifetimeMilestone(client, userId, "character_setup_dialog_eligible", { flow: "short_tutorial_v1" });
+    return { data: { status: "accepted_flow_restored", tutorial_step: progress.step_id }, error: null };
+  }
+
+  if (funcName === "prepare_current_tutorial_formation") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const progress = client.getStorage("tutorial_progress") || [];
+    const entry = progress.find((value: any) => value.user_id === userId);
+    if (!userId || !entry) return { data: null, error: { message: "tutorial progress not found", code: "P0002" } };
+    if (["DISPATCH", "FREE_INSTANT", "TUTORIAL_BATTLE", "RULE_GUIDE", "COMPLETE", "AUTHENTICATION"].includes(entry.step_id)) {
+      return { data: { status: "already_advanced", tutorial_step: entry.step_id }, error: null };
     }
-    if (progress.step_id === "AUTO_FORMATION") {
-      const saved = await executeMockRpc(client, "save_recommended_main_formation", {});
-      if (saved.error) return saved;
-      progress.step_id = "DISPATCH";
-    }
-    let patrol = (client.getStorage("user_patrols") || []).find((row: any) => row.user_id === userId && row.status !== "COMPLETED" && (row.course_id || row.quest_id) === "q_shinjuku_1");
-    if (progress.step_id === "DISPATCH") {
-      if (!patrol) {
-        const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
-        const owned = client.getStorage("user_characters") || [];
-        const character = owned.find((row: any) => row.id === formation[0]?.user_character_id);
-        patrol = { id: `tutorial-patrol-${userId}`, user_id: userId, course_id: "q_shinjuku_1", character_id: character?.character_id, status: "ONGOING", has_battle_event: true, battle_resolved: false, started_at: new Date().toISOString(), expires_at: new Date().toISOString() };
-        const patrols = client.getStorage("user_patrols") || []; patrols.push(patrol); client.setStorage("user_patrols", patrols);
-      }
-      progress.step_id = "FREE_INSTANT";
-    }
-    if (progress.step_id === "FREE_INSTANT") { if (patrol) patrol.status = "CLAIMABLE"; progress.step_id = "TUTORIAL_BATTLE"; }
-    client.setStorage("tutorial_progress", progressRows);
-    return { data: { status: "ready", tutorial_step: progress.step_id, patrol_id: patrol?.id || null }, error: null };
+    if (entry.step_id !== "AUTO_FORMATION") return { data: null, error: { message: "tutorial formation is unavailable", code: "23514" } };
+    const allOwned = (client.getStorage("user_characters") || []).filter((row: any) => row.user_id === userId);
+    const tutorialHistory = (client.getStorage("gacha_execution_history") || [])
+      .filter((row: any) => row.user_id === userId && row.gacha_id === "CHAR_NORMAL" && row.pull_count === 10 && row.result_payload?.tutorial)
+      .slice(-1)[0];
+    const guaranteedMasterId = tutorialHistory?.result_payload?.results
+      ?.find((result: any) => Number(result.tutorial_slot) === 10)?.character_id;
+    const guaranteedOwned = allOwned.find((row: any) => row.character_id === guaranteedMasterId);
+    const owned = [
+      ...(guaranteedOwned ? [guaranteedOwned] : []),
+      ...allOwned.filter((row: any) => row !== guaranteedOwned).slice().reverse(),
+    ].slice(0, 5);
+    if (!guaranteedOwned || owned.length < 3) return { data: null, error: { message: "three owned tutorial Characters are required", code: "23514" } };
+    const formations = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id !== userId);
+    owned.forEach((row: any, index: number) => formations.push({ user_id: userId, slot: index + 1, user_character_id: row.id }));
+    client.setStorage("user_main_formations", formations);
+    const defenseDecks = (client.getStorage("pvp_defense_decks") || []).filter((row: any) => row.user_id !== userId);
+    defenseDecks.push({
+      user_id: userId,
+      character_1_id: owned[0]?.id || null,
+      character_2_id: owned[1]?.id || null,
+      character_3_id: owned[2]?.id || null,
+      character_4_id: owned[3]?.id || null,
+      character_5_id: owned[4]?.id || null,
+      tactic: "ATTACK_PRIORITY",
+      updated_at: new Date().toISOString(),
+    });
+    client.setStorage("pvp_defense_decks", defenseDecks);
+    const users = client.getStorage("users") || [];
+    const user = users.find((row: any) => row.id === userId);
+    if (user) user.favorite_character_id = guaranteedMasterId;
+    client.setStorage("users", users);
+    return {
+      data: {
+        status: "prepared",
+        tutorial_step: "AUTO_FORMATION",
+        formation: { status: "success", character_ids: owned.map((row: any) => row.character_id) },
+        leader_character_id: guaranteedMasterId,
+      },
+      error: null,
+    };
   }
 
   if (funcName === "prepare_current_tutorial_growth") {
@@ -1706,77 +1744,39 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       return { data: { status: "already_advanced", tutorial_step: entry.step_id }, error: null };
     }
     if (entry.step_id !== "AUTO_FORMATION") return { data: null, error: { message: "tutorial formation is unavailable" } };
+    const prepared = await executeMockRpc(client, "prepare_current_tutorial_formation", {});
+    if (prepared.error) return prepared;
     const allOwned = (client.getStorage("user_characters") || []).filter((row: any) => row.user_id === userId);
-    const tutorialHistory = (client.getStorage("gacha_execution_history") || [])
-      .filter((row: any) => row.user_id === userId && row.gacha_id === "CHAR_NORMAL" && row.pull_count === 10 && row.result_payload?.tutorial)
-      .slice(-1)[0];
-    const guaranteedMasterId = tutorialHistory?.result_payload?.results
-      ?.find((result: any) => Number(result.tutorial_slot) === 10)?.character_id;
-    const guaranteedOwned = allOwned.find((row: any) => row.character_id === guaranteedMasterId);
-    const hasGrowth = (client.getStorage("user_funnel_milestones") || []).some((value: any) => value.user_id === userId && value.milestone === "first_growth");
-    if (!hasGrowth) return { data: null, error: { message: "character growth is required before formation", code: "23514" } };
-    if (Number(guaranteedOwned?.level || 0) < 7) return { data: null, error: { message: "tutorial Character must reach level 7 before formation", code: "23514" } };
-    const owned = [
-      ...(guaranteedOwned ? [guaranteedOwned] : []),
-      ...allOwned.filter((row: any) => row !== guaranteedOwned).slice().reverse(),
-    ].slice(0, 5);
-    if (!owned.length) return { data: null, error: { message: "owned character required" } };
-    const formations = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id !== userId);
-    owned.forEach((row: any, index: number) => formations.push({ user_id: userId, slot: index + 1, user_character_id: row.id }));
-    client.setStorage("user_main_formations", formations);
-    const defenseDecks = (client.getStorage("pvp_defense_decks") || []).filter((row: any) => row.user_id !== userId);
-    defenseDecks.push({
-      user_id: userId,
-      character_1_id: owned[0]?.id || null,
-      character_2_id: owned[1]?.id || null,
-      character_3_id: owned[2]?.id || null,
-      character_4_id: owned[3]?.id || null,
-      character_5_id: owned[4]?.id || null,
-      tactic: "ATTACK_PRIORITY",
-      updated_at: new Date().toISOString(),
-    });
-    client.setStorage("pvp_defense_decks", defenseDecks);
+    const formationIds = prepared.data.formation.character_ids as string[];
+    const owned = formationIds.map((characterId) => allOwned.find((row: any) => row.character_id === characterId)).filter(Boolean);
+    if (owned.length < 3) return { data: null, error: { message: "tutorial Skill targets are unavailable", code: "23514" } };
     const skills = client.getStorage("user_skills") || [];
-    const eligibleOwned = skills
-      .filter((skill: any) => skill.user_id === userId)
-      .map((skill: any) => ({
-        owned: skill,
-        master: CANONICAL_SKILLS.find((master) => master.skill_id === skill.skill_card_id
-          && (!master.exclusive_character_id || master.exclusive_character_id === owned[0].character_id)),
-      }))
-      .filter((skill: any) => skill.master)
-      .sort((left: any, right: any) => {
-        const highestDamage = (master: any) => Math.max(0, ...parseCanonicalEffects(master.effects).map((effect) => Number(effect.powerBp || 0)));
-        return highestDamage(right.master) - highestDamage(left.master) || left.master.skill_id.localeCompare(right.master.skill_id);
+    const skillAssignments = [
+      { character: owned[0], skillId: "SKILL_022" },
+      { character: owned[1], skillId: "SKILL_001" },
+      { character: owned[2], skillId: "SKILL_003" },
+    ].map(({ character, skillId }, index) => {
+      const master = CANONICAL_SKILLS.find((candidate) => candidate.skill_id === skillId && !candidate.exclusive_character_id);
+      if (!master) throw new Error(`canonical tutorial Skill missing: ${skillId}`);
+      let instance = skills.find((skill: any) => skill.user_id === userId && skill.skill_card_id === skillId);
+      const granted = !instance;
+      if (!instance) {
+        instance = { id: `tutorial_skill_${index}_${userId}`, user_id: userId, skill_card_id: skillId, plus_val: 0, equipped_character_id: null, slot_index: null, created_at: new Date().toISOString() };
+        skills.push(instance);
+      }
+      skills.forEach((skill: any) => {
+        if (skill.user_id === userId && ((skill.equipped_character_id === character.id && Number(skill.slot_index) === 0) || skill === instance)) {
+          skill.equipped_character_id = null;
+          skill.slot_index = null;
+        }
       });
-    let recommended = eligibleOwned[0];
-    let starterGranted = false;
-    if (!recommended) {
-      const starterMaster = CANONICAL_SKILLS.find((master) => master.skill_id === "SKILL_001" && !master.exclusive_character_id);
-      if (!starterMaster) return { data: null, error: { message: "canonical starter skill missing", code: "P0002" } };
-      let starterOwned = skills.find((skill: any) => skill.user_id === userId && skill.skill_card_id === starterMaster.skill_id);
-      if (!starterOwned) {
-        starterOwned = { id: `tutorial_skill_${userId}`, user_id: userId, skill_card_id: starterMaster.skill_id, plus_val: 0, equipped_character_id: null, slot_index: null, created_at: new Date().toISOString() };
-        skills.push(starterOwned);
-        starterGranted = true;
-      }
-      recommended = { owned: starterOwned, master: starterMaster };
-    }
-    skills.forEach((skill: any) => {
-      if (skill.user_id === userId && skill.equipped_character_id === owned[0].id && Number(skill.slot_index) === 0) {
-        skill.equipped_character_id = null;
-        skill.slot_index = null;
-      }
-      if (skill === recommended.owned) {
-        skill.equipped_character_id = owned[0].id;
-        skill.slot_index = 0;
-      }
+      instance.equipped_character_id = character.id;
+      instance.slot_index = 0;
+      return { character_id: character.character_id, user_character_id: character.id, skill_id: skillId, skill_name: master.name, slot_index: 0, granted };
     });
     client.setStorage("user_skills", skills);
-    const users = client.getStorage("users") || [];
-    const user = users.find((row: any) => row.id === userId);
-    if (user) user.favorite_character_id = owned[0].character_id;
-    client.setStorage("users", users);
+    const equipmentGrant = await executeMockRpc(client, "ensure_initial_equipment_v1", {});
+    if (equipmentGrant.error) return equipmentGrant;
     entry.step_id = "DISPATCH";
     client.setStorage("tutorial_progress", progress);
     return {
@@ -1785,11 +1785,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         tutorial_step: "DISPATCH",
         formation: { status: "success", character_ids: owned.map((row: any) => row.character_id) },
         leader_character_id: owned[0].character_id,
-        leader_user_character_id: owned[0].id,
         skill_equipped: true,
-        skill_id: recommended.master.skill_id,
-        skill_name: recommended.master.name,
-        starter_skill_granted: starterGranted,
+        skill_count: 3,
+        skills: skillAssignments,
       },
       error: null,
     };
@@ -2621,6 +2619,52 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     return { data: { status: "success", tutorial_step: "WORLD_INTRO" }, error: null };
   }
 
+  if (funcName === "ensure_initial_equipment_v1") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const users = client.getStorage("users") || [];
+    if (!users.some((user: any) => user.id === userId)) {
+      return { data: null, error: { message: "player profile required", code: "P0002" } };
+    }
+    const equipments = client.getStorage("user_equipments") || [];
+    const existing = equipments.filter((equipment: any) => equipment.user_id === userId);
+    if (existing.length) {
+      return { data: { status: "skipped", equipmentIds: existing.map((equipment: any) => equipment.id) }, error: null };
+    }
+    const hasTutorialGacha = (client.getStorage("gacha_execution_history") || []).some((history: any) =>
+      history.user_id === userId && history.status === "COMPLETED" && history.result_payload?.tutorial === true
+    );
+    const firstCharacter = (client.getStorage("user_characters") || [])
+      .filter((character: any) => character.user_id === userId)
+      .sort((left: any, right: any) => String(left.created_at || "").localeCompare(String(right.created_at || "")))[0];
+    if (!hasTutorialGacha || !firstCharacter) return { data: { status: "pending" }, error: null };
+    const issued = [
+      ["WEAPON_001", 0],
+      ["HEAD_001", 2],
+      ["BODY_001", 3],
+      ["LEGS_001", 4],
+      ["ACCESSORY_001", 5],
+    ].map(([equipmentId, slotIndex], index) => ({
+      id: `initial_equipment_${index}_${userId}`,
+      user_id: userId,
+      equipment_id: equipmentId,
+      equipment_master_id: equipmentId,
+      level: 1,
+      plus_val: 0,
+      equipped_character_id: firstCharacter.id,
+      slot_index: slotIndex,
+      random_options: [
+        { name: "クリティカル率", val: "+5%", unlocked: true },
+        { name: "命中率", val: "+8%", unlocked: false },
+        { name: "回避率", val: "+6%", unlocked: false },
+        { name: "防御貫通力", val: "+12%", unlocked: false },
+      ],
+      created_at: new Date().toISOString(),
+    }));
+    client.setStorage("user_equipments", [...equipments, ...issued]);
+    return { data: { status: "granted", equipmentIds: issued.map((equipment) => equipment.id) }, error: null };
+  }
+
   if (funcName === "buy_normal_shop_product") {
     const { p_user_id, p_product_id, p_currency_type, p_price, p_items, p_product_title } = params;
     const users = client.getStorage("users");
@@ -3410,10 +3454,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("users", users);
     const progressRows = client.getStorage("tutorial_progress") || [];
     const progress = progressRows.find((row: any) => row.user_id === userId);
-    if (progress) Object.assign(progress, { step_id: "FREE_GACHA", completed_at: null });
-    else progressRows.push({ user_id: userId, step_id: "FREE_GACHA" });
+    if (progress) Object.assign(progress, { step_id: "WORLD_INTRO", completed_at: null });
+    else progressRows.push({ user_id: userId, step_id: "WORLD_INTRO" });
     client.setStorage("tutorial_progress", progressRows);
-    const result = { status: "success", tutorial_step: "FREE_GACHA", request_id: params.p_request_id };
+    const result = { status: "success", tutorial_step: "WORLD_INTRO", request_id: params.p_request_id };
     requests.push({ request_id: params.p_request_id, user_id: userId, status: "COMPLETED", result });
     client.setStorage("gameplay_reset_requests", requests);
     return { data: result, error: null };

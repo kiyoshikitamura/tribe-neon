@@ -52,3 +52,18 @@ Deno.test("an unresolved round limit is an enemy win", () => {
     throw new Error("Unresolved battles must not grant a player victory");
   }
 });
+
+Deno.test("an authored turn gate waits without changing the unit's SPD", () => {
+  const waitingPlayer = [{
+    ...player[0],
+    id: "waiting-player",
+    turnAvailableFromRound: 2,
+    stats: { ...player[0].stats, spd: 250 },
+  }];
+  const durableEnemy = [{ ...enemy[0], stats: { ...enemy[0].stats, hp: 2_000, spd: 150 } }];
+  const result = resolveBattle(91_337, "ATTACK_PRIORITY", 2, waitingPlayer, durableEnemy);
+  const actions = result.events.filter((entry) => entry.type === "ACTION" && entry.payload.actorId === "waiting-player");
+  if (actions.some((entry) => entry.round === 1) || !actions.some((entry) => entry.round === 2)) {
+    throw new Error("Expected the authored unit to wait until round 2");
+  }
+});

@@ -54,17 +54,19 @@ const resumeAudits = [];
 
 const snapshotAcquisitionState = async (label) => {
   if (!userId) throw new Error(`Cannot snapshot ${label} without the Preview QA user id.`);
-  const [{ data: characters, error: characterError }, { data: formation, error: formationError }, { data: history, error: historyError }, { data: profile, error: profileError }, { data: tutorial, error: tutorialError }, { data: patrols, error: patrolError }] = await Promise.all([
+  const [{ data: characters, error: characterError }, { data: formation, error: formationError }, { data: history, error: historyError }, { data: profile, error: profileError }, { data: tutorial, error: tutorialError }, { data: patrols, error: patrolError }, { data: skills, error: skillError }, { data: equipment, error: equipmentError }] = await Promise.all([
     admin.from("user_characters").select("id,character_id,level,awakening_level,created_at").eq("user_id", userId).order("created_at"),
     admin.from("user_main_formations").select("slot,user_character_id").eq("user_id", userId).order("slot"),
     admin.from("gacha_execution_history").select("request_id,gacha_id,status,result_payload,created_at").eq("user_id", userId).order("created_at"),
     admin.from("users").select("favorite_character_id").eq("id", userId).single(),
     admin.from("tutorial_progress").select("step_id").eq("user_id", userId).single(),
     admin.from("user_patrols").select("id,status,character_id,has_battle_event,battle_resolved,expires_at").eq("user_id", userId).order("started_at"),
+    admin.from("user_skills").select("id,skill_card_id,equipped_character_id,slot_index").eq("user_id", userId).order("created_at"),
+    admin.from("user_equipments").select("id,equipment_id,equipped_character_id,slot_index").eq("user_id", userId).order("created_at"),
   ]);
-  const errors = { characterError, formationError, historyError, profileError, tutorialError, patrolError };
+  const errors = { characterError, formationError, historyError, profileError, tutorialError, patrolError, skillError, equipmentError };
   if (!selfScopedQa && Object.values(errors).some(Boolean)) throw new Error(`Acquisition snapshot ${label} failed: ${JSON.stringify(errors)}`);
-  acquisitionAudit[label] = { characters: characters || [], formation: formation || [], history: history || [], profile, tutorial, patrols: patrols || [], selfScopedErrors: selfScopedQa ? errors : undefined };
+  acquisitionAudit[label] = { characters: characters || [], formation: formation || [], history: history || [], profile, tutorial, patrols: patrols || [], skills: skills || [], equipment: equipment || [], selfScopedErrors: selfScopedQa ? errors : undefined };
 };
 
 page.on("pageerror", (error) => pageErrors.push(error.message));
@@ -94,10 +96,18 @@ const visible = async (selector, timeout = 20_000) => {
 const resumeAfterReload = async (label) => {
   trace.push(...await page.evaluate(() => window.__TRIBE_TUTORIAL_JOURNEY_TRACE__ || []).catch(() => []));
   await page.reload({ waitUntil: "domcontentloaded" });
-  await (await visible(".title-entry-secondary", 30_000)).click();
+  await page.waitForLoadState("networkidle", { timeout: 30_000 }).catch(() => {});
+  await page.waitForTimeout(500);
+  const continueButton = page.getByRole("button", { name: /続きから|チュートリアルを続ける/ });
+  for (let attempt = 0; attempt < 6 && !(await continueButton.isVisible()); attempt += 1) {
+    const titleTap = page.locator(".title-tap-text");
+    if (await titleTap.isVisible()) await titleTap.click();
+    await continueButton.waitFor({ state: "visible", timeout: 5_000 }).catch(() => {});
+  }
+  await continueButton.click();
   const loading = await visible(".game-start-transition", 10_000);
   const loadingCopy = (await loading.textContent())?.trim() || "";
-  const exposedSurface = await page.locator(".char-tab-container,.mypage-container,.patrol-container,.quest-battle-viewer").evaluateAll((nodes) => nodes.some((node) => {
+  const exposedSurface = await page.locator(".char-tab-container,.mypage-container,.patrol-container,.quest-battle-viewer,.sb-root").evaluateAll((nodes) => nodes.some((node) => {
     const element = node;
     return element.offsetParent !== null && getComputedStyle(element).visibility !== "hidden";
   }));
@@ -107,12 +117,25 @@ const resumeAfterReload = async (label) => {
 
 try {
   await page.goto(previewUrl, { waitUntil: "domcontentloaded", timeout: 60_000 });
-  const legacyTitleTap = page.locator(".title-tap-text");
-  if (await legacyTitleTap.isVisible()) await legacyTitleTap.click();
+  const legacyTitleTap = await visible(".title-tap-text", 30_000);
+  await legacyTitleTap.click();
   await (await visible(".title-entry-primary")).click();
 
   await visible('[data-entry-state="WORLD_INFORMATION"]');
-  await (await visible('[data-world-stage="4"] .setup-world-tap', 35_000)).click();
+  const worldCharacters = [];
+  for (const expected of ["レイジ", "アゲハ", "ゴウ"]) {
+    await page.waitForFunction((name) => document.querySelector('[data-world-stage="1"]')?.getAttribute("data-character") === name, expected, { timeout: 10_000 });
+    worldCharacters.push(expected);
+  }
+  await (await visible('[data-world-stage="1"] .setup-world-tap', 10_000)).click();
+  for (const expected of ["カレン", "カエデ"]) {
+    await page.waitForFunction((name) => document.querySelector('[data-world-stage="2"]')?.getAttribute("data-character") === name, expected, { timeout: 10_000 });
+    worldCharacters.push(expected);
+  }
+  await (await visible('[data-world-stage="2"] .setup-world-tap', 10_000)).click();
+  await visible('[data-world-stage="3"] .setup-world-logo', 10_000);
+  await page.screenshot({ path: path.join(artifactsDirectory, "preview-world-introduction.png"), fullPage: true });
+  await (await visible('[data-world-stage="3"] .setup-world-tap', 10_000)).click();
   await visible('[data-entry-state="AGEHA_INTRO"]');
   await page.locator(".setup-ageha-presentation .setup-primary-action").click();
   await visible('[data-entry-state="NAME_INPUT"]');
@@ -160,18 +183,27 @@ try {
   await snapshotAcquisitionState("TUTORIAL_GACHA_RESULT");
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-gacha-result.png"), fullPage: true });
   await (await visible(".cg-continue", 20_000)).click();
-  await visible('[data-acceptance-state="TUTORIAL_SKILL_STEP"]', 20_000);
-  await page.getByRole("button", { name: "育成へ進む" }).click();
-  await visible('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]', 20_000);
-  await page.getByRole("button", { name: "Lv.7まで強化" }).click();
-  await page.getByRole("heading", { name: "レベルアップ結果" }).waitFor({ state: "visible", timeout: 20_000 });
-  await page.getByRole("button", { name: "編成へ進む" }).click();
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-formation-owned.png"), fullPage: true });
   await (await visible(".char-party-auto-btn", 20_000)).click();
   const formationCompletion = await visible('[data-acceptance-state="AUTO_FORMATION_COMPLETE"]', 20_000);
   await formationCompletion.getByRole("button", { name: "OK" }).click();
+  const skillStep = await visible('[data-acceptance-state="TUTORIAL_SKILL_STEP"]', 20_000);
+  for (const skillId of ["SKILL_001", "SKILL_003", "SKILL_022"]) {
+    if (await skillStep.locator(`[data-skill-id="${skillId}"]`).count() !== 1) throw new Error(`Missing tutorial Skill card: ${skillId}`);
+  }
+  if (await page.locator('[data-acceptance-state="TUTORIAL_GROWTH_STEP"]').count()) throw new Error("Level Up Tutorial must not be rendered.");
+  await page.screenshot({ path: path.join(artifactsDirectory, "preview-tutorial-skills.png"), fullPage: true });
+  await page.getByRole("button", { name: "装備する" }).click();
   await visible('[data-acceptance-state="Q1"]', 30_000);
   await snapshotAcquisitionState("RECOMMENDED_FORMATION");
+  const tutorialSkills = acquisitionAudit.RECOMMENDED_FORMATION.skills || [];
+  for (const skillId of ["SKILL_001", "SKILL_003", "SKILL_022"]) {
+    const matches = tutorialSkills.filter((skill) => skill.skill_card_id === skillId && Number(skill.slot_index) === 0 && skill.equipped_character_id);
+    if (matches.length !== 1) throw new Error(`Tutorial Skill assignment is not canonical: ${skillId} ${JSON.stringify(matches)}`);
+  }
+  if ((acquisitionAudit.RECOMMENDED_FORMATION.equipment || []).length !== 5) {
+    throw new Error(`Initial Equipment handoff did not persist five items: ${JSON.stringify(acquisitionAudit.RECOMMENDED_FORMATION.equipment)}`);
+  }
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-formation-skill.png"), fullPage: true });
 
   const stateSequence = [];
@@ -249,15 +281,16 @@ try {
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-B1.png"), fullPage: true });
   await page.locator('[data-acceptance-state="B1"] .start-battle-btn').click();
   await recordState("B2");
-  await visible(".quest-battle-viewer", 30_000);
-  if ((await page.locator(".speed-toggle-btn").textContent())?.trim() === "1x") {
-    await page.locator(".speed-toggle-btn").click();
+  await visible(".sb-root", 30_000);
+  const speedToggle = page.locator(".sb-controls button").filter({ hasText: /^×[123]$/ }).first();
+  if ((await speedToggle.textContent())?.trim() === "×1") {
+    await speedToggle.click();
   }
-  await page.locator('[data-battle-speed="2"]').waitFor({ state: "visible", timeout: 10_000 });
+  await page.locator('.sb-root[data-battle-speed="2"]').waitFor({ state: "visible", timeout: 10_000 });
   await page.waitForFunction(() => (window.__TRIBE_BATTLE_PRESENTATION__?.history || []).some((entry) => entry?.kind === "normal" && entry?.actionCompleteAt), undefined, { timeout: 45_000, polling: 50 });
   stateSequence.push("B3");
   await resumeAfterReload("BATTLE_IN_PROGRESS");
-  await visible(".quest-battle-viewer", 30_000);
+  await visible(".sb-root", 30_000);
   await page.waitForFunction(() => (window.__TRIBE_BATTLE_PRESENTATION__?.history || []).some((entry) => entry?.kind === "skill" && entry?.actionCompleteAt), undefined, { timeout: 45_000, polling: 50 });
   stateSequence.push("B4");
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-B4.png"), fullPage: true });
@@ -268,15 +301,9 @@ try {
   completedBattlePresentation = await page.evaluate(() => window.__TRIBE_BATTLE_PRESENTATION__ || { history: [] });
   await page.locator('[data-acceptance-state="B6"] button').click();
 
-  await visible(".tutorial-rule-screen", 20_000);
-  await visible('[data-acceptance-state="COMPLETION_DIALOGUE"]', 20_000);
-  await page.screenshot({ path: path.join(artifactsDirectory, "preview-M7-completion-dialogue.png"), fullPage: true });
-  await page.locator('[data-acceptance-state="COMPLETION_DIALOGUE"] button').click();
-  await visible('[data-acceptance-state="WORLD"]', 20_000);
-  await page.screenshot({ path: path.join(artifactsDirectory, "preview-M8-world-first.png"), fullPage: true });
-  for (let index = 0; index < 3; index += 1) {
-    await page.locator(".tutorial-rule-screen button").click();
-  }
+  await visible('[data-acceptance-state="FINAL_GUIDE"]', 20_000);
+  await page.screenshot({ path: path.join(artifactsDirectory, "preview-final-guide.png"), fullPage: true });
+  await page.getByRole("button", { name: "街へ出る →" }).click();
   await visible(".modal-overlay.background-black-95 .modal-card", 20_000);
   stateSequence.push("ACCOUNT_AUTHENTICATION");
   await page.screenshot({ path: path.join(artifactsDirectory, "preview-account-authentication.png"), fullPage: true });
@@ -339,6 +366,7 @@ try {
       battleNetworkTrace,
       resumeAudits,
       acquisitionAudit,
+      worldCharacters,
       artifact: path.join(artifactsDirectory, "preview-B1.png"),
     };
     await writeFile(path.join(artifactsDirectory, "preview-journey-report.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -482,6 +510,7 @@ try {
     replayContract: { basicActionIndex, skillActionIndex, skillImpactIndex, winner: replay.result.winner },
     battleResolveContract: { patrol: finalPatrol, replay: canonicalReplay, dispatchResponseCount: dispatchResponses.length, createResponseCount: createResponses.length, resolveResponseCount: resolveResponses.length },
     acquisitionAudit,
+    worldCharacters,
     guaranteedTutorialSsr: guaranteedResult.character_id,
     enemyPresentationActions,
     artifact: path.join(artifactsDirectory, "preview-B1.png"),
