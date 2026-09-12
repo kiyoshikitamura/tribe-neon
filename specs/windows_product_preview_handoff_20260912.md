@@ -1,31 +1,35 @@
-# Product監査修正候補：専用Preview再配信
+# Product実画面監査修正：専用Preview再配信・再監査
 
 ## 取得
 Repository: kiyoshikitamura/tribe-neon
 Branch: codex/product-preview-20260912-694db8f
-このブランチをfetchし、報告された最新SHAを独立作業フォルダでcheckoutする。旧80bd05cのPreviewへの追加修正。ZIP不要。既存Windowsの未共有作業は上書きしない。
+親の最終報告SHAを独立フォルダへfetch/checkoutする。既存Windowsの未共有作業を上書きしない。旧固定Preview f9lx3ik3d / SHA1a814d7への修正候補。
 
 ## 配信
-既存Vercel CLI認証と既存Preview設定を利用。
+既存Vercel CLI認証・Preview設定を使用。
 Team: kiyoshi-kitamura / Project: tribe-neon
 Project ID: prj_He8QAAwvfwm74FWq2Vb8BFHCbEXb
-Supabase接続先: sufvuqdnqohpfzkwxohq
-必ずPreview targetへ配信。Production、共有alias、環境変数を変更しない。
-秘密値は出力しない。接続先が異なる場合は配信を止める。
+Supabase: sufvuqdnqohpfzkwxohq
+Preview targetのみ。Production、共有alias、環境変数は変更しない。秘密値を表示しない。
+固定Preview URL / 配信SHA / Deployment ID / Supabase project ref / READY / HTTPを返す。
 
 ## DB
-今回追加の以下2件はPreview適用・実RPC ROLLBACKテスト済み。再適用しない。
-- 20260912153009_mission_claim_deadline_and_event_history.sql
-- 20260912153017_ranking_context_audit_fixes.sql
-前候補の3 migrationも適用済み。一括db push不要。
+親側で以下をPreview適用・実関数検証済み。再適用しない。一括db push不要。
+- 20260912164556_ranking_power_period_context.sql
+- 20260912164642_hide_ssr_activity_preserve_history.sql
+- 20260912164928_post_tutorial_guide_recovery.sql
+前候補の5件とTutorial復元元の6件も適用済み。DB状態を巻き戻さない。
 
-## 結果
-固定Preview URL / 配信SHA / Deployment ID / Supabase project ref / READY / HTTPを返す。
-修正と検証の詳細はspecs/product_audit_fixes_20260912.md。
-実ブラウザの受取・再読込・イベント切替・ランキング・Navigation回帰は未完了。全ページのユーザー実機確認は最後に一括。デザイン追加調整はその後。
+## 再監査
+正：specs/post_tutorial_judgment_authority_20260912.md。
+実施済みと今回差分：specs/product_preview_qa_round2_20260912.md。
+1. Fresh Tutorial：Level Up省略、初期1x、新Final Guide、World Introduction非SKIP、Character初回Dialog。通常Battle/Questへの戻りも確認。
+2. Post-Tutorial：Login Bonus→無料Skill/Equipment→Character→Quest/CASH→PvP→Raid→Guild→Mission。既存停止QAの復帰、匿名/認証済み双方、未開催スキップと開催後再案内。Guild案内は加入強制にしない。
+3. 限定Mission自動訴求の後置、認証案内を止めない、通常Missionの自由アクセス。
+4. Mission報酬/タイトルの名称、SSR Activity非表示、POWER実期間と状態確認中の表示。
+5. 前回未検証：Missionイベント切替・終了履歴・未開催、Ranking通信失敗。
+画面操作・モバイル表示・3 Cycle整合を記録する。既存PASSのQuestは変更影響の接続回帰に絞る。
 
-## Post-Tutorial判断Authority追加（2026-09-12）
-
-正：`specs/post_tutorial_judgment_authority_20260912.md`。
-監査へ追加：post_tutorial_judgment_authority_20260912.mdに従い、機能の理解と動機の接続を確認。Guild案内欠落と限定Mission先行表示は既知の未整合。挙動PASSだけで全体PASSにしない。
-24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。
+QAは現在Windowsブラウザの匿名「統合QA」を再利用可能だが、別Originへセッションは自動移行しない。新Previewで必要なら既存QA運用に沿って専用テストアカウントを用意し、qa除外を維持。秘密値をチャットやRepositoryへ掲載しない。
+実画面で確認できない条件は未検証と記載。POWER次期期間設定は運営未決として残し、勝手な期間延長・報酬付与で解決しない。
+ユーザーの実機確認は最後に全ページ一括。実iPhone Safariはその際に確認。Production変更は別途明示承認後。

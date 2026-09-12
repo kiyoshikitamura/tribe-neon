@@ -42,6 +42,8 @@ const alignmentOptions = [
 
 export default function GuildTab() {
   const {
+    session,
+    onboardingState,
     userLevel,
     userGuild,
     setUserGuild,
@@ -74,6 +76,14 @@ export default function GuildTab() {
     setChatChannel,
     fetchPlayerDetail,
   } = useGame();
+
+  // ページへの接触のみを記録する。加入・参加実績の代わりにはしない。
+  useEffect(() => {
+    if (!session?.user?.id || !onboardingState?.gameplay_authorized) return;
+    void supabase.rpc("record_post_tutorial_guild_view").then(({ error }) => {
+      if (error) console.warn("Guild guide contact could not be recorded", error);
+    });
+  }, [session?.user?.id, onboardingState?.gameplay_authorized]);
 
   const [guildSearchQuery, setGuildSearchQuery] = useState("");
   const [guildDescriptionDraft, setGuildDescriptionDraft] = useState(userGuild?.description || "");

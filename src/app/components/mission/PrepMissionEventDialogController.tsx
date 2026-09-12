@@ -49,6 +49,7 @@ export default function PrepMissionEventDialogController() {
     setMissionTab,
     setShowMissionPanel,
   } = useGame();
+  const [guideReady, setGuideReady] = useState(false);
   const [pending, setPending] = useState<PendingEventDialog | null>(null);
   const [imageReady, setImageReady] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
@@ -58,6 +59,8 @@ export default function PrepMissionEventDialogController() {
   useEffect(() => {
     const userId = session?.user?.id || "";
     if (!userId) {
+      setPending(null);
+      setGuideReady(false);
       requestedKeyRef.current = "";
       presentedKeyRef.current = "";
       return;
@@ -71,8 +74,19 @@ export default function PrepMissionEventDialogController() {
     if (requestedKeyRef.current === requestKey) return;
     requestedKeyRef.current = requestKey;
     setPrepMissionDialogCheckComplete(false);
+    setGuideReady(false);
+    setPending(null);
     let cancelled = false;
     void (async () => {
+      // 初期学習より前に限定Missionを重ねない。待機を閲覧済みにはしない。
+      const { data: handoff, error: guideError } = await supabase.from("user_funnel_milestones")
+        .select("milestone").eq("user_id", userId).eq("milestone", "activation_mission_handoff").maybeSingle();
+      if (cancelled) return;
+      if (guideError || !handoff) {
+        setPrepMissionDialogCheckComplete(true);
+        return;
+      }
+      setGuideReady(true);
       const { data, error } = await supabase.rpc("get_pending_mission_event_dialog");
       if (cancelled) return;
       if (error) {
@@ -90,7 +104,7 @@ export default function PrepMissionEventDialogController() {
   }, [activeTab, session?.user?.id, setPrepMissionDialogCheckComplete]);
 
   useEffect(() => {
-    if (!pending
+    if (!guideReady || !pending
       || activeTab !== "home"
       || !loginBonusCheckComplete
       || showLoginBonusModal
@@ -98,7 +112,7 @@ export default function PrepMissionEventDialogController() {
       || confirmDialogConfig
       || showPrepMissionDialog) return;
     setShowPrepMissionDialog(true);
-  }, [activeTab, confirmDialogConfig, loginBonusCheckComplete, pending, setShowPrepMissionDialog, showAccountAuthenticationModal, showLoginBonusModal, showPrepMissionDialog]);
+  }, [activeTab, confirmDialogConfig, guideReady, loginBonusCheckComplete, pending, setShowPrepMissionDialog, showAccountAuthenticationModal, showLoginBonusModal, showPrepMissionDialog]);
 
   useEffect(() => {
     if (!showPrepMissionDialog || !pending || !imageReady) return;

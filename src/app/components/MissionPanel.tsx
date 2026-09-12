@@ -5,7 +5,7 @@ import SubTabNav from "./ui/SubTabNav";
 import OutlawButton from "./ui/OutlawButton";
 import { canonicalMissionRewardName } from "@/domain/gameplay/canonical/missions";
 import CanonicalItemIcon from "./ui/CanonicalItemIcon";
-import { battleDisplayText } from "@/domain/presentation/battleTerminology";
+import { missionDisplayText } from "@/domain/presentation/missionTerminology";
 import "./MissionPanel.css";
 import { canClaimMission, missionClaimExpired, missionProgressEnded, missionEventPriority, needsMissionGuild } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
@@ -159,13 +159,13 @@ export default function MissionPanel() {
       : (m.ctaTab === "raid" || String(m.triggerType).startsWith("RAID")) && !isRaidActive && raidCheckedFor === session?.user?.id && !!raidCheckedFor ? "開催待ち" : null;
     const target = Math.max(1, Number(m.target_value || 1));
     const progress = Math.max(0, Number(m.current_progress || 0));
-    const title = m.triggerType === "QUEST_COMPLETE_COUNT" && m.title === "派遣に出よう" ? `クエストを${target}回完了する` : battleDisplayText(m.title);
-    const description = battleDisplayText(m.description || "");
+    const title = m.triggerType === "QUEST_COMPLETE_COUNT" && m.title === "派遣に出よう" ? `クエストを${target}回完了する` : missionDisplayText(m.title);
+    const description = missionDisplayText(m.description || "");
     const next = currentMissions.filter((n: any) => n.prerequisiteMissionId === m.id && n.status === "LOCKED");
     return <article key={m.id} className={`mission-item ${m.status}`}>
       <div className="mission-info">
         <div className="mission-title">{title}</div>
-        {description && description !== battleDisplayText(m.title) && description !== title && <div className="mission-desc">{description}</div>}
+        {description && description !== missionDisplayText(m.title) && description !== title && <div className="mission-desc">{description}</div>}
         <div className="mission-row-bottom">
           {renderMissionRewards(m)}
           <div className="mission-action">
@@ -181,7 +181,7 @@ export default function MissionPanel() {
           </div>
         </div>
         {m.status === "IN_PROGRESS" && !isMilestone(m) && <div className="mission-progress-line"><progress max={target} value={Math.min(target, progress)} aria-label={`${title}の進捗`} /><span>{progress.toLocaleString()} / {target.toLocaleString()}</span></div>}
-        {showNext && next.length > 0 && <details className="mission-next"><summary>次の目標</summary>{next.map((n: any) => <div key={n.id}><p>{battleDisplayText(n.title)}</p>{renderMissionRewards(n)}</div>)}</details>}
+        {showNext && next.length > 0 && <details className="mission-next"><summary>次の目標</summary>{next.map((n: any) => <div key={n.id}><p>{missionDisplayText(n.title)}</p>{renderMissionRewards(n)}</div>)}</details>}
       </div>
     </article>;
   };

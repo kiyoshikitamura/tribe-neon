@@ -27,3 +27,11 @@ assert.equal(rankingPeriodText(null, opts), '集計期間情報なし');
 assert.equal(rankingPeriodText(null, { ...opts, failed: true }), '集計期間を取得できませんでした');
 assert.equal(rankingPeriodText({ status: 'ACTIVE', ends_at: '2099-12-30' }, { ...opts, preopen: true }), 'プレオープン中開催');
 console.log('PASS: tied rank6, outside top100, missing row-position, proven self statuses, metadata failure vs missing');
+
+// 期間外ACTIVEの実メタデータを隠さず表示し、日時や確定状態を捏造しない。
+const expiredPower = { starts_at: '2026-07-31T15:00:00Z', ends_at: '2026-08-31T15:00:00Z', status: 'ACTIVE' };
+assert.equal(rankingPeriodText(expiredPower, opts), `${expiredPower.starts_at} ～ ${expiredPower.ends_at} JST（集計期間終了・状態確認中）`);
+assert.equal(rankingPeriodText({ ...expiredPower, status: 'CLOSED' }, opts), `${expiredPower.starts_at} ～ ${expiredPower.ends_at} JST`);
+assert.equal(rankingPeriodText(expiredPower, { ...opts, failed: true }), '集計期間を取得できませんでした');
+assert.equal(rankingPeriodText({ starts_at: '2026-09-11T15:00:00Z', ends_at: '2026-09-12T15:00:00Z' }, { ...opts, daily: true }), '2026-09-11T15:00:00Z ～ 2026-09-12T15:00:00Z JST');
+console.log('PASS: expired POWER ACTIVE metadata, CLOSED preservation, transport error precedence, daily period');

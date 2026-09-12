@@ -34,6 +34,11 @@ export function resolveHomeInitialCta(input: {
   }
   if (!milestones.has("post_tutorial_quest")) return { key: "post_tutorial_quest", title: "クエストでCASHを集めよう", tab: "patrol" };
   if (!milestones.has("first_pvp")) return { key: "first_pvp", title: "最初のバトルへ挑戦", tab: "pvp" };
+  if ((milestones.has("first_raid") || input.raidAvailability === "inactive")
+    && !milestones.has("post_tutorial_guild_view") && !milestones.has("guild_detail_view")) {
+    return { key: "post_tutorial_guild_view", title: input.raidAvailability === "inactive" && !milestones.has("first_raid")
+      ? "レイド開催待ち・ギルドを見よう" : "ギルドを見よう", tab: "guild" };
+  }
   if (!milestones.has("first_raid") && input.raidAvailability === "inactive") return {
     key: "activation_mission_handoff", title: "レイド開催待ち・ミッションへ", action: "mission_handoff",
   };

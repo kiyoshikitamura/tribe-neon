@@ -1,7 +1,12 @@
 export const RECENT_ACTIVITY_WINDOW_MS = 24 * 60 * 60 * 1000;
 
+const VISIBLE_ACTIVITY_TYPES = new Set([
+  "POWER_RANK_1", "GUILD_CREATED", "RAID_HELP_REQUEST", "RAID_BOSS_DEFEATED",
+]);
+
 export type RecentActivityRecord = Readonly<{
   id: string;
+  activity_type?: string | null;
   created_at?: string | null;
 }>;
 
@@ -13,6 +18,8 @@ export function normalizeRecentActivities<T extends RecentActivityRecord>(
 
   return activities
     .filter((activity) => {
+      // 全体Activityは交流・協力につながる出来事のみ。旧SSR履歴は表示しない。
+      if (!VISIBLE_ACTIVITY_TYPES.has(activity.activity_type || "")) return false;
       const createdAt = Date.parse(activity.created_at || "");
       return Number.isFinite(createdAt) && createdAt >= oldestVisibleAt && createdAt <= nowMs;
     })

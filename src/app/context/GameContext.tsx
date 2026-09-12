@@ -1074,6 +1074,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setLastPatrolRewards(null);
       setOnboardingState((current: any) => current ? { ...current, tutorial_step: data || "RULE_GUIDE" } : current);
       battle.completeBattleResult();
+      battle.setBattleSpeed(2);
     } catch (error: any) {
       setErrorMessage(`チュートリアルを進められませんでした。${error?.message ? `（${error.message}）` : ""}`);
     } finally {
@@ -3954,21 +3955,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
     const nextParty = [charId, ...selectedMembers.filter((id) => id !== charId)];
-    const saveError = await persistPartyFormation(nextParty);
-    if (saveError) {
-      console.warn("Failed to update party leader:", saveError);
-      setErrorMessage("パーティリーダーの変更に失敗しました。");
-      return false;
-    }
-    const { error: identityLeaderError } = await supabase
-      .from("users")
-      .update({ favorite_character_id: charId })
-      .eq("id", session.user.id);
-    if (identityLeaderError) {
-      console.warn("Failed to update identity leader:", identityLeaderError);
+    const { data: identityLeader, error: identityLeaderError } = await supabase.rpc("set_main_formation_leader", {
+      p_character_id: charId,
+    });
+    if (identityLeaderError || identityLeader?.status !== "success") {
+      console.warn("Failed to update identity leader:", identityLeaderError || identityLeader);
       setErrorMessage("リーダーの変更に失敗しました。");
       return false;
     }
+    setTotalPower(Number(identityLeader?.total_power || totalPower || 0));
     const identityRefreshed = await refreshIdentityLeaderAuthority(session.user.id);
     if (!identityRefreshed) {
       setErrorMessage("リーダーの最新状態を確認できませんでした。");
@@ -4031,6 +4026,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           setSelectedLeader(String(tutorialFormation.leader_character_id));
         }
         setUpgradeSelectedCharId(committedParty[0]);
+        // Project the equipment and Skill rows committed by the same authority
+        // before the player reaches Quest/Battle. The wider bootstrap remains a
+        // background reconciliation, but these loadout rows must not lag behind
+        // the Character tutorial handoff.
+        const [tutorialEquipmentProjection, tutorialSkillProjection] = await Promise.all([
+          supabase.from("user_equipments").select("*").eq("user_id", session.user.id).order("created_at", { ascending: false }),
+          supabase.from("user_skills").select("*").eq("user_id", session.user.id),
+        ]);
+        if (tutorialEquipmentProjection.error || tutorialSkillProjection.error) {
+          console.warn("Tutorial loadout projection failed:", tutorialEquipmentProjection.error || tutorialSkillProjection.error);
+          setErrorMessage("チュートリアル装備の反映を確認できませんでした。");
+          return false;
+        }
+        setUserEquipmentsList(tutorialEquipmentProjection.data || []);
+        setUserSkillsList(tutorialSkillProjection.data || []);
         // Register the explicit-continuation owner before exposing the completion
         // panel. Otherwise a fast tap during the presentation delay is lost.
         const tutorialContinue = waitForTutorialContinue?.(tutorialFormation);

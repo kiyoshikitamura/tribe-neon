@@ -20,7 +20,7 @@ export const CANONICAL_MISSION_REWARD_IDS = Object.freeze(Object.keys(CANONICAL_
 export const CANONICAL_MISSION_BY_ID = new Map(CANONICAL_MISSIONS.map((mission) => [mission.id, mission]));
 
 export function canonicalMissionRewardName(rewardItemId: string): string {
-  return CANONICAL_MISSION_REWARD_NAMES[rewardItemId] ?? rewardItemId;
+  return CANONICAL_MISSION_REWARD_NAMES[rewardItemId] ?? canonicalItemName(rewardItemId);
 }
 
 export function canonicalMissionUiStatus(
