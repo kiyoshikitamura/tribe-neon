@@ -1,6 +1,5 @@
 "use client";
-import type { RaidRoomDto } from "@/domain/raidRoom";
-import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
+import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import { getRaidRescueActivityId } from '../../domain/raidRoomRescue';
@@ -384,26 +383,10 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     return () => window.clearTimeout(timer);
   }, [activityWindowNow, qaState?.socialActivityNowMs, socialActivities]);
 
-  const [raidListCheckedFor, setRaidListCheckedFor] = useState<string | null>(null);
-  useEffect(() => {
-    const userId = session?.user?.id;
-    if (qaState || !userId || process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED !== "true"
-      || funnelMilestones.has("first_raid") || !funnelMilestones.has("first_pvp")) return;
-    let cancelled = false;
-    const check = async () => {
-      if (!cancelled) setRaidListCheckedFor(null);
-      try {
-        const rooms = await raidRoomActivityTracker.observeTransport(createRaidRoomRpcTransport(supabase)).listRooms();
-        const complete = rooms.every((room: RaidRoomDto) => room.state.status === "available" && (room.state.value !== "active"
-          || (room.hp.status === "available" && room.expiresAt.status === "available" && Number.isFinite(Date.parse(room.expiresAt.value)))));
-        if (!cancelled) setRaidListCheckedFor(complete ? userId : null);
-      } catch { if (!cancelled) setRaidListCheckedFor(null); }
-    };
-    void check();
-    const onVisible = () => { if (document.visibilityState === "visible") void check(); };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => { cancelled = true; document.removeEventListener("visibilitychange", onVisible); };
-  }, [session?.user?.id, qaState, funnelMilestones, isRaidActive, raidRoomActivityTracker]);
+  const observedRaidAvailability = useRaidGuideAvailability(session?.user?.id,
+    !qaState && funnelMilestones.has("first_pvp") && !funnelMilestones.has("first_raid"),
+    raidRoomActivityTracker, isRaidActive);
+  const raidAvailability = qaState?.raidAvailability ?? observedRaidAvailability;
 
   const primaryCta = useMemo(() => resolveHomeInitialCta({
     ready: qaState ? qaState.ctaAuthorityReady !== false : Boolean(
@@ -412,9 +395,9 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     tutorialStep: onboardingState?.tutorial_step,
     gameplayAuthorized: onboardingState?.gameplay_authorized,
     milestones: funnelMilestones,
-    // Only a successful complete room list proves the inactive state.
-    raidAvailability: qaState?.raidAvailability ?? (isRaidActive ? "active" : raidListCheckedFor === session?.user?.id && !!session?.user?.id ? "inactive" : "unknown"),
-  }), [funnelMilestones, funnelAuthorityOwnerUserId, onboardingState, qaState, session?.user?.id, isRaidActive, raidListCheckedFor]);
+    // 表示対象と同じ一覧の成功結果だけを開催判定に使う。
+    raidAvailability: raidAvailability,
+  }), [funnelMilestones, funnelAuthorityOwnerUserId, onboardingState, qaState, session?.user?.id, raidAvailability]);
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -429,8 +412,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       setActivationHandoffPending(true);
       // Availability acknowledgment is separate from actual Raid participation.
       // Existing server contract checks prerequisites; never write first_raid here.
-      const waitingForRaid = !funnelMilestones.has("first_raid") && !isRaidActive
-        && raidListCheckedFor === session?.user?.id && !!session?.user?.id;
+      const waitingForRaid = !funnelMilestones.has("first_raid") && raidAvailability === "inactive";
       const acknowledgment = waitingForRaid
         ? await supabase.rpc("acknowledge_initial_raid_guide") : { error: null };
       const { error } = acknowledgment.error
@@ -796,7 +778,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
         </nav>
 
         {!primaryCta && !funnelMilestones.has("first_raid") && funnelMilestones.has("activation_mission_handoff")
-          && (qaState?.raidAvailability === "inactive" || (!isRaidActive && raidListCheckedFor === session?.user?.id && !!session?.user?.id))
+          && raidAvailability === "inactive"
           && <p className="mypage-raid-waiting" role="status">レイド開催待ち</p>}
         {primaryCta && <button className="mypage-primary-cta semantic-cta semantic-cta--primary active-scale-effect" onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
           <strong>{activationHandoffPending ? "確認中…" : primaryCta.title}</strong>

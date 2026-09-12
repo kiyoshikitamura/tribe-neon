@@ -3,7 +3,7 @@
 ## 取得
 Repository: kiyoshikitamura/tribe-neon
 Branch: codex/product-preview-20260912-694db8f
-親の最終報告SHAを独立フォルダへfetch/checkoutする。既存Windowsの未共有作業を上書きしない。旧固定Preview f9lx3ik3d / SHA1a814d7への修正候補。
+親の最終報告SHAを独立フォルダへfetch/checkoutする。既存Windowsの未共有作業を上書きしない。旧固定Preview 6vcge47ff / SHA63a2adfへの接続Blocker修正候補。
 
 ## 配信
 既存Vercel CLI認証・Preview設定を使用。
@@ -13,6 +13,9 @@ Supabase: sufvuqdnqohpfzkwxohq
 Preview targetのみ。Production、共有alias、環境変数は変更しない。秘密値を表示しない。
 固定Preview URL / 配信SHA / Deployment ID / Supabase project ref / READY / HTTPを返す。
 
+## 今回の差分
+Final Guide完了後のHome遷移、ROOM_UI_ENABLED未指定時を含むRaid開催判定の共通化。今回は追加Migrationなし。環境変数を追加・変更しない。
+
 ## DB
 親側で以下をPreview適用・実関数検証済み。再適用しない。一括db push不要。
 - 20260912164556_ranking_power_period_context.sql
@@ -21,14 +24,16 @@ Preview targetのみ。Production、共有alias、環境変数は変更しない
 前候補の5件とTutorial復元元の6件も適用済み。DB状態を巻き戻さない。
 
 ## 再監査
+過去の広いチェックリストを最初から再実施せず、以下の優先確認と未検証に絞る。
 正：specs/post_tutorial_judgment_authority_20260912.md。
-実施済みと今回差分：specs/product_preview_qa_round2_20260912.md。
-1. Fresh Tutorial：Level Up省略、初期1x、新Final Guide、World Introduction非SKIP、Character初回Dialog。通常Battle/Questへの戻りも確認。
-2. Post-Tutorial：Login Bonus→無料Skill/Equipment→Character→Quest/CASH→PvP→Raid→Guild→Mission。既存停止QAの復帰、匿名/認証済み双方、未開催スキップと開催後再案内。Guild案内は加入強制にしない。
-3. 限定Mission自動訴求の後置、認証案内を止めない、通常Missionの自由アクセス。
-4. Mission報酬/タイトルの名称、SSR Activity非表示、POWER実期間と状態確認中の表示。
-5. 前回未検証：Missionイベント切替・終了履歴・未開催、Ranking通信失敗。
-画面操作・モバイル表示・3 Cycle整合を記録する。既存PASSのQuestは変更影響の接続回帰に絞る。
+実施済みと今回差分：specs/product_preview_qa_round3_20260912.md。
+優先確認は、Final Guide「街へ出る」→手動操作なしでHome、PvP後の未開催判定→Guild→Mission。匿名/認証済み・通信失敗時の誤進行なし・再試行・後日Raid案内を対象にする。前回PASSのTutorial演出/Quest/Mission/Rankingは接続の回帰だけ確認する。
+1. Final Guide「街へ出る」からHomeへ自動接続。Login Bonus/無料ガチャ案内を確認。保存応答消失後の再試行と、失敗時に先へ進めないことを確認。
+2. 現Previewと同じROOM_UI_ENABLED未指定の状態で、PvP後に未開催判定→Guild接触→Missionへ接続。first_raid未達・未加入を保持。Mission側も「開催待ち」と一致。
+3. 開催情報取得失敗を未開催と扱わないこと。開催後の再案内はFactがあれば確認、なければ未検証と明示。
+4. Character初回設定の完了Feedbackを重点確認。前回コード/DBでは確認済みだが画面記録未捕捉。
+5. 前回未検証：Missionイベント切替・終了履歴・未開催、Ranking通信失敗、認証済みユーザー通し。再現可能な条件のあるものだけ実施し、条件不足は報告する。
+前回PASSのTutorial演出/Quest/Mission/Rankingを全面再監査しない。UI・操作・3 Cycle整合を確認し、未検証をPASSへ置き換えない。
 
 QAは現在Windowsブラウザの匿名「統合QA」を再利用可能だが、別Originへセッションは自動移行しない。新Previewで必要なら既存QA運用に沿って専用テストアカウントを用意し、qa除外を維持。秘密値をチャットやRepositoryへ掲載しない。
 実画面で確認できない条件は未検証と記載。POWER次期期間設定は運営未決として残し、勝手な期間延長・報酬付与で解決しない。

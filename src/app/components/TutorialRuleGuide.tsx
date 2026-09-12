@@ -11,7 +11,7 @@ import "./TutorialRuleGuide.css";
 const AGEHA_END_MESSAGE = "これで基本はバッチリ！\nあとは街に出て、好きに遊んでみて。";
 
 export default function TutorialRuleGuide() {
-  const { onboardingState, setOnboardingState, playCyberSe } = useGame();
+  const { onboardingState, setOnboardingState, setActiveTab, setGlobalInteractionBlocking, playCyberSe } = useGame();
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [phase, setPhase] = useState<"AGEHA_END" | "FINAL_GUIDE">("AGEHA_END");
@@ -19,8 +19,9 @@ export default function TutorialRuleGuide() {
   const mountedRef = useRef(true);
   const tutorialStep = onboardingState?.tutorial_step;
 
-  useEffect(() => () => {
-    mountedRef.current = false;
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
   }, []);
 
   useEffect(() => {
@@ -46,14 +47,16 @@ export default function TutorialRuleGuide() {
     if (workingRef.current) return;
     workingRef.current = true;
     setWorking(true);
+    setGlobalInteractionBlocking(true);
     setError(null);
     playCyberSe("click");
     const isAnonymous = Boolean(onboardingState?.is_anonymous);
     try {
-      const { error: progressError } = await supabase.rpc("advance_tutorial_progress", { p_expected_step: "RULE_GUIDE", p_next_step: "COMPLETE" });
-      if (progressError) {
-        if (mountedRef.current) setError("進行を保存できませんでした。通信状態を確認して、もう一度お試しください。");
-        return;
+      // 保存済みの再試行・応答消失でも、サーバーの完了状態を確認して復帰する。
+      try {
+        await supabase.rpc("advance_tutorial_progress", { p_expected_step: "RULE_GUIDE", p_next_step: "COMPLETE" });
+      } catch {
+        // 通信失敗時も完了済みかを読み直す。未完了なら下の検証で遷移を止める。
       }
       const { data: authoritativeState, error: stateError } = await supabase.rpc("get_current_onboarding_state");
       const completionState = authoritativeState as {
@@ -76,11 +79,16 @@ export default function TutorialRuleGuide() {
         if (mountedRef.current) setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
         return;
       }
-      // This is the single handoff point: only the verified server projection
-      // can close the guide and expose the normal shell.
-      if (mountedRef.current) setOnboardingState(completionState);
+      // 確認済みの完了状態と表示先を同時に切り替え、背後のクエストへ戻さない。
+      if (mountedRef.current) {
+        setActiveTab("home");
+        setOnboardingState(completionState);
+      }
+    } catch {
+      if (mountedRef.current) setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
     } finally {
       workingRef.current = false;
+      setGlobalInteractionBlocking(false);
       if (mountedRef.current) setWorking(false);
     }
   };

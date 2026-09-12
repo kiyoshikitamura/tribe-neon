@@ -9,9 +9,7 @@ import { missionDisplayText } from "@/domain/presentation/missionTerminology";
 import "./MissionPanel.css";
 import { canClaimMission, missionClaimExpired, missionProgressEnded, missionEventPriority, needsMissionGuild } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
-import type { RaidRoomDto } from "@/domain/raidRoom";
-import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
-import { supabase } from "@/utils/supabase";
+import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 
 const MISSION_STATUS_LABELS: Record<string, string> = {
   CLEAR: "受取可能",
@@ -36,24 +34,8 @@ export default function MissionPanel() {
   } = useGame();
   const now = useMissionClock(missions || []);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [raidCheckedFor, setRaidCheckedFor] = useState<string | null>(null);
-  useEffect(() => {
-    const owner = session?.user?.id;
-    if (!showMissionPanel || !owner || process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED !== "true") return;
-    let cancelled = false;
-    const check = async () => {
-      setRaidCheckedFor(null);
-      try {
-        const rooms = await raidRoomActivityTracker.observeTransport(createRaidRoomRpcTransport(supabase)).listRooms();
-        const complete = rooms.every((room: RaidRoomDto) => room.state.status === "available" && (room.state.value !== "active" || (room.hp.status === "available" && room.expiresAt.status === "available" && Number.isFinite(Date.parse(room.expiresAt.value)))));
-        if (!cancelled) setRaidCheckedFor(complete ? owner : null);
-      } catch { if (!cancelled) setRaidCheckedFor(null); }
-    };
-    void check();
-    const visible = () => { if (document.visibilityState === "visible") void check(); };
-    document.addEventListener("visibilitychange", visible);
-    return () => { cancelled = true; document.removeEventListener("visibilitychange", visible); };
-  }, [showMissionPanel, session?.user?.id, raidRoomActivityTracker, isRaidActive]);
+  const raidAvailability = useRaidGuideAvailability(session?.user?.id, showMissionPanel,
+    raidRoomActivityTracker, isRaidActive);
   const specialViewTrackedRef = useRef(false);
 
   useEffect(() => {
@@ -156,7 +138,7 @@ export default function MissionPanel() {
     const expired = missionClaimExpired(m, now);
     const eventEnded = m.category === "SPECIAL" && missionProgressEnded(m, now);
     const unavailable = needsMissionGuild(m) && !userGuildMember?.guild_id ? "ギルド未加入"
-      : (m.ctaTab === "raid" || String(m.triggerType).startsWith("RAID")) && !isRaidActive && raidCheckedFor === session?.user?.id && !!raidCheckedFor ? "開催待ち" : null;
+      : (m.ctaTab === "raid" || String(m.triggerType).startsWith("RAID")) && raidAvailability === "inactive" ? "開催待ち" : null;
     const target = Math.max(1, Number(m.target_value || 1));
     const progress = Math.max(0, Number(m.current_progress || 0));
     const title = m.triggerType === "QUEST_COMPLETE_COUNT" && m.title === "派遣に出よう" ? `クエストを${target}回完了する` : missionDisplayText(m.title);

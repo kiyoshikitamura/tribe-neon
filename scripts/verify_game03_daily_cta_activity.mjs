@@ -56,13 +56,13 @@ assert.deepEqual([row().current_progress, row().status], [2, "CLEAR"]);
 syncCanonicalMissions(runtimeMaster, rows, userId, "2026-09-11");
 assert.deepEqual([row().current_progress, row().status, row().cycle_date], [0, "PROGRESS", "2026-09-11"]);
 
-const guideSteps = ["first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout", "post_tutorial_quest", "first_pvp", "first_raid"];
+const guideSteps = ["first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout", "post_tutorial_quest", "first_pvp", "first_raid", "post_tutorial_guild_view"];
 const orderedCtas = [];
 for (let index = 0; index <= guideSteps.length; index += 1) {
   const cta = resolveHomeInitialCta({ ready: true, gameplayAuthorized: true, milestones: new Set(guideSteps.slice(0, index)), raidAvailability: "active" });
   orderedCtas.push(cta?.tab || cta?.action);
 }
-assert.deepEqual(orderedCtas, ["gacha", "gacha", "character", "patrol", "pvp", "raid", "mission_handoff"]);
+assert.deepEqual(orderedCtas, ["gacha", "gacha", "character", "patrol", "pvp", "raid", "guild", "mission_handoff"]);
 const guide = (milestones, overrides = {}) => resolveHomeInitialCta({
   ready: true, tutorialStep: "AUTHENTICATION", gameplayAuthorized: true,
   milestones: new Set(milestones), raidAvailability: "unknown", ...overrides,
@@ -75,7 +75,8 @@ assert.equal(guide(guideSteps.filter((step) => step !== "post_tutorial_quest"))?
 assert.equal(guide(guideSteps.slice(0, 5))?.title, "レイドを確認");
 const pausedRaid = guide(guideSteps.slice(0, 5), { raidAvailability: "inactive" });
 assert.notEqual(pausedRaid?.disabled, true);
-assert.equal(pausedRaid?.action, "mission_handoff", "Inactive Raid must permit mission handoff");
+assert.equal(pausedRaid?.tab, "guild", "未開催でもGuild接触へ継続する");
+assert.equal(guide([...guideSteps.slice(0, 5), "post_tutorial_guild_view"], { raidAvailability: "inactive" })?.action, "mission_handoff", "Guild加入は要求せずMissionへ継続する");
 const pending = [...guideSteps.slice(0, 5), "activation_mission_handoff"];
 assert.equal(guide(pending, { raidAvailability: "inactive" }), null);
 assert.equal(guide(pending, { raidAvailability: "unknown" }), null);
