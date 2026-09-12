@@ -79,3 +79,8 @@ Production変更は明示承認後のみ。
 正：`specs/post_tutorial_judgment_authority_20260912.md`。
 限定Missionの自動訴求は主要機能の学習より先行させない。通常アクセス・受取機能を閉じず、Guild等の文脈から明日も続ける理由へ接続する。
 24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。
+
+
+## Guide × Mission統合の追加Authority
+
+正：`guide_mission_integration_mapping_20260912.md`。初心者Mission = Guide + Achievement + Reward + Reflow。報酬未受取でJourneyをロックせず、先行達成を認識する。旧「受取成功のみで次へ進む」案は撤回。通常Missionの戻り先は維持し、初心者導線経由の受取だけHomeへ帰還する。原則は確定、具体的な既存Mission対応・不足条件の修正は提案段階。報酬追加/増量は未実施。

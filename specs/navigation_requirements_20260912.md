@@ -40,3 +40,8 @@ Production反映は別途明示承認後のみ。
 正：`specs/post_tutorial_judgment_authority_20260912.md`。
 従来のGacha→Character→Quest→Battle→Raid→Missionは旧基本順序。最新学習順は追加Authorityに従う。Skill/Equipment分離は既存実装を再利用し、Guild案内を追加する。Raid未開催の迂回・実参加未達保持・再案内は維持する。
 24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。
+
+
+## Guide × Mission統合の追加Authority
+
+正：`guide_mission_integration_mapping_20260912.md`。初心者Mission = Guide + Achievement + Reward + Reflow。報酬未受取でJourneyをロックせず、先行達成を認識する。旧「受取成功のみで次へ進む」案は撤回。通常Missionの戻り先は維持し、初心者導線経由の受取だけHomeへ帰還する。原則は確定、具体的な既存Mission対応・不足条件の修正は提案段階。報酬追加/増量は未実施。

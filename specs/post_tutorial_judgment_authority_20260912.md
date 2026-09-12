@@ -53,3 +53,8 @@ Guide完走率・前Stepから次Stepへの単純離脱率だけで判定しな�
 - Raid未開催時のMissionアクセス許可・実参加未達保持・開催後再案内は既存承認を維持。新Guild案内を追加しても未開催で停止させない。
 - 24h/48h機能接触の計測対応は未検証。既存イベントと照合して不足だけを追加する。
 - 今回はAuthority・仕様・監査指示の更新。DB、商品価格、排出率、Pool、Productionの変更なし。
+
+
+## Guide × Mission統合の追加Authority
+
+正：`guide_mission_integration_mapping_20260912.md`。初心者Mission = Guide + Achievement + Reward + Reflow。報酬未受取でJourneyをロックせず、先行達成を認識する。旧「受取成功のみで次へ進む」案は撤回。通常Missionの戻り先は維持し、初心者導線経由の受取だけHomeへ帰還する。原則は確定、具体的な既存Mission対応・不足条件の修正は提案段階。報酬追加/増量は未実施。
