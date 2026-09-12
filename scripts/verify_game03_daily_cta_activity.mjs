@@ -2,6 +2,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { evaluateCanonicalMissionProgress, syncCanonicalMissions } from "../src/domain/gameplay/canonical/mission_runtime.ts";
 
+import { resolveHomeInitialCta, describeHomeActivity } from "../src/domain/presentation/homeInitialGuide.ts";
+import { HOME_ACTION_PRESENTATION_SLOTS } from "../src/domain/presentation/homeActionPresentation.ts";
+
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 const master = JSON.parse(await read("src/domain/gameplay/canonical/data/missions_20260910.json"));
@@ -53,13 +56,36 @@ assert.deepEqual([row().current_progress, row().status], [2, "CLEAR"]);
 syncCanonicalMissions(runtimeMaster, rows, userId, "2026-09-11");
 assert.deepEqual([row().current_progress, row().status, row().cycle_date], [0, "PROGRESS", "2026-09-11"]);
 
-const orderedCtas = ["無料ガチャ", "キャラ装備", "CASHをゲット", "腕試しをしよう", "強敵に挑戦", "ミッションを確認"];
-let cursor = -1;
-for (const copy of orderedCtas) {
-  const next = home.indexOf(`title: "${copy}"`, cursor + 1);
-  assert.ok(next > cursor, `CTA order mismatch at ${copy}`);
-  cursor = next;
+const guideSteps = ["first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout", "post_tutorial_quest", "first_pvp", "first_raid"];
+const orderedCtas = [];
+for (let index = 0; index <= guideSteps.length; index += 1) {
+  const cta = resolveHomeInitialCta({ ready: true, gameplayAuthorized: true, milestones: new Set(guideSteps.slice(0, index)), raidAvailability: "active" });
+  orderedCtas.push(cta?.tab || cta?.action);
 }
+assert.deepEqual(orderedCtas, ["gacha", "gacha", "character", "patrol", "pvp", "raid", "mission_handoff"]);
+const guide = (milestones, overrides = {}) => resolveHomeInitialCta({
+  ready: true, tutorialStep: "AUTHENTICATION", gameplayAuthorized: true,
+  milestones: new Set(milestones), raidAvailability: "unknown", ...overrides,
+});
+assert.equal(guide([], { ready: false }), null);
+assert.equal(guide(["activation_mission_handoff"]), null, "Legacy completion must not restart the guide");
+assert.equal(guide(["activation_mission_handoff"], { tutorialStep: "FREE_GACHA", gameplayAuthorized: false })?.key, "tutorial");
+assert.equal(guide([...guideSteps.slice(0, 2), "character_setup_dialog_consumed"])?.tab, "patrol");
+assert.equal(guide(guideSteps.filter((step) => step !== "post_tutorial_quest"))?.tab, "patrol");
+assert.equal(guide(guideSteps.slice(0, 5))?.title, "レイドを確認");
+const pausedRaid = guide(guideSteps.slice(0, 5), { raidAvailability: "inactive" });
+assert.notEqual(pausedRaid?.disabled, true);
+assert.equal(pausedRaid?.action, "mission_handoff", "Inactive Raid must permit mission handoff");
+const pending = [...guideSteps.slice(0, 5), "activation_mission_handoff"];
+assert.equal(guide(pending, { raidAvailability: "inactive" }), null);
+assert.equal(guide(pending, { raidAvailability: "unknown" }), null);
+assert.equal(guide(pending, { raidAvailability: "active" })?.tab, "raid", "Raid reappears after handoff/reload");
+assert.equal(guide([...pending, "first_raid"], { raidAvailability: "active" }), null);
+assert.equal(pending.includes("first_raid"), false, "Projection never grants Raid completion");
+assert.equal(guide(guideSteps.map((step) => step === "first_main_loadout" ? "character_setup_dialog_consumed" : step))?.action, "mission_handoff");
+assert.deepEqual(HOME_ACTION_PRESENTATION_SLOTS.map((slot) => slot.destination), ["patrol", "pvp", "raid", "guild"]);
+assert.ok(HOME_ACTION_PRESENTATION_SLOTS.every((slot) => slot.exposure === "ACTIVE"));
+assert.equal(describeHomeActivity("future_type"), "アクティビティを更新");
 const primaryCtaBlock = home.slice(home.indexOf("const primaryCta"), home.indexOf("const openPrimaryCta"));
 assert.ok(!primaryCtaBlock.includes("guild_discovery") && !primaryCtaBlock.includes("guild_join"), "Guild must not gate the post-tutorial CTA");
 assert.ok(mock.includes('"post_tutorial_quest"') && mock.includes('"first_pvp"') && mock.includes('"first_raid"'));
@@ -71,7 +97,9 @@ for (const contract of [
   "'boss_name',v_boss_name",
   "social_activity_feed_raid_boss_defeated_once_idx",
 ]) assert.ok(migration.includes(contract), `Activity contract missing: ${contract}`);
-assert.ok(home.includes('"RAID_BOSS_DEFEATED"') && home.includes('"GUILD_CREATED"') && home.includes('"POWER_RANK_1"'));
+assert.equal(describeHomeActivity("RAID_BOSS_DEFEATED"), "レイドボスを撃破");
+assert.equal(describeHomeActivity("GUILD_CREATED"), "TRIBEを結成");
+assert.equal(describeHomeActivity("POWER_RANK_1"), "総戦力ランキング1位に到達");
 assert.ok(!home.slice(home.indexOf("VISIBLE_ACTIVITY_TYPES"), home.indexOf("const activityDescription")).includes("SSR_CHARACTER"));
 
 for (const claimContract of [

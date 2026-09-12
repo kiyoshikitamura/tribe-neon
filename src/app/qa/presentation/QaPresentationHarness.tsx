@@ -471,7 +471,7 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     setMissionTab: noop,
     activePatrols: [],
     onboardingState: { tutorial_step: "AUTHENTICATION", gameplay_authorized: true },
-    userGuildMember: guildJoined && ctaAuthorityReady ? { role: "MEMBER" } : null,
+    userGuildMember: guildJoined && ctaAuthorityReady ? { guild_id: "qa-neon-crew", role: "MEMBER" } : null,
     userGuild: guildJoined && ctaAuthorityReady ? { name: "NEON CREW" } : null,
     pendingGuildJoinRequests: scenario === "first-home-guild-pending" && ctaAuthorityReady ? [{ id: "qa-pending-request" }] : [],
     guildMembershipAuthorityReady: ctaAuthorityReady,

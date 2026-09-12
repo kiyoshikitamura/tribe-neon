@@ -321,9 +321,7 @@ export function useInventory(
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
 
-      setMissions(prev => targetMission.category === "SPECIAL"
-        ? prev.map(m => m.id === id ? { ...m, status: "CLAIMED", loading: false } : m)
-        : prev.filter(m => m.id !== id));
+      setMissions(prev => prev.map(m => m.id === id ? { ...m, status: "CLAIMED", loading: false } : m));
       playCyberSe("MISSION_REWARD");
       await syncBootstrapData(session.user.id);
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
@@ -339,7 +337,7 @@ export function useInventory(
 
   const handleClaimAllMissions = async () => {
     if (!session) return;
-    const clearMissions = missions.filter(m => m.status === "CLEAR" && m.category === missionTab);
+    const clearMissions = missions.filter(m => m.status === "CLEAR" && m.category === missionTab && !(m.eventClaimEndAt && new Date(m.eventClaimEndAt).valueOf() <= Date.now()));
     if (clearMissions.length === 0) return;
 
     if (!beginMissionClaim()) return;
@@ -354,9 +352,7 @@ export function useInventory(
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
 
-      setMissions(prev => missionTab === "SPECIAL"
-        ? prev.map(m => m.status === "CLEAR" && m.category === missionTab ? { ...m, status: "CLAIMED", loading: false } : m)
-        : prev.filter(m => !(m.status === "CLEAR" && m.category === missionTab)));
+      setMissions(prev => prev.map(m => missionIds.includes(m.id) ? { ...m, status: "CLAIMED", loading: false } : m));
       playCyberSe("MISSION_REWARD");
       await syncBootstrapData(session.user.id);
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);

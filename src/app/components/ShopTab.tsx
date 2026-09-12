@@ -8,14 +8,20 @@ import SectionHeader from "./ui/SectionHeader";
 import SubTabNav from "./ui/SubTabNav";
 import OutlawCard from "./ui/OutlawCard";
 import OutlawButton from "./ui/OutlawButton";
+import BillingHistory from "./BillingHistory";
 
 export default function ShopTab() {
-  const monetizationAvailable = false;
+  const [monetizationAvailable, setMonetizationAvailable] = useState(false);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/billing/config", {cache:"no-store"}).then(r => r.json())
+      .then(data => { if (active) setMonetizationAvailable(data.available === true); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
   const {
     shopSubTab,
     setShopSubTab,
     userShopPurchases,
-    userCreatedAt,
     boughtResultModal,
     setBoughtResultModal,
     handleBuyNormalProduct,
@@ -26,51 +32,8 @@ export default function ShopTab() {
     setConfirmDialogConfig
   } = useGame();
 
-  const [timeLeftStr, setTimeLeftStr] = useState<string>("");
-
-  useEffect(() => {
-    if (!monetizationAvailable && shopSubTab === "LIMITED") setShopSubTab("NORMAL");
-  }, [shopSubTab, setShopSubTab]);
-
-  // 初心者パックの24時間カウントダウン計算
-  useEffect(() => {
-    if (!userCreatedAt) return;
-
-    const calcTimeLeft = () => {
-      const createdTime = new Date(userCreatedAt).getTime();
-      const expireTime = createdTime + 72 * 60 * 60 * 1000;
-      const now = Date.now();
-      const diff = expireTime - now;
-
-      if (diff <= 0) {
-        setTimeLeftStr("");
-        return;
-      }
-
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-      const hStr = String(hours).padStart(2, "0");
-      const mStr = String(mins).padStart(2, "0");
-      const sStr = String(secs).padStart(2, "0");
-
-      setTimeLeftStr(`${hStr}:${mStr}:${sStr}`);
-    };
-
-    calcTimeLeft();
-    const timer = setInterval(calcTimeLeft, 1000);
-    return () => clearInterval(timer);
-  }, [userCreatedAt]);
-
-  // 初心者限定商材の表示判定 (作成後24時間以内 かつ 未購入)
-  const isBeginnerAvailable = (() => {
-    if (!userCreatedAt) return true;
-    const createdTime = new Date(userCreatedAt).getTime();
-    const isWithin72h = Date.now() < createdTime + 72 * 60 * 60 * 1000;
-    const purchased = (userShopPurchases["beginner_pack_01"] || 0) > 0;
-    return isWithin72h && !purchased;
-  })();
+  const timeLeftStr = "";
+  const isBeginnerAvailable = (userShopPurchases["beginner_pack_01"] || 0) < 1;
 
   // 商品フィルタリング
   const beginnerProducts = SHOP_PRODUCTS_MASTER.filter(p => p.category === "BEGINNER" && isBeginnerAvailable);
@@ -79,7 +42,7 @@ export default function ShopTab() {
   const diamondProducts = SHOP_PRODUCTS_MASTER.filter(p => p.category === "DIAMOND").sort((a, b) => a.sortOrder - b.sortOrder);
   const normalItemProducts = SHOP_PRODUCTS_MASTER.filter(p => p.shopType === "NORMAL").sort((a, b) => a.sortOrder - b.sortOrder);
 
-  const isLoading = profileLoading || upgradeLoading;
+  const isLoading = profileLoading || upgradeLoading || !monetizationAvailable;
 
   // 購入完了モーダルの表示（GameContextのboughtResultModalを監視）
   useEffect(() => {
@@ -146,11 +109,13 @@ export default function ShopTab() {
   return (
     <div className="view-container shop-tab-container">
       <SectionHeader title="ショップ" />
+      {monetizationAvailable && <p className="shop-billing-notice">テスト決済環境</p>}
+      {monetizationAvailable && <BillingHistory />}
 
       {/* サブタブ切替 */}
       <SubTabNav
         tabs={[
-          { id: "LIMITED", label: "有償商品（準備中）", disabled: !monetizationAvailable },
+          { id: "LIMITED", label: monetizationAvailable ? "有償商品" : "有償商品（準備中）", disabled: !monetizationAvailable },
           { id: "NORMAL", label: "通常ショップ" },
         ]}
         activeTabId={shopSubTab}

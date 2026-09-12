@@ -43,7 +43,7 @@ export default function RaidTab() {
         id: String(present.id), title: present.message ? present.message.split(":")[0] : "配布アイテム",
         desc: present.message ? present.message.split(":")[1] || present.message : "",
         reward: `${canonicalItemName(present.item_id)} +${present.quantity}`, itemId: present.item_id, qty: present.quantity,
-        expireText: Date.parse(present.expire_at) <= Date.now() ? "期限切れ" : `期限: ${new Date(present.expire_at).toLocaleString("ja-JP")}`,
+        expireText: present.expire_at == null ? "期限なし" : Date.parse(present.expire_at) <= Date.now() ? "期限切れ" : `期限: ${new Date(present.expire_at).toLocaleString("ja-JP")}`,
         status: present.status, loading: false,
       })));
       setPresentsPrefetched(true);

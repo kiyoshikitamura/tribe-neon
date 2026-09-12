@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { flushSync } from "react-dom";
 import { supabase } from "@/utils/supabase";
+import { billingFetch, billingRequestId, clearBillingRequest } from "@/utils/billing_client";
 import { loadRaidActivity } from "@/domain/raidRoomActivity";
 import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
 import { useRaidRoomActivity } from "./hooks/useRaidRoomActivity";
@@ -217,6 +218,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [diamonds, setDiamonds] = useState<number>(200);
   const [vitality, setVitality] = useState<number>(100);
   const [vitalityNextRecoveryAt, setVitalityNextRecoveryAt] = useState<string | null>(null);
+  const [questSkipsAuthorityOwner, setQuestSkipsAuthorityOwner] = useState<string | null>(null);
+  useEffect(() => { setQuestSkipsAuthorityOwner(null); }, [session?.user?.id]);
   const [pvpNextRecoveryAt, setPvpNextRecoveryAt] = useState<string | null>(null);
   const [monthlyPassActive, setMonthlyPassActive] = useState<boolean>(false);
   const [monthlyPassClaimedToday, setMonthlyPassClaimedToday] = useState<boolean>(false);
@@ -438,6 +441,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     selectedCourse, setSelectedCourse,
     selectedMembers, setSelectedMembers,
     selectedPatrolMember, setSelectedPatrolMember,
+    questSelectionRequest, requestQuestSelection,
     dailyCashSkips, setDailyCashSkips, dailyPaidSkips, setDailyPaidSkips,
     dailyCashSkipsResetDate, setDailyCashSkipsResetDate,
     activePatrols, setActivePatrols,
@@ -1195,6 +1199,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       releaseBootstrap();
       return;
     }
+    setQuestSkipsAuthorityOwner(null);
     const patrolRevisionAtStart = patrolStateRevisionRef.current;
     let coreProjectionReady = false;
     let localGuildRec: any = null;
@@ -1238,6 +1243,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           let expireText = `期限: あと${diffHrs}時間`;
           if (diffHrs > 24) expireText = `期限: あと${Math.ceil(diffHrs / 24)}日`;
           else if (diffHrs <= 0) expireText = "期限切れ";
+          if (present.expire_at == null) expireText = "期限なし";
           return {
             id: present.id.toString(),
             title: present.message ? present.message.split(":")[0] : "配布アイテム",
@@ -1271,6 +1277,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         );
         setMissions(missionMasterResult.data
           .filter((mission: any) => mission.trigger_type !== "USER_INVITE" || featureUiExposure("INVITE") === "ACTIVE")
+          .filter((mission: any) => !["GVG_FINALIZED_BATTLE_COUNT", "GVG_WIN_COUNT"].includes(mission.trigger_type) || featureUiExposure("GVG") === "ACTIVE")
           .filter((mission: any) => mission.category !== "SPECIAL" || !mission.event_id || visibleEvents.has(String(mission.event_id)))
           .map((mission: any) => {
           const userMission: any = userMissionById.get(mission.id);
@@ -1292,6 +1299,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             category: mission.category || "DAILY",
             eventId: mission.event_id || null,
             eventProgressOpen: eventProjection?.progress_open !== false,
+            eventTitle: eventProjection?.display_name || null,
+            eventStartAt: eventProjection?.start_at || null,
+            eventProgressEndAt: eventProjection?.progress_end_at || null,
+            eventClaimEndAt: eventProjection?.claim_deadline || null,
             displayGroup: mission.display_group || "PROGRESS",
             conditionParams: mission.condition_params || {},
             triggerType: mission.trigger_type || "",
@@ -1435,6 +1446,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setDailyCashSkips(userProfile.quest_free_skips_count ?? userProfile.daily_cash_skips_count ?? 0);
         setDailyPaidSkips(userProfile.quest_paid_skips_count ?? 0);
         setDailyCashSkipsResetDate(userProfile.quest_skips_reset_date || userProfile.daily_cash_skips_reset_date || null);
+        if (!userProfileError && userProfile.id === userId && currentAuthUserIdRef.current === userId) setQuestSkipsAuthorityOwner(userId);
         setCurrentBaseId(userProfile.current_base_id || "shinjuku");
         setLastGuildLeftAt(userProfile.last_guild_left_at);
         setGiftCode(userProfile.gift_code || null);
@@ -3290,9 +3302,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const handleScout = async (
     scoutType: string,
     scoutCount: number,
-    useCurrency: "CASH" | "DIAMOND" | "FREE" | "TICKET"
+    useCurrency: "CASH" | "DIAMOND" | "FREE" | "TICKET",
+    dailyFreeRateVersion?: string
   ) => {
     if (!session) return;
+    if (scoutType.endsWith("_SPECIAL") && !["DIAMOND", "TICKET"].includes(useCurrency)) {
+      setErrorMessage("スペシャルガチャはDIAまたは専用チケットで利用できます。");
+      return;
+    }
     const actionPerformance = beginActionPerformance("gacha");
     const requestId = crypto.randomUUID();
 
@@ -3350,7 +3367,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
               p_gacha_id: scoutType === "CHAR_NORMAL" || scoutType === "CHAR_SPECIAL" ? scoutType : "CHAR_SPECIAL",
               p_pull_count: scoutCount,
               p_currency_type: serverCurrency,
-              p_request_id: requestId
+              p_request_id: requestId,
+              ...(serverCurrency === "free" ? { p_rate_version: dailyFreeRateVersion || "" } : {})
             });
         if (drawResult.error || drawResult.data?.error) {
           throw drawResult.error || new Error(drawResult.data.error);
@@ -3484,7 +3502,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         : (scoutType === "EQUIP_NORMAL" || scoutType === "EQUIP_SPECIAL" ? scoutType : "EQUIP_SPECIAL");
       const serverCurrency = useCurrency === "FREE" ? "free" : useCurrency === "DIAMOND" ? "diamonds" : useCurrency === "TICKET" ? "ticket" : "cash";
       actionPerformance.mark("request_start");
-      const drawResult = await supabase.rpc("execute_asset_gacha", { p_user_id: session.user.id, p_gacha_id: assetGachaId, p_pull_count: scoutCount, p_currency_type: serverCurrency, p_request_id: requestId });
+      const drawResult = await supabase.rpc("execute_asset_gacha", { p_user_id: session.user.id, p_gacha_id: assetGachaId, p_pull_count: scoutCount, p_currency_type: serverCurrency, p_request_id: requestId, ...(serverCurrency === "free" ? { p_rate_version: dailyFreeRateVersion || "" } : {}) });
       if (drawResult.error || drawResult.data?.error) throw drawResult.error || new Error(drawResult.data.error);
       reportScoutTiming("server_response");
       actionPerformance.mark("response");
@@ -3707,10 +3725,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     } catch (err: unknown) {
       setScoutAnimationState(null);
-      const detail = err instanceof Error ? err.message : String(err);
+      const detail = err instanceof Error ? err.message
+        : typeof err === "object" && err !== null && "message" in err ? String(err.message) : String(err);
       console.warn("Gacha execution error:", detail);
       setErrorMessage(
-        detail.includes("gacha not found")
+        detail.includes("DAILY_FREE_RATE_VERSION_MISMATCH")
+          ? "無料10連の提供割合が更新されました。ゲームを再読み込みしてからお試しください。"
+          : detail.includes("gacha not found")
           ? "ガチャ設定が見つかりません。運営へお問い合わせください。"
           : detail.includes("already claimed")
             ? "本日の無料10連ガチャは使用済みです。"
@@ -3753,143 +3774,58 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const handleBuyNormalProduct = async (productId: string, currencyType: "CASH" | "DIAMOND"): Promise<boolean> => {
     if (!session) return false;
-    if (!isFeatureOpen("SHOP", featureOperatingStates)) {
-      setErrorMessage("ショップは現在利用できません。");
-      return false;
-    }
-    const product = SHOP_PRODUCTS_MASTER.find(p => p.id === productId);
-    if (!product) return false;
-
+    const product = SHOP_PRODUCTS_MASTER.find(p => p.id === productId && p.shopType === "NORMAL");
+    if (!product || currencyType !== "DIAMOND") return false;
     setUpgradeLoading(true);
-    playCyberSe("click");
-
-    const price = currencyType === "CASH" ? (product.priceCash || 0) : (product.priceDiamond || 0);
-
-    if (currencyType === "CASH" && cash < price) {
-      setErrorMessage("キャッシュが不足しています。");
-      setUpgradeLoading(false);
-      return false;
-    }
-    if (currencyType === "DIAMOND" && diamonds < price) {
-      setErrorMessage("ダイヤが不足しています。");
-      setUpgradeLoading(false);
-      return false;
-    }
-
+    setGlobalInteractionBlocking(true);
     try {
-      setGlobalInteractionBlocking(true);
-      const { data: rpcRes, error } = await supabase.rpc("buy_normal_shop_product", {
-        p_user_id: session.user.id,
-        p_product_id: product.id,
-        p_currency_type: currencyType,
-        p_price: price,
-        p_items: product.items,
-        p_product_title: product.title
+      const result = await billingFetch("shop", session.access_token, {
+        productId, requestId: billingRequestId(session.user.id, productId, "shop"),
       });
-
-      if (error || !rpcRes) {
-        console.error("buy_normal_shop_product rpc error:", error);
-        setErrorMessage("購入処理中にエラーが発生しました。");
-        setUpgradeLoading(false);
-        return false;
-      }
-
-      setBoughtResultModal({
-        productTitle: product.title,
-        items: product.items,
-        message: `${product.title} を購入しました！獲得アイテムはプレゼントBOXに送られました。`
-      });
-
-      playCyberSe("gacha");
+      if (!result.success) throw new Error("購入を確認できませんでした。");
+      clearBillingRequest(session.user.id, productId, "shop");
+      setBoughtResultModal({ productTitle: product.title, items: product.items,
+        message: `${product.title} を購入しました。プレゼントBOXをご確認ください。` });
       await syncBootstrapData(session.user.id);
       return true;
-    } catch (err: any) {
-      console.error("handleBuyNormalProduct error:", err);
-      setErrorMessage("購入処理中にエラーが発生しました。");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "購入を確認できませんでした。");
       return false;
     } finally {
-      // Keep the application inert until either the result/error state has
-      // committed. Releasing immediately after the RPC left a tappable frame
-      // before the destination dialog's effect could mount it.
       await waitForBrowserPaint();
       setGlobalInteractionBlocking(false);
       setUpgradeLoading(false);
     }
   };
 
-  const handleBuyStripeProduct = async (productId: string, isSimulatedDuplicate: boolean = false): Promise<boolean> => {
+  const handleBuyStripeProduct = async (productId: string): Promise<boolean> => {
     if (!session) return false;
-    if (!isFeatureOpen("PAYMENT", featureOperatingStates)) {
-      setErrorMessage("決済機能は現在利用できません。");
-      return false;
-    }
-    const product = SHOP_PRODUCTS_MASTER.find(p => p.id === productId);
+    const product = SHOP_PRODUCTS_MASTER.find(p => p.id === productId && !!p.priceJpy);
     if (!product) return false;
-    if (product.id === "vip_pass_01") {
-      const result = await handlePurchaseMonthlyPass();
-      return !!result?.success;
-    }
-
     setProfileLoading(true);
-    playCyberSe("click");
-
-    const sessionId = isSimulatedDuplicate
-      ? lastPaymentSessionId
-      : `stripe_session_${Math.floor(Math.random() * 899999) + 100000}`;
-
-    if (!sessionId) {
-      setErrorMessage("前回のセッションが見つかりません。新規購入を行ってください。");
-      setProfileLoading(false);
-      return false;
-    }
-
+    setGlobalInteractionBlocking(true);
     try {
-      const isBeginner = product.category === "BEGINNER";
-      const purchaseLimit = product.purchaseLimit || 0;
-
-      setGlobalInteractionBlocking(true);
-      const { data: rpcRes, error } = await supabase.rpc("process_stripe_shop_purchase", {
-        p_user_id: session.user.id,
-        p_stripe_session_id: sessionId,
-        p_product_id: product.id,
-        p_amount_jpy: product.priceJpy || 0,
-        p_items: product.items,
-        p_product_title: product.title,
-        p_is_beginner: isBeginner,
-        p_purchase_limit: purchaseLimit
+      const result = await billingFetch("checkout", session.access_token, {
+        productId, requestId: billingRequestId(session.user.id, productId, "checkout"),
       });
-
-      if (error) {
-        console.error("process_stripe_shop_purchase RPC error:", error);
-        setErrorMessage("決済処理中にエラーが発生しました。");
-        setProfileLoading(false);
-        return false;
-      } else if (rpcRes && rpcRes.duplicate) {
-        setConfirmDialogConfig({
-          isOpen: true,
-          title: "重複トランザクション",
-          message: "【Stripe Webhook 冪等性競合検知】 重複トランザクションを安全に無視しました。",
-          onConfirm: () => setConfirmDialogConfig(null),
-          onCancel: () => setConfirmDialogConfig(null)
-        });
-        setProfileLoading(false);
-        return false;
+      if (result.status === "GRANTED") {
+        clearBillingRequest(session.user.id, productId, "checkout");
+        setBoughtResultModal({productTitle:product.title,items:product.items,
+          message:"購入済みの商品を確認しました。プレゼントBOXをご確認ください。"});
+        await syncBootstrapData(session.user.id);
+        return true;
       }
-
-      setLastPaymentSessionId(sessionId);
-
-      setBoughtResultModal({
-        productTitle: product.title,
-        items: product.items,
-        message: `${product.title} の購入が完了しました！獲得アイテムはプレゼントBOXに送付されました。`
-      });
-
-      playCyberSe("gacha");
-      await syncBootstrapData(session.user.id);
-      return true;
-    } catch (err: any) {
-      console.error("handleBuyStripeProduct error:", err);
-      setErrorMessage("決済処理中にエラーが発生しました。");
+      if (result.status === "EXPIRED") {
+        clearBillingRequest(session.user.id, productId, "checkout");
+        throw new Error("前回のお支払い期限が終了しました。商品を選び直してください。");
+      }
+      if (result.url && new URL(result.url).origin === "https://checkout.stripe.com") {
+        window.location.assign(result.url);
+        return true;
+      }
+      throw new Error("お支払いの状況を購入履歴から再確認してください。");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "購入を確認できませんでした。");
       return false;
     } finally {
       await waitForBrowserPaint();
@@ -4324,6 +4260,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     selectedCourse, setSelectedCourse,
     selectedMembers, setSelectedMembers,
     selectedPatrolMember, setSelectedPatrolMember,
+    questSelectionRequest, requestQuestSelection,
+    questSkipsAuthorityReady: !!session?.user?.id && questSkipsAuthorityOwner === session.user.id,
     dailyCashSkips, setDailyCashSkips, dailyPaidSkips, setDailyPaidSkips,
     dailyCashSkipsResetDate, setDailyCashSkipsResetDate,
     activePatrols, setActivePatrols,

@@ -1,5 +1,7 @@
 # 個別企画仕様書(E)：ガチャ ＆ ショップ ＆ Stripe課金
 
+> **2026-09-12更新：** 課金・ショップ・スペシャルガチャ・専用演出・購入分の期限については、[課金公開・統合設計書](monetization_release_20260912.md)を現行仕様とする。本書の該当する旧記述は履歴であり、新規実装の根拠にしない。対象外の仕様は本更新で変更しない。
+
 ## Tutorial 10連
 
 Tutorial 10連はDaily Normal無料回数と別のServer-authoritative契約とする。1〜9枠は有効なNormal pool、10枠目は有効な正規SSR poolから解決し、request idempotency・execution history・retry result restoreを必須とする。

@@ -1,0 +1,4 @@
+.billing-return { width:100%; max-width:430px; min-width:0; display:flex; flex-direction:column; gap:16px; padding:calc(24px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px)); }
+.billing-return p { line-height:1.7; }
+.billing-return .shop-btn-spinner { display:block; width:24px; height:24px; border:2px solid #777; border-top-color:transparent; border-radius:50%; animation:billing-spin 1s linear infinite; }
+@keyframes billing-spin { to { transform:rotate(360deg); } }

@@ -60,6 +60,8 @@ export default function CardBattleView() {
     completeBattleResult,
     completeTutorialBattleResult,
     lastPatrolRewards,
+    patrolCourses,
+    requestQuestSelection,
     playCyberSe,
     handleFirstUserInteraction,
     playSe,
@@ -174,6 +176,10 @@ export default function CardBattleView() {
             presentationContext={battlePresentationContext}
             modeResult={battleModeResultDetail}
             displayedRound={battleRound}
+            onRepeatQuest={!isTutorialBattle && battleMode === "PATROL" && lastPatrolRewards?.courseId && patrolCourses.some((course: any) => course.id === lastPatrolRewards.courseId) ? async () => {
+              requestQuestSelection(lastPatrolRewards.courseId);
+              await completeBattleResult();
+            } : undefined}
             onContinue={isTutorialBattle ? completeTutorialBattleResult : completeBattleResult}
           />
         )}

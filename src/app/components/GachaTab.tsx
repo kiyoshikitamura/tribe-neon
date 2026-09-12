@@ -8,6 +8,8 @@ import CanonicalDialog from "./ui/CanonicalDialog";
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 import { resolveAvailableGachaCreative, type CanonicalGachaId } from "@/domain/presentation/production_creatives";
 import "./GachaTab.css";
+import { supabase } from "@/utils/supabase";
+import { parseDailyFreeRates, type DailyFreeRate } from "@/domain/gameplay/dailyFreeRates";
 
 type GachaCategory = "CHARACTER" | "SKILL" | "EQUIPMENT";
 type GachaSurface = "NORMAL" | "SPECIAL";
@@ -19,11 +21,32 @@ const CATEGORY_META: Readonly<Record<GachaCategory, { label: string; prefix: "CH
 };
 
 export default function GachaTab() {
-  const { handleScout, gachaMasters, gachaRarityRates, dailyFreeGachaFlags, dailyFreeGachaReady, refreshDailyFreeGachaAuthority, userItems, cash, upgradeLoading, onboardingState, playSe, guideGachaCategory } = useGame();
+  const { handleScout, gachaMasters, gachaRarityRates, dailyFreeGachaFlags, dailyFreeGachaReady, refreshDailyFreeGachaAuthority, userItems, cash, diamonds, upgradeLoading, onboardingState, playSe, guideGachaCategory } = useGame();
   const isTutorialScout = onboardingState?.tutorial_step === "FREE_GACHA";
   const [activeCategory, setActiveCategory] = useState<GachaCategory>("CHARACTER");
   const [activeSurface, setActiveSurface] = useState<GachaSurface>("NORMAL");
   const [showRates, setShowRates] = useState(false);
+  const [freeRates, setFreeRates] = useState<DailyFreeRate[]>([]);
+  const [freeRatesStatus, setFreeRatesStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [freeRatesRetry, setFreeRatesRetry] = useState(0);
+  useEffect(() => {
+    if (isTutorialScout) return;
+    let active = true;
+    setFreeRatesStatus("loading");
+    setFreeRates([]);
+    void Promise.resolve(supabase.rpc("get_daily_free_gacha_rates")).then(({ data, error }) => {
+      if (!active) return;
+      const parsed = error ? null : parseDailyFreeRates(data);
+      setFreeRates(parsed || []);
+      setFreeRatesStatus(parsed ? "ready" : "error");
+    }).catch(() => { if (active) setFreeRatesStatus("error"); });
+    return () => { active = false; };
+  }, [isTutorialScout, freeRatesRetry]);
+  const [billingAvailable,setBillingAvailable] = useState(false);
+  useEffect(()=>{ let active=true;
+    fetch("/api/billing/config",{cache:"no-store"}).then(r=>r.json()).then(data=>{if(active)setBillingAvailable(data.available===true);}).catch(()=>{});
+    return ()=>{active=false;};
+  },[]);
   const { isLocked, beginAction, endAction } = useImmediateActionLock();
   const pending = upgradeLoading || isLocked;
 
@@ -34,18 +57,24 @@ export default function GachaTab() {
   const normalGacha = gachaMasters?.find((g: any) => g.id === normalGachaId);
   const hasDailyFree = dailyFreeGachaReady && dailyFreeGachaFlags[activeCategory];
   const tickets = Number(userItems?.find((item: any) => item.item_id === meta.ticketId)?.quantity || 0);
-  const currentRates = (gachaRarityRates || []).filter((rate: any) => rate.gacha_id === normalGachaId);
+  const specialGacha = gachaMasters?.find((g: any) => g.id === specialGachaId);
+  const specialTicketId = `SPECIAL_TICKET_${activeCategory}`;
+  const specialTickets = Number(userItems?.find((item: any) => item.item_id === specialTicketId)?.quantity || 0);
+  const currentRates = (gachaRarityRates || []).filter((rate: any) => rate.gacha_id === (activeSurface === "SPECIAL" ? specialGachaId : normalGachaId));
+  const currentFreeRates = freeRates.filter(rate => rate.gacha_id === normalGachaId);
+  const freeWeightTotal = currentFreeRates.reduce((sum, rate) => sum + rate.weight, 0);
   const rateWeightTotal = currentRates.reduce((sum: number, rate: any) => sum + Number(rate.weight || 0), 0);
   const formatCost = (value: unknown, pulls: number) => {
     const amount = Number(value);
     return Number.isFinite(amount) ? (amount * pulls).toLocaleString("ja-JP") : "--";
   };
 
-  const runScout = async (count: number, currency: "CASH" | "FREE" | "TICKET") => {
+  const runScout = async (count: number, currency: "CASH" | "FREE" | "TICKET" | "DIAMOND") => {
+    if (currency === "FREE" && !isTutorialScout && freeRatesStatus !== "ready") return;
     if (!beginAction()) return;
     playSe("GACHA_START");
     try {
-      await handleScout(normalGachaId, count, currency);
+      await handleScout(activeSurface === "SPECIAL" && !isTutorialScout ? specialGachaId : normalGachaId, count, currency, currency === "FREE" && !isTutorialScout ? currentFreeRates[0]?.version : undefined);
     } finally {
       endAction();
     }
@@ -114,9 +143,19 @@ export default function GachaTab() {
         </div>
 
         {activeSurface === "SPECIAL" ? (
-          <section className="gacha-special-summary" aria-label="スペシャルガチャ準備中">
-            <strong>COMING SOON</strong>
-            <span>スペシャルガチャは準備中です</span>
+          <section className="gacha-normal-offer" aria-label="スペシャルガチャ">
+            {billingAvailable ? <>
+              <header><strong>{meta.label}スペシャルガチャ</strong><button type="button" className="gacha-rate-link" onClick={()=>setShowRates(true)}>提供割合</button></header>
+              <div className="gacha-payment-group" aria-label="DIAで引く">
+                {[1,10].map(count=><button key={count} onClick={()=>void runScout(count,"DIAMOND")}
+                  disabled={!specialGacha || !(Number(specialGacha.cost_diamond)>0) || Number(diamonds||0)<Number(specialGacha.cost_diamond)*count || pending}>
+                  <span>{count}回</span><small>{formatCost(specialGacha?.cost_diamond,count)} DIA</small></button>)}
+              </div>
+              <div className="gacha-payment-group" aria-label="専用チケットで引く">
+                {[1,10].map(count=><button key={count} onClick={()=>void runScout(count,"TICKET")} disabled={!specialGacha || specialTickets<count || pending}>
+                  <span>チケット{count}回</span><small>所持 {specialTickets}枚</small></button>)}
+              </div>
+            </> : <p>スペシャルガチャは準備中です</p>}
           </section>
         ) : (
           <section className="gacha-normal-offer" aria-label={`${meta.label}ノーマルガチャ`}>
@@ -128,12 +167,14 @@ export default function GachaTab() {
             {!dailyFreeGachaReady ? (
               <p className="gacha-free-loading" role="status">無料10連の利用状況を確認中…</p>
             ) : hasDailyFree ? (
-              <button className="semantic-cta semantic-cta--primary gacha-free-btn" onClick={() => void runScout(10, "FREE")} disabled={!normalGacha || pending} aria-busy={pending}>
+              <button className="semantic-cta semantic-cta--primary gacha-free-btn" onClick={() => void runScout(10, "FREE")} disabled={!normalGacha || pending || freeRatesStatus !== "ready"} aria-busy={pending}>
                 <span>{pending ? "抽選中…" : "本日10連無料"}</span>
                 {!pending && <small>消費なし</small>}
               </button>
             ) : null}
 
+            {freeRatesStatus === "loading" && <p role="status">無料10連の提供割合を確認中…</p>}
+            {freeRatesStatus === "error" && <p role="alert">無料10連の提供割合を取得できませんでした。<button type="button" className="gacha-rate-link" onClick={() => setFreeRatesRetry(value => value + 1)}>再取得</button></p>}
             <div className="gacha-payment-group" aria-label="キャッシュで引く">
               <button onClick={() => void runScout(1, "CASH")} disabled={!normalGacha || Number(cash || 0) < Number(normalGacha?.cost_cash || Infinity) || pending}><span>1回</span><small>{formatCost(normalGacha?.cost_cash, 1)}キャッシュ</small></button>
               <button onClick={() => void runScout(10, "CASH")} disabled={!normalGacha || Number(cash || 0) < Number(normalGacha?.cost_cash || Infinity) * 10 || pending}><span>10回</span><small>{formatCost(normalGacha?.cost_cash, 10)}キャッシュ</small></button>
@@ -147,6 +188,13 @@ export default function GachaTab() {
       </div>
       {showRates && (
         <CanonicalDialog title="提供割合" onClose={() => setShowRates(false)} actions={[{ label: "閉じる", semantic: "primary", onClick: () => setShowRates(false) }]}>
+          {activeSurface === "NORMAL" && <section aria-label="日次無料10連の提供割合">
+            <h3>日次無料10連</h3>
+            {freeRatesStatus === "ready" ? <div className="gacha-rate-list">{currentFreeRates.map(rate => (
+              <div key={rate.rarity}><span>{rate.rarity}</span><strong>{(rate.weight / freeWeightTotal * 100).toFixed(2)}%</strong></div>
+            ))}</div> : <p>提供割合を取得できていません。画面を閉じて再取得してください。</p>}
+          </section>}
+          <h3>{activeSurface === "NORMAL" ? "CASH・チケット・DIA" : "スペシャルガチャ"}</h3>
           <div className="gacha-rate-list">
             {currentRates.map((rate: any) => (
               <div key={rate.rarity}><span>{rate.rarity}</span><strong>{rateWeightTotal > 0 ? `${(Number(rate.weight) / rateWeightTotal * 100).toFixed(2)}%` : "—"}</strong></div>

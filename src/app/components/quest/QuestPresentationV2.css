@@ -38,3 +38,36 @@
 .quest-v2-battle-ready .tutorial-wire-encounter>.semantic-cta{grid-column:1/3;width:100%;min-height:44px;margin:0;align-self:auto}
 .quest-v2-battle-ready .tutorial-wire-encounter>.quest-v2-selection-return{margin-top:-2px}
 @media(max-width:390px){.quest-v2-battle-ready{min-height:min(556px,calc(100dvh - 176px));padding:10px}.quest-v2-battle-ready .tutorial-wire-encounter{padding:12px}.quest-v2-battle-enemies article{grid-template-columns:40px minmax(0,1fr)}.quest-v2-battle-enemies .character-presentation{width:40px;height:40px}}
+
+/* Compact overview keeps all five dispatches reachable above the detail. */
+.quest-v2-dispatch-list{display:grid;gap:6px}.quest-v2-dispatch-list>strong{font-size:13px}.quest-v2-dispatch-list>button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;min-height:44px;padding:8px 10px;background:#101722;color:#eaf2f6;border:1px solid #354653;border-radius:5px;text-align:left}.quest-v2-dispatch-list>button[aria-pressed=true]{border-color:#00dce9}.quest-v2-dispatch-list>button>span{overflow-wrap:anywhere}.quest-v2-dispatch-list>button>strong{font-size:12px;color:#73e7ee}.quest-v2-dispatch-list>button>small{grid-column:1/-1;color:#d5b96b}.quest-v2-flow-note{font-size:12px;line-height:1.6;color:#c1d1df}.quest-v2-speed-actions{flex-wrap:wrap}.quest-v2-speed-actions button{white-space:normal;min-height:44px}.quest-v2-result .quest-v2-reward-item small{white-space:normal;overflow-wrap:anywhere;font-size:11px}.quest-v2-result .quest-v2-reward-item strong{font-size:12px}
+
+/* Approved daily overview: one dispatch owner, destination and action per row. */
+.quest-v2-overview{display:grid;gap:10px}
+.quest-v2-overview-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.quest-v2-overview-heading h2{margin:0;font-size:22px}
+.quest-v2-overview-heading>span{color:#b6b4ad;font-size:12px}
+.quest-v2-dispatch-card{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:104px;padding:10px;border:1px solid #393c40;border-left:3px solid #72777a;border-radius:5px;background:linear-gradient(120deg,#202326,#11151a);text-align:left;color:#eee9e1}
+.quest-v2-dispatch-card>.character-presentation{width:64px;height:82px}
+.quest-v2-dispatch-description{display:grid;gap:6px;min-width:0}
+.quest-v2-dispatch-description>strong{font-size:15px}
+.quest-v2-dispatch-description>span{font-size:11px;color:#b9b9b4;overflow-wrap:anywhere}
+.quest-v2-dispatch-description>b{font-size:11px;color:#c1c6cb}
+.quest-v2-dispatch-card[data-state="REWARD"]{border-left-color:#d2b369}
+.quest-v2-dispatch-card[data-state="REWARD"] .quest-v2-dispatch-description>b{color:#ecd18d}
+.quest-v2-dispatch-card[data-state="BATTLE"]{border-left-color:#b76767}
+.quest-v2-dispatch-card[data-state="BATTLE"] .quest-v2-dispatch-description>b{color:#e0a4a4}
+.quest-v2-dispatch-open{font-size:11px;padding:9px 6px;border:1px solid #53565a;border-radius:3px;background:#292d31;white-space:nowrap}
+.quest-v2-empty-slot{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:64px;padding:12px;border:1px dashed #555b62;border-radius:5px;background:#10151bbf;text-align:left;color:#d2d0ca}
+.quest-v2-empty-slot strong{font-size:13px}.quest-v2-empty-slot span{font-size:10px;color:#a8acb0}
+.quest-v2-back{align-self:flex-start;min-height:40px;padding:6px 10px;border:1px solid #494d51;border-radius:4px;background:#15191e;color:#ddd;font-size:12px}
+.quest-v2-content button:active:not(:disabled){transform:scale(.97)}
+.quest-v2-content button:focus-visible{outline:2px solid #d2b369;outline-offset:2px}
+.quest-v2-character-grid strong{font-size:11px}.quest-v2-character-grid span{font-size:10px}.quest-v2-character-grid em{font-size:10px}
+.quest-v2-metrics{grid-template-columns:repeat(auto-fit,minmax(80px,1fr))}
+.quest-v2-metrics small{font-size:10px}.quest-v2-metrics strong{font-size:13px}
+.quest-v2-identity{border-color:#494c50}.quest-v2-identity>div{border-left-color:#b6a779}
+.quest-v2-courses button.active{border-color:#c8b680;background:linear-gradient(145deg,#393426,#14191e)}
+.quest-v2-town-tabs button.active{border-color:#c8b680}.quest-v2-character-grid button.selected{border-color:#c8b680;background:#c8b68014}
+
+.quest-v2-drops{font-size:11px;color:#c2c2bd}.quest-v2-drops summary{min-height:32px;cursor:pointer}.quest-v2-dispatch-reason{margin:0;color:#e1b2a7;font-size:12px}

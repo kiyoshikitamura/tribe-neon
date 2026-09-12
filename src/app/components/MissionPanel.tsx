@@ -57,11 +57,12 @@ export default function MissionPanel() {
   const statusOrder: Record<string, number> = { CLEAR: 0, IN_PROGRESS: 1, LOCKED: 2, CLAIMED: 3 };
   const currentMissions = (missions || []).filter((m: any) => m.category === missionTab)
     .sort((left: any, right: any) => (statusOrder[left.status] ?? 9) - (statusOrder[right.status] ?? 9) || Number(left.display_order || 0) - Number(right.display_order || 0));
-  const clearMissionsCount = currentMissions.filter((m: any) => m.status === "CLEAR").length;
+  const canClaim = (m: any) => m.status === "CLEAR" && !(m.eventClaimEndAt && new Date(m.eventClaimEndAt).valueOf() <= Date.now());
+  const clearMissionsCount = currentMissions.filter(canClaim).length;
   const clearCounts = {
-    DAILY: (missions || []).filter((m: any) => m.category === "DAILY" && m.status === "CLEAR").length,
-    NORMAL: (missions || []).filter((m: any) => m.category === "NORMAL" && m.status === "CLEAR").length,
-    SPECIAL: (missions || []).filter((m: any) => m.category === "SPECIAL" && m.status === "CLEAR").length,
+    DAILY: (missions || []).filter((m: any) => m.category === "DAILY" && canClaim(m)).length,
+    NORMAL: (missions || []).filter((m: any) => m.category === "NORMAL" && canClaim(m)).length,
+    SPECIAL: (missions || []).filter((m: any) => m.category === "SPECIAL" && canClaim(m)).length,
   };
   const specialCompletion = missionTab === "SPECIAL" ? currentMissions.find((mission: any) => mission.isCompletion) : null;
   const specialStandardMissions = missionTab === "SPECIAL" ? currentMissions.filter((mission: any) => !mission.isCompletion) : [];
@@ -95,139 +96,93 @@ export default function MissionPanel() {
     else if (mission.ctaTab) navigateTab(mission.ctaTab);
   };
 
+  const isMilestone = (m: any) => m.triggerType === "DAILY_MISSION_COMPLETED_COUNT";
+  const standards = currentMissions.filter((m: any) => !isMilestone(m) && !m.isCompletion);
+  const completed = standards.filter((m: any) => ["CLEAR", "CLAIMED"].includes(m.status)).length;
+  const received = standards.filter((m: any) => m.status === "CLAIMED");
+  const available = standards.filter((m: any) => m.status === "CLEAR");
+  const pending = standards.filter((m: any) => m.status === "IN_PROGRESS");
+  const fallbackCta = (m: any) => {
+    if (m.ctaTab || m.ctaAction) return m;
+    const type = String(m.triggerType || "");
+    const route = type.includes("GACHA") ? ["gacha", "ガチャへ"]
+      : /CHARACTER|SKILL|EQUIPMENT/.test(type) ? ["character", "キャラへ"]
+      : type.startsWith("QUEST") ? ["patrol", "クエストへ"]
+      : type.startsWith("PVP") ? ["pvp", "バトルへ"]
+      : type.startsWith("RAID") ? ["raid", "レイドへ"]
+      : type.startsWith("GUILD") ? ["guild", "ギルドへ"] : null;
+    return route ? { ...m, ctaTab: route[0], ctaLabel: route[1] } : m;
+  };
+  const dateLabel = (value: string) => {
+    const date = new Date(value);
+    return Number.isNaN(date.valueOf()) ? "確認中" : date.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  };
+  const renderRow = (mission: any, showNext = false): React.ReactNode => {
+    const m = fallbackCta(mission);
+    const expired = Boolean(m.eventClaimEndAt && new Date(m.eventClaimEndAt).valueOf() <= Date.now());
+    const eventEnded = m.category === "SPECIAL" && m.eventProgressOpen === false;
+    const target = Math.max(1, Number(m.target_value || 1));
+    const progress = Math.max(0, Number(m.current_progress || 0));
+    const title = m.triggerType === "QUEST_COMPLETE_COUNT" && m.title === "派遣に出よう" ? `クエストを${target}回完了する` : battleDisplayText(m.title);
+    const description = battleDisplayText(m.description || "");
+    const next = currentMissions.filter((n: any) => n.prerequisiteMissionId === m.id && n.status === "LOCKED");
+    return <article key={m.id} className={`mission-item ${m.status}`}>
+      <div className="mission-info">
+        <div className="mission-title">{title}</div>
+        {description && description !== battleDisplayText(m.title) && description !== title && <div className="mission-desc">{description}</div>}
+        <div className="mission-row-bottom">
+          {renderMissionRewards(m)}
+          <div className="mission-action">
+            {m.status === "CLAIMED" ? <span className="mission-status">受取済み</span>
+              : expired ? <OutlawButton disabled>受取期間終了</OutlawButton>
+              : m.status === "CLEAR" ? <OutlawButton variant="primary" disabled={missionClaimLoading || m.loading} isLoading={Boolean(m.loading)} loadingLabel="" onClick={() => handleClaimMission(m.id)}>受け取る</OutlawButton>
+              : eventEnded ? <OutlawButton disabled>挑戦期間終了</OutlawButton>
+              : isMilestone(m) ? <OutlawButton disabled>あと{Math.max(0, target - completed)}件</OutlawButton>
+              : m.status === "LOCKED" ? <span className="mission-status">前段階の受取で解放</span>
+              : m.ctaTab || m.ctaAction ? <OutlawButton onClick={() => handleMissionCta(m)}>{m.ctaLabel || "挑戦する"}</OutlawButton>
+              : <span className="mission-status">{MISSION_STATUS_LABELS[m.status] || "進行中"}</span>}
+          </div>
+        </div>
+        {m.status === "IN_PROGRESS" && !isMilestone(m) && <div className="mission-progress-line"><progress max={target} value={Math.min(target, progress)} aria-label={`${title}の進捗`} /><span>{progress.toLocaleString()} / {target.toLocaleString()}</span></div>}
+        {showNext && next.length > 0 && <details className="mission-next"><summary>次の目標</summary>{next.map((n: any) => <div key={n.id}><p>{battleDisplayText(n.title)}</p>{renderMissionRewards(n)}</div>)}</details>}
+      </div>
+    </article>;
+  };
+  const event = currentMissions.find((m: any) => m.eventId);
   return (
     <FullScreenPanel title="ミッション" onClose={handleClose} closeDisabled={missionClaimLoading}>
       <fieldset className="mission-panel-container-inner mission-operation-surface" disabled={missionClaimLoading} aria-busy={missionClaimLoading}>
-        <SubTabNav
-          tabs={[
-            { id: "DAILY", label: "デイリー", badge: clearCounts.DAILY },
-            { id: "NORMAL", label: "ノーマル", badge: clearCounts.NORMAL },
-            { id: "SPECIAL", label: "スペシャル", badge: clearCounts.SPECIAL }
-          ]}
-          activeTabId={missionTab}
-          onSelect={(id) => setMissionTab(id as any)}
-          className="mb-3"
-        />
-
-        <div className="mission-actions">
-          <span className="mission-clear-count">{missionTab === "SPECIAL" ? <><strong>{specialCompletedCount}</strong> / {specialStandardMissions.length || 12} 達成</> : <>受取可能 <strong>{clearMissionsCount}</strong>件</>}</span>
-          <OutlawButton
-            variant="primary"
-            disabled={clearMissionsCount === 0 || missionClaimLoading}
-            isLoading={missionClaimLoading}
-            loadingLabel="一括受取中…"
-            onClick={handleClaimAllMissions}
-          >
-            一括受け取り
-          </OutlawButton>
-        </div>
-
-        <div className="mission-list">
-          {currentMissions.length === 0 ? (
-            <div className="mission-empty">ミッションはありません</div>
-          ) : (
-            (missionTab === "NORMAL"
-              ? [
-                  ...currentMissions.filter((m: any) => m.status === "CLEAR"),
-                  ...currentMissions.filter((m: any) => m.status === "IN_PROGRESS" && m.displayGroup === "PROGRESS").slice(0, 5),
-                ]
-              : missionTab === "SPECIAL"
-                ? specialStandardMissions
-                : currentMissions.filter((m: any) => m.status !== "CLAIMED")
-            ).map((m: any) => {
-              const targetValue = m.target_value || 1;
-              const currentProgress = m.current_progress || 0;
-              const progressPercent = Math.min(100, Math.floor((currentProgress / targetValue) * 100));
-              const eventEnded = missionTab === "SPECIAL" && m.eventProgressOpen === false && m.status !== "CLEAR" && m.status !== "CLAIMED";
-              const statusLabel = eventEnded ? "終了" : MISSION_STATUS_LABELS[m.status] || "進行中";
-
-              return (
-                <div key={m.id} className={`mission-item ${m.status}`}>
-                  <div className="mission-info">
-                    <div className="mission-heading">
-                      <div className="mission-title">{battleDisplayText(m.title)}</div>
-                      <span className="mission-status">{statusLabel}</span>
-                    </div>
-                    <div className="mission-desc">{battleDisplayText(m.description)}</div>
-                    {renderMissionRewards(m)}
-                    
-                    <div className="mission-progress-bar-container">
-                      <div className="mission-progress-bar" style={{ width: `${progressPercent}%` }}></div>
-                      <span className="mission-progress-text">{currentProgress} / {targetValue}</span>
-                    </div>
-                  </div>
-                  <div className="mission-action">
-                    {m.status === "CLEAR" ? (
-                      <OutlawButton
-                        variant="primary"
-                        disabled={missionClaimLoading || m.loading}
-                        isLoading={Boolean(m.loading)}
-                        loadingLabel="受取中…"
-                        onClick={() => handleClaimMission(m.id)}
-                      >
-                        受け取る
-                      </OutlawButton>
-                    ) : m.status === "CLAIMED" ? (
-                      <OutlawButton variant="secondary" disabled>受取済</OutlawButton>
-                    ) : eventEnded ? (
-                      <OutlawButton variant="secondary" disabled>終了</OutlawButton>
-                    ) : m.status === "LOCKED" ? (
-                      <OutlawButton variant="secondary" disabled>未達成</OutlawButton>
-                    ) : m.ctaTab || m.ctaAction ? (
-                      <OutlawButton variant="primary" onClick={() => handleMissionCta(m)}>
-                        {m.ctaLabel || "挑戦する"}
-                      </OutlawButton>
-                    ) : (
-                      <OutlawButton variant="secondary" disabled>進行中</OutlawButton>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-        {missionTab === "SPECIAL" && specialCompletion && <section className={`mission-completion ${specialCompletion.status}`} aria-label="コンプリートミッション">
-          <small>COMPLETE MISSION</small>
-          <h3>{specialCompletion.status === "CLAIMED" ? "COMPLETE" : specialCompletion.status === "CLEAR" ? "すべての準備が完了しました！" : specialCompletion.title}</h3>
-          {specialCompletion.status !== "CLEAR" && specialCompletion.status !== "CLAIMED" && <p>あと{Math.max(0, specialStandardMissions.length - specialCompletedCount)}件</p>}
-          {renderMissionRewards(specialCompletion)}
-          {specialCompletion.status === "CLEAR" ? <OutlawButton variant="primary" disabled={missionClaimLoading || specialCompletion.loading} isLoading={Boolean(specialCompletion.loading)} loadingLabel="受取中…" onClick={() => handleClaimMission(specialCompletion.id)}>受け取る</OutlawButton>
-            : <OutlawButton variant="secondary" disabled>{specialCompletion.status === "CLAIMED" ? "COMPLETE" : `あと${Math.max(0, specialStandardMissions.length - specialCompletedCount)}件`}</OutlawButton>}
+        <SubTabNav tabs={[
+          { id: "DAILY", label: "デイリー", badge: clearCounts.DAILY },
+          { id: "NORMAL", label: "通常", badge: clearCounts.NORMAL },
+          { id: "SPECIAL", label: "スペシャル", badge: clearCounts.SPECIAL },
+        ]} activeTabId={missionTab} onSelect={(id) => setMissionTab(id as any)} />
+        {missionTab === "DAILY" && standards.length > 0 && <section className="mission-overview">
+          <div className="mission-overview-heading"><strong>本日 {completed} / {standards.length} 達成</strong><small>毎日 0:00 JST 更新</small></div>
+          <progress max={standards.length} value={completed} aria-label="本日の達成数" />
+          {completed === standards.length && <p role="status">本日のミッション達成{clearMissionsCount === 0 ? "・報酬受取済み" : ""}</p>}
+          <div className="mission-milestones">{currentMissions.filter(isMilestone).map((m: any) => renderRow(m))}</div>
         </section>}
-        {missionTab === "NORMAL" && (["GROWTH", "BATTLE", "GUILD"] as const).map((group) => {
-          const labels = { GROWTH: "育成", BATTLE: "バトル", GUILD: "ギルド" };
-          const groupMissions = currentMissions.filter((mission: any) => mission.displayGroup === group && mission.status === "IN_PROGRESS");
-          if (!groupMissions.length) return null;
-          return <details key={group} className="mission-group">
-            <summary>{labels[group]} <span>{groupMissions.length}件</span></summary>
-            <div className="mission-group-list">
-              {groupMissions.map((mission: any) => {
-                const targetValue = Number(mission.target_value || 1);
-                const currentProgress = Number(mission.current_progress || 0);
-                const progressPercent = Math.min(100, Math.floor((currentProgress / targetValue) * 100));
-                return <div key={mission.id} className="mission-group-current">
-                  <div className="mission-group-heading">
-                    <strong>{battleDisplayText(mission.title)}</strong>
-                    <span>{currentProgress} / {targetValue}</span>
-                  </div>
-                  <p>{battleDisplayText(mission.description)}</p>
-                  <div className="mission-group-reward">
-                    <CanonicalItemIcon itemId={mission.reward_item} alt="" className="mission-reward-art" />
-                    <span>{canonicalMissionRewardName(String(mission.reward_item || ""))} × {Number(mission.reward_amount || 0).toLocaleString()}</span>
-                    {Number(mission.cashReward || 0) > 0 && <>
-                      <CanonicalItemIcon itemId="CASH" alt="" className="mission-reward-art" />
-                      <span>キャッシュ × {Number(mission.cashReward).toLocaleString()}</span>
-                    </>}
-                  </div>
-                  <div className="mission-progress-bar-container">
-                    <div className="mission-progress-bar" style={{ width: `${progressPercent}%` }}></div>
-                    <span className="mission-progress-text">{currentProgress} / {targetValue}</span>
-                  </div>
-                </div>;
-              })}
-            </div>
-          </details>;
-        })}
+        {missionTab === "SPECIAL" && event && <section className="mission-overview">
+          <h3>{event.eventTitle || "イベントミッション"}</h3>
+          {event.eventStartAt && event.eventProgressEndAt && <p>開催：{dateLabel(event.eventStartAt)} ～ {dateLabel(event.eventProgressEndAt)} JST</p>}
+          {event.eventClaimEndAt && <p>受取期限：{dateLabel(event.eventClaimEndAt)} JST</p>}
+          <strong>{specialCompletedCount} / {specialStandardMissions.length} 達成</strong>
+          <progress max={Math.max(1, specialStandardMissions.length)} value={specialCompletedCount} aria-label="イベント達成数" />
+          {specialCompletion && renderRow(specialCompletion)}
+        </section>}
+        <div className="mission-actions"><span className="mission-clear-count">受取可能 <strong>{clearMissionsCount}</strong>件</span>
+          <OutlawButton variant="primary" disabled={clearMissionsCount === 0 || missionClaimLoading} isLoading={missionClaimLoading} loadingLabel="" onClick={handleClaimAllMissions}>一括受け取り</OutlawButton>
+        </div>
+        <div className="mission-list">
+          {available.map((m: any) => renderRow(m, missionTab === "NORMAL"))}
+          {missionTab === "NORMAL" ? (["PROGRESS", "GROWTH", "BATTLE", "GUILD"] as const).map(group => {
+            const rows = pending.filter((m: any) => m.displayGroup === group);
+            return rows.length > 0 && <section key={group} className="mission-current-group"><h3>{{ PROGRESS: "初回目標", GROWTH: "育成", BATTLE: "バトル・レイド", GUILD: "ギルド" }[group]}</h3>{rows.map((m: any) => renderRow(m, true))}</section>;
+          }) : pending.map((m: any) => renderRow(m))}
+          {currentMissions.length === 0 && <div className="mission-empty">{missionTab === "SPECIAL" ? "現在開催中のイベントミッションはありません" : "ミッションはありません"}</div>}
+        </div>
+        {received.length > 0 && <details className="mission-received"><summary>受取済み {received.length}件</summary>{received.map((m: any) => renderRow(m))}</details>}
       </fieldset>
     </FullScreenPanel>
   );
