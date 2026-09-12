@@ -27,3 +27,7 @@ Production、共有alias、環境変数は変更しない。秘密値を表示�
 Preview/Develop QAは事前確認なしで作成可能、qa集計除外。認証情報は出力しない。
 新候補の実画面未確認をPASSとしない。ユーザーの全ページ一括実機確認は統合監査後。
 Questデザイン、既知の総合力/回復集計表示差、POWER次期期間は今回対象外。Production変更は別途明示承認後。
+
+## TRIBE参加Mission追補
+MIS_N_P010「TRIBEに参加しよう」へ統合。加入/設立どちらでも一回達成。Preview Migration 20260912222025_beginner_tribe_participationも適用済み、再適用不要。
+配信後は名称、GuildへのCTA、加入/設立後の報酬CTA→受取→Homeを差分確認。加入をJourney終端の必須条件にはしない。

@@ -21,7 +21,7 @@ export function nextBeginnerAction(journey: BeginnerJourney | null, raid: 'activ
   if (!f.quest) return { key: 'quest', title: 'クエストでCASHを集めよう', tab: 'patrol' };
   if (!f.pvp) return { key: 'pvp', title: 'バトルに挑戦しよう', tab: 'pvp' };
   if (!f.raid && raid !== 'inactive') return { key: 'raid', title: raid === 'active' ? '開催中のレイドに参加しよう' : 'レイドを確認', tab: 'raid' };
-  if (!f.guild) return { key: 'guild', title: !f.raid ? 'レイド開催待ち・ギルドを見よう' : 'ギルドを見よう', tab: 'guild' };
+  if (!f.guild) return { key: 'guild', title: !f.raid ? 'レイド開催待ち・TRIBEに参加しよう' : 'TRIBEに参加しよう', tab: 'guild' };
   return journey.reflow_completed ? null : { key: 'reflow', title: !f.raid ? 'レイド開催待ち・ミッションへ' : 'ミッションを確認しよう', action: 'mission_handoff' };
 }
 

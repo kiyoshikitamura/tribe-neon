@@ -149,6 +149,7 @@ export default function MissionPanel() {
   const available = standards.filter((m: any) => m.status === "CLEAR");
   const pending = standards.filter((m: any) => m.status === "IN_PROGRESS");
   const fallbackCta = (m: any) => {
+    if (m.id === "MIS_N_P010") return { ...m, ctaTab: "guild", ctaAction: null, ctaLabel: "TRIBEへ" };
     if (needsMissionGuild(m) && !userGuildMember?.guild_id) return { ...m, ctaTab: "guild", ctaAction: null, ctaLabel: "ギルドを探す" };
     if (m.ctaTab || m.ctaAction) return m;
     const type = String(m.triggerType || "");
