@@ -81,3 +81,9 @@ specs/mission_requirements_20260912.md、ranking_requirements_20260912.md、navi
 
 各レーン：STATUS / CHANGE / FUNCTIONAL FINDINGS / SHARED DIFF / DB IMPACT / VALIDATION / PREVIEW / ACCEPTANCE / BLOCKER。
 未確認をPASSにしない。既存の無関係FAILは別管理。
+
+## Post-Tutorial判断Authority追加（2026-09-12）
+
+正：`specs/post_tutorial_judgment_authority_20260912.md`。
+P0は初期Guide、MyPage、Quest、ページ間接続。進行中作業を停止せず、追加Authorityを受入に使用する。
+24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。

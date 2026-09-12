@@ -34,3 +34,9 @@ Gacha → Character → Quest → Battle → Raid → Mission
 6. 再読み込み・再ログイン後も上記状態が保たれる。
 
 Production反映は別途明示承認後のみ。
+
+## Post-Tutorial判断Authority追加（2026-09-12）
+
+正：`specs/post_tutorial_judgment_authority_20260912.md`。
+従来のGacha→Character→Quest→Battle→Raid→Missionは旧基本順序。最新学習順は追加Authorityに従う。Skill/Equipment分離は既存実装を再利用し、Guild案内を追加する。Raid未開催の迂回・実参加未達保持・再案内は維持する。
+24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。

@@ -73,3 +73,9 @@ Production変更は明示承認後のみ。
 - specs/spec_progression.md
 - supabase/migrations/20260903000235_preopen_gvg_preparation_missions.sql
 - supabase/migrations/20260902000225_mission_direct_grant_refresh.sql
+
+## Post-Tutorial判断Authority追加（2026-09-12）
+
+正：`specs/post_tutorial_judgment_authority_20260912.md`。
+限定Missionの自動訴求は主要機能の学習より先行させない。通常アクセス・受取機能を閉じず、Guild等の文脈から明日も続ける理由へ接続する。
+24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。

@@ -23,3 +23,9 @@ Supabase接続先: sufvuqdnqohpfzkwxohq
 固定Preview URL / 配信SHA / Deployment ID / Supabase project ref / READY / HTTPを返す。
 修正と検証の詳細はspecs/product_audit_fixes_20260912.md。
 実ブラウザの受取・再読込・イベント切替・ランキング・Navigation回帰は未完了。全ページのユーザー実機確認は最後に一括。デザイン追加調整はその後。
+
+## Post-Tutorial判断Authority追加（2026-09-12）
+
+正：`specs/post_tutorial_judgment_authority_20260912.md`。
+監査へ追加：post_tutorial_judgment_authority_20260912.mdに従い、機能の理解と動機の接続を確認。Guild案内欠落と限定Mission先行表示は既知の未整合。挙動PASSだけで全体PASSにしない。
+24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。

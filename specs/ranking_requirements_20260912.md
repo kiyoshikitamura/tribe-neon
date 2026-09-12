@@ -55,3 +55,9 @@ Customer Journeyの初期プレイ、Motivation Cycleの成長・手応え・他
 3カテゴリ×2期間の指標・条件・日時一致。上位外自己順位、同点、1位、未参加、未所属、エラーの表示。
 自分周辺と上位の順位整合。カテゴリ別CTAと公開詳細。報酬帯の現在順位対応。
 実装対象は確認済み候補との必要差分のみ。本番反映は別途明示承認後。
+
+## Post-Tutorial判断Authority追加（2026-09-12）
+
+正：`specs/post_tutorial_judgment_authority_20260912.md`。
+順位確認から次の育成・挑戦へ戻れることをCycle Acceptanceへ追加。低い訪問率だけを根拠に局所改修しない。
+24h/48h Feature Coverage、D1再訪、継続/離脱者の接触機能差を観測し、Guide一本道完走だけで評価しない。
