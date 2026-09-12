@@ -7,6 +7,7 @@ import { canUseEnergyDrink } from "@/domain/gameplay/canonical/action_resources"
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { canonicalMissionRewardName } from "@/domain/gameplay/canonical/missions";
+import { canClaimMission, reconcileMissionClaim } from "@/domain/mission/availability";
 import { buildInventoryQuantityProjection } from "@/domain/gameplay/inventoryProjection";
 
 const aggregateMissionRewards = (rows: Array<{ item_id?: string; quantity?: number }>) => {
@@ -118,6 +119,7 @@ export function useInventory(
 
   // ミッション ＆ プレゼント
   const [missions, setMissions] = useState<any[]>([]);
+  const [missionEventsError, setMissionEventsError] = useState(false);
   const [missionTab, setMissionTab] = useState<"DAILY" | "NORMAL" | "SPECIAL">("DAILY");
   const [presents, setPresents] = useState<any[]>([]);
   const [presentsPrefetched, setPresentsPrefetched] = useState<boolean>(false);
@@ -305,9 +307,26 @@ export function useInventory(
     }
   };
 
+  const refreshMissionClaimState = async (owner: string, isCurrent: () => boolean) => {
+    if (!isCurrent()) return;
+    await syncBootstrapData(owner);
+    if (!isCurrent()) return;
+    const { data, error } = await supabase.from("user_missions").select("mission_id,status,current_progress").eq("user_id", owner);
+    if (error) throw error;
+    if (!isCurrent()) return;
+    const rows = new Map((data || []).map(row => [row.mission_id, row]));
+    setMissions(prev => prev.map(m => {
+      const row = rows.get(m.id);
+      return row ? { ...m, status: row.status === "PROGRESS" ? "IN_PROGRESS" : row.status, current_progress: row.current_progress, loading: false } : m;
+    }));
+  };
+
   const handleClaimMission = async (id: string) => {
     if (!session) return;
+    if (!canClaimMission(missions.find(m => m.id === id) || {})) return;
     if (!beginMissionClaim()) return;
+    const owner = session.user.id;
+    const isCurrent = () => activeInventoryUserIdRef.current === owner;
     setMissions(prev => prev.map(m => m.id === id ? { ...m, loading: true } : m));
     playCyberSe("click");
 
@@ -315,19 +334,21 @@ export function useInventory(
       const targetMission = missions.find(m => m.id === id);
       if (!targetMission) return;
 
-      const res = await supabase.rpc("claim_mission_reward", {
-        p_mission_id: id
-      });
-      if (res.error) throw res.error;
-      if (res.data?.error) throw new Error(res.data.error);
+      const res = await reconcileMissionClaim(async () => {
+        const response = await supabase.rpc("claim_mission_reward", { p_mission_id: id });
+        if (response.error) throw response.error;
+        if (response.data?.error) throw new Error(response.data.error);
+        return response;
+      }, () => refreshMissionClaimState(owner, isCurrent), isCurrent);
+      if (!isCurrent()) return;
 
-      setMissions(prev => prev.map(m => m.id === id ? { ...m, status: "CLAIMED", loading: false } : m));
-      playCyberSe("MISSION_REWARD");
-      await syncBootstrapData(session.user.id);
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
+      if (!rewards.length) return;
+      playCyberSe("MISSION_REWARD");
       setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: targetMission.isCompletion ? "ギルドバトル開幕の準備完了！\n正式オープンに備えよう！" : "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
     } catch (err) {
       console.warn(err);
+      if (!isCurrent()) return;
       setMissions(prev => prev.map(m => m.id === id ? { ...m, loading: false } : m));
       showActionError("報酬を受け取れませんでした", err);
     } finally {
@@ -335,30 +356,37 @@ export function useInventory(
     }
   };
 
-  const handleClaimAllMissions = async () => {
+  const handleClaimAllMissions = async (eventId?: string | null) => {
     if (!session) return;
-    const clearMissions = missions.filter(m => m.status === "CLEAR" && m.category === missionTab && !(m.eventClaimEndAt && new Date(m.eventClaimEndAt).valueOf() <= Date.now()));
+    const clearMissions = missions.filter(m => canClaimMission(m) && m.category === missionTab && (eventId === undefined || (m.eventId || "unassigned") === eventId));
     if (clearMissions.length === 0) return;
 
     if (!beginMissionClaim()) return;
-    setMissions(prev => prev.map(m => m.status === "CLEAR" && m.category === missionTab ? { ...m, loading: true } : m));
+    const owner = session.user.id;
+    const isCurrent = () => activeInventoryUserIdRef.current === owner;
+    setMissions(prev => prev.map(m => clearMissions.some(target => target.id === m.id) ? { ...m, loading: true } : m));
     playCyberSe("gacha");
 
     try {
       const missionIds = clearMissions.map(m => m.id);
-      const res = await supabase.rpc("claim_all_mission_rewards", {
-        p_mission_ids: missionIds
-      });
-      if (res.error) throw res.error;
-      if (res.data?.error) throw new Error(res.data.error);
+      const res = await reconcileMissionClaim(async () => {
+        const response = await supabase.rpc("claim_all_mission_rewards", { p_mission_ids: missionIds });
+        if (response.error) throw response.error;
+        if (response.data?.error) throw new Error(response.data.error);
+        return response;
+      }, () => refreshMissionClaimState(owner, isCurrent), isCurrent);
+      if (!isCurrent()) return;
 
-      setMissions(prev => prev.map(m => missionIds.includes(m.id) ? { ...m, status: "CLAIMED", loading: false } : m));
-      playCyberSe("MISSION_REWARD");
-      await syncBootstrapData(session.user.id);
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
+      if (!rewards.length) {
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "受取状態を更新しました。", confirmText: "閉じる", cancelText: "", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+        return;
+      }
+      playCyberSe("MISSION_REWARD");
       setConfirmDialogConfig({ isOpen: true, title: "クリア報酬", message: "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
     } catch (err: any) {
       console.warn(err.message);
+      if (!isCurrent()) return;
       setMissions(prev => prev.map(m => ({ ...m, loading: false })));
       showActionError("一括受け取りに失敗しました", err);
     } finally {
@@ -388,7 +416,7 @@ export function useInventory(
     pvpVipPasses,
     trainingManuals,
     polishingStones,
-    missions, setMissions,
+    missions, setMissions, missionEventsError, setMissionEventsError,
     missionTab, setMissionTab,
     presents, setPresents,
     presentsPrefetched, setPresentsPrefetched,

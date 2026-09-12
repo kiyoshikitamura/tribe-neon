@@ -1,3 +1,5 @@
+> 最新状態：前候補80bd05cの専用Preview配信は完了（oenzyoqr2）。その後の監査指摘は specs/product_audit_fixes_20260912.md を参照。今回追加2 migrationはPreview適用・ROLLBACK検証済み。以下は前候補時点の記録を含む。
+
 # GAME03 Product統合候補・受入状況
 
 ## 状態

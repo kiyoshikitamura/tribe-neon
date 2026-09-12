@@ -8,8 +8,9 @@ type PeriodMetadata = {
 /** Presentation only: never advance or finalize a server season from the clock. */
 export function rankingPeriodText(
   metadata: PeriodMetadata | null,
-  options: { preopen: boolean; daily: boolean; now: number; format: (value: string) => string | null },
+  options: { failed?: boolean; preopen: boolean; daily: boolean; now: number; format: (value: string) => string | null },
 ): string {
+  if (options.failed) return "集計期間を取得できませんでした";
   const finalized = Boolean(metadata?.finalized_at)
     || ["FINALIZED", "COMPLETED", "CLOSED"].includes(String(metadata?.status || "").toUpperCase());
   // The preopen event's far-future end is a server sentinel, not a published deadline.

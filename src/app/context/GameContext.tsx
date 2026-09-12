@@ -1,4 +1,6 @@
 "use client";
+import { canClaimMission } from "@/domain/mission/availability";
+import { useMissionClock } from "@/hooks/useMissionClock";
 
 import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { flushSync } from "react-dom";
@@ -256,7 +258,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     pvpVipPasses,
     trainingManuals,
     polishingStones,
-    missions, setMissions,
+    missions, setMissions, missionEventsError, setMissionEventsError,
     missionTab, setMissionTab,
     presents, setPresents,
     presentsPrefetched, setPresentsPrefetched,
@@ -1257,6 +1259,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           };
         }));
       }
+      setMissionEventsError(Boolean(activeEventResult.error));
       if (missionMasterResult.data && userMissionResult.data) {
         const rewardComponentsByMission = new Map<string, Array<{ itemId: string; quantity: number }>>();
         for (const component of rewardComponentResult.data || []) {
@@ -4079,7 +4082,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return true;
   };
 
-  const unreadMissionsCount = missions.filter(m => m.status === "CLEAR").length;
+  const missionNow = useMissionClock(missions);
+  const unreadMissionsCount = missions.filter(m => canClaimMission(m, missionNow)).length;
   const unclaimedPresentsCount = presents.filter(p => p.status === "UNCLAIMED").length;
 
   const openRaidRescue = (rescueId: string) => {
@@ -4305,7 +4309,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     raidBossName, setRaidBossName,
     upgradeSubTab, setUpgradeSubTab,
     shopSubTab, setShopSubTab,
-    missions, setMissions,
+    missions, setMissions, missionEventsError, setMissionEventsError,
     missionTab, setMissionTab,
     presents, setPresents,
     presentsPrefetched, setPresentsPrefetched,

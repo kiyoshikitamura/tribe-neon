@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
 import SubTabNav from "./ui/SubTabNav";
@@ -7,6 +7,11 @@ import { canonicalMissionRewardName } from "@/domain/gameplay/canonical/missions
 import CanonicalItemIcon from "./ui/CanonicalItemIcon";
 import { battleDisplayText } from "@/domain/presentation/battleTerminology";
 import "./MissionPanel.css";
+import { canClaimMission, missionClaimExpired, missionProgressEnded, missionEventPriority, needsMissionGuild } from "@/domain/mission/availability";
+import { useMissionClock } from "@/hooks/useMissionClock";
+import type { RaidRoomDto } from "@/domain/raidRoom";
+import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
+import { supabase } from "@/utils/supabase";
 
 const MISSION_STATUS_LABELS: Record<string, string> = {
   CLEAR: "受取可能",
@@ -21,14 +26,34 @@ export default function MissionPanel() {
     setShowMissionPanel,
     missionTab,
     setMissionTab,
-    missions,
+    missions, missionEventsError,
     handleClaimMission,
     handleClaimAllMissions,
     missionClaimLoading,
     playCyberSe,
     navigateTab,
-    setShowTribeChatPanel
+    setShowTribeChatPanel, session, userGuildMember, isRaidActive, raidRoomActivityTracker
   } = useGame();
+  const now = useMissionClock(missions || []);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [raidCheckedFor, setRaidCheckedFor] = useState<string | null>(null);
+  useEffect(() => {
+    const owner = session?.user?.id;
+    if (!showMissionPanel || !owner || process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED !== "true") return;
+    let cancelled = false;
+    const check = async () => {
+      setRaidCheckedFor(null);
+      try {
+        const rooms = await raidRoomActivityTracker.observeTransport(createRaidRoomRpcTransport(supabase)).listRooms();
+        const complete = rooms.every((room: RaidRoomDto) => room.state.status === "available" && (room.state.value !== "active" || (room.hp.status === "available" && room.expiresAt.status === "available" && Number.isFinite(Date.parse(room.expiresAt.value)))));
+        if (!cancelled) setRaidCheckedFor(complete ? owner : null);
+      } catch { if (!cancelled) setRaidCheckedFor(null); }
+    };
+    void check();
+    const visible = () => { if (document.visibilityState === "visible") void check(); };
+    document.addEventListener("visibilitychange", visible);
+    return () => { cancelled = true; document.removeEventListener("visibilitychange", visible); };
+  }, [showMissionPanel, session?.user?.id, raidRoomActivityTracker, isRaidActive]);
   const specialViewTrackedRef = useRef(false);
 
   useEffect(() => {
@@ -55,9 +80,16 @@ export default function MissionPanel() {
   };
 
   const statusOrder: Record<string, number> = { CLEAR: 0, IN_PROGRESS: 1, LOCKED: 2, CLAIMED: 3 };
-  const currentMissions = (missions || []).filter((m: any) => m.category === missionTab)
+  const specialRows = (missions || []).filter((m: any) => m.category === "SPECIAL");
+  const events = (Array.from(new Map(specialRows.map((m: any) => [m.eventId || "unassigned", m])).values()) as any[])
+    .sort((a, b) => {
+      const priority = (event: any) => Math.min(...specialRows.filter((m: any) => (m.eventId || "unassigned") === (event.eventId || "unassigned")).map((m: any) => missionEventPriority(m, now)));
+      return priority(a) - priority(b);
+    });
+  const activeEventId = events.some(event => (event.eventId || "unassigned") === selectedEventId) ? selectedEventId : (events[0]?.eventId || "unassigned");
+  const currentMissions = (missions || []).filter((m: any) => m.category === missionTab && (missionTab !== "SPECIAL" || (m.eventId || "unassigned") === activeEventId))
     .sort((left: any, right: any) => (statusOrder[left.status] ?? 9) - (statusOrder[right.status] ?? 9) || Number(left.display_order || 0) - Number(right.display_order || 0));
-  const canClaim = (m: any) => m.status === "CLEAR" && !(m.eventClaimEndAt && new Date(m.eventClaimEndAt).valueOf() <= Date.now());
+  const canClaim = (m: any) => canClaimMission(m, now);
   const clearMissionsCount = currentMissions.filter(canClaim).length;
   const clearCounts = {
     DAILY: (missions || []).filter((m: any) => m.category === "DAILY" && canClaim(m)).length,
@@ -92,7 +124,8 @@ export default function MissionPanel() {
       p_metadata: { cta_tab: mission.ctaTab, cta_action: mission.ctaAction }
     }));
     setShowMissionPanel(false);
-    if (mission.ctaAction === "guild_chat") setShowTribeChatPanel(true);
+    if (mission.ctaAction === "guild_chat" && userGuildMember?.guild_id) setShowTribeChatPanel(true);
+    else if (mission.ctaAction === "guild_chat") navigateTab("guild");
     else if (mission.ctaTab) navigateTab(mission.ctaTab);
   };
 
@@ -103,6 +136,7 @@ export default function MissionPanel() {
   const available = standards.filter((m: any) => m.status === "CLEAR");
   const pending = standards.filter((m: any) => m.status === "IN_PROGRESS");
   const fallbackCta = (m: any) => {
+    if (needsMissionGuild(m) && !userGuildMember?.guild_id) return { ...m, ctaTab: "guild", ctaAction: null, ctaLabel: "ギルドを探す" };
     if (m.ctaTab || m.ctaAction) return m;
     const type = String(m.triggerType || "");
     const route = type.includes("GACHA") ? ["gacha", "ガチャへ"]
@@ -119,8 +153,10 @@ export default function MissionPanel() {
   };
   const renderRow = (mission: any, showNext = false): React.ReactNode => {
     const m = fallbackCta(mission);
-    const expired = Boolean(m.eventClaimEndAt && new Date(m.eventClaimEndAt).valueOf() <= Date.now());
-    const eventEnded = m.category === "SPECIAL" && m.eventProgressOpen === false;
+    const expired = missionClaimExpired(m, now);
+    const eventEnded = m.category === "SPECIAL" && missionProgressEnded(m, now);
+    const unavailable = needsMissionGuild(m) && !userGuildMember?.guild_id ? "ギルド未加入"
+      : (m.ctaTab === "raid" || String(m.triggerType).startsWith("RAID")) && !isRaidActive && raidCheckedFor === session?.user?.id && !!raidCheckedFor ? "開催待ち" : null;
     const target = Math.max(1, Number(m.target_value || 1));
     const progress = Math.max(0, Number(m.current_progress || 0));
     const title = m.triggerType === "QUEST_COMPLETE_COUNT" && m.title === "派遣に出よう" ? `クエストを${target}回完了する` : battleDisplayText(m.title);
@@ -133,6 +169,7 @@ export default function MissionPanel() {
         <div className="mission-row-bottom">
           {renderMissionRewards(m)}
           <div className="mission-action">
+            {m.status === "IN_PROGRESS" && !eventEnded && !expired && unavailable && <span className="mission-status">{unavailable}</span>}
             {m.status === "CLAIMED" ? <span className="mission-status">受取済み</span>
               : expired ? <OutlawButton disabled>受取期間終了</OutlawButton>
               : m.status === "CLEAR" ? <OutlawButton variant="primary" disabled={missionClaimLoading || m.loading} isLoading={Boolean(m.loading)} loadingLabel="" onClick={() => handleClaimMission(m.id)}>受け取る</OutlawButton>
@@ -163,16 +200,18 @@ export default function MissionPanel() {
           {completed === standards.length && <p role="status">本日のミッション達成{clearMissionsCount === 0 ? "・報酬受取済み" : ""}</p>}
           <div className="mission-milestones">{currentMissions.filter(isMilestone).map((m: any) => renderRow(m))}</div>
         </section>}
+        {missionTab === "SPECIAL" && events.length > 1 && <label>イベント <select aria-label="イベント選択" value={activeEventId || ""} onChange={e => setSelectedEventId(e.target.value)}>{events.map(event => <option key={event.eventId || "unassigned"} value={event.eventId || "unassigned"}>{event.eventTitle || "イベントミッション"}</option>)}</select></label>}
         {missionTab === "SPECIAL" && event && <section className="mission-overview">
           <h3>{event.eventTitle || "イベントミッション"}</h3>
           {event.eventStartAt && event.eventProgressEndAt && <p>開催：{dateLabel(event.eventStartAt)} ～ {dateLabel(event.eventProgressEndAt)} JST</p>}
           {event.eventClaimEndAt && <p>受取期限：{dateLabel(event.eventClaimEndAt)} JST</p>}
+          <p role="status">{currentMissions.every((m: any) => m.status === "CLAIMED") ? "全報酬受取済み" : missionClaimExpired(event, now) ? "受取期間終了" : missionProgressEnded(event, now) ? "開催終了・報酬受取期間" : "開催中"}</p>
           <strong>{specialCompletedCount} / {specialStandardMissions.length} 達成</strong>
           <progress max={Math.max(1, specialStandardMissions.length)} value={specialCompletedCount} aria-label="イベント達成数" />
           {specialCompletion && renderRow(specialCompletion)}
         </section>}
         <div className="mission-actions"><span className="mission-clear-count">受取可能 <strong>{clearMissionsCount}</strong>件</span>
-          <OutlawButton variant="primary" disabled={clearMissionsCount === 0 || missionClaimLoading} isLoading={missionClaimLoading} loadingLabel="" onClick={handleClaimAllMissions}>一括受け取り</OutlawButton>
+          <OutlawButton variant="primary" disabled={clearMissionsCount === 0 || missionClaimLoading} isLoading={missionClaimLoading} loadingLabel="" onClick={() => handleClaimAllMissions(missionTab === "SPECIAL" ? activeEventId : undefined)}>一括受け取り</OutlawButton>
         </div>
         <div className="mission-list">
           {available.map((m: any) => renderRow(m, missionTab === "NORMAL"))}
@@ -180,7 +219,7 @@ export default function MissionPanel() {
             const rows = pending.filter((m: any) => m.displayGroup === group);
             return rows.length > 0 && <section key={group} className="mission-current-group"><h3>{{ PROGRESS: "初回目標", GROWTH: "育成", BATTLE: "バトル・レイド", GUILD: "ギルド" }[group]}</h3>{rows.map((m: any) => renderRow(m, true))}</section>;
           }) : pending.map((m: any) => renderRow(m))}
-          {currentMissions.length === 0 && <div className="mission-empty">{missionTab === "SPECIAL" ? "現在開催中のイベントミッションはありません" : "ミッションはありません"}</div>}
+          {currentMissions.length === 0 && <div className="mission-empty">{missionTab === "SPECIAL" ? missionEventsError ? "イベントを取得できませんでした。画面を再読み込みしてください" : "現在開催中のイベントミッションはありません" : "ミッションはありません"}</div>}
         </div>
         {received.length > 0 && <details className="mission-received"><summary>受取済み {received.length}件</summary>{received.map((m: any) => renderRow(m))}</details>}
       </fieldset>

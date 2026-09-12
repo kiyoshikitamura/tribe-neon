@@ -14,6 +14,7 @@ type GuildRankingPayload = {
   rows: any[];
   selfRank: Record<string, any> | null;
   season: GuildSeasonMetadata | null;
+  selfStatus: string | null;
 };
 
 const asRecord = (value: unknown): Record<string, any> | null => value && typeof value === "object" && !Array.isArray(value)
@@ -21,9 +22,9 @@ const asRecord = (value: unknown): Record<string, any> | null => value && typeof
   : null;
 
 export function normalizeGuildRankingPayload(data: unknown): GuildRankingPayload {
-  if (Array.isArray(data)) return { rows: data, selfRank: null, season: null };
+  if (Array.isArray(data)) return { rows: data, selfRank: null, season: null, selfStatus: null };
   const payload = asRecord(data);
-  if (!payload) return { rows: [], selfRank: null, season: null };
+  if (!payload) return { rows: [], selfRank: null, season: null, selfStatus: null };
   const rows = [payload.rows, payload.rankings, payload.guilds, payload.data].find(Array.isArray) || [];
   const selfPayload = asRecord(payload.selfRank) || asRecord(payload.self_rank) || asRecord(payload.self_guild) || asRecord(payload.current_guild);
   const selfRank = asRecord(selfPayload?.row) || asRecord(selfPayload?.guild) || selfPayload;
@@ -48,7 +49,7 @@ export function normalizeGuildRankingPayload(data: unknown): GuildRankingPayload
       is_current_context: seasonSource.is_current_context ?? seasonSource.isCurrentContext,
     }
     : null;
-  return { rows, selfRank, season };
+  return { rows, selfRank, season, selfStatus: typeof payload.self_status === "string" ? payload.self_status : null };
 }
 
 export function isPreopenGuildPowerSeasonContext(season: GuildSeasonMetadata | null | undefined): boolean {

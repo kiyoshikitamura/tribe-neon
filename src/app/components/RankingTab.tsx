@@ -14,6 +14,7 @@ import StatusMetric from "./presentation/StatusMetric";
 import { useScreenReadiness } from "../hooks/useScreenReadiness";
 import { SCREEN_ASSET_MANIFESTS } from "../lib/screenManifests";
 import { loadRankingProfiles } from "@/domain/ranking/loadRankingProfiles";
+import { rankingNearbyOffset, rankingSelfStatusText } from "@/domain/ranking/rankingSelfPresentation";
 import { rankingPeriodText } from "@/domain/ranking/rankingPeriodPresentation";
 import RankingRewardDialog from "./ranking/RankingRewardDialog";
 import type { RankingRewardMasterPayload } from "@/domain/ranking/rankingRewardPresentation";
@@ -121,6 +122,8 @@ export default function RankingTab() {
   const [listView, setListView] = useState<"top" | "nearby">("top");
   const [neighbors, setNeighbors] = useState<any[]>([]);
   const [contextError, setContextError] = useState(false);
+  const [periodError, setPeriodError] = useState(false);
+  const [selfStatus, setSelfStatus] = useState<string | null>(null);
   const [periodBounds, setPeriodBounds] = useState<{ starts_at?: string; ends_at?: string; status?: string } | null>(null);
   const [rewardDialogOpen, setRewardDialogOpen] = useState(false);
   const [rewardMaster, setRewardMaster] = useState<RankingRewardMasterPayload | undefined>(undefined);
@@ -145,12 +148,16 @@ export default function RankingTab() {
     setUpdatedAt(null);
     setPeriodBounds(null);
     setContextError(false);
+    setPeriodError(false);
+    setSelfStatus(null);
     if (rankingActiveTab === "raid") { setLoading(false); return; }
 
     try {
       let nextRows: any[] = [];
       let nextGuildRows: any[] = [];
       let nextSelfRank: any | null = null;
+      let nextSelfStatus: string | null = null;
+      let nextPeriodError = false;
       let nextGuildSeason: GuildSeasonMetadata | null = null;
 
       if (activeTab === "power") {
@@ -173,6 +180,7 @@ export default function RankingTab() {
         }
         nextGuildRows = normalized.rows;
         nextSelfRank = normalized.selfRank;
+        nextSelfStatus = normalized.selfStatus;
         nextGuildSeason = activePeriod === "season" ? normalized.season : null;
       } else if (activeTab === "pvp") {
         const { data, error: rpcError } = await supabase.rpc("get_public_pvp_rankings", { p_daily: activePeriod === "daily", p_limit: 100, p_offset: 0 });
@@ -185,10 +193,15 @@ export default function RankingTab() {
       let nextBounds: { starts_at?: string; ends_at?: string; status?: string } | null = null;
       if (activeTab === "guild_power" && isPreopenGuildPowerSeasonContext(nextGuildSeason)) {
         if (nextSelfRank) {
-          const offset = Math.max(0, Number(nextSelfRank.rank_position ?? nextSelfRank.rank) - 3);
-          const nearby = await supabase.rpc("get_preopen_guild_power_ranking", { p_limit: 5, p_offset: offset });
-          if (nearby.error) nextContextError = true;
-          else nextNeighbors = normalizeGuildRankingPayload(nearby.data).rows;
+          const offset = rankingNearbyOffset(nextSelfRank);
+          if (offset == null) nextContextError = true;
+          else {
+            const nearby = await supabase.rpc("get_preopen_guild_power_ranking", { p_limit: 5, p_offset: offset });
+            const nearbyRows = normalizeGuildRankingPayload(nearby.data).rows;
+            // A live score change can move self between requests. Never show a false self-centered list.
+            if (nearby.error || !nearbyRows.some((row) => row.guild_id === nextSelfRank.guild_id)) nextContextError = true;
+            else nextNeighbors = nearbyRows;
+          }
         }
       } else {
         // Separate read contract: missing API does not fabricate a rank/score.
@@ -196,13 +209,15 @@ export default function RankingTab() {
         if (context.error || !context.data || !Array.isArray(context.data.neighbors)) nextContextError = true;
         else {
           nextSelfRank = context.data.self;
+          nextSelfStatus = typeof context.data.self_status === "string" ? context.data.self_status : null;
           nextNeighbors = context.data.neighbors;
           nextBounds = context.data;
         }
         if (activePeriod === "season") {
           const seasons = await supabase.rpc("get_active_ranking_seasons");
           const rankingType = activeTab === "power" ? "POWER" : activeTab === "guild_power" ? "GUILD_POWER" : "PVP";
-          if (!seasons.error && Array.isArray(seasons.data)) {
+          if (seasons.error || !Array.isArray(seasons.data)) nextPeriodError = true;
+          else {
             nextBounds = seasons.data.find((season: any) => season.ranking_type === rankingType) || nextBounds;
           }
         }
@@ -224,6 +239,8 @@ export default function RankingTab() {
       setGuildSeason(nextGuildSeason);
       setNeighbors(nextNeighbors);
       setContextError(nextContextError);
+      setPeriodError(nextPeriodError);
+      setSelfStatus(nextSelfStatus);
       setPeriodBounds(nextBounds);
       setUpdatedAt(new Date().toISOString());
     } catch {
@@ -289,7 +306,7 @@ export default function RankingTab() {
   const ownScore = scoreOf(ownRow);
   const currentMetric = ownScore == null ? "—" : ownScore.toLocaleString();
   const sourceRows = activeTab === "guild_power" ? guildRows : rows;
-  const nearbyRows = neighbors.length ? neighbors : sourceRows.filter((row) => currentRank && Math.abs(Number(row.rank_position) - currentRank) <= 2);
+  const nearbyRows = neighbors;
   const displayedRows = listView === "top" ? sourceRows : nearbyRows;
   const above = [...nearbyRows].reverse().find((row) => currentRank && Number(row.rank_position) < currentRank);
   const aboveScore = scoreOf(above);
@@ -301,13 +318,14 @@ export default function RankingTab() {
       : activePeriod === "daily" ? "本日のバトル勝利数" : "シーズンRATE";
   const bounds = guildSeason || periodBounds;
   const periodText = rankingPeriodText(bounds, {
+    failed: periodError || (activePeriod === "daily" && contextError && !periodBounds),
     preopen: activeTab === "guild_power" && activePeriod === "season" && isPreopenGuildPowerSeasonContext(guildSeason),
     daily: activePeriod === "daily",
     now: Date.now(),
     format: formatJstTimestamp,
   });
   const rankState = loading ? "—" : error ? "取得失敗" : activeTab === "guild_power" && !currentGuildId ? "未所属"
-    : currentRank ? null : contextError ? "順位取得不可" : "順位未成立";
+    : currentRank ? null : contextError ? "順位取得不可" : rankingSelfStatusText(selfStatus);
 
   const activeCategoryLabel = RANKING_TABS.find((tab) => tab.id === activeTab)?.label || "総合力";
   const metricLabel = activeTab === "power" ? "総合力" : activeTab === "guild_power" ? "ギルド総合力" : activePeriod === "daily" ? "勝利数" : "RATE";
@@ -376,6 +394,7 @@ export default function RankingTab() {
       <OutlawButton variant="primary" fullWidth className="ranking-category-action" onClick={() => setActiveTab(activeTab === "power" ? "character" : activeTab === "guild_power" ? "guild" : "pvp")}>
         {activeTab === "power" ? "キャラ・編成へ" : activeTab === "guild_power" ? currentGuildId ? "ギルドへ" : "ギルドを探す" : "バトルへ"}
       </OutlawButton>
+      {periodError && !loading && !error && <div className="ranking-context-error" role="status">集計期間を取得できませんでした。<button type="button" onClick={() => void loadRanking()}>再試行</button></div>}
       {contextError && !loading && !error && <div className="ranking-context-error" role="status">自己・周辺順位の追加情報を取得できませんでした。<button type="button" onClick={() => void loadRanking()}>再試行</button></div>}
       <div className="ranking-list-heading"><div className="ranking-view-toggle" role="group" aria-label="ランキング表示範囲">{(["top", "nearby"] as const).map(view => <button key={view} type="button" aria-pressed={listView === view} onClick={() => setListView(view)}>{view === "top" ? "上位" : "自分周辺"}</button>)}</div><span>{periodLabel}</span></div>
       {error ? <div className="ranking-state" role="alert"><span>ランキングを取得できませんでした</span><button type="button" onClick={() => void loadRanking()}>再試行</button></div>
