@@ -1,6 +1,6 @@
 # GAME03 初心者Mission統合仕様・既存マッピング
 
-状態：統合原則はユーザー確定。Mission対応付け・不足条件への対応は提案。実装/DB/報酬変更なし。
+状態：統合原則および対応提案はユーザー承認済み。以下の棚卸しは変更前記録。実装・Preview DB適用結果は guide_mission_implementation_20260912.md を参照。報酬量変更なし。
 照合元：Preview sufvuqdnqohpfzkwxohq の有効missions（READ ONLY）、src/domain/gameplay/canonical/data/missions_20260910.json、mission_runtime.ts、既存Post-Tutorial判断Authority。
 Productionのマスター一致は今回未監査。Previewの定義確認は、すべての行動経路で実績が正常記録されることの検証とは区別する。
 

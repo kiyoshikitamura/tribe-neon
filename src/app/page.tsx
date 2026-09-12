@@ -1,5 +1,6 @@
 "use client";
 
+import BeginnerMissionRewardCta from "./components/mission/BeginnerMissionRewardCta";
 import React from "react";
 import dynamic from "next/dynamic";
 import { useAssetTierPreloader } from "./hooks/useImagePreloader";
@@ -283,6 +284,7 @@ function AppContent() {
           </>
         )}
       >
+        <BeginnerMissionRewardCta />
         {activeTab === "home" && <HomeTab />}
         {(activeTab === "patrol" || activeTab === "quest") && <PatrolTab />}
         {activeTab === "pvp" && <PvpTab />}

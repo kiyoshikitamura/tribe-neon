@@ -1,4 +1,5 @@
 "use client";
+import { useBeginnerJourney } from "@/hooks/useBeginnerJourney";
 import { canClaimMission } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
 
@@ -4171,7 +4172,47 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const { beginnerJourney, refreshBeginnerJourney } = useBeginnerJourney(session?.user?.id,
+    Boolean(onboardingState?.gameplay_authorized), missions);
+  const [beginnerMissionTargetIds, setBeginnerMissionTargetIds] = useState<string[]>([]);
+  const beginnerRewardGeneration = useRef(0);
+  const beginnerRewardOpening = useRef(false);
+  const clearBeginnerMissionTarget = useCallback(() => {
+    ++beginnerRewardGeneration.current;
+    beginnerRewardOpening.current = false;
+    setBeginnerMissionTargetIds([]);
+  }, []);
+  const openBeginnerMissionReward = async (ids: string[]) => {
+    const owner = session?.user?.id;
+    if (!ids.length || !owner || beginnerRewardOpening.current) return;
+    beginnerRewardOpening.current = true;
+    const generation = ++beginnerRewardGeneration.current;
+    const stillCurrent = () => currentAuthUserIdRef.current === owner && beginnerRewardGeneration.current === generation;
+    try {
+      if (!await refreshBeginnerJourney()) throw new Error("受取状態を確認できませんでした。");
+      if (!stillCurrent()) return;
+      await syncBootstrapData(owner);
+      if (!stillCurrent()) return;
+      const { data: rows, error } = await supabase.from("user_missions").select("*").eq("user_id", owner);
+      if (error || !rows) throw new Error("ミッションを取得できませんでした。");
+      if (!stillCurrent()) return;
+      setMissions((previous: any[]) => previous.map(m => {
+        const row = rows.find((r: any) => r.mission_id === m.id);
+        return row ? { ...m, status: canonicalMissionUiStatus(row.status, m.status !== "LOCKED"), current_progress: row.current_progress,
+          expires_at: row.expires_at } : m;
+      }));
+      setBeginnerMissionTargetIds([...new Set(ids)]);
+      setShowMissionPanel(true);
+    } catch {
+      if (stillCurrent()) setErrorMessage("受取状態を確認できませんでした。もう一度お試しください。");
+    } finally { if (beginnerRewardGeneration.current === generation) beginnerRewardOpening.current = false; }
+  };
+  useEffect(() => { clearBeginnerMissionTarget(); }, [session?.user?.id, clearBeginnerMissionTarget]);
+  useEffect(() => { void refreshBeginnerJourney(); },
+    [activeTab, battle.battleState, scoutAnimationState, showMissionPanel, confirmDialogConfig, refreshBeginnerJourney]);
+
   const value = {
+    beginnerJourney, refreshBeginnerJourney, beginnerMissionTargetIds, openBeginnerMissionReward, clearBeginnerMissionTarget,
     // 状態
     session, setSession,
     authLoading, setAuthLoading,

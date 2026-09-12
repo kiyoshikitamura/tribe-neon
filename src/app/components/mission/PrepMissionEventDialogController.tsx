@@ -37,6 +37,7 @@ function parsePendingDialog(value: unknown): PendingEventDialog | null {
 
 export default function PrepMissionEventDialogController() {
   const {
+    beginnerJourney,
     activeTab,
     session,
     loginBonusCheckComplete,
@@ -79,10 +80,8 @@ export default function PrepMissionEventDialogController() {
     let cancelled = false;
     void (async () => {
       // 初期学習より前に限定Missionを重ねない。待機を閲覧済みにはしない。
-      const { data: handoff, error: guideError } = await supabase.from("user_funnel_milestones")
-        .select("milestone").eq("user_id", userId).eq("milestone", "activation_mission_handoff").maybeSingle();
-      if (cancelled) return;
-      if (guideError || !handoff) {
+      if (!beginnerJourney?.reflow_completed) {
+        requestedKeyRef.current = "";
         setPrepMissionDialogCheckComplete(true);
         return;
       }
@@ -101,7 +100,7 @@ export default function PrepMissionEventDialogController() {
       if (!parsed) setPrepMissionDialogCheckComplete(true);
     })();
     return () => { cancelled = true; };
-  }, [activeTab, session?.user?.id, setPrepMissionDialogCheckComplete]);
+  }, [activeTab, session?.user?.id, beginnerJourney?.reflow_completed, setPrepMissionDialogCheckComplete]);
 
   useEffect(() => {
     if (!guideReady || !pending

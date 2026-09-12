@@ -1,4 +1,5 @@
 "use client";
+import { nextBeginnerAction, beginnerRewardIds, priorityBeginnerRewardIds } from "@/domain/mission/beginnerJourney";
 import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
@@ -117,6 +118,7 @@ function activityTimeLabel(value?: string | null) {
  */
 function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const {
+    beginnerJourney, refreshBeginnerJourney, openBeginnerMissionReward,
     currentBaseId,
     identityLeaderCharacterId,
     identityLeaderAuthorityReady,
@@ -384,20 +386,17 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   }, [activityWindowNow, qaState?.socialActivityNowMs, socialActivities]);
 
   const observedRaidAvailability = useRaidGuideAvailability(session?.user?.id,
-    !qaState && funnelMilestones.has("first_pvp") && !funnelMilestones.has("first_raid"),
+    !qaState && Boolean(beginnerJourney?.facts.pvp) && !beginnerJourney?.facts.raid,
     raidRoomActivityTracker, isRaidActive);
   const raidAvailability = qaState?.raidAvailability ?? observedRaidAvailability;
 
-  const primaryCta = useMemo(() => resolveHomeInitialCta({
-    ready: qaState ? qaState.ctaAuthorityReady !== false : Boolean(
-      session?.user?.id && onboardingState && funnelAuthorityOwnerUserId === session.user.id
-    ),
-    tutorialStep: onboardingState?.tutorial_step,
-    gameplayAuthorized: onboardingState?.gameplay_authorized,
-    milestones: funnelMilestones,
-    // 表示対象と同じ一覧の成功結果だけを開催判定に使う。
-    raidAvailability: raidAvailability,
-  }), [funnelMilestones, funnelAuthorityOwnerUserId, onboardingState, qaState, session?.user?.id, raidAvailability]);
+  const primaryCta = useMemo(() => qaState ? resolveHomeInitialCta({
+    ready: qaState.ctaAuthorityReady !== false, tutorialStep: onboardingState?.tutorial_step,
+    gameplayAuthorized: onboardingState?.gameplay_authorized, milestones: funnelMilestones, raidAvailability,
+  }) : nextBeginnerAction(beginnerJourney, raidAvailability),
+  [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones]);
+  const pendingBeginnerRewards = beginnerRewardIds(beginnerJourney);
+  const priorityRewardIds = priorityBeginnerRewardIds(beginnerJourney);
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -410,43 +409,20 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     void supabase.rpc("record_client_funnel_event", { p_event_name: "home_primary_cta_click", p_source_screen: "home", p_source_cta: primaryCta.key, p_object_id: null, p_metadata: {} });
     if (primaryCta.action === "mission_handoff") {
       setActivationHandoffPending(true);
-      // Availability acknowledgment is separate from actual Raid participation.
-      // Existing server contract checks prerequisites; never write first_raid here.
-      const waitingForRaid = !funnelMilestones.has("first_raid") && raidAvailability === "inactive";
-      const acknowledgment = waitingForRaid
-        ? await supabase.rpc("acknowledge_initial_raid_guide") : { error: null };
-      const { error } = acknowledgment.error
-        ? acknowledgment : await supabase.rpc("complete_activation_mission_handoff");
+      const { error } = await supabase.rpc("complete_activation_mission_handoff");
+      await refreshBeginnerJourney();
+      setActivationHandoffPending(false);
       if (error) {
-        // Refresh once; a stale projection must not trap the user in retries.
-        const { data: latest, error: refreshError } = await supabase.from("user_funnel_milestones")
-          .select("milestone").eq("user_id", session.user.id);
-        if (!refreshError && latest) setFunnelMilestones(new Set(latest.map((row) => row.milestone)));
-        setActivationHandoffPending(false);
-        setErrorMessage(refreshError
-          ? "最新状態を確認できませんでした。ミッションは画面のミッションから開けます。"
-          : "案内の状態を確認しました。ミッションは画面のミッションから開けます。");
-        return;
-      }
-      const { data, error: projectionError } = await supabase.from("user_funnel_milestones")
-        .select("milestone")
-        .eq("user_id", session.user.id)
-        .eq("milestone", "activation_mission_handoff")
-        .maybeSingle();
-      if (projectionError || !data) {
-        setActivationHandoffPending(false);
         setErrorMessage("最新状態を確認できませんでした。もう一度お試しください。");
         return;
       }
-      setFunnelMilestones((current) => new Set(current).add("activation_mission_handoff"));
-      setActivationHandoffPending(false);
       setShowMissionPanel(true);
     } else if (primaryCta.action === "guild_chat") setShowTribeChatPanel(true);
     else if (primaryCta.tab) {
-      if (primaryCta.key === "first_free_asset_gacha") {
-        setGuideGachaCategory(funnelMilestones.has("first_free_skill_ten_pull") ? "EQUIPMENT" : "SKILL");
+      if (primaryCta.tab === "gacha") {
+        setGuideGachaCategory(beginnerJourney?.facts.free_skill ? "EQUIPMENT" : "SKILL");
       }
-      navigateTab(primaryCta.tab, primaryCta.key === "first_main_loadout" ? "party" : undefined);
+      navigateTab(primaryCta.tab, primaryCta.tab === "character" ? "party" : undefined);
     }
     playCyberSe("click");
   };
@@ -777,12 +753,19 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           })}
         </nav>
 
-        {!primaryCta && !funnelMilestones.has("first_raid") && funnelMilestones.has("activation_mission_handoff")
+        {!primaryCta && beginnerJourney && !beginnerJourney.facts.raid
           && raidAvailability === "inactive"
           && <p className="mypage-raid-waiting" role="status">レイド開催待ち</p>}
-        {primaryCta && <button className="mypage-primary-cta semantic-cta semantic-cta--primary active-scale-effect" onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
+        {priorityRewardIds.length > 0 && <button className="mypage-primary-cta semantic-cta semantic-cta--primary" onClick={() => openBeginnerMissionReward(priorityRewardIds)}>
+          ミッション報酬を受け取る
+        </button>}
+        {primaryCta && <button className={`mypage-primary-cta semantic-cta ${priorityRewardIds.length ? "semantic-cta--secondary" : "semantic-cta--primary"} active-scale-effect`} onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
           <strong>{activationHandoffPending ? "確認中…" : primaryCta.title}</strong>
           <b aria-hidden="true">›</b>
+        </button>}
+
+        {pendingBeginnerRewards.some(id => !priorityRewardIds.includes(id)) && <button className="semantic-cta semantic-cta--secondary" onClick={() => openBeginnerMissionReward(pendingBeginnerRewards)}>
+          ミッション報酬を受け取る
         </button>}
 
         {visibleBanners.length > 0 && <div className="mypage-event-banner-area">

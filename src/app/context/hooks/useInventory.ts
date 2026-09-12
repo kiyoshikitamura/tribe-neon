@@ -319,9 +319,10 @@ export function useInventory(
       const row = rows.get(m.id);
       return row ? { ...m, status: row.status === "PROGRESS" ? "IN_PROGRESS" : row.status, current_progress: row.current_progress, loading: false } : m;
     }));
+    return rows;
   };
 
-  const handleClaimMission = async (id: string) => {
+  const handleClaimMission = async (id: string, onReceiptConfirmed?: () => void) => {
     if (!session) return;
     if (!canClaimMission(missions.find(m => m.id === id) || {})) return;
     if (!beginMissionClaim()) return;
@@ -330,6 +331,12 @@ export function useInventory(
     setMissions(prev => prev.map(m => m.id === id ? { ...m, loading: true } : m));
     playCyberSe("click");
 
+    let refreshedRows: Map<string, any> | undefined;
+    const closeReceipt = () => {
+      if (!isCurrent()) return;
+      setConfirmDialogConfig(null);
+      onReceiptConfirmed?.();
+    };
     try {
       const targetMission = missions.find(m => m.id === id);
       if (!targetMission) return;
@@ -339,24 +346,32 @@ export function useInventory(
         if (response.error) throw response.error;
         if (response.data?.error) throw new Error(response.data.error);
         return response;
-      }, () => refreshMissionClaimState(owner, isCurrent), isCurrent);
+      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent); }, isCurrent);
       if (!isCurrent()) return;
 
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
-      if (!rewards.length) return;
+      if (!rewards.length) {
+        if (onReceiptConfirmed && refreshedRows?.get(id)?.status === "CLAIMED") {
+          setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "報酬は受取済みです。", confirmText: "マイページへ", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+        }
+        return;
+      }
       playCyberSe("MISSION_REWARD");
-      setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: targetMission.isCompletion ? "ギルドバトル開幕の準備完了！\n正式オープンに備えよう！" : "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: targetMission.isCompletion ? "ギルドバトル開幕の準備完了！\n正式オープンに備えよう！" : "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: onReceiptConfirmed ? "マイページへ" : "OK", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
     } catch (err) {
       console.warn(err);
       if (!isCurrent()) return;
       setMissions(prev => prev.map(m => m.id === id ? { ...m, loading: false } : m));
-      showActionError("報酬を受け取れませんでした", err);
+      // 応答消失でも、再取得で受取済みを確認できた場合だけ帰還可能にする。
+      if (onReceiptConfirmed && refreshedRows?.get(id)?.status === "CLAIMED") {
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "報酬の受取済みを確認しました。", confirmText: "マイページへ", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+      } else showActionError("報酬を受け取れませんでした", err);
     } finally {
       endMissionClaimAfterPaint();
     }
   };
 
-  const handleClaimAllMissions = async (eventId?: string | null) => {
+  const handleClaimAllMissions = async (eventId?: string | null, onReceiptConfirmed?: () => void, receiptMissionIds?: string[]) => {
     if (!session) return;
     const clearMissions = missions.filter(m => canClaimMission(m) && m.category === missionTab && (eventId === undefined || (m.eventId || "unassigned") === eventId));
     if (clearMissions.length === 0) return;
@@ -367,6 +382,12 @@ export function useInventory(
     setMissions(prev => prev.map(m => clearMissions.some(target => target.id === m.id) ? { ...m, loading: true } : m));
     playCyberSe("gacha");
 
+    let refreshedRows: Map<string, any> | undefined;
+    const closeReceipt = () => {
+      if (!isCurrent()) return;
+      setConfirmDialogConfig(null);
+      if (clearMissions.some(m => (!receiptMissionIds || receiptMissionIds.includes(m.id)) && refreshedRows?.get(m.id)?.status === "CLAIMED")) onReceiptConfirmed?.();
+    };
     try {
       const missionIds = clearMissions.map(m => m.id);
       const res = await reconcileMissionClaim(async () => {
@@ -374,21 +395,23 @@ export function useInventory(
         if (response.error) throw response.error;
         if (response.data?.error) throw new Error(response.data.error);
         return response;
-      }, () => refreshMissionClaimState(owner, isCurrent), isCurrent);
+      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent); }, isCurrent);
       if (!isCurrent()) return;
 
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
       if (!rewards.length) {
-        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "受取状態を更新しました。", confirmText: "閉じる", cancelText: "", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "受取状態を更新しました。", confirmText: "閉じる", cancelText: "", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
         return;
       }
       playCyberSe("MISSION_REWARD");
-      setConfirmDialogConfig({ isOpen: true, title: "クリア報酬", message: "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      setConfirmDialogConfig({ isOpen: true, title: "クリア報酬", message: "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: onReceiptConfirmed ? "マイページへ" : "閉じる", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
     } catch (err: any) {
       console.warn(err.message);
       if (!isCurrent()) return;
       setMissions(prev => prev.map(m => ({ ...m, loading: false })));
-      showActionError("一括受け取りに失敗しました", err);
+      if (onReceiptConfirmed && clearMissions.some(m => (!receiptMissionIds || receiptMissionIds.includes(m.id)) && refreshedRows?.get(m.id)?.status === "CLAIMED")) {
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "報酬の受取済みを確認しました。", confirmText: "マイページへ", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+      } else showActionError("一括受け取りに失敗しました", err);
     } finally {
       endMissionClaimAfterPaint();
     }
