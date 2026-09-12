@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { nextBeginnerAction, beginnerRewardIds, priorityBeginnerRewardIds } from '../src/domain/mission/beginnerJourney.ts';
 const facts = { free_skill:true, free_equipment:true, character:true, quest:true, pvp:false, raid:false, guild:false };
 const mission = id => ({id,category:'NORMAL',status:'CLEAR'});
@@ -20,4 +21,10 @@ const tomorrow = {...pulls,missions:[{...mission('MIS_D_001'),expires_at:'2026-0
 assert.deepEqual(beginnerRewardIds(tomorrow,'gacha',Date.parse('2026-09-13T15:00:00Z')),[]);
 assert.equal(nextBeginnerAction(tomorrow,'inactive').key,'pvp'); // 日次リセットは生涯経験を消さない
 assert.equal(nextBeginnerAction(null,'active'),null);
+const home = fs.readFileSync('src/app/components/HomeTab.tsx','utf8');
+const contextual = fs.readFileSync('src/app/components/mission/BeginnerMissionRewardCta.tsx','utf8');
+assert.match(home,/今回のミッション報酬を受け取る/);
+assert.match(home,/その他の未受取報酬/);
+assert.match(home,/openBeginnerMissionReward\(otherPendingRewardIds\)/);
+assert.match(contextual,/今回のミッション報酬を受け取る/);
 console.log('PASS: server facts, advance without claims, reward priority, shared free reward, expiry, tutorial reuse, Raid reoffer');

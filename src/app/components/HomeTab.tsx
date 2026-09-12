@@ -397,6 +397,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones]);
   const pendingBeginnerRewards = beginnerRewardIds(beginnerJourney);
   const priorityRewardIds = priorityBeginnerRewardIds(beginnerJourney);
+  const otherPendingRewardIds = pendingBeginnerRewards.filter(id => !priorityRewardIds.includes(id));
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -757,15 +758,15 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           && raidAvailability === "inactive"
           && <p className="mypage-raid-waiting" role="status">レイド開催待ち</p>}
         {priorityRewardIds.length > 0 && <button className="mypage-primary-cta semantic-cta semantic-cta--primary" onClick={() => openBeginnerMissionReward(priorityRewardIds)}>
-          ミッション報酬を受け取る
+          今回のミッション報酬を受け取る
         </button>}
         {primaryCta && <button className={`mypage-primary-cta semantic-cta ${priorityRewardIds.length ? "semantic-cta--secondary" : "semantic-cta--primary"} active-scale-effect`} onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
           <strong>{activationHandoffPending ? "確認中…" : primaryCta.title}</strong>
           <b aria-hidden="true">›</b>
         </button>}
 
-        {pendingBeginnerRewards.some(id => !priorityRewardIds.includes(id)) && <button className="semantic-cta semantic-cta--secondary" onClick={() => openBeginnerMissionReward(pendingBeginnerRewards)}>
-          ミッション報酬を受け取る
+        {otherPendingRewardIds.length > 0 && <button className="semantic-cta semantic-cta--secondary" onClick={() => openBeginnerMissionReward(otherPendingRewardIds)}>
+          その他の未受取報酬
         </button>}
 
         {visibleBanners.length > 0 && <div className="mypage-event-banner-area">

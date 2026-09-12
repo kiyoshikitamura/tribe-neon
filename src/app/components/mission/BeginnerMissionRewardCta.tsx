@@ -13,5 +13,5 @@ export default function BeginnerMissionRewardCta() {
   const ids = beginnerRewardIds(beginnerJourney, activeTab);
   if (!ids.length) return null;
   return <button className="beginner-mission-reward-cta semantic-cta semantic-cta--primary"
-    onClick={() => openBeginnerMissionReward(ids)}>ミッション報酬を受け取る</button>;
+    onClick={() => openBeginnerMissionReward(ids)}>今回のミッション報酬を受け取る</button>;
 }
