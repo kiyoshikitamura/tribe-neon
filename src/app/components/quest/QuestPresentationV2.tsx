@@ -116,7 +116,7 @@ export default function QuestPresentationV2() {
   }, [game.questSelectionRequest]);
 
   const returnToList = () => { setShowSelection(false); setSelectedPatrolId(null); };
-  const startSelection = () => { if (!activeCourse || activeCourse.is_unlocked === false) { const first = (game.patrolCourses || []).find((course: any) => course.town_id === game.selectedTown && course.is_unlocked !== false); game.setSelectedCourse(first?.id || ""); } game.setSelectedPatrolMember(null); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); setShowSelection(true); };
+  const startSelection = () => { game.setSelectedCourse(""); game.setSelectedPatrolMember(null); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); setShowSelection(true); };
 
   const openPatrol = (patrolId: string) => {
     setSelectedPatrolId(patrolId);
@@ -167,7 +167,7 @@ export default function QuestPresentationV2() {
           const label = { REWARD: "受取可能", BATTLE: "戦闘待ち", WAITING: "探索中", UNKNOWN: "確認中" }[state];
           return <button className="quest-v2-dispatch-card" data-state={state} key={patrol.id} onClick={() => openPatrol(patrol.id)}>
             {character && <CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="thumbnail" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} />}
-            <span className="quest-v2-dispatch-description"><strong>{character?.jpName || "キャラクター"}</strong><span>{course?.name || "クエスト"} / {difficulty(course?.level_type || "")}</span><b>{label}{state === "WAITING" ? `・残り ${clock(patrol.secondsLeft)}` : ""}</b>{isCharacterHometown(character?.homeTown, course?.town_id) && <em className="quest-v2-bonus">{patrol.hometownBonusSnapshot?.matched ? "地元ボーナス発生中" : "地元一致"}</em>}</span>
+            <span className="quest-v2-dispatch-description"><strong>{character?.jpName || "キャラクター"}</strong><span>{course?.name || "クエスト"} / {difficulty(course?.level_type || "")}</span><b>{label}{state === "WAITING" ? `・残り ${clock(patrol.secondsLeft)}` : ""}</b>{isCharacterHometown(character?.homeTown, course?.town_id) && <em className="quest-v2-bonus">地元一致</em>}</span>
             <span className="quest-v2-dispatch-open">{state === "REWARD" ? "報酬へ" : state === "BATTLE" ? "バトルへ" : "確認"}</span>
           </button>;
         })}

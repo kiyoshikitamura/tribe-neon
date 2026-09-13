@@ -92,15 +92,16 @@ export default function PatrolTab() {
   const tutorialEncounterPatrolStatus = tutorialEncounterPatrol?.status ?? null;
   const tutorialEncounterQuestId = tutorialEncounterPatrol?.courseId ?? null;
 
-  // コースが未選択のときに初期選択を設定
+  // 通常探索の級は本人が選ぶ。初期補完はチュートリアル専用。
   React.useEffect(() => {
+    if (!isTutorialQuestStep) return;
     if (patrolCourses.length > 0 && (!selectedCourse || selectedCourse === "e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1")) {
       const firstCourse = patrolCourses.find((c: any) => c.town_id === selectedTown && c.is_unlocked !== false);
       if (firstCourse) {
         setSelectedCourse(firstCourse.id);
       }
     }
-  }, [patrolCourses, selectedTown, selectedCourse, setSelectedCourse]);
+  }, [isTutorialQuestStep, patrolCourses, selectedTown, selectedCourse, setSelectedCourse]);
 
   // The first quest uses the canonical tutorial formation leader. Never fall
   // back to the initialization starter or whichever owned row happens to be
