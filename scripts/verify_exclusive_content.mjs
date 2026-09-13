@@ -52,11 +52,11 @@ assert.ok(replaySource.includes('outcomeUnit && exclusiveSkill ? EXCLUSIVE_SKILL
 const streetSource = fs.readFileSync('src/app/components/battle/StreetBattleViewer.tsx','utf8');
 assert.ok(streetSource.includes('key={action?.unit.replayStartCursor}'),'every activation restarts full dialogue');
 assert.ok(streetSource.includes('!dialogue && master && resolveCharacterGachaQuote'),'exclusive does not use Gacha quote');
-const css = fs.readFileSync('src/app/components/battle/ExclusiveBattlePresentation.css','utf8');
-for (const child of ['.battle-skill-cutin', '.battle-cutin-character', '.battle-cutin-speed-lines', '.sb-standing']) assert.ok(css.includes(`.exclusive-skill-cutin ${child}`),'delay the child animation as well as revealing the wrapper');
-assert.ok(css.includes('animation-delay:1100ms'));
+const sequenceSource = fs.readFileSync('src/app/components/battle/ExclusiveBattlePresentation.tsx','utf8');
+assert.ok(sequenceSource.includes('phase === "CUTIN" ? <div className="exclusive-skill-cutin">{children}</div>'),'cut-in children mount only after the dialogue phase');
+assert.ok(sequenceSource.includes('EXCLUSIVE_SKILL_PREFIX_MS - 180'));
 const cutInSource = fs.readFileSync('src/app/components/battle/BattleEffectPresentation.tsx','utf8');
 assert.ok(cutInSource.includes('if (!visible || paused) return;'));
 assert.ok(cutInSource.includes('clock.remainingMs - (performance.now() - startedAt)'));
 assert.ok(fs.readFileSync('src/app/components/battle/ExclusiveBattlePresentation.tsx','utf8').includes('index * 120'));
-console.log('PASS: approved dialogue, snapshot owner guard, authoritative outcome wait, repeated activation, child animation delay, pause, 120ms bands');
+console.log('PASS: approved dialogue, snapshot owner guard, authoritative outcome wait, repeated activation, phase-mounted cut-in, pause, 120ms bands');

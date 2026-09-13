@@ -6,6 +6,7 @@ import type { BattleParticipantView } from "./BattleUnitPortrait";
 import type { BattleTargetResolutionGroup } from "@/domain/presentation/battlePresentationUnit";
 import "./BattleEffectPresentation.css";
 import "./ExclusiveBattlePresentation.css";
+import { ExclusiveSkillSequence } from "./ExclusiveBattlePresentation";
 import { exclusiveSkillForBattleMember } from "@/domain/presentation/exclusiveContent";
 import { EXCLUSIVE_SKILL_DIALOGUE, EXCLUSIVE_SKILL_PREFIX_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 import { isInternalBattleLabel, safeBattleCharacterName } from "@/domain/presentation/battleSkillLabels";
@@ -208,9 +209,7 @@ export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, a
   if (!visible?.tier) return null;
   const tier = visible.tier.toLowerCase();
   return (
-    <div key={actionKey} className={`${visible.dialogue ? "exclusive-skill-sequence" : ""} ${paused ? "is-paused" : ""}`}>
-      {visible.dialogue && <div className="exclusive-skill-dialogue"><span>{visible.dialogue}</span></div>}
-      <div className={visible.dialogue ? "exclusive-skill-cutin" : ""}>
+    <ExclusiveSkillSequence key={actionKey} dialogue={visible.dialogue} paused={paused}>
     <div className={`battle-skill-cutin is-${tier} is-speed-${speed > 1 ? "fast" : "normal"}`} aria-label={`${visible.charName} ${visible.skillName}`}>
       <img className="battle-cutin-darken" src={BATTLE_EFFECT_ASSETS.screenDarken} alt="" aria-hidden="true" />
       <img
@@ -228,7 +227,7 @@ export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, a
         <strong>{visible.skillName}</strong>
         <span>{visible.charName}</span>
       </div>
-    </div></div></div>
+    </div></ExclusiveSkillSequence>
   );
 }
 

@@ -12,7 +12,7 @@ import { isInternalBattleLabel } from "@/domain/presentation/battleSkillLabels";
 import "./StreetBattle.css";
 import { exclusiveSkillForBattleMember } from "@/domain/presentation/exclusiveContent";
 import { EXCLUSIVE_SKILL_DIALOGUE } from "@/domain/presentation/exclusiveSkillDialogue";
-import { ExclusiveEquipmentIntro } from "./ExclusiveBattlePresentation";
+import { ExclusiveEquipmentIntro, ExclusiveSkillSequence } from "./ExclusiveBattlePresentation";
 
 const impact = "/effects/battle-v3/street-impact.webp";
 const support = "/effects/battle-v3/street-support.webp";
@@ -64,9 +64,7 @@ export default function StreetBattleViewer(props:QuestBattleViewerProps) {
     })}</section>)}</main>
     <p className="sb-event sb-visually-hidden" aria-live="polite">{action ? `${actor?.name || ""} / ${skillName}` : props.paused ? "一時停止中" : "AUTO BATTLE"}</p>
     <ExclusiveEquipmentIntro members={props.playerParty} paused={props.paused} />
-    {casting && actor && <div key={action?.unit.replayStartCursor} className={dialogue ? `exclusive-skill-sequence ${props.paused ? "is-paused" : ""}` : ""}>
-    {dialogue && <div className="exclusive-skill-dialogue"><span>{dialogue}</span></div>}
-    <div className={dialogue ? "exclusive-skill-cutin" : ""}><section key={action?.unit.replayStartCursor} className={`sb-announcement ${fullscreen?"fullscreen":"compact"}`} aria-label="スキル演出">{fullscreen && master && <img className="sb-standing" src={getCharacterTransparentImg(master.name)} alt=""/>}<div className="sb-cast-copy">{!fullscreen && master && <div className="sb-speaker sb-face" data-character={master.name.toLowerCase()}><img src={getCharacterTransparentImg(master.name)} alt={actor.name}/></div>}<small>{master?.rarity} / {actor.name}</small><h2>{skillName}</h2>{skillRarity&&<span>SKILL {skillRarity}</span>}<p>{!dialogue && master && resolveCharacterGachaQuote(master.id)}</p></div></section></div></div>}
+    {casting && actor && <ExclusiveSkillSequence key={action?.unit.replayStartCursor} dialogue={dialogue} paused={props.paused}><section key={action?.unit.replayStartCursor} className={`sb-announcement ${fullscreen?"fullscreen":"compact"}`} aria-label="スキル演出">{fullscreen && master && <img className="sb-standing" src={getCharacterTransparentImg(master.name)} alt=""/>}<div className="sb-cast-copy">{!fullscreen && master && <div className="sb-speaker sb-face" data-character={master.name.toLowerCase()}><img src={getCharacterTransparentImg(master.name)} alt={actor.name}/></div>}<small>{master?.rarity} / {actor.name}</small><h2>{skillName}</h2>{skillRarity&&<span>SKILL {skillRarity}</span>}<p>{!dialogue && master && resolveCharacterGachaQuote(master.id)}</p></div></section></ExclusiveSkillSequence>}
     </div><footer className="sb-controls"><button onClick={()=>{props.onSpeedChange(props.speed===2?1:props.speed===1&&props.monthlyPassActive?3:2);props.onSound();}}>×{props.speed}</button><button onClick={()=>{props.onPauseChange(!props.paused);props.onSound();}}>{props.paused?"再開":"一時停止"}</button>{props.canSkip&&<button disabled={props.skipPending} onClick={props.onSkip}>{props.skipPending?"結果へ移動中":"SKIP"}</button>}{!props.tutorial&&<button onClick={props.onRetreat}>撤退</button>}</footer>
   </div>;
 }

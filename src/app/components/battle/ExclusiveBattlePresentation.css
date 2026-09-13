@@ -6,24 +6,11 @@
 @keyframes exclusive-band-in{from{opacity:0;transform:translate3d(var(--band-x),0,0)}to{opacity:1;transform:translate3d(0,0,0)}}
 @keyframes exclusive-intro-out{0%,84%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
 .exclusive-skill-sequence{position:absolute;inset:0;z-index:25;pointer-events:none;overflow:hidden}
-.exclusive-skill-dialogue{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:#030408ed;color:#fff0d2;font-size:clamp(20px,5.8vw,28px);line-height:1.6;text-align:center;animation:exclusive-dialogue 1100ms linear both}
-.exclusive-skill-dialogue span{animation:exclusive-words 1100ms linear both}.exclusive-skill-cutin{position:absolute;inset:0;animation:exclusive-cutin-enter 1100ms step-end both}
-@keyframes exclusive-dialogue{0%,84%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
-@keyframes exclusive-words{0%,16%{opacity:0}24%,84%{opacity:1}100%{opacity:0}}
-@keyframes exclusive-cutin-enter{from{visibility:hidden}to{visibility:visible}}
+.exclusive-skill-dialogue{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:#030408ed;color:#fff0d2;font-size:clamp(20px,5.8vw,28px);line-height:1.6;text-align:center}
+.exclusive-skill-cutin{position:absolute;inset:0}
 .exclusive-skill-sequence.is-paused,.exclusive-skill-sequence.is-paused *{animation-play-state:paused!important}
-/* Start each existing cut-in animation after the dialogue, not while its wrapper is hidden. */
-.exclusive-skill-cutin .battle-skill-cutin,
-.exclusive-skill-cutin .battle-cutin-character,
-.exclusive-skill-cutin .battle-cutin-speed-lines,
-.exclusive-skill-cutin .sb-standing{animation-delay:1100ms;animation-fill-mode:both}
 .battle-cutin-slot .is-paused,.battle-cutin-slot .is-paused *{animation-play-state:paused!important}
-/* Reduced motion removes travel, but preserves dialogue/cut-in and intro end boundaries. */
 @media(prefers-reduced-motion:reduce){
-  .sb-root .exclusive-skill-dialogue{animation:exclusive-dialogue 1100ms step-end both!important}
-  .sb-root .exclusive-skill-dialogue span{animation:exclusive-words 1100ms step-end both!important}
-  .sb-root .exclusive-skill-cutin{animation:exclusive-cutin-enter 1100ms step-end both!important}
   .sb-root .exclusive-equipment-intro{animation:exclusive-intro-out var(--intro-ms) step-end both!important}
-  .sb-root .exclusive-skill-sequence.is-paused *{animation-play-state:paused!important}
 }
 .sb-root .exclusive-equipment-intro[data-paused="true"]{animation-play-state:paused!important}

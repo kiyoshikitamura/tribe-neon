@@ -1,8 +1,8 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { exclusiveEquipmentForBattleMember } from "@/domain/presentation/exclusiveContent";
-import { EXCLUSIVE_EQUIPMENT_INTRO_MS } from "@/domain/presentation/exclusiveSkillDialogue";
+import { EXCLUSIVE_SKILL_PREFIX_MS, EXCLUSIVE_EQUIPMENT_INTRO_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import type { BattleParticipantView } from "./BattleUnitPortrait";
 import "./ExclusiveBattlePresentation.css";
@@ -20,5 +20,30 @@ export function ExclusiveEquipmentIntro({ members, paused }: { members: BattlePa
         <div><small>{member.name}</small><strong>{equipment.name}</strong></div>
       </div>;
     })}
+  </div>;
+}
+
+/** Phase boundaries use the same duration as replay; cut-in children mount only after dialogue. */
+export function ExclusiveSkillSequence({ dialogue, paused, children }: { dialogue?: string | null; paused: boolean; children: ReactNode }) {
+  const [phase, setPhase] = useState<"DARK" | "DIALOGUE" | "CUTIN">("DARK");
+  const clockRef = useRef({ remainingMs: 180 });
+  useEffect(() => {
+    if (!dialogue || paused || phase === "CUTIN") return;
+    const clock = clockRef.current;
+    const startedAt = performance.now();
+    const timer = setTimeout(() => {
+      if (phase === "DARK") {
+        clockRef.current = { remainingMs: EXCLUSIVE_SKILL_PREFIX_MS - 180 };
+        setPhase("DIALOGUE");
+      } else setPhase("CUTIN");
+    }, clock.remainingMs);
+    return () => {
+      clearTimeout(timer);
+      clock.remainingMs = Math.max(0, clock.remainingMs - (performance.now() - startedAt));
+    };
+  }, [dialogue, paused, phase]);
+  if (!dialogue) return <div className={paused ? "is-paused" : ""}>{children}</div>;
+  return <div className={`exclusive-skill-sequence ${paused ? "is-paused" : ""}`} data-exclusive-phase={phase.toLowerCase()}>
+    {phase === "CUTIN" ? <div className="exclusive-skill-cutin">{children}</div> : <div className="exclusive-skill-dialogue">{phase === "DIALOGUE" && <span>{dialogue}</span>}</div>}
   </div>;
 }
