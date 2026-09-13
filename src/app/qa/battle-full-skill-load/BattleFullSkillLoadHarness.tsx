@@ -20,6 +20,8 @@ import {
   type BattleActionPresentation,
 } from "@/domain/presentation/battlePresentationUnit";
 import "./battle-full-skill-load.css";
+import { exclusiveSkillForBattleMember, EXCLUSIVE_CONTENT } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_SKILL_PREFIX_MS, EXCLUSIVE_EQUIPMENT_INTRO_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 
 type BattleScreenState = "SETUP" | "PLAYING" | "ENDING" | "OUTCOME" | "RESULT";
 type DamagePopup = { val: number; type: "dmg" | "heal" | "shield"; isCritical?: boolean; x: number; y: number; charId: string };
@@ -27,6 +29,8 @@ type DamagePopup = { val: number; type: "dmg" | "heal" | "shield"; isCritical?: 
 const toParticipant = (unit: BattleUnitInput): ParticipantState => ({
   id: unit.id,
   characterId: unit.characterId ?? unit.id,
+  // Synthetic QA fixture only; the production adapter reads server equipment snapshots.
+  equipmentMasterIds: EXCLUSIVE_CONTENT.filter(entry => entry.kind === "EQUIPMENT" && entry.characterId === unit.characterId).map(entry => entry.id),
   name: unit.name,
   alignment: unit.alignment,
   level: unit.level ?? 100,
@@ -85,6 +89,7 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
   const playerRef = useRef(initialPlayers);
   const enemyRef = useRef(initialEnemies);
   const [started, setStarted] = useState(false);
+  const [equipmentIntroComplete, setEquipmentIntroComplete] = useState(false);
   const [battleState, setBattleState] = useState<BattleScreenState>("PLAYING");
   const [eventIndex, setEventIndex] = useState(0);
   const [players, setPlayers] = useState(initialPlayers);
@@ -171,12 +176,19 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
     setSkipPending(false);
     setBattleState("PLAYING");
     setStarted(false);
+    setEquipmentIntroComplete(false);
   }, [audio.stopBgm, clearTimers, initialEnemies, initialPlayers]);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
   useEffect(() => {
-    if (!started || paused || battleState !== "PLAYING") return;
+    if (!started || paused || equipmentIntroComplete) return;
+    const timer = setTimeout(() => setEquipmentIntroComplete(true), EXCLUSIVE_EQUIPMENT_INTRO_MS);
+    return () => clearTimeout(timer);
+  }, [started, paused, equipmentIntroComplete]);
+
+  useEffect(() => {
+    if (!started || paused || !equipmentIntroComplete || battleState !== "PLAYING") return;
     const event = replay.events[eventIndex];
     if (!event) return;
     const payload = event.payload;
@@ -196,8 +208,9 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
       if (!unit) { advance(40); return; }
       const skillName = skillNames.get(skillId) ?? (skill ? "スキル発動" : "通常攻撃");
       const tier = battlePresentationTier(skill, actor?.rarity);
-      const budget = battlePresentationBudget(tier, speed, true);
-      const impactAt = battlePresentationImpactAt(speed, tier, true);
+      const exclusivePrefix = exclusiveSkillForBattleMember(actor?.characterId ?? "", skillId) ? EXCLUSIVE_SKILL_PREFIX_MS : 0;
+      const budget = battlePresentationBudget(tier, speed, true) + exclusivePrefix;
+      const impactAt = battlePresentationImpactAt(speed, tier, true) + exclusivePrefix;
       const nextActors = replay.events.slice(eventIndex).filter((entry) => entry.type === "ACTION").slice(0, 4).map((entry) => {
         const id = String(entry.payload.actorId ?? "");
         const participant = participants.find((candidate) => candidate.id === id);
@@ -357,7 +370,7 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
     }
 
     advance(40);
-  }, [battleState, clearTimers, enterResult, eventIndex, paused, replay.events, replaceParticipant, schedule, skillNames, speed, started, teamById]);
+  }, [battleState, clearTimers, enterResult, equipmentIntroComplete, eventIndex, paused, replay.events, replaceParticipant, schedule, skillNames, speed, started, teamById]);
 
   const start = async () => {
     await audio.unlockAudio();
