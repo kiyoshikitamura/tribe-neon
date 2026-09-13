@@ -21,6 +21,9 @@ export default function TribeChatModal() {
     setChatChannel,
     chatUnreadCounts,
     guildChats,
+    chatHasMore,
+    chatLoadingOlder,
+    loadOlderChatMessages,
     chatInput,
     setChatInput,
     chatReplyTo,
@@ -43,6 +46,7 @@ export default function TribeChatModal() {
   const safeDirectMessages = directMessages || [];
   const safeGuildChats = guildChats || [];
   const [chatProfiles, setChatProfiles] = useState<Record<string, any>>({});
+  const preserveChatScrollRef = useRef(false);
   const chatActorKey = showTribeChatPanel && chatChannel === "GLOBAL"
     ? [...new Set(safeGuildChats.map((msg: any) => msg.user_id || msg.author_id).filter(Boolean))].sort().join("|") : "";
   useEffect(() => {
@@ -80,9 +84,26 @@ export default function TribeChatModal() {
 
   useEffect(() => {
     if (showTribeChatPanel && chatBodyRef.current) {
+      if (preserveChatScrollRef.current) {
+        preserveChatScrollRef.current = false;
+        return;
+      }
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [guildChats, directMessages, dmRecipientId, showTribeChatPanel, chatChannel]);
+
+  const handleChatScroll = async () => {
+    const body = chatBodyRef.current;
+    if (!body || body.scrollTop > 40 || chatLoadingOlder || !chatHasMore) return;
+    const previousHeight = body.scrollHeight;
+    preserveChatScrollRef.current = true;
+    await loadOlderChatMessages();
+    requestAnimationFrame(() => {
+      if (chatBodyRef.current) {
+        chatBodyRef.current.scrollTop += chatBodyRef.current.scrollHeight - previousHeight;
+      }
+    });
+  };
 
   if (!showTribeChatPanel) return null;
 
@@ -170,7 +191,7 @@ export default function TribeChatModal() {
         )}
 
         {/* チャットメッセージログ表示領域 */}
-        <div className="tribe-modal-body custom-scrollbar flex-1 mb-3" ref={chatBodyRef}>
+        <div className="tribe-modal-body custom-scrollbar flex-1 mb-3" ref={chatBodyRef} onScroll={handleChatScroll}>
           {chatChannel === "DM" ? (
             !dmRecipientId ? (
               dmConversations.length === 0 ? (
@@ -237,7 +258,7 @@ export default function TribeChatModal() {
             safeGuildChats.length === 0 ? (
               <div className="tribe-modal-empty">メッセージログはありません</div>
             ) : (
-              safeGuildChats.map((msg: any, idx: number) => {
+              safeGuildChats.map((msg: any) => {
                 const isSelf = msg.user_id === session?.user?.id;
                 const member = guildMembersList?.find((entry: any) => entry.user_id === (msg.user_id || msg.author_id));
                 const identity = chatChannel === "GLOBAL" ? chatProfiles[msg.user_id || msg.author_id] : member?.users;
@@ -246,7 +267,7 @@ export default function TribeChatModal() {
                   ? new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                   : "";
                 return (
-                  <div key={idx} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
+                  <div key={msg.id} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
                     <div className="tribe-msg-header">
                       <div className="tribe-msg-identity"><UserIdentityRow
                         userName={identity?.username || msg.author_name || "ユーザー"}

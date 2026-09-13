@@ -574,6 +574,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     guildChats, setGuildChats,
     chatChannel, setChatChannel,
     chatInput, setChatInput,
+    chatReplyTo, setChatReplyTo,
     chatSending, setChatSending,
     chatCooldown, setChatCooldown,
     activeUsersCount, setActiveUsersCount,
@@ -600,6 +601,42 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     createBbsThread,
     createBbsPost
   } = chat;
+
+  const [chatHasMore, setChatHasMore] = useState(false);
+  const [chatLoadingOlder, setChatLoadingOlder] = useState(false);
+  const loadOlderChatMessages = useCallback(async () => {
+    if (!session || chatChannel === "DM" || chatLoadingOlder || !chatHasMore) return 0;
+    const oldestMessage = guildChats[0];
+    if (!oldestMessage?.created_at) return 0;
+
+    setChatLoadingOlder(true);
+    try {
+      let query = supabase
+        .from("board_posts")
+        .select("*")
+        .lt("created_at", oldestMessage.created_at)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      query = chatChannel === "GLOBAL"
+        ? query.eq("target_type", "GLOBAL")
+        : query.eq("target_type", "GUILD").eq("target_id", userGuildMember?.guild_id || "");
+
+      const { data, error } = await query;
+      if (error) throw error;
+      const olderMessages = (data || []).reverse();
+      setChatHasMore(olderMessages.length === 30);
+      setGuildChats((previous) => {
+        const existingIds = new Set(previous.map((message) => message.id));
+        return [...olderMessages.filter((message) => !existingIds.has(message.id)), ...previous];
+      });
+      return olderMessages.length;
+    } catch (error: any) {
+      console.warn("loadOlderChatMessages error:", error.message);
+      return 0;
+    } finally {
+      setChatLoadingOlder(false);
+    }
+  }, [chatChannel, chatHasMore, chatLoadingOlder, guildChats, session, setGuildChats, userGuildMember]);
 
 
 
@@ -2342,7 +2379,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       let query = supabase
         .from("board_posts")
         .select("*")
-        .order("created_at", { ascending: true })
+        .order("created_at", { ascending: false })
         .limit(30);
 
       if (chatChannel === "GLOBAL") {
@@ -2352,9 +2389,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         query = query.eq("target_type", "GUILD").eq("target_id", guildIdFilter);
       }
 
-      const { data } = await query;
+      const { data, error } = await query;
+      if (error) {
+        console.warn("fetchChats error:", error.message);
+        return;
+      }
       if (data) {
-        setGuildChats(data);
+        setChatHasMore(data.length === 30);
+        setGuildChats(data.reverse());
       }
     };
 
@@ -4412,11 +4454,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     unreadNewsCount, markNewsRead,
     selectedNews, setSelectedNews,
     guildChats, setGuildChats,
+    chatHasMore,
+    chatLoadingOlder,
+    loadOlderChatMessages,
     chatChannel, setChatChannel,
     chatUnreadCounts,
     refreshChatUnreadCounts,
     markChatChannelRead,
     chatInput, setChatInput,
+    chatReplyTo, setChatReplyTo,
     chatSending, setChatSending,
     errorMessage, setErrorMessage,
     upgradeLoading, setUpgradeLoading,

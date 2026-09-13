@@ -8,6 +8,28 @@ import {
   type DirectMessageRow,
 } from "./directMessageConversations";
 
+const GUILD_CHAT_REFRESH_TIMEOUT_MS = 12_000;
+
+function getChatSendErrorMessage(error: unknown) {
+  const message = String((error as { message?: unknown })?.message || "").toLowerCase();
+  if (message.includes("reply target is unavailable")) {
+    return "返信先が現在のチャンネルで利用できないため、返信を解除して送信してください。";
+  }
+  if (message.includes("chat cooldown is active")) {
+    return "送信間隔が短すぎます。少し待ってからもう一度お試しください。";
+  }
+  if (message.includes("guild membership required")) {
+    return "ギルドメンバーのみギルドチャットへ送信できます。";
+  }
+  if (message.includes("invalid chat message")) {
+    return "メッセージは1〜140文字で入力してください。";
+  }
+  if (message.includes("jwt") || message.includes("session") || message.includes("auth")) {
+    return "セッションを確認できませんでした。画面を更新して、もう一度お試しください。";
+  }
+  return "メッセージを送信できませんでした。入力内容を確認して、もう一度お試しください。";
+}
+
 export function useChat(
   session: any,
   username: string,
@@ -356,17 +378,18 @@ export function useChat(
       setChatReplyTo(null);
       setChatCooldown(chatChannel === "GUILD" ? 3 : 10);
       if (chatChannel === "GUILD") {
-        try {
-          await refreshAfterGuildChat(session.user.id);
-        } catch (refreshError) {
-          // メッセージは確定済みなので、表示同期の失敗を送信失敗として扱わない。
+        // 送信RPCは確定済み。無関係な全体同期の遅延を送信UIへ波及させない。
+        const refreshTimeout = new Promise<void>((_, reject) => {
+          setTimeout(() => reject(new Error("guild chat post-send refresh timed out")), GUILD_CHAT_REFRESH_TIMEOUT_MS);
+        });
+        void Promise.race([refreshAfterGuildChat(session.user.id), refreshTimeout]).catch((refreshError) => {
           console.warn("Guild chat mission projection refresh failed:", refreshError);
-        }
+        });
       }
     } catch (err: any) {
       setGuildChats((previous) => previous.filter((message) => message.id !== temporaryMessageId));
       console.warn(err.message);
-      setErrorMessage("メッセージを送信できませんでした。入力内容を確認して、もう一度お試しください。");
+      setErrorMessage(getChatSendErrorMessage(err));
     } finally {
       setChatSending(false);
     }
