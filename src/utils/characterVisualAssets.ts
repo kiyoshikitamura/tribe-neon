@@ -26,3 +26,9 @@ export function getCharacterLocationBackground(homeTown: unknown): string {
   const locationKey = resolveCharacterLocationKey(homeTown);
   return CHARACTER_LOCATION_BACKGROUNDS[locationKey || "shinjuku"];
 }
+
+/** 日本語表記と街IDを同一の地元として比較。未設定同士は一致させない。 */
+export function isCharacterHometown(homeTown: unknown, destination: unknown): boolean {
+  const home = resolveCharacterLocationKey(homeTown);
+  return home !== null && home === resolveCharacterLocationKey(destination);
+}

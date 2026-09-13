@@ -25,3 +25,9 @@ RPC、報酬量、時短費用、枠数、Tutorial専用UIは変更しない。
 構造変更済み。状態遷移時は表示先の先頭へスクロール。派遣中/戦闘待ち/受取可能から「別の派遣をする」で一覧へ帰還。
 型・Next build・verify_quest_ui_state・verify_quest_battle_result_liveness PASS。実画面Acceptance未実施。
 DB/Production変更なし。既存Mission共通修正の累積候補に包含。
+
+## efa32fc実画面差分監査・ラベル修正
+ユーザー提供監査: 段階UI、複数派遣の担当/時間、初心者順、受取dialog、同期中背面操作防止、Mission表示PASS。地元一致だけFAIL。
+原因: 日本語homeTownと英字town_idの直接比較。既存resolveCharacterLocationKeyを再利用し、共通isCharacterHometownで担当選択/一覧/派遣詳細3箇所を修正。
+7街の日本語/英字、大文字/空白、一致しない街、未設定/不明の誤一致防止を検証PASS。
+ラベル修正後の実画面監査は未実施。ボーナス実加算は別のProduction必須Gateとして残る。
