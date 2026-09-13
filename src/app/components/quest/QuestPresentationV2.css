@@ -71,3 +71,34 @@
 .quest-v2-town-tabs button.active{border-color:#c8b680}.quest-v2-character-grid button.selected{border-color:#c8b680;background:#c8b68014}
 
 .quest-v2-drops{font-size:11px;color:#c2c2bd}.quest-v2-drops summary{min-height:32px;cursor:pointer}.quest-v2-dispatch-reason{margin:0;color:#e1b2a7;font-size:12px}
+
+/* Dispatch-first journey: overview, destination, encounter/reward, owner. */
+.quest-v2-overview-heading{padding:8px 0 10px;border-bottom:1px solid #675838}
+.quest-v2-overview-heading h2{font-size:24px;letter-spacing:.06em}
+.quest-v2-dispatch-card{position:relative;overflow:hidden;background:linear-gradient(115deg,rgba(48,43,34,.95),rgba(13,19,28,.97));box-shadow:inset 0 1px 0 #ffffff0b}
+.quest-v2-dispatch-card[data-state="WAITING"]{border-left-color:#c8b680}
+.quest-v2-bonus{width:fit-content;padding:3px 6px;border:1px solid #9c885144;border-radius:3px;background:#8f753b19;color:#e7d393;font-size:10px;font-style:normal}
+.quest-v2-empty-slot{display:grid;grid-template-columns:36px minmax(0,1fr) 28px;min-height:84px;padding:12px;border:1px solid #554d3e;background:linear-gradient(115deg,#28261f99,#101720);box-shadow:inset 3px 0 #85734f55}
+.quest-v2-empty-slot .quest-v2-slot-number{color:#bda878;font-family:var(--font-display);font-size:24px;opacity:.8}
+.quest-v2-empty-slot strong{display:grid;gap:4px;color:#d8d3c8;font-size:14px}
+.quest-v2-empty-slot strong small{font-size:10px;font-weight:400;color:#b5b5af}
+.quest-v2-empty-slot .quest-v2-slot-plus{display:grid;place-items:center;width:28px;height:28px;border:1px solid #8d7e5e70;border-radius:50%;color:#d8c798;font-size:20px}
+.quest-v2-stepper{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:0;padding:0;list-style:none}
+.quest-v2-stepper li{display:flex;align-items:center;justify-content:center;gap:5px;min-height:36px;border-bottom:2px solid #333a42;color:#9ba3ae;font-size:10px;white-space:nowrap}
+.quest-v2-stepper li b{display:grid;place-items:center;width:18px;height:18px;border:1px solid #59606a;border-radius:50%;font-size:10px}
+.quest-v2-stepper li[aria-current="step"]{border-bottom-color:#c8b680;color:#f0e3be}
+.quest-v2-stepper li[aria-current="step"] b{border-color:#c8b680;background:#c8b68022}
+.quest-v2-brief>header{gap:8px;align-items:flex-start}
+.quest-v2-brief>header>strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.quest-v2-brief>header>.quest-v2-back{flex-shrink:0}
+.quest-v2-enemy-preview{display:grid;gap:8px;min-width:0}
+.quest-v2-enemy-preview>p{margin:0;color:#a4acb5;font-size:10px}
+.quest-v2-enemy-preview>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.quest-v2-enemy-preview article{display:grid;gap:4px;min-width:0}
+.quest-v2-enemy-preview .character-presentation{width:100%;height:auto;aspect-ratio:1}
+.quest-v2-enemy-preview article>strong{font-size:11px;overflow-wrap:anywhere;text-align:center}
+.quest-v2-brief .quest-v2-reward-item small{font-size:11px;white-space:normal;line-height:1.35}
+.quest-v2-brief .quest-v2-reward-item strong{font-size:11px}
+.quest-v2-brief .quest-v2-first-clear{font-size:11px}
+.quest-v2-hometown-note{position:relative;z-index:1;width:fit-content;margin:8px auto}
+@media(max-width:360px){.quest-v2-dispatch-card{grid-template-columns:52px minmax(0,1fr) auto;gap:7px;padding:8px}.quest-v2-dispatch-card>.character-presentation{width:52px;height:72px}.quest-v2-dispatch-description>strong{font-size:13px}.quest-v2-dispatch-description>span,.quest-v2-dispatch-description>b{font-size:10px}.quest-v2-enemy-preview>div{grid-template-columns:repeat(4,minmax(0,1fr))}}

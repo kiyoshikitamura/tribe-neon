@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGame } from "@/app/context/GameContext";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
+import { CANONICAL_QUEST_ENEMY_POOLS } from "@/domain/gameplay/canonical/quests";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import CharacterPresentation from "../character/CharacterPresentation";
@@ -33,6 +34,7 @@ function RewardIcon({ itemId, label, quantity }: { itemId: string; label: string
 
 export default function QuestPresentationV2() {
   const game = useGame() as any;
+  const contentRef = useRef<HTMLDivElement>(null);
   const actionRef = useRef(false);
   const mountedRef = useRef(true);
   useEffect(() => { mountedRef.current = true; return () => { mountedRef.current = false; }; }, []);
@@ -41,12 +43,14 @@ export default function QuestPresentationV2() {
   const battleRef = useRef(false);
   const [battleStartingId, setBattleStartingId] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<"DISPATCH" | "SHORTEN" | "CLAIM" | null>(null);
-  const [showSelection, setShowSelection] = useState((game.activePatrols || []).length === 0);
+  const [showSelection, setShowSelection] = useState(false);
+  const [selectionStep, setSelectionStep] = useState<"DESTINATION" | "REVIEW" | "CHARACTER">("DESTINATION");
   const [selectedPatrolId, setSelectedPatrolId] = useState<string | null>(null);
   const activePatrols = sortQuestProgress<any>(game.activePatrols || []);
   const selectedPatrol = activePatrols.find((patrol: any) => patrol.id === selectedPatrolId) || null;
-  const selectionVisible = showSelection || activePatrols.length === 0;
+  const selectionVisible = showSelection;
   const activeCourse = (game.patrolCourses || []).find((course: any) => course.id === game.selectedCourse);
+  const enemyCandidates = CANONICAL_QUEST_ENEMY_POOLS.entries.filter((entry) => entry.areaId === String(activeCourse?.town_id || "").toUpperCase() && entry.difficulty === activeCourse?.level_type).map((entry) => CHARACTERS_MASTER.find((master) => master.id === entry.characterId)).filter(Boolean);
   const townName = TOWNS.find(([id]) => id === game.selectedTown)?.[1] || "街";
   const bgImage = `/bg/bg_street_${game.selectedTown}.jpg`;
   const detailCourse = (game.patrolCourses || []).find((course: any) => course.id === selectedPatrol?.courseId);
@@ -58,6 +62,9 @@ export default function QuestPresentationV2() {
       setSelectedPatrolId(null);
     }
   }, [activePatrols, selectedPatrolId]);
+
+  useEffect(() => { contentRef.current?.scrollIntoView({ block: "start" }); }, [showSelection, selectionStep, selectedPatrolId]);
+  useEffect(() => { setShowSelection(false); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); }, [game.session?.user?.id]);
 
   const [today, setToday] = useState(() => getJstDateString());
   useEffect(() => {
@@ -78,7 +85,7 @@ export default function QuestPresentationV2() {
   const paidRemaining = skipsReady ? Math.max(0, 10 - (game.dailyCashSkipsResetDate === today ? Number(game.dailyPaidSkips) : 0)) : null;
   const shorten = async (currency: "FREE_PREOPEN" | "DIAMOND", patrolId: string) => {
     setPendingAction("SHORTEN");
-    await guarded(async () => {
+    return await guarded(async () => {
       const success = await game.handleInstantComplete(currency, patrolId);
       if (!success && mountedRef.current && game.session?.user?.id === userRef.current) await game.syncBootstrapData(game.session.user.id);
       return success;
@@ -90,7 +97,7 @@ export default function QuestPresentationV2() {
     isOpen: true, title: "DIA時短", message: "30 DIAを消費して、このクエストの待機時間を完了します。バトルと報酬受取は別途必要です。",
     confirmText: "30 DIAで時短", cancelText: "戻る",
     onCancel: () => game.setConfirmDialogConfig(null),
-    onConfirm: async () => { game.setConfirmDialogConfig(null); if (!mountedRef.current || !owner || userRef.current !== owner) return; await shorten("DIAMOND", patrolId); },
+    onConfirm: async () => { if (!mountedRef.current || !owner || userRef.current !== owner) return; const success = await shorten("DIAMOND", patrolId); if (!success) throw new Error("時短を完了できませんでした"); if (mountedRef.current && userRef.current === owner) game.setConfirmDialogConfig(null); },
   });
   };
   const closeResult = () => { game.setShowPatrolRewardModal(false); game.setLastPatrolRewards(null); };
@@ -99,6 +106,7 @@ export default function QuestPresentationV2() {
     if (!course) { closeResult(); return; }
     game.setSelectedTown(course.town_id); game.setSelectedCourse(course.id);
     game.setSelectedPatrolMember(null);
+    setSelectionStep("REVIEW");
     setShowSelection(true);
     closeResult();
   };
@@ -111,9 +119,13 @@ export default function QuestPresentationV2() {
     game.setSelectedTown(course.town_id);
     game.setSelectedCourse(course.id);
     game.setSelectedPatrolMember(null);
+    setSelectionStep("REVIEW");
     setShowSelection(true);
     game.requestQuestSelection(null);
   }, [game.questSelectionRequest]);
+
+  const returnToList = () => { setShowSelection(false); setSelectedPatrolId(null); };
+  const startSelection = () => { if (!activeCourse || activeCourse.is_unlocked === false) { const first = (game.patrolCourses || []).find((course: any) => course.town_id === game.selectedTown && course.is_unlocked !== false); game.setSelectedCourse(first?.id || ""); } game.setSelectedPatrolMember(null); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); setShowSelection(true); };
 
   const openPatrol = (patrolId: string) => {
     setSelectedPatrolId(patrolId);
@@ -153,8 +165,8 @@ export default function QuestPresentationV2() {
   };
 
   return <HubPage className="patrol-container quest-v2-shell" title="クエスト" hideVisualHeader>
-    <div className="quest-v2-content" style={{ "--quest-state-background": `url(${stateBgImage})` } as React.CSSProperties}>
-      {(selectionVisible || selectedPatrol) && activePatrols.length > 0 && <button className="quest-v2-back" onClick={() => { setShowSelection(false); setSelectedPatrolId(null); }}>派遣一覧へ</button>}
+    <div ref={contentRef} className="quest-v2-content" style={{ "--quest-state-background": `url(${stateBgImage})` } as React.CSSProperties}>
+      {(selectionVisible || selectedPatrol) && <button className="quest-v2-back" onClick={returnToList}>派遣一覧へ</button>}
       {!selectionVisible && !selectedPatrol && <section className="quest-v2-overview" aria-label="派遣状況">
         <header className="quest-v2-overview-heading"><h2>クエスト</h2><span>派遣枠 {activePatrols.length} / 5</span></header>
         {activePatrols.map((patrol: any) => {
@@ -164,30 +176,37 @@ export default function QuestPresentationV2() {
           const label = { REWARD: "受取可能", BATTLE: "戦闘待ち", WAITING: "派遣中", UNKNOWN: "確認中" }[state];
           return <button className="quest-v2-dispatch-card" data-state={state} key={patrol.id} onClick={() => openPatrol(patrol.id)}>
             {character && <CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="thumbnail" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} />}
-            <span className="quest-v2-dispatch-description"><strong>{character?.jpName || "派遣担当"}</strong><span>{course?.name || "クエスト"} / {difficulty(course?.level_type || "")}</span><b>{label}{state === "WAITING" ? `・残り ${clock(patrol.secondsLeft)}` : ""}</b></span>
+            <span className="quest-v2-dispatch-description"><strong>{character?.jpName || "派遣担当"}</strong><span>{course?.name || "クエスト"} / {difficulty(course?.level_type || "")}</span><b>{label}{state === "WAITING" ? `・残り ${clock(patrol.secondsLeft)}` : ""}</b>{character?.homeTown === course?.town_id && <em className="quest-v2-bonus">地元一致</em>}</span>
             <span className="quest-v2-dispatch-open">{state === "REWARD" ? "報酬へ" : state === "BATTLE" ? "バトルへ" : "確認"}</span>
           </button>;
         })}
-        {Array.from({ length: Math.max(0, 5 - activePatrols.length) }, (_, index) => <button className="quest-v2-empty-slot" key={index} onClick={() => { game.setSelectedPatrolMember(null); setShowSelection(true); }}><strong>＋ 新しく派遣する</strong><span>空き枠 {activePatrols.length + index + 1} / 5</span></button>)}
+        {Array.from({ length: Math.max(0, 5 - activePatrols.length) }, (_, index) => <button className="quest-v2-empty-slot" key={index} onClick={startSelection}><span className="quest-v2-slot-number">{String(activePatrols.length + index + 1).padStart(2, "0")}</span><strong>未派遣<small>派遣先を選ぶ</small></strong><span className="quest-v2-slot-plus" aria-hidden="true">＋</span></button>)}
       </section>}
-      {selectionVisible && <><section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}>
+      {selectionVisible && <><ol className="quest-v2-stepper" aria-label="派遣準備">{["派遣先・級", "敵・報酬", "派遣担当"].map((label, index) => <li key={label} aria-current={index === ["DESTINATION", "REVIEW", "CHARACTER"].indexOf(selectionStep) ? "step" : undefined}><b>{index + 1}</b>{label}</li>)}</ol><section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}>
         <div><span>新規派遣</span><strong>{townName}</strong><small>空き枠 {Math.max(0, 5 - activePatrols.length)}</small></div>
       </section>
 
-      <nav className="quest-v2-town-tabs" aria-label="街選択">{TOWNS.map(([id, label]) => <button key={id} className={game.selectedTown === id ? "active" : ""} onClick={() => { game.setSelectedTown(id); const first = (game.patrolCourses || []).find((course: any) => course.town_id === id && course.is_unlocked !== false); game.setSelectedCourse(first?.id || ""); game.playCyberSe("click"); }}>{label}</button>)}</nav>
+      {selectionStep === "DESTINATION" && <><nav className="quest-v2-town-tabs" aria-label="街選択">{TOWNS.map(([id, label]) => <button key={id} className={game.selectedTown === id ? "active" : ""} onClick={() => { game.setSelectedTown(id); const first = (game.patrolCourses || []).find((course: any) => course.town_id === id && course.is_unlocked !== false); game.setSelectedCourse(first?.id || ""); game.playCyberSe("click"); }}>{label}</button>)}</nav>
 
       <section className="quest-v2-courses" aria-label="クエスト選択">{(game.patrolCourses || []).filter((course: any) => course.town_id === game.selectedTown).map((course: any) => <button key={course.id} className={`${game.selectedCourse === course.id ? "active" : ""} ${course.is_unlocked === false ? "locked" : ""}`} disabled={course.is_unlocked === false} onClick={() => { game.setSelectedCourse(course.id); game.playCyberSe("click"); }}><strong>{difficulty(course.level_type)}</strong><small>{course.is_unlocked === false ? "前の難度をクリアで解放" : course.is_first_cleared ? "クリア済" : ""}</small></button>)}</section>
 
-      {activeCourse && <section className="quest-v2-brief">
+      <OutlawButton variant="primary" fullWidth disabled={!activeCourse || activeCourse.is_unlocked === false || activePatrols.length >= 5} onClick={() => setSelectionStep("REVIEW")}>出現エネミー・報酬を確認</OutlawButton></>}
 
-        <div className="quest-v2-metrics"><span><small>所要時間</small><strong>{clock(activeCourse.duration_seconds)}</strong></span><span><small>Energy</small><strong>{activeCourse.cost_vitality}</strong></span>{Number(activeCourse.recommended_level) > 0 && <span><small>推奨レベル</small><strong>Lv {activeCourse.recommended_level}</strong></span>}</div>
-        <div className="quest-v2-rewards" aria-label="確定報酬">{Number(activeCourse.reward_xp || 0) > 0 && <RewardIcon itemId="PLAYER_XP" label="PLAYER XP" quantity={Number(activeCourse.reward_xp)} />}{Number(activeCourse.reward_cash || 0) > 0 && <RewardIcon itemId="CASH" label="CASH" quantity={Number(activeCourse.reward_cash)} />}{guaranteedRewards(activeCourse.reward_items).map((item: any) => <RewardIcon key={item.item_id} itemId={String(item.item_id || "")} label={canonicalItemName(String(item.item_id || ""))} quantity={Number(item.quantity || 0)} />)}</div>
+      {activeCourse && selectionStep !== "DESTINATION" && <section className="quest-v2-brief">
+        <header><strong>{activeCourse.name} / {difficulty(activeCourse.level_type)}</strong><button className="quest-v2-back" onClick={() => setSelectionStep(selectionStep === "CHARACTER" ? "REVIEW" : "DESTINATION")}>戻る</button></header>
+        {selectionStep === "REVIEW" && <>
+
+        <section className="quest-v2-enemy-preview" aria-label="出現エネミー"><h3 className="quest-v2-section-title">出現エネミー <span>候補</span></h3><p>編成は派遣ごとに変わります</p><div>{enemyCandidates.map((master: any) => <article key={master.id}><CharacterPresentation src={master.img?.startsWith("/characters/") ? master.img : `/characters/${String(master.img || "").replace(/^\//, "")}`} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /><strong>{master.jpName}</strong></article>)}</div>{enemyCandidates.length === 0 && <p role="status">出現情報を確認中</p>}</section>
+        <h3 className="quest-v2-section-title">報酬</h3>
+        <div className="quest-v2-metrics"><span><small>所要時間</small><strong>{clock(activeCourse.duration_seconds)}</strong></span><span><small>エナジー</small><strong>{activeCourse.cost_vitality}</strong></span>{Number(activeCourse.recommended_level) > 0 && <span><small>推奨レベル</small><strong>Lv {activeCourse.recommended_level}</strong></span>}</div>
+        <div className="quest-v2-rewards" aria-label="確定報酬">{Number(activeCourse.reward_xp || 0) > 0 && <RewardIcon itemId="PLAYER_XP" label="プレイヤー経験値" quantity={Number(activeCourse.reward_xp)} />}{Number(activeCourse.reward_cash || 0) > 0 && <RewardIcon itemId="CASH" label="CASH" quantity={Number(activeCourse.reward_cash)} />}{guaranteedRewards(activeCourse.reward_items).map((item: any) => <RewardIcon key={item.item_id} itemId={String(item.item_id || "")} label={canonicalItemName(String(item.item_id || ""))} quantity={Number(item.quantity || 0)} />)}</div>
         {(activeCourse.reward_items || []).some((item: any) => Number(item.probability_bp) > 0 && Number(item.probability_bp) < 10000) && <details className="quest-v2-drops"><summary>獲得可能なアイテム</summary><div className="quest-v2-rewards">{(activeCourse.reward_items || []).filter((item: any) => Number(item.probability_bp) > 0 && Number(item.probability_bp) < 10000).map((item: any) => <RewardIcon key={item.item_id} itemId={String(item.item_id)} label={canonicalItemName(String(item.item_id))} quantity={Number(item.quantity || 0)} />)}</div></details>}
-        {!activeCourse.is_first_cleared && (Number(activeCourse.first_clear_user_exp) > 0 || (activeCourse.first_clear_items || []).some((item: any) => Number(item.quantity) > 0)) && <section className="quest-v2-first-clear"><strong>初回クリア報酬</strong><div className="quest-v2-rewards">{Number(activeCourse.first_clear_user_exp) > 0 && <RewardIcon itemId="PLAYER_XP" label="PLAYER XP" quantity={Number(activeCourse.first_clear_user_exp)} />}{(activeCourse.first_clear_items || []).map((item: any) => <RewardIcon key={item.item_id} itemId={String(item.item_id || "")} label={canonicalItemName(String(item.item_id || ""))} quantity={Number(item.quantity || 0)} />)}</div></section>}
-        <h3 className="quest-v2-section-title">派遣担当 <span>1名</span></h3>
-        <div className="quest-v2-character-grid">{(game.userCharactersDbList || []).map((record: any) => { const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id); if (!master) return null; const patrol = activePatrols.find((entry: any) => entry.characterId === record.character_id); const deployed = Boolean(patrol); return <button key={record.id} className={`${game.selectedPatrolMember === record.character_id && !deployed ? "selected" : ""} ${deployed ? "deployed" : ""}`} aria-label={deployed ? `${master.jpName} 派遣中のクエストを確認` : `${master.jpName} Lv.${Number(record.level || 1)}`} onClick={() => deployed ? openPatrol(patrol.id) : game.togglePatrolMemberSelection(record.character_id)}><span className="quest-v2-character-visual"><CharacterPresentation src={master.img?.startsWith("/characters/") ? master.img : `/characters/${String(master.img || "").replace(/^\//, "")}`} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} />{deployed && <b>派遣中</b>}</span><strong>{master.jpName}</strong><span>{deployed ? "進行状況を確認" : `Lv.${Number(record.level || 1)}`}</span>{master.homeTown === game.selectedTown && <em>地元一致</em>}</button>; })}</div>
-        {(activePatrols.length >= 5 || Number(game.vitality) < Number(activeCourse.cost_vitality)) && <p className="quest-v2-dispatch-reason" role="status">{activePatrols.length >= 5 ? "派遣枠がいっぱいです" : "Energyが不足しています"}</p>}
-        <OutlawButton variant="primary" fullWidth disabled={game.dispatchLoading || activeCourse.is_unlocked === false || !game.selectedCourse || !game.selectedPatrolMember || activePatrols.length >= 5 || activePatrols.some((p: any) => p.characterId === game.selectedPatrolMember) || Number(game.vitality) < Number(activeCourse.cost_vitality)} isLoading={game.dispatchLoading || pendingAction === "DISPATCH"} loadingLabel="派遣準備中…" onClick={() => { setPendingAction("DISPATCH"); void guarded(async () => { const success = await game.handleStartPatrol(); if (success && mountedRef.current) { setSelectedPatrolId(null); setShowSelection(false); } }); }}>{townName}へ派遣する</OutlawButton>
+        {!activeCourse.is_first_cleared && (Number(activeCourse.first_clear_user_exp) > 0 || (activeCourse.first_clear_items || []).some((item: any) => Number(item.quantity) > 0)) && <section className="quest-v2-first-clear"><strong>初回クリア報酬</strong><div className="quest-v2-rewards">{Number(activeCourse.first_clear_user_exp) > 0 && <RewardIcon itemId="PLAYER_XP" label="プレイヤー経験値" quantity={Number(activeCourse.first_clear_user_exp)} />}{(activeCourse.first_clear_items || []).map((item: any) => <RewardIcon key={item.item_id} itemId={String(item.item_id || "")} label={canonicalItemName(String(item.item_id || ""))} quantity={Number(item.quantity || 0)} />)}</div></section>}
+        <OutlawButton variant="primary" fullWidth disabled={activePatrols.length >= 5} onClick={() => setSelectionStep("CHARACTER")}>派遣担当を選ぶ</OutlawButton></>}
+        {selectionStep === "CHARACTER" && <><h3 className="quest-v2-section-title">派遣担当 <span>1名</span></h3>
+        <div className="quest-v2-character-grid">{(game.userCharactersDbList || []).map((record: any) => { const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id); if (!master) return null; const patrol = activePatrols.find((entry: any) => entry.characterId === record.character_id); const deployed = Boolean(patrol); return <button key={record.id} className={`${game.selectedPatrolMember === record.character_id && !deployed ? "selected" : ""} ${deployed ? "deployed" : ""}`} aria-label={deployed ? `${master.jpName} 派遣中のクエストを確認` : `${master.jpName} Lv.${Number(record.level || 1)}`} onClick={() => deployed ? openPatrol(patrol.id) : game.togglePatrolMemberSelection(record.character_id)}><span className="quest-v2-character-visual"><CharacterPresentation src={master.img?.startsWith("/characters/") ? master.img : `/characters/${String(master.img || "").replace(/^\//, "")}`} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} />{deployed && <b>派遣中</b>}</span><strong>{master.jpName}</strong><span>{deployed ? "進行状況を確認" : `Lv.${Number(record.level || 1)}`}</span>{master.homeTown === activeCourse.town_id && <em>地元一致</em>}</button>; })}</div>
+        {(activePatrols.length >= 5 || Number(game.vitality) < Number(activeCourse.cost_vitality)) && <p className="quest-v2-dispatch-reason" role="status">{activePatrols.length >= 5 ? "派遣枠がいっぱいです" : "エナジーが不足しています"}</p>}
+        <OutlawButton variant="primary" fullWidth disabled={game.dispatchLoading || activeCourse.is_unlocked === false || !game.selectedCourse || !game.selectedPatrolMember || activePatrols.length >= 5 || activePatrols.some((p: any) => p.characterId === game.selectedPatrolMember) || Number(game.vitality) < Number(activeCourse.cost_vitality)} isLoading={game.dispatchLoading || pendingAction === "DISPATCH"} loadingLabel="派遣準備中…" onClick={() => { setPendingAction("DISPATCH"); void guarded(async () => { const owner = userRef.current; const patrolId = await game.handleStartPatrol(); if (typeof patrolId === "string" && mountedRef.current && userRef.current === owner) { setSelectedPatrolId(patrolId); setShowSelection(false); } }); }}>{townName}へ派遣する</OutlawButton></>}
       </section>}</>}
 
       {!selectionVisible && selectedPatrol && <div className="quest-v2-progress-list">{[selectedPatrol].map((patrol: any) => {
@@ -223,15 +242,15 @@ export default function QuestPresentationV2() {
             <header className="quest-v2-battle-ready-identity"><small>{patrolTownName} / {difficulty(course?.level_type || "")}</small><h2>バトル発生</h2><strong>{course?.name || "クエスト"}</strong></header>
             <div className="quest-v2-battle-enemies" aria-label="対戦相手">{battleEnemies.map(({ member, master }: any, index: number) => <article key={`${member.characterId}-${index}`}><CharacterPresentation src={master.img?.startsWith("/characters/") ? master.img : `/characters/${String(master.img || "").replace(/^\//, "")}`} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /><span><strong>{master.jpName}</strong><small>Lv {Number(member.level || npc?.npc_level || 1)}</small></span></article>)}</div>
             <OutlawButton variant="primary" fullWidth disabled={!unresolvedBattle || battleStartingId === patrol.id || game.battleEncounterLocked} isLoading={battleStartingId === patrol.id} loadingLabel="バトル準備中…" onClick={() => void startBattle(patrol, npc)}>{unresolvedBattle ? "バトルへ" : "遭遇情報を同期中…"}</OutlawButton>
-            <OutlawButton className="quest-v2-selection-return" fullWidth onClick={() => setShowSelection(true)}>別のクエストへ派遣</OutlawButton>
+            <OutlawButton className="quest-v2-selection-return" fullWidth onClick={returnToList}>別の派遣をする</OutlawButton>
           </div>
         </section>;
-        if (complete) return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="RESULT_READY" key={patrol.id}><header className="tutorial-wire-complete"><h2>クエスト完了</h2><small>QUEST COMPLETE</small></header>{character && <div className="tutorial-wire-return-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong><OutlawButton variant="primary" fullWidth isLoading={pendingAction === "CLAIM"} onClick={() => { setPendingAction("CLAIM"); void guarded(() => game.handleClaimRewards(patrol.id)); }}>報酬を受け取る</OutlawButton><OutlawButton className="quest-v2-selection-return" fullWidth onClick={() => setShowSelection(true)}>別のクエストへ派遣</OutlawButton></section>;
+        if (complete) return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="RESULT_READY" key={patrol.id}><header className="tutorial-wire-complete"><h2>クエスト完了</h2><small>QUEST COMPLETE</small></header>{character && <div className="tutorial-wire-return-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong><OutlawButton variant="primary" fullWidth isLoading={pendingAction === "CLAIM"} onClick={() => { setPendingAction("CLAIM"); void guarded(() => game.handleClaimRewards(patrol.id)); }}>報酬を受け取る</OutlawButton><OutlawButton className="quest-v2-selection-return" fullWidth onClick={returnToList}>別の派遣をする</OutlawButton></section>;
         if (progressState === "UNKNOWN") return <section key={patrol.id} role="status">派遣状況を確認中…</section>;
-        return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="PROGRESS" key={patrol.id}><header className="tutorial-wire-progress-title"><span>{patrolTownName}へ派遣中</span><small>{difficulty(course?.level_type || "")}</small></header>{character && <div className="tutorial-wire-progress-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong><div className="tutorial-wire-time">残り時間 <b>{clock(patrol.secondsLeft)}</b></div><div className="tutorial-wire-progress"><i style={{ width: `${progress}%` }} /></div><div className="quest-v2-speed-actions"><OutlawButton disabled={game.dispatchLoading || !skipsReady || freeRemaining === 0} onClick={() => void shorten("FREE_PREOPEN", patrol.id)}>無料時短 {freeRemaining === null ? "残数確認中" : `残り${freeRemaining}回`}</OutlawButton><OutlawButton variant="primary" disabled={game.dispatchLoading || !skipsReady || paidRemaining === 0} onClick={() => confirmPaidShorten(patrol.id)}>30 DIA / 回 {paidRemaining === null ? "残数確認中" : `残り${paidRemaining}回`}</OutlawButton></div><OutlawButton className="quest-v2-selection-return" fullWidth onClick={() => setShowSelection(true)}>別のクエストへ派遣</OutlawButton></section>;
+        return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="PROGRESS" key={patrol.id}><header className="tutorial-wire-progress-title"><span>{patrolTownName}へ派遣中</span><small>{difficulty(course?.level_type || "")}</small></header>{character && <div className="tutorial-wire-progress-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong>{character?.homeTown === course?.town_id && <p className="quest-v2-hometown-note">地元一致</p>}<div className="tutorial-wire-time">残り時間 <b>{clock(patrol.secondsLeft)}</b></div><div className="tutorial-wire-progress"><i style={{ width: `${progress}%` }} /></div><div className="quest-v2-speed-actions"><OutlawButton disabled={game.dispatchLoading || !skipsReady || freeRemaining === 0} onClick={() => void shorten("FREE_PREOPEN", patrol.id)}>無料時短 {freeRemaining === null ? "残数確認中" : `残り${freeRemaining}回`}</OutlawButton><OutlawButton variant="primary" disabled={game.dispatchLoading || !skipsReady || paidRemaining === 0} onClick={() => confirmPaidShorten(patrol.id)}>30 DIA / 回 {paidRemaining === null ? "残数確認中" : `残り${paidRemaining}回`}</OutlawButton></div><OutlawButton className="quest-v2-selection-return" fullWidth onClick={returnToList}>別の派遣をする</OutlawButton></section>;
       })}</div>}
     </div>
 
-    {game.showPatrolRewardModal && game.lastPatrolRewards && game.battleState === null && <CanonicalDialog title="クエスト結果" onClose={closeResult} actions={[...((game.patrolCourses || []).some((course: any) => course.id === game.lastPatrolRewards.courseId) ? [{ label: "同じクエストへ", semantic: "primary" as const, onClick: repeatCourse }] : []), { label: "閉じる", semantic: "secondary", onClick: closeResult }]}><div className="quest-v2-result"><span>{game.lastPatrolRewards.battleVictory ? "勝利" : "帰還完了"}</span><strong>{game.lastPatrolRewards.courseName}</strong><p>CASH・PLAYER XPは反映済みです。</p><div className="quest-v2-rewards">{Number(game.lastPatrolRewards.totalCash || 0) > 0 && <RewardIcon itemId="CASH" label="CASH" quantity={Number(game.lastPatrolRewards.totalCash)} />}{Number(game.lastPatrolRewards.totalXp || 0) > 0 && <RewardIcon itemId="PLAYER_XP" label="PLAYER XP" quantity={Number(game.lastPatrolRewards.totalXp)} />}{(game.lastPatrolRewards.awardedItems || []).map((item: any, index: number) => <RewardIcon key={`${item.item_id}-${index}`} itemId={String(item.item_id)} label={canonicalItemName(String(item.item_id))} quantity={Number(item.quantity)} />)}</div>{(game.lastPatrolRewards.awardedItems || []).length > 0 && <p>アイテムはプレゼントへ届きました。受取期限はプレゼントで確認してください。</p>}{game.lastPatrolRewards.levelUpMessage && <p>{game.lastPatrolRewards.levelUpMessage}</p>}</div></CanonicalDialog>}
+    {game.showPatrolRewardModal && game.lastPatrolRewards && game.battleState === null && <CanonicalDialog title="クエスト結果" onClose={closeResult} actions={[...((game.patrolCourses || []).some((course: any) => course.id === game.lastPatrolRewards.courseId) ? [{ label: "同じクエストへ", semantic: "primary" as const, onClick: repeatCourse }] : []), { label: "閉じる", semantic: "secondary", onClick: closeResult }]}><div className="quest-v2-result"><span>{game.lastPatrolRewards.battleVictory ? "勝利" : "帰還完了"}</span><strong>{game.lastPatrolRewards.courseName}</strong><p>CASH・プレイヤー経験値は反映済みです。</p><div className="quest-v2-rewards">{Number(game.lastPatrolRewards.totalCash || 0) > 0 && <RewardIcon itemId="CASH" label="CASH" quantity={Number(game.lastPatrolRewards.totalCash)} />}{Number(game.lastPatrolRewards.totalXp || 0) > 0 && <RewardIcon itemId="PLAYER_XP" label="プレイヤー経験値" quantity={Number(game.lastPatrolRewards.totalXp)} />}{(game.lastPatrolRewards.awardedItems || []).map((item: any, index: number) => <RewardIcon key={`${item.item_id}-${index}`} itemId={String(item.item_id)} label={canonicalItemName(String(item.item_id))} quantity={Number(item.quantity)} />)}</div>{(game.lastPatrolRewards.awardedItems || []).length > 0 && <p>アイテムはプレゼントへ届きました。受取期限はプレゼントで確認してください。</p>}{game.lastPatrolRewards.levelUpMessage && <p>{game.lastPatrolRewards.levelUpMessage}</p>}</div></CanonicalDialog>}
   </HubPage>;
 }

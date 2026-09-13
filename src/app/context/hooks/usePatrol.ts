@@ -231,7 +231,7 @@ export function usePatrol(
       });
       actionPerformance.mark("state_update");
       actionPerformance.markVisualReady();
-      return true;
+      return String(res.data.patrol_id);
     } catch (err: any) {
       traceTutorialJourney("dispatch_rejected", { reason: err?.message || String(err) });
       console.warn(err.message);

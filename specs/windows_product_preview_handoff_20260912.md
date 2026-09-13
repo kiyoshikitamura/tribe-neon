@@ -39,3 +39,10 @@ Tutorial内Mission CLEARをpostTutorial体験へ流用しない。Fresh無料2�
 ユーザー一括再確認は、修正候補の実画面差分監査を完了してから。前回PASSだったRPC成功だけを今回の体験順のPASS根拠にしない。
 
 Preview追加適用済み: 20260913014208_beginner_post_tutorial_experience_order。再適用しない。
+
+
+## Quest構造変更（優先対応）
+最新候補はQuest一覧→未派遣枠→派遣先/級→敵候補/報酬→担当→派遣詳細の構造へ変更。
+「別の派遣をする」は派遣一覧へ戻す。一覧のキャラ・地元一致・残り時間を確認。
+specs/quest_dispatch_flow_20260913.md参照。今回追加DB変更なし。地元一致の報酬加算は現在Preview実RPCに存在しないため「ボーナス発生中」と表示しない。地元ボーナス正常化は別途残課題。
+先のMission全体修正を含む累積候補。Quest接続と初心者学習順を同じ候補で確認する。
