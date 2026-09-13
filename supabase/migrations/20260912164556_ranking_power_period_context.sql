@@ -1,4 +1,7 @@
-do $$ begin if md5(pg_get_functiondef('public.get_ranking_self_context(text,boolean)'::regprocedure)) <> 'c133b2d88efa82af07a13b0120eb2c8b' then raise exception 'concurrent function change'; end if; end $$;
+-- Hash of the immediately preceding 20260912153017 definition on PostgreSQL
+-- 17.6 with the repository's LF-normalized function body. Keep this guard in
+-- sync with that migration so substantive concurrent changes still stop here.
+do $$ begin if md5(pg_get_functiondef('public.get_ranking_self_context(text,boolean)'::regprocedure)) <> '78128fb0680418fa453feeae6f842b4d' then raise exception 'concurrent function change'; end if; end $$;
 -- POWER期間メタデータの読取補完のみ。ranking_seasons行・順位・報酬は変更しない。
 create or replace function public.get_ranking_self_context(p_category text, p_daily boolean)
 returns jsonb language plpgsql stable security definer set search_path='' as $$
