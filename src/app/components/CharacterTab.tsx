@@ -345,7 +345,7 @@ export default function CharacterTab() {
   const leftSlots = GEAR_SLOTS_MASTER.slice(0, 3);
   const rightSlots = GEAR_SLOTS_MASTER.slice(3, 7);
   if (!isTutorialStep) return <>
-    <CharacterSystemV2 />
+    <CharacterSystemV2 setupResult={characterSetupResult} />
     {characterSetupDialogOpen && <CanonicalDialog
       title="おすすめパーティと装備を設定しますか？"
       ariaLabel="キャラクターページ初回おすすめ設定"
@@ -357,16 +357,7 @@ export default function CharacterTab() {
       今のキャラクターから、おすすめの編成と装備を自動で設定します。
       {Number(totalPower || 0) > 0 && <small className="character-setup-current-power">現在の総合力 {Number(totalPower).toLocaleString()}</small>}
     </CanonicalDialog>}
-    {characterSetupResult && <CanonicalDialog
-      title="おすすめ設定が完了しました"
-      actions={[{ label: "編成を確認する", semantic: "primary", onClick: () => setCharacterSetupResult(null) }]}
-    >
-      <div className="character-setup-result" data-acceptance-state="CHARACTER_SETUP_COMPLETE">
-        <p>パーティと装備を設定しました。</p>
-        <strong>総合力 {Number(characterSetupResult.powerBefore || 0).toLocaleString()} → {Number(characterSetupResult.powerAfter || 0).toLocaleString()}</strong>
-        <small>パーティ {Number(characterSetupResult.partyCount || 0)}人 / 装備 {Number(characterSetupResult.equipmentCount || 0)}件</small>
-      </div>
-    </CanonicalDialog>}
+
   </>;
   if (!activeCharRecord || !activeCharMaster) {
     return <div className="char-tab-container char-data-unavailable" role="status">キャラクターデータを確認しています。</div>;

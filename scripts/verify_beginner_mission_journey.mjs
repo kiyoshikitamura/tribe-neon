@@ -23,7 +23,9 @@ assert.equal(nextBeginnerAction(tomorrow,'inactive').key,'pvp'); // 日次リセ
 assert.equal(nextBeginnerAction(null,'active'),null);
 const home = fs.readFileSync('src/app/components/HomeTab.tsx','utf8');
 const contextual = fs.readFileSync('src/app/components/mission/BeginnerMissionRewardCta.tsx','utf8');
-assert.match(home,/今回のミッション報酬を受け取る/);
+assert.doesNotMatch(home,/今回のミッション報酬を受け取る/);
+assert.doesNotMatch(home,/mypage-primary-cta-eyebrow/);
+assert.match(home,/ミッション：/);
 assert.doesNotMatch(home,/その他の未受取報酬/);
 
 
@@ -52,3 +54,11 @@ console.log('PASS: complete post-tutorial order, claim-independent advancement, 
 const historical={facts:{...fresh.facts,free_skill:false,character:false,quest:false},missions:[],reflow_completed:true};
 assert.equal(nextBeginnerAction(historical,'inactive'),null);
 assert.equal(nextBeginnerAction(historical,'active').key,'raid');
+
+// 開催中に未参加で帰還しても、過去の開催待ち・受取状態でGuildへ飛ばない。
+const unjoined = {...fresh, facts:{...fresh.facts, raid:false, guild:false}, raid_unavailable_ack:true};
+assert.equal(nextBeginnerAction(unjoined,'active').key,'raid');
+assert.equal(nextBeginnerAction(unjoined,'unknown').key,'raid');
+assert.equal(nextBeginnerAction(unjoined,'inactive').key,'guild');
+assert.equal(nextBeginnerAction(unjoined,'inactive').title,'TRIBEに参加しよう');
+assert.equal(nextBeginnerAction({...unjoined,facts:{...unjoined.facts,raid:true}},'active').key,'guild');

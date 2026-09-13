@@ -9,10 +9,14 @@ import CharacterPresentation from "./CharacterPresentation";
 import OutlawButton from "../ui/OutlawButton";
 import CharacterStatusBadges from "./CharacterStatusBadges";
 import "./CharacterHome.css";
+import { useGame } from "@/app/context/GameContext";
+import { beginnerRewardIds } from "@/domain/mission/beginnerJourney";
+import { canPromptBeginnerReward } from "@/domain/mission/beginnerRewardPrompt";
 
 // Selection uses a Master ID; equipment ownership uses the instance UUID.
 export type HomeCharacter = CharacterRuntimeRecord & { id: string };
 type Props = {
+  setupResult?: any;
   character: HomeCharacter;
   master: (typeof CHARACTERS_MASTER)[number];
   power: number;
@@ -27,7 +31,12 @@ type Props = {
   onParty: () => void;
 };
 
-export default function CharacterHome({ character, master, power, equipment, userId, position, total, onSwitch, onBack, onGrowth, onEquipment, onParty }: Props) {
+export default function CharacterHome({ setupResult, character, master, power, equipment, userId, position, total, onSwitch, onBack, onGrowth, onEquipment, onParty }: Props) {
+  const { beginnerJourney, openBeginnerMissionReward, refreshBeginnerJourney } = useGame();
+  const [rewardPending, setRewardPending] = useState(false);
+  const rewardIds = beginnerRewardIds(beginnerJourney, 'character');
+  const canReceive = canPromptBeginnerReward(beginnerJourney, 'character') && rewardIds.length > 0;
+  useEffect(() => { if (setupResult) void refreshBeginnerJourney(); }, [setupResult, refreshBeginnerJourney]);
   const [formation, setFormation] = useState<{ owner: string; ids: string[] } | null>(null);
   const [formationError, setFormationError] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -46,7 +55,7 @@ export default function CharacterHome({ character, master, power, equipment, use
       }
     })();
     return () => { cancelled = true; };
-  }, [userId, retry]);
+  }, [userId, retry, setupResult]);
   const savedIds = formation?.owner === userId ? formation.ids : null;
   const partyLabel = formationError ? "確認できません" : !savedIds ? "確認中" : savedIds.length === 0 ? "未編成" : savedIds.includes(character.character_id) ? "編成中" : "編成外";
   const equippedCount = equipment.filter((entry) => entry.equipped_character_id === character.id).length;
@@ -76,6 +85,15 @@ export default function CharacterHome({ character, master, power, equipment, use
       <CharacterPresentation key={character.id} src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="dialogue-bust" rarity={master.rarity} frameKind={false} metadata={false} />
     </div>
     <div className="character-home-information">
+      {setupResult && <div className="character-home-setup-result" role="status" data-acceptance-state="CHARACTER_SETUP_COMPLETE">
+        <strong>編成・装備を整えました</strong>
+        <span>総合力 {Number(setupResult.powerBefore || 0).toLocaleString()} → {Number(setupResult.powerAfter || 0).toLocaleString()}</span>
+      </div>}
+      {canReceive && <OutlawButton variant="primary" fullWidth isLoading={rewardPending} disabled={rewardPending} onClick={async () => {
+        if (rewardPending) return;
+        setRewardPending(true);
+        try { await openBeginnerMissionReward(rewardIds); } finally { setRewardPending(false); }
+      }}>報酬を受け取る</OutlawButton>}
       <div className="character-home-identity"><CharacterStatusBadges rarity={master.rarity} awakeningLevel={character.awakening_level || 0} /><h1>{master.jpName}</h1><p><span>Lv.{character.level || 1}</span></p></div>
       <div className="character-home-power"><span>総合力</span><strong>{power.toLocaleString()}</strong></div>
       <OutlawButton variant="primary" fullWidth onClick={onGrowth}>育成する</OutlawButton>

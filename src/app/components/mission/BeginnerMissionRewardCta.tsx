@@ -18,7 +18,7 @@ export default function BeginnerMissionRewardCta() {
   const key = `${owner}:${activeTab}:${ids.join(',')}`;
   const experienceComplete = canPromptBeginnerReward(beginnerJourney, activeTab);
   useEffect(() => {
-    if (!owner || !onboardingState?.gameplay_authorized || activeTab === 'home' || battleState || scoutAnimationState
+    if (!owner || !onboardingState?.gameplay_authorized || (activeTab === 'home' || activeTab === 'character' || activeTab === 'ranking') || battleState || scoutAnimationState
       || showMissionPanel || confirmDialogConfig || globalInteractionBlocking || showPatrolRewardModal
       || showLoginBonusModal || showAccountAuthenticationModal || presentedDialog || hasPresentedDialog()
       || !experienceComplete || !ids.length || announced.current.has(key)) return;
@@ -27,7 +27,7 @@ export default function BeginnerMissionRewardCta() {
       isOpen: true,
       title: 'ミッション達成',
       message: 'ミッション報酬を受け取れます。',
-      confirmText: 'ミッション報酬を受け取る',
+      confirmText: '報酬を受け取る',
       confirmPendingText: 'ミッションを開いています…',
       cancelText: 'あとで',
       presentation: 'canonical',

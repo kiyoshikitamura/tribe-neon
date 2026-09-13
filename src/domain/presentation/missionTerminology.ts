@@ -10,5 +10,6 @@ export function missionDisplayText(value: unknown): string {
     .replace(/Skill/gi, "スキル")
     .replace(/Quest/gi, "クエスト")
     .replace(/Raid/gi, "レイド")
-    .replace(/Guild/gi, "ギルド");
+    .replace(/Guild/gi, "ギルド")
+    .replace(/派遣/g, "探索");
 }

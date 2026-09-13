@@ -119,7 +119,7 @@ export function usePatrol(
       return false;
     }
     if (!selectedPatrolMember) {
-      setErrorMessage("派遣するメンバーを選択してください。");
+      setErrorMessage("探索するメンバーを選択してください。");
       return false;
     }
 

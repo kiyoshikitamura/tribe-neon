@@ -1,3 +1,4 @@
+import type { RaidTopData } from './raidTop';
 import type { RaidRoomDto } from './raidRoom';
 import type { RaidRoomRpcClient } from './raidRoomRpcTransport';
 
@@ -8,6 +9,7 @@ export async function loadRaidGuideAvailability(input: {
   roomEnabled: boolean;
   client: RaidRoomRpcClient;
   listRooms: () => Promise<readonly RaidRoomDto[]>;
+  loadTop?: () => Promise<Omit<RaidTopData, 'canCreate'>>;
   now?: number;
 }): Promise<RaidGuideAvailability> {
   try {
@@ -24,6 +26,22 @@ export async function loadRaidGuideAvailability(input: {
       // Raid画面もHP 0/期限切れでは出撃不可。返却後の期限越えを開催中と扱わない。
       return data.some(row => row.currentHp > 0 && Date.parse(row.expiresAt) > now) ? 'active' : 'inactive';
     }
+    // Raid TOPは日次対象から新規参加できる。既存Room一覧の空だけで未開催にしない。
+    let topUnknown = false;
+    if (input.loadTop) {
+      try {
+        const top = await input.loadTop();
+        if (top.dailyTargets.status === 'ready' && top.dailyTargets.data.targets.length > 0) return 'active';
+        for (const resource of [top.participating, top.rescues]) {
+          if (resource.status === 'ready' && resource.data.some(({ room }) =>
+            room.state.status === 'available' && room.state.value === 'active'
+            && room.hp.status === 'available' && room.hp.value.current > 0
+            && room.expiresAt.status === 'available' && Date.parse(room.expiresAt.value) > (input.now ?? Date.now()))) return 'active';
+        }
+        topUnknown = top.dailyTargets.status !== 'ready'
+          || top.participating.status !== 'ready' || top.rescues.status !== 'ready';
+      } catch { topUnknown = true; }
+    }
     const rooms = await input.listRooms();
     const now = input.now ?? Date.now();
     let incomplete = false;
@@ -34,6 +52,6 @@ export async function loadRaidGuideAvailability(input: {
         || !Number.isFinite(Date.parse(room.expiresAt.value))) { incomplete = true; continue; }
       if (room.hp.value.current > 0 && Date.parse(room.expiresAt.value) > now) return 'active';
     }
-    return incomplete ? 'unknown' : 'inactive';
+    return incomplete || topUnknown ? 'unknown' : 'inactive';
   } catch { return 'unknown'; }
 }

@@ -208,6 +208,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [hasShownGuildDialog, setHasShownGuildDialog] = useState<boolean>(false);
   const [activeBanners, setActiveBanners] = useState<any[]>([]);
   const [userXp, setUserXp] = useState<number>(0);
+  const [rankingMissionRewardOrigin, setRankingMissionRewardOrigin] = useState(false);
+  useEffect(() => { setRankingMissionRewardOrigin(false); }, [session?.user?.id]);
   const [raidPoints, setRaidPoints] = useState<number>(5);
   const [raidRescueTarget, setRaidRescueTarget] = useState<{ rescueId: string; revision: number } | null>(null);
   const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
@@ -234,7 +236,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     vitality, setVitality,
     (type: string) => playCyberSe(type as any),
     (userId: string) => syncBootstrapData(userId),
-    setConfirmDialogConfig
+    setConfirmDialogConfig,
+    (level: number, xp: number) => { setUserLevel(level); setUserXp(xp); }
   );
 
   const {
@@ -658,7 +661,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     for (let attempt = 0; attempt < 2; attempt += 1) {
       const { data, error } = await supabase
         .from("users")
-        .select("favorite_character_id")
+        .select("favorite_character_id,current_base_id")
         .eq("id", userId)
         .single();
       if (requestId !== identityAuthorityRequestRef.current) return false;
@@ -668,6 +671,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
       const favoriteCharacterId = data?.favorite_character_id;
+      if (data?.current_base_id) setCurrentBaseId(data.current_base_id);
       const canonicalFavoriteCharacterId =
         favoriteCharacterId && CHARACTERS_MASTER.some((character) => character.id === favoriteCharacterId)
           ? favoriteCharacterId
@@ -1047,7 +1051,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     patrolNpcs,
     patrol: activePatrols.find((entry: any) => entry.has_battle_event && !entry.battle_resolved),
     tutorialStep: onboardingState?.tutorial_step,
-    navigateTab: (tabName: string) => setActiveTab(tabName as any),
+    navigateTab: (tabName: string) => {
+      setRankingMissionRewardOrigin(tabName === "ranking");
+      if (tabName === "ranking") setRankingActiveTab("pvp");
+      setActiveTab(tabName as any);
+    },
     setTutorialStep: (step: string) => setOnboardingState(current => current ? { ...current, tutorial_step: step } : current)
   });
 
@@ -4107,6 +4115,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { setRaidRescueTarget(null); }, [session?.user?.id]);
 
   const navigateTab = (tabName: string, subTab?: string) => {
+    setRankingMissionRewardOrigin(false);
     setActivePlayerDetail(null);
     setSelectedNews(null);
     if (tabName === "ranking" && subTab === "raid") {
@@ -4181,21 +4190,23 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const clearBeginnerMissionTarget = useCallback(() => {
     ++beginnerRewardGeneration.current;
     beginnerRewardOpening.current = false;
+    setGlobalInteractionBlocking(false);
     setBeginnerMissionTargetIds([]);
   }, []);
   const currentConfirmDialogRef = useRef(confirmDialogConfig);
-  currentConfirmDialogRef.current = confirmDialogConfig;
+  useLayoutEffect(() => { currentConfirmDialogRef.current = confirmDialogConfig; }, [confirmDialogConfig]);
   const openBeginnerMissionReward = async (ids: string[]) => {
     const sourceDialogId = currentConfirmDialogRef.current?.dialogId;
     const owner = session?.user?.id;
     if (!ids.length || !owner || beginnerRewardOpening.current) return false;
     beginnerRewardOpening.current = true;
+    setGlobalInteractionBlocking(true);
+    const actionPerformance = beginActionPerformance("mission_open");
+    actionPerformance.mark("request_start");
     const generation = ++beginnerRewardGeneration.current;
     const stillCurrent = () => currentAuthUserIdRef.current === owner && beginnerRewardGeneration.current === generation;
     try {
       if (!await refreshBeginnerJourney()) throw new Error("受取状態を確認できませんでした。");
-      if (!stillCurrent()) return false;
-      await syncBootstrapData(owner);
       if (!stillCurrent()) return false;
       const { data: rows, error } = await supabase.from("user_missions").select("*").eq("user_id", owner);
       if (error || !rows) throw new Error("ミッションを取得できませんでした。");
@@ -4205,24 +4216,28 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return row ? { ...m, status: canonicalMissionUiStatus(row.status, m.status !== "LOCKED"), current_progress: row.current_progress,
           expires_at: row.expires_at } : m;
       }));
+      actionPerformance.mark("response");
       // Commit target data, panel and dismissal atomically. Do not expose the
       // old page between tapping a dialog CTA and the Mission becoming visible.
       flushSync(() => {
         setBeginnerMissionTargetIds([...new Set(ids)]);
         setShowMissionPanel(true);
+        setGlobalInteractionBlocking(false);
         setConfirmDialogConfig(current => current?.dialogId === sourceDialogId ? null : current);
       });
+      actionPerformance.markVisualReady();
       return true;
     } catch {
       if (stillCurrent()) setErrorMessage("受取状態を確認できませんでした。もう一度お試しください。");
       return false;
-    } finally { if (beginnerRewardGeneration.current === generation) beginnerRewardOpening.current = false; }
+    } finally { if (beginnerRewardGeneration.current === generation) { beginnerRewardOpening.current = false; setGlobalInteractionBlocking(false); } }
   };
   useEffect(() => { clearBeginnerMissionTarget(); }, [session?.user?.id, clearBeginnerMissionTarget]);
   useEffect(() => { void refreshBeginnerJourney(); },
     [activeTab, battle.battleState, scoutAnimationState, showMissionPanel, confirmDialogConfig, refreshBeginnerJourney]);
 
   const value = {
+    rankingMissionRewardOrigin, setRankingMissionRewardOrigin,
     beginnerJourney, refreshBeginnerJourney, beginnerMissionTargetIds, openBeginnerMissionReward, clearBeginnerMissionTarget,
     // 状態
     session, setSession,

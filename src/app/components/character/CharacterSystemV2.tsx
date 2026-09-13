@@ -50,7 +50,7 @@ function SkillArt({ master }: { master: any }) {
   </span>;
 }
 
-export default function CharacterSystemV2({ initialCharacterMasterId }: { initialCharacterMasterId?: string }) {
+export default function CharacterSystemV2({ initialCharacterMasterId, setupResult }: { initialCharacterMasterId?: string; setupResult?: any }) {
   const game = useGame() as any;
   const { characterEntryView, setCharacterEntryView } = game;
   const [mainView, setMainView] = useState<MainView>(characterEntryView === "party" ? "PARTY" : "CHARACTERS");
@@ -71,6 +71,10 @@ export default function CharacterSystemV2({ initialCharacterMasterId }: { initia
   useEffect(() => {
     if (characterEntryView === "party") setCharacterEntryView(null);
   }, [characterEntryView, setCharacterEntryView]);
+
+  useEffect(() => {
+    if (setupResult) { setMainView("CHARACTERS"); setCharacterView("HOME"); }
+  }, [setupResult]);
 
   const ownedCharacters = game.userCharactersDbList || [];
   const leaderMasterId = game.identityLeaderCharacterId;
@@ -227,6 +231,7 @@ export default function CharacterSystemV2({ initialCharacterMasterId }: { initia
     </section>}
 
     {mainView === "CHARACTERS" && characterView === "HOME" && (filteredCharacters.length > 0 ? <CharacterHome
+      setupResult={setupResult}
       character={selectedCharacter} master={selectedMaster} power={power} equipment={game.userEquipmentsList || []} userId={game.session.user.id}
       position={filteredCharacters.findIndex((entry: any) => entry.character_id === selectedCharacter.character_id) + 1} total={filteredCharacters.length}
       onSwitch={switchCharacter} onBack={() => setCharacterView("LIST")}

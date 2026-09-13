@@ -26,3 +26,6 @@
 .character-home-destinations small { display:block; margin-top:3px; font-size:11px; font-weight:400; color:var(--ui-text-secondary); }
 .character-home-retry { padding:8px; border:0; background:transparent; color:var(--ui-text-secondary); text-decoration:underline; }
 @media(max-height:740px) { .character-home-art { height:34dvh; min-height:180px; } .character-home-information { gap:8px; } .character-home-identity h1 { font-size:24px; } .character-home-power strong { font-size:32px; } }
+
+.character-home-setup-result { display:grid; gap:4px; text-align:center; color:var(--ui-text-secondary); font-size:12px; }
+.character-home-setup-result strong { color:var(--ui-accent-cyan, #27d6e6); font-size:13px; }

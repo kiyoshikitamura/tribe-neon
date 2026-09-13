@@ -1,5 +1,5 @@
 "use client";
-import { nextBeginnerAction, priorityBeginnerRewardIds } from "@/domain/mission/beginnerJourney";
+import { nextBeginnerAction } from "@/domain/mission/beginnerJourney";
 import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
@@ -118,7 +118,7 @@ function activityTimeLabel(value?: string | null) {
  */
 function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const {
-    beginnerJourney, refreshBeginnerJourney, openBeginnerMissionReward,
+    beginnerJourney, refreshBeginnerJourney,
     currentBaseId,
     identityLeaderCharacterId,
     identityLeaderAuthorityReady,
@@ -395,7 +395,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     gameplayAuthorized: onboardingState?.gameplay_authorized, milestones: funnelMilestones, raidAvailability,
   }) : nextBeginnerAction(beginnerJourney, raidAvailability),
   [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones]);
-  const priorityRewardIds = priorityBeginnerRewardIds(beginnerJourney);
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -566,7 +565,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   // Only display facts with established authority. Quest/BP initial values are
   // not read-ready projections, so they intentionally have no guessed status.
   const actionStatus: Partial<Record<string, string>> = {
-    ...(isRaidActive ? { raid: "開催中" } : {}),
+    ...(raidAvailability === "active" ? { raid: "開催中" } : raidAvailability === "inactive" ? { raid: "開催待ち" } : {}),
     ...(guildMembershipAuthorityReady ? { guild: userGuildMember?.guild_id ? "所属中" : "加入する" } : {}),
   };
   const handleLeaderTap = () => {
@@ -752,15 +751,8 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           })}
         </nav>
 
-        {!primaryCta && beginnerJourney && !beginnerJourney.facts.raid
-          && raidAvailability === "inactive"
-          && <p className="mypage-raid-waiting" role="status">レイド開催待ち</p>}
-        {priorityRewardIds.length > 0 && <button className="mypage-primary-cta semantic-cta semantic-cta--primary" onClick={() => openBeginnerMissionReward(priorityRewardIds)}>
-          今回のミッション報酬を受け取る
-        </button>}
-        {primaryCta && <button className={`mypage-primary-cta semantic-cta ${priorityRewardIds.length ? "semantic-cta--secondary" : "semantic-cta--primary"} active-scale-effect`} onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
-          <span className="mypage-primary-cta-eyebrow">ミッション</span>
-          <strong>{activationHandoffPending ? "確認中…" : primaryCta.title}</strong>
+        {primaryCta && <button className="mypage-primary-cta semantic-cta semantic-cta--primary active-scale-effect" onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
+          <strong>{activationHandoffPending ? "確認中…" : `ミッション：${primaryCta.title}`}</strong>
           <b aria-hidden="true">›</b>
         </button>}
 

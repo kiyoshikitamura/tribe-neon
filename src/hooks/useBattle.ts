@@ -3253,7 +3253,7 @@ export function useBattle(options: UseBattleOptions) {
           { label: "BP", value: `${Number(pvpResultTemp.remainingPvpPoints ?? 0)}/5` },
         ],
         reward: `CASH +${rewardCash.toLocaleString()}`,
-        note: isFirstOfficialPvp ? "初戦の順位を確認して、次のレイドへ進もう。" : "バトルへ戻って次の対戦相手を選べます。",
+        note: isFirstOfficialPvp ? "順位を確認して、ミッション報酬を受け取ろう。" : "バトルへ戻って次の対戦相手を選べます。",
         continueLabel: isFirstOfficialPvp ? "ランキングを確認" : "バトルへ戻る",
         destination: isFirstOfficialPvp ? "ranking" : "pvp",
       });

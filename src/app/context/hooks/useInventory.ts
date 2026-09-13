@@ -8,6 +8,7 @@ import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { canonicalMissionRewardName } from "@/domain/gameplay/canonical/missions";
 import { canClaimMission, reconcileMissionClaim } from "@/domain/mission/availability";
+import { beginActionPerformance } from "@/utils/actionPerformance";
 import { buildInventoryQuantityProjection } from "@/domain/gameplay/inventoryProjection";
 
 const aggregateMissionRewards = (rows: Array<{ item_id?: string; quantity?: number }>) => {
@@ -35,7 +36,8 @@ export function useInventory(
   setVitality: React.Dispatch<React.SetStateAction<number>>,
   playCyberSe: (type: string) => void,
   syncBootstrapData: (userId: string) => Promise<void>,
-  setConfirmDialogConfig: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>
+  setConfirmDialogConfig: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>,
+  onMissionPlayerProgress?: (level: number, xp: number) => void
 ) {
   const [userItems, setUserItems] = useState<any[]>([]);
   const [inventoryProjectionOwnerUserId, setInventoryProjectionOwnerUserId] = useState("");
@@ -307,18 +309,30 @@ export function useInventory(
     }
   };
 
-  const refreshMissionClaimState = async (owner: string, isCurrent: () => boolean) => {
+  const refreshMissionClaimState = async (owner: string, isCurrent: () => boolean, committedProjection?: any) => {
     if (!isCurrent()) return;
-    await syncBootstrapData(owner);
+    // 成功時は同じトランザクションの投影を使用。応答消失時だけ所有者の状態を再取得。
+    let projection = committedProjection;
+    if (!projection) {
+      const { data, error } = await supabase.rpc("get_current_mission_reward_state");
+      if (error) throw error;
+      projection = data;
+    }
     if (!isCurrent()) return;
-    const { data, error } = await supabase.from("user_missions").select("mission_id,status,current_progress").eq("user_id", owner);
-    if (error) throw error;
-    if (!isCurrent()) return;
-    const rows = new Map((data || []).map(row => [row.mission_id, row]));
+    if (projection?.owner !== owner || !Array.isArray(projection?.missions) || !Array.isArray(projection?.items)) {
+      throw new Error("報酬の最新状態を確認できませんでした。");
+    }
+    const rows = new Map<string, any>(projection.missions.map((row: any) => [row.mission_id, row]));
     setMissions(prev => prev.map(m => {
       const row = rows.get(m.id);
-      return row ? { ...m, status: row.status === "PROGRESS" ? "IN_PROGRESS" : row.status, current_progress: row.current_progress, loading: false } : m;
+      return row ? { ...m, status: row.status === "PROGRESS" ? "IN_PROGRESS" : row.status,
+        current_progress: row.current_progress, expires_at: row.expires_at, loading: false } : m;
     }));
+    const generation = beginUserItemsProjectionRequest(owner);
+    projectUserItems(projection.items, owner, generation);
+    setCash(Number(projection.cash));
+    setDiamonds(Number(projection.diamonds));
+    onMissionPlayerProgress?.(Number(projection.level), Number(projection.xp));
     return rows;
   };
 
@@ -332,6 +346,9 @@ export function useInventory(
     playCyberSe("click");
 
     let refreshedRows: Map<string, any> | undefined;
+    let claimProjection: any;
+    const timing = beginActionPerformance("mission_claim");
+    timing.mark("request_start");
     const closeReceipt = () => {
       if (!isCurrent()) return;
       setConfirmDialogConfig(null);
@@ -345,8 +362,12 @@ export function useInventory(
         const response = await supabase.rpc("claim_mission_reward", { p_mission_id: id });
         if (response.error) throw response.error;
         if (response.data?.error) throw new Error(response.data.error);
+        claimProjection = response.data?.mission_state;
+        timing.mark("response");
         return response;
-      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent); }, isCurrent);
+      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent, claimProjection); }, isCurrent);
+      timing.mark("state_update");
+      timing.markVisualReady();
       if (!isCurrent()) return;
 
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
@@ -383,6 +404,9 @@ export function useInventory(
     playCyberSe("gacha");
 
     let refreshedRows: Map<string, any> | undefined;
+    let claimProjection: any;
+    const timing = beginActionPerformance("mission_claim");
+    timing.mark("request_start");
     const closeReceipt = () => {
       if (!isCurrent()) return;
       setConfirmDialogConfig(null);
@@ -394,8 +418,12 @@ export function useInventory(
         const response = await supabase.rpc("claim_all_mission_rewards", { p_mission_ids: missionIds });
         if (response.error) throw response.error;
         if (response.data?.error) throw new Error(response.data.error);
+        claimProjection = response.data?.mission_state;
+        timing.mark("response");
         return response;
-      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent); }, isCurrent);
+      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent, claimProjection); }, isCurrent);
+      timing.mark("state_update");
+      timing.markVisualReady();
       if (!isCurrent()) return;
 
       const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);

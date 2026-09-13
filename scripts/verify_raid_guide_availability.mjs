@@ -43,3 +43,16 @@ for (const mode of [false, true]) {
   milestones.delete('post_tutorial_guild_view'); milestones.delete('activation_mission_handoff');
 }
 console.log('PASS: legacy/room selection, empty/error/malformed/partial/expiry, Guild → Mission, Raid再案内・未参加Fact保持');
+
+// FreshユーザーがRoomを作成/参加する前も、Raid TOPの日次対象があれば参加可能。
+const top = (dailyTargets, participating={status:'ready',data:[]}, rescues={status:'ready',data:[]}) => ({dailyTargets,participating,rescues});
+const withTop = async (value, rooms=[]) => loadRaidGuideAvailability({roomEnabled:true, now,
+ client:{rpc:async()=>{throw Error('unexpected legacy');}},listRooms:async()=>rooms,
+ loadTop:async()=>{if(value instanceof Error) throw value;return value;}});
+assert.equal(await withTop(top({status:'ready',data:{dateJst:'2026-09-12',targets:[{baseId:'shinjuku'},{baseId:'shibuya'}]}})), 'active');
+assert.equal(await withTop(top({status:'unavailable'})), 'unknown');
+assert.equal(await withTop(new Error('offline')), 'unknown');
+assert.equal(await withTop(new Error('offline'),[room()]), 'active');
+assert.equal(await withTop(top({status:'ready',data:{targets:[]}})), 'inactive');
+assert.equal(await withTop(top({status:'unavailable'},{status:'ready',data:[{room:room()}]})), 'active');
+console.log('PASS: visible Raid TOP targets qualify before participation; failed/unknown TOP cannot become inactive');

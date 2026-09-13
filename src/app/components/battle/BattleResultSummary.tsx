@@ -38,7 +38,7 @@ const toParticipant = (entry: any, isEnemy: boolean): BattleResultParticipant =>
   isEnemy,
 });
 
-export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, continueControl, onRepeatQuest }: Props) {
+export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, continueControl }: Props) {
   const { playSe } = useAudio();
   const announcedRef = useRef(false);
   const analysis = useMemo(() => analyzeBattleResult(
@@ -213,7 +213,6 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
         </div>
       )}
       {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・PLAYER XPは反映済みです。アイテムはプレゼントへ配送されます。受取期限はプレゼントで確認してください。</p>}
-      {!tutorial && presentationContext?.mode === "PATROL" && rewards && onRepeatQuest && <OutlawButton variant="primary" onClick={onRepeatQuest}>同じクエストへ</OutlawButton>}
       {continueControl ?? <OutlawButton variant={victory ? "primary" : "secondary"} onClick={onContinue} className="battle-result-continue" disabled={victory && (tutorial || presentationContext?.mode === "PATROL") && !rewards}>
         {victory && (tutorial || presentationContext?.mode === "PATROL") ? (rewards ? "次へ" : "報酬確定中…") : modeResult?.continueLabel || "次へ"}
       </OutlawButton>}
