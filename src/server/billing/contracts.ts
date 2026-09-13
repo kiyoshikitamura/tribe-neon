@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
+export type BillingMode = "sandbox" | "live";
+export const PRODUCTION_PROJECT_REF = "ktpolnkyyfkowxdmijww";
 export const PREVIEW_PROJECT_REF = "sufvuqdnqohpfzkwxohq";
 export class BillingError extends Error {
   status: number;
@@ -12,31 +14,43 @@ export type CheckoutSession = {
 };
 export type BillingOrder = {
   id: string; user_id: string; product_id: string; amount_jpy: number;
+  billing_mode?: BillingMode;
   status: string; stripe_session_id: string | null; created_at: string;
   product_snapshot: { title: string; items: { itemId: string; quantity: number }[] };
 };
 
-/** Preview専用。本番DBのPAYMENTを開いてもこのAPIは有効にならない。 */
+/** mode未指定は従来Sandboxのみ。本番は明示設定が全て一致した時だけ有効。 */
 export function billingConfig(env: NodeJS.ProcessEnv = process.env) {
+  const mode = env.BILLING_MODE ?? "sandbox";
+  if (mode !== "sandbox" && mode !== "live") throw new BillingError("決済の準備中です。", 503);
   const databaseUrl = env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-  if (env.BILLING_SANDBOX_ENABLED !== "true" || env.VERCEL_ENV === "production" ||
-      databaseUrl !== `https://${PREVIEW_PROJECT_REF}.supabase.co` ||
-      !env.STRIPE_SECRET_KEY?.startsWith("sk_test_") ||
-      !env.STRIPE_WEBHOOK_SECRET?.startsWith("whsec_") ||
-      !env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new BillingError("決済のテスト環境は準備中です。", 503);
+  const live = mode === "live";
+  const validDatabase = live
+    ? [`https://${PRODUCTION_PROJECT_REF}.supabase.co`, "https://api.tribe-neon.com"].includes(databaseUrl)
+    : databaseUrl === `https://${PREVIEW_PROJECT_REF}.supabase.co`;
+  const enabled = live
+    ? env.BILLING_LIVE_ENABLED === "true" && env.VERCEL_ENV === "production"
+    : env.BILLING_SANDBOX_ENABLED === "true" && env.VERCEL_ENV !== "production";
+  if (!enabled || !validDatabase ||
+      !env.STRIPE_SECRET_KEY?.startsWith(live ? "sk_live_" : "sk_test_") ||
+      !env.STRIPE_WEBHOOK_SECRET?.startsWith("whsec_") || !env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new BillingError("決済の準備中です。", 503);
   }
   let origin: URL;
   try { origin = new URL(env.BILLING_RETURN_ORIGIN ?? ""); }
   catch { throw new BillingError("決済の戻り先が未設定です。", 503); }
+  const productionOrigin = ["https://tribe-neon.com", "https://www.tribe-neon.com"].includes(origin.origin);
   if (origin.protocol !== "https:" || origin.username || origin.password ||
-      origin.pathname !== "/" || origin.search || origin.hash ||
-      ["tribe-neon.com", "www.tribe-neon.com"].includes(origin.hostname)) {
+      origin.pathname !== "/" || origin.search || origin.hash || productionOrigin !== live) {
     throw new BillingError("決済の戻り先が不正です。", 503);
   }
   return { databaseUrl, serviceKey: env.SUPABASE_SERVICE_ROLE_KEY,
     stripeKey: env.STRIPE_SECRET_KEY, webhookSecret: env.STRIPE_WEBHOOK_SECRET,
-    origin: origin.origin };
+    origin: origin.origin, mode: mode as BillingMode };
+}
+
+export function sessionMatchesMode(id: unknown, mode: BillingMode) {
+  return typeof id === "string" && (mode === "live" ? /^cs_live_[a-zA-Z0-9]+$/ : /^cs_test_[a-zA-Z0-9]+$/).test(id);
 }
 
 export function uuid(value: unknown): string {
@@ -59,8 +73,9 @@ export function verifyStripeEvent(raw: string, signature: string, secret: string
   catch { throw new BillingError("Invalid webhook payload", 400); }
 }
 
-export function validateSession(session: CheckoutSession, order: BillingOrder) {
-  if (session.livemode !== false || !session.id?.startsWith("cs_test_") ||
+export function validateSession(session: CheckoutSession, order: BillingOrder, mode: BillingMode = "sandbox") {
+  if (session.livemode !== (mode === "live") || !sessionMatchesMode(session.id, mode) ||
+      (order.billing_mode ?? "sandbox") !== mode ||
       session.client_reference_id !== order.id || session.metadata?.order_id !== order.id ||
       session.metadata?.user_id !== order.user_id || session.metadata?.product_id !== order.product_id ||
       session.amount_total !== order.amount_jpy || session.currency !== "jpy" ||

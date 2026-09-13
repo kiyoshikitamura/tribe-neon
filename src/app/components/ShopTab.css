@@ -210,3 +210,19 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.shop-product-card { padding: 14px; }
+.shop-card-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.shop-card-heading .shop-card-title { min-width:0; }
+.shop-limit-badge { flex-shrink:0; font-size:11px; color:#d7bd87; }
+.shop-expiry-notice { font-size:12px; line-height:1.65; color:#aeb7c5; margin:12px 0 0; }
+.shop-price { font-size:18px; font-weight:700; color:#e2c794; margin:16px 0 8px; }
+.shop-status, .shop-billing-notice { font-size:12px; color:#aeb7c5; padding:8px 12px; }
+.shop-item-bundle-grid { grid-template-columns:minmax(0,1fr); }
+.bundle-item-chip { gap:12px; }
+.bundle-item-name { min-width:0; overflow-wrap:anywhere; }
+.bundle-item-qty { flex-shrink:0; }
+.shop-paid-expiry { margin:8px 0; }
+.shop-paid-expiry-list { list-style:none; padding:0; margin:8px 0; max-height:240px; overflow-y:auto; }
+.shop-paid-expiry-list li { border-bottom:1px solid #343d4a; padding:10px 4px; font-size:12px; }
+.shop-paid-expiry-list time { display:block; margin-top:6px; color:#d7bd87; }

@@ -1,5 +1,6 @@
 "use client";
 
+import QuestRaidEncounter from "./components/quest/QuestRaidEncounter";
 import BeginnerMissionRewardCta from "./components/mission/BeginnerMissionRewardCta";
 import React from "react";
 import dynamic from "next/dynamic";
@@ -284,6 +285,7 @@ function AppContent() {
           </>
         )}
       >
+        <QuestRaidEncounter />
         <BeginnerMissionRewardCta />
         {activeTab === "home" && <HomeTab />}
         {(activeTab === "patrol" || activeTab === "quest") && <PatrolTab />}

@@ -1,4 +1,5 @@
 "use client";
+import { useQuestRaidEncounter } from "./hooks/useQuestRaidEncounter";
 import { useBeginnerJourney } from "@/hooks/useBeginnerJourney";
 import { canClaimMission } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
@@ -463,6 +464,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     transitionTutorialQuestToBattle,
     handleClaimRewards
   } = patrol;
+
+  const questRaidEncounter = useQuestRaidEncounter(session?.user?.id, lastPatrolRewards?.patrolId);
+  const [questEncounterDismissedVisit, setQuestEncounterDismissedVisit] = useState(false);
+  useEffect(() => { setQuestEncounterDismissedVisit(false); }, [activeTab, session?.user?.id]);
+  const openQuestEncounterRaid = async (roomId: string) => {
+    if (!session?.user?.id) return;
+    const response = await supabase.rpc("get_raid_room_v1", { p_room_id: roomId });
+    if (response.error) throw new Error("レイドを開けませんでした。もう一度お試しください。");
+    setRaidRescueTarget(null);
+    setRaidRoomReturnTarget({userId: session.user.id, roomId});
+    setRaidTopRefreshRevision(value => value + 1);
+    setActiveTab("raid");
+  };
 
   const gacha = useGacha();
 
@@ -1258,6 +1272,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     if (identityLeaderOwnerUserId !== userId) setIdentityLeaderAuthorityReady(false);
     const identityAuthorityPromise = refreshIdentityLeaderAuthority(userId);
     const dailyFreeAuthorityPromise = refreshDailyFreeGachaAuthority(userId);
+    // 課金公開後は期限切れの購入分を控除してから所持数を投影する。
+    if (isFeatureOpen("PAYMENT", featureOperatingStates)) {
+      const { error: paidAssetError } = await supabase.rpc("billing_refresh_paid_assets");
+      if (paidAssetError) console.warn("Failed to refresh purchased assets:", paidAssetError);
+    }
     const inventoryProjectionPromise = refreshUserItemsProjection(userId).catch((error) => {
       console.warn("Failed to prime inventory projection:", error);
       return [];
@@ -3420,7 +3439,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           ? await supabase.rpc("execute_tutorial_character_gacha", { p_request_id: requestId })
           : await supabase.rpc("execute_character_gacha", {
               p_user_id: session.user.id,
-              p_gacha_id: scoutType === "CHAR_NORMAL" || scoutType === "CHAR_SPECIAL" ? scoutType : "CHAR_SPECIAL",
+              p_gacha_id: scoutType,
               p_pull_count: scoutCount,
               p_currency_type: serverCurrency,
               p_request_id: requestId,
@@ -3802,27 +3821,24 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleExchangePityReward = async (rewardType: "CHARACTER" | "SKILL" | "EQUIPMENT", rewardId: string) => {
-    if (!session) return;
-    if (specialPityPoints < 200) {
-      setErrorMessage("天井Ptが不足しています（200Pt必要）。");
-      return;
-    }
+  const handleExchangePityReward = async (rewardType: "CHARACTER" | "SKILL" | "EQUIPMENT", rewardId: string, requestId: string): Promise<boolean> => {
+    if (!session) return false;
 
     setUpgradeLoading(true);
     try {
-      const { data: pityResult, error: pityError } = await supabase.rpc("exchange_pity_reward", {
-        p_user_id: session.user.id,
+      const { data: pityResult, error: pityError } = await supabase.rpc("exchange_special_gacha_reward", {
+        p_request_id: requestId,
         p_reward_type: rewardType,
         p_reward_id: rewardId
       });
       if (pityError || pityResult?.error) throw pityError || new Error(pityResult.error);
-      setSpecialPityPoints((pityResult?.current_points ?? Math.max(0, specialPityPoints - 200)) as number);
+      setSpecialPityPoints((pityResult?.current_points ?? Math.max(0, specialPityPoints - 100)) as number);
       await syncBootstrapData(session.user.id);
-      return;
+      return true;
     } catch (err: unknown) {
       console.error("Exchange pity error:", err);
-      setErrorMessage("天井交換に失敗しました。");
+      setErrorMessage("天井交換に失敗しました。もう一度お試しください。");
+      return false;
     } finally {
       setUpgradeLoading(false);
     }
@@ -3858,6 +3874,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     if (!session) return false;
     const product = SHOP_PRODUCTS_MASTER.find(p => p.id === productId && !!p.priceJpy);
     if (!product) return false;
+    let leavingForCheckout = false;
     setProfileLoading(true);
     setGlobalInteractionBlocking(true);
     try {
@@ -3877,6 +3894,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       }
       if (result.url && new URL(result.url).origin === "https://checkout.stripe.com") {
         window.location.assign(result.url);
+        leavingForCheckout = true;
         return true;
       }
       throw new Error("お支払いの状況を購入履歴から再確認してください。");
@@ -3884,9 +3902,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setErrorMessage(error instanceof Error ? error.message : "購入を確認できませんでした。");
       return false;
     } finally {
-      await waitForBrowserPaint();
-      setGlobalInteractionBlocking(false);
-      setProfileLoading(false);
+      if (!leavingForCheckout) {
+        await waitForBrowserPaint();
+        setGlobalInteractionBlocking(false);
+        setProfileLoading(false);
+      }
     }
   };
 
@@ -4280,6 +4300,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     rankingMissionRewardOrigin, setRankingMissionRewardOrigin,
+    questRaidEncounter, questEncounterDismissedVisit, setQuestEncounterDismissedVisit, openQuestEncounterRaid,
     beginnerJourney, refreshBeginnerJourney, beginnerMissionTargetIds, openBeginnerMissionReward, clearBeginnerMissionTarget,
     // 状態
     session, setSession,

@@ -1,4 +1,5 @@
 "use client";
+import type { QuestRaidEncounter } from '@/domain/quest/raidEncounter';
 import { useEffect, useRef } from 'react';
 import { canPromptBeginnerReward } from '@/domain/mission/beginnerRewardPrompt';
 import { beginnerRewardIds } from '@/domain/mission/beginnerJourney';
@@ -7,7 +8,7 @@ import { hasPresentedDialog, usePresentedDialog } from '../ui/dialogPresence';
 
 /** 体験の終了後に報酬を案内。演出途中・他ダイアログ表示中は待つ。 */
 export default function BeginnerMissionRewardCta() {
-  const { beginnerJourney, activeTab, openBeginnerMissionReward, battleState,
+  const { questRaidEncounter, questEncounterDismissedVisit, beginnerJourney, activeTab, openBeginnerMissionReward, battleState,
     scoutAnimationState, showMissionPanel, confirmDialogConfig, globalInteractionBlocking,
     showPatrolRewardModal, onboardingState, setConfirmDialogConfig, session,
     showLoginBonusModal, showAccountAuthenticationModal } = useGame();
@@ -18,7 +19,7 @@ export default function BeginnerMissionRewardCta() {
   const key = `${owner}:${activeTab}:${ids.join(',')}`;
   const experienceComplete = canPromptBeginnerReward(beginnerJourney, activeTab);
   useEffect(() => {
-    if (!owner || !onboardingState?.gameplay_authorized || (activeTab === 'home' || activeTab === 'character' || activeTab === 'ranking') || battleState || scoutAnimationState
+    if (questRaidEncounter.resolving || questRaidEncounter.entries.some((e:QuestRaidEncounter)=>!e.acknowledged) || questEncounterDismissedVisit || !owner || !onboardingState?.gameplay_authorized || (activeTab === 'home' || activeTab === 'character' || activeTab === 'ranking') || battleState || scoutAnimationState
       || showMissionPanel || confirmDialogConfig || globalInteractionBlocking || showPatrolRewardModal
       || showLoginBonusModal || showAccountAuthenticationModal || presentedDialog || hasPresentedDialog()
       || !experienceComplete || !ids.length || announced.current.has(key)) return;
@@ -38,7 +39,7 @@ export default function BeginnerMissionRewardCta() {
         if (!await openBeginnerMissionReward(ids)) throw new Error("ミッションを開けませんでした。もう一度お試しください。");
       },
     });
-  }, [owner, onboardingState?.gameplay_authorized, activeTab, battleState, scoutAnimationState,
+  }, [questRaidEncounter.resolving, questRaidEncounter.entries, questEncounterDismissedVisit, owner, onboardingState?.gameplay_authorized, activeTab, battleState, scoutAnimationState,
     showMissionPanel, confirmDialogConfig, globalInteractionBlocking, showPatrolRewardModal,
     showLoginBonusModal, showAccountAuthenticationModal, presentedDialog, experienceComplete, ids, key,
     openBeginnerMissionReward, setConfirmDialogConfig]);

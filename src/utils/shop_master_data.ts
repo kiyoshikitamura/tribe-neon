@@ -21,7 +21,7 @@ export interface ShopProduct {
   sortOrder: number;
 }
 
-// 2026-09-10確定商品。確率・排出プールはLane Bの判定対象。
+// 商品Authority: specs/monetization_release_20260912.md。価格は税込。
 const diaProducts = [[300,300],[500,500],[1030,1000],[2080,2000],[5240,5000],[10680,10000]];
 const recoveries = [
   ["energy", "ENERGY_DRINK", "エナジードリンク"],
@@ -31,21 +31,47 @@ const recoveries = [
 export const SHOP_PRODUCTS_MASTER: ShopProduct[] = [
   {
     id: "beginner_pack_01", shopType: "LIMITED", category: "BEGINNER",
-    title: "ビギナーパック", description: "1回限り。育成とスペシャルガチャを始めよう。",
-    priceJpy: 100, purchaseLimit: 1, sortOrder: 1,
-    bannerUrl: "/banner_beginner_pack.jpg",
+    title: "ビギナーパック", description: "", priceJpy: 100, purchaseLimit: 1, sortOrder: 1,
     items: [
-      {itemId:"CASH",itemName:"CASH",quantity:5000},
-      {itemId:"SPECIAL_TICKET_CHARACTER",itemName:"SPキャラクターチケット",quantity:3},
-      {itemId:"SPECIAL_TICKET_SKILL",itemName:"SPスキルチケット",quantity:3},
-      {itemId:"SPECIAL_TICKET_EQUIPMENT",itemName:"SP装備チケット",quantity:3},
-      {itemId:"ENERGY_DRINK",itemName:"エナジードリンク",quantity:5},
+      {itemId:"SPECIAL_TICKET_CHARACTER",itemName:"SPキャラチケット",quantity:1},
+      {itemId:"SPECIAL_TICKET_SKILL",itemName:"SPスキルチケット",quantity:1},
+      {itemId:"SPECIAL_TICKET_EQUIPMENT",itemName:"SP装備チケット",quantity:1},
+      {itemId:"CASH",itemName:"CASH",quantity:1000},
+      {itemId:"RAID_POINT_TICKET",itemName:"レイドチケット",quantity:3},
+    ],
+  },
+  {
+    id:"ticket_pack_01",shopType:"LIMITED",category:"LIMITED_N",title:"チケットパック",
+    description:"",priceJpy:1500,purchaseLimit:3,sortOrder:2,
+    items:[
+      {itemId:"SPECIAL_TICKET_CHARACTER",itemName:"SPキャラチケット",quantity:5},
+      {itemId:"SPECIAL_TICKET_SKILL",itemName:"SPスキルチケット",quantity:5},
+      {itemId:"SPECIAL_TICKET_EQUIPMENT",itemName:"SP装備チケット",quantity:5},
+    ],
+  },
+  {
+    id:"growth_pack_01",shopType:"LIMITED",category:"LIMITED_N",title:"育成応援パック",
+    description:"",priceJpy:500,purchaseLimit:3,sortOrder:3,
+    items:[
+      {itemId:"CHAR_EXP_L",itemName:"強化ドリンク・大",quantity:30},
+      {itemId:"EQUIP_EXP_L",itemName:"カスタムオイル・大",quantity:20},
+      {itemId:"CASH",itemName:"CASH",quantity:10000},
+    ],
+  },
+  {
+    id:"awakening_pack_01",shopType:"LIMITED",category:"LIMITED_N",title:"覚醒応援パック",
+    description:"",priceJpy:1000,purchaseLimit:3,sortOrder:4,
+    items:[
+      {itemId:"AWAKENING_BOOK",itemName:"覚醒の書",quantity:3},
+      {itemId:"SKILL_MANUAL",itemName:"スキル指南書",quantity:3},
+      {itemId:"EQUIP_LB_PART",itemName:"改造パーツ",quantity:3},
+      {itemId:"CASH",itemName:"CASH",quantity:20000},
     ],
   },
   ...diaProducts.map(([quantity,priceJpy], index): ShopProduct => ({
     id:`diamond_${quantity}`, shopType:"LIMITED", category:"DIAMOND",
-    title:`DIA ${quantity.toLocaleString("ja-JP")}個`, description:`DIA ${quantity.toLocaleString("ja-JP")}個をチャージします。`,
-    priceJpy, items:[{itemId:"DIAMOND",itemName:"DIA",quantity}], sortOrder:10+index,
+    title:`ダイア ${quantity.toLocaleString("ja-JP")}個`, description:"",
+    priceJpy, items:[{itemId:"DIAMOND",itemName:"ダイア",quantity}], sortOrder:10+index,
   })),
   ...recoveries.flatMap(([key,itemId,itemName], index) => [1,11].map((quantity): ShopProduct => ({
     id:`${key}_${quantity}`,shopType:"NORMAL",category:"NORMAL_ITEM",
@@ -58,3 +84,9 @@ export const SHOP_PRODUCTS_MASTER: ShopProduct[] = [
     items:[{itemId:"CASH",itemName:"CASH",quantity}],sortOrder:110+index,
   })),
 ];
+
+/** 表示用。購入の最終判定はサーバー側の注文・購入履歴を使用する。 */
+export function remainingShopPurchases(product: ShopProduct, purchased: number): number | null {
+  if (!product.purchaseLimit) return null;
+  return Math.max(0, product.purchaseLimit - Math.max(0, Math.floor(purchased || 0)));
+}

@@ -8,6 +8,7 @@ import CanonicalDialog from "./ui/CanonicalDialog";
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 import { resolveAvailableGachaCreative, type CanonicalGachaId } from "@/domain/presentation/production_creatives";
 import "./GachaTab.css";
+import SpecialGachaOffer from "./SpecialGachaOffer";
 import { supabase } from "@/utils/supabase";
 import { parseDailyFreeRates, type DailyFreeRate } from "@/domain/gameplay/dailyFreeRates";
 
@@ -21,7 +22,7 @@ const CATEGORY_META: Readonly<Record<GachaCategory, { label: string; prefix: "CH
 };
 
 export default function GachaTab() {
-  const { handleScout, gachaMasters, gachaRarityRates, dailyFreeGachaFlags, dailyFreeGachaReady, refreshDailyFreeGachaAuthority, userItems, cash, diamonds, upgradeLoading, onboardingState, playSe, guideGachaCategory } = useGame();
+  const { handleScout, handleExchangePityReward, gachaMasters, gachaRarityRates, dailyFreeGachaFlags, dailyFreeGachaReady, refreshDailyFreeGachaAuthority, userItems, cash, diamonds, upgradeLoading, onboardingState, playSe, guideGachaCategory } = useGame();
   const isTutorialScout = onboardingState?.tutorial_step === "FREE_GACHA";
   const [activeCategory, setActiveCategory] = useState<GachaCategory>("CHARACTER");
   const [activeSurface, setActiveSurface] = useState<GachaSurface>("NORMAL");
@@ -42,11 +43,6 @@ export default function GachaTab() {
     }).catch(() => { if (active) setFreeRatesStatus("error"); });
     return () => { active = false; };
   }, [isTutorialScout, freeRatesRetry]);
-  const [billingAvailable,setBillingAvailable] = useState(false);
-  useEffect(()=>{ let active=true;
-    fetch("/api/billing/config",{cache:"no-store"}).then(r=>r.json()).then(data=>{if(active)setBillingAvailable(data.available===true);}).catch(()=>{});
-    return ()=>{active=false;};
-  },[]);
   const { isLocked, beginAction, endAction } = useImmediateActionLock();
   const pending = upgradeLoading || isLocked;
 
@@ -57,9 +53,6 @@ export default function GachaTab() {
   const normalGacha = gachaMasters?.find((g: any) => g.id === normalGachaId);
   const hasDailyFree = dailyFreeGachaReady && dailyFreeGachaFlags[activeCategory];
   const tickets = Number(userItems?.find((item: any) => item.item_id === meta.ticketId)?.quantity || 0);
-  const specialGacha = gachaMasters?.find((g: any) => g.id === specialGachaId);
-  const specialTicketId = `SPECIAL_TICKET_${activeCategory}`;
-  const specialTickets = Number(userItems?.find((item: any) => item.item_id === specialTicketId)?.quantity || 0);
   const currentRates = (gachaRarityRates || []).filter((rate: any) => rate.gacha_id === (activeSurface === "SPECIAL" ? specialGachaId : normalGachaId));
   const currentFreeRates = freeRates.filter(rate => rate.gacha_id === normalGachaId);
   const freeWeightTotal = currentFreeRates.reduce((sum, rate) => sum + rate.weight, 0);
@@ -143,20 +136,11 @@ export default function GachaTab() {
         </div>
 
         {activeSurface === "SPECIAL" ? (
-          <section className="gacha-normal-offer" aria-label="スペシャルガチャ">
-            {billingAvailable ? <>
-              <header><strong>{meta.label}スペシャルガチャ</strong><button type="button" className="gacha-rate-link" onClick={()=>setShowRates(true)}>提供割合</button></header>
-              <div className="gacha-payment-group" aria-label="DIAで引く">
-                {[1,10].map(count=><button key={count} onClick={()=>void runScout(count,"DIAMOND")}
-                  disabled={!specialGacha || !(Number(specialGacha.cost_diamond)>0) || Number(diamonds||0)<Number(specialGacha.cost_diamond)*count || pending}>
-                  <span>{count}回</span><small>{formatCost(specialGacha?.cost_diamond,count)} DIA</small></button>)}
-              </div>
-              <div className="gacha-payment-group" aria-label="専用チケットで引く">
-                {[1,10].map(count=><button key={count} onClick={()=>void runScout(count,"TICKET")} disabled={!specialGacha || specialTickets<count || pending}>
-                  <span>チケット{count}回</span><small>所持 {specialTickets}枚</small></button>)}
-              </div>
-            </> : <p>スペシャルガチャは準備中です</p>}
-          </section>
+          <SpecialGachaOffer key={activeCategory} category={activeCategory} diamonds={Number(diamonds || 0)} userItems={userItems || []} pending={pending}
+            onScout={async (id, count, currency) => {
+              if (!beginAction()) return;
+              try { await handleScout(id, count, currency); } finally { endAction(); }
+            }} onExchange={handleExchangePityReward} />
         ) : (
           <section className="gacha-normal-offer" aria-label={`${meta.label}ノーマルガチャ`}>
             <header>

@@ -1,0 +1,15 @@
+.special-gacha-offer { display: grid; gap: 14px; padding: 14px; }
+.special-gacha-product { display: grid; gap: 5px; }
+.special-gacha-product > .semantic-cta { min-height: 52px; font-size: 15px; }
+.special-gacha-product > .gacha-rate-link { justify-self: end; }
+.special-gacha-pity { display: flex; justify-content: space-between; gap: 8px; min-height: 46px; padding: 12px; border: 1px solid #9e8761; border-radius: 6px; background: #25202a; color: #ecd5a7; }
+.special-gacha-loading { display: grid; place-items: center; min-height: 100px; }
+.special-gacha-confirm { text-align: center; margin: 12px 0; }
+.special-gacha-balance { color: var(--text-secondary); font-size: 12px; margin-top: 12px; }
+.special-gacha-rates { display: grid; gap: 8px; }
+.special-gacha-rates > div { display: flex; align-items: center; gap: 12px; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #343541; font-size: 12px; }
+.special-gacha-rates strong { white-space: nowrap; }
+.special-gacha-exchange { display: grid; gap: 8px; }
+.special-gacha-exchange > button { padding: 12px; text-align: left; color: #eee; background: #202532; border: 1px solid #464451; border-radius: 6px; }
+.special-gacha-exchange > button[aria-pressed="true"] { border-color: #c5a875; background: #393039; }
+.special-gacha-offer button:active { transform: scale(.97); }

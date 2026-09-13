@@ -1,0 +1,17 @@
+@font-face{font-family:TNEncounter;src:url('/effects/battle-live/tetsubin.woff2') format('woff2');font-display:swap}
+.quest-encounter-panel{background:#0b1019;color:#f2f0ed}
+.quest-encounter-scene{position:relative;min-height:340px;background-size:cover;background-position:center;overflow:hidden}
+.quest-encounter-area{display:inline-block;margin:16px;padding:5px 10px;background:#0b1019da;border-left:3px solid #46cbd5;font-size:13px}
+.quest-encounter-scene h1{position:relative;z-index:1;text-align:center;color:#e4c891;font-family:TNEncounter,sans-serif;font-size:clamp(28px,8vw,42px);margin:4px 0;text-shadow:0 2px 12px #000}
+.quest-encounter-scene img{display:block;height:300px;max-width:100%;object-fit:contain;margin:-24px auto -45px}
+.quest-encounter-actions{padding:18px;text-align:center;background:#0b1019}
+.quest-encounter-actions h2{font-size:clamp(16px,4.5vw,22px);margin:8px 0}
+.quest-encounter-actions p{margin:4px 0 10px}
+.quest-encounter-actions .outlaw-btn{margin-top:10px}
+.quest-encounter-bonus{display:inline-block;color:#ead39d;border:1px solid #8b7954;background:#29261f;padding:4px 8px;font-size:12px;margin-bottom:10px}
+.quest-encounter-revisit{padding:12px}
+.quest-encounter-revisit>div{display:grid;gap:6px;padding:12px;background:#141c28;border:1px solid #89764b;border-radius:6px;margin-bottom:8px}
+.quest-encounter-revisit strong{font-size:16px}
+.quest-encounter-revisit span{font-size:12px}
+@media(prefers-reduced-motion:no-preference){.quest-encounter-scene h1{animation:quest-encounter-arrive .3s ease-out}}
+@keyframes quest-encounter-arrive{from{transform:scale(1.08)}to{transform:scale(1)}}

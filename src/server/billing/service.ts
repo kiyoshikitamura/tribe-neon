@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { BillingError, billingConfig, validateSession } from "./contracts";
 import type { BillingOrder, CheckoutSession } from "./contracts";
+import { reconcileCheckout } from "./reconciliation";
 
 export function billingService() {
   const config = billingConfig();
@@ -44,15 +45,7 @@ export function billingService() {
     return data;
   }
   async function reconcile(session: CheckoutSession, existing?: BillingOrder) {
-    const item = existing ?? await order(session.client_reference_id);
-    const paid = validateSession(session, item);
-    if (paid) return rpc("billing_grant_order", { p_order_id: item.id, p_session_id: session.id,
-      p_amount_jpy: session.amount_total, p_currency: session.currency });
-    if (session.status === "expired") {
-      await rpc("billing_expire_order", { p_order_id: item.id, p_session_id: session.id });
-      return { status: "EXPIRED", order_id: item.id };
-    }
-    return { status: item.status === "GRANTED" ? "GRANTED" : "PENDING", order_id: item.id };
+    return reconcileCheckout(session, { order, rpc, validate: (value, item) => validateSession(value, item, config.mode) }, existing);
   }
   return { config, db, authenticatedUser, rpc, stripe, order, reconcile };
 }
