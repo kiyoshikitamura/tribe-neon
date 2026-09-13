@@ -8,6 +8,7 @@ import { getRaidRoomLifecyclePresentation } from "@/domain/raidRoomLifecyclePres
 import { preloadAssetManifest, type AssetResult } from "@/app/lib/screenAssets";
 import OutlawButton from "../ui/OutlawButton";
 import UserAvatar from "../profile/UserAvatar";
+import GuildIdentity from "../profile/GuildIdentity";
 import OutlawCard from "../ui/OutlawCard";
 import SectionHeader from "../ui/SectionHeader";
 import "./RaidTop.css";
@@ -32,7 +33,7 @@ function challengerName(entry: RaidTopEntry) {
 function Owner({ entry, resolve }: { entry: RaidTopEntry; resolve: ImageResolver }) {
   const owner = entry.room.owner.status === "available" ? entry.room.owner.value : undefined;
   const guild = entry.ownerGuild.status === "available" ? entry.ownerGuild.value?.name ?? "Guild未所属" : "Guild未確認";
-  return <div className="raid-top__owner"><PersonIcon player={owner} resolve={resolve} /><div className="raid-top__identity"><strong>挑戦者：{challengerName(entry)}</strong><span className="raid-top__guild">{guild}</span></div></div>;
+  return <div className="raid-top__owner"><PersonIcon player={owner} resolve={resolve} /><div className="raid-top__identity"><strong>挑戦者：{challengerName(entry)}</strong><span className="raid-top__guild">{entry.ownerGuild.status === "available" && entry.ownerGuild.value ? <GuildIdentity guildId={entry.ownerGuild.value.guildId} name={entry.ownerGuild.value.name} /> : guild}</span></div></div>;
 }
 function BattleState({ entry, now, resolve, compact = false }: { entry: RaidTopEntry; now: number | null; resolve: ImageResolver; compact?: boolean }) {
   const { room } = entry;

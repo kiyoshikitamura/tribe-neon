@@ -88,3 +88,4 @@ Guild Shop販売、Guild Currency、Season報酬ルール新設、GvG公開、�
 既存Cosmetic基盤の再利用を前提とした目安で、9/15納期保証ではない。
 主な変動要因は全表示へのGuild ID/Emblem投影、素材レビュー、Productionとの差分。Vercel担当の待ち時間は含まない。
 Standard 8種類・上記公開表示Scopeで着手する案。12種類への拡張や限定報酬は後続に分離。
+

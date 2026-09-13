@@ -85,3 +85,4 @@ available:true / mode:sandbox / catalogVersion:20260913 を確認してから決
 配信SHA / Deployment ID / URL / DB接続先 / 設定名と適用範囲（秘密値なし）。
 各項目を実画面PASS・SQL/コードPASS・FAIL・未検証に分ける。
 Production可否と、ユーザー実機確認依頼の可否を明記する。
+
