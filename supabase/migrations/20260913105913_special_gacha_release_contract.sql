@@ -21,14 +21,14 @@ on conflict(id) do update set rarity=excluded.rarity,weight=1;
 -- Dedicated item IDs mechanically matched to existing master; no new stats.
 insert into public.gacha_items_master(id,gacha_id,item_type,item_id,rarity,weight,is_pickup)
 select 'SKILL_SPECIAL:'||s.skill_id,'SKILL_SPECIAL','SKILL',s.skill_id,
-  case when substring(s.skill_id from '[0-9]+$')::integer <=60 then 'SSR' else 'SR' end,1,false
-from public.skill_battle_master s
-where s.enabled and s.exclusive_character_id is not null
+  s.rarity,1,false
+from public.canonical_skill_master s
+where s.version='2026-08-21' and s.kind='EXCLUSIVE' and s.exclusive_character_id is not null
   and s.skill_id in (select 'SKILL_'||lpad(n::text,3,'0') from generate_series(51,70) n)
 on conflict(id) do update set rarity=excluded.rarity,weight=1;
 insert into public.gacha_items_master(id,gacha_id,item_type,item_id,rarity,weight,is_pickup)
 select 'EQUIP_SPECIAL:'||e.equipment_id,'EQUIP_SPECIAL','EQUIPMENT',e.equipment_id,'SSR',1,false
-from public.equipment_battle_master e where e.is_exclusive and e.rarity='SSR'
+from public.canonical_equipment_master e where e.version='2026-08-21' and e.exclusive_character_id is not null and e.rarity='SSR'
   and e.equipment_id in ('WEAPON_047','WEAPON_048','WEAPON_049','WEAPON_050','HEAD_020','BODY_029','BODY_030','LEGS_020','ACCESSORY_049','ACCESSORY_050')
 on conflict(id) do update set rarity=excluded.rarity,weight=1;
 
@@ -62,8 +62,8 @@ insert into public.special_gacha_pool_groups values
 
 create function public._special_gacha_is_exclusive(p_type text,p_id text)
 returns boolean language sql stable security definer set search_path='' as $$
- select case p_type when 'SKILL' then coalesce((select exclusive_character_id is not null from public.skill_battle_master where skill_id=p_id),false)
- when 'EQUIPMENT' then coalesce((select is_exclusive from public.equipment_battle_master where equipment_id=p_id),false) else false end
+ select case p_type when 'SKILL' then coalesce((select exclusive_character_id is not null from public.canonical_skill_master where version='2026-08-21' and skill_id=p_id),false)
+ when 'EQUIPMENT' then coalesce((select exclusive_character_id is not null from public.canonical_equipment_master where version='2026-08-21' and equipment_id=p_id),false) else false end
 $$;
 revoke all on function public._special_gacha_is_exclusive(text,text) from public,anon,authenticated;
 
@@ -91,22 +91,43 @@ end $$;
 revoke all on function public.draw_gacha_item(text,text) from public,anon,authenticated;
 grant execute on function public.draw_gacha_item(text,text) to service_role;
 
--- Guarded edits preserve all later patches on the actual five-argument RPCs.
+-- Patch the actual authority: legacy five arguments, or versioned six arguments.
+-- The five-argument versioned replay wrapper remains byte-for-byte unchanged.
 do $$
-declare definition text; updated text; signature text;
+declare definition text; updated text; signature text; rpc text; wrapper text;
 begin
- signature:='public.execute_character_gacha(uuid,text,integer,text,uuid)';
- definition:=pg_get_functiondef(signature::regprocedure);
- if position('v_is_special := p_gacha_id = ''CHAR_SPECIAL'';' in definition)=0
- or position('(''CHAR_NORMAL'', ''CHAR_SPECIAL'')' in definition)=0 then raise exception 'SPECIAL_CHARACTER_RPC_DRIFT'; end if;
- updated:=replace(definition,'v_is_special := p_gacha_id = ''CHAR_SPECIAL'';',
- 'v_is_special := p_gacha_id in (''CHAR_JUSTICE_EVIL_SPECIAL'',''CHAR_ORDER_CHAOS_SPECIAL'');');
- updated:=replace(updated,'(''CHAR_NORMAL'', ''CHAR_SPECIAL'')','(''CHAR_NORMAL'',''CHAR_JUSTICE_EVIL_SPECIAL'',''CHAR_ORDER_CHAOS_SPECIAL'')');
- execute updated;
- foreach signature in array array['public.execute_character_gacha(uuid,text,integer,text,uuid)','public.execute_asset_gacha(uuid,text,integer,text,uuid)'] loop
-  definition:=pg_get_functiondef(signature::regprocedure);
-  if position('if v_is_special and not exists (' in definition)=0 then raise exception 'SPECIAL_RPC_GUARD_DRIFT: %',signature; end if;
-  updated:=replace(definition,'if v_is_special and not exists (',
+ foreach rpc in array array['execute_character_gacha','execute_asset_gacha'] loop
+  signature:='public.'||rpc||'(uuid,text,integer,text,uuid)';
+  if to_regprocedure('public.'||rpc||'(uuid,text,integer,text,uuid,text)') is not null then
+   wrapper:=lower(regexp_replace(pg_get_functiondef(signature::regprocedure),'\s+','','g'));
+   if position('returnpublic.'||rpc||'(p_user_id,p_gacha_id,p_pull_count,p_currency_type,p_request_id,null);' in wrapper)=0
+    or position('daily_free_rate_version_mismatch' in wrapper)=0
+    or position('returnv_history.result_payload;' in wrapper)=0 then
+    raise exception 'SPECIAL_VERSIONED_WRAPPER_DRIFT: %',rpc;
+   end if;
+   signature:='public.'||rpc||'(uuid,text,integer,text,uuid,text)';
+   definition:=pg_get_functiondef(signature::regprocedure);
+   if position('p_rate_version is distinct from ''daily-free-2026-09-12-v1''' in definition)=0
+    or position('public.draw_daily_free_gacha_rarity(p_gacha_id)' in definition)=0
+    or position('return v_history.result_payload;' in definition)=0 then
+    raise exception 'SPECIAL_RATE_VERSION_RPC_DRIFT: %',rpc;
+   end if;
+  else
+   definition:=pg_get_functiondef(signature::regprocedure);
+  end if;
+  updated:=definition;
+  if rpc='execute_character_gacha' then
+   if position('v_is_special := p_gacha_id = ''CHAR_SPECIAL'';' in definition)=0
+    or position('(''CHAR_NORMAL'', ''CHAR_SPECIAL'')' in definition)=0 then
+    raise exception 'SPECIAL_CHARACTER_RPC_DRIFT';
+   end if;
+   updated:=replace(updated,'v_is_special := p_gacha_id = ''CHAR_SPECIAL'';',
+    'v_is_special := p_gacha_id in (''CHAR_JUSTICE_EVIL_SPECIAL'',''CHAR_ORDER_CHAOS_SPECIAL'');');
+   updated:=replace(updated,'(''CHAR_NORMAL'', ''CHAR_SPECIAL'')',
+    '(''CHAR_NORMAL'',''CHAR_JUSTICE_EVIL_SPECIAL'',''CHAR_ORDER_CHAOS_SPECIAL'')');
+  end if;
+  if position('if v_is_special and not exists (' in updated)=0 then raise exception 'SPECIAL_RPC_GUARD_DRIFT: %',signature; end if;
+  updated:=replace(updated,'if v_is_special and not exists (',
   'if v_is_special and (p_currency_type is null or p_currency_type not in (''diamonds'',''ticket'')) then
     raise exception ''SPECIAL_REQUIRES_DIA_OR_TICKET'';
   end if;
@@ -180,8 +201,8 @@ returns jsonb language sql stable security definer set search_path='' as $$
    coalesce(c.display_name,s.display_name,e.display_name,p.item_id) name
   from public.gacha_items_master p
   left join public.canonical_character_master c on p.item_type='CHARACTER' and c.character_id=p.item_id and c.version='2026-08-21'
-  left join public.skill_battle_master s on p.item_type='SKILL' and s.skill_id=p.item_id
-  left join public.equipment_battle_master e on p.item_type='EQUIPMENT' and e.equipment_id=p.item_id
+  left join public.canonical_skill_master s on p.item_type='SKILL' and s.version='2026-08-21' and s.skill_id=p.item_id
+  left join public.canonical_equipment_master e on p.item_type='EQUIPMENT' and e.version='2026-08-21' and e.equipment_id=p.item_id
   where p.gacha_id in ('CHAR_JUSTICE_EVIL_SPECIAL','CHAR_ORDER_CHAOS_SPECIAL','SKILL_SPECIAL','EQUIP_SPECIAL')
  ), rates as (
   select p.*,100.0 * r.weight / (select sum(weight) from public.gacha_rarity_rates where gacha_id=p.gacha_id)

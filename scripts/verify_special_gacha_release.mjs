@@ -8,6 +8,8 @@ import { randomUUID } from 'node:crypto';
 import ts from 'typescript';
 const { PGlite } = await import(process.env.PGLITE_MODULE || '@electric-sql/pglite');
 const db = new PGlite();
+const versioned = process.env.SPECIAL_GACHA_VERSIONED === '1';
+const rateVersion = 'daily-free-2026-09-12-v1';
 const read = file => fs.readFileSync(file,'utf8');
 const migrations='supabase/migrations/';
 const migrationPath=fs.readdirSync(migrations).find(f=>f.endsWith('_special_gacha_release_contract.sql'));
@@ -27,6 +29,8 @@ create table gacha_masters(id text primary key,name text not null,gacha_type tex
 create table gacha_items_master(id text primary key,gacha_id text references gacha_masters,item_type text,item_id text,rarity text,weight integer,is_pickup boolean);
 create table gacha_rarity_rates(gacha_id text,rarity text,weight integer,primary key(gacha_id,rarity));
 create table canonical_character_master(version text,character_id text primary key,display_name text,rarity text,attribute text);
+create table canonical_skill_master(version text,skill_id text primary key,display_name text,rarity text,kind text,exclusive_character_id text);
+create table canonical_equipment_master(version text,equipment_id text primary key,display_name text,rarity text,exclusive_character_id text);
 create table skill_battle_master(skill_id text primary key,display_name text,enabled boolean,exclusive_character_id text);
 create table equipment_battle_master(equipment_id text primary key,display_name text,is_exclusive boolean,rarity text);
 create table feature_operating_states(feature_key text primary key,state text);
@@ -49,27 +53,51 @@ for(const [prefix,type] of [['CHAR','CHARACTER'],['SKILL','SKILL'],['EQUIP','EQU
   for(const [rarity,weight] of [['N',50],['R',40],['SR',9],['SSR',1]]) await db.query('insert into gacha_rarity_rates values($1,$2,$3)',[id,rarity,weight]);
  }
 }
+// Populate the actual frozen skill master; legacy battle master stays disabled/ownerless.
+for(const s of JSON.parse(read('src/domain/gameplay/canonical/data/skills_20260821.json')).skills) await db.query('insert into canonical_skill_master values($1,$2,$3,$4,$5,$6)',['2026-08-21',s.skill_id,s.name,s.rarity,s.kind,s.exclusive_character_id]);
+for(const e of JSON.parse(read('src/domain/gameplay/canonical/data/equipment_20260821.json')).equipments) await db.query('insert into canonical_equipment_master values($1,$2,$3,$4,$5)',['2026-08-21',e.equipment_id,e.display_name,e.rarity,e.exclusive_character_id]);
 // Actual character master; asset fixtures retain every dedicated ID and canonical rarity.
 await db.exec(`insert into gacha_items_master select g.id||':'||c.character_id,g.id,'CHARACTER',c.character_id,c.rarity,1,false from canonical_character_master c cross join gacha_masters g where g.gacha_type='CHARACTER';`);
 for(let n=1;n<=70;n++) {
  const id=`SKILL_${String(n).padStart(3,'0')}`; const rarity=n<=10?'N':n<=20?'R':n<=35?'SR':n<=60?'SSR':'SR';
- await db.query('insert into skill_battle_master values($1,$1,true,$2)',[id,n>=51?'owner':null]);
+ await db.query('insert into skill_battle_master values($1,$1,false,$2)',[id,null]);
  if(n<=50) for(const gid of ['SKILL_NORMAL','SKILL_SPECIAL']) await db.query('insert into gacha_items_master values($1,$2,\'SKILL\',$3,$4,1,false)',[`${gid}:${id}`,gid,id,rarity]);
 }
 const equipment=['WEAPON_047','WEAPON_048','WEAPON_049','WEAPON_050','HEAD_020','BODY_029','BODY_030','LEGS_020','ACCESSORY_049','ACCESSORY_050'];
 for(const id of equipment) await db.query('insert into equipment_battle_master values($1,$1,true,\'SSR\')',[id]);
 for(const rarity of ['N','R','SR','SSR']) {
- const id=`GENERIC_${rarity}`; await db.query('insert into equipment_battle_master values($1,$1,false,$2)',[id,rarity]);
+ const id=`GENERIC_${rarity}`; await db.query('insert into canonical_equipment_master values($1,$2,$2,$3,null)',['2026-08-21',id,rarity]); await db.query('insert into equipment_battle_master values($1,$1,false,$2)',[id,rarity]);
  for(const gid of ['EQUIP_NORMAL','EQUIP_SPECIAL']) await db.query('insert into gacha_items_master values($1,$2,\'EQUIPMENT\',$3,$4,1,false)',[`${gid}:${id}`,gid,id,rarity]);
 }
 for(const name of ['draw_gacha_rarity','draw_gacha_item']) await db.exec(fn('20260817000159_gacha_launch_control_foundation.sql',name));
 for(const name of ['canonical_character_awakening_required','apply_character_awakening_equivalent','execute_character_gacha','exchange_pity_reward']) await db.exec(fn('20260822000175_character_awakening_copy_equivalent.sql',name));
 await db.exec(fn('20260821000173_mission_production_master.sql','execute_asset_gacha'));
 await db.exec(read(migrations+'20260828000208_gacha_result_projection_parity.sql'));
+let wrappersBefore;
+if (versioned) {
+ // Exact live RPC bodies. Only the existing daily rarity helper is a deterministic
+ // contract fixture: this test checks version/routing/replay, not its rates.
+ await db.exec("create function public.draw_daily_free_gacha_rarity(text) returns text language sql as $$ select 'R'::text $$;");
+ await db.exec(read('tests/fixtures/gacha/preview_versioned_rpcs_20260913.sql'));
+ wrappersBefore = (await db.query("select oid::regprocedure::text signature,pg_get_functiondef(oid) definition from pg_proc where oid in ('execute_character_gacha(uuid,text,integer,text,uuid)'::regprocedure,'execute_asset_gacha(uuid,text,integer,text,uuid)'::regprocedure) order by 1")).rows;
+ const actual=(await db.query("select pg_get_functiondef('execute_character_gacha(uuid,text,integer,text,uuid,text)'::regprocedure) definition")).rows[0].definition;
+ await db.exec(actual.replaceAll(rateVersion,'unknown-rate-version'));
+ await assert.rejects(db.exec(read(migrations+migrationPath)),/SPECIAL_RATE_VERSION_RPC_DRIFT/);
+ await db.exec('rollback');
+ await db.exec(actual);
+}
+const tutorialPoolBefore=(await db.query("select jsonb_agg(to_jsonb(p) order by id) data from gacha_items_master p where gacha_id='CHAR_SPECIAL'")).rows[0].data;
 const normalBefore=(await db.query(`select jsonb_agg(to_jsonb(p) order by id) data from gacha_items_master p where gacha_id like '%_NORMAL'`)).rows[0].data;
 await db.exec(read(migrations+migrationPath));
+if (versioned) {
+ const wrappersAfter=(await db.query("select oid::regprocedure::text signature,pg_get_functiondef(oid) definition from pg_proc where oid in ('execute_character_gacha(uuid,text,integer,text,uuid)'::regprocedure,'execute_asset_gacha(uuid,text,integer,text,uuid)'::regprocedure) order by 1")).rows;
+ assert.deepEqual(wrappersAfter,wrappersBefore,'versioned 5arg wrappers unchanged');
+}
 const normalAfter=(await db.query(`select jsonb_agg(to_jsonb(p) order by id) data from gacha_items_master p where gacha_id like '%_NORMAL'`)).rows[0].data;
 assert.deepEqual(normalAfter,normalBefore,'Normal pool unchanged');
+assert.deepEqual((await db.query("select jsonb_agg(to_jsonb(p) order by id) data from gacha_items_master p where gacha_id='CHAR_SPECIAL'")).rows[0].data,tutorialPoolBefore,'Tutorial SSR source unchanged');
+const tutorialSsr=(await db.query("select public.draw_gacha_item('CHAR_SPECIAL','SSR') item")).rows[0].item;
+assert.ok(CHARACTERS_MASTER.some(c=>c.id===tutorialSsr&&c.rarity==='SSR'),'Tutorial legacy SSR draw still resolves');
 const user=randomUUID();
 await db.query('insert into users(id) values($1)',[user]);
 await db.query("select set_config('request.jwt.claim.sub',$1,false)",[user]);
@@ -87,7 +115,7 @@ for(const g of data.gachas) {
 }
 assert.equal(data.gachas.find(g=>g.id==='SKILL_SPECIAL').items.filter(i=>i.rarity==='SSR'&&i.is_exclusive).reduce((a,i)=>a+Number(i.probability),0).toFixed(1),'4.8');
 assert.equal(data.gachas.find(g=>g.id==='EQUIP_SPECIAL').items.filter(i=>i.rarity==='SSR'&&i.is_exclusive).reduce((a,i)=>a+Number(i.probability),0).toFixed(1),'6.0');
-const draw=(gid,count,currency,request=randomUUID())=>db.query(`select ${gid.startsWith('CHAR_')?'execute_character_gacha':'execute_asset_gacha'}($1,$2,$3,$4,$5) data`,[user,gid,count,currency,request]).then(r=>r.rows[0].data);
+const draw=(gid,count,currency,request=randomUUID(),version=rateVersion)=>db.query(`select ${gid.startsWith('CHAR_')?'execute_character_gacha':'execute_asset_gacha'}($1,$2,$3,$4,$5${versioned&&currency==='free'?', $6':''}) data`,[user,gid,count,currency,request,...(versioned&&currency==='free'?[version]:[])]).then(r=>r.rows[0].data);
 await assert.rejects(draw('SKILL_SPECIAL',1,'diamonds'),/closed/);
 await db.exec("update feature_operating_states set state='OPEN';");
 for(const ticket of ['CHARACTER','SKILL','EQUIPMENT']) await db.query('insert into user_items values($1,$2,100,now())',[user,`SPECIAL_TICKET_${ticket}`]);
@@ -110,7 +138,17 @@ for(const g of data.gachas) {
  await assert.rejects(draw(g.id,2,'diamonds'),/SPECIAL_INVALID_PULL_COUNT/);
 }
 for(const gid of ['CHAR_NORMAL','SKILL_NORMAL','EQUIP_NORMAL']) {
- const normal=await draw(gid,10,'free'); assert.equal(normal.results.length,10); assert.equal(normal.pity_after,totalPoints);
+ const request=randomUUID();
+ if(versioned) await assert.rejects(draw(gid,10,'free',request,'old-rate'),/DAILY_FREE_RATE_VERSION_MISMATCH/);
+ const normal=await draw(gid,10,'free',request);
+ if(versioned) {
+  assert.equal(normal.rate_version,rateVersion);
+  assert.deepEqual(await draw(gid,10,'free',request,'old-rate'),normal,'completed free retry ignores stale rate without drawing');
+  const rpc=gid.startsWith('CHAR_')?'execute_character_gacha':'execute_asset_gacha';
+  const replay=(await db.query(`select ${rpc}($1,$2,10,'free',$3) data`,[user,gid,request])).rows[0].data;
+  assert.deepEqual(replay,normal,'legacy wrapper accepts saved free result');
+  await assert.rejects(db.query(`select ${rpc}($1,$2,10,'free',$3)`,[user,gid,randomUUID()]),/DAILY_FREE_RATE_VERSION_MISMATCH/);
+ } assert.equal(normal.results.length,10); assert.equal(normal.pity_after,totalPoints);
  const cash=await draw(gid,1,'cash'); assert.equal(cash.results.length,1); assert.equal(cash.pity_after,totalPoints);
 }
 await assert.rejects(draw('CHAR_SPECIAL',1,'diamonds'),/unsupported character/);
@@ -126,6 +164,7 @@ assert.equal((await catalog()).pity_points,50);
 await assert.rejects(exchange('EQUIPMENT','WEAPON_048',randomUUID()),/insufficient pity/);
 // Authenticated direct access to the old grant helper must be impossible.
 assert.equal((await db.query("select has_function_privilege('authenticated','public._exchange_pity_reward_before_special_release(uuid,text,text)','execute') allowed")).rows[0].allowed,false);
+console.log(`RPC authority: ${versioned?'live six-argument + unchanged replay wrapper':'legacy five-argument'}`);
 console.log('PASS: local PostgreSQL migration, real RPC 16 paid draws/retries, currency/count guards, exact rates/alignments, dedicated pools, SSR-only 100Pt exchange/retries, Normal pool retained');
 if (process.env.SPECIAL_GACHA_KEEP_DB !== '1') await db.close();
 export { db, user, draw, catalog, exchange };

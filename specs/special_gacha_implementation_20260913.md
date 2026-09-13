@@ -57,3 +57,15 @@ assetデータは専用IDとrarityのfixture、characterは現行canonical JSON 
 7. 既存Pt残高は換算・削除せず保持。公開時の移行承認は正本の残項目として管理。
 
 Production、Preview、共有alias、環境変数、実DB、決済への変更はなし。
+
+## Preview現行RPC互換修正
+
+Preview正規Authorityは5引数無料再送wrapperから6引数（rate_version）本体へ移行済みでした。Special Migrationは6引数本体を検出して変更し、wrapperを保持します。6引数がない旧DBでは従来5引数本体を変更します。転送・版チェック・無料専用抽選・保存結果再送・Special入口・Pt読取のドリフト検出は維持しています。
+
+SPECIAL_GACHA_VERSIONED=1 を指定した scripts/verify_special_gacha_release.mjs は、2026-09-13のPreview読取定義fixtureで同じ16購入パターンとSSR交換を検証します。無料3カテゴリの最新版成功、旧版初回拒否、完了要求の旧版再送、5引数互換再送、wrapper定義不変、Tutorial旧SSRプール維持、未知版AuthorityでMigration停止を追加確認します。日次無料のrarity選択helperのみ固定Rの契約fixtureで、確率再監査は対象外です。実DB適用は含みません。
+
+## 抽選master参照の正本修正
+
+Preview READ ONLYで、旧 skill_battle_master は8/12暫定枠（専用20件無効・ownerなし）、現在の戦闘Authorityは canonical_skill_master の2026-08-21版であることを確認。後者の20件は正本の名称・所有者・rarity・activation・cooldown・target・raw effect本文と一致しています。旧表へ所有者や能力を上書きせず、Special pool生成・専用判定・カタログ名称をcanonical_skill_master／canonical_equipment_masterに統一しました。装備は承認済み10 IDだけを採用し、旧表の専用19件を自動追加しません。master能力値に変更はありません。
+
+旧skill表を無効・ownerなしにしたfixtureでも、5引数／6引数の双方でMigrationと購入16ケースがPASSしています。

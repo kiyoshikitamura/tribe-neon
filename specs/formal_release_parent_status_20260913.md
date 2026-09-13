@@ -1,5 +1,7 @@
 # GAME03 次版統合候補 / 2026-09-13
 
+本書は初回統合時の記録。後続のPreview適用・実RPC結果は `preview_acceptance_progress_20260913.md` を優先する。仕様判断候補は `next_release_decisions_20260913.md`、専用スキル台詞は `exclusive_skill_dialogue_proposal_20260913.md`。
+
 ## 現行Production
 
 ユーザー報告により ef18a73810c7a2b01f1cc56498ac1a87341f3c67 の本番公開・Smoke PASSを受領。現行改善の公開工程は完了。次版候補には同SHAのChat、Inventory、Ranking互換Migration差分を保持した。本作業ではProduction、alias、環境変数、DBを変更していない。
