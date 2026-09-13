@@ -16,6 +16,9 @@ export type BeginnerRecommendation = { key: string; title: string; tab?: string;
 export function nextBeginnerAction(journey: BeginnerJourney | null, raid: 'active' | 'inactive' | 'unknown'): BeginnerRecommendation | null {
   if (!journey) return null;
   const f = journey.facts;
+  // 終端到達済みユーザーを、旧データの経験欠損で初心者工程へ戻さない。
+  if (journey.reflow_completed) return !f.raid && raid !== 'inactive'
+    ? { key: 'raid', title: raid === 'active' ? '開催中のレイドに参加しよう' : 'レイドを確認', tab: 'raid' } : null;
   if (!f.free_skill || !f.free_equipment) return { key: 'free_assets', title: '無料ガチャを引こう', tab: 'gacha' };
   if (!f.character) return { key: 'character', title: '装備しよう', tab: 'character' };
   if (!f.quest) return { key: 'quest', title: 'クエストでCASHを集めよう', tab: 'patrol' };

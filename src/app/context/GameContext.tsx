@@ -4182,29 +4182,39 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     beginnerRewardOpening.current = false;
     setBeginnerMissionTargetIds([]);
   }, []);
+  const currentConfirmDialogRef = useRef(confirmDialogConfig);
+  currentConfirmDialogRef.current = confirmDialogConfig;
   const openBeginnerMissionReward = async (ids: string[]) => {
+    const sourceDialogId = currentConfirmDialogRef.current?.dialogId;
     const owner = session?.user?.id;
-    if (!ids.length || !owner || beginnerRewardOpening.current) return;
+    if (!ids.length || !owner || beginnerRewardOpening.current) return false;
     beginnerRewardOpening.current = true;
     const generation = ++beginnerRewardGeneration.current;
     const stillCurrent = () => currentAuthUserIdRef.current === owner && beginnerRewardGeneration.current === generation;
     try {
       if (!await refreshBeginnerJourney()) throw new Error("受取状態を確認できませんでした。");
-      if (!stillCurrent()) return;
+      if (!stillCurrent()) return false;
       await syncBootstrapData(owner);
-      if (!stillCurrent()) return;
+      if (!stillCurrent()) return false;
       const { data: rows, error } = await supabase.from("user_missions").select("*").eq("user_id", owner);
       if (error || !rows) throw new Error("ミッションを取得できませんでした。");
-      if (!stillCurrent()) return;
+      if (!stillCurrent()) return false;
       setMissions((previous: any[]) => previous.map(m => {
         const row = rows.find((r: any) => r.mission_id === m.id);
         return row ? { ...m, status: canonicalMissionUiStatus(row.status, m.status !== "LOCKED"), current_progress: row.current_progress,
           expires_at: row.expires_at } : m;
       }));
-      setBeginnerMissionTargetIds([...new Set(ids)]);
-      setShowMissionPanel(true);
+      // Commit target data, panel and dismissal atomically. Do not expose the
+      // old page between tapping a dialog CTA and the Mission becoming visible.
+      flushSync(() => {
+        setBeginnerMissionTargetIds([...new Set(ids)]);
+        setShowMissionPanel(true);
+        setConfirmDialogConfig(current => current?.dialogId === sourceDialogId ? null : current);
+      });
+      return true;
     } catch {
       if (stillCurrent()) setErrorMessage("受取状態を確認できませんでした。もう一度お試しください。");
+      return false;
     } finally { if (beginnerRewardGeneration.current === generation) beginnerRewardOpening.current = false; }
   };
   useEffect(() => { clearBeginnerMissionTarget(); }, [session?.user?.id, clearBeginnerMissionTarget]);

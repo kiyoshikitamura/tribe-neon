@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
 import { sanitizeOperationsTab } from "@/domain/operations/operations";
 import { hasPendingLegalSettingsReturn } from "@/utils/legalSettingsReturn";
@@ -18,7 +18,15 @@ export function useNavigation(playCyberSe: (type: string) => void, handleFirstUs
   const [inboxPanelTab, setInboxPanelTab] = useState<"presents" | "news">("presents");
   const [rankingActiveTab, setRankingActiveTab] = useState<string>("power");
   const [characterEntryView, setCharacterEntryView] = useState<"party" | null>(null);
-  const [confirmDialogConfig, setConfirmDialogConfig] = useState<ConfirmDialogConfig | null>(null);
+  const [confirmDialogConfig, setConfirmDialogState] = useState<ConfirmDialogConfig | null>(null);
+  const dialogSequence = useRef(0);
+  const setConfirmDialogConfig = useCallback((next: React.SetStateAction<ConfirmDialogConfig | null>) => {
+    setConfirmDialogState(previous => {
+      const value = typeof next === "function" ? next(previous) : next;
+      if (value === previous) return previous;
+      return value ? { ...value, dialogId: ++dialogSequence.current } : null;
+    });
+  }, []);
   const [globalInteractionBlocking, setGlobalInteractionBlocking] = useState<boolean>(false);
 
   const setActiveTab = useCallback((tabName: string) => {

@@ -1,7 +1,7 @@
 # Guide × Mission統合：専用Preview配信・差分監査
 
 Repository: kiyoshikitamura/tribe-neon
-Branch: codex/product-preview-20260912-694db8f
+Branch: codex/mission-journey-review-20260913
 親の最終報告SHAを独立フォルダへfetch/checkout。既存Windows作業を上書きしない。
 
 ## 配信
@@ -31,3 +31,11 @@ Questデザイン、既知の総合力/回復集計表示差、POWER次期期間
 ## TRIBE参加Mission追補
 MIS_N_P010「TRIBEに参加しよう」へ統合。加入/設立どちらでも一回達成。Preview Migration 20260912222025_beginner_tribe_participationも適用済み、再適用不要。
 配信後は名称、GuildへのCTA、加入/設立後の報酬CTA→受取→Homeを差分確認。加入をJourney終端の必須条件にはしない。
+
+## 2026-09-13 実機レビューによる全体修正
+旧08eb15dのJourney受入は修正待ちへ戻す。最新候補と specs/mission_journey_device_review_20260913.md を参照。
+その他の未受取報酬button削除、Mission認知ラベル、受取可能一覧統一、日次バーのみ、体験終了後dialog、同期/遷移がcommitするまで背景操作禁止を確認。
+Tutorial内Mission CLEARをpostTutorial体験へ流用しない。Fresh無料2種→装備→Quest→PvP→Raid→TRIBE→終端の全順を確認し、途中で飛んだ場合そこでFAILにする。
+ユーザー一括再確認は、修正候補の実画面差分監査を完了してから。前回PASSだったRPC成功だけを今回の体験順のPASS根拠にしない。
+
+Preview追加適用済み: 20260913014208_beginner_post_tutorial_experience_order。再適用しない。

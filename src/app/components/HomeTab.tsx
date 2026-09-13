@@ -1,5 +1,5 @@
 "use client";
-import { nextBeginnerAction, beginnerRewardIds, priorityBeginnerRewardIds } from "@/domain/mission/beginnerJourney";
+import { nextBeginnerAction, priorityBeginnerRewardIds } from "@/domain/mission/beginnerJourney";
 import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
@@ -395,9 +395,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     gameplayAuthorized: onboardingState?.gameplay_authorized, milestones: funnelMilestones, raidAvailability,
   }) : nextBeginnerAction(beginnerJourney, raidAvailability),
   [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones]);
-  const pendingBeginnerRewards = beginnerRewardIds(beginnerJourney);
   const priorityRewardIds = priorityBeginnerRewardIds(beginnerJourney);
-  const otherPendingRewardIds = pendingBeginnerRewards.filter(id => !priorityRewardIds.includes(id));
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -761,13 +759,11 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           今回のミッション報酬を受け取る
         </button>}
         {primaryCta && <button className={`mypage-primary-cta semantic-cta ${priorityRewardIds.length ? "semantic-cta--secondary" : "semantic-cta--primary"} active-scale-effect`} onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
+          <span className="mypage-primary-cta-eyebrow">ミッション</span>
           <strong>{activationHandoffPending ? "確認中…" : primaryCta.title}</strong>
           <b aria-hidden="true">›</b>
         </button>}
 
-        {otherPendingRewardIds.length > 0 && <button className="semantic-cta semantic-cta--secondary" onClick={() => openBeginnerMissionReward(otherPendingRewardIds)}>
-          その他の未受取報酬
-        </button>}
 
         {visibleBanners.length > 0 && <div className="mypage-event-banner-area">
           <div className="banner-slide-wrapper">

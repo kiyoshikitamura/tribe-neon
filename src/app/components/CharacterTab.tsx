@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useGame } from "../context/GameContext";
 import { supabase } from "@/utils/supabase";
 import {
@@ -146,10 +147,14 @@ export default function CharacterTab() {
     try {
       const { data, error } = await supabase.rpc("complete_character_setup_dialog", { p_action: action });
       if (error) throw error;
-      setCharacterSetupDialogOpen(false);
       if (action === "AUTO_SETUP" && data?.status === "success") {
         await syncBootstrapData(session.user.id);
-        setCharacterSetupResult(data);
+        flushSync(() => {
+          setCharacterSetupResult(data);
+          setCharacterSetupDialogOpen(false);
+        });
+      } else {
+        setCharacterSetupDialogOpen(false);
       }
       playCyberSe("click");
     } catch (error: any) {
@@ -345,8 +350,8 @@ export default function CharacterTab() {
       title="おすすめパーティと装備を設定しますか？"
       ariaLabel="キャラクターページ初回おすすめ設定"
       actions={[
-        { label: characterSetupPending ? "設定中..." : "おすすめ設定する", semantic: "primary", disabled: characterSetupPending, onClick: () => void completeCharacterSetupDialog("AUTO_SETUP") },
-        { label: "あとで", semantic: "secondary", disabled: characterSetupPending, onClick: () => void completeCharacterSetupDialog("LATER") },
+        { label: characterSetupPending ? "設定中..." : "おすすめ設定する", semantic: "primary", disabled: characterSetupPending, onClick: () => completeCharacterSetupDialog("AUTO_SETUP") },
+        { label: "あとで", semantic: "secondary", disabled: characterSetupPending, onClick: () => completeCharacterSetupDialog("LATER") },
       ]}
     >
       今のキャラクターから、おすすめの編成と装備を自動で設定します。
@@ -354,12 +359,12 @@ export default function CharacterTab() {
     </CanonicalDialog>}
     {characterSetupResult && <CanonicalDialog
       title="おすすめ設定が完了しました"
-      actions={[{ label: "確認する", semantic: "primary", onClick: () => setCharacterSetupResult(null) }]}
+      actions={[{ label: "編成を確認する", semantic: "primary", onClick: () => setCharacterSetupResult(null) }]}
     >
       <div className="character-setup-result" data-acceptance-state="CHARACTER_SETUP_COMPLETE">
-        <p>パーティと装備をCharacter Pageへ反映しました。</p>
+        <p>パーティと装備を設定しました。</p>
         <strong>総合力 {Number(characterSetupResult.powerBefore || 0).toLocaleString()} → {Number(characterSetupResult.powerAfter || 0).toLocaleString()}</strong>
-        <small>Party {Number(characterSetupResult.partyCount || 0)}人 / Equipment {Number(characterSetupResult.equipmentCount || 0)}件</small>
+        <small>パーティ {Number(characterSetupResult.partyCount || 0)}人 / 装備 {Number(characterSetupResult.equipmentCount || 0)}件</small>
       </div>
     </CanonicalDialog>}
   </>;

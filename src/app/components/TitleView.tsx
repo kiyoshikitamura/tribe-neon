@@ -104,7 +104,7 @@ export default function TitleView() {
         </div>}
 
         <TitleLegalFooter />
-        <ConfirmDialog {...confirmDialogConfig} />
+        <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
       </div>
     </div>
   );

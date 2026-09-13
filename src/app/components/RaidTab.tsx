@@ -230,7 +230,7 @@ export default function RaidTab() {
     {dialog === "shortage" && <CanonicalDialog title="RPが不足しています" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }, { label: "回復する", semantic: "primary", onClick: () => setDialog("recovery") }]}>挑戦にはRPが1必要です。{`\n`}レイドチケットで1回復できます。</CanonicalDialog>}
     {dialog === "recovery" && <CanonicalDialog title="レイドチケットで回復しますか？" onClose={() => !recoveryInFlightRef.current && setDialog(null)} actions={[
       { label: "閉じる", semantic: "secondary", onClick: () => setDialog(null), disabled: recoveryLoading },
-      { label: recoveryLoading ? "回復中…" : "回復する", semantic: "primary", onClick: () => void recoverRaidPoint(), disabled: recoveryLoading || raidTicketQuantity <= 0 },
+      { label: recoveryLoading ? "回復中…" : "回復する", semantic: "primary", onClick: () => recoverRaidPoint(), disabled: recoveryLoading || raidTicketQuantity <= 0 },
     ]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>1枚使用してRPを1回復します。</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
     {dialog === "recovery-error" && <CanonicalDialog title="RPの回復結果を確認してください" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>回復結果を確認できませんでした。RPと所持枚数を確認するため、閉じて出撃準備を押し直してください。</CanonicalDialog>}
     {dialog === "battle-background-error" && <CanonicalDialog title="戦場を準備できませんでした" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>通信状態を確認して、もう一度お試しください。</CanonicalDialog>}

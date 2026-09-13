@@ -99,8 +99,8 @@ export default function FriendPanel() {
       confirmText: "削除",
       cancelText: "キャンセル",
       onConfirm: async () => {
-        setConfirmDialogConfig(null);
         await removeFriend(session.user.id, friendId);
+        setConfirmDialogConfig(null);
       },
       onCancel: () => setConfirmDialogConfig(null)
     });

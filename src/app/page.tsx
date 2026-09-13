@@ -235,7 +235,7 @@ function AppContent() {
             <button className="claim-reward-btn font-weight-bold py-2 width-100" onClick={() => void handleLogout()}>
               ログアウトして戻る
             </button>
-            <ConfirmDialog {...confirmDialogConfig} />
+            <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
           </div>
         </div>
       </div>
@@ -279,7 +279,7 @@ function AppContent() {
             {/* Layer 6: 最上位の共通ダイアログとブロッカー */}
             <PrepMissionEventDialogController />
             <RankingRewardNotificationController />
-            <ConfirmDialog {...confirmDialogConfig} />
+            <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
             <GlobalInteractionBlocker isBlocking={globalInteractionBlocking} />
           </>
         )}

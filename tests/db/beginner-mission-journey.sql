@@ -24,9 +24,12 @@ begin
     (v_uid,'first_main_loadout','{"skillCount":3,"equipmentCount":15}'),
     (v_uid,'first_free_skill_ten_pull','{}'),(v_uid,'first_free_equipment_ten_pull','{}'),
     (v_uid,'first_pvp','{}'),(v_uid,'post_tutorial_guild_view','{}');
-  -- Tutorial経験でQuestを通過。post_tutorial_questがなくても既達成を認識する。
+  -- Tutorial報酬だけではQuest学習を通過しない。実行済みFactは別に記録する。
   update public.user_missions set status='CLEAR',current_progress=1,progress_val=1
     where user_id=v_uid and mission_id='MIS_N_P004';
+  v_j:=public.get_beginner_mission_journey();
+  if (v_j#>>'{facts,quest}')::boolean then raise exception 'Tutorial mission reward must not skip post-tutorial Quest'; end if;
+  perform public.record_post_tutorial_guide_milestone(v_uid,'post_tutorial_quest','{}');
   v_j:=public.get_beginner_mission_journey();
   if not ((v_j->'facts') @> '{"free_skill":true,"free_equipment":true,"character":true,"quest":true,"pvp":true,"guild":true,"raid":false}') then
     raise exception 'authoritative facts projection failed: %',v_j->'facts';

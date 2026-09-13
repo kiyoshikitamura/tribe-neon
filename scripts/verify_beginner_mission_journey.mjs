@@ -4,7 +4,7 @@ import { nextBeginnerAction, beginnerRewardIds, priorityBeginnerRewardIds } from
 const facts = { free_skill:true, free_equipment:true, character:true, quest:true, pvp:false, raid:false, guild:false };
 const mission = id => ({id,category:'NORMAL',status:'CLEAR'});
 const state = {facts,missions:[mission('MIS_D_001'),mission('MIS_N_P003'),mission('MIS_N_P004')]};
-assert.equal(nextBeginnerAction(state,'inactive').key,'pvp'); // Tutorial経験のやり直しなし
+assert.equal(nextBeginnerAction(state,'inactive').key,'pvp'); // Tutorial後の自由先行経験のやり直しなし
 assert.deepEqual(priorityBeginnerRewardIds(state),['MIS_N_P004']);
 assert.deepEqual(priorityBeginnerRewardIds({...state,facts:{...facts,free_skill:false,free_equipment:false}}),[]);
 const ahead = {...state,facts:{...facts,pvp:true,guild:true}};
@@ -24,7 +24,31 @@ assert.equal(nextBeginnerAction(null,'active'),null);
 const home = fs.readFileSync('src/app/components/HomeTab.tsx','utf8');
 const contextual = fs.readFileSync('src/app/components/mission/BeginnerMissionRewardCta.tsx','utf8');
 assert.match(home,/今回のミッション報酬を受け取る/);
-assert.match(home,/その他の未受取報酬/);
-assert.match(home,/openBeginnerMissionReward\(otherPendingRewardIds\)/);
-assert.match(contextual,/今回のミッション報酬を受け取る/);
-console.log('PASS: server facts, advance without claims, reward priority, shared free reward, expiry, tutorial reuse, Raid reoffer');
+assert.doesNotMatch(home,/その他の未受取報酬/);
+
+
+console.log('PASS: server facts, advance without claims, reward priority, shared free reward, expiry, post-tutorial facts, Raid reoffer');
+
+// Tutorial報酬が既にCLEARでも、学習Factsだけで全順序を決める。
+const fresh = {facts:{free_skill:false,free_equipment:false,character:false,quest:false,pvp:false,raid:false,guild:false},missions:[mission('MIS_N_P002'),mission('MIS_N_P003'),mission('MIS_N_P004')]};
+assert.equal(nextBeginnerAction(fresh,'inactive').key,'free_assets');
+fresh.facts.free_skill=true;
+assert.equal(nextBeginnerAction(fresh,'inactive').key,'free_assets');
+fresh.facts.free_equipment=true;
+for (const [key,fact] of [['character','character'],['quest','quest'],['pvp','pvp'],['guild','guild']]) {
+  assert.equal(nextBeginnerAction(fresh,'inactive').key,key);
+  const withClaims={...fresh,missions:fresh.missions.map(m=>({...m,status:'CLAIMED'}))};
+  assert.equal(nextBeginnerAction(withClaims,'inactive').key,key);
+  fresh.facts[fact]=true;
+}
+assert.equal(nextBeginnerAction(fresh,'inactive').key,'reflow');
+assert.equal(nextBeginnerAction({...fresh,reflow_completed:true},'active').key,'raid');
+const aheadQuest={...fresh,facts:{...fresh.facts,character:false,quest:true,pvp:true,guild:false}};
+assert.equal(nextBeginnerAction(aheadQuest,'inactive').key,'character');
+aheadQuest.facts.character=true;
+assert.equal(nextBeginnerAction(aheadQuest,'inactive').key,'guild');
+console.log('PASS: complete post-tutorial order, claim-independent advancement, free exploration, Raid reoffer');
+
+const historical={facts:{...fresh.facts,free_skill:false,character:false,quest:false},missions:[],reflow_completed:true};
+assert.equal(nextBeginnerAction(historical,'inactive'),null);
+assert.equal(nextBeginnerAction(historical,'active').key,'raid');

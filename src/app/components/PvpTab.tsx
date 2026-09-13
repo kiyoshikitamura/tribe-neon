@@ -315,7 +315,7 @@ export default function PvpTab() {
     ]}>対戦にはBPが1必要です。{`\n`}ファイトチケットで回復できます。</CanonicalDialog>}
     {bpDialog === "recovery" && <CanonicalDialog title="BP回復" onClose={() => setBpDialog(null)} actions={pvpTicketQuantity > 0 ? [
       { label: "キャンセル", semantic: "secondary", onClick: () => setBpDialog(null) },
-      { label: "1枚使用", semantic: "primary", onClick: () => { setBpDialog(null); void handleUseItem("PVP_POINT_TICKET"); } },
+      { label: "1枚使用", semantic: "primary", onClick: async () => { await handleUseItem("PVP_POINT_TICKET"); setBpDialog(null); } },
     ] : [{ label: "閉じる", semantic: "secondary", onClick: () => setBpDialog(null) }]}>
       <div className="pvp-bp-recovery-copy"><strong>ファイトチケット</strong><span>所持 ×{pvpTicketQuantity}</span><span>BP　{pvpPoints} / 5 → {Math.min(5, pvpPoints + 1)} / 5</span>{pvpTicketQuantity === 0 && <em>ファイトチケットを所持していません。</em>}</div>
     </CanonicalDialog>}

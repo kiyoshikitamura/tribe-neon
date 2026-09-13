@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import "./ConfirmDialog.css";
 import OutlawButton from "./OutlawButton";
@@ -8,6 +8,7 @@ import CanonicalDialog from "./CanonicalDialog";
 
 export interface ConfirmDialogConfig {
   isOpen: boolean;
+  dialogId?: number;
   title: string;
   message: React.ReactNode;
   confirmText?: string;
@@ -41,36 +42,44 @@ export default function ConfirmDialog({
 }: ConfirmDialogConfig) {
   const [dismissed, setDismissed] = useState(false);
   const [pending, setPending] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
   const actionStartedRef = useRef(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    actionStartedRef.current = false;
-    setDismissed(false);
-    setPending(false);
-  }, [isOpen, title, message]);
+  // Parent keys each configuration by dialogId. Replacement mounts a fresh
+  // instance; an older async completion only touches its unmounted instance.
+
 
   const runAndDismiss = (action: () => void | Promise<void>) => {
     if (actionStartedRef.current) return;
     actionStartedRef.current = true;
-    let result: void | Promise<void>;
+    let result: void | Promise<void> = undefined;
     try {
-      result = action();
-    } catch (error) {
+      // Navigation changes and dismissal commit together. Never dismiss first
+      // and leave the previous page interactive while React processes the action.
+      flushSync(() => {
+        setPending(true);
+        setActionError(null);
+        result = action();
+        if (!result || typeof result.then !== "function") setDismissed(true);
+      });
+    } catch {
+      setActionError("処理を完了できませんでした。もう一度お試しください。");
       actionStartedRef.current = false;
-      throw error;
+      setPending(false);
+      return;
     }
-    if (result && typeof result.then === "function") {
-      setPending(true);
-      void result.catch(() => {
+    const completion = result as void | Promise<void>;
+    if (completion && typeof completion.then === "function") {
+      void completion.then(() => {
+        actionStartedRef.current = false;
+        setPending(false);
+      }, () => {
+        setActionError("処理を完了できませんでした。もう一度お試しください。");
         actionStartedRef.current = false;
         setPending(false);
       });
-      return;
     }
-    // Synchronous actions close in the same input event. Async mutation
-    // handlers keep the dialog mounted and replace it with their result state.
-    flushSync(() => setDismissed(true));
+
   };
 
   if (!isOpen || dismissed) return null;
@@ -98,6 +107,7 @@ export default function ConfirmDialog({
         {kind === "reward" && rewards.length > 0
           ? <RewardReceipt items={rewards} delivery={delivery} note={typeof message === "string" ? message : undefined} />
           : message}
+        {actionError && <p role="alert">{actionError}</p>}
       </CanonicalDialog>
     );
   }
@@ -111,6 +121,7 @@ export default function ConfirmDialog({
             {kind === "reward" && rewards.length > 0
               ? <RewardReceipt items={rewards} delivery={delivery} note={typeof message === "string" ? message : undefined} />
               : message}
+            {actionError && <p role="alert">{actionError}</p>}
           </div>
 
           <div className="confirm-actions">

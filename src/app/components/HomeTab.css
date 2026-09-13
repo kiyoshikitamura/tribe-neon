@@ -1163,3 +1163,9 @@
 @media (max-width:340px) {
   .circle-menu-status { visibility:hidden; }
 }
+
+/* 初心者の推奨行動は、ラベルと行動を分けて狭い画面でも全文を表示する。 */
+.mypage-primary-cta:has(.mypage-primary-cta-eyebrow){display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;min-height:54px}
+.mypage-primary-cta-eyebrow{grid-column:1;font-size:10px;line-height:1.3;letter-spacing:.06em}
+.mypage-primary-cta:has(.mypage-primary-cta-eyebrow) strong{grid-column:1;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;font-size:14px;line-height:1.4}
+.mypage-primary-cta:has(.mypage-primary-cta-eyebrow)>b{grid-column:2;grid-row:1 / 3}
