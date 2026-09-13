@@ -1,4 +1,5 @@
 'use client';
+import GuildIdentity from '../profile/GuildIdentity';
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -70,7 +71,7 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
         {participants.status === 'success' && <ul className="raid-room-dialogs__participants">{participants.data?.map(participant => <li key={participant.player.userId}>
           <button type="button" className="raid-room-dialogs__person" disabled={!onOpenProfile} data-profile-user={participant.player.userId} onClick={() => void openProfile(participant.player.userId)} aria-label={`${participant.player.name}のプロフィール`}>
             <span className="raid-room-dialogs__person-head"><span className="raid-room-dialogs__avatar">{participant.player.leaderIconUrl.status === 'available' && participant.player.leaderIconUrl.value && <ParticipantPortrait url={participant.player.leaderIconUrl.value} />}</span>
-            <span className="raid-room-dialogs__identity"><strong>{participant.player.name}</strong><span>{participant.player.userId === ownerUserId ? '挑戦者' : '参加者'}{participant.player.userId === currentUserId ? '・あなた' : ''}</span><span>{participant.currentGuild.status === 'available' ? participant.currentGuild.value?.name ?? 'Guild未所属' : 'Guild未取得'}</span></span>
+            <span className="raid-room-dialogs__identity"><strong>{participant.player.name}</strong><span>{participant.player.userId === ownerUserId ? '挑戦者' : '参加者'}{participant.player.userId === currentUserId ? '・あなた' : ''}</span><span>{participant.currentGuild.status === 'available' ? participant.currentGuild.value ? <GuildIdentity guildId={participant.currentGuild.value.guildId} name={participant.currentGuild.value.name} /> : "Guild未所属" : 'Guild未取得'}</span></span>
             <span className="raid-room-dialogs__chevron" aria-hidden="true">›</span>
             </span><span className="raid-room-dialogs__contribution"><span>貢献 {participant.appliedDamage.status === 'available' ? participant.appliedDamage.value.toLocaleString('ja-JP') : '未取得'}</span><span>{participant.finalizedBattles.status === 'available' ? `${participant.finalizedBattles.value.toLocaleString('ja-JP')}戦` : '戦数未取得'}</span></span>
           </button>

@@ -1,0 +1,7 @@
+.guild-identity-label{display:inline-flex;align-items:center;gap:6px;min-width:0;max-width:100%;vertical-align:middle}
+.guild-identity-label__name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.guild-emblem{display:inline-block;object-fit:contain;flex:none;vertical-align:middle}
+.guild-emblem--s{width:20px;height:20px}
+.guild-emblem--m{width:28px;height:28px}
+.guild-emblem--l{width:56px;height:56px}
+.guild-emblem-change{margin:10px 0 0;min-height:40px}

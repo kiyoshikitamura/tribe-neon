@@ -13,12 +13,12 @@ import { GACHA_RARITY_ASSETS } from "../lib/screenManifests";
 import { preloadAssetManifest } from "../lib/screenAssets";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import "./CommonModals.css";
-import { resolvePresentableAssetUrl } from "@/utils/assetPresentation";
 import { userFacingErrorMessage } from "../lib/userFacingError";
 import CharacterGachaPresentation from "./gacha/CharacterGachaPresentation";
 import CanonicalDialog from "./ui/CanonicalDialog";
 import PublicUserProfile from "./profile/PublicUserProfile";
 import UserIdentityRow from "./profile/UserIdentityRow";
+import { GuildEmblem } from "./profile/GuildIdentity";
 import { SkillIcon } from "./skill/SkillPresentation";
 
 function gachaLocationBackground(result: any): string {
@@ -339,9 +339,7 @@ export default function CommonModals() {
         >
             <div className="guild-public-detail">
               <div className="guild-public-identity">
-                {resolvePresentableAssetUrl(activeGuildDetail.emblem_url)
-                  ? <img className="guild-emblem-placeholder" src={resolvePresentableAssetUrl(activeGuildDetail.emblem_url) || ""} alt="" />
-                  : <div className="guild-emblem-placeholder is-placeholder" aria-hidden="true" />}
+                <GuildEmblem guildId={activeGuildDetail.id} legacySrc={activeGuildDetail.emblem_url} size="l" />
                 <div><strong>{activeGuildDetail.name}</strong><span>Lv.{activeGuildDetail.level} ・ {activeGuildDetail.member_count}/{activeGuildDetail.member_limit}名</span></div>
               </div>
               <div className="guild-meta-section flex justify-between mb-3">
@@ -349,7 +347,7 @@ export default function CommonModals() {
                   <small>ギルドマスター</small>
                   <UserIdentityRow
                     userName={activeGuildDetail.leaderName}
-                    guildName={activeGuildDetail.name}
+                    guildName={activeGuildDetail.name} guildId={activeGuildDetail.id}
                     leaderCharacterId={activeGuildDetail.leaderCharacterId}
                     onOpen={activeGuildDetail.leaderUserId ? () => fetchPlayerDetail(activeGuildDetail.leaderUserId) : undefined}
                     variant="compact"
@@ -384,7 +382,7 @@ export default function CommonModals() {
                     <div className="guild-public-member-row" key={member.user_id}>
                       <UserIdentityRow
                         userName={member.username}
-                        guildName={activeGuildDetail.name}
+                        guildName={activeGuildDetail.name} guildId={activeGuildDetail.id}
                         leaderCharacterId={member.favorite_character_id || null}
                         onOpen={() => fetchPlayerDetail(member.user_id)}
                         variant="compact"

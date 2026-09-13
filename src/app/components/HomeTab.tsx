@@ -91,6 +91,7 @@ type HomeActivity = {
   actor_display_name?: string | null;
   actor_favorite_character_id?: string | null;
   actor_guild_name?: string | null;
+  actor_guild_id?: string | null;
   created_at?: string | null;
   [key: string]: unknown;
 };
@@ -342,7 +343,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       if (error || !active) return;
       const visible = normalizeRecentActivities((data || []) as HomeActivity[]);
       const actorIds = [...new Set(visible.map((event: HomeActivity) => event.actor_user_id).filter((id): id is string => Boolean(id)))];
-      const profilesById = new Map<string, { username?: string | null; favorite_character_id?: string | null; guild_name?: string | null }>();
+      const profilesById = new Map<string, { username?: string | null; favorite_character_id?: string | null; guild_name?: string | null; guild_id?: string | null }>();
       if (actorIds.length > 0) {
         const { data: profiles } = await supabase.rpc("get_public_profiles", { p_user_ids: actorIds });
         if (Array.isArray(profiles)) {
@@ -357,6 +358,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           actor_display_name: profile?.username || event.actor_display_name,
           actor_favorite_character_id: profile?.favorite_character_id || null,
           actor_guild_name: profile?.guild_name || null,
+          actor_guild_id: profile?.guild_id || null,
         };
       }));
     })();
@@ -603,7 +605,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
             <UserIdentityRow
               variant="compact"
               userName={String(latestActivity.actor_display_name || "プレイヤー")}
-              guildName={latestActivity.actor_guild_name}
+              guildName={latestActivity.actor_guild_name} guildId={latestActivity.actor_guild_id}
               leaderCharacterId={latestActivity.actor_favorite_character_id}
             />
             <span className="mypage-live-ticker-text">{activityText}</span>
@@ -631,7 +633,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
             <UserIdentityRow
               variant="compact"
               userName={String(activity.actor_display_name || "プレイヤー")}
-              guildName={activity.actor_guild_name}
+              guildName={activity.actor_guild_name} guildId={activity.actor_guild_id}
               leaderCharacterId={activity.actor_favorite_character_id}
               onOpen={activity.actor_user_id ? () => { void fetchPlayerDetail(activity.actor_user_id!); playCyberSe("click"); } : undefined}
             />

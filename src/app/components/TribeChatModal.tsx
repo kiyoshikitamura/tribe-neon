@@ -272,6 +272,7 @@ export default function TribeChatModal() {
                       <div className="tribe-msg-identity"><UserIdentityRow
                         userName={identity?.username || msg.author_name || "ユーザー"}
                         guildName={chatChannel === "GLOBAL" ? identity?.guild_name || null : userGuild?.name || null}
+                        guildId={chatChannel === "GLOBAL" ? identity?.guild_id : userGuild?.id}
                         leaderCharacterId={leaderCharacterId}
                         onOpen={msg.user_id ? () => fetchPlayerDetail(msg.user_id) : undefined}
                         variant="compact"

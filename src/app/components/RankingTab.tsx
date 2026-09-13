@@ -1,4 +1,5 @@
 "use client";
+import GuildIdentity from "./profile/GuildIdentity";
 
 import { beginnerRewardIds } from "@/domain/mission/beginnerJourney";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -406,7 +407,7 @@ export default function RankingTab() {
 
       <section className="ranking-current" aria-label="あなたの現在地">
         <div className="ranking-current-identity">
-          {activeTab === "guild_power" ? <div><small>YOUR GUILD</small><strong>{userGuild?.name || "未所属"}</strong></div> : currentIdentityName ? <UserIdentityRow userName={currentIdentityName} guildName={currentProfile?.guild_name || userGuild?.name} leaderCharacterId={currentProfile?.favorite_character_id || currentUser?.favorite_character_id} onOpen={currentUserId ? () => openPlayer(currentUserId) : undefined} variant="compact" /> : <div className="ranking-current-identity-loading" role="status">ユーザー情報を取得中</div>}
+          {activeTab === "guild_power" ? <div><small>YOUR GUILD</small><strong>{userGuild?.name ? <GuildIdentity guildId={userGuild.id} name={userGuild.name} size="m" /> : "未所属"}</strong></div> : currentIdentityName ? <UserIdentityRow userName={currentIdentityName} guildName={currentProfile?.guild_name || userGuild?.name} guildId={currentProfile?.guild_id || userGuild?.id} leaderCharacterId={currentProfile?.favorite_character_id || currentUser?.favorite_character_id} onOpen={currentUserId ? () => openPlayer(currentUserId) : undefined} variant="compact" /> : <div className="ranking-current-identity-loading" role="status">ユーザー情報を取得中</div>}
         </div>
         <StatusMetric label="順位" value={rankState || <RankPresentation rank={currentRank} />} />
         <StatusMetric label={metricLabel} value={currentMetric} />
@@ -423,13 +424,13 @@ export default function RankingTab() {
         : loading ? <div className="ranking-skeleton" aria-label="ランキング取得中">{[0, 1, 2].map((key) => <span key={key} />)}</div>
           : activeTab === "guild_power" ? <div className="ranking-list">{displayedRows.length > 0 ? displayedRows.map((row) => {
             const rank = validRank(row.rank_position);
-            return <button type="button" key={row.guild_id} className={`ranking-guild-row ${row.guild_id === currentGuildId ? "is-current" : ""}`} onClick={() => openGuild(row.guild_id)}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><span className="ranking-guild-identity"><strong>{row.name || row.guild_name || "ギルド"}</strong><small>{Number(row.member_count || row.participant_count || 0)} MEMBERS</small></span><span className="ranking-metric">{Number(activePeriod === "daily" ? row.daily_power : row.current_power ?? row.guild_power ?? row.score ?? row.contribution ?? 0).toLocaleString()}<small>総合力</small></span></button>;
+            return <button type="button" key={row.guild_id} className={`ranking-guild-row ${row.guild_id === currentGuildId ? "is-current" : ""}`} onClick={() => openGuild(row.guild_id)}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><span className="ranking-guild-identity"><strong><GuildIdentity guildId={row.guild_id} name={row.name || row.guild_name || "ギルド"} size="m" /></strong><small>{Number(row.member_count || row.participant_count || 0)} MEMBERS</small></span><span className="ranking-metric">{Number(activePeriod === "daily" ? row.daily_power : row.current_power ?? row.guild_power ?? row.score ?? row.contribution ?? 0).toLocaleString()}<small>総合力</small></span></button>;
           }) : <div className="ranking-empty">{listView === "nearby" ? contextError ? "周辺順位を取得できませんでした" : currentGuildId || activeTab !== "guild_power" ? "表示できる自己順位がありません" : "ギルドに所属すると確認できます" : "まだランキングデータがありません"}</div>}</div>
             : <div className="ranking-list">{displayedRows.length > 0 ? displayedRows.map((row) => {
               const profile = profiles[row.user_id];
               const rank = validRank(row.rank_position);
               const metric = activeTab === "power" ? Number(row.current_power || 0).toLocaleString() : activePeriod === "daily" ? `${Number(row.daily_wins || 0)}勝` : Number(row.rank_points || 0).toLocaleString();
-              return <article key={row.user_id} className={`ranking-user-row ${row.user_id === currentUserId ? "is-current" : ""}`}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><div className="ranking-user-main"><UserIdentityRow userName={profile?.username || row.username || "プレイヤー"} guildName={profile?.guild_name || row.guild_name} leaderCharacterId={profile?.favorite_character_id} onOpen={() => openPlayer(row.user_id)} variant="compact" /><RankingDeck characterIds={profile?.main_formation_character_ids} /></div><span className="ranking-metric">{metric}<small>{activeTab === "power" ? "総合力" : activePeriod === "daily" ? "WIN" : "RATE"}</small></span></article>;
+              return <article key={row.user_id} className={`ranking-user-row ${row.user_id === currentUserId ? "is-current" : ""}`}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><div className="ranking-user-main"><UserIdentityRow userName={profile?.username || row.username || "プレイヤー"} guildName={profile?.guild_name || row.guild_name} guildId={profile?.guild_id || row.guild_id} leaderCharacterId={profile?.favorite_character_id} onOpen={() => openPlayer(row.user_id)} variant="compact" /><RankingDeck characterIds={profile?.main_formation_character_ids} /></div><span className="ranking-metric">{metric}<small>{activeTab === "power" ? "総合力" : activePeriod === "daily" ? "WIN" : "RATE"}</small></span></article>;
             }) : <div className="ranking-empty">{listView === "nearby" ? contextError ? "周辺順位を取得できませんでした" : "表示できる自己順位がありません" : "まだランキングデータがありません"}</div>}</div>}
 
       {!rankingMissionRewardOrigin && (activationMilestones.has("first_pvp") && !activationMilestones.has("first_raid") && isRaidActive ? <OutlawButton variant="primary" fullWidth className="ranking-return-cta" onClick={() => setActiveTab("raid")}>次はレイドへ挑戦</OutlawButton>

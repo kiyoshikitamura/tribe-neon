@@ -75,7 +75,7 @@ export default function BbsTab() {
     const profile = identityByUserId[entry?.user_id];
     return <UserIdentityRow
       userName={String(profile?.username || "ユーザー")}
-      guildName={profile?.guild_name}
+      guildName={profile?.guild_name} guildId={profile?.guild_id}
       title={profile?.title_name}
       leaderCharacterId={profile?.favorite_character_id}
       identityReady={identityReady}

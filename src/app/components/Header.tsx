@@ -62,7 +62,7 @@ export default function Header() {
           <UserIdentityRow
             variant="compact"
             userName={username || "プレイヤー名"}
-            guildName={userGuild?.name}
+            guildName={userGuild?.name} guildId={userGuild?.id}
             title={visibleTitle}
             leaderCharacterId={identityLeaderCharacterId || null}
             identityReady={identityLeaderAuthorityReady}
