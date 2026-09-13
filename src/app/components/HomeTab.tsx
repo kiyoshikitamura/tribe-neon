@@ -2,6 +2,7 @@
 import { nextBeginnerAction } from "@/domain/mission/beginnerJourney";
 import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
+import QuestEncounterHomeReturn from './quest/QuestEncounterHomeReturn';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import { getRaidRescueActivityId } from '../../domain/raidRoomRescue';
 
@@ -756,6 +757,8 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           <b aria-hidden="true">›</b>
         </button>}
 
+
+        {!qaState && <QuestEncounterHomeReturn />}
 
         {visibleBanners.length > 0 && <div className="mypage-event-banner-area">
           <div className="banner-slide-wrapper">

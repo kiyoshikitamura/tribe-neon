@@ -9,6 +9,7 @@ function fixture({points=0,free=false,tickets=2,fail=false}={}) {
  const context={session:{user:{id:'qa'}},raidPoints:points,raidFirstEntryFree:free,userLevel:5,raidTopRefreshRevision:0,setRaidPoints:v=>context.raidPoints=v,setRaidFirstEntryFree:v=>context.raidFirstEntryFree=v,prepareRaidRoomBattle:async(_briefing,_presentation,gate)=>{if(await gate())prepared++},syncBootstrapData:async()=>{},playCyberSe(){}};
  const react={createElement:(type,props,...children)=>({type,props:{...props,children}}),useState:init=>{const i=cursor++;if(!(i in slots))slots[i]=typeof init==='function'?init():init;return [slots[i],v=>slots[i]=typeof v==='function'?v(slots[i]):v]},useRef:init=>{const i=cursor++;return slots[i]??=({current:init})},useLayoutEffect(){},useEffect(){},useCallback:fn=>fn};
  const supabase={rpc:async name=>{if(name==='get_current_raid_attempt_state')return {data:{raidPoints:points,firstEntryFree:free}};assert.equal(name,'use_action_resource_ticket');calls++;if(block)await block;if(fail)return {error:Error('network')};points++;tickets--;return {data:{status:'success',points,quantity:tickets}}},from:()=>{const q={select:()=>q,eq:()=>q,maybeSingle:async()=>({data:{quantity:tickets}})};return q}};
+ for (const key of Object.keys(context)) if (!publishedKeys.has(key)) delete context[key];
  const module={exports:{}};vm.runInNewContext(code,{exports:module.exports,module,process:{env:{NEXT_PUBLIC_RAID_ROOM_UI_ENABLED:'true'}},require:name=>name==='react'?react:name.includes('GameContext')?{useGame:()=>context}:name==='@/utils/supabase'?{supabase}:name.includes('game_constants')?{getCanonicalBattleAreaName:()=>'',getCanonicalBattleBackground:()=>''}:name.includes('screenAssets')?{preloadAsset:async()=>({resolvedSrc:'/test.jpg'})}:name.includes('useScreenReadiness')?{useScreenReadiness:()=>({status:'ready'})}:name.includes('screenManifests')?{SCREEN_ASSET_MANIFESTS:{raid:[]}}:name.includes('canonical/items')?{}:name});
  const render=()=>{cursor=0;return module.exports.default()};
  const find=(node,p)=>{if(!node||typeof node!=='object')return null;if(p(node))return node;for(const child of (Array.isArray(node)?node:node.props?.children??[])){const result=find(child,p);if(result)return result;}return null};
@@ -16,6 +17,17 @@ function fixture({points=0,free=false,tickets=2,fail=false}={}) {
  const enter=()=>find(render(),n=>n.props?.onBriefingReady).props.onBriefingReady({roomId:'room',baseId:'base'});
  return {render,find,dialog,enter,context,get calls(){return calls},get prepared(){return prepared},hold:()=>{let release;block=new Promise(r=>release=r);return release}};
 }
+// Project the mocked hook state through the actual Provider value contract.
+// A hand-written useGame fixture alone silently supplies unpublished setters.
+const providerSource = ts.createSourceFile('GameContext.tsx', fs.readFileSync('src/app/context/GameContext.tsx', 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+let providerValue;
+function visit(node) {
+ if (ts.isVariableDeclaration(node) && node.name.getText(providerSource) === 'value' && node.initializer && ts.isObjectLiteralExpression(node.initializer)) providerValue = node.initializer;
+ ts.forEachChild(node, visit);
+}
+visit(providerSource);
+assert.ok(providerValue, 'GameProvider value exists');
+const publishedKeys = new Set(providerValue.properties.filter(p => p.name).map(p => p.name.getText(providerSource)));
 const checks=[];
 let f=fixture();await f.enter();assert.ok(f.dialog());assert.equal(f.calls,0);f.dialog().props.actions[0].onClick();assert.equal(f.dialog(),null);assert.equal(f.calls,0);checks.push('zero RP opens; close consumes nothing');
 f=fixture({tickets:0});await f.enter();assert.equal(f.dialog().props.actions[1].disabled,true);checks.push('no ticket disables recovery');

@@ -13,5 +13,8 @@
 .quest-encounter-revisit>div{display:grid;gap:6px;padding:12px;background:#141c28;border:1px solid #89764b;border-radius:6px;margin-bottom:8px}
 .quest-encounter-revisit strong{font-size:16px}
 .quest-encounter-revisit span{font-size:12px}
+.quest-encounter-home-return{margin:8px 0}
+.quest-encounter-home-return button{white-space:nowrap;font-size:14px;min-height:44px}
+.quest-encounter-home-return p{font-size:12px;color:#ffb7b7;margin:6px 0}
 @media(prefers-reduced-motion:no-preference){.quest-encounter-scene h1{animation:quest-encounter-arrive .3s ease-out}}
 @keyframes quest-encounter-arrive{from{transform:scale(1.08)}to{transform:scale(1)}}

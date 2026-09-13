@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from '@/utils/game_constants';
-import { isEncounterPresentationSafe, type QuestRaidEncounter as Encounter } from '@/domain/quest/raidEncounter';
+import { isEncounterPresentationSafe, revisitableQuestEncounters, type QuestRaidEncounter as Encounter } from '@/domain/quest/raidEncounter';
 import FullScreenPanel from '../ui/FullScreenPanel';
 import OutlawButton from '../ui/OutlawButton';
 import { hasPresentedDialog } from '../ui/dialogPresence';
@@ -35,7 +35,7 @@ export default function QuestRaidEncounter() {
   }catch{setError('画面を開けませんでした。もう一度お試しください。');}
   finally{setBusy(false);setGlobalInteractionBlocking(false);}
  }
- const revisitable=questRaidEncounter.entries.filter((e:Encounter)=>e.acknowledged&&!e.ended);
+ const revisitable=revisitableQuestEncounters(questRaidEncounter.entries, Date.now());
  const master=shown?CHARACTERS_MASTER.find(c=>c.id===shown.leaderId):null;
  const ended=shown&&(shown.ended||Boolean(shown.expiresAt&&Date.parse(shown.expiresAt)<=Date.now()));
  return <>

@@ -32,3 +32,7 @@ export function parseQuestRaidEncounter(value: unknown): QuestRaidEncounter {
 export function isEncounterPresentationSafe(state: {battle: unknown;gacha: unknown;dialog: unknown;mission: boolean;patrolReward: boolean;blocked: boolean}) {
   return !state.battle&&!state.gacha&&!state.dialog&&!state.mission&&!state.patrolReward&&!state.blocked;
 }
+export function revisitableQuestEncounters(entries: readonly QuestRaidEncounter[], now: number) {
+  return entries.filter(entry => entry.status === 'CREATED' && entry.acknowledged && entry.roomId && !entry.ended
+    && (!entry.expiresAt || Date.parse(entry.expiresAt) > now));
+}
