@@ -20,6 +20,8 @@ import "./CardBattleView.css";
 export default function CardBattleView() {
   const {
     battleMode,
+    identityLeaderCharacterId,
+    identityLeaderAuthorityReady,
     battleOpponentName,
     battleState,
     battleOutcome,
@@ -67,6 +69,12 @@ export default function CardBattleView() {
     playSe,
     preloadAudio
   } = useGame();
+  // PvPの代表表示はHome/Battle TOPと同じ公開リーダー。戦闘配列の先頭とは別。
+  const identityMaster = identityLeaderAuthorityReady
+    ? CHARACTERS_MASTER.find(character => character.id === identityLeaderCharacterId) : undefined;
+  const playerRepresentative = battleMode === "PVP" || battleMode === "PVP_PRACTICE"
+    ? identityMaster ? { characterId: identityMaster.id, name: identityMaster.jpName } : null
+    : playerPartyStates[0];
   const isRoomBattle = Boolean(battlePresentationContext?.raidRoomId);
   const roomMemberIds = isRoomBattle ? enemyPartyStates.map((enemy: any) => enemy.characterId) : undefined;
   const roomLeaderId = roomMemberIds?.[0];
@@ -214,7 +222,7 @@ export default function CardBattleView() {
 
     if (setupLaunching) {
       return <BattleMatchupPresentation
-        playerLeader={playerPartyStates[0]}
+        playerLeader={playerRepresentative ?? undefined}
         opponentLeader={enemyPartyStates[0]}
         context={roomLeader && battlePresentationContext ? {...battlePresentationContext, opponentLeaderCharacterId:roomLeader.id, opponentLeaderName:roomLeader.jpName} : battlePresentationContext}
         imageFor={getBattleCharacterImage}
@@ -224,7 +232,7 @@ export default function CardBattleView() {
 
     if (battleMode === "RAID" && isRoomBattle) {
       const leader = roomLeader;
-      return <div className="battle-screen street-battle-screen" onClick={handleFirstUserInteraction}><StreetBattleSetup playerParty={playerPartyStates} enemyParty={enemyPartyStates} enemyLeader={leader ? {characterId:leader.id,name:leader.jpName} : undefined} enemyDetails={<RaidEnemyRoster raidName={battleOpponentName} memberCharacterIds={roomMemberIds}/>} playerPower={playerPower} enemyPower={enemyPower} tutorial={false} mode="RAID" label={battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={launchRegularBattle} startLabel="討伐開始" backLabel="レイドへ戻る" resourceLabel={raidFirstEntryFree ? "初回無料" : ("RP " + raidPoints + " / 5・開始時に1消費")} onBack={()=>{if(cancelPreparedRaidBattle())playSe("UI_BACK");}}/></div>;
+      return <div className="battle-screen street-battle-screen" onClick={handleFirstUserInteraction}><StreetBattleSetup playerLeader={playerRepresentative} playerParty={playerPartyStates} enemyParty={enemyPartyStates} enemyLeader={leader ? {characterId:leader.id,name:leader.jpName} : undefined} enemyDetails={<RaidEnemyRoster raidName={battleOpponentName} memberCharacterIds={roomMemberIds}/>} playerPower={playerPower} enemyPower={enemyPower} tutorial={false} mode="RAID" label={battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={launchRegularBattle} startLabel="討伐開始" backLabel="レイドへ戻る" resourceLabel={raidFirstEntryFree ? "初回無料" : ("RP " + raidPoints + " / 5・開始時に1消費")} onBack={()=>{if(cancelPreparedRaidBattle())playSe("UI_BACK");}}/></div>;
     }
 
     if (battleMode === "RAID") {
@@ -264,7 +272,7 @@ export default function CardBattleView() {
       </div>{selectedOpponentSkill && <SkillDetailDialog skill={selectedOpponentSkill} onClose={() => setSelectedOpponentSkill(null)} />}</>;
     }
 
-    return <div className={`battle-screen ${(battleMode !== "RAID" || isRoomBattle) ? "street-battle-screen" : ""}`} onClick={handleFirstUserInteraction}><StreetBattleSetup playerParty={playerPartyStates} enemyParty={enemyPartyStates} playerPower={playerPower} enemyPower={enemyPower} tutorial={isTutorialBattle} mode={battleMode} label={battlePresentationContext?.encounterLabel || battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={isTutorialBattle ? launchBattleOnce : launchRegularBattle} onBack={["PVP","PVP_PRACTICE","GVG"].includes(battleMode) ? ()=>{if(cancelPreparedPvpBattle())playSe("UI_BACK");} : undefined}/></div>;
+    return <div className={`battle-screen ${(battleMode !== "RAID" || isRoomBattle) ? "street-battle-screen" : ""}`} onClick={handleFirstUserInteraction}><StreetBattleSetup playerLeader={playerRepresentative} playerParty={playerPartyStates} enemyParty={enemyPartyStates} playerPower={playerPower} enemyPower={enemyPower} tutorial={isTutorialBattle} mode={battleMode} label={battlePresentationContext?.encounterLabel || battleOpponentName} background={battlePresentationContext?.backgroundPath} tactic={tactic} onTactic={value=>setTactic(value as typeof tactic)} onStart={isTutorialBattle ? launchBattleOnce : launchRegularBattle} onBack={["PVP","PVP_PRACTICE","GVG"].includes(battleMode) ? ()=>{if(cancelPreparedPvpBattle())playSe("UI_BACK");} : undefined}/></div>;
   }
 
   // 2. PLAYING オート戦闘中画面
