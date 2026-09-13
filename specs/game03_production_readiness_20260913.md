@@ -1,6 +1,12 @@
 # GAME03 本番反映前確認（2026-09-13）
 
-状態: 本番反映準備中。Production配信・Migration適用は未実施。
+状態: 現行改善版の条件付き本番公開はユーザー承認済み。Production配信・Migration適用は未実施。
+
+## 最新の公開指示（以前の保留記述より優先）
+
+ユーザーは「今進めているバージョンは本番公開可能であればこのまま公開」「では現行版を進めます」と指示した。
+以下の残条件を満たした場合、現行改善版の必要Migration・Production配信・本番ドメイン切替まで進める。条件が満たされた後の再承認待ちは不要。
+Quest → Raid Encounterの新規開催機能は正式リリースの必須範囲として別工程で実装する。現行改善版の先行公開には含めず、完成を待たない。
 
 ## 受入基準
 
@@ -43,17 +49,23 @@ Productionはsnapshot baseline方式。PreviewのMigration番号差をそのま�
 12. `20260913032942_quest_hometown_reward_bonus.sql`
 13. `20260913062244_mission_receipt_projection_and_leader_town.sql`
 
-各段階の後続ガード、既存探索のsnapshot補完、権限、報酬ledgerの保持を含めて検証する。上記の順序は候補であり、本番適用許可ではない。無差別の `db push` は行わない。
+各段階の後続ガード、既存探索のsnapshot補完、権限、報酬ledgerの保持を含めて検証する。上記は適用候補であり、13件の無条件一括適用指示ではない。実本番との差分から必要なものだけ確定し、公開条件を満たした後に適用する。無差別の `db push` は行わない。
 
-## 配信担当への読取依頼
+## 配信担当への本番公開工程依頼
 
 現在この環境ではVercel配信情報を取得する接続がない。次の情報が必要。
 
 1. `tribe-neon.com` / `www.tribe-neon.com` の実alias先Deployment ID。
 2. そのDeploymentの source SHA、target、READY、接続DB ref（秘密値は出力しない）。
 3. Production実SHAと受入SHAの差分、Production側だけの変更一覧。上書きせず統合要否を判定。
-4. 統合が必要なら独立作業フォルダで候補を作り、専用Previewで差分Acceptance。環境変数・共有alias・Productionはまだ変更しない。
+4. 統合が必要なら独立作業フォルダで候補を作り、専用Previewで差分Acceptance。公開条件を満たすまでProductionを変更しない。
 5. 受入PreviewのRaid公開モード（`NEXT_PUBLIC_RAID_ROOM_UI_ENABLED`）と、開催中Raidの検証条件を確認。今回の画面は「現在開催中のレイドはありません」。Preview DBのlegacy設定もdisabled。開催中の実画面を用意する方法を確定し、公開設定を無断変更しない。
+6. 本番Migration履歴・関数定義・影響件数を実行直前に再照合し、必要ファイルと順序を確定。既存本番の並行修正を保持する。ガード不一致は削除して進めず、差分を確認する。
+7. 残るRaid確認と変更範囲の型・ビルド・回帰を完了したら、必要DB差分を適用してProduction向けにビルド・配信する。Preview接続の成果物をそのまま本番aliasへ向けない。既存Production接続先・設定を利用し、秘密値を出力しない。
+8. READY・本番DB接続を確認後、対象本番ドメインのみ切替。無関係のalias・課金公開設定・Raid Encounterは変更しない。切替前のDeployment IDを保存し、異常時はアプリを戻せる状態にする。DBの破壊的な巻き戻しはしない。
+9. 本番でHome・Mission・Quest・Leader・Raid表示を確認。報酬・再受取防止の操作検証はKPI除外済みQAで行う。受入済み全ページのユーザー再確認は要求しない。
+
+返却内容: STATUS、配信SHA、Deployment ID、本番URL、READY/HTTP、DB ref、適用Migration、変更alias、差分Acceptance、本番smoke、残事項。公開できない場合は未達条件と必要な次操作を具体的に返す。
 
 ## 残る実画面確認
 
@@ -66,5 +78,5 @@ Productionはsnapshot baseline方式。PreviewのMigration番号差をそのま�
 
 ## 公開判定
 
-配信準備・読取確認の依頼は可。本番反映依頼は、実Production SHAとの統合確認、Migration manifest確定、Raid実画面確認が完了してから。
+本番公開工程の依頼は可。実Production SHAとの統合確認、Migration manifest確定、Raid実画面確認が完了したら、ユーザーの条件付き公開承認に基づき実施する。
 Production、共有alias、環境変数の変更は今回なし。
