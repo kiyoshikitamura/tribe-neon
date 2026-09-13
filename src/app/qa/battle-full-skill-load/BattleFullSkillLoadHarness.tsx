@@ -97,6 +97,8 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
   const [round, setRound] = useState(1);
   const [speed, setSpeed] = useState(1);
   const [paused, setPaused] = useState(false);
+  const [qaPauseAt, setQaPauseAt] = useState("none");
+  const qaPauseDone = useRef(false);
   const [phase, setPhase] = useState<BattlePresentationPhase>("IDLE");
   const [actionPresentation, setActionPresentation] = useState<BattleActionPresentation | null>(null);
   const [skillCutIn, setSkillCutIn] = useState<{ charName: string; skillName: string } | null>(null);
@@ -175,6 +177,7 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
     setAuthoritativeTimeline([]);
     setSkipPending(false);
     setBattleState("PLAYING");
+    qaPauseDone.current = false;
     setStarted(false);
     setEquipmentIntroComplete(false);
   }, [audio.stopBgm, clearTimers, initialEnemies, initialPlayers]);
@@ -188,6 +191,8 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
   }, [started, paused, equipmentIntroComplete]);
 
   useEffect(() => {
+    // Cancel already scheduled presentation work before the pause early return.
+    clearTimers();
     if (!started || paused || !equipmentIntroComplete || battleState !== "PLAYING") return;
     const event = replay.events[eventIndex];
     if (!event) return;
@@ -372,6 +377,23 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
     advance(40);
   }, [battleState, clearTimers, enterResult, equipmentIntroComplete, eventIndex, paused, replay.events, replaceParticipant, schedule, skillNames, speed, started, teamById]);
 
+  // Preview-only inspection controls: pause the actual shared display at a reproducible point.
+  useEffect(() => {
+    if (!started || battleState !== "PLAYING" || paused || qaPauseDone.current || qaPauseAt === "none") return;
+    let delay: number;
+    if (qaPauseAt === "equipment") {
+      if (equipmentIntroComplete) return;
+      delay = 850;
+    } else {
+      if (actionPresentation?.beat !== "ACTOR") return;
+      const actor = [...players, ...enemies].find(entry => entry.id === actionPresentation.unit.actorId);
+      if (!exclusiveSkillForBattleMember(actor?.characterId ?? "", actionPresentation.unit.skillId)) return;
+      delay = qaPauseAt === "dialogue" ? 350 : EXCLUSIVE_SKILL_PREFIX_MS + 250;
+    }
+    const timer = setTimeout(() => { qaPauseDone.current = true; setPaused(true); }, delay);
+    return () => clearTimeout(timer);
+  }, [started, battleState, paused, qaPauseAt, equipmentIntroComplete, actionPresentation, players, enemies]);
+
   const start = async () => {
     await audio.unlockAudio();
     audio.playBgm("BATTLE");
@@ -478,6 +500,7 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
       <div className="battle-stress-rosters"><article><b>PLAYER</b><span>{fixture.player.map((unit) => unit.name).join(" / ")}</span></article><article><b>ENEMY</b><span>{fixture.enemy.map((unit) => unit.name).join(" / ")}</span></article></div>
       <dl><div><dt>Replay</dt><dd>{replaySkillCount} Skill actions / {replay.rounds} rounds / {replay.events.length} events</dd></div><div><dt>Quest / Area</dt><dd>{fixture.location.questId} → {fixture.location.townId}</dd></div><div><dt>Expected BG</dt><dd>{fixture.location.expectedBackgroundPath}</dd></div><div><dt>Runtime Battle BG</dt><dd>{fixture.location.runtimeBattleBackgroundPath ?? "UNCONNECTED — Human AcceptanceでFAIL判定"}</dd></div></dl>
       <details><summary>Current Skills ({skills.length})</summary><p>{skills.map((skill) => `${skill.id} ${skill.name}`).join(" / ")}</p></details>
+      <label>QA停止位置<select value={qaPauseAt} onChange={event => setQaPauseAt(event.target.value)}><option value="none">停止なし</option><option value="equipment">装備帯</option><option value="dialogue">専用台詞</option><option value="cutin">専用カットイン</option></select></label>
       <button type="button" onClick={start}>Stress Battleを開始</button>
     </section> : <GameContext.Provider value={context}><CardBattleView /></GameContext.Provider>}
     {started && <aside className="battle-stress-audit" data-location-parity={fixture.location.runtimeBattleBackgroundPath === fixture.location.expectedBackgroundPath ? "pass" : "fail"}><b>{round}/{replay.rounds}</b><span>EVENT {Math.min(eventIndex + 1, replay.events.length)}/{replay.events.length}</span><span>BG {fixture.location.runtimeBattleBackgroundPath ? "CONNECTED" : "UNCONNECTED / FAIL"}</span></aside>}
