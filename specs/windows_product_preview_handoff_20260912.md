@@ -46,3 +46,13 @@ Preview追加適用済み: 20260913014208_beginner_post_tutorial_experience_orde
 「別の派遣をする」は派遣一覧へ戻す。一覧のキャラ・地元一致・残り時間を確認。
 specs/quest_dispatch_flow_20260913.md参照。今回追加DB変更なし。地元一致の報酬加算は現在Preview実RPCに存在しないため「ボーナス発生中」と表示しない。地元ボーナス正常化は別途残課題。
 先のMission全体修正を含む累積候補。Quest接続と初心者学習順を同じ候補で確認する。
+
+## 地元一致ボーナス実加算候補 / 2026-09-13
+ブランチ `codex/mission-journey-review-20260913` の最新候補を独立フォルダから専用Previewへ配信してください。
+Base: ddc742a6c244a1bf4b01452386380433d82ef747。
+Supabase: sufvuqdnqohpfzkwxohq。
+Migration `20260913032942_quest_hometown_reward_bonus.sql` はPreview適用済み。再適用不要。
+Production・共有alias・環境変数は変更しないでください。
+配信後、レイジ/新宿・アゲハ/渋谷の担当選択、派遣中の加算内訳、Reload保持、実戦完了後のCASH合計・地元加算内数を確認してください。
+不一致派遣との報酬差、受取再操作で増えないことを確認。既存ページの全面再監査は不要です。
+固定URL/SHA/Deployment ID/接続先/READYと実画面検証範囲を報告してください。

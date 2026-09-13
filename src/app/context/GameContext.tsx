@@ -1776,6 +1776,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             battle_result: p.battle_result,
             rewards_accrued: p.rewards_accrued,
             encounterSnapshot: p.encounter_snapshot,
+            hometownBonusSnapshot: p.hometown_bonus_snapshot,
             started_at: p.started_at,
             expires_at: p.expires_at
           };

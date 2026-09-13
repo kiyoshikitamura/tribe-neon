@@ -31,3 +31,7 @@ DB/Production変更なし。既存Mission共通修正の累積候補に包含。
 原因: 日本語homeTownと英字town_idの直接比較。既存resolveCharacterLocationKeyを再利用し、共通isCharacterHometownで担当選択/一覧/派遣詳細3箇所を修正。
 7街の日本語/英字、大文字/空白、一致しない街、未設定/不明の誤一致防止を検証PASS。
 ラベル修正後の実画面監査は未実施。ボーナス実加算は別のProduction必須Gateとして残る。
+
+## 2026-09-13 実加算の後続対応
+地元ボーナスをPreview DBへ接続済み。詳細は `quest_hometown_bonus_20260913.md`。
+上記の「加算なし」は過去監査時点。現在はRPC差分検証PASS、専用Preview再配信・実画面Acceptance待ち。Production保留。

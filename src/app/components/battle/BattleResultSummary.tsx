@@ -186,7 +186,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           <div className="battle-result-canonical-rewards" aria-label="獲得報酬">
             {Number(rewards.totalCash || 0) > 0 && <span>
               <img src="/ui/icon_cash.png" alt="" />
-              <b>CASH</b>
+              <b>CASH{rewards.matchBonusApplied && <small style={{ display: "block", fontSize: "0.75em" }}>地元ボーナス +{Number(rewards.matchBonusCash).toLocaleString()} 込み</small>}</b>
               <em>×{Number(rewards.totalCash).toLocaleString()}</em>
             </span>}
             {Number(rewards.totalXp || 0) > 0 && <span>

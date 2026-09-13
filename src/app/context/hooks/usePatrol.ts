@@ -41,6 +41,7 @@ export function usePatrol(
     battle_result?: "VICTORY" | "DEFEAT" | null;
     rewards_accrued?: any;
     encounterSnapshot?: any;
+    hometownBonusSnapshot?: any;
     started_at?: string;
     expires_at?: string;
   }>>([]);
@@ -201,6 +202,7 @@ export function usePatrol(
         battle_resolved: false,
         battle_result: null,
         encounterSnapshot,
+        hometownBonusSnapshot: res.data.hometown_bonus_snapshot,
         started_at: startedAt.toISOString(),
         expires_at: expiresAt.toISOString()
       };
@@ -417,7 +419,7 @@ export function usePatrol(
         awardedItems,
         isTutorialReward: options?.isTutorialReward === true,
         courseName: res.data?.course_name || "クエスト",
-        baseCash: Number(res.data?.cash || 0),
+        baseCash: Number(res.data?.base_cash ?? res.data?.cash ?? 0),
         baseXp: Number(res.data?.xp || 0),
         levelBonusPercent: 0,
         levelBonusCash: 0,
