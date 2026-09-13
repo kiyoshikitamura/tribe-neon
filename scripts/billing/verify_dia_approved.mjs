@@ -1,0 +1,96 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+const runtime = process.env.PGLITE_MODULE;
+if (!runtime) throw new Error('PGLITE_MODULE に隔離インストールしたPGliteのentry pathを指定してください');
+const { PGlite } = await import(pathToFileURL(runtime).href);
+const db = new PGlite();
+await db.exec(`create role anon; create role authenticated; create role service_role;
+create schema auth; create function auth.uid() returns uuid language sql as $$select '11111111-1111-4111-8111-111111111111'::uuid$$;
+create table public.users(id uuid primary key,cash bigint default 0,neon_diamonds bigint default 0);
+create table public.equipment_battle_master(equipment_id text);
+create table public.user_equipments(user_id uuid,equipment_id text,equipment_master_id text,level integer,plus_val integer);
+create table public.user_items(user_id uuid,item_id text,quantity integer,primary key(user_id,item_id));
+create table public.presents(id uuid primary key default gen_random_uuid(),user_id uuid,item_id text,quantity integer,message text,status text,expire_at timestamptz,claimed_at timestamptz);
+create table public.payment_transactions(id uuid default gen_random_uuid(),user_id uuid,product_id text,amount integer,currency text,status text);
+create table public.user_shop_purchases(user_id uuid,product_id text,purchase_count integer,last_purchased_at timestamptz,primary key(user_id,product_id));
+insert into public.users(id,cash) values('11111111-1111-4111-8111-111111111111',500);
+`);
+await db.exec(await readFile(new URL('./preview_schema.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913105839_billing_paid_pack_lots.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913111028_billing_checkout_mode_contract.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913120945_billing_dia_approved_contract.sql',import.meta.url),'utf8'));
+const claimSource=await readFile(new URL('../../supabase/migrations/20260812000135_provisional_open_beta_missions.sql',import.meta.url),'utf8');
+await db.exec(claimSource.slice(claimSource.indexOf('CREATE OR REPLACE FUNCTION public.grant_present_payload('),claimSource.indexOf('REVOKE ALL ON FUNCTION public.claim_present(uuid, uuid)')));
+const uid='11111111-1111-4111-8111-111111111111';
+const rows=async(sql,args=[]) => (await db.query(sql,args)).rows;
+const reserve=async(product,request) => (await rows('select billing_reserve_order($1,$2,$3) o',[uid,request,product]))[0].o;
+const grant=async(order,session) => (await rows("select billing_grant_order($1,$2,$3,'jpy') r",[order.id,session,order.amount_jpy]))[0].r;
+const buy=async(product)=> {const o=await reserve(product,crypto.randomUUID()); await grant(o,`cs_test_${crypto.randomUUID().replaceAll('-','')}`);await rows('select claim_all_presents()');return o;};
+const exchange=async(product,request=crypto.randomUUID())=> (await rows('select billing_buy_dia_product($1,$2,$3) r',[uid,request,product]))[0].r;
+const one=async(sql,args=[]) => (await rows(sql,args))[0];
+// 全商品: 有償/無償snapshotと配送の再送。未受取無料Presentは期限なし。
+for (const [total,paid,free] of [[300,300,0],[500,500,0],[1030,1000,30],[2080,2000,80],[5240,5000,240],[10680,10000,680]]) {
+ const o=await reserve(`diamond_${total}`,crypto.randomUUID());
+ const sess=`cs_test_all${total}`;
+ assert.equal((await grant(o,sess)).duplicate,false); assert.equal((await grant(o,sess)).duplicate,true);
+ assert.equal(o.product_snapshot.items[0].quantity,paid);
+ assert.equal(o.product_snapshot.items[1]?.quantity??0,free);
+ const lot=await one('select * from billing_asset_lots where order_id=$1',[o.id]);
+ assert.equal(lot.remaining_quantity,paid);
+ assert.equal(new Date(lot.expires_at)-new Date(lot.issued_at),120*86400000);
+}
+await rows('select claim_all_presents()');
+let balance=Number((await one('select neon_diamonds from users')).neon_diamonds);
+let paid=Number((await one("select sum(remaining_quantity) n from billing_asset_lots where item_id='DIAMOND'")).n);
+// Expired paid cannot be spent. Failed transaction leaves lots intact; refresh persists expiry.
+await db.exec("update billing_asset_lots set issued_at=now()-interval '121 days',expires_at=now()-interval '1 day'");
+await assert.rejects(()=>db.exec('update users set neon_diamonds=0'),/EXPIRED_ASSET_BALANCE/);
+assert.equal(Number((await one("select sum(remaining_quantity) n from billing_asset_lots where item_id='DIAMOND'")).n),paid);
+await rows('select billing_refresh_paid_assets()');
+assert.equal(Number((await one('select neon_diamonds from users')).neon_diamonds),balance-paid);
+// Empty free DIA only for isolated test; never change real DB.
+await db.exec('update users set neon_diamonds=0');
+const o=await buy('diamond_1030');
+await rows("update billing_asset_lots set expires_at=now()+interval '2 days' where order_id=$1",[o.id]);
+const req=crypto.randomUUID();await exchange('energy_11',req);assert.equal((await exchange('energy_11',req)).duplicate,true);
+await assert.rejects(()=>exchange('rp_11',req),/REQUEST_CONFLICT/);
+assert.equal((await one("select sum(quantity)::int n from presents where item_id='ENERGY_DRINK'")).n,11);
+assert.equal((await one("select remaining_quantity from billing_asset_lots where order_id=$1",[o.id])).remaining_quantity,500);
+assert.equal((await one('select count(*)::int n from billing_asset_lots a join billing_asset_lots b on a.source_lot_id=b.id where a.expires_at=b.expires_at')).n,1);
+await rows('select claim_all_presents()');
+await db.exec("update user_items set quantity=quantity-1 where item_id='ENERGY_DRINK'");
+assert.equal((await one("select remaining_quantity from billing_asset_lots where item_id='ENERGY_DRINK'")).remaining_quantity,10);
+assert.equal((await one("select count(*)::int n from billing_asset_lots where item_id in ('AP','BP','RP')")).n,0);
+// paid25+free475 -> one expiring recovery and ten unlimited recoveries.
+await db.exec('update users set neon_diamonds=neon_diamonds-475');
+await db.exec('update users set neon_diamonds=neon_diamonds+445');
+await exchange('rp_11');
+assert.equal((await one("select quantity from presents where item_id='RAID_POINT_TICKET' and expire_at is not null")).quantity,1);
+assert.equal((await one("select quantity from presents where item_id='RAID_POINT_TICKET' and expire_at is null")).quantity,10);
+await db.exec("update billing_asset_lots set issued_at=now()-interval '121 days',expires_at=now()-interval '1 day' where item_id='ENERGY_DRINK'");
+await rows('select billing_refresh_paid_assets()');
+assert.equal((await one("select quantity from user_items where item_id='ENERGY_DRINK'")).quantity,0);
+// Cash quantity invariant and only paid portion expires; initial free500 remains.
+await buy('diamond_300');
+await db.exec('update users set neon_diamonds=neon_diamonds-150');
+await db.exec('update users set neon_diamonds=neon_diamonds+150');
+await exchange('cash_3000');
+assert.equal((await one("select quantity from presents where item_id='CASH' and expire_at is not null")).quantity,1500);
+assert.equal((await one("select quantity from presents where item_id='CASH' and expire_at is null")).quantity,1500);
+await rows('select claim_all_presents()');
+await db.exec("update billing_asset_lots set issued_at=now()-interval '121 days',expires_at=now()-interval '1 day' where item_id='CASH'");
+await rows('select billing_refresh_paid_assets()');
+assert.equal(Number((await one('select cash from users')).cash),2000);
+// Two paid sources spanning one item inherit earliest expiry.
+const early=await buy('diamond_300');
+await rows("update billing_asset_lots set expires_at=now()+interval '1 day' where order_id=$1",[early.id]);
+await db.exec('update users set neon_diamonds=neon_diamonds-275');
+const later=await buy('diamond_300');
+await rows("update billing_asset_lots set expires_at=now()+interval '2 days' where order_id=$1",[later.id]);
+await exchange('bp_1');
+const reward=await one("select l.* from billing_asset_lots l where item_id='PVP_POINT_TICKET'");
+assert.equal(reward.issued_quantity,1);assert.equal(reward.source_lot_id,(await one('select id from billing_asset_lots where order_id=$1',[early.id])).id);
+assert.equal((await one("select has_function_privilege('authenticated','billing_dia_balance_trigger()','execute') allowed")).allowed,false);
+console.log('PASS DIA six products / duplicate / paid expiry / inherited expiry / mixed-source rounding / earliest expiry / free preservation / cash and recovery / privileges');
+await db.close();

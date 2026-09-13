@@ -32,7 +32,7 @@ export default function ShopTab() {
       .then(response => response.ok ? response.json() : Promise.reject())
       .then(data => {
         if (!active) return;
-        setAvailability(data.available === true && data.catalogVersion === "20260912" ? "available" : "unavailable");
+        setAvailability(data.available === true && data.catalogVersion === "20260913" ? "available" : "unavailable");
         setDisabledProductIds(Array.isArray(data.disabledProductIds) ? data.disabledProductIds : []);
         setSandbox(data.mode === "sandbox");
       }).catch(() => { if (active) setAvailability("unavailable"); });
@@ -74,9 +74,10 @@ export default function ShopTab() {
       message: <div>
         <Bundle product={product} />
         <p className="shop-price">{paid ? `¥${product.priceJpy?.toLocaleString("ja-JP")}（税込）` : `${product.priceDiamond?.toLocaleString("ja-JP")} ダイア`}</p>
+        {!paid && <p className="shop-expiry-notice">有償ダイアで交換した分は、元の有効期限を引き継ぎます。</p>}
         {remaining !== null && <p className="shop-card-desc">残り{remaining} / {product.purchaseLimit}回</p>}
         {isPack && <p className="shop-expiry-notice">{PACK_EXPIRY_NOTICE}</p>}
-        {paid && !isPack && <p className="shop-expiry-notice">有償ダイアの有効期限は付与から120日です。</p>}
+        {paid && !isPack && <p className="shop-expiry-notice">有償{product.priceJpy?.toLocaleString("ja-JP")}＋無償{((product.items[0]?.quantity ?? 0)-(product.priceJpy ?? 0)).toLocaleString("ja-JP")} ダイア。有償分は付与から120日、無償分は無期限です。</p>}
       </div>,
       confirmText: paid ? "お支払いへ" : "購入する",
       onConfirm: async () => {
@@ -96,6 +97,7 @@ export default function ShopTab() {
         <div className="shop-card-title">{product.title}</div>
         {remaining !== null && <span className="shop-limit-badge">{soldOut ? "購入済み" : `残り${remaining} / ${product.purchaseLimit}回`}</span>}
       </div>
+      {product.category === "DIAMOND" && <p className="shop-card-desc">有償{product.priceJpy?.toLocaleString("ja-JP")}＋無償{((product.items[0]?.quantity ?? 0)-(product.priceJpy ?? 0)).toLocaleString("ja-JP")} ダイア</p>}
       {product.category !== "DIAMOND" && product.shopType === "LIMITED" && <Bundle product={product} />}
       <OutlawButton variant="primary" fullWidth className="mt-4"
         disabled={disabled || soldOut || disabledProductIds.includes(product.id)} onClick={() => confirmPurchase(product)}>

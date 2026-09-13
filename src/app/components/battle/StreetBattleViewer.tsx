@@ -10,6 +10,9 @@ import { isActiveEffectSync, type BattleTargetResolutionGroup } from "@/domain/p
 import { battleStatusPresentationTone } from "@/domain/presentation/battleStatusPresentation";
 import { isInternalBattleLabel } from "@/domain/presentation/battleSkillLabels";
 import "./StreetBattle.css";
+import { exclusiveSkillForBattleMember } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_SKILL_DIALOGUE } from "@/domain/presentation/exclusiveSkillDialogue";
+import { ExclusiveEquipmentIntro } from "./ExclusiveBattlePresentation";
 
 const impact = "/effects/battle-v3/street-impact.webp";
 const support = "/effects/battle-v3/street-support.webp";
@@ -45,7 +48,9 @@ export default function StreetBattleViewer(props:QuestBattleViewerProps) {
   const rawName = action?.skillName || props.skillCutIn?.skillName || "通常攻撃";
   const skillName = isInternalBattleLabel(rawName) ? "スキル発動" : rawName;
   const casting = isSkill && (action ? action.beat==="ACTOR" : Boolean(props.skillCutIn) && !props.damagePopup);
-  const fullscreen = master?.rarity==="SSR";
+  const exclusive = exclusiveSkillForBattleMember(actor?.characterId ?? "", action?.unit.skillId ?? "");
+  const dialogue = exclusive ? EXCLUSIVE_SKILL_DIALOGUE[exclusive.id] : null;
+  const fullscreen = Boolean(exclusive) || master?.rarity==="SSR";
   const special = isSkill && (skillRarity==="SR" || skillRarity==="SSR");
   const resolving = action && action.beat!=="ACTOR";
   const groups = resolving ? action.unit.targets.filter(g=>g.events.some(e=>!isActiveEffectSync(e))) : [];
@@ -58,7 +63,10 @@ export default function StreetBattleViewer(props:QuestBattleViewerProps) {
       return <BattleUnitPortrait key={p.id} street participant={p} domId={p.id} imageSrc={c?getCharacterTransparentImg(c.name):undefined} side={enemy?"enemy":"player"} rarity={c?.rarity || p.rarity} attribute={p.alignment || c?.alignment} actor={Boolean(actor?.id===p.id && (action || props.targetLine || props.skillCutIn))} reaction={group} impactOverlay={group ? <Resolution key={action?.unit.replayStartCursor} group={group} special={special} impactBeat={action?.beat==="IMPACT"} multiple={groups.length>1}/> : popup ? <div className="sb-resolution">{popup.type==="dmg" && <img className="sb-effect" src={impact} alt=""/>}<div className="sb-numbers"><b data-battle-number={popup.type==="dmg"?"damage":undefined} className={popup.type!=="dmg"?"positive":""}>{popup.type==="dmg"?"−":"+"}{popup.val.toLocaleString()}</b></div></div> : null}/>;
     })}</section>)}</main>
     <p className="sb-event sb-visually-hidden" aria-live="polite">{action ? `${actor?.name || ""} / ${skillName}` : props.paused ? "一時停止中" : "AUTO BATTLE"}</p>
-    {casting && actor && <section key={action?.unit.replayStartCursor} className={`sb-announcement ${fullscreen?"fullscreen":"compact"}`} aria-label="スキル演出">{fullscreen && master && <img className="sb-standing" src={getCharacterTransparentImg(master.name)} alt=""/>}<div className="sb-cast-copy">{!fullscreen && master && <div className="sb-speaker sb-face" data-character={master.name.toLowerCase()}><img src={getCharacterTransparentImg(master.name)} alt={actor.name}/></div>}<small>{master?.rarity} / {actor.name}</small><h2>{skillName}</h2>{skillRarity&&<span>SKILL {skillRarity}</span>}<p>{master && resolveCharacterGachaQuote(master.id)}</p></div></section>}
+    <ExclusiveEquipmentIntro members={props.playerParty} paused={props.paused} />
+    {casting && actor && <div key={action?.unit.replayStartCursor} className={dialogue ? `exclusive-skill-sequence ${props.paused ? "is-paused" : ""}` : ""}>
+    {dialogue && <div className="exclusive-skill-dialogue"><span>{dialogue}</span></div>}
+    <div className={dialogue ? "exclusive-skill-cutin" : ""}><section key={action?.unit.replayStartCursor} className={`sb-announcement ${fullscreen?"fullscreen":"compact"}`} aria-label="スキル演出">{fullscreen && master && <img className="sb-standing" src={getCharacterTransparentImg(master.name)} alt=""/>}<div className="sb-cast-copy">{!fullscreen && master && <div className="sb-speaker sb-face" data-character={master.name.toLowerCase()}><img src={getCharacterTransparentImg(master.name)} alt={actor.name}/></div>}<small>{master?.rarity} / {actor.name}</small><h2>{skillName}</h2>{skillRarity&&<span>SKILL {skillRarity}</span>}<p>{!dialogue && master && resolveCharacterGachaQuote(master.id)}</p></div></section></div></div>}
     </div><footer className="sb-controls"><button onClick={()=>{props.onSpeedChange(props.speed===2?1:props.speed===1&&props.monthlyPassActive?3:2);props.onSound();}}>×{props.speed}</button><button onClick={()=>{props.onPauseChange(!props.paused);props.onSound();}}>{props.paused?"再開":"一時停止"}</button>{props.canSkip&&<button disabled={props.skipPending} onClick={props.onSkip}>{props.skipPending?"結果へ移動中":"SKIP"}</button>}{!props.tutorial&&<button onClick={props.onRetreat}>撤退</button>}</footer>
   </div>;
 }

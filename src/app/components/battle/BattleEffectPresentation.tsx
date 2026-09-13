@@ -5,6 +5,9 @@ import CharacterPresentation from "../character/CharacterPresentation";
 import type { BattleParticipantView } from "./BattleUnitPortrait";
 import type { BattleTargetResolutionGroup } from "@/domain/presentation/battlePresentationUnit";
 import "./BattleEffectPresentation.css";
+import "./ExclusiveBattlePresentation.css";
+import { exclusiveSkillForBattleMember } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_SKILL_DIALOGUE, EXCLUSIVE_SKILL_PREFIX_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 import { isInternalBattleLabel, safeBattleCharacterName } from "@/domain/presentation/battleSkillLabels";
 import {
   battleStatusApplyLabel,
@@ -30,6 +33,7 @@ export type BattleSkillPresentation = {
   skillName: string;
   tier: BattleCutInTier | null;
   impact: BattleImpactKind;
+  dialogue?: string;
 };
 
 const effectAsset: Record<BattleImpactKind, string> = {
@@ -148,6 +152,7 @@ export function resolveBattleSkillPresentation(
     skillName: safeSkillName,
     tier: isBasicAttack ? null : actorRarity === "SSR" ? "SSR" : actorRarity === "SR" ? "SR" : "STANDARD",
     impact: resolveImpactKind(skill),
+    dialogue: exclusiveSkillForBattleMember(participant?.characterId ?? "", skillId) ? EXCLUSIVE_SKILL_DIALOGUE[skillId] : undefined,
   };
 }
 
@@ -167,11 +172,12 @@ type CutInProps = {
   imageSrc?: string;
   speed: number;
   actionKey?: string | number;
+  paused?: boolean;
 };
 
-export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, actionKey }: CutInProps) {
+export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, actionKey, paused = false }: CutInProps) {
   const [visible, setVisible] = useState<BattleSkillPresentation | null>(null);
-  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clockRef = useRef({ remainingMs: 0 });
   const lastPresentationKeyRef = useRef("");
 
   useLayoutEffect(() => {
@@ -183,19 +189,28 @@ export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, a
     const presentationKey = `${actionKey ?? "legacy"}:${presentation.charName}:${presentation.skillName}:${presentation.tier}`;
     if (lastPresentationKeyRef.current === presentationKey) return;
     lastPresentationKeyRef.current = presentationKey;
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     setVisible(presentation);
     const minimumDuration = speed > 1 ? 780 : presentation.tier === "SSR" ? 1300 : 1100;
-    hideTimerRef.current = setTimeout(() => setVisible(null), minimumDuration);
+    clockRef.current = { remainingMs: minimumDuration + (presentation.dialogue ? EXCLUSIVE_SKILL_PREFIX_MS : 0) };
   }, [actionKey, presentation, speed]);
 
-  useEffect(() => () => {
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-  }, []);
+  useEffect(() => {
+    if (!visible || paused) return;
+    const clock = clockRef.current;
+    const startedAt = performance.now();
+    const timer = setTimeout(() => setVisible(null), clock.remainingMs);
+    return () => {
+      clearTimeout(timer);
+      clock.remainingMs = Math.max(0, clock.remainingMs - (performance.now() - startedAt));
+    };
+  }, [visible, paused]);
 
   if (!visible?.tier) return null;
   const tier = visible.tier.toLowerCase();
   return (
+    <div key={actionKey} className={`${visible.dialogue ? "exclusive-skill-sequence" : ""} ${paused ? "is-paused" : ""}`}>
+      {visible.dialogue && <div className="exclusive-skill-dialogue"><span>{visible.dialogue}</span></div>}
+      <div className={visible.dialogue ? "exclusive-skill-cutin" : ""}>
     <div className={`battle-skill-cutin is-${tier} is-speed-${speed > 1 ? "fast" : "normal"}`} aria-label={`${visible.charName} ${visible.skillName}`}>
       <img className="battle-cutin-darken" src={BATTLE_EFFECT_ASSETS.screenDarken} alt="" aria-hidden="true" />
       <img
@@ -213,7 +228,7 @@ export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, a
         <strong>{visible.skillName}</strong>
         <span>{visible.charName}</span>
       </div>
-    </div>
+    </div></div></div>
   );
 }
 

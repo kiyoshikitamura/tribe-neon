@@ -19,6 +19,7 @@ insert into public.users(id,cash) values('11111111-1111-4111-8111-111111111111',
 await db.exec(await readFile(new URL('./preview_schema.sql',import.meta.url),'utf8'));
 await db.exec(await readFile(new URL('../../supabase/migrations/20260913105839_billing_paid_pack_lots.sql',import.meta.url),'utf8'));
 await db.exec(await readFile(new URL('../../supabase/migrations/20260913111028_billing_checkout_mode_contract.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913120945_billing_dia_approved_contract.sql',import.meta.url),'utf8'));
 const claimSource=await readFile(new URL('../../supabase/migrations/20260812000135_provisional_open_beta_missions.sql',import.meta.url),'utf8');
 await db.exec(claimSource.slice(claimSource.indexOf('CREATE OR REPLACE FUNCTION public.grant_present_payload('),claimSource.indexOf('REVOKE ALL ON FUNCTION public.claim_present(uuid, uuid)')));
 const uid='11111111-1111-4111-8111-111111111111';

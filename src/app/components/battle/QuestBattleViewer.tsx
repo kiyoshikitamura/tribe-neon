@@ -12,6 +12,7 @@ import {
 } from "./BattleEffectPresentation";
 import "./QuestBattleViewer.css";
 import StreetBattleViewer from "./StreetBattleViewer";
+import { ExclusiveEquipmentIntro } from "./ExclusiveBattlePresentation";
 import { useAudio } from "@/audio/AudioProvider";
 import type { BattlePresentationPhase } from "@/hooks/useBattle";
 import { isInternalBattleLabel } from "@/domain/presentation/battleSkillLabels";
@@ -197,8 +198,9 @@ export default function QuestBattleViewer(props: QuestBattleViewerProps) {
         {isSkillAction && props.actionPresentation && (props.actionPresentation.beat === "ACTOR" || props.actionPresentation.beat === "IMPACT") && <BattleSkillResolutionVfx key={`${props.actionPresentation.unit.replayStartCursor}:${props.actionPresentation.beat}`} presentation={skillPresentation} phase={props.actionPresentation.beat === "ACTOR" ? "TARGET_FOCUS" : "ATTACK_MOTION"} actorSide={activeSide} />}
       </main>
 
+      <ExclusiveEquipmentIntro members={props.playerParty} paused={props.paused} />
       <section className="battle-cutin-slot" aria-hidden={!skillPresentation?.tier}>
-        <BattleSkillCutIn actionKey={props.actionPresentation?.unit.replayStartCursor} presentation={skillPresentation} participant={activeParticipant ? { ...activeParticipant, rarity: activeVisual.rarity } : undefined} imageSrc={activeVisual.src} speed={props.speed} />
+        <BattleSkillCutIn paused={props.paused} actionKey={props.actionPresentation?.unit.replayStartCursor} presentation={skillPresentation} participant={activeParticipant ? { ...activeParticipant, rarity: activeVisual.rarity } : undefined} imageSrc={activeVisual.src} speed={props.speed} />
       </section>
       {isFinalHit && <div className="battle-final-hit-overlay" role="status"><strong>FINAL HIT</strong><i /></div>}
       <footer className="battle-viewer-controls">

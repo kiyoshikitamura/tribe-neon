@@ -19,6 +19,7 @@ const itemName = (id: string) => id === "CASH" ? "CASH"
 /** 販売catalogの接続確認後のみShopから表示する。期限の判定・失効はRPC側。 */
 export default function PaidAssetExpiry() {
   const [lots, setLots] = useState<PaidAssetLot[] | null>(null);
+  const [dia, setDia] = useState<{paid:number;free:number} | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const inFlight = useRef(false);
@@ -31,6 +32,7 @@ export default function PaidAssetExpiry() {
     try {
       const { data, error: rpcError } = await supabase.rpc("billing_refresh_paid_assets");
       if (rpcError || !data || !Array.isArray(data.lots)) throw new Error("購入分の有効期限を確認できませんでした。");
+      if (Number.isFinite(data.dia_paid) && Number.isFinite(data.dia_total)) setDia({paid:data.dia_paid,free:Math.max(0,data.dia_total-data.dia_paid)});
       const result = data.lots as PaidAssetLot[];
       if (result.some(lot => typeof lot.item_id !== "string" || !Number.isFinite(lot.quantity)
         || lot.quantity <= 0 || typeof lot.claimed !== "boolean" || !Number.isFinite(Date.parse(lot.expires_at)))) {
@@ -51,6 +53,7 @@ export default function PaidAssetExpiry() {
       {busy ? <span className="shop-btn-spinner" aria-label="確認中" /> : "購入分の有効期限"}
     </OutlawButton>
     {error && <p className="shop-expiry-notice" role="alert">{error}</p>}
+    {dia && <p className="shop-expiry-notice">ダイア 有償{dia.paid.toLocaleString("ja-JP")} / 無償{dia.free.toLocaleString("ja-JP")}</p>}
     {lots?.length === 0 && <p className="shop-expiry-notice">期限のある未使用の購入分はありません。</p>}
     {lots && lots.length > 0 && <>
       <p className="shop-expiry-notice">未使用の購入分のみ表示しています。日時は日本時間です。</p>

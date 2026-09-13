@@ -12,6 +12,8 @@ import StreetStatuses from "./StreetStatuses";
 
 export type BattleParticipantView = {
   id: string;
+  characterId?: string;
+  equipmentMasterIds?: string[];
   name: string;
   hp: number;
   maxHp: number;

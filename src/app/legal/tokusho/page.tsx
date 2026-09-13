@@ -11,7 +11,7 @@ type TokushoPageProps = { searchParams: Promise<{ from?: string }> };
 export default async function TokushoPage({ searchParams }: TokushoPageProps) {
   const { from } = await searchParams;
   return (
-    <LegalPage title="特定商取引法に基づく表記" updatedAt="2026年9月4日" returnToGame={from === "settings"}>
+    <LegalPage title="特定商取引法に基づく表記" updatedAt="2026年9月13日" returnToGame={from === "settings"}>
       <h2>販売事業者</h2>
       <p>TRIBE NEON 運営事務局</p>
       <p>法令上必要となる販売事業者の氏名または名称について、請求があった場合、遅滞なく開示いたします。</p>
@@ -66,6 +66,11 @@ export default async function TokushoPage({ searchParams }: TokushoPageProps) {
 
       <h2>商品の提供方法</h2>
       <p>購入したダイヤその他の商品は、本サービス内の利用者アカウントまたはゲームデータへ付与されます。</p>
+
+      <h2>有効期限・使用条件</h2>
+      <p>有償ダイヤおよび有料パックで購入した未使用のCASH・アイテム・チケットは、最初のゲーム内付与から120日で失効します。プレゼント受取による期限の延長はありません。無償分および既存無料資産には、この期限を適用しません。</p>
+      <p>有効期限の近い購入分から消費します。有償ダイヤから交換したCASH・回復アイテムは元の期限を引き継ぎ、混合支払では期限順に配分します。分割できない1個の交換品には先に使用した有償分の期限を適用します。</p>
+      <p>使用後のキャラクター・装備・育成結果、回復済みAP・BP・RP、ガチャポイントは、この期限による失効対象ではありません。購入前に期限条件、所持画面に内訳・期限・数量を表示します。</p>
 
       <h2>返品・キャンセル・返金</h2>
       <p>デジタルコンテンツの性質上、商品提供後の利用者都合による返品、キャンセルまたは返金は原則としてお受けしておりません。</p>

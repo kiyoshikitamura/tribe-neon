@@ -1,6 +1,6 @@
 import { BillingError, uuid, validateSession } from "@/server/billing/contracts";
 import { billingService, billingFailure, billingResponse } from "@/server/billing/service";
-import { catalogMatches, PAID_PACKS } from "@/server/billing/catalog";
+import { catalogMatches, PAID_PRODUCT_IDS } from "@/server/billing/catalog";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const input = await request.json();
     const requestId = uuid(input.requestId);
     if (typeof input.productId !== "string" || input.productId.length > 80) throw new BillingError("商品が不正です。");
-    if (!PAID_PACKS.some(item => item.id === input.productId)) throw new BillingError("この商品の販売準備中です。", 503);
+    if (!PAID_PRODUCT_IDS.includes(input.productId)) throw new BillingError("この商品の販売準備中です。", 503);
     const { data: products, error: catalogError } = await billing.db.from("billing_products").select("id,amount_jpy,purchase_limit,validity_days,items");
     if (catalogError || !products || !catalogMatches(products)) throw new BillingError("商品の販売準備中です。", 503);
     const order = await billing.rpc("billing_reserve_order", {

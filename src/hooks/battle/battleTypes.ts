@@ -65,6 +65,7 @@ export type CompatibleBattleTacticId = BattleTacticId | LegacyBattleTacticId;
 export interface ParticipantState {
   id: string; // "char_xxx" or "ENEMY_xxx" or "ENEMY"
   name: string;
+  equipmentMasterIds?: string[]; // Immutable server battle snapshot only
   characterId: string; // Master Character ID
   alignment?: string; // 繧｢繝ｩ繧､繝｡繝ｳ繝・(JUSTICE, EVIL, ORDER, CHAOS)
   level: number;

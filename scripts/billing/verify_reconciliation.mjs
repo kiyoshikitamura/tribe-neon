@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { reconcileCheckout, terminalOrderResult } from '../../src/server/billing/reconciliation.ts';
 import { validateSession } from '../../src/server/billing/contracts.ts';
-import { catalogMatches, PAID_PACKS } from '../../src/server/billing/catalog.ts';
+import { catalogMatches, PAID_PACKS, DIA_PRODUCTS } from '../../src/server/billing/catalog.ts';
 const original={id:'order1',user_id:'user1',product_id:'beginner_pack_01',amount_jpy:100,status:'PENDING',stripe_session_id:'cs_test_first'};
 const session={id:'cs_test_first',livemode:false,status:'expired',payment_status:'unpaid',amount_total:100,currency:'jpy',client_reference_id:'order1',metadata:{order_id:'order1',user_id:'user1',product_id:'beginner_pack_01'}};
 let latest={...original}; const calls=[];
@@ -22,7 +22,7 @@ latest={...original};calls.length=0;
 assert.equal((await reconcileCheckout({...session,status:'complete',payment_status:'paid'},deps)).status,'GRANTED');
 assert.deepEqual(calls,['billing_grant_order']);
 await assert.rejects(()=>reconcileCheckout({...session,amount_total:1},deps),/一致/);
-const catalog=PAID_PACKS.map(pack=>({...pack,validity_days:120,items:Object.entries(pack.items).map(([itemId,quantity])=>({itemId,quantity}))}));
+const catalog=[...PAID_PACKS.map(pack=>({...pack,validity_days:120,items:Object.entries(pack.items).map(([itemId,quantity])=>({itemId,quantity}))})),...DIA_PRODUCTS.map(p=>({...p,validity_days:120}))];
 assert.equal(catalogMatches(catalog),true);
 assert.equal(catalogMatches(catalog.map((p,i)=>i? p:{...p,validity_days:undefined})),false);
 assert.equal(catalogMatches(catalog.map((p,i)=>i? p:{...p,items:p.items.map((item,j)=>j?item:{...item,quantity:5000})})),false);

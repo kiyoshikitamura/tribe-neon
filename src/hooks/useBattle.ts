@@ -39,6 +39,8 @@ import {
   type BattleActionPresentation,
 } from "@/domain/presentation/battlePresentationUnit";
 import { resolveBattleSkillLabel, safeBattleCharacterName } from "@/domain/presentation/battleSkillLabels";
+import { exclusiveSkillForBattleMember, exclusiveEquipmentForBattleMember } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_SKILL_PREFIX_MS, EXCLUSIVE_EQUIPMENT_INTRO_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { battleDisplayText } from "@/domain/presentation/battleTerminology";
 import { loadRaidReplayBackground, type RaidReplayBackground } from "@/domain/presentation/raidReplayBackground";
@@ -2640,7 +2642,7 @@ export function useBattle(options: UseBattleOptions) {
           // budget before advancing to this ACTION cursor. Do not apply the
           // post-impact remainder a second time between actions.
           ? 80
-          : 500
+          : 500 + (playerPartyStatesRef.current.some((member) => exclusiveEquipmentForBattleMember(member.characterId, member.equipmentMasterIds ?? []).length > 0) ? EXCLUSIVE_EQUIPMENT_INTRO_MS : 0)
         : outcomeUnit
           ? battlePresentationImpactAt(battleSpeed, previousTier, battleMode !== "RAID" || Boolean(battlePresentationContext?.raidRoomId))
           : replayEvent.type === "EFFECT" && replayEvent.payload.kind === "ACTIVE_EFFECT_SYNC"
@@ -2648,7 +2650,9 @@ export function useBattle(options: UseBattleOptions) {
             : replayEvent.type === "RESULT"
               ? followsFinalHit ? 260 : 180
               : 80;
-      const replayDelay = delay;
+      // The authoritative cursor waits for dialogue AND cut-in before projecting any outcome.
+      const exclusiveSkill = previousActor && previousAction ? exclusiveSkillForBattleMember(previousActor.characterId, String(previousAction.payload.skillId ?? "")) : null;
+      const replayDelay = delay + (outcomeUnit && exclusiveSkill ? EXCLUSIVE_SKILL_PREFIX_MS : 0);
       const timer = setTimeout(async () => {
         const payload = replayEvent.payload;
         const actorId = String(payload.actorId ?? "");

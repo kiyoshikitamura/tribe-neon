@@ -7,6 +7,7 @@ export interface QuestRaidEncounter {
   difficulty: EncounterDifficulty | null;
   bossName: string | null;
   leaderId: string | null;
+  rewardMultiplier?: 1 | 2;
   bonusItems: { itemId: string; quantity: number }[];
   acknowledged: boolean;
   expiresAt: string | null;
@@ -21,6 +22,7 @@ export function parseQuestRaidEncounter(value: unknown): QuestRaidEncounter {
     patrolId:v.patrolId, status:v.status as QuestRaidEncounter['status'], roomId:typeof v.roomId==='string'?v.roomId:null,
     areaId:typeof v.areaId==='string'?v.areaId:'', difficulty:['beginner','intermediate','advanced'].includes(String(v.difficulty))?v.difficulty as EncounterDifficulty:null,
     bossName:typeof v.bossName==='string'?v.bossName:null,leaderId:typeof v.leaderId==='string'?v.leaderId:null,
+    rewardMultiplier:v.rewardMultiplier===2?2:1,
     bonusItems:Array.isArray(v.bonusItems)?v.bonusItems.map((item: {itemId: unknown;quantity: unknown})=>{
       if(typeof item.itemId!=='string'||!Number.isSafeInteger(item.quantity)||Number(item.quantity)<=0)throw new Error('報酬情報を確認できませんでした。');
       return {itemId:item.itemId,quantity:Number(item.quantity)};
