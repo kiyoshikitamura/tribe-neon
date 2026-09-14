@@ -1,0 +1,258 @@
+{
+  "version": "20260914",
+  "POWER": [
+    {
+      "rank_min": 1,
+      "rank_max": 1,
+      "honor_label": "Season Champion称号＋専用Badge",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 4
+        },
+        {
+          "item_id": "SPECIAL_TICKET_SKILL",
+          "quantity": 2
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 2
+        },
+        {
+          "item_id": "AWAKENING_BOOK",
+          "quantity": 2
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 4
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "rank_min": 2,
+      "rank_max": 3,
+      "honor_label": "TOP3称号＋専用Badge",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 2
+        },
+        {
+          "item_id": "SPECIAL_TICKET_SKILL",
+          "quantity": 2
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 2
+        },
+        {
+          "item_id": "AWAKENING_BOOK",
+          "quantity": 2
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 3
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "rank_min": 4,
+      "rank_max": 10,
+      "honor_label": "TOP10称号＋Badge",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 2
+        },
+        {
+          "item_id": "SPECIAL_TICKET_SKILL",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "item_id": "AWAKENING_BOOK",
+          "quantity": 1
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 3
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "rank_min": 11,
+      "rank_max": 30,
+      "honor_label": "TOP30 Badge",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_SKILL",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 2
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "rank_min": 31,
+      "rank_max": 100,
+      "honor_label": "TOP100 Badge",
+      "items": [
+        {
+          "item_id": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 2
+        },
+        {
+          "item_id": "CHAR_EXP_L",
+          "quantity": 3
+        },
+        {
+          "item_id": "EQUIP_EXP_L",
+          "quantity": 3
+        }
+      ]
+    }
+  ],
+  "GUILD_POWER": [
+    {
+      "rank_min": 1,
+      "rank_max": 1,
+      "honor_label": "Champion限定Emblem＋Decoration＋Champion表示",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 2
+        },
+        {
+          "item_id": "SPECIAL_TICKET_SKILL",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "item_id": "AWAKENING_BOOK",
+          "quantity": 2
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 3
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "rank_min": 2,
+      "rank_max": 3,
+      "honor_label": "TOP3限定Emblem＋Decoration",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_SKILL",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "item_id": "AWAKENING_BOOK",
+          "quantity": 1
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 2
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "rank_min": 4,
+      "rank_max": 10,
+      "honor_label": "TOP10 Decoration＋Badge",
+      "items": [
+        {
+          "item_id": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1
+        },
+        {
+          "item_id": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "item_id": "SKILL_MANUAL",
+          "quantity": 2
+        },
+        {
+          "item_id": "EQUIP_LB_PART",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "rank_min": 11,
+      "rank_max": 20,
+      "honor_label": "TOP20 Badge",
+      "items": [
+        {
+          "item_id": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 2
+        },
+        {
+          "item_id": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1
+        },
+        {
+          "item_id": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "item_id": "CHAR_EXP_L",
+          "quantity": 2
+        },
+        {
+          "item_id": "EQUIP_EXP_L",
+          "quantity": 2
+        }
+      ]
+    }
+  ]
+}

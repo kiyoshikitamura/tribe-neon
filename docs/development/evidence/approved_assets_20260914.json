@@ -1,0 +1,146 @@
+[
+  {
+    "source": "eye_cutins/eye_cutin_03_kengo.png",
+    "path": "/eye-cutins/eye_cutin_03_kengo.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "2bc305ac54e2892ea507b8f18ce4046f39399a1639f5fc6754f009a519b3c411"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_07_reiji.png",
+    "path": "/eye-cutins/eye_cutin_07_reiji.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "802b6148331f0678a2078534fcd9e97dd6f30538bbcf296ed97e3214ece9d7be"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_08_ageha.png",
+    "path": "/eye-cutins/eye_cutin_08_ageha.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "5a58a19362316ff49041ce7cf0a65df87df59b89e13148ced2e746cc71dc563a"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_09_karen.png",
+    "path": "/eye-cutins/eye_cutin_09_karen.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "807bd77ac1393ba19d400cbe5859f52dd653c516ee324d336887d1f38a944c7a"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_02_leo.png",
+    "path": "/eye-cutins/eye_cutin_02_leo.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "91c8930b9b76e87ace6d7e12b5deaf4e4325a3e2edc761d595ea37a549673bee"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_10_kaede.png",
+    "path": "/eye-cutins/eye_cutin_10_kaede.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "34db1c9ebb06b08b9999a8fab0c33141b43526e415411f8e2a7ecc688678c19c"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_06_mio.png",
+    "path": "/eye-cutins/eye_cutin_06_mio.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "ab63a8aeac14bc17eba373fcd97c3ca7614ef2b48a7c2842b959924d003756a1"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_05_miyabi.png",
+    "path": "/eye-cutins/eye_cutin_05_miyabi.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "f01a7eab6712cca82d03db2a65bb9eeb039986a94dca9b7df8092f7a8f0ea71a"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_01_go.png",
+    "path": "/eye-cutins/eye_cutin_01_go.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "9a712bbcfd892be2e390df69e7793e1ff28d1a48750be41027525fded4c385c4"
+  },
+  {
+    "source": "eye_cutins/eye_cutin_04_koharu.png",
+    "path": "/eye-cutins/eye_cutin_04_koharu.png",
+    "width": 1536,
+    "height": 512,
+    "mode": "RGBA",
+    "sha256": "9e7f01f8da027d0ee8ec08638628c20c925297e4395ab3ced0a96397f4f9d807"
+  },
+  {
+    "source": "guild_emblems/guild_standard_03_ikebukuro.png",
+    "path": "/guild-emblems/guild_standard_03_ikebukuro.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "4b54c81cb515314e8da3d134612729a2eeb481bc7dcf168e2dc005e024a15bde"
+  },
+  {
+    "source": "guild_emblems/guild_standard_01_shinjuku.png",
+    "path": "/guild-emblems/guild_standard_01_shinjuku.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "45048fdd30df896668f859e9999e3d469cafcea7484a4cf1970a1465058a0a84"
+  },
+  {
+    "source": "guild_emblems/guild_standard_05_akihabara.png",
+    "path": "/guild-emblems/guild_standard_05_akihabara.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "5a7e53c282bfe303f2c4d03cd076b5967221f6859ce06052e929dc555923ab41"
+  },
+  {
+    "source": "guild_emblems/guild_standard_02_shibuya.png",
+    "path": "/guild-emblems/guild_standard_02_shibuya.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "cfc1517c1d95908229a703ca8c6c488560a342f2b3577c261002074a026a5f64"
+  },
+  {
+    "source": "guild_emblems/guild_standard_04_roppongi.png",
+    "path": "/guild-emblems/guild_standard_04_roppongi.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "63477fc4dc23ea8674e9702f4147b30012066535a4e78476452b3163abe01176"
+  },
+  {
+    "source": "guild_emblems/guild_standard_06_kawasaki.png",
+    "path": "/guild-emblems/guild_standard_06_kawasaki.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "1a64e6a8c972ba4237022e988d5867a13074ca66681742216983056892a43574"
+  },
+  {
+    "source": "guild_emblems/guild_event_rank1_base.png",
+    "path": "/guild-emblems/guild_event_rank1_base.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "a266c575a6627b9de54cff9b9b30288b90a9d21fec68152293ace1398464687e"
+  },
+  {
+    "source": "guild_emblems/guild_standard_07_yokohama.png",
+    "path": "/guild-emblems/guild_standard_07_yokohama.png",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "sha256": "3f0b52bffa2a0a1d688bb72b91885ca37ebc458e70673fd0e89c6008aaa801d3"
+  }
+]

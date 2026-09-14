@@ -13,3 +13,6 @@
 .ranking-reward-standing{font-size:12px;color:#ecd1a2;margin:4px 0 10px}
 .ranking-reward-tier.is-current{background:#514031;border-color:#cba46d}
 .ranking-reward-tier strong small{display:block;color:#edd0a1;font-size:10px;margin-top:3px}
+
+.ranking-reward-dialog-content:has(> .ranking-reward-standing){grid-template-rows:auto auto minmax(0,1fr)}
+.ranking-season-tier,.ranking-season-planned{padding:10px;border:1px solid #ffffff24;border-radius:6px;background:#ffffff08;font-size:11px;line-height:1.6}.ranking-season-tier.is-current{border-color:#cba46d;background:#514031}.ranking-season-tier>strong{color:#edd0a1}.ranking-season-tier p,.ranking-season-planned p{margin:4px 0}.ranking-season-items{list-style:none;padding:0;margin:6px 0}.ranking-season-items li{display:flex;justify-content:space-between;gap:10px}.ranking-season-items b{white-space:nowrap}.ranking-season-pending{font-size:11px;color:var(--ui-text-secondary)}

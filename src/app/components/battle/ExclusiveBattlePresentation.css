@@ -14,3 +14,6 @@
   .sb-root .exclusive-equipment-intro{animation:exclusive-intro-out var(--intro-ms) step-end both!important}
 }
 .sb-root .exclusive-equipment-intro[data-paused="true"]{animation-play-state:paused!important}
+
+/* Normalized 3:1 eye artwork already supplies the crop. */
+.exclusive-equipment-eyes.is-approved-cutin img{height:100%;object-fit:contain;object-position:center;transform:none}

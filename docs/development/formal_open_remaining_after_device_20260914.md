@@ -1,6 +1,6 @@
 # 正式公開 残件台帳 — 2026-09-14 実機修正後
 
-追加統合の基準: 141833fcc20c89b1fdc69bcc0b9edda8c9293b5c。追加の実装・検証はformal_open_bug_consumption_progress_20260914.mdを参照。
+今回再開の基準: ed215459dc1b895fe94b17fd28d66c991a3ba0d6。追加の実装・検証はformal_open_bug_consumption_progress_20260914.mdを参照。
 Preview DB: sufvuqdnqohpfzkwxohq。
 本流方針: 実装・Previewまで。仕様議論は別スレッド。Production反映なし。
 
@@ -41,10 +41,10 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | Stripe Sandbox | Checkout→戻り→受取、再送・取消等の実接続受入が未完了 | 配信環境診断完了後、Sandbox E2E。実課金を実行しない |
 | Character/Equipment EXP | 必要EXP/余剰保持/最終Lv100だけ使用不可を9/14本流で確定。混合atomic RPC・xpをPreview適用済み、UI候補実装。DB rollback検証PASS | growth_exp_preview_implementation_20260914.md参照。専用Preview適用・Build・実機受入状況を区別する |
 | Guild tenure | 9/14本流で加入日Day1確定。JST日付差+1をMission同期へ接続 | Preview検証結果はguild_tenure_day_origin_decision_20260914.md参照。Production未反映 |
-| 売上KPI | Preview refresh_kpi_revenueも未実装stub | 別スレッドからF10–F13/PURの計上時刻、分母、返金、QA/Sandbox除外定義を回収 |
-| Season切替 | 第1Season PvP/POWER/GUILD_POWERの3本、既存報酬維持で確定。日付は9/16–10/1 JST。プレOPEN1位Emblemは素材統合へ | 通常POWER/GUILD_POWER Season報酬定義欠落、interval RATE/Wins等が残件。formal_open_season_scope_and_reward_projection_20260914.md参照。実切替なし |
+| 売上KPI | 公開後残件へ移動。集計完成はリリース必須Gateにしない | 計上・返金・分母・除外定義を別途確定。購入・付与・返金記録の保持と照合は課金受入で確認 |
+| Season切替 | 3カテゴリとも正式オープンと同時開始。終了10/1 00:00 JST維持。Season報酬MD/XLSX全Tier一致 | 開始契約・報酬・在籍資格・既存Cosmetic ID接続を実装。公開時刻は推測しない。実切替なし |
 | ガチャPool差異 | 本流READ ONLY監査でSpecial収録ID/属性/確率/抽選関数とcatalog計算一致。欠落・重複等0。データ修正不要 | 実ブラウザの表示/CTA引数、実抽選/paid lot E2Eは未確認。special_gacha_integrated_readonly_audit_20260914.md参照 |
-| 素材統合 | manifest/正規化ZIP/eye previewの3ファイル受領済み。ローカル実行環境障害で内容未読・未統合 | 環境復旧後に添付と参照先を照合して統合。実機確認は残件とまとめる |
+| 素材統合 | ローカル復旧・添付読取済み。承認18PNGを無加工格納、目元10点をcanonicalへ接続 | Guild都市紋章は旧8種と異なるため所持品を上書きしない。実機確認は残件とまとめる |
 
 ## 成長曲線の実装状況
 旧fixtureの対応待ちは解除。現在のcanonical JSON60名の既存割当(5型各12名)を維持し、6型指数をserver/clientへ接続。任意の型再配分なし。360ケースの一致、current Power整合をPreviewで検証済み。実UI受入は残す。
@@ -66,8 +66,8 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 - F10–F13/PURの正式値は一般的なARPU定義から創作しない。
 
 ## ユーザーへ依頼する未決事項
-formal_open_pending_decisions_handoff_20260914.mdの3テーマ: Season間PvP、個人/Guild総合力Season報酬、売上KPI集計契約。確定済みの商品/EXP/Guild Day1/Emblem名称を再質問しない。
+Season間PvP・報酬数量の定義待ちは解消。売上KPI集計は公開後対応。新たな依頼はCosmetic ID等、実監査で不足が確定した項目に限定する。
 
 ## 現在の制約と停止点
-作業環境exec-server停止。GitHub/Supabase read-only監査とGitHub経由Preview buildは可能。対象Vercel teamへの接続は403のため配信設定診断は不可。再認証依頼を繰り返さず、この制約を明示する。
+作業環境exec-server復旧。最新ed21545のcheckout・添付読取が可能。対象Vercel teamへの接続は403のため配信設定診断は不可。再認証依頼を繰り返さず、この制約を明示する。
 公開準備完了とは判定しない。旧fixture成長型の無断継承や未確定KPI/Season規則の創作、Production公開、Season実リセット、運営告知配信は行わない。

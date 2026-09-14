@@ -1,4 +1,6 @@
-# 別スレッドへ依頼する未決事項（3テーマ）
+# 過去の未決事項と解消記録
+
+最新決定: Seasonは3カテゴリとも正式オープンと同時開始。POWER/GUILD_POWER報酬はspecs/TRIBE_NEON_Season_Ranking_Reward_Master_20260914.mdで確定。以下1・2の依頼は解消済み、3の売上KPIは公開後残件でリリースGateではない。以下は判断前の監査履歴。
 
 2026-09-14。監査基準: 141833fcc20c89b1fdc69bcc0b9edda8c9293b5c。
 Preview DB: sufvuqdnqohpfzkwxohq。READ ONLY確認。以下は未決事項の依頼文であり、提案の承認・実装開始・本番操作を意味しない。

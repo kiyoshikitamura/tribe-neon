@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { EXCLUSIVE_EYE_CUTINS } from "@/domain/presentation/approvedAssets20260914";
 import { exclusiveEquipmentForBattleMember } from "@/domain/presentation/exclusiveContent";
 import { EXCLUSIVE_SKILL_PREFIX_MS, EXCLUSIVE_EQUIPMENT_INTRO_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
@@ -14,8 +15,9 @@ export function ExclusiveEquipmentIntro({ members, paused }: { members: BattlePa
   return <div className="exclusive-equipment-intro" data-paused={paused} aria-label="専用装備" style={{ "--intro-ms": `${EXCLUSIVE_EQUIPMENT_INTRO_MS}ms`, animationPlayState: paused ? "paused" : "running" } as CSSProperties}>
     {bands.map(({ member, equipment }, index) => {
       const master = CHARACTERS_MASTER.find(entry => entry.id === member.characterId);
+      const eyeCutin = EXCLUSIVE_EYE_CUTINS[member.characterId ?? ""];
       return <div key={`${member.id}:${equipment.id}`} className={`exclusive-equipment-band ${index % 2 ? "from-right" : "from-left"}`} style={{ animationDelay: `${80 + index * 120}ms`, animationPlayState: paused ? "paused" : "running" }}>
-        {master && <div className="exclusive-equipment-eyes"><img src={getCharacterTransparentImg(master.name)} alt="" /></div>}
+        {(eyeCutin || master) && <div className={`exclusive-equipment-eyes${eyeCutin ? " is-approved-cutin" : ""}`}><img src={eyeCutin || getCharacterTransparentImg(master!.name)} alt="" /></div>}
         <img className="exclusive-equipment-item" src={equipment.imageSrc} alt="" />
         <div><small>{member.name}</small><strong>{equipment.name}</strong></div>
       </div>;
