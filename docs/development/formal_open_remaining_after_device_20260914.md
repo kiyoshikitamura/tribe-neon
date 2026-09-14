@@ -1,6 +1,6 @@
 # 正式公開 残件台帳 — 2026-09-14 実機修正後
 
-実装基準: 91e30cb387038438d5634ff847e02fe99aaeaa28。今回の更新は消化台帳のみ。
+追加統合の基準: 141833fcc20c89b1fdc69bcc0b9edda8c9293b5c。追加の実装・検証はformal_open_bug_consumption_progress_20260914.mdを参照。
 Preview DB: sufvuqdnqohpfzkwxohq。
 本流方針: 実装・Previewまで。仕様議論は別スレッド。Production反映なし。
 
@@ -19,16 +19,16 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 
 | ID | 本番由来の案件 | 現在の確認範囲 | 消化に必要な確認 |
 |---|---|---|---|
-| BUG-01 | Skill Lv表示/旧state/不正Mission名称 | Mission名称MigrationのPreview適用記録あり。全画面除去の受入証跡は再照合対象 | Skill Lv表示0、+値のみ、Battle効果・既存進捗維持 |
-| BUG-02 | Character/Equipment素材1個≒Lv+1 | EXPをPreview適用済み、DB検証・91e30cb Build PASS | 実UIの混合/予測/繰越/最終Lv/不足時取消/reload。成長型旧参照整理は独立残件 |
-| BUG-03 | Room RaidのMission進捗が増えない | raid_room_mission_finalization_hooksのPreview適用記録あり | 正式1戦→進捗、retry追加0、10/50累積、clear eligibility、cancel/Tutorial除外の証跡確認 |
+| BUG-01 | Skill Lv表示/旧state/不正Mission名称 | ソース407・SQL445全文監査で表示/旧Client state残存0、SQLaliasは進捗互換用 | 実機で+値表示とBattle効果を確認。formal_open_bug_01_06_08_code_audit_20260914.md参照 |
+| BUG-02 | Character/Equipment素材1個≒Lv+1 | EXPをPreview適用済み・DB検証PASS。成長指数も現在のcanonical60割当維持で接続しserver/client360ケース一致 | 実UIの混合/予測/繰越/最終Lv/不足時取消/reload、成長後Battle |
+| BUG-03 | Room RaidのMission進捗が増えない | 正式finalize50回・Daily/累計10,50・全retry/late/cancel/非Raid/clear資格を実DB検証PASS | 実画面Mission反映。raid_mission_guild_tenure_live_audit_20260914.md参照 |
 | BUG-04 | Guild在籍30/90日が0 | Day1のPreview実装・DB境界/再加入/再送検証済み | 実画面の在籍日数・Mission表示 |
 | BUG-05 | Quest難度/初級default/cleared表示 | 暗色・六本木難度順等はユーザー実機OK | acceptedを保持。街変更・unlock等の個別受入証跡を区別 |
-| BUG-06 | MyPage小Raidアイコン重複 | 統合対象。個別の実装/受入証跡を再照合 | 小Raidなし、大Raid/バナー/Activity導線維持 |
-| BUG-07 | 通常Gameplay報酬がPresent経由 | gameplay_direct_reward_delivery適用記録、Ranking通知修正あり | Quest/Raid/PvP/Mission/Ranking/Login Bonusを経路別に即Bag・実資産・ledger・再送確認 |
-| BUG-08 | 「アンケートのお礼」再表示 | 統合対象。Exact Source・修正差分・受入証跡を再照合 | 新規/既存/reload/Inbox/bootstrapで非表示、正規Present正常。DB行削除で代替しない |
-| BUG-09 | Quest Battleに保存Partyが反映されない | quest_main_formation_authorityのPreview適用記録あり | Party変更/reload後にQuest/PvP/RaidのCharacter・Skill・Equipment5人一致 |
-| BUG-10 | MyPage/Character/Profile Leader不一致 | profile_leader_authority_v1適用記録、slot1とFavorite分離変更の記録あり | 3画面一致・slot1非Leader・favorite値を強制変更しないことを確認 |
+| BUG-06 | MyPage小Raidアイコン重複 | 現行ソースで小Raidなし、大Raid/Banner/Activity維持を確認 | 実機で導線保持。追加のコード修正なし |
+| BUG-07 | 通常Gameplay報酬がPresent経由 | PvP AFTER Triggerの配送漏れを修正しPreview適用、Resultへ実receipt表示。6経路の直接付与/再送/Present増0をDB検証PASS | 新PvP Result実画面と6経路統合受入。bug07_gameplay_direct_reward_reaudit_20260914.md参照 |
+| BUG-08 | 「アンケートのお礼」再表示 | 現行全ソースでp_swr/survey/該当placeholderなし。正規Presentを削除・フィルタしない | 新規/既存/reload/Inbox/bootstrapの実機受入。コード監査と実機PASSを区別 |
+| BUG-09 | Quest Battleに保存Partyが反映されない | コード/DB Main Authority一致、保存5名→READ ONLY snapshot5名/slot順/Skill・Equipment fields一致 | Party変更/reload後のQuest/PvP/Raid実戦一致。quest_party_leader_authority_audit_20260914.md参照 |
+| BUG-10 | MyPage/Character/Profile Leader不一致 | Favorite参照とslot1先頭表示をコード/DBで確認、既存favorite/slot1の相違は正常 | MyPage/Character/Public Profile実画面一致 |
 
 全件の実機受入完了とは判定しない。これらの消化は追加実機不具合、課金、Season、素材統合の完了とは別に管理する。
 
@@ -46,8 +46,8 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | ガチャPool差異 | 本流READ ONLY監査でSpecial収録ID/属性/確率/抽選関数とcatalog計算一致。欠落・重複等0。データ修正不要 | 実ブラウザの表示/CTA引数、実抽選/paid lot E2Eは未確認。special_gacha_integrated_readonly_audit_20260914.md参照 |
 | 素材統合 | manifest/正規化ZIP/eye previewの3ファイル受領済み。ローカル実行環境障害で内容未読・未統合 | 環境復旧後に添付と参照先を照合して統合。実機確認は残件とまとめる |
 
-## 成長曲線の独立残件
-EXP量とは別に、既存DBの成長型60行は旧fixture UUID3件を含む。本流でユーザーが旧仕様の残骸と明示したため、旧UUIDをcanonicalのレイジ/ルイ/チャンへ継承しない。「旧UUIDとの正式対応待ち」は解除し、旧参照の除去・現canonical側の成長型整合を実装課題として扱う。57名だけ新曲線にしない。指数と数式の18万チェックはPASS、全60名runtime接続は未完了。現行client JSONも5型×12名でDB6型と不一致。growth_exp_preview_implementation_20260914.md参照。
+## 成長曲線の実装状況
+旧fixtureの対応待ちは解除。現在のcanonical JSON60名の既存割当(5型各12名)を維持し、6型指数をserver/clientへ接続。任意の型再配分なし。360ケースの一致、current Power整合をPreviewで検証済み。実UI受入は残す。
 
 ## 再適用禁止のPreview課金Migration対応
 
@@ -64,6 +64,9 @@ EXP量とは別に、既存DBの成長型60行は旧fixture UUID3件を含む。
 - Guild加入はguild_members INSERT、脱退はDELETE+last_guild_left_at更新。再加入24時間制約は維持。ログイン回数の加算cronで代用しない。
 - 別スレッドでプレオープンユーザーを課金検証対象外、新規ユーザー中心とする方針が確認された。既存ユーザーの資産正常化義務や無断補正禁止を解除するものとは扱わない。
 - F10–F13/PURの正式値は一般的なARPU定義から創作しない。
+
+## ユーザーへ依頼する未決事項
+formal_open_pending_decisions_handoff_20260914.mdの3テーマ: Season間PvP、個人/Guild総合力Season報酬、売上KPI集計契約。確定済みの商品/EXP/Guild Day1/Emblem名称を再質問しない。
 
 ## 現在の制約と停止点
 作業環境exec-server停止。GitHub/Supabase read-only監査とGitHub経由Preview buildは可能。対象Vercel teamへの接続は403のため配信設定診断は不可。再認証依頼を繰り返さず、この制約を明示する。

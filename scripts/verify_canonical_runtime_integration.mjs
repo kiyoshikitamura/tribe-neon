@@ -22,8 +22,8 @@ assert.deepEqual([0, 1, 2, 3, 4, 5].map(canonicalSkillSlotCount), [3, 4, 5, 5, 5
 assert.deepEqual([0, 1, 5, 10].map(canonicalEquipmentLimitBreakMultiplier), [1, 1.04, 1.2, 1.4]);
 
 for (const character of CANONICAL_CHARACTERS) {
-  assert.deepEqual(canonicalCharacterStats(character.lv1, character.lv100, 1, 0), character.lv1);
-  assert.deepEqual(canonicalCharacterStats(character.lv1, character.lv100, 100, 0), character.lv100);
+  assert.deepEqual(canonicalCharacterStats(character.lv1, character.lv100, 1, 0, character.growth_pattern), character.lv1);
+  assert.deepEqual(canonicalCharacterStats(character.lv1, character.lv100, 100, 0, character.growth_pattern), character.lv100);
 }
 
 const runtimeFiles = [

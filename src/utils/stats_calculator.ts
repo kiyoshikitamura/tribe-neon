@@ -7,7 +7,7 @@ export type EquipmentRuntimeRecord = { equipment_id?: string; equipment_master_i
 export function getCharacterBaseStats(characterId: string, level: number, awaken: number) {
   const character = CANONICAL_CHARACTERS.find((entry) => entry.character_id === characterId);
   if (!character) return { hp: 0, atk: 0, def: 0, spd: 0, luk: 0 };
-  return canonicalCharacterStats(character.lv1, character.lv100, Math.max(1, Math.min(100, Math.trunc(level || 1))), Math.max(0, Math.min(5, Math.trunc(awaken || 0))));
+  return canonicalCharacterStats(character.lv1, character.lv100, Math.max(1, Math.min(100, Math.trunc(level || 1))), Math.max(0, Math.min(5, Math.trunc(awaken || 0))), character.growth_pattern);
 }
 
 export function getCharacterTotalStats(charRecord: CharacterRuntimeRecord | null | undefined, equipsList: EquipmentRuntimeRecord[]) {

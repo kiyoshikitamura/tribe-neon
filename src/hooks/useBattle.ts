@@ -3249,6 +3249,11 @@ export function useBattle(options: UseBattleOptions) {
       }
       const pointsDiff = Number(pvpResultTemp.rankDelta ?? 0);
       const rewardCash = Number(pvpResultTemp.rewards?.cash ?? 0);
+      const inventoryRewards = pvpResultTemp.reward_delivery === "INVENTORY" && Array.isArray(pvpResultTemp.reward_items)
+        ? pvpResultTemp.reward_items
+          .filter((item: any) => item?.delivery === "INVENTORY" && typeof item.itemId === "string" && Number(item.quantity) > 0)
+          .map((item: any) => ({ id: item.itemId, name: canonicalItemName(item.itemId), quantity: Number(item.quantity) }))
+        : [];
       const oldRating = Number(pvpResultTemp.oldRating ?? pvpRate);
       const newRating = Number(pvpResultTemp.newRankPoints ?? pvpRate);
       setPvpRate?.(newRating);
@@ -3264,7 +3269,8 @@ export function useBattle(options: UseBattleOptions) {
           { label: "RANK CHANGE", value: `${pointsDiff >= 0 ? "+" : ""}${pointsDiff} pt` },
           { label: "BP", value: `${Number(pvpResultTemp.remainingPvpPoints ?? 0)}/5` },
         ],
-        reward: `CASH +${rewardCash.toLocaleString()}`,
+        reward: inventoryRewards.length ? "報酬を獲得しました" : `CASH +${rewardCash.toLocaleString()}`,
+        rewards: inventoryRewards,
         note: isFirstOfficialPvp ? "順位を確認して、ミッション報酬を受け取ろう。" : "バトルへ戻って次の対戦相手を選べます。",
         continueLabel: isFirstOfficialPvp ? "ランキングを確認" : "バトルへ戻る",
         destination: isFirstOfficialPvp ? "ranking" : "pvp",

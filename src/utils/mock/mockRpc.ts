@@ -154,7 +154,7 @@ const rarityScore = (rarity?: string) => ({ SSR: 4, SR: 3, R: 2, N: 1 }[rarity |
 const mockCharacterPower = (character: any, equipments: any[]) => {
   const master = CANONICAL_CHARACTERS.find((entry) => entry.character_id === character.character_id);
   if (!master) return 0;
-  const stats = canonicalCharacterStats(master.lv1, master.lv100, Number(character.level || 1), Number(character.awakening_level || 0));
+  const stats = canonicalCharacterStats(master.lv1, master.lv100, Number(character.level || 1), Number(character.awakening_level || 0), master.growth_pattern);
   const equipmentPower = equipments
     .filter((entry: any) => entry.equipped_character_id === character.id)
     .reduce((total: number, owned: any) => {
@@ -1380,7 +1380,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         total.luk += canonicalEquipmentFlatStat(master.base_stats.luk, level, plusValue);
         return total;
       }, { hp: 0, atk: 0, def: 0, spd: 0, luk: 0 });
-      const characterStats = characterMaster ? canonicalCharacterStats(characterMaster.lv1, characterMaster.lv100, Math.max(1, Math.min(100, Number(character.level || 1))), Math.max(0, Math.min(5, Number(character.awakening_level || 0)))) : { hp: 1, atk: 0, def: 0, spd: 0, luk: 0 };
+      const characterStats = characterMaster ? canonicalCharacterStats(characterMaster.lv1, characterMaster.lv100, Math.max(1, Math.min(100, Number(character.level || 1))), Math.max(0, Math.min(5, Number(character.awakening_level || 0))), characterMaster.growth_pattern) : { hp: 1, atk: 0, def: 0, spd: 0, luk: 0 };
       const skillRefs = equippedSkills
         .filter((owned: any) => owned.user_id === userId && owned.equipped_character_id === character.id
           && Number(owned.slot_index) >= 0 && Number(owned.slot_index) < canonicalSkillSlotCount(Math.max(0, Math.min(5, Number(character.awakening_level || 0)))))
@@ -4290,7 +4290,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       const condition = quest.unlockCondition;
       const prerequisite = condition.type === "FIRST_CLEAR" ? condition.questId : null;
       const memberCharacters = encounter.members.map((member) => CANONICAL_CHARACTERS.find((entry) => entry.character_id === member.characterId)!);
-      const recommendedPower = encounter.members.reduce((total,member,index) => { const stats=canonicalCharacterStats(memberCharacters[index].lv1,memberCharacters[index].lv100,member.level,member.awakening); return total+stats.hp+stats.atk+stats.def; },0);
+      const recommendedPower = encounter.members.reduce((total,member,index) => { const stats=canonicalCharacterStats(memberCharacters[index].lv1,memberCharacters[index].lv100,member.level,member.awakening,memberCharacters[index].growth_pattern); return total+stats.hp+stats.atk+stats.def; },0);
       return { quest_id:encounter.questId, unlock_condition:condition.type === "OPEN" ? "OPEN" : `FIRST_CLEAR:${prerequisite}`, is_unlocked:condition.type === "OPEN" || firstClears.some((entry:any)=>entry.user_id===userId&&entry.quest_id===prerequisite), is_first_cleared:firstClears.some((entry:any)=>entry.user_id===userId&&entry.quest_id===encounter.questId), enemy_tactic:encounter.enemyTactic, enemy_member_count:encounter.members.length, enemy_members:[], enemy_attributes:[...new Set(memberCharacters.map((entry)=>entry.attribute))], recommended_level:encounter.members[0]?.level ?? null, recommended_power:recommendedPower };
     }), error:null };
   }

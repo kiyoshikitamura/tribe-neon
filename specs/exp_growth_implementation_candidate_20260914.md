@@ -111,5 +111,9 @@ Daily Rankingと一度限りの突出報酬を除く標準供給。
 
 統合基準は661dfd3 + 確認済みProduction差分。今回は受入までの実装候補であり、仕様提示だけで実装済み/受入済みとしない。
 
-## 9. 実装時に判明した割当不整合
-必要EXP実装と成長曲線接続は分離。既存Release/Battleの60型割当には旧fixture UUID3名が含まれ、canonicalのレイジ/ルイ/チャンへの正式対応がない。57名だけ曲線変更せず、60名全件の対応確定後に接続。詳細はdocs/development/growth_exp_preview_implementation_20260914.md参照。
+## 9. 現行canonical割当による解決（2026-09-14追加監査）
+ユーザー確認により旧fixture UUIDは旧仕様の残骸であり、canonicalキャラへの別名対応は作らない。
+現在のPRODUCTION_FROZEN canonical JSONには全60名のgrowth_patternが存在する。既存割当は5型各12名・HP_TANK0名であり、§1の旧release/battle masterの件数とは区別する。
+既存60名の割当を維持し、§3の6型指数をserver/clientへ接続済み。人数を合わせる再配分は行わない。
+Preview DB適用後に60名×Lv1/50/100×覚醒0/5の360ケースで一致を確認。詳細はdocs/development/canonical_character_growth_runtime_20260914.mdおよびformal_open_bug_consumption_progress_20260914.md参照。
+実画面とBattleの受入・Production反映は別途管理する。

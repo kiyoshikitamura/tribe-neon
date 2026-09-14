@@ -44,11 +44,11 @@ assert.equal(CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === "ACCESSOR
 assert.equal(CANONICAL_SKILLS.find((item) => item.skill_id === "SKILL_051")?.effects.includes("IGNORE_DEF 55%"), true);
 assert.equal(canonicalLevelBaseStat(100, 1000, 1), 100);
 assert.equal(canonicalLevelBaseStat(100, 1000, 100), 1000);
-assert.deepEqual(canonicalCharacterStats({ hp: 100, atk: 100, def: 100, spd: 100, luk: 100 }, { hp: 1000, atk: 1000, def: 1000, spd: 1000, luk: 1000 }, 1, 1), { hp: 108, atk: 108, def: 108, spd: 103, luk: 103 });
+assert.deepEqual(canonicalCharacterStats({ hp: 100, atk: 100, def: 100, spd: 100, luk: 100 }, { hp: 1000, atk: 1000, def: 1000, spd: 1000, luk: 1000 }, 1, 1, "BALANCED"), { hp: 108, atk: 108, def: 108, spd: 103, luk: 103 });
 for (const character of CANONICAL_CHARACTERS) {
   for (const level of [1, 2, 50, 99, 100]) {
     for (const awakening of [0, 1, 2, 3, 4, 5]) {
-      const stats = canonicalCharacterStats(character.lv1, character.lv100, level, awakening);
+      const stats = canonicalCharacterStats(character.lv1, character.lv100, level, awakening, character.growth_pattern);
       assert.ok(Object.values(stats).every(Number.isInteger), `${character.character_id} level ${level} awakening ${awakening}`);
     }
   }
