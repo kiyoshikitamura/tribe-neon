@@ -500,6 +500,7 @@ function ProductionHomeFixture({ scenario, activityOverride, activityNowOverride
     userXp: 120,
     cash: 4200,
     diamonds: 300,
+    raidPoints: 3,
     vitality: 95,
     vitalityNextRecoveryAt: new Date(Date.now() + 180_000).toISOString(),
     setShowMissionPanel: noop,

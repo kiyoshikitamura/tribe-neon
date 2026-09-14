@@ -18,6 +18,6 @@ export default function RaidResultDetails({ victory, modeResult, roomState, late
     <p className="raid-result-details__note">個人の勝敗と、共有レイドの撃破状態は別です。</p>
     {modeResult?.stats?.length ? <dl className="raid-result-details__stats">{modeResult.stats.map((stat, index) => <div key={`${stat.label}:${index}`}><dt>{stat.label}</dt><dd>{stat.value}</dd></div>)}</dl> : <p>今回の貢献情報は未取得です。</p>}
     {lateFinalization && <p className="raid-result-details__notice">開催終了後の確定です。個人の記録は残り、共有HPには反映されません。</p>}
-    <p className="raid-result-details__note">討伐・救援報酬はレイドの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。</p>
+    <p className="raid-result-details__note">討伐・救援報酬は条件達成時に所持資産へ反映されます。内容はレイドの「報酬」で確認できます。</p>
   </section>;
 }

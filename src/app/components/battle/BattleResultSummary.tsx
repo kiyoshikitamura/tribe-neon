@@ -212,7 +212,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           {modeResult?.note && <p>{modeResult.note}</p>}
         </div>
       )}
-      {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・PLAYER XPは反映済みです。アイテムはプレゼントへ配送されます。受取期限はプレゼントで確認してください。</p>}
+      {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・プレイヤー経験値・アイテムを獲得しました。アイテムはMy Bagで確認できます。</p>}
       {continueControl ?? <OutlawButton variant={victory ? "primary" : "secondary"} onClick={onContinue} className="battle-result-continue" disabled={victory && (tutorial || presentationContext?.mode === "PATROL") && !rewards}>
         {victory && (tutorial || presentationContext?.mode === "PATROL") ? (rewards ? "次へ" : "報酬確定中…") : modeResult?.continueLabel || "次へ"}
       </OutlawButton>}
