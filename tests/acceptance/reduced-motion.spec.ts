@@ -1,4 +1,32 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Locator } from '@playwright/test';
+
+async function waitForNaturalResultWithStallGuard(
+  harness: Locator,
+) {
+  const naturalCompletionLimitMs = 300_000;
+  const stallLimitMs = 20_000;
+  const startedAt = Date.now();
+  let lastProgressAt = startedAt;
+  let previousReplayIndex = await harness.getAttribute('data-replay-index');
+  let previousBattleState = await harness.getAttribute('data-battle-state');
+
+  while (Date.now() - startedAt < naturalCompletionLimitMs) {
+    // Deliberate progress sampling for the finite liveness guard.
+    await new Promise(resolve => setTimeout(resolve, 250));
+    const replayIndex = await harness.getAttribute('data-replay-index');
+    const battleState = await harness.getAttribute('data-battle-state');
+    if (battleState === 'RESULT') return;
+    if (replayIndex !== previousReplayIndex || battleState !== previousBattleState) {
+      previousReplayIndex = replayIndex;
+      previousBattleState = battleState;
+      lastProgressAt = Date.now();
+    } else if (Date.now() - lastProgressAt >= stallLimitMs) {
+      throw new Error(`Battle presentation stopped for ${stallLimitMs}ms at replay=${replayIndex}, state=${battleState}`);
+    }
+  }
+
+  throw new Error(`Battle did not reach RESULT within the finite ${naturalCompletionLimitMs}ms test limit`);
+}
 
 // Preview fixture only. No account, message, database write or billing operation.
 for (const stop of ['equipment', 'dialogue', 'cutin']) {
@@ -31,8 +59,9 @@ for (const stop of ['equipment', 'dialogue', 'cutin']) {
     await expect(page.getByRole('button', { name: '一時停止', exact: true })).toBeVisible();
     await expect.poll(() => harness.getAttribute('data-replay-index')).not.toBe(cursor);
     if (stop === 'cutin') {
-      // Natural completion only, no SKIP.
-      await expect(harness).toHaveAttribute('data-battle-state', 'RESULT', { timeout: 150_000 });
+      // Natural completion only, no SKIP. The limit keeps CI finite; it is not a product-duration requirement.
+      await waitForNaturalResultWithStallGuard(harness);
+      await expect(harness).toHaveAttribute('data-battle-state', 'RESULT');
     }
   });
 }

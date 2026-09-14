@@ -17,6 +17,7 @@ npx playwright test --config tests/acceptance/motion-social.config.ts
 - `reducedMotion: reduce`を指定し、matchMediaのtrueを先に検証する。
 - 装備帯／台詞／Cut-inの停止・2.2秒保持・再開を確認。
 - Cut-inの移動アニメーション抑制と、SKIPなしResult到達を確認。
+- Replay indexまたは画面状態が20秒間変化しない場合は停止FAIL。自然終了の監視上限は300秒、ケース全体は360秒とする。これはテストを有限に保つ上限であり、製品の戦闘時間仕様ではない。
 - これはQAハーネスのメディア設定テスト。実機OS設定による確認や実Raidの検証とは区別する。
 - ブラウザー実行権限や環境にこのAPIがなければ、許可された別の検証環境で実行する。アプリDOMへCSSを注入してPASS扱いにしない。
 - テストの実行結果は本書作成時点で未取得。タイムアウトもPASSに読み替えない。
@@ -33,7 +34,7 @@ Repository確認結果：全体Chat・Guild ChatはTribeChatModal→UserIdentity
 | --- | --- | --- |
 | 全体Chat | 対象Guild所属QAの既存発言 | 名前の所属Guild左に月Emblem |
 | Guild Chat | 同Guildの既存発言 | Guild名と月Emblem |
-| Activity最新行 | 対象Guild所属QAがactorの既存イベント | Guild名と月Emblem |
+| Activity最新行 | 対象Guild所属QAがactorの既存イベント | Guild名と月Emblem。最新行では所属Guild行だけを表示し、Emblemは16px固定 |
 | Activity履歴 | 同イベントを履歴で表示 | 最新行と同じGuild・Emblem |
 
 各行でguild_id、guild_name、表示asset pathの対応、画像読込、320px／390pxの見切れを確認。Reload後の保持も確認する。

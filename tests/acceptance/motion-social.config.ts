@@ -6,7 +6,7 @@ if (!new URL(baseURL).hostname.endsWith('.vercel.app')) throw new Error('専用P
 
 export default defineConfig({
   testDir: '.', testMatch: 'reduced-motion.spec.ts', retries: 0, workers: 1,
-  timeout: 180_000, expect: { timeout: 15_000 }, reporter: 'list',
+  timeout: 360_000, expect: { timeout: 15_000 }, reporter: 'list',
   use: { baseURL, contextOptions: { reducedMotion: 'reduce' }, viewport: { width: 390, height: 844 },
     video: 'off', trace: 'off', screenshot: 'only-on-failure' },
 });
