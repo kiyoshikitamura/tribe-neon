@@ -69,9 +69,9 @@ PGliteはlive DBや実Mission evaluator全体のAcceptanceを代替しない。
 
 ## 棚卸し結果と残作業
 
-- EXP：REQUIRED EXP MASTER NOT DEFINED。Character最新level_up_characterは素材個数でLevel加算、Equipmentも同様。items master effectValueを使っていない。混合投入は逐次RPCで全体atomicでない。
+- EXP（2026-09-14訂正）：育成マスタはPreview・Productionに存在する。「REQUIRED EXP MASTER NOT DEFINED」の断定を撤回。現行RPCは素材個数でLevel加算し、items master effectValueを使っていない。混合投入は逐次RPCで全体atomicでない。詳細は exp_master_authority_audit_20260914.md。
 - user_level_progressionはPlayer用。equipment_progressionは能力倍率/capで必要EXP表ではない。
-- 仕様判断：Character/Equipment必要EXP曲線、部分EXP投入時のCASH費用、cap余剰EXP扱い。
+- EXP対応：既存正式定義の特定・照合を優先し、新しい必要EXP曲線の決定依頼は撤回。確認済み暫定値を正式曲線として採用しない。部分EXP投入時のCASH費用・cap余剰EXPも既存正本を確認する。
 - Guild tenure：joined_atは存在するが日数投影なし。Day0/Day1は判断待ち。
 - AP MAX50：自然回復cap、Quest開始時の回復timer、表示用定数/JSONに100が残る。50超保持を含む一括修正が必要。
 - Direct reward：通常MissionとDaily Rankingは既に直接付与。Quest drop/Raid Clear/Rescue/Login BonusはPresent経由。名前がgrant_present_payloadでも実資産dispatcherであり、一律置換しない。

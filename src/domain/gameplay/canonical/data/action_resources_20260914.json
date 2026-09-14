@@ -1,0 +1,52 @@
+{
+  "version": "2026-09-14",
+  "status": "PRODUCTION_FROZEN",
+  "resources": {
+    "VITALITY": {
+      "naturalMax": 50,
+      "hardCap": 500,
+      "recoveryAmount": 1,
+      "recoveryIntervalSeconds": 360,
+      "entryCost": null
+    },
+    "PVP_POINT": {
+      "naturalMax": 5,
+      "hardCap": 5,
+      "recoveryAmount": 1,
+      "recoveryIntervalSeconds": 7200,
+      "entryCost": 1,
+      "practiceCost": 0
+    },
+    "RAID_POINT": {
+      "naturalMax": 5,
+      "hardCap": 5,
+      "recoveryAmount": 1,
+      "recoveryIntervalSeconds": 7200,
+      "entryCost": 1,
+      "firstEntryCost": 0
+    }
+  },
+  "questCosts": {
+    "EASY": 3,
+    "NORMAL": 10,
+    "HARD": 20
+  },
+  "recoveryItems": {
+    "ENERGY_DRINK": {
+      "resource": "VITALITY",
+      "amount": 50,
+      "rejectAboveHardCap": true
+    },
+    "PVP_POINT_TICKET": {
+      "resource": "PVP_POINT",
+      "amount": 1,
+      "rejectAtMax": true
+    },
+    "RAID_POINT_TICKET": {
+      "resource": "RAID_POINT",
+      "amount": 1,
+      "rejectAtMax": true
+    }
+  },
+  "authorityGaps": []
+}

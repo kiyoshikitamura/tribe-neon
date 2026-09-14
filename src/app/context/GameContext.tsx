@@ -16,6 +16,7 @@ import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { CANONICAL_EQUIPMENT_VIEW } from "@/utils/equipments_master_data";
 import { getCanonicalSkillIcon } from "@/utils/skillVisualAssets";
 import {
+  VITALITY_MAX,
   TEST_SKILL_ID,
   CHARACTERS_MASTER,
   BASE_MAP_MASTER,
@@ -222,7 +223,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [raidFirstEntryFree, setRaidFirstEntryFree] = useState<boolean>(true);
   const [cash, setCash] = useState<number>(2600);
   const [diamonds, setDiamonds] = useState<number>(200);
-  const [vitality, setVitality] = useState<number>(100);
+  const [vitality, setVitality] = useState<number>(VITALITY_MAX);
   const [vitalityNextRecoveryAt, setVitalityNextRecoveryAt] = useState<string | null>(null);
   const [questSkipsAuthorityOwner, setQuestSkipsAuthorityOwner] = useState<string | null>(null);
   useEffect(() => { setQuestSkipsAuthorityOwner(null); }, [session?.user?.id]);

@@ -3,7 +3,7 @@
 import { CANONICAL_CHARACTERS, CANONICAL_EQUIPMENTS, CANONICAL_MISSIONS, CANONICAL_RAID_BOSSES, CANONICAL_SKILLS } from "../../domain/gameplay/canonical/masters.ts";
 import { canonicalCharacterStats, canonicalEquipmentFlatStat, canonicalEquipmentLevelCap, canonicalSkillSlotCount } from "../../domain/gameplay/canonical/calculations.ts";
 import { applyCharacterAwakeningCopyEquivalent } from "../../domain/gameplay/canonical/awakening.ts";
-import { applyFrozenUserXp, canUseEnergyDrink, recoverCanonicalResource } from "../../domain/gameplay/canonical/action_resources.ts";
+import { CANONICAL_ACTION_RESOURCES, applyFrozenUserXp, canUseEnergyDrink, recoverCanonicalResource } from "../../domain/gameplay/canonical/action_resources.ts";
 import { CANONICAL_QUESTS, canonicalQuestById, generateCanonicalQuestEncounter, rollCanonicalQuestItems } from "../../domain/gameplay/canonical/quests.ts";
 import { parseCanonicalEffects } from "../../domain/battle/canonical_effects.ts";
 import { DEFAULT_OPERATIONS_STATE, type OperationsFeatureKey } from "../../domain/operations/operations.ts";
@@ -1354,16 +1354,14 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (!patrol || !isServerComplete || !patrol.has_battle_event || patrol.battle_resolved) {
       return { data: null, error: { message: "eligible patrol encounter not found", code: "P0002" } };
     }
+    const owned = client.getStorage("user_characters") || [];
+    const formation = (client.getStorage("user_main_formations") || [])
+      .filter((entry: any) => entry.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+    const roster = formation.map((slot: any) => owned.find((entry: any) =>
+      entry.id === slot.user_character_id && entry.user_id === userId)).filter(Boolean);
+    if (!roster.length || roster.length > 5) return { data: null, error: { message: "battle formation has no supported owned character", code: "23514" } };
     patrol.status = "CLAIMABLE";
     client.setStorage("user_patrols", patrols);
-    const owned = client.getStorage("user_characters") || [];
-    const decks = client.getStorage("pvp_defense_decks") || [];
-    const deck = decks.find((entry: any) => entry.user_id === userId);
-    const deckIds = deck ? [deck.character_1_id, deck.character_2_id, deck.character_3_id, deck.character_4_id, deck.character_5_id].filter(Boolean) : [];
-    const roster = deckIds.length
-      ? deckIds.map((id: string) => owned.find((entry: any) => entry.id === id && entry.user_id === userId)).filter(Boolean)
-      : owned.filter((entry: any) => entry.user_id === userId && entry.character_id === patrol.character_id).slice(0, 1);
-    if (!roster.length) return { data: null, error: { message: "battle formation has no supported owned character", code: "23514" } };
     const equipments = client.getStorage("user_equipments") || [];
     const equippedSkills = client.getStorage("user_skills") || [];
     const playerSnapshot = roster.map((character: any) => {
@@ -2192,7 +2190,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const user = users.find((entry: any) => entry.id === currentUserId);
     if (!user) return { data: null, error: { message: "User not found" } };
     const now = Date.now();
-    const vitality = recoverCanonicalResource(Number(user.vitality ?? 100), new Date(user.vitality_last_recovered_at ?? now).getTime(), now, "VITALITY");
+    const vitality = recoverCanonicalResource(Number(user.vitality ?? CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax), new Date(user.vitality_last_recovered_at ?? now).getTime(), now, "VITALITY");
     const pvp = recoverCanonicalResource(Number(user.pvp_points ?? 5), new Date(user.pvp_points_last_recovered_at ?? now).getTime(), now, "PVP_POINT");
     const raid = recoverCanonicalResource(Number(user.raid_points ?? 5), new Date(user.raid_points_last_recovered_at ?? now).getTime(), now, "RAID_POINT");
     user.vitality = vitality.value;
@@ -2209,7 +2207,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       out_cash: Number(user.cash || 0),
       out_diamonds: Number(user.neon_diamonds || user.diamonds || 0),
       raid_first_entry_free: !Boolean(user.raid_free_entry_consumed),
-      vitality_next_recovery_at: vitality.value < 100 ? new Date(vitality.lastRecoveredAtMs + 360_000).toISOString() : null,
+      vitality_next_recovery_at: vitality.value < CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax ? new Date(vitality.lastRecoveredAtMs + 360_000).toISOString() : null,
       pvp_next_recovery_at: pvp.value < 5 ? new Date(pvp.lastRecoveredAtMs + 7_200_000).toISOString() : null,
       raid_next_recovery_at: raid.value < 5 ? new Date(raid.lastRecoveredAtMs + 7_200_000).toISOString() : null,
     }, error: null };
@@ -2441,7 +2439,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       avatar_url: p_character_id === "char_reiji_01" ? "/characters/reiji_transparent_asset.png" : p_character_id === "char_rui_01" ? "/characters/rui_transparent_asset.png" : p_character_id === "char_chang_01" ? "/characters/chang_transparent_asset.png" : "/characters/reiji_transparent_asset.png",
       cash: 2600,
       neon_diamonds: 200,
-      vitality: 100,
+      vitality: CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax,
       pvp_points: 5,
       sound_settings: { bgm: true, se: true },
       current_base_id: p_area_id === "shinjuku" ? "shinjuku" : p_area_id,
@@ -2603,7 +2601,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       avatar_url: "/characters/reiji_transparent_asset.png",
       cash: 2600,
       neon_diamonds: 200,
-      vitality: 100,
+      vitality: CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax,
       pvp_points: 5,
       current_base_id: "shinjuku",
       favorite_character_id: null,
@@ -3406,7 +3404,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("user_missions", missions);
     const users = client.getStorage("users") || [];
     const user = users.find((row: any) => row.id === userId);
-    if (user) Object.assign(user, { level: 1, xp: 0, cash: 2600, neon_diamonds: 200, diamonds: 0, vitality: 100, pvp_points: 5, raid_points: 5, favorite_character_id: null, current_base_id: "shinjuku" });
+    if (user) Object.assign(user, { level: 1, xp: 0, cash: 2600, neon_diamonds: 200, diamonds: 0, vitality: CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax, pvp_points: 5, raid_points: 5, favorite_character_id: null, current_base_id: "shinjuku" });
     client.setStorage("users", users);
     const progressRows = client.getStorage("tutorial_progress") || [];
     const progress = progressRows.find((row: any) => row.user_id === userId);
@@ -4340,6 +4338,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       battle_resolved: false,
       encounter_snapshot: encounterSnapshot,
     });
+    if (user.vitality >= CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax) {
+      user.vitality_last_recovered_at = new Date().toISOString();
+    }
     user.vitality -= costVitality;
     client.setStorage("users", users);
     client.setStorage("user_patrols", patrols);

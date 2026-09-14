@@ -1,5 +1,6 @@
 export { RAID_BOSS_ID, TEST_SKILL_ID, ENEMIES_MASTER } from "@/constants/enemies";
 import { CANONICAL_CHARACTERS } from "@/domain/gameplay/canonical/masters";
+import { CANONICAL_ACTION_RESOURCES } from "@/domain/gameplay/canonical/action_resources";
 import { CANONICAL_QUESTS } from "@/domain/gameplay/canonical/quests";
 
 export const CHARACTERS_MASTER = CANONICAL_CHARACTERS.map((character) => ({
@@ -22,7 +23,7 @@ export const CHARACTER_AWAKENING_MASTER = [
   { awakening_level: 5, required_cash: 50000, dupe_required: 1 },
 ] as const;
 
-export const VITALITY_MAX = 100;
+export const VITALITY_MAX = CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax;
 export const VITALITY_OVERFLOW_MAX = 500;
 export const VITALITY_RECOVERY_INTERVAL_SEC = 360; // 6分 = 360秒
 export const VITALITY_RECOVERY_AMOUNT = 1;

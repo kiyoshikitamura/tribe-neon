@@ -591,7 +591,7 @@ async function runBattleStart(context: BattleStartContext,
       setGvgTargetBaseId(null);
     }
 
-    // PvP preparation and commit are two separate UI phases. Both must read the
+    // Quest, PvP and Raid preparation/commit must read the
     // same server-owned Main Formation instead of re-reading mutable patrol UI
     // state, otherwise the commit phase can replace a visible deck with zero
     // participants.
@@ -601,7 +601,7 @@ async function runBattleStart(context: BattleStartContext,
     let battleUserEquipments = userEquipmentsList;
     const retryCharacters = roomBriefing ? roomAttemptRef.current?.characters() : null;
     if (retryCharacters) party = retryCharacters;
-    if ((mode === "PVP" || mode === "RAID") && !retryCharacters) {
+    if ((mode === "PATROL" || mode === "PVP" || mode === "RAID") && !retryCharacters) {
       const { data: mainFormation, error: mainFormationError } = await supabase.rpc("get_current_main_formation");
       if (staleRoomUser()) return;
       const canonicalParty = Array.isArray(mainFormation?.characters)

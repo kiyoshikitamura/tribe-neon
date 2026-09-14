@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { applyFrozenUserXp, canUseActionResourceTicket, canUseEnergyDrink, recoverCanonicalResource } from "../src/domain/gameplay/canonical/action_resources.ts";
 
 const levels = JSON.parse(await readFile("src/domain/gameplay/canonical/data/user_level_progression_20260822.json", "utf8"));
-const resources = JSON.parse(await readFile("src/domain/gameplay/canonical/data/action_resources_20260822.json", "utf8"));
+const resources = JSON.parse(await readFile("src/domain/gameplay/canonical/data/action_resources_20260914.json", "utf8"));
 const activation = JSON.parse(await readFile("src/domain/gameplay/canonical/data/activation_budget_20260822.json", "utf8"));
 assert.equal(levels.levels.length, 100);
 assert.deepEqual(levels.levels.slice(0, 7).map((row) => row.requiredExp), [100, 150, 200, 250, 300, 350, 400]);
@@ -17,8 +17,8 @@ for (let level = 8; level < 100; level += 1) {
   assert.equal(levels.levels[level - 1].requiredExp, Math.floor((600 + 100 * x + 25 * x * x + 24) / 50) * 50);
 }
 assert.equal(levels.levels[99].requiredExp, 0);
-assert.deepEqual(resources.questCosts, { EASY: 5, NORMAL: 10, HARD: 15 });
-assert.equal(resources.resources.VITALITY.naturalMax, 100);
+assert.deepEqual(resources.questCosts, { EASY: 3, NORMAL: 10, HARD: 20 });
+assert.equal(resources.resources.VITALITY.naturalMax, 50);
 assert.equal(resources.resources.VITALITY.hardCap, 500);
 assert.equal(resources.resources.VITALITY.recoveryIntervalSeconds, 360);
 assert.equal(resources.resources.PVP_POINT.naturalMax, 5);
@@ -39,7 +39,7 @@ assert.deepEqual(applyFrozenUserXp(99, 0, levels.levels[98].requiredExp), { leve
 assert.deepEqual(applyFrozenUserXp(100, 999, 5000), { level: 100, xp: 0, leveledUp: false });
 assert.deepEqual(applyFrozenUserXp(101, 999, 5000), { level: 101, xp: 999, leveledUp: false });
 assert.deepEqual(applyFrozenUserXp(1, 0, 99_999_999), { level: 100, xp: 0, leveledUp: true });
-assert.deepEqual(recoverCanonicalResource(99, 0, 360_000, "VITALITY"), { value: 100, recovered: 1, lastRecoveredAtMs: 360_000 });
+assert.deepEqual(recoverCanonicalResource(49, 0, 360_000, "VITALITY"), { value: 50, recovered: 1, lastRecoveredAtMs: 360_000 });
 assert.deepEqual(recoverCanonicalResource(120, 0, 3_600_000, "VITALITY"), { value: 120, recovered: 0, lastRecoveredAtMs: 0 });
 assert.deepEqual(recoverCanonicalResource(3, 0, 14_400_000, "PVP_POINT"), { value: 5, recovered: 2, lastRecoveredAtMs: 14_400_000 });
 assert.deepEqual(recoverCanonicalResource(4, 0, 7_200_000, "RAID_POINT"), { value: 5, recovered: 1, lastRecoveredAtMs: 7_200_000 });
