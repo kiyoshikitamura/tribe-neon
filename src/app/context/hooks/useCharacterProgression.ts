@@ -509,8 +509,8 @@ export function useCharacterProgression(
   const handleEquipSkillBulkRecommended = async (characterDbId: string, masterCharId?: string, options: OwnedUpgradeOptions = {}) => {
     if (!session || !characterDbId) return;
     const targetCharacter = userCharactersDbList.find((character: any) => character.id === characterDbId);
-    const resolvedMasterCharId = masterCharId || targetCharacter?.character_id;
-    if (!resolvedMasterCharId) {
+    const resolvedMasterCharId = targetCharacter?.character_id;
+    if (!targetCharacter || !resolvedMasterCharId || (masterCharId && masterCharId !== resolvedMasterCharId)) {
       setErrorMessage("装備先のキャラクターが見つかりません。");
       return false;
     }
@@ -522,9 +522,7 @@ export function useCharacterProgression(
         if (s.equipped_character_id && s.equipped_character_id !== characterDbId) return false;
         const master = CANONICAL_SKILL_VIEW.find((m: any) => m.id === s.skill_card_id);
         if (!master) return false;
-        const skillNumber = Number(s.skill_card_id?.match(/\d+$/)?.[0]);
-        if (!Number.isInteger(skillNumber) || skillNumber < 1 || skillNumber > 50) return false;
-        if (master.is_exclusive && master.exclusive_character_id && master.exclusive_character_id !== resolvedMasterCharId) return false;
+        if (master.is_exclusive && master.exclusive_character_id !== resolvedMasterCharId) return false;
         return true;
       }).sort((a: any, b: any) => {
         const mA = CANONICAL_SKILL_VIEW.find((m: any) => m.id === a.skill_card_id);
@@ -544,9 +542,15 @@ export function useCharacterProgression(
       const selectedSlotIndexes: number[] = [];
 
       const maxSlots = canonicalSkillSlotCount(Math.max(0, Math.min(5, targetCharacter?.awakening_level || 0)));
-      for (let i = 0; i < Math.min(availableSkills.length, maxSlots); i++) {
-        selectedSkillUuids.push(availableSkills[i].id);
-        selectedSlotIndexes.push(i);
+      let exclusiveSelected = false;
+      for (const skill of availableSkills) {
+        if (selectedSkillUuids.length >= maxSlots) break;
+        const master = CANONICAL_SKILL_VIEW.find((entry: any) => entry.id === skill.skill_card_id);
+        if (master?.is_exclusive && exclusiveSelected) continue;
+        if (selectedSkillUuids.includes(skill.id)) continue;
+        selectedSlotIndexes.push(selectedSkillUuids.length);
+        selectedSkillUuids.push(skill.id);
+        if (master?.is_exclusive) exclusiveSelected = true;
       }
 
       if (selectedSkillUuids.length > 0) {
@@ -562,7 +566,7 @@ export function useCharacterProgression(
         if (options.refresh !== false) await syncBootstrapData(session.user.id);
         return true;
       } else {
-        setErrorMessage("装備できるOpen Beta対応スキルがありません。");
+        setErrorMessage("装備できる所持スキルがありません。");
         return false;
       }
     } catch (err) {

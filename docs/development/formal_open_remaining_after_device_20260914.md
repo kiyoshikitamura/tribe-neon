@@ -78,8 +78,16 @@ Season間PvP・報酬数量・新規Cosmetic登録・連続在籍7日・旧POWER
 |---|---|---|
 | 覚醒の書：別キャラへ続けて使えない | 対象所持IDを無視した旧Leader/global判定を修正。操作テスト・実RPC rollback検証PASS | 新PreviewのA→B操作受入 |
 | 装備／スキルLB確認 | 別対象への応答誤反映・旧段階参照・装備の誤CASH制限を修正。canonical必要パーツ表示。操作テスト・実RPC rollback検証PASS | 対象切替とreload受入 |
-| おすすめスキル | 旧一括導線消失、現個別処理の旧ID制限を特定。要望監査済み | 個別おすすめスキル導線案の仕様確定後に実装 |
+| おすすめスキル | 旧一括導線消失、現個別処理の旧ID制限を特定。要望監査済み | 追加承認済み・V2育成→スキルに実装。旧ID制限撤去、専用最大1・他キャラ保持・解放枠を検証。実機は残件とまとめる |
 | Raid拠点別報酬 | 現Previewは拠点差なし。要望監査済み | 拠点別品目・数量・討伐／救援の適用範囲確定 |
 | 地元一致ボーナス | 現式・最大例を監査。二重適用ではなく固定加算の影響。数値変更なし | CASH／Dropの係数・上限、進行中Questの適用境界を別スレッドで決定 |
 
 根拠: growth_target_switch_fix_20260914.md、hometown_bonus_audit_20260914.md、recommendation_and_raid_reward_requests_20260914.md。
+
+### おすすめスキル追加（承認後）
+- 基準SHA: 8f6649c81214d0afd5124bd9b068f36177bcbcaf。
+- V2「育成→スキル」に専用ボタンを追加。所持キャラの正式IDで候補判定し、現行canonical全IDを候補にする。専用最大1個、他キャラ使用中保持、解放枠、既存優先順位を維持。
+- 変更handlerをV8内で型注釈のみ除去して実行し、新ID／専用重複／他キャラ使用中／枠数／候補なし／不正対象／再同期を検証PASS。
+- ローカルexec-server起動不可。ローカル型・build未実行。Preview配信側の検証結果をcommit statusで管理。
+- 覚醒・LBと今回の実機確認は他の残件確認時にまとめる。地元一致・Raid報酬は別スレッドで整理し、ここでは変更しない。
+- DB Migrationなし。Production: NOT EXECUTED。
