@@ -6,7 +6,7 @@ import { useMissionClock } from "@/hooks/useMissionClock";
 
 import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { flushSync } from "react-dom";
-import { supabase } from "@/utils/supabase";
+import { supabase, usingMockSupabase } from "@/utils/supabase";
 import { billingFetch, billingRequestId, clearBillingRequest } from "@/utils/billing_client";
 import { loadRaidActivity } from "@/domain/raidRoomActivity";
 import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
@@ -1617,11 +1617,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setAvatarPartsMaster(partsMasterList);
       }
 
-      const { data: guildMemberRec } = await supabase
+      const { data: guildMemberRec, error: guildMemberError } = await supabase
         .from("guild_members")
         .select("*")
         .eq("user_id", userId)
-        .single();
+        .maybeSingle();
+      if (guildMemberError) throw guildMemberError;
 
       if (guildMemberRec) {
         setGuildDiscoveryState("pending");
@@ -1898,11 +1899,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setMyPvpDefenseDeck(deckData);
       }
 
-      const { data: storyData } = await supabase
+      const { data: storyData, error: storyError } = await supabase
         .from("story_sessions")
         .select("*")
         .eq("user_id", userId)
-        .single();
+        .maybeSingle();
+      if (storyError) throw storyError;
       
       if (storyData && (storyData.status === "INTRO_TALK" || storyData.status === "OUTRO_TALK")) {
         setActiveStorySession({
@@ -2203,15 +2205,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // 🛡️ 戦闘セッション復帰 (Resume) ロジック
       // ==========================================
       const pendingRoomHandled = await battle.resumePendingRaidRoomBattle();
-      const { data: activeBattleSession } = await supabase
-        .from("battle_sessions")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("status", "ACTIVE")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (!pendingRoomHandled && activeBattleSession) battle.resumeBattleSession(activeBattleSession, localCharIds);
+      // Live battles recover from canonical replays / Raid request records.
+      // The retired client snapshot table exists only in the explicit Mock client.
+      if (usingMockSupabase && !pendingRoomHandled) {
+        const { data: activeBattleSession } = await supabase
+          .from("battle_sessions")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("status", "ACTIVE")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (activeBattleSession) battle.resumeBattleSession(activeBattleSession, localCharIds);
+      }
 
       const { data: newsData } = await supabase
         .from("news")

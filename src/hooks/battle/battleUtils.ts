@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/utils/supabase";
+import { supabase, usingMockSupabase } from "@/utils/supabase";
 import { ParticipantState } from "./battleTypes";
 
 export async function postNpcYajiMessage(
@@ -50,6 +50,7 @@ export async function saveBattleSessionState(
   tlIdx: number,
   gvgAreaId: string | null
 ) {
+  if (!usingMockSupabase) return;
   try {
     await supabase.from("battle_sessions").update({
       player_state: { playerStates, ap: apVal, maxAp: maxApVal, tactic: tacticVal, log: logs, timelineIndex: tlIdx, gvgAreaId },

@@ -7,7 +7,7 @@ import { createRaidRoomBattleAttempt } from "../domain/raidRoomBattleAttempt";
 
 
 import { useRef, useState, useEffect, useLayoutEffect, useCallback, type RefObject, type Dispatch, type SetStateAction } from "react";
-import { supabase } from "@/utils/supabase";
+import { supabase, usingMockSupabase } from "@/utils/supabase";
 import {
   CHARACTERS_MASTER,
   ENEMIES_MASTER
@@ -1463,8 +1463,8 @@ async function runBattleStart(context: BattleStartContext,
 
     if (staleRoomUser()) return;
     let roomCompatibilitySaved = false;
-    // 旧セッションは中断再開の互換用。再生UI移行後に廃止する。
-    if (mode !== "PVP_PRACTICE" && !prepareOnly) try {
+    // Client snapshot compatibility belongs to Mock only; live recovery uses canonical records.
+    if (usingMockSupabase && mode !== "PVP_PRACTICE" && !prepareOnly) try {
       const existingRoomSession = roomBriefing && officialRaidReplayIdForBattle
         ? await supabase.from("battle_sessions").select("id").eq("user_id", startingRoomUserId)
             .eq("status", "ACTIVE").eq("player_state->>officialRaidReplayId", officialRaidReplayIdForBattle).maybeSingle()
@@ -1796,6 +1796,9 @@ export function useBattle(options: UseBattleOptions) {
           }
         }
       }
+
+      // No legacy fallback on live DB: Quest and Raid recovery above are authoritative.
+      if (!usingMockSupabase) return false;
 
       const { data: activeSessions, error } = await supabase
         .from("battle_sessions")
@@ -3207,15 +3210,16 @@ export function useBattle(options: UseBattleOptions) {
       return;
     }
 
-    if (battleSessionId) {
+    if (usingMockSupabase && battleSessionId) {
       await supabase.from("battle_sessions").update({ status: finalResult }).eq("id", battleSessionId);
     }
 
-    const { data: tutorialSession } = await supabase
+    const { data: tutorialSession, error: tutorialSessionError } = await supabase
       .from("story_sessions")
       .select("*")
       .eq("user_id", session.user.id)
-      .single();
+      .maybeSingle();
+    if (tutorialSessionError) console.warn("Failed to load story session:", tutorialSessionError);
 
     if (modeTemp !== "PATROL" && tutorialSession && tutorialSession.stage_id === "stage_tutorial_01" && tutorialSession.status === "BATTLE") {
       if (isWin) {
