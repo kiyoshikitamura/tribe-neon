@@ -19,7 +19,7 @@ export default function UserIdentityRow({ userName, guildName, guildId, title, l
     {identityReady
       ? <UserAvatar characterId={leaderCharacterId} src={leaderImageSrc} alt={`${userName}のリーダー`} className="user-identity-leader-face" />
       : <span className="user-identity-leader-loading" role="status" aria-label="リーダーを読み込み中" />}
-    <span><strong>{userName}</strong>{guildName ? <small><GuildIdentity guildId={guildId} name={guildName} /></small> : <small>未所属</small>}{title ? <small>{title}</small> : null}</span>
+    <span><strong>{userName}</strong>{guildName ? <small className="user-identity-guild"><GuildIdentity guildId={guildId} name={guildName} /></small> : <small>未所属</small>}{title ? <small>{title}</small> : null}</span>
   </>;
   return onOpen
     ? <button type="button" className={`user-identity-row is-${variant}`} onClick={onOpen} aria-label={`${userName}のプロフィールを開く`}>{content}</button>

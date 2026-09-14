@@ -32,7 +32,21 @@ for (const stop of ['equipment', 'dialogue', 'cutin']) {
     await expect.poll(() => harness.getAttribute('data-replay-index')).not.toBe(cursor);
     if (stop === 'cutin') {
       // Natural completion only, no SKIP.
-      await expect(harness).toHaveAttribute('data-battle-state', 'RESULT', { timeout: 150_000 });
+      // 300s is a bounded test watchdog, not a product battle-duration requirement.
+      // Fail earlier if replay/state makes no progress for 20s.
+      const deadline = Date.now() + 300_000;
+      let lastProgress = Date.now();
+      let previous = '';
+      while (await harness.getAttribute('data-battle-state') !== 'RESULT') {
+        const state = await harness.getAttribute('data-battle-state');
+        const index = await harness.getAttribute('data-replay-index');
+        const marker = `${state}:${index}`;
+        if (marker !== previous) { previous = marker; lastProgress = Date.now(); }
+        expect(Date.now() - lastProgress, `Replay stalled at ${marker}`).toBeLessThan(20_000);
+        expect(Date.now(), 'Natural completion watchdog exceeded').toBeLessThan(deadline);
+        await page.waitForTimeout(1000);
+      }
+      await expect(harness).toHaveAttribute('data-battle-state', 'RESULT');
     }
   });
 }

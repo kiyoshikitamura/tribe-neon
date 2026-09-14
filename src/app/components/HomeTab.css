@@ -630,6 +630,9 @@
 .mypage-live-ticker .user-identity-row.is-compact > .character-presentation { width:30px;height:30px; }
 .mypage-live-ticker .user-identity-row strong { font-size:10px; }
 .mypage-live-ticker .user-identity-row small { display:none; }
+.mypage-live-ticker .user-identity-row .user-identity-guild { display:block;min-width:0;line-height:16px; }
+.mypage-live-ticker .user-identity-guild .guild-identity-label { display:flex;gap:3px; }
+.mypage-live-ticker .user-identity-guild .guild-emblem { width:16px;height:16px; }
 @keyframes mypage-activity-enter { from { opacity:0;transform:translateX(-18px); } to { opacity:1;transform:translateX(0); } }
 
 .canonical-dialog-overlay:has(.mypage-activity-log){isolation:isolate;background:rgba(0,0,0,.84);animation:none}
