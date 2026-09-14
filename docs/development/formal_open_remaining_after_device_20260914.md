@@ -18,12 +18,12 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | 課金商品 | 承認済み4pack/6DIA/10DIA交換とPreview DB一致 | 商品を再作成・再適用しない |
 | 課金available:false | 商品catalog不一致は除外。配信環境検証/ServiceRole照会の失敗箇所は未確定 | 対象配信環境で既存check_sandbox_environment.mjs --remote-catalog。秘密値ではなく判定結果を取得 |
 | Stripe Sandbox | Checkout→戻り→受取、再送・取消等の実接続受入が未完了 | 配信環境診断完了後、Sandbox E2E。実課金を実行しない |
-| Character/Equipment EXP | 素材effectValueあり、必要EXP曲線の正式出典未回収 | 別スレッドから承認済みLv別必要EXP表/式を回収 |
+| Character/Equipment EXP | 9/14本流で必要EXP・成長指数の実装候補本文受領。累計118400/78450一致。現行RPC/列/能力計算READ ONLY監査済み | exp_growth_implementation_candidate_20260914.mdを基準に混合atomic RPC・xp・UIを実装。cap到達時の余剰EXP扱いを確定。Human acceptance前提 |
 | Guild tenure | 9/14本流で加入日Day1確定。JST日付差+1をMission同期へ接続 | Preview検証結果はguild_tenure_day_origin_decision_20260914.md参照。Production未反映 |
 | 売上KPI | Preview refresh_kpi_revenueも未実装stub | 別スレッドからF10–F13/PURの計上時刻、分母、返金、QA/Sandbox除外定義を回収 |
 | Season切替 | Claim/1位限定Emblemの定義準備済み。実切替なし | インターバルPvP/Rate/Wins、POWER/GUILD_POWERの新Season契約を確定 |
-| ガチャPool差異 | 別スレッドで相違発見済みだが訂正対象の承認本文未回収 | カテゴリ/ガチャ種別/対象ID/期待Poolの訂正表を回収 |
-| 素材統合 | 制作終了と受入素材の配信統合完了は別 | 既存の未取得eye/emblem素材がある場合のみ正本との一致・包含を確認 |
+| ガチャPool差異 | 仕様FIX済み。monetization_release_20260912.mdとPreviewに確率・汎用/専用Poolあり。未定義/データなしという整理を訂正 | 本流の統合監査で収録ID・属性・提供割合表示・実抽選処理を照合。別スレッド起票不要 |
+| 素材統合 | manifest/正規化ZIP/eye previewの3ファイル受領済み。ローカル実行環境障害で内容未読・未統合 | 環境復旧後に添付と参照先を照合して統合。実機確認は残件とまとめる |
 
 ## 再適用禁止のPreview課金Migration対応
 
@@ -34,7 +34,7 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | 20260913120945 billing_dia_approved_contract | 20260913123800 |
 
 ## Authority確認の補足
-- EXP: specs/spec_progression.mdのlevel*100はPlayer用。Character/Equipmentへ転用不可。
+- EXP: 9/14ユーザー提示の実装候補をspecs/exp_growth_implementation_candidate_20260914.mdに記録。specs/spec_progression.mdのlevel*100はPlayer用で転用不可。
 - EquipmentのPRODUCTION_FROZENデータは能力倍率/Lv capであり必要EXP表ではない。
 - 提案744000/93000を承認値として採用しない。素材所持数や既存Lvの補正をしない。
 - Guild加入はguild_members INSERT、脱退はDELETE+last_guild_left_at更新。再加入24時間制約は維持。ログイン回数の加算cronで代用しない。
@@ -43,4 +43,4 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 
 ## 現在の制約と停止点
 作業環境exec-server停止。GitHub/Supabase read-only監査とGitHub経由Preview buildは可能。対象Vercel teamへの接続は403のため配信設定診断は不可。再認証依頼を繰り返さず、この制約を明示する。
-公開準備完了とは判定しない。上記未確定値の創作、Production公開、Season実リセット、運営告知配信は行わない。
+公開準備完了とは判定しない。未確定のcap余剰EXPやKPI/Season規則の創作、Production公開、Season実リセット、運営告知配信は行わない。
