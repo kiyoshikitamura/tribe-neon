@@ -29,3 +29,7 @@ export function missionEventPriority(mission: MissionAvailability, now: number):
 export function needsMissionGuild(mission: { ctaTab?: string; ctaAction?: string; triggerType?: string }): boolean {
   return mission.ctaTab === "guild" || mission.ctaAction === "guild_chat" || String(mission.triggerType || "").startsWith("GUILD");
 }
+
+export function missionVisible(mission: MissionAvailability & { category?: string }, now: number): boolean {
+  return mission.category !== "SPECIAL" || !missionClaimExpired(mission, now);
+}

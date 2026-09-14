@@ -27,27 +27,24 @@ Blockerを残したままの日付優先リリースは禁止する。特に育�
 
 ## 2. Release Authority / 作業ルール
 
-### 2.1 親SHA
+### 2.1 統合基準（2026-09-14 本流の最新承認で更新）
 
-作業開始時に、実際の `www.tribe-neon.com` Productionから次を取得して記録する。
-
-- Current Production SHA：`未取得（作業開始時に記録）`
-- Deployment ID：`未取得（作業開始時に記録）`
-- Production branch / ref：`未取得（作業開始時に記録）`
-- branch ancestry：Current Production SHAをancestorに持つこと
-- working tree：開始時とCandidate作成時の両方を確認
-
-Current Production SHAを親にしない stale branch / stale candidateは禁止する。CandidateがProduction SHAのancestorを持たない場合はBLOCKとする。
+- 作業基準: `661dfd3d4ed2de3ca0420185f18537be5e34baa9` + 受入Authorityを確認したProduction差分。
+- Production照合先: `dpl_6DFs3ee9hzRqQdC6D8nensQdNZ4y` / `44e43ee43c358b3bbe0b5dce64e538453581ba36`（ユーザー提供）。
+- 本番Git objectを取得できないため、本番SHAのancestor条件を再開条件にしない。代替方式はユーザー承認済み。
+- 本番で配信されている事実だけで受入Authorityとしない。未確認差分は「本番上では確認できるが未確認」として統合しない。
+- Activity/Bannerは依存するRPC/DB/Feature Flag等まで照合する。コードだけの一致で本番同等と断定しない。
+- 候補SHA・継承した差分・未確認差分を `preview_integration_authority_20260914.md` および本流報告に記録する。
 
 ### 2.2 Preview first
 
-- Current Production SHAを親にCandidateを作成する。
+- 上記承認基準を祖先に持つ専用Candidateで作業する。
 - 専用PreviewとPreview DBで実装・実UI Acceptanceを行う。
-- Production DBは変更しない。
-- Production反映は、Release Gateの全条件がPASSし、別途Go判定が出るまで行わない。
+- Production DBは変更しない。Production反映は別途明示承認まで実施しない。
 - 最近受入済みのRaid / Activity / Banner / Chat / Rankingを巻き戻さない。
 - 既存のTrigger / RPC / RLSを意図せずdropしない。
 - 今回必要なMigrationだけを追加し、既存ユーザー資産を没収・勝手に補正しない。
+- 自動テスト・fixtureブラウザ確認と、実ゲーム動作・本人実機デザイン受入を区別する。
 
 ### 2.3 作業開始時の記録
 

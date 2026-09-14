@@ -7,7 +7,7 @@ import { canonicalMissionRewardName } from "@/domain/gameplay/canonical/missions
 import CanonicalItemIcon from "./ui/CanonicalItemIcon";
 import { missionDisplayText } from "@/domain/presentation/missionTerminology";
 import "./MissionPanel.css";
-import { canClaimMission, missionClaimExpired, missionProgressEnded, missionEventPriority, needsMissionGuild } from "@/domain/mission/availability";
+import { canClaimMission, missionClaimExpired, missionProgressEnded, missionEventPriority, needsMissionGuild, missionVisible } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
 import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 
@@ -92,10 +92,11 @@ export default function MissionPanel() {
     setShowMissionPanel(false);
     navigateTab("home");
   };
-  const beginnerTargets = (missions || []).filter((m: any) => beginnerMissionTargetIds.includes(m.id));
+  const visibleMissions = (missions || []).filter((mission: any) => missionVisible(mission, now));
+  const beginnerTargets = visibleMissions.filter((m: any) => beginnerMissionTargetIds.includes(m.id));
   const isBeginnerTarget = (m: any) => beginnerMissionTargetIds.includes(m.id);
   const statusOrder: Record<string, number> = { CLEAR: 0, IN_PROGRESS: 1, LOCKED: 2, CLAIMED: 3 };
-  const specialRows = (missions || []).filter((m: any) => m.category === "SPECIAL");
+  const specialRows = visibleMissions.filter((m: any) => m.category === "SPECIAL");
   const events = (Array.from(new Map(specialRows.map((m: any) => [m.eventId || "unassigned", m])).values()) as any[])
     .sort((a, b) => {
       const priority = (event: any) => Math.min(...specialRows.filter((m: any) => (m.eventId || "unassigned") === (event.eventId || "unassigned")).map((m: any) => missionEventPriority(m, now)));
@@ -103,13 +104,13 @@ export default function MissionPanel() {
     });
   const activeEventId = events.some(event => (event.eventId || "unassigned") === selectedEventId) ? selectedEventId : (events[0]?.eventId || "unassigned");
   const canClaim = (m: any) => canClaimMission(m, now);
-  const currentMissions = (missions || []).filter((m: any) => m.category === missionTab && (missionTab !== "SPECIAL" || (m.eventId || "unassigned") === activeEventId))
+  const currentMissions = visibleMissions.filter((m: any) => m.category === missionTab && (missionTab !== "SPECIAL" || (m.eventId || "unassigned") === activeEventId))
     .sort((left: any, right: any) => Number(canClaim(right)) - Number(canClaim(left)) || Number(isBeginnerTarget(right)) - Number(isBeginnerTarget(left)) || (statusOrder[left.status] ?? 9) - (statusOrder[right.status] ?? 9) || Number(left.display_order || 0) - Number(right.display_order || 0));
   const clearMissionsCount = currentMissions.filter(canClaim).length;
   const clearCounts = {
-    DAILY: (missions || []).filter((m: any) => m.category === "DAILY" && canClaim(m)).length,
-    NORMAL: (missions || []).filter((m: any) => m.category === "NORMAL" && canClaim(m)).length,
-    SPECIAL: (missions || []).filter((m: any) => m.category === "SPECIAL" && canClaim(m)).length,
+    DAILY: visibleMissions.filter((m: any) => m.category === "DAILY" && canClaim(m)).length,
+    NORMAL: visibleMissions.filter((m: any) => m.category === "NORMAL" && canClaim(m)).length,
+    SPECIAL: visibleMissions.filter((m: any) => m.category === "SPECIAL" && canClaim(m)).length,
   };
   const specialStandardMissions = missionTab === "SPECIAL" ? currentMissions.filter((mission: any) => !mission.isCompletion) : [];
   const specialCompletedCount = specialStandardMissions.filter((mission: any) => mission.status === "CLEAR" || mission.status === "CLAIMED").length;

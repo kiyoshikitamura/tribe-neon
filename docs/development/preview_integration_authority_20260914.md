@@ -7,7 +7,7 @@
 - 照合対象Production: `dpl_6DFs3ee9hzRqQdC6D8nensQdNZ4y`。
 - Production SHA（ユーザー提供）: `44e43ee43c358b3bbe0b5dce64e538453581ba36`。Git object未取得。祖先関係を満たすという旧方式の主張はしない。
 - Preview DB: `sufvuqdnqohpfzkwxohq`。Production DB: `ktpolnkyyfkowxdmijww`（READ ONLY）。
-- 最終統合SHA / Deployment / 実UI受入: 未確定。実装完了とPreview受入を区別する。
+- 第1統合SHA: `112a21377fc384f70d93230439eb64bc3b4d0767`。結果文言修正SHA: `ec6c7d2e0c2917b4923df3af85bf80fcd9325152`。実UI受入は未完了。後続の最終配信SHAは本流報告を参照する。
 - PRODUCTION: NOT EXECUTED。
 
 ## 継承Authority
@@ -72,3 +72,14 @@ Activityの`get_recent_social_activity_feed`、生成関数`on_m9x_gacha_activit
 - PGlite: Raid finalize再送/資格/rollback、AP50/既存overflow保持、Profile Leader/編成独立、Quest実Tutorial wrapper、Gameplay直接配送/装備個体/旧Present/2倍/再送/atomic rollback PASS。
 - 表示fixtureブラウザ確認: 旧Preview Home/Skill/Public Profile、実viewport1363×936・ゲーム枠430px。390px/本人実機未確認。Home fixtureのRPが `/5` となる不足を発見。実データの不具合と断定しない。
 - 本人実機・実ログインの一気通貫受入は未完了。Preview受入完了と宣言しない。
+
+## 残件の後続実装
+
+- `ec6c7d2`: Quest結果、Quest戦闘結果、Raid戦績の旧Present配送案内を直接獲得に修正。Home fixtureのRP欠損を補完。
+- 実機確認依頼先: https://tribe-neon-c81xlzaib-kiyoshi-kitamura.vercel.app / dpl_F1cZUy6JoV95Dq1nBhJuQx6gCq4y。Home/Quest/Skill/Leader/Quest報酬を依頼済み。ユーザー結果待ち。
+- MissionPanelは端末時計の更新でSPECIALの受取期限を越えた行を非表示にする。通常Missionは保持。
+- Preview適用: `20260914112059_formal_open_season_claim_contract.sql` → 実履歴 `20260914112919`。
+- Postflight: event期限filter、終了後completion進捗停止、新規close/first-only RPC、anon/authenticatedの管理RPC拒否、既存イベント日時不変をPASS。
+- 限定Emblem関数は限定ID必須、標準Emblemを拒否。既存no-arg finalizer/cronは変更しない。実際のSeason確定・配布・日時設定は未実行。
+- PvP予約切替の後続migrationは未適用候補。インターバル中のPvP/Rate、POWER/GUILD_POWER新Seasonの残件を混同しない。
+- Guild起算日・売上KPIの仕様回収/判断依頼は独立文書化。未承認の数値・起算日を採用しない。
