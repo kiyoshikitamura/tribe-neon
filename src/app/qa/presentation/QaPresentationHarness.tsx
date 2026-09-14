@@ -568,21 +568,21 @@ function PreviewRealActivityFixture() {
         if (active) setState({ status: "error", activities: [], observedAt: 0, message: "Preview QAへログインしてください。" });
         return;
       }
-      const [{ data: rows, error: feedError }, { data: profiles, error: profileError }] = await Promise.all([
-        supabase.from("social_activity_feed")
-          .select("id,activity_type,actor_user_id,actor_display_name,guild_id,object_master_id,display_payload,permanent,created_at")
-          .eq("actor_user_id", actorId)
-          .order("created_at", { ascending: false })
-          .limit(20),
-        supabase.rpc("get_public_profiles", { p_user_ids: [actorId] }),
-      ]);
+      const response = await fetch(`/api/qa/activity?actor=${encodeURIComponent(actorId)}`, {
+        headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
+        cache: "no-store",
+      });
+      const payload = await response.json().catch(() => null) as null | {
+        activities?: Array<Record<string, unknown>>;
+        profile?: Record<string, unknown>;
+      };
       if (!active) return;
-      if (feedError || profileError) {
+      if (!response.ok || !payload) {
         setState({ status: "error", activities: [], observedAt: 0, message: "実Activityを読み込めませんでした。" });
         return;
       }
-      const profile = Array.isArray(profiles) ? profiles[0] : null;
-      const activities = (Array.isArray(rows) ? rows : []).map((row) => ({
+      const profile = payload.profile || null;
+      const activities = (Array.isArray(payload.activities) ? payload.activities : []).map((row) => ({
         ...row,
         actor_user_id: row.actor_user_id ? String(row.actor_user_id) : null,
         actor_display_name: String(profile?.username || row.actor_display_name || "プレイヤー"),

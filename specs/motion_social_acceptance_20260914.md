@@ -41,8 +41,9 @@ Repository確認結果：全体Chat・Guild ChatはTribeChatModal→UserIdentity
 未所属actorに他GuildのEmblemを表示しない。対象投稿やイベントが存在しない場合は「データ不足」とし、接続済みを実画面PASSへ読み替えない。
 
 QA分類済みactorは通常のActivity取得Authorityから除外されるため、Preview専用の
-`first-home-activity-real` scenarioだけが、ログイン済みQAから指定actorの実Activityを直接読み、
-本体`HomeTab`の最新行・履歴へ渡す。`actor` queryには実UUIDを指定する。
+`first-home-activity-real` scenarioだけが、QA分類済みの認証セッションからPreview限定APIを呼び、
+指定actorの実Activityと実Guild IDを本体`HomeTab`の最新行・履歴へ渡す。
+通常クライアントへActivityテーブル権限を追加しない。`actor` queryには実UUIDを指定する。
 通常の`get_recent_social_activity_feed`、QA除外、KPI分類は変更しない。
 
 ## 報告と公開判定
