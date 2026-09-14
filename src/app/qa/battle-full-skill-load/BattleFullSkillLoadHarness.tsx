@@ -101,7 +101,7 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
   const qaPauseDone = useRef(false);
   const [phase, setPhase] = useState<BattlePresentationPhase>("IDLE");
   const [actionPresentation, setActionPresentation] = useState<BattleActionPresentation | null>(null);
-  const [skillCutIn, setSkillCutIn] = useState<{ charName: string; skillName: string } | null>(null);
+  const [skillCutIn, setSkillCutIn] = useState<{ charName: string; skillName: string; actorId?: string; skillId?: string; actionKey?: number } | null>(null);
   const [targetLine, setTargetLine] = useState<{ fromId: string; toId: string } | null>(null);
   const [shakingId, setShakingId] = useState<string | null>(null);
   const [damagePopup, setDamagePopup] = useState<DamagePopup | null>(null);
@@ -227,7 +227,7 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
         const participant = participants.find((candidate) => candidate.id === id);
         return { id, name: participant?.name ?? "キャラクター", isEnemy: teamById.get(id) === true };
       });
-      setSkillCutIn({ charName: actor?.name ?? "キャラクター", skillName });
+      setSkillCutIn({ charName: actor?.name ?? "キャラクター", skillName, actorId, skillId, actionKey: eventIndex });
       setTargetLine(null);
       setShakingId(null);
       setDamagePopup(null);

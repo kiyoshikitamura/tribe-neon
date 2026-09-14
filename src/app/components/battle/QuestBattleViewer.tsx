@@ -38,7 +38,7 @@ export type QuestBattleViewerProps = {
   actionPresentation?: BattleActionPresentation | null;
   round: number;
   roundLimit?: number;
-  skillCutIn: { charName: string; skillName: string } | null;
+  skillCutIn: { charName: string; skillName: string; actorId?: string; skillId?: string; actionKey?: number } | null;
   targetLine: { fromId: string; toId: string } | null;
   shakingId: string | null;
   damagePopup: (BattleDamagePopup & { charId: string }) | null;
@@ -77,10 +77,10 @@ export default function QuestBattleViewer(props: QuestBattleViewerProps) {
   const allParticipants = [...props.playerParty, ...props.enemyParty];
   const activeTimelineNode = props.actionPresentation
     ? { id: props.actionPresentation.unit.actorId, name: "" }
-    : props.authoritativeTimeline?.[0] || props.timeline[props.timelineIndex] || props.timeline[0];
+    : props.skillCutIn ? { id: props.skillCutIn.actorId, name: "" } : props.authoritativeTimeline?.[0] || props.timeline[props.timelineIndex] || props.timeline[0];
   const explicitActiveParticipant = allParticipants.find((entry) => entry.id === activeTimelineNode?.id);
   const activeParticipant = explicitActiveParticipant
-    || (props.presentationPhase === "IDLE" ? props.playerParty[0] || props.enemyParty[0] : undefined);
+    || (!props.skillCutIn && props.presentationPhase === "IDLE" ? props.playerParty[0] || props.enemyParty[0] : undefined);
   const targetId = props.actionPresentation?.unit.targets[0]?.targetId || props.damagePopup?.charId || props.targetLine?.toId;
   const targetParticipant = targetId ? allParticipants.find((entry) => entry.id === targetId) : undefined;
 

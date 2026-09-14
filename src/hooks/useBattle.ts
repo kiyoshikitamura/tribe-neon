@@ -1684,7 +1684,7 @@ export function useBattle(options: UseBattleOptions) {
   const [battleRound, setBattleRound] = useState<number>(1);
 
   // 演出・ポップアップ
-  const [activeSkillCutIn, setActiveSkillCutIn] = useState<{ charName: string; skillName: string } | null>(null);
+  const [activeSkillCutIn, setActiveSkillCutIn] = useState<{ charName: string; skillName: string; actorId?: string; skillId?: string; actionKey?: number } | null>(null);
   const [targetLine, setTargetLine] = useState<{ fromId: string; toId: string } | null>(null);
   const [activeShakingCharId, setActiveShakingCharId] = useState<string | null>(null);
   const [damagePopup, setDamagePopup] = useState<{ val: number; type: "dmg" | "heal" | "shield"; isCritical?: boolean; x: number; y: number; charId: string } | null>(null);
@@ -2354,6 +2354,8 @@ export function useBattle(options: UseBattleOptions) {
 
     // 演出表示
     setActiveSkillCutIn({
+      actorId: enemy.id,
+      skillId: String(chosenSkill.skill_card_id ?? chosenSkill.skill_id ?? chosenSkill.id ?? ""),
       charName: safeBattleCharacterName(enemy.name),
       skillName: resolveBattleSkillLabel(chosenSkill.skill_card_id ?? chosenSkill.skill_id ?? chosenSkill.id, enemy.skills as Array<Record<string, unknown>>),
     });
@@ -2487,6 +2489,8 @@ export function useBattle(options: UseBattleOptions) {
 
     // 演出設定
     setActiveSkillCutIn({
+      actorId: actor.id,
+      skillId: String(chosenSkill.skill_card_id ?? chosenSkill.skill_id ?? chosenSkill.id ?? ""),
       charName: safeBattleCharacterName(actor.name),
       skillName: resolveBattleSkillLabel(chosenSkill.skill_card_id ?? chosenSkill.skill_id ?? chosenSkill.id, actor.skills as Array<Record<string, unknown>>),
     });
@@ -2643,7 +2647,7 @@ export function useBattle(options: UseBattleOptions) {
           // post-impact remainder a second time between actions.
           ? 80
           : 500 + (playerPartyStatesRef.current.some((member) => exclusiveEquipmentForBattleMember(member.characterId, member.equipmentMasterIds ?? []).length > 0) ? EXCLUSIVE_EQUIPMENT_INTRO_MS : 0)
-        : outcomeUnit
+        : previousReplayEvent?.type === "ACTION"
           ? battlePresentationImpactAt(battleSpeed, previousTier, battleMode !== "RAID" || Boolean(battlePresentationContext?.raidRoomId))
           : replayEvent.type === "EFFECT" && replayEvent.payload.kind === "ACTIVE_EFFECT_SYNC"
             ? 40
@@ -2652,7 +2656,7 @@ export function useBattle(options: UseBattleOptions) {
               : 80;
       // The authoritative cursor waits for dialogue AND cut-in before projecting any outcome.
       const exclusiveSkill = previousActor && previousAction ? exclusiveSkillForBattleMember(previousActor.characterId, String(previousAction.payload.skillId ?? "")) : null;
-      const replayDelay = delay + (outcomeUnit && exclusiveSkill ? EXCLUSIVE_SKILL_PREFIX_MS : 0);
+      const replayDelay = delay + (previousReplayEvent?.type === "ACTION" && exclusiveSkill ? EXCLUSIVE_SKILL_PREFIX_MS : 0);
       const timer = setTimeout(async () => {
         const payload = replayEvent.payload;
         const actorId = String(payload.actorId ?? "");
@@ -2699,7 +2703,7 @@ export function useBattle(options: UseBattleOptions) {
             })
             .filter((entry) => entry.id);
           setAuthoritativeTimeline(nextActions);
-          setActiveSkillCutIn({ charName: actorName, skillName });
+          setActiveSkillCutIn({ charName: actorName, skillName, actorId, skillId, actionKey: authoritativeEventIndex });
           const actorTimelineIndex = timeline.findIndex((entry) => entry.id === actorId);
           if (actorTimelineIndex >= 0) setTimelineIndex(actorTimelineIndex);
           setBattleLog((previous) => [...previous, `[ROUND ${replayEvent.round}] ${actorName}：${skillName}`]);

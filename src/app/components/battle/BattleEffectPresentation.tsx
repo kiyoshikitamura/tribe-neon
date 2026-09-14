@@ -139,12 +139,12 @@ function resolveImpactKind(skill: Record<string, unknown> | undefined): BattleIm
 }
 
 export function resolveBattleSkillPresentation(
-  cutIn: { charName: string; skillName: string } | null,
+  cutIn: { charName: string; skillName: string; actorId?: string; skillId?: string } | null,
   participant?: BattleParticipantView,
 ): BattleSkillPresentation | null {
-  if (!cutIn) return null;
+  if (!cutIn || (cutIn.actorId && cutIn.actorId !== participant?.id)) return null;
   const safeSkillName = isInternalBattleLabel(cutIn.skillName) ? "スキル発動" : cutIn.skillName;
-  const skill = participant?.skills?.find((entry) => String(entry.name ?? "") === safeSkillName);
+  const skill = participant?.skills?.find((entry) => cutIn.skillId ? String(entry.id ?? entry.skill_card_id ?? entry.skill_id ?? "") === cutIn.skillId : String(entry.name ?? "") === safeSkillName);
   const skillId = String(skill?.id ?? skill?.skill_card_id ?? skill?.skill_id ?? "");
   const actorRarity = stringValue(participant?.rarity);
   const isBasicAttack = isBasicAttackPresentation(skillId, safeSkillName);

@@ -29,10 +29,21 @@ test('旧通知の通常攻撃は同じ対象に命中画像と数字を描画�
  assert.equal((s.match(/class="sb-effect"/g)||[]).length,1);assert.match(s,/street-impact.webp/);assert.match(s,/data-battle-number="damage"[^>]*>−150/);assert.ok(s.indexOf('id="e"')<s.indexOf('class="sb-effect"'));assert.doesNotMatch(s,/>SKIP</);
 });
 test('旧通知のスキルは予告を先に出し、命中でカットインを退け、クリア時に画像も消す',()=>{
- const cue={charName:'レイジ',skillName:'スキル発動'};
+ const cue={actorId:'p',charName:'レイジ',skillName:'スキル発動'};
  const cast=renderToStaticMarkup(<QuestBattleViewer {...hitProps} skillCutIn={cue}/>);assert.match(cast,/sb-announcement/);assert.doesNotMatch(cast,/class="sb-effect"/);
  const hit=renderToStaticMarkup(<QuestBattleViewer {...hitProps} skillCutIn={cue} damagePopup={{charId:'e',val:150,type:'dmg'}}/>);assert.match(hit,/class="sb-effect"/);assert.doesNotMatch(hit,/class="sb-announcement/);
  const clear=renderToStaticMarkup(<QuestBattleViewer {...hitProps}/>);assert.doesNotMatch(clear,/class="sb-effect"/);
 });
 test('回復・シールドは打撃画像にしない',()=>{for(const type of ['heal','shield']){const s=renderToStaticMarkup(<QuestBattleViewer {...hitProps} damagePopup={{charId:'p',val:150,type}}/>);assert.doesNotMatch(s,/street-impact.webp/);assert.match(s,/\+150/);}});
 test('通常・RaidのReplayはACTOR/IMPACT/RETURNと対象1件の描画を維持',()=>{for(const battleMode of ['PVP','RAID'])for(const beat of ['ACTOR','IMPACT','RETURN']){const action={unit:{actorId:'p',skillId:'BASIC_ATTACK',replayStartCursor:1,targets:[{targetId:'e',events:[{type:'DAMAGE',index:2,payload:{targetId:'e',amount:150,hpDamage:150,hit:true}}]}]},tier:'NORMAL',beat};const s=renderToStaticMarkup(<QuestBattleViewer {...hitProps} battleMode={battleMode} tutorial={false} canSkip actionPresentation={action} damagePopup={{charId:'e',val:150,type:'dmg'}}/>);assert.equal((s.match(/class="sb-effect /g)||[]).length,beat==='IMPACT'?1:0);assert.match(s,/>SKIP</);assert.equal((s.match(/data-battle-number="damage"/g)||[]).length,beat==='ACTOR'?0:1);}});
+
+test('fallback cue actor wins over stale target line and timeline, including duplicate names',()=>{
+ const ageha={...hitPlayer,id:'ageha-player',characterId:'char_ageha_01',name:'アゲハ',skills:[{id:'SKILL_055',name:'ネオン・アクセル'}]};
+ const cue={actorId:ageha.id,skillId:'SKILL_055',charName:ageha.name,skillName:'ネオン・アクセル',actionKey:42};
+ const s=renderToStaticMarkup(<QuestBattleViewer {...hitProps} playerParty={[hitPlayer,ageha]} enemyParty={[{...ageha,id:'ageha-enemy',isEnemy:true}]} authoritativeTimeline={[{id:'ageha-enemy'}]} skillCutIn={cue}/>);
+ assert.match(s,/data-action-actor-id="ageha-player"/);
+ assert.match(s,/data-exclusive-phase="dark"/);
+ assert.doesNotMatch(s,/sb-cast-copy/,'exclusive must start in dialogue prefix rather than generic cut-in');
+ const missing=renderToStaticMarkup(<QuestBattleViewer {...hitProps} skillCutIn={{...cue,actorId:'unknown'}}/>);
+ assert.doesNotMatch(missing,/sb-announcement|exclusive-skill-sequence/,'unknown actor must not substitute timeline leader');
+});
