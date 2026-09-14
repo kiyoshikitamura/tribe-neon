@@ -145,3 +145,5 @@
 
 .pvp-deck-details { color: #aeb8c4; font-size: 11px; }
 .pvp-deck-details > summary { padding: 12px 2px; cursor: pointer; }
+
+.pvp-battle-rewards{margin:12px 0;padding:14px 16px;border:1px solid #bf9852;border-radius:8px;background:#191714;color:#f9f2df}.pvp-battle-rewards>strong{display:block;color:#ffd581;font-size:16px}.pvp-battle-rewards p{margin:8px 0 0;line-height:1.6}.pvp-battle-rewards p b{margin-right:8px}

@@ -120,3 +120,13 @@ Vercel team接続403が以前発生。GitHub commit statusで tribe-neon配信�
 - Quest21行候補の素材別供給量・地元一致・最大集中ケースをquest_area_identity_supply_audit_20260914.mdへ記録。確率は未変更。
 - 3DB回帰（Raid Instance/Daily、Quest発見Raid CASH/EXP、地元固定）再実行PASS・全ROLLBACK。typecheck、Quest/Raid表示テスト、webpack build PASS（mock buildで実接続代替ではない）。
 - 上級／超級Contribution、Quest確率、進行中QuestのCASH適用境界、Raid数値調整・実機受入は未決／未完を維持。
+
+## 追加FIX: PvP → Raid 報酬接続
+
+仕様正本: specs/pvp_battle_raid_ticket_reward_20260914.md。
+WIN=200 CASH＋RAID_POINT_TICKET1、LOSE=50 CASH。3勝は各勝利合計3枚、追加Bonusなし。
+既存毎戦EXPと3戦指南書/CASHを置換。RATE/Ranking/Point/Fight Ticket/Quest/Raidの仕様は維持。
+実装記録: docs/development/pvp_battle_reward_implementation_20260914.md。
+Preview追加適用済み: Repository 20260914223252_pvp_battle_raid_ticket_rewards.sql → 実version20260914223627。再適用禁止。
+サーバー実receipt・Exactly-once・TOP表示・Resultチケット強調・任意Raid CTAを実装。DB rollback/SSR検証PASS。実機は残件。
+Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の未完了はこの追加で解消していない。

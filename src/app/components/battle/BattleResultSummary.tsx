@@ -27,6 +27,7 @@ type Props = {
   modeResult?: BattleModeResultDetail | null;
   displayedRound?: number;
   onContinue: () => void | Promise<void>;
+  onRaid?: () => void | Promise<void>;
   continueControl?: ReactNode;
   onRepeatQuest?: () => void | Promise<void>;
 };
@@ -38,7 +39,7 @@ const toParticipant = (entry: any, isEnemy: boolean): BattleResultParticipant =>
   isEnemy,
 });
 
-export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, continueControl }: Props) {
+export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, onRaid, continueControl }: Props) {
   const { playSe } = useAudio();
   const announcedRef = useRef(false);
   const analysis = useMemo(() => analyzeBattleResult(
@@ -204,7 +205,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
       ) : isRaidResult && presentationContext?.raidRoomId ? null : (
         <div className="battle-result-mode-reward">
           <strong>{modeResult?.reward || (victory ? "勝利" : "敗北")}</strong>
-          {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`}>
+          {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`} className={presentationContext?.mode === "PVP" && reward.id === "RAID_POINT_TICKET" ? "battle-result-raid-ticket" : undefined}>
             <CanonicalItemIcon itemId={reward.id} alt={reward.name} />
             <b>{reward.name}</b>
             <em>×{reward.quantity.toLocaleString()}</em>
@@ -213,6 +214,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
         </div>
       )}
       {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・プレイヤー経験値・アイテムを獲得しました。アイテムはMy Bagで確認できます。</p>}
+      {victory && presentationContext?.mode === "PVP" && onRaid && modeResult?.rewards?.some(item => item.id === "RAID_POINT_TICKET" && item.quantity > 0) && <OutlawButton variant="primary" onClick={onRaid}>レイドに挑戦</OutlawButton>}
       {continueControl ?? <OutlawButton variant={victory ? "primary" : "secondary"} onClick={onContinue} className="battle-result-continue" disabled={victory && (tutorial || presentationContext?.mode === "PATROL") && !rewards}>
         {victory && (tutorial || presentationContext?.mode === "PATROL") ? (rewards ? "次へ" : "報酬確定中…") : modeResult?.continueLabel || "次へ"}
       </OutlawButton>}

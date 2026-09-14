@@ -16,6 +16,7 @@ import PvpDeckPresentation from "./pvp/PvpDeckPresentation";
 import { SkillDetailDialog } from "./skill/SkillPresentation";
 import type { SkillCardMaster } from "@/utils/skills_master_data";
 import CanonicalDialog from "./ui/CanonicalDialog";
+import PvpBattleRewards, { pvpRewardLabel, type PvpMatchRewards } from "./pvp/PvpBattleRewards";
 
 const tacticNames: { [key: string]: string } = {
   ATTACK_PRIORITY: "攻撃優先",
@@ -65,7 +66,7 @@ export default function PvpTab() {
   const [clock, setClock] = React.useState(() => Date.now());
   const [selectedSkill, setSelectedSkill] = React.useState<SkillCardMaster | null>(null);
   const [bpDialog, setBpDialog] = React.useState<"shortage" | "recovery" | null>(null);
-  const [matchRewards, setMatchRewards] = React.useState<Record<"VICTORY" | "DEFEAT", { cash: number; diamonds: number; xp: number }> | null>(null);
+  const [matchRewards, setMatchRewards] = React.useState<PvpMatchRewards | null>(null);
   const [firstPvpPending, setFirstPvpPending] = React.useState<boolean | null>(null);
   const initialOpponentFetchRef = React.useRef<string | null>(null);
   const rankingAuthorityKey = `${session?.user?.id || "signed-out"}:${pvpRate}`;
@@ -79,11 +80,11 @@ export default function PvpTab() {
 
   React.useEffect(() => {
     let cancelled = false;
-    void supabase.from("pvp_match_rewards_master").select("result,cash_reward,diamond_reward,exp_reward").in("result", ["VICTORY", "DEFEAT"]).then(({ data, error }) => {
+    void supabase.from("pvp_match_rewards_master").select("result,cash_reward,diamond_reward,exp_reward,raid_ticket_reward").in("result", ["VICTORY", "DEFEAT"]).then(({ data, error }) => {
       if (cancelled || error || !Array.isArray(data)) return;
       const rewardFor = (result: "VICTORY" | "DEFEAT") => {
         const row = data.find((entry: any) => entry.result === result);
-        return { cash: Number(row?.cash_reward || 0), diamonds: Number(row?.diamond_reward || 0), xp: Number(row?.exp_reward || 0) };
+        return { cash: Number(row?.cash_reward || 0), diamonds: Number(row?.diamond_reward || 0), xp: Number(row?.exp_reward || 0), raidTickets: Number(row?.raid_ticket_reward || 0) };
       };
       setMatchRewards({ VICTORY: rewardFor("VICTORY"), DEFEAT: rewardFor("DEFEAT") });
     });
@@ -145,12 +146,7 @@ export default function PvpTab() {
     const weaker = pvpOpponents.filter((opponent: any) => opponent.opponent_class === "WEAKER");
     return weaker.length > 0 ? weaker : pvpOpponents.filter((opponent: any) => Number(opponent.opponent_power || 0) < Number(totalPower || 0));
   }, [firstPvpPending, pvpOpponents, totalPower]);
-  const rewardLabel = (result: "VICTORY" | "DEFEAT") => {
-    const reward = matchRewards?.[result];
-    if (!reward) return "報酬マスタを同期中";
-    const entries = [reward.cash > 0 ? `CASH ${reward.cash.toLocaleString()}` : null, reward.diamonds > 0 ? `ダイヤ ${reward.diamonds.toLocaleString()}` : null, reward.xp > 0 ? `EXP ${reward.xp.toLocaleString()}` : null].filter(Boolean);
-    return entries.length > 0 ? entries.join("・") : "勝敗報酬なし";
-  };
+  const rewardLabel = (result: "VICTORY" | "DEFEAT") => pvpRewardLabel(matchRewards?.[result]);
 
   const recoveryCountdown = React.useMemo(() => {
     if (pvpPoints >= 5 || !pvpNextRecoveryAt) return null;
@@ -241,6 +237,7 @@ export default function PvpTab() {
           <img src="/promotion/battle_page_header.webp" alt="バトル" />
         </section>
         {pvpSubView === "opponents" && <>
+          <PvpBattleRewards rewards={matchRewards} />
           <BattleHero player={{ name: username || "—", leaderName: playerLeaderMaster?.jpName || "リーダー", rate: displayedPvpRate, image: playerLeaderMaster ? getCharacterTransparentImg(playerLeaderMaster.name) : undefined, power: Number(totalPower || 0) }} rival={rivals.find((rival: { id: string }) => rival.id === heroOpponent?.opponent_user_id)} background={pvpBackgroundPath} attempts={pvpPoints} recovery={recoveryCountdown} busy={battleLoading || opponentsLoading} onStart={handleStartSelectedRival} onRecover={openBpRecoveryDialog} onPlayerDeck={() => setDeckDialog("my")} onRivalDeck={() => setDeckDialog("rival")} />
           <RivalSelector rivals={rivals} selectedId={heroOpponent?.opponent_user_id} busy={battleLoading || opponentsLoading} onSelect={setSelectedRivalId} onRefresh={handleRefreshOpponents} emptyTitle={firstPvpPending ? "勝てる相手を探しています" : "対戦相手が見つかりません"} emptyMessage={firstPvpPending ? "更新して格下の相手を再検索してください。" : "時間を置いて更新してください。"} />
           <BattleRankingSummary rate={displayedPvpRate} rank={ownPvpStanding?.rankPosition} onOpen={handleNavigateToRanking} />

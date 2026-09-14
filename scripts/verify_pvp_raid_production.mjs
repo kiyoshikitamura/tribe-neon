@@ -8,7 +8,12 @@ import {
 
 assert.equal(CANONICAL_PVP_PRODUCTION.modes.PRACTICE.cost, 0);
 assert.equal(CANONICAL_PVP_PRODUCTION.modes.OFFICIAL.cost, 1);
-assert.equal(CANONICAL_PVP_PRODUCTION.modes.OFFICIAL.cashReward, 0);
+assert.equal(CANONICAL_PVP_PRODUCTION.modes.OFFICIAL.winCash, 200);
+assert.equal(CANONICAL_PVP_PRODUCTION.modes.OFFICIAL.lossCash, 50);
+assert.deepEqual(CANONICAL_PVP_PRODUCTION.rewards.win, [{itemId:"CASH",quantity:200},{itemId:"RAID_POINT_TICKET",quantity:1}]);
+assert.deepEqual(CANONICAL_PVP_PRODUCTION.rewards.loss, [{itemId:"CASH",quantity:50}]);
+assert.deepEqual(CANONICAL_PVP_PRODUCTION.rewards.perBattle, []);
+assert.deepEqual(CANONICAL_PVP_PRODUCTION.rewards.daily3, []);
 assert.equal(canonicalPvpRatingDelta(1000, 1000, "WIN"), 16);
 assert.equal(canonicalPvpRatingDelta(1000, 1000, "LOSS"), -8);
 assert(canonicalPvpRatingDelta(1000, 1400, "WIN") > canonicalPvpRatingDelta(1000, 800, "WIN"));
@@ -31,7 +36,7 @@ const migration = fs.readFileSync("supabase/migrations/20260822000184_pvp_raid_r
 for (const token of ["canonical_pvp_rating_delta", "canonical_raid_rotation_pair", "rank() over(order by contribution desc)", "NORMAL_GACHA_TICKET_CHARACTER", "PRESENT_EXACTLY_ONCE", "DAMAGE 80% ATK"]) assert(migration.includes(token), token);
 for (const legacy of ["order by random()", "9999999", "3 free attempts", "rank_gap / 50", "plus_val * 0.10"]) assert(!migration.toLowerCase().includes(legacy.toLowerCase()), legacy);
 const pvpUi = fs.readFileSync("src/app/components/PvpTab.tsx", "utf8");
-for (const token of ["公式戦", "模擬戦", "WIN +", "pvp_match_rewards_master", "勝敗報酬なし"]) assert(pvpUi.includes(token), token);
+for (const token of ["公式戦", "模擬戦", "pvp_match_rewards_master", "PvpBattleRewards"]) assert(pvpUi.includes(token), token);
 for (const retired of ["勝利 CASH 500", "敗北 CASH 250", "防衛・履歴", "防衛設定を保存"]) assert(!pvpUi.includes(retired), retired);
 const raidUi = fs.readFileSync("src/app/components/RaidTab.tsx", "utf8");
 for (const token of ["profileType", "Guild Contribution", "selectedRaid"]) assert(raidUi.includes(token), token);

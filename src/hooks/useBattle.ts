@@ -3253,6 +3253,7 @@ export function useBattle(options: UseBattleOptions) {
         ? pvpResultTemp.reward_items
           .filter((item: any) => item?.delivery === "INVENTORY" && typeof item.itemId === "string" && Number(item.quantity) > 0)
           .map((item: any) => ({ id: item.itemId, name: canonicalItemName(item.itemId), quantity: Number(item.quantity) }))
+          .sort((a: { id: string }, b: { id: string }) => Number(b.id === "RAID_POINT_TICKET") - Number(a.id === "RAID_POINT_TICKET"))
         : [];
       const oldRating = Number(pvpResultTemp.oldRating ?? pvpRate);
       const newRating = Number(pvpResultTemp.newRankPoints ?? pvpRate);
@@ -3269,7 +3270,7 @@ export function useBattle(options: UseBattleOptions) {
           { label: "RANK CHANGE", value: `${pointsDiff >= 0 ? "+" : ""}${pointsDiff} pt` },
           { label: "BP", value: `${Number(pvpResultTemp.remainingPvpPoints ?? 0)}/5` },
         ],
-        reward: inventoryRewards.length ? "報酬を獲得しました" : `CASH +${rewardCash.toLocaleString()}`,
+        reward: inventoryRewards.some((item: { id: string }) => item.id === "RAID_POINT_TICKET") ? "レイドチケット GET" : rewardCash > 0 ? `${rewardCash.toLocaleString()} CASH獲得` : inventoryRewards.length ? "報酬を獲得しました" : "獲得報酬はありません",
         rewards: inventoryRewards,
         note: isFirstOfficialPvp ? "順位を確認して、ミッション報酬を受け取ろう。" : "バトルへ戻って次の対戦相手を選べます。",
         continueLabel: isFirstOfficialPvp ? "ランキングを確認" : "バトルへ戻る",
@@ -3445,7 +3446,7 @@ export function useBattle(options: UseBattleOptions) {
     await syncBootstrapData(session.user.id);
   };
 
-  const completeBattleResult = async () => {
+  const completeBattleResult = async (destinationOverride?: "raid") => {
     if (battleState !== "RESULT") return;
     const resultUserId = session?.user?.id;
     const attempt = roomAttemptRef.current;
@@ -3464,7 +3465,7 @@ export function useBattle(options: UseBattleOptions) {
       }
     }
     roomPresentationUserRef.current = null;
-    const destination = battleModeResultDetail?.destination;
+    const destination = destinationOverride === "raid" && battlePresentationContext?.mode === "PVP" && battleModeResultDetail?.rewards?.some(item => item.id === "RAID_POINT_TICKET" && item.quantity > 0) ? "raid" : battleModeResultDetail?.destination;
     const returnRoomId = battlePresentationContext?.raidRoomId;
     setBattleState(null);
     setBattleMode(null);

@@ -86,3 +86,5 @@
 .battle-result-canonical-rewards b { overflow: hidden; color: #fff; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .battle-result-canonical-rewards em { color: var(--neon-gold); font-size: 11px; font-style: normal; font-weight: 900; }
 .battle-result-mode-stats.is-raid { margin-top: 8px; }
+
+.battle-result-canonical-rewards .battle-result-raid-ticket{border:2px solid #f1bd61;background:#302416;box-shadow:0 0 18px #f1bd6126}.battle-result-raid-ticket b,.battle-result-raid-ticket em{color:#ffd581}

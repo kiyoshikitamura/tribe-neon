@@ -189,6 +189,7 @@ export default function CardBattleView() {
               await completeBattleResult();
             } : undefined}
             onContinue={isTutorialBattle ? completeTutorialBattleResult : completeBattleResult}
+            onRaid={() => completeBattleResult("raid")}
           />
         )}
       </div>
