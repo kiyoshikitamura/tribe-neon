@@ -181,7 +181,7 @@ Canonical Item MasterのeffectValueをAuthorityとし、素材個数ではなく
 - Mission同期時にauthoritative valueを計算する方式を優先
 - 毎日全ユーザーへ加算するcronを既定にしない
 - 脱退で停止、再加入はmembership history Authorityに従う
-- 加入日をDay1とするかDay0とするかは既存仕様・文言を確認してから確定する。Authorityがなければ要確認として残す
+- 2026-09-14本流承認：加入日をDay1とする。現在membershipの開始日からJST日付差+1で算出する。
 
 ### 5. Quest難度選択 / 初級Default正常化
 
@@ -320,14 +320,14 @@ Favorite / Profile LeaderとParty slot1を分離する。
 
 ## 6. 統合Release Sequence
 
-1. Current Production SHA、Deployment、ancestry、working treeを記録
-2. Current Production SHAを親にCandidateを作成
+1. 確認できるProduction SHA・Deploymentと、統合branch・working treeを記録
+2. 承認済み基準661dfd3＋確認済みProduction差分を継承するCandidateを作成
 3. Formal Open前正常化10項目を実装
 4. Preview DBへMigration / RPC / UIを反映
 5. 10項目の実UI AcceptanceとRegression
 6. Monetization、Pack、Raid Encounter、Guild Emblem、専用Skill / Equipmentを統合
 7. AP MAX 100 → 50を統合（既存APの切捨てなし）
-8. 統合CandidateのProduction SHA ancestorを再確認
+8. 統合Candidateの承認済み基準からの継承と、追加差分の受入Authorityを再確認
 9. メンテナンス開始、User操作停止
 10. Production READ ONLY最終監査
 11. 全開催中Seasonの最終Snapshot

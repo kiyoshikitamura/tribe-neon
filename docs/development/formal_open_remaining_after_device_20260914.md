@@ -19,7 +19,7 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | 課金available:false | 商品catalog不一致は除外。配信環境検証/ServiceRole照会の失敗箇所は未確定 | 対象配信環境で既存check_sandbox_environment.mjs --remote-catalog。秘密値ではなく判定結果を取得 |
 | Stripe Sandbox | Checkout→戻り→受取、再送・取消等の実接続受入が未完了 | 配信環境診断完了後、Sandbox E2E。実課金を実行しない |
 | Character/Equipment EXP | 素材effectValueあり、必要EXP曲線の正式出典未回収 | 別スレッドから承認済みLv別必要EXP表/式を回収 |
-| Guild tenure | 現在membership開始日を同期時に投影する接続箇所は特定 | 別スレッドで加入日Day0/Day1を確定 |
+| Guild tenure | 9/14本流で加入日Day1確定。JST日付差+1をMission同期へ接続 | Preview検証結果はguild_tenure_day_origin_decision_20260914.md参照。Production未反映 |
 | 売上KPI | Preview refresh_kpi_revenueも未実装stub | 別スレッドからF10–F13/PURの計上時刻、分母、返金、QA/Sandbox除外定義を回収 |
 | Season切替 | Claim/1位限定Emblemの定義準備済み。実切替なし | インターバルPvP/Rate/Wins、POWER/GUILD_POWERの新Season契約を確定 |
 | ガチャPool差異 | 別スレッドで相違発見済みだが訂正対象の承認本文未回収 | カテゴリ/ガチャ種別/対象ID/期待Poolの訂正表を回収 |

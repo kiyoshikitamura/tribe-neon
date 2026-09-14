@@ -1,32 +1,35 @@
-# Guild在籍日数：別スレッド決定依頼
+# Guild在籍日数：確定仕様
 
-状態：加入日のカウントのみ判断待ち。実装・DB変更なし。
-照合基準：`112a21377fc384f70d93230439eb64bc3b4d0767`。
+2026-09-14 本流ユーザー承認：**Guild在籍日＝加入日を1日目**。
 
-## 決めること
+## 計算
 
-現在のGuild membership開始日を、JST日付で **1日目（Day1）** と数えるか、**0日（Day0）** と数えるか。
+現在のguild_members.joined_atをAuthorityとし、JST日付差 + 1で算出する。
+ログイン日数・24時間経過数ではない。
 
-例：9月14日23:50 JST加入、9月15日00:10 JSTにMission同期。
+| 例 | 表示日数 |
+|---|---:|
+| 9/14 23:50 JST加入、9/14中に同期 | 1 |
+| 同じ所属で9/15 00:10 JSTに同期 | 2 |
+| 加入日の29日後 | 30 |
+| 加入日の89日後 | 90 |
 
-| 定義 | 加入日 | 翌JST日付 |
-| --- | ---: | ---: |
-| Day1（既存指示の採用候補・未確定） | 1 | 2 |
-| Day0 | 0 | 1 |
+## 既存契約を保持
+- Mission同期経路で投影し、毎日の全ユーザー加算cronは追加しない。
+- 再同期で加算しない。
+- 脱退後は進捗を加算しない。再加入した未達成Missionは現在のmembership開始日から計算。
+- 既存の通常Mission契約に従い、達成済みCLEAR・受取済みCLAIMEDは維持する。
+- 30日Mission受取後に90日Missionが開放される既存の前提条件は維持する。
+- 報酬量・加入制限・Guildデータ・所持資産は変更しない。
 
-どちらでも、ログイン日数や24時間経過数ではなく、現在membership開始日からのJST日付差を使用する。
-日数に1を加えるかどうかだけが今回の判断対象。
+## 実装
+既存sync_current_missions → refresh_normal_mission_owned_stateの投影経路へ接続する。
+Previewのみ。Production未反映。
 
-## 根拠と確認結果
-
-- `src/domain/gameplay/canonical/data/missions_20260910.json`：MIS_N_U005/U006は「Guild在籍30日／90日」。`conditionParams`は空で、Day0/Day1指定なし。
-- `specs/mission_requirements_20260912.md`：在籍定義と加算経路を保留と明記。
-- `specs/mission_implementation_20260912.md`：在籍定義を未確定と明記。
-- `docs/development/formal_open_normalization_second_patch_20260914.md`：joined_atあり、日数投影なし、Day0/Day1判断待ち。
-- `docs/development/formal_open_integrated_release_management_20260914.md`：現在membership開始日・JST単位・Mission同期時計算を指定。加入日のカウントは既存Authority確認後に確定するよう指示。
-
-## 決定後
-
-Mission同期時のauthoritative日数投影を実装し、加入日・JST境界・30/90日境界・再同期で二重加算しないことを検証する。脱退・再加入は既存membership契約に従って別途接続確認する。
-
-EXP候補や報酬内容は、この判断に含めない。
+## Preview検証結果
+- Migration: 20260914124315_guild_tenure_day_one_projection.sql
+- Preview適用履歴: 20260914124608
+- Day1/29/30/89/90、同日再同期、CLEAR/CLAIMED保持、90日子Mission開放、再加入起点、脱退停止、JST日跨ぎ、owner guard: PASS。
+- 適用後の正式sync_current_missions経由でも再検証PASS。検証データは全ROLLBACK。
+- UIは既存bootstrap同期後のcurrent_progress表示を再利用。全ユーザーへの一括更新なし。
+- Production: NOT EXECUTED。
