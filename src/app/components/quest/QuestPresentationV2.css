@@ -67,7 +67,12 @@
 .quest-v2-metrics{grid-template-columns:repeat(auto-fit,minmax(80px,1fr))}
 .quest-v2-metrics small{font-size:10px}.quest-v2-metrics strong{font-size:13px}
 .quest-v2-identity{border-color:#494c50}.quest-v2-identity>div{border-left-color:#b6a779}
-.quest-v2-courses button.active{border-color:#c8b680;background:linear-gradient(145deg,#393426,#14191e)}
+.quest-v2-courses button{color:#eaf2f6}
+.quest-v2-courses button:not(:disabled){opacity:1}
+.quest-v2-courses button.active{border-color:#c8b680;background:linear-gradient(145deg,#53482e,#28271f);color:#fff3d4;box-shadow:inset 0 0 0 1px #c8b680}
+.quest-v2-courses button:not(:disabled) small{color:#c8d2db}
+.quest-v2-courses button.active small{color:#f0dcab}
+.quest-v2-courses button.locked{cursor:default}
 .quest-v2-town-tabs button.active{border-color:#c8b680}.quest-v2-character-grid button.selected{border-color:#c8b680;background:#c8b68014}
 
 .quest-v2-drops{font-size:11px;color:#c2c2bd}.quest-v2-drops summary{min-height:32px;cursor:pointer}.quest-v2-dispatch-reason{margin:0;color:#e1b2a7;font-size:12px}

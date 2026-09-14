@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { questProgressState, sortQuestProgress, initialQuestCourseId } from '../src/domain/questPresentationState.ts';
+import { questProgressState, sortQuestProgress, initialQuestCourseId, questCoursesForTown } from '../src/domain/questPresentationState.ts';
 const p = (id, overrides) => ({ id, status: 'ONGOING', secondsLeft: 0, has_battle_event: true, battle_resolved: false, ...overrides });
 assert.equal(questProgressState(p('fight')), 'BATTLE');
 assert.equal(questProgressState(p('claim', { battle_resolved: true })), 'REWARD');
@@ -21,3 +21,20 @@ assert.equal(initialQuestCourseId(courses, 'shinjuku'), 'easy');
 assert.equal(initialQuestCourseId(courses, 'shibuya'), 'other_easy');
 assert.equal(initialQuestCourseId(courses, 'missing'), '');
 assert.equal(initialQuestCourseId([], 'shinjuku'), '');
+
+// A noncanonical RPC row order must produce the same three difficulty buttons in every town.
+for (const town_id of ['shinjuku', 'shibuya', 'ikebukuro', 'roppongi', 'akihabara', 'kawasaki', 'yokohama']) {
+  const shuffled = [
+    { id: 'hard', town_id, level_type: 'HARD', is_unlocked: false },
+    { id: 'easy', town_id, level_type: 'EASY', is_unlocked: true, is_first_cleared: true },
+    { id: 'normal', town_id, level_type: 'NORMAL', is_unlocked: true },
+    { id: 'other', town_id: 'other-town', level_type: 'EASY' },
+  ];
+  const ordered = questCoursesForTown(shuffled, town_id);
+  assert.deepEqual(ordered.map(course => course.level_type), ['EASY', 'NORMAL', 'HARD']);
+  assert.deepEqual(ordered.map(course => course.is_unlocked), [true, true, false]);
+  assert.equal(ordered[0].is_first_cleared, true, 'cleared course remains selectable');
+  assert.equal(shuffled[0].id, 'hard', 'sorting must not mutate shared context');
+}
+assert.deepEqual(questCoursesForTown([], 'roppongi'), []);
+console.log('Quest difficulty order and cleared/unlocked state: PASS');

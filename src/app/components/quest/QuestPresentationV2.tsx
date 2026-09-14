@@ -11,7 +11,7 @@ import HubPage from "../ui/HubPage";
 import OutlawButton from "../ui/OutlawButton";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
-import { questProgressState, sortQuestProgress, initialQuestCourseId } from "@/domain/questPresentationState";
+import { questProgressState, sortQuestProgress, initialQuestCourseId, questCoursesForTown } from "@/domain/questPresentationState";
 import { getJstDateString } from "@/utils/jst_date";
 import "./QuestPresentationV2.css";
 
@@ -185,7 +185,7 @@ export default function QuestPresentationV2() {
         <section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}><div><strong>{townName}</strong><small>空き枠 {Math.max(0, 5 - activePatrols.length)}</small></div></section>
         {selectionStep === "REVIEW" && <>
           <button className="quest-v2-back" onClick={() => setSelectionStep("DESTINATION")}>街を選び直す</button>
-          <section className="quest-v2-courses" aria-label="級を選ぶ">{(game.patrolCourses || []).filter((course: any) => course.town_id === game.selectedTown).map((course: any) => <button key={course.id} className={`${game.selectedCourse === course.id ? "active" : ""} ${course.is_unlocked === false ? "locked" : ""}`} disabled={course.is_unlocked === false} onClick={() => { game.setSelectedCourse(course.id); game.playCyberSe("click"); }}><strong>{difficulty(course.level_type)}</strong><small>{course.is_unlocked === false ? "前の難度をクリアで解放" : course.is_first_cleared ? "クリア済" : ""}</small></button>)}</section>
+          <section className="quest-v2-courses" aria-label="級を選ぶ">{questCoursesForTown(game.patrolCourses || [], game.selectedTown).map((course: any) => <button key={course.id} className={`${game.selectedCourse === course.id ? "active" : ""} ${course.is_unlocked === false ? "locked" : ""}`} aria-pressed={game.selectedCourse === course.id} disabled={course.is_unlocked === false} onClick={() => { game.setSelectedCourse(course.id); game.playCyberSe("click"); }}><strong>{difficulty(course.level_type)}</strong><small>{course.is_unlocked === false ? "前の難度をクリアで解放" : course.is_first_cleared ? "クリア済・再挑戦可" : "選択可能"}</small></button>)}</section>
         </>}
       </>}
 

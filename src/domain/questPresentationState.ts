@@ -22,3 +22,10 @@ export function sortQuestProgress<T extends QuestProgress>(patrols: T[]): T[] {
 export function initialQuestCourseId(courses: { id: string; town_id: string; level_type: string }[], townId: string): string {
   return courses.find(course => course.town_id === townId && course.level_type === 'EASY')?.id || '';
 }
+
+/** Difficulty display order never depends on the database response order. */
+export function questCoursesForTown<T extends { town_id: string; level_type: string }>(courses: T[], townId: string): T[] {
+  const order: Record<string, number> = { EASY: 0, NORMAL: 1, HARD: 2 };
+  return courses.filter(course => course.town_id === townId)
+    .sort((a, b) => (order[a.level_type] ?? 3) - (order[b.level_type] ?? 3));
+}
