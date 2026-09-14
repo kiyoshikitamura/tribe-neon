@@ -535,12 +535,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
       label: "ランキング",
       icon: "/menu/home_nav_ranking.png",
       onClick: () => navigateTab("ranking")
-    },
-    {
-      id: "raid",
-      label: "レイド",
-      icon: "/menu/home_nav_raid.png",
-      onClick: () => navigateTab("raid")
     }
   ];
 

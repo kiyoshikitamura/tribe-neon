@@ -2500,27 +2500,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(timer);
   }, [activePatrols, session]);
 
-  // SWR追加プレゼントフェッチ
-  useEffect(() => {
-    if (session && showInboxPanel && inboxPanelTab === "presents" && !presentsPrefetched) {
-      setPresentsSyncing(true);
-      const timer = setTimeout(() => {
-        setPresentsSyncing(false);
-        setPresentsPrefetched(true);
-        setPresents((prev) => {
-          if (!prev.some(p => p.id === "p_swr")) {
-            return [
-              ...prev,
-              { id: "p_swr", title: "SWR同期追加: アンケート協力のお礼", desc: "アンケート回答のお礼ダイヤ", reward: "ダイヤ +50", itemId: "DIAMOND", qty: 50, expireText: "期限: あと23時間", status: "UNCLAIMED", loading: false }
-            ];
-          }
-          return prev;
-        });
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [showInboxPanel, inboxPanelTab, presentsPrefetched, session]);
-
   // ==========================================
   // 5. 認証 ＆ 初期セットアップハンドラ (useAuthフックへ移譲)
   // ==========================================

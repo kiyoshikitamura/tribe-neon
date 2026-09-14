@@ -178,7 +178,7 @@ export default function CharacterSystemV2({ initialCharacterMasterId, setupResul
     const cardStats = getCharacterTotalStats(record, game.userEquipmentsList || []);
     return <button type="button" key={record.id || record.character_id} className="character-v2-card active-scale-effect" onClick={() => selectCharacter(record)}>
       <span className={rarityClass(master.rarity)}><CharacterPresentation src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /></span>
-      <span className="character-v2-card-badges">{record.is_new && <b>新着</b>}{partyIndex === 0 && <b>リーダー</b>}{partyIndex > 0 && <b>編成中</b>}</span>
+      <span className="character-v2-card-badges">{record.is_new && <b>新着</b>}{record.character_id === leaderMasterId && <b>リーダー</b>}{partyIndex === 0 && <b>先頭</b>}{partyIndex > 0 && <b>編成中</b>}</span>
       <CharacterStatusBadges rarity={master.rarity} awakeningLevel={Number(record.awakening_level || 0)} /><span className="character-v2-card-level">Lv.{Number(record.level || 1)}</span>
       {!compact && <><strong>{master.jpName}</strong><span className="character-v2-card-power">総合力 {(cardStats.hp + cardStats.atk + cardStats.def).toLocaleString()}</span></>}
     </button>;
