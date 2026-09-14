@@ -60,7 +60,6 @@ export function useCharacterProgression(
   const [activeSkillSlot, setActiveSkillSlot] = useState<number | null>(null);
   const [showSkillModal, setShowSkillModal] = useState<boolean>(false);
 
-  const [skillLevel, setSkillLevel] = useState<number>(1);
   const [skillLimitBreakMaster, setSkillLimitBreakMaster] = useState<any[]>([]);
   const [selectedSkill, setSelectedSkill] = useState<any | null>(null);
   const [equipmentLevelUpMaster, setEquipmentLevelUpMaster] = useState<any[]>([]);
@@ -913,7 +912,6 @@ export function useCharacterProgression(
     showGearModal, setShowGearModal,
     activeSkillSlot, setActiveSkillSlot,
     showSkillModal, setShowSkillModal,
-    skillLevel, setSkillLevel,
     skillLimitBreakMaster, setSkillLimitBreakMaster,
     selectedSkill, setSelectedSkill,
     equipmentLevelUpMaster, setEquipmentLevelUpMaster,

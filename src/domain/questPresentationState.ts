@@ -17,3 +17,8 @@ export function sortQuestProgress<T extends QuestProgress>(patrols: T[]): T[] {
     || (Date.parse(a.started_at || '') || 0) - (Date.parse(b.started_at || '') || 0)
     || a.id.localeCompare(b.id));
 }
+
+/** Town entry always starts at EASY, independent of course order or prior clears. */
+export function initialQuestCourseId(courses: { id: string; town_id: string; level_type: string }[], townId: string): string {
+  return courses.find(course => course.town_id === townId && course.level_type === 'EASY')?.id || '';
+}

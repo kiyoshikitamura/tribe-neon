@@ -547,7 +547,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     showGearModal, setShowGearModal,
     activeSkillSlot, setActiveSkillSlot,
     showSkillModal, setShowSkillModal,
-    skillLevel, setSkillLevel,
     skillLimitBreakMaster, setSkillLimitBreakMaster,
     selectedSkill, setSelectedSkill,
     equipmentLevelUpMaster, setEquipmentLevelUpMaster,
@@ -3999,14 +3998,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     return true;
   };
 
-  const handleSetPartyLeader = async (charId: string) => {
+  const handleSetProfileLeader = async (charId: string) => {
     if (!session?.user?.id) return false;
-    if (!selectedMembers.includes(charId)) {
-      setErrorMessage("パーティに編成中のキャラクターを選択してください。");
+    if (!userCharactersDbList.some((character: any) => character.character_id === charId)) {
+      setErrorMessage("所持しているキャラクターを選択してください。");
       return false;
     }
-    const nextParty = [charId, ...selectedMembers.filter((id) => id !== charId)];
-    const { data: identityLeader, error: identityLeaderError } = await supabase.rpc("set_main_formation_leader", {
+    const { data: identityLeader, error: identityLeaderError } = await supabase.rpc("set_profile_leader_v1", {
       p_character_id: charId,
     });
     if (identityLeaderError || identityLeader?.status !== "success") {
@@ -4014,18 +4012,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setErrorMessage("リーダーの変更に失敗しました。");
       return false;
     }
-    setTotalPower(Number(identityLeader?.total_power || totalPower || 0));
     const identityRefreshed = await refreshIdentityLeaderAuthority(session.user.id);
     if (!identityRefreshed) {
       setErrorMessage("リーダーの最新状態を確認できませんでした。");
       return false;
     }
-    setSelectedMembers(nextParty);
     setUpgradeSelectedCharId(charId);
     return true;
   };
 
   const handleSaveParty = async (draft?: string[]) => {
+    if (!session?.user?.id) return false;
     const nextParty = (draft ?? selectedMembers).slice(0, 5);
     const saveError = await persistPartyFormation(nextParty);
     if (saveError) {
@@ -4652,7 +4649,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     selectUpgradeEquipment,
     togglePatrolMemberSelection,
     handleTogglePartyMember,
-    handleSetPartyLeader,
+    handleSetProfileLeader,
     handleSaveParty,
     handleAutoFormation,
     navigateTab,

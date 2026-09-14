@@ -11,7 +11,7 @@ import HubPage from "../ui/HubPage";
 import OutlawButton from "../ui/OutlawButton";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
-import { questProgressState, sortQuestProgress } from "@/domain/questPresentationState";
+import { questProgressState, sortQuestProgress, initialQuestCourseId } from "@/domain/questPresentationState";
 import { getJstDateString } from "@/utils/jst_date";
 import "./QuestPresentationV2.css";
 
@@ -115,6 +115,13 @@ export default function QuestPresentationV2() {
     game.requestQuestSelection(null);
   }, [game.questSelectionRequest]);
 
+  // Default only when entering selection or changing town. Do not reset a user's higher difficulty on refresh.
+  useEffect(() => {
+    if (!showSelection || selectionStep !== "REVIEW" || game.selectedCourse) return;
+    const courseId = initialQuestCourseId(game.patrolCourses || [], game.selectedTown);
+    if (courseId) game.setSelectedCourse(courseId);
+  }, [showSelection, selectionStep, game.selectedCourse, game.selectedTown, game.patrolCourses]);
+
   const returnToList = () => { setShowSelection(false); setSelectedPatrolId(null); };
   const startSelection = () => { game.setSelectedCourse(""); game.setSelectedPatrolMember(null); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); setShowSelection(true); };
 
@@ -174,7 +181,7 @@ export default function QuestPresentationV2() {
         {Array.from({ length: Math.max(0, 5 - activePatrols.length) }, (_, index) => <button className="quest-v2-empty-slot" key={index} onClick={startSelection}><span className="quest-v2-slot-number">{String(activePatrols.length + index + 1).padStart(2, "0")}</span><strong>未探索<small>探索先を選ぶ</small></strong><span className="quest-v2-slot-plus" aria-hidden="true">＋</span></button>)}
       </section>}
       {selectionVisible && <>
-      {selectionStep === "DESTINATION" ? <section className="quest-v2-town-list" aria-label="街を選ぶ">{TOWNS.map(([id, label]) => <button key={id} onClick={() => { game.setSelectedTown(id); game.setSelectedCourse(""); game.setSelectedPatrolMember(null); setSelectionStep("REVIEW"); game.playCyberSe("click"); }}><img src={`/bg/bg_street_${id}.jpg`} alt="" /><strong>{label}</strong><span aria-hidden="true">›</span></button>)}</section> : <>
+      {selectionStep === "DESTINATION" ? <section className="quest-v2-town-list" aria-label="街を選ぶ">{TOWNS.map(([id, label]) => <button key={id} onClick={() => { game.setSelectedTown(id); game.setSelectedCourse(initialQuestCourseId(game.patrolCourses || [], id)); game.setSelectedPatrolMember(null); setSelectionStep("REVIEW"); game.playCyberSe("click"); }}><img src={`/bg/bg_street_${id}.jpg`} alt="" /><strong>{label}</strong><span aria-hidden="true">›</span></button>)}</section> : <>
         <section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}><div><strong>{townName}</strong><small>空き枠 {Math.max(0, 5 - activePatrols.length)}</small></div></section>
         {selectionStep === "REVIEW" && <>
           <button className="quest-v2-back" onClick={() => setSelectionStep("DESTINATION")}>街を選び直す</button>

@@ -4589,6 +4589,24 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     return { data: { status: "success" }, error: null };
   }
 
+  if (funcName === "set_profile_leader_v1") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const characterId = params?.p_character_id;
+    const users = client.getStorage("users") || [];
+    const user = users.find((entry: any) => entry.id === userId);
+    const owned = (client.getStorage("user_characters") || []).some((entry: any) => entry.user_id === userId && entry.character_id === characterId);
+    if (!user || !owned) return { data: null, error: { message: "owned character not found", code: "P0002" } };
+    if (user.favorite_character_id !== characterId) {
+      user.favorite_character_id = characterId;
+      const hometown = CANONICAL_CHARACTERS.find(entry => entry.character_id === characterId)?.hometown;
+      const towns: Record<string, string> = { 新宿: "shinjuku", 渋谷: "shibuya", 池袋: "ikebukuro", 六本木: "roppongi", 秋葉原: "akihabara", 川崎: "kawasaki", 横浜: "yokohama" };
+      if (hometown && towns[hometown]) user.current_base_id = towns[hometown];
+      client.setStorage("users", users);
+    }
+    return { data: { status: "success", favorite_character_id: characterId }, error: null };
+  }
+
   if (funcName === "update_favorite_character") {
     const { p_user_id, p_character_id } = params;
     const users = client.getStorage("users") || [];
