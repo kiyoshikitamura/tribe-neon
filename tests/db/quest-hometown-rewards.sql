@@ -21,8 +21,8 @@ begin
    update user_characters set level=1,awakening_level=0 where id=c.id;
    update users set vitality=100 where id=u;
    select quest_id,cash_reward into q,base from canonical_quest_master where version='2026-08-30' and difficulty='EASY' and public.quest_town_key(town_id)=public.quest_town_key(c.hometown) and is_production_enabled limit 1;
-   j:=public.start_patrol(q,c.id::text); p:=(j->>'patrol_id')::uuid; snap:=j->'hometown_bonus_snapshot'; expected:=c.lv1_luk*10;
-   if (snap->>'cash')::integer<>expected or not (snap->>'matched')::boolean or (snap->>'drop_bonus_bp')::integer<>c.lv1_luk*10 then raise exception 'dispatch snapshot mismatch %',snap; end if;
+   j:=public.start_patrol(q,c.id::text); p:=(j->>'patrol_id')::uuid; snap:=j->'hometown_bonus_snapshot'; expected:=base/10;
+   if (snap->>'cash')::integer<>expected or not (snap->>'matched')::boolean or (snap->>'drop_bonus_bp')::integer<>200 then raise exception 'dispatch snapshot mismatch %',snap; end if;
    begin perform public.start_patrol(q,c.id::text); raise exception 'duplicate dispatch accepted'; exception when unique_violation then null; end;
    begin perform public.claim_patrol_rewards(p); raise exception 'early claim accepted'; exception when check_violation then null; end;
    update user_characters set level=100,awakening_level=5 where id=c.id;
@@ -55,5 +55,5 @@ begin
  end loop;
  if n<>2 then raise exception 'both characters not tested'; end if;
 end $$;
-select 'PASS: 7town normalization, Reiji/Ageha matched and unmatched grants, frozen LUK, early/unresolved/foreign/duplicate claim rejection, duplicate dispatch' result;
+select 'PASS: 7town normalization, Reiji/Ageha matched and unmatched grants, frozen fixed bonus, early/unresolved/foreign/duplicate claim rejection, duplicate dispatch' result;
 rollback;

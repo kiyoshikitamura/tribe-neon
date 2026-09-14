@@ -10,10 +10,10 @@ begin
  update user_characters set level=1,awakening_level=0 where id=c;
  select quest_id,reward_pool_id into q,pool from canonical_quest_master where version='2026-08-30' and public.quest_town_key(town_id)='shinjuku' and difficulty='EASY' limit 1;
  select min(roll_index) into first_roll from canonical_quest_reward_pool_items where version='2026-08-30' and reward_pool_id=pool;
- -- 1%なら落ちず、地元の+0.9ポイントにより落ちる乱数を固定。
+ -- 1%なら落ちず、地元の+2ポイントにより落ちる乱数を固定。
  for i in 0..10000 loop
    seed:=i/10000.0; perform setseed(seed); roll:=floor(random()*10000)::integer;
-   if roll>=100 and roll<190 then found_seed:=true; exit; end if;
+   if roll>=200 and roll<300 then found_seed:=true; exit; end if;
  end loop;
  if not found_seed then raise exception 'seed unavailable'; end if;
  update canonical_quest_reward_pool_items set probability_bp=case when roll_index=first_roll then 100 else 0 end where version='2026-08-30' and reward_pool_id=pool;

@@ -5,7 +5,6 @@ import { useGame } from "../context/GameContext";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
-import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import OutlawCard from "./ui/OutlawCard";
 import OutlawButton from "./ui/OutlawButton";
 import SubTabNav from "./ui/SubTabNav";
@@ -577,6 +576,7 @@ export default function PatrolTab() {
               {!activeCourse.is_first_cleared && <p className="quest-first-clear">初回クリア：プレイヤーEXP +{Number(activeCourse.first_clear_user_exp || 0).toLocaleString()} / {formatRewardItems(activeCourse.first_clear_items) || "追加報酬なし"}</p>}
             </section>
             <div className="quest-v0-section-label">派遣する仲間 <b>1名</b></div>
+            <p>地元一致：CASH +10% / ドロップ率 +2%ポイント</p>
             <div className="patrol-char-grid mb-3">
               {CHARACTERS_MASTER.filter((character: any) => !isTutorialQuestStep || character.id === selectedPatrolMember).map((c: any) => {
                 const isUnlocked = userCharactersDbList.some((uc: any) => uc.character_id === c.id);
@@ -585,7 +585,6 @@ export default function PatrolTab() {
                 
                 const isAlreadyDeployed = activePatrols.some((p: any) => p.characterId === c.id && p.status !== "COMPLETED");
 
-                const baseLuk = getCharacterBaseStats(c.id, 1, 0).luk;
                 
                 return (
                   <div 
@@ -614,7 +613,7 @@ export default function PatrolTab() {
                         attributeBadge
                       />
                     </div>
-                    {isHome && <div className="char-bonus-badge">地元一致(LUK{baseLuk})</div>}
+                    {isHome && <div className="char-bonus-badge">地元一致</div>}
                     {isAlreadyDeployed && <div className="char-deployed-badge">出撃中</div>}
                   </div>
                 );

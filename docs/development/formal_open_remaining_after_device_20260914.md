@@ -80,7 +80,7 @@ Season間PvP・報酬数量・新規Cosmetic登録・連続在籍7日・旧POWER
 | 装備／スキルLB確認 | 別対象への応答誤反映・旧段階参照・装備の誤CASH制限を修正。canonical必要パーツ表示。操作テスト・実RPC rollback検証PASS | 対象切替とreload受入 |
 | おすすめスキル | 旧一括導線消失、現個別処理の旧ID制限を特定。要望監査済み | 追加承認済み・V2育成→スキルに実装。旧ID制限撤去、専用最大1・他キャラ保持・解放枠を検証。実機は残件とまとめる |
 | Raid拠点別報酬 | 現Previewは拠点差なし。要望監査済み | 拠点別品目・数量・討伐／救援の適用範囲確定 |
-| 地元一致ボーナス | 現式・最大例を監査。二重適用ではなく固定加算の影響。数値変更なし | CASH／Dropの係数・上限、進行中Questの適用境界を別スレッドで決定 |
+| 地元一致ボーナス | CASH+10% / Drop+200bp固定を承認・Preview適用済み。全21course・旧Snapshot保持・再送検証PASS | 実機表示は残件とまとめる。quest_hometown_fixed_bonus_implementation_20260914.md参照 |
 
 根拠: growth_target_switch_fix_20260914.md、hometown_bonus_audit_20260914.md、recommendation_and_raid_reward_requests_20260914.md。
 
@@ -91,3 +91,6 @@ Season間PvP・報酬数量・新規Cosmetic登録・連続在籍7日・旧POWER
 - ローカルexec-server起動不可。ローカル型・build未実行。Preview配信側の検証結果をcommit statusで管理。
 - 覚醒・LBと今回の実機確認は他の残件確認時にまとめる。地元一致・Raid報酬は別スレッドで整理し、ここでは変更しない。
 - DB Migrationなし。Production: NOT EXECUTED。
+
+## 地元一致ボーナス確定後
+CASH+10% / Drop+200bp固定 / LUK非連動をPreview実装。開始済みSnapshot保持、基礎Master/claim不変。旧監査の判断待ちは解消。Raid拠点別報酬は引き続き別スレッド。仕様: specs/quest_hometown_fixed_bonus_20260914.md。実機確認は他残件とまとめる。
