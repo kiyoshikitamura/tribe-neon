@@ -111,7 +111,7 @@ export default function RankingRewardNotificationController() {
       title: "ランキング報酬獲得",
       message: [
         hasDailyItemRewards ? "デイリーランキング報酬はバッグへ直接付与されました。" : "",
-        hasSeasonItemRewards ? "シーズンランキング報酬はプレゼントBOXへ付与されました。" : "",
+        hasSeasonItemRewards ? "シーズンランキング報酬を獲得しました。" : "",
         hasCosmeticRewards ? "ギルド装飾を獲得しました。\nランキング報酬の限定ギルド装飾は、正式オープン後のギルド装飾機能追加時に使用できるようになります。" : "",
       ].filter(Boolean).join("\n"),
       confirmText: "閉じる",
@@ -120,7 +120,7 @@ export default function RankingRewardNotificationController() {
       onCancel: acknowledge,
       kind: "reward",
       rewards,
-      delivery: hasSeasonItemRewards && !hasDailyItemRewards ? "PRESENT" : "INVENTORY",
+      delivery: "INVENTORY",
       presentation: "canonical",
     });
   }, [
