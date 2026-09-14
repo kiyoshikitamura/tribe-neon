@@ -45,6 +45,7 @@ export const QA_PRESENTATION_SCENARIOS = [
   ["first-home-favorite-missing", "First Home / Favorite未設定"],
   ["first-home-favorite-invalid", "First Home / Favorite不正"],
   ["first-home-activity-self", "First Home / Activity Self"],
+  ["first-home-activity-real", "First Home / Preview Activity real data"],
   ["first-home-character-tall", "First Home / Tall Character"],
   ["first-home-character-hair", "First Home / Hair Volume Character"],
   ["first-home-campaign", "First Home / Pre-open Campaign"],

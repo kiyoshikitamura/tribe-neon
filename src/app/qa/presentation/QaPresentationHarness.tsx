@@ -30,6 +30,7 @@ import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { waitForBrowserPaint } from "@/domain/presentation/browserPaint";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
+import { supabase } from "@/utils/supabase";
 import "@/app/components/SetupView.css";
 import "@/app/components/TutorialWorldIntro.css";
 import "@/app/components/CommonModals.css";
@@ -402,7 +403,25 @@ function PublicProfileFixture() {
 
 type HomeScenario = "first-home-fresh" | "first-home-identity-loading" | "first-home-raid" | "first-home-guild-out" | "first-home-guild-in" | "first-home-guild-pending" | "first-home-favorite-missing" | "first-home-favorite-invalid" | "first-home-activity-self" | "first-home-character-tall" | "first-home-character-hair" | "first-home-campaign";
 
-function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
+type PreviewActivity = {
+  id: string;
+  activity_type: string;
+  actor_user_id: string | null;
+  actor_display_name: string;
+  actor_favorite_character_id?: string | null;
+  actor_guild_name?: string | null;
+  actor_guild_id?: string | null;
+  object_master_id?: string | null;
+  display_payload?: Record<string, unknown> | null;
+  permanent?: boolean;
+  created_at: string;
+};
+
+function ProductionHomeFixture({ scenario, activityOverride, activityNowOverride }: {
+  scenario: HomeScenario;
+  activityOverride?: PreviewActivity[];
+  activityNowOverride?: number;
+}) {
   const prepQa = String(scenario) === "first-home-prep";
   const [showPrepMissionDialog, setShowPrepMissionDialog] = useState(false);
   const [prepMissionDialogCheckComplete, setPrepMissionDialogCheckComplete] = useState(false);
@@ -501,8 +520,8 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     ? [...guideMilestones, "first_pvp", "ranking_viewed", "first_raid", "guild_activation", "activation_mission_handoff"]
     : raidActive ? [...guideMilestones, "first_pvp", "ranking_viewed"] : guideMilestones;
   const activityIsSelf = scenario === "first-home-activity-self";
-  const activityNow = Date.parse("2026-08-28T11:00:00+09:00");
-  const activities = [
+  const activityNow = activityNowOverride ?? Date.parse("2026-08-28T11:00:00+09:00");
+  const fixtureActivities = [
     { id: "qa-activity-z", activity_type: "SSR_CHARACTER", actor_user_id: activityIsSelf ? "qa-self" : "other-user", actor_display_name: activityIsSelf ? "NEON-R" : "KAI", actor_favorite_character_id: activityIsSelf ? homeLeader.id : "char_reiji_01", actor_guild_name: "NIGHT CREW", created_at: new Date(activityNow - 5 * 60_000).toISOString() },
     { id: "qa-activity-y", activity_type: "GUILD_CREATED", actor_user_id: activityIsSelf ? "other-user" : "qa-self", actor_display_name: activityIsSelf ? "KAI" : "NEON-R", actor_favorite_character_id: activityIsSelf ? "char_reiji_01" : homeLeader.id, actor_guild_name: "NEON CREW", display_payload: { guild_name: "NEON CREW" }, created_at: new Date(activityNow - 5 * 60_000).toISOString() },
     { id: "qa-activity-raid", activity_type: "RAID_BOSS_DEFEATED", actor_user_id: "raid-owner", actor_display_name: "RAID OWNER", actor_favorite_character_id: "char_reiji_01", actor_guild_name: null, display_payload: { boss_name: "雷神連合総長", room_id: "qa-room" }, created_at: new Date(activityNow - 10 * 60_000).toISOString() },
@@ -510,6 +529,7 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     ...Array.from({ length: 9 }, (_, index) => ({ id: `qa-activity-${index + 4}`, activity_type: index % 2 === 0 ? "SSR_CHARACTER" : "GUILD_CREATED", actor_user_id: `log-user-${index}`, actor_display_name: `PLAYER-${index + 1}`, actor_favorite_character_id: index % 3 === 0 ? null : "char_alice_01", actor_guild_name: index % 2 === 0 ? "NEON CREW" : null, display_payload: index % 2 === 0 ? {} : { guild_name: `TRIBE-${index + 1}` }, created_at: new Date(activityNow - (index + 1) * 60 * 60_000).toISOString() })),
     { id: "qa-activity-expired", activity_type: "GUILD_CREATED", actor_user_id: "expired-user", actor_display_name: "OLD USER", actor_favorite_character_id: null, actor_guild_name: null, created_at: new Date(activityNow - 25 * 60 * 60_000).toISOString() },
   ];
+  const activities = activityOverride ?? fixtureActivities;
   return <GameContext.Provider value={game}>
     <div className="qa-production-home" data-home-scenario={scenario} data-raid-active={String(raidActive)} data-guild-joined={String(guildJoined)} data-cta-authority-ready={String(ctaAuthorityReady)} data-identity-authority-ready={String(identityAuthorityReady)}>
       <PageShell header={<Header />} footer={<Footer />}>
@@ -529,9 +549,69 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
   </GameContext.Provider>;
 }
 
+function PreviewRealActivityFixture() {
+  const [state, setState] = useState<{ status: "loading" | "ready" | "error"; activities: PreviewActivity[]; observedAt: number; message?: string }>({
+    status: "loading",
+    activities: [],
+    observedAt: 0,
+  });
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      const actorId = new URLSearchParams(window.location.search).get("actor")?.trim() || "";
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actorId)) {
+        if (active) setState({ status: "error", activities: [], observedAt: 0, message: "actor UUIDを指定してください。" });
+        return;
+      }
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        if (active) setState({ status: "error", activities: [], observedAt: 0, message: "Preview QAへログインしてください。" });
+        return;
+      }
+      const [{ data: rows, error: feedError }, { data: profiles, error: profileError }] = await Promise.all([
+        supabase.from("social_activity_feed")
+          .select("id,activity_type,actor_user_id,actor_display_name,guild_id,object_master_id,display_payload,permanent,created_at")
+          .eq("actor_user_id", actorId)
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabase.rpc("get_public_profiles", { p_user_ids: [actorId] }),
+      ]);
+      if (!active) return;
+      if (feedError || profileError) {
+        setState({ status: "error", activities: [], observedAt: 0, message: "実Activityを読み込めませんでした。" });
+        return;
+      }
+      const profile = Array.isArray(profiles) ? profiles[0] : null;
+      const activities = (Array.isArray(rows) ? rows : []).map((row) => ({
+        ...row,
+        actor_user_id: row.actor_user_id ? String(row.actor_user_id) : null,
+        actor_display_name: String(profile?.username || row.actor_display_name || "プレイヤー"),
+        actor_favorite_character_id: profile?.favorite_character_id || null,
+        actor_guild_name: profile?.guild_name || null,
+        actor_guild_id: profile?.guild_id || row.guild_id || null,
+        display_payload: row.display_payload && typeof row.display_payload === "object" ? row.display_payload as Record<string, unknown> : null,
+      })) as PreviewActivity[];
+      setState(activities.length > 0
+        ? { status: "ready", activities, observedAt: Date.now() }
+        : { status: "error", activities: [], observedAt: 0, message: "対象actorのActivityがありません。" });
+    })();
+    return () => { active = false; };
+  }, []);
+
+  if (state.status !== "ready") return <div className="qa-activity-real-status" role="status" data-status={state.status}>
+    {state.status === "loading" ? "Preview実Activityを読み込み中…" : state.message}
+  </div>;
+  return <ProductionHomeFixture
+    scenario="first-home-activity-self"
+    activityOverride={state.activities}
+    activityNowOverride={state.observedAt}
+  />;
+}
+
 function Scenario({ id }: { id: QaPresentationScenarioId }) {
   if (id === "card-visual-geometry") return <div data-card-visual-geometry style={{display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:8}}>{["N","R","SR","SSR"].map(rarity => <CharacterPresentation key={rarity} src={getCharacterTransparentImg(CHARACTERS_MASTER[0].name)} alt={rarity} variant="thumbnail" rarity={rarity} frameKind="character" metadata={false} />)}</div>;
   if (id === "gacha-character-v3") return <CharacterGachaV3Fixture />;
+  if (id === "first-home-activity-real") return <PreviewRealActivityFixture />;
   if (id.startsWith("first-home-")) return <ProductionHomeFixture scenario={id as HomeScenario} />;
   if (id === "gacha-ssr-reveal") return <SsrRevealFixture />;
   if (id === "battle-5v3") return <BattleFixture size={3} />;

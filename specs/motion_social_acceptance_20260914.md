@@ -40,6 +40,11 @@ Repository確認結果：全体Chat・Guild ChatはTribeChatModal→UserIdentity
 各行でguild_id、guild_name、表示asset pathの対応、画像読込、320px／390pxの見切れを確認。Reload後の保持も確認する。
 未所属actorに他GuildのEmblemを表示しない。対象投稿やイベントが存在しない場合は「データ不足」とし、接続済みを実画面PASSへ読み替えない。
 
+QA分類済みactorは通常のActivity取得Authorityから除外されるため、Preview専用の
+`first-home-activity-real` scenarioだけが、ログイン済みQAから指定actorの実Activityを直接読み、
+本体`HomeTab`の最新行・履歴へ渡す。`actor` queryには実UUIDを指定する。
+通常の`get_recent_social_activity_feed`、QA除外、KPI分類は変更しない。
+
 ## 報告と公開判定
 
 Reduced Motionと4つのSocial表示面を個別にPASS／FAIL／未検証で報告する。環境不足・データ不足を具体的に記載する。
