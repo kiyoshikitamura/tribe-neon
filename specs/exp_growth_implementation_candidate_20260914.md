@@ -88,7 +88,7 @@ Daily Rankingと一度限りの突出報酬を除く標準供給。
 - EXPアイテムのeffectValueを加算し、masterの必要EXP到達でLvUPする。素材個数=LvUPを廃止。
 - 現在Lv、覚醒/LB、所有キャラ/装備、所持素材を維持。遡及EXP負債・降Lvなし。新規xp列は既存行0から。
 - S/M/L混合投入、複数LvUP、CASH不足時atomic rollback、reload一致を検証。
-- cap到達時の余剰EXP処理は現行契約を監査し記録する。本文にない消失/返却規則を確定済みとしない。
+- 9/14本流追加確定: cap超過EXPは保持し覚醒/LB後へ繰越。最終Lv100まで残り1EXPでも素材全量投入可。途中capでも蓄積可、Lv100到達後だけ使用不可。最終Lv到達時の余剰も保持する。
 
 ## 6. UI
 レイアウト再設計は不要。現在Lv/EXP、次Lv必要EXP、選択素材の獲得EXP、使用後予測Lv/EXP、CASH費用、覚醒/LB上限を正しく表示する。
@@ -110,3 +110,6 @@ Daily Rankingと一度限りの突出報酬を除く標準供給。
 7. Productionは本流の別途指示があるまで実行しない
 
 統合基準は661dfd3 + 確認済みProduction差分。今回は受入までの実装候補であり、仕様提示だけで実装済み/受入済みとしない。
+
+## 9. 実装時に判明した割当不整合
+必要EXP実装と成長曲線接続は分離。既存Release/Battleの60型割当には旧fixture UUID3名が含まれ、canonicalのレイジ/ルイ/チャンへの正式対応がない。57名だけ曲線変更せず、60名全件の対応確定後に接続。詳細はdocs/development/growth_exp_preview_implementation_20260914.md参照。
