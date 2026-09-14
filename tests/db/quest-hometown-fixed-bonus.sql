@@ -55,14 +55,14 @@ begin
  and quest_town_key(town_id)=quest_town_key(c.hometown) and is_production_enabled limit 1;
  update users set vitality=100 where id=u;
  j:=start_patrol(q.quest_id,c.id::text); p:=(j->>'patrol_id')::uuid; snap:=j->'hometown_bonus_snapshot';
- if (snap->>'version')::int<>2 or (snap->>'cash')::int<>60 or (snap->>'drop_bonus_bp')::int<>200 then raise exception 'new start snapshot mismatch'; end if;
+ if (snap->>'version')::int<>2 or (snap->>'cash')::int<>q.cash_reward/10 or (snap->>'drop_bonus_bp')::int<>200 then raise exception 'new start snapshot mismatch'; end if;
  update user_characters set level=50,awakening_level=3 where id=c.id;
  if (select hometown_bonus_snapshot from user_patrols where id=p)<>snap then raise exception 'new snapshot drift'; end if;
  update user_patrols set expires_at=now()-interval '1 second',battle_resolved=true,status='CLAIMABLE' where id=p;
  select cash into old_cash from users where id=u;
  j:=claim_patrol_rewards(p);
  select cash into after_cash from users where id=u;
- if after_cash-old_cash<>660 or (j->>'cash')::bigint<>660 or (j->>'hometown_drop_bonus_bp')::int<>200 then raise exception 'new claim mismatch'; end if;
+ if after_cash-old_cash<>q.cash_reward+q.cash_reward/10 or (j->>'cash')::bigint<>q.cash_reward+q.cash_reward/10 or (j->>'hometown_drop_bonus_bp')::int<>200 then raise exception 'new claim mismatch'; end if;
  select coalesce(jsonb_object_agg(item_id,quantity),'{}') into before_items from user_items where user_id=u;
  select count(*) into before_ledger from gameplay_reward_delivery_ledger where user_id=u;
  begin perform claim_patrol_rewards(p); raise exception 'retry accepted'; exception when unique_violation then null; end;

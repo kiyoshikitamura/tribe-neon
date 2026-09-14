@@ -94,6 +94,7 @@ export const CANONICAL_QUESTS = questData.quests.map((quest) => {
     ...quest,
     difficulty: quest.difficulty as CanonicalQuestDifficulty,
     ...contract,
+    rewardPoolId: quest.rewardPoolId,
     firstClearRewardPoolId: null,
     enemyPoolKey: quest.enemyPoolKey,
     unlockCondition: quest.unlockCondition,

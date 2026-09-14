@@ -39,7 +39,7 @@ export default function QuestRaidEncounter() {
  const master=shown?CHARACTERS_MASTER.find(c=>c.id===shown.leaderId):null;
  const ended=shown&&(shown.ended||Boolean(shown.expiresAt&&Date.parse(shown.expiresAt)<=Date.now()));
  return <>
-  {!shown&&!battleState&&['raid','patrol','quest'].includes(activeTab)&&revisitable.length>0&&<section className="quest-encounter-revisit" aria-label="発見した強敵">{revisitable.map((e:Encounter)=><div key={e.patrolId}><span>{towns[e.areaId]} ／ {e.difficulty&&grades[e.difficulty]}</span><strong>{e.bossName}</strong><span className="quest-encounter-bonus">{e.rewardMultiplier===2?'報酬2倍':'報酬ボーナス'}</span><OutlawButton onClick={()=>proceed(e,true)} disabled={busy}>挑む</OutlawButton></div>)}</section>}
+  {!shown&&!battleState&&['raid','patrol','quest'].includes(activeTab)&&revisitable.length>0&&<section className="quest-encounter-revisit" aria-label="発見した強敵">{revisitable.map((e:Encounter)=><div key={e.patrolId}><span>{towns[e.areaId]} ／ {e.difficulty&&grades[e.difficulty]}</span><strong>{e.bossName}</strong><span className="quest-encounter-bonus">{e.bonusCash !== undefined ? `撃破で追加CASH ${e.bonusCash.toLocaleString()} / EXP ${e.bonusUserXp ?? 0}` : '撃破ボーナス'}</span><OutlawButton onClick={()=>proceed(e,true)} disabled={busy}>挑む</OutlawButton></div>)}</section>}
   {!shown&&!battleState&&activeTab==='raid'&&questRaidEncounter.error&&<div role="alert">{questRaidEncounter.error}<OutlawButton onClick={()=>questRaidEncounter.refresh()}>再試行</OutlawButton></div>}
   {shown&&<FullScreenPanel className="quest-encounter-panel" onClose={()=>{void proceed(shown,false);}} showCloseButton={false} closeDisabled={busy}>
    <div className="quest-encounter-scene" style={{backgroundImage:`linear-gradient(0deg,#0b1019,transparent),url('/bg/bg_street_${towns[shown.areaId]?shown.areaId:'shinjuku'}.jpg')`}}>
@@ -49,7 +49,7 @@ export default function QuestRaidEncounter() {
    </div>
    <div className="quest-encounter-actions">
     <p>{ended?'この強敵との戦いは終了しました':'レイドボスを発見！'}</p><h2>{shown.bossName}</h2>
-    {(shown.rewardMultiplier===2||shown.bonusItems.length>0)&&<span className="quest-encounter-bonus">{shown.rewardMultiplier===2?'報酬2倍':'報酬ボーナス'}</span>}
+    {shown.bonusCash !== undefined && <span className="quest-encounter-bonus">撃破で追加CASH {shown.bonusCash.toLocaleString()} / EXP {shown.bonusUserXp ?? 0}</span>}
     {error&&<p role="alert">{error}</p>}
     {!ended&&<OutlawButton variant="primary" fullWidth disabled={busy} onClick={()=>proceed(shown,true)}>今すぐ挑む</OutlawButton>}
     <OutlawButton fullWidth disabled={busy} onClick={()=>proceed(shown,false)}>{ended?'探索へ':'あとで'}</OutlawButton>

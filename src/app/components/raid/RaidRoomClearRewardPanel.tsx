@@ -32,7 +32,7 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
     void client.getReward(roomId).then(async value => {
       if (!current) return;
       setReward(value);
-      if (value.items.some(item => item.delivery === 'DIRECT')) await onDirectReward?.();
+      if (value.items.some(item => item.delivery === 'DIRECT') || value.dailyBonus?.items.length) await onDirectReward?.();
     })
       .catch(() => { if (current) setError(true); })
       .finally(() => { if (current) setBusy(false); });
@@ -58,6 +58,10 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
       <p className="raid-room-muted">レイド終了後に確定した戦闘は討伐報酬の貢献に含みません。</p>
       <p className="raid-room-muted">討伐報酬は1人につきレイドごとに1回。条件達成時に所持資産へ反映されます。</p>
       <RaidIssuedRewardItems items={reward.items} />
+      {reward.dailyBonus && <section aria-label="1日1回撃破ボーナス">
+        <h4>1日1回撃破ボーナス</h4>
+        {reward.dailyBonus.won ? <><p>獲得しました。</p><RaidIssuedRewardItems items={reward.dailyBonus.items.map(item => ({ ...item, delivery: 'DIRECT' as const, presentId: null, presentStatus: null, claimedAt: reward.dailyBonus!.issuedAt, expiresAt: null }))} /></> : <p>本日の抽選は終了しました。チケットの当選はありませんでした。</p>}
+      </section>}
       {reward.status === 'issued' && reward.items.some(item => item.delivery !== 'DIRECT') && onOpenPresents && <OutlawButton loadingLabel="" disabled={opening} onClick={openPresents}>プレゼントBOXへ</OutlawButton>}
     </>}
     <OutlawButton loadingLabel="" disabled={busy || opening} onClick={() => setRevision(value => value + 1)}>報酬情報を更新</OutlawButton>

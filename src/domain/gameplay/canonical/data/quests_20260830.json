@@ -43,7 +43,7 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
       "rewardPoolId": "QUEST_EASY_20260830"
     },
@@ -51,7 +51,7 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
       "rewardPoolId": "QUEST_NORMAL_20260830"
     },
@@ -59,7 +59,7 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
       "rewardPoolId": "QUEST_HARD_20260830"
     }
@@ -129,6 +129,461 @@
           "probabilityBp": 300
         }
       ]
+    },
+    {
+      "rewardPoolId": "QUEST_SHINJUKU_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_SHINJUKU_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_SHINJUKU_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_SHIBUYA_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_SHIBUYA_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_SHIBUYA_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_IKEBUKURO_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_IKEBUKURO_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_IKEBUKURO_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_ROPPONGI_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_ROPPONGI_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_ROPPONGI_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_AKIHABARA_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_AKIHABARA_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_AKIHABARA_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_KAWASAKI_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_KAWASAKI_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_KAWASAKI_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_YOKOHAMA_EASY_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_YOKOHAMA_NORMAL_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "rewardPoolId": "QUEST_YOKOHAMA_HARD_20260914",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
     }
   ],
   "quests": [
@@ -142,9 +597,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_SHINJUKU_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "SHINJUKU_EASY",
       "unlockCondition": {
@@ -162,9 +617,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_SHINJUKU_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "SHINJUKU_NORMAL",
       "unlockCondition": {
@@ -183,9 +638,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_SHINJUKU_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "SHINJUKU_HARD",
       "unlockCondition": {
@@ -204,9 +659,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_SHIBUYA_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "SHIBUYA_EASY",
       "unlockCondition": {
@@ -224,9 +679,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_SHIBUYA_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "SHIBUYA_NORMAL",
       "unlockCondition": {
@@ -245,9 +700,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_SHIBUYA_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "SHIBUYA_HARD",
       "unlockCondition": {
@@ -266,9 +721,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_IKEBUKURO_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "IKEBUKURO_EASY",
       "unlockCondition": {
@@ -286,9 +741,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_IKEBUKURO_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "IKEBUKURO_NORMAL",
       "unlockCondition": {
@@ -307,9 +762,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_IKEBUKURO_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "IKEBUKURO_HARD",
       "unlockCondition": {
@@ -328,9 +783,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_ROPPONGI_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "ROPPONGI_EASY",
       "unlockCondition": {
@@ -348,9 +803,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_ROPPONGI_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "ROPPONGI_NORMAL",
       "unlockCondition": {
@@ -369,9 +824,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_ROPPONGI_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "ROPPONGI_HARD",
       "unlockCondition": {
@@ -390,9 +845,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_AKIHABARA_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "AKIHABARA_EASY",
       "unlockCondition": {
@@ -410,9 +865,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_AKIHABARA_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "AKIHABARA_NORMAL",
       "unlockCondition": {
@@ -431,9 +886,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_AKIHABARA_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "AKIHABARA_HARD",
       "unlockCondition": {
@@ -452,9 +907,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_KAWASAKI_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "KAWASAKI_EASY",
       "unlockCondition": {
@@ -472,9 +927,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_KAWASAKI_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "KAWASAKI_NORMAL",
       "unlockCondition": {
@@ -493,9 +948,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_KAWASAKI_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "KAWASAKI_HARD",
       "unlockCondition": {
@@ -514,9 +969,9 @@
       "durationSec": 300,
       "vitalityCost": 3,
       "userExp": 100,
-      "cashReward": 0,
+      "cashReward": 300,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_EASY_20260830",
+      "rewardPoolId": "QUEST_YOKOHAMA_EASY_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "YOKOHAMA_EASY",
       "unlockCondition": {
@@ -534,9 +989,9 @@
       "durationSec": 3600,
       "vitalityCost": 10,
       "userExp": 400,
-      "cashReward": 0,
+      "cashReward": 600,
       "dailyFirstClearCash": 0,
-      "rewardPoolId": "QUEST_NORMAL_20260830",
+      "rewardPoolId": "QUEST_YOKOHAMA_NORMAL_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "YOKOHAMA_NORMAL",
       "unlockCondition": {
@@ -555,9 +1010,9 @@
       "durationSec": 10800,
       "vitalityCost": 20,
       "userExp": 1000,
-      "cashReward": 0,
+      "cashReward": 1000,
       "dailyFirstClearCash": 20,
-      "rewardPoolId": "QUEST_HARD_20260830",
+      "rewardPoolId": "QUEST_YOKOHAMA_HARD_20260914",
       "firstClearUserExp": 0,
       "enemyPoolKey": "YOKOHAMA_HARD",
       "unlockCondition": {

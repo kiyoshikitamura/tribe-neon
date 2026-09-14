@@ -1,0 +1,1659 @@
+{
+  "status": "CANDIDATE_MEASUREMENT_NOT_ACCEPTANCE",
+  "seeds": [
+    104729,
+    112648,
+    120567,
+    128486,
+    136405,
+    144324,
+    152243,
+    160162,
+    168081,
+    176000,
+    183919,
+    191838,
+    199757,
+    207676,
+    215595,
+    223514,
+    231433,
+    239352,
+    247271,
+    255190
+  ],
+  "notes": [
+    "Local current repository engine; not live E2E.",
+    "Synthetic parties; same stats for counter comparison.",
+    "netHpReduction is end-of-battle remaining-HP comparison, not the server contribution ledger."
+  ],
+  "rows": [
+    {
+      "area": "SHINJUKU",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 220000,
+      "baseline": {
+        "rawDamage": 46833,
+        "netHpReduction": 46833,
+        "enemyHealing": 0,
+        "rounds": 20.7,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 114,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_009": 108,
+          "BASIC_ATTACK": 1159
+        }
+      },
+      "candidate": {
+        "rawDamage": 46858,
+        "netHpReduction": 46858,
+        "enemyHealing": 0,
+        "rounds": 20.65,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 113,
+          "SKILL_008": 141,
+          "SKILL_011": 141,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_009": 108,
+          "BASIC_ATTACK": 1158
+        }
+      },
+      "counter": {
+        "rawDamage": 42412,
+        "netHpReduction": 42412,
+        "enemyHealing": 0,
+        "rounds": 20.4,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 140,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_009": 139,
+          "BASIC_ATTACK": 1156
+        }
+      }
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 3500000,
+      "baseline": {
+        "rawDamage": 282386,
+        "netHpReduction": 277637,
+        "enemyHealing": 5388,
+        "rounds": 27.8,
+        "survivors": 0.15,
+        "enemySkillActions": {
+          "SKILL_001": 196,
+          "SKILL_008": 194,
+          "SKILL_011": 190,
+          "SKILL_019": 188,
+          "SKILL_012": 182,
+          "SKILL_017": 895,
+          "BASIC_ATTACK": 887
+        }
+      },
+      "candidate": {
+        "rawDamage": 201423,
+        "netHpReduction": 200509,
+        "enemyHealing": 3278,
+        "rounds": 19.35,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 139,
+          "SKILL_011": 272,
+          "SKILL_019": 133,
+          "SKILL_012": 126,
+          "SKILL_009": 123,
+          "SKILL_008": 119,
+          "BASIC_ATTACK": 950
+        }
+      },
+      "counter": {
+        "rawDamage": 172641,
+        "netHpReduction": 169321,
+        "enemyHealing": 3320,
+        "rounds": 19.95,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 141,
+          "SKILL_011": 274,
+          "SKILL_019": 137,
+          "SKILL_012": 132,
+          "SKILL_009": 132,
+          "SKILL_008": 123,
+          "BASIC_ATTACK": 978
+        }
+      }
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 15200000,
+      "baseline": {
+        "rawDamage": 405754,
+        "netHpReduction": 405412,
+        "enemyHealing": 4327,
+        "rounds": 29.85,
+        "survivors": 1.1,
+        "enemySkillActions": {
+          "SKILL_001": 160,
+          "SKILL_008": 160,
+          "SKILL_011": 160,
+          "SKILL_019": 160,
+          "SKILL_012": 160,
+          "SKILL_021": 157,
+          "SKILL_028": 157,
+          "SKILL_027": 156,
+          "SKILL_032": 154,
+          "SKILL_026": 713,
+          "SKILL_034": 140,
+          "BASIC_ATTACK": 652
+        }
+      },
+      "candidate": {
+        "rawDamage": 400541,
+        "netHpReduction": 398473,
+        "enemyHealing": 5654,
+        "rounds": 28.7,
+        "survivors": 0.75,
+        "enemySkillActions": {
+          "SKILL_011": 583,
+          "SKILL_019": 194,
+          "SKILL_012": 192,
+          "SKILL_001": 190,
+          "SKILL_008": 188,
+          "SKILL_009": 360,
+          "BASIC_ATTACK": 1095
+        }
+      },
+      "counter": {
+        "rawDamage": 447615,
+        "netHpReduction": 442035,
+        "enemyHealing": 5580,
+        "rounds": 29.5,
+        "survivors": 0.95,
+        "enemySkillActions": {
+          "SKILL_011": 592,
+          "SKILL_019": 196,
+          "SKILL_012": 195,
+          "SKILL_001": 188,
+          "SKILL_008": 193,
+          "SKILL_009": 370,
+          "BASIC_ATTACK": 1136
+        }
+      }
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 28700000,
+      "baseline": {
+        "rawDamage": 450726,
+        "netHpReduction": 445823,
+        "enemyHealing": 5579,
+        "rounds": 28.6,
+        "survivors": 1.25,
+        "enemySkillActions": {
+          "SKILL_012": 154,
+          "SKILL_001": 154,
+          "SKILL_008": 154,
+          "SKILL_011": 154,
+          "SKILL_019": 154,
+          "SKILL_026": 686,
+          "SKILL_021": 150,
+          "SKILL_028": 148,
+          "SKILL_027": 148,
+          "SKILL_032": 148,
+          "SKILL_034": 134,
+          "BASIC_ATTACK": 658
+        }
+      },
+      "candidate": {
+        "rawDamage": 490352,
+        "netHpReduction": 486272,
+        "enemyHealing": 4741,
+        "rounds": 29.8,
+        "survivors": 1.85,
+        "enemySkillActions": {
+          "SKILL_012": 200,
+          "SKILL_011": 799,
+          "SKILL_009": 590,
+          "SKILL_001": 199,
+          "SKILL_008": 198,
+          "SKILL_019": 198,
+          "BASIC_ATTACK": 771
+        }
+      },
+      "counter": {
+        "rawDamage": 443140,
+        "netHpReduction": 438483,
+        "enemyHealing": 4657,
+        "rounds": 29.75,
+        "survivors": 1.7,
+        "enemySkillActions": {
+          "SKILL_012": 200,
+          "SKILL_011": 800,
+          "SKILL_009": 588,
+          "SKILL_001": 199,
+          "SKILL_008": 198,
+          "SKILL_019": 196,
+          "BASIC_ATTACK": 768
+        }
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 200000,
+      "baseline": {
+        "rawDamage": 45343,
+        "netHpReduction": 45343,
+        "enemyHealing": 0,
+        "rounds": 20.7,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 96,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_004": 82,
+          "BASIC_ATTACK": 1143
+        }
+      },
+      "candidate": {
+        "rawDamage": 45346,
+        "netHpReduction": 45346,
+        "enemyHealing": 0,
+        "rounds": 20.7,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 96,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_004": 82,
+          "BASIC_ATTACK": 1143
+        }
+      },
+      "counter": {
+        "rawDamage": 39965,
+        "netHpReduction": 39965,
+        "enemyHealing": 0,
+        "rounds": 19.8,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 132,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 137,
+          "SKILL_004": 120,
+          "BASIC_ATTACK": 1113
+        }
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 3600000,
+      "baseline": {
+        "rawDamage": 322176,
+        "netHpReduction": 318058,
+        "enemyHealing": 5360,
+        "rounds": 29.75,
+        "survivors": 1.6,
+        "enemySkillActions": {
+          "SKILL_001": 199,
+          "SKILL_008": 198,
+          "SKILL_011": 199,
+          "SKILL_019": 199,
+          "SKILL_012": 198,
+          "SKILL_020": 982,
+          "BASIC_ATTACK": 970
+        }
+      },
+      "candidate": {
+        "rawDamage": 223415,
+        "netHpReduction": 221723,
+        "enemyHealing": 3923,
+        "rounds": 23.15,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 159,
+          "SKILL_008": 160,
+          "SKILL_011": 160,
+          "SKILL_019": 157,
+          "SKILL_012": 155,
+          "SKILL_004": 150,
+          "BASIC_ATTACK": 1223,
+          "SKILL_030": 81
+        }
+      },
+      "counter": {
+        "rawDamage": 186566,
+        "netHpReduction": 182514,
+        "enemyHealing": 4052,
+        "rounds": 22.8,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 153,
+          "SKILL_008": 156,
+          "SKILL_011": 151,
+          "SKILL_019": 152,
+          "SKILL_012": 149,
+          "SKILL_004": 144,
+          "BASIC_ATTACK": 1205,
+          "SKILL_030": 77
+        }
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 15800000,
+      "baseline": {
+        "rawDamage": 431489,
+        "netHpReduction": 427968,
+        "enemyHealing": 4752,
+        "rounds": 30,
+        "survivors": 2.8,
+        "enemySkillActions": {
+          "SKILL_065": 20,
+          "SKILL_011": 160,
+          "SKILL_001": 160,
+          "SKILL_008": 160,
+          "SKILL_019": 199,
+          "SKILL_012": 160,
+          "SKILL_032": 160,
+          "SKILL_028": 160,
+          "SKILL_066": 160,
+          "SKILL_033": 699,
+          "SKILL_021": 160,
+          "SKILL_034": 137,
+          "SKILL_027": 140,
+          "BASIC_ATTACK": 495
+        }
+      },
+      "candidate": {
+        "rawDamage": 371187,
+        "netHpReduction": 367917,
+        "enemyHealing": 4503,
+        "rounds": 29.5,
+        "survivors": 1.3,
+        "enemySkillActions": {
+          "SKILL_065": 20,
+          "SKILL_011": 197,
+          "SKILL_001": 198,
+          "SKILL_008": 159,
+          "SKILL_019": 197,
+          "SKILL_012": 197,
+          "SKILL_004": 389,
+          "SKILL_066": 154,
+          "BASIC_ATTACK": 1216,
+          "SKILL_030": 195
+        }
+      },
+      "counter": {
+        "rawDamage": 349299,
+        "netHpReduction": 344856,
+        "enemyHealing": 4443,
+        "rounds": 29.5,
+        "survivors": 1.25,
+        "enemySkillActions": {
+          "SKILL_065": 20,
+          "SKILL_011": 197,
+          "SKILL_001": 196,
+          "SKILL_008": 159,
+          "SKILL_019": 197,
+          "SKILL_012": 197,
+          "SKILL_004": 387,
+          "SKILL_066": 155,
+          "BASIC_ATTACK": 1223,
+          "SKILL_030": 192
+        }
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 31300000,
+      "baseline": {
+        "rawDamage": 523172,
+        "netHpReduction": 517810,
+        "enemyHealing": 5887,
+        "rounds": 29.35,
+        "survivors": 1.85,
+        "enemySkillActions": {
+          "SKILL_012": 160,
+          "SKILL_008": 160,
+          "SKILL_001": 147,
+          "SKILL_011": 159,
+          "SKILL_019": 199,
+          "SKILL_021": 152,
+          "SKILL_027": 152,
+          "SKILL_028": 131,
+          "SKILL_032": 152,
+          "SKILL_033": 647,
+          "SKILL_034": 132,
+          "SKILL_056": 119,
+          "BASIC_ATTACK": 598
+        }
+      },
+      "candidate": {
+        "rawDamage": 494617,
+        "netHpReduction": 489194,
+        "enemyHealing": 5423,
+        "rounds": 30,
+        "survivors": 1.4,
+        "enemySkillActions": {
+          "SKILL_012": 200,
+          "SKILL_008": 200,
+          "SKILL_001": 191,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_004": 580,
+          "BASIC_ATTACK": 993,
+          "SKILL_030": 299,
+          "SKILL_056": 120
+        }
+      },
+      "counter": {
+        "rawDamage": 479227,
+        "netHpReduction": 473764,
+        "enemyHealing": 5464,
+        "rounds": 30,
+        "survivors": 1.25,
+        "enemySkillActions": {
+          "SKILL_012": 200,
+          "SKILL_008": 200,
+          "SKILL_001": 191,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_004": 580,
+          "BASIC_ATTACK": 994,
+          "SKILL_030": 298,
+          "SKILL_056": 120
+        }
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 215250,
+      "baseline": {
+        "rawDamage": 45551,
+        "netHpReduction": 45551,
+        "enemyHealing": 0,
+        "rounds": 20.8,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 105,
+          "SKILL_008": 141,
+          "SKILL_011": 141,
+          "SKILL_019": 141,
+          "SKILL_012": 140,
+          "SKILL_006": 96,
+          "BASIC_ATTACK": 1166
+        }
+      },
+      "candidate": {
+        "rawDamage": 45358,
+        "netHpReduction": 45358,
+        "enemyHealing": 0,
+        "rounds": 20.8,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 117,
+          "SKILL_008": 141,
+          "SKILL_011": 141,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_006": 109,
+          "BASIC_ATTACK": 1158
+        }
+      },
+      "counter": {
+        "rawDamage": 56108,
+        "netHpReduction": 55169,
+        "enemyHealing": 938,
+        "rounds": 20.2,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 134,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_006": 122,
+          "BASIC_ATTACK": 1146
+        }
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 4200000,
+      "baseline": {
+        "rawDamage": 310595,
+        "netHpReduction": 306487,
+        "enemyHealing": 4938,
+        "rounds": 29.9,
+        "survivors": 1.35,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 199,
+          "SKILL_019": 199,
+          "SKILL_012": 199,
+          "SKILL_014": 989,
+          "BASIC_ATTACK": 981
+        }
+      },
+      "candidate": {
+        "rawDamage": 240680,
+        "netHpReduction": 239628,
+        "enemyHealing": 4386,
+        "rounds": 25.95,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 180,
+          "SKILL_008": 181,
+          "SKILL_011": 180,
+          "SKILL_019": 177,
+          "SKILL_012": 174,
+          "SKILL_006": 170,
+          "SKILL_002": 172,
+          "BASIC_ATTACK": 1297
+        }
+      },
+      "counter": {
+        "rawDamage": 236169,
+        "netHpReduction": 231877,
+        "enemyHealing": 4292,
+        "rounds": 26.25,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 182,
+          "SKILL_008": 184,
+          "SKILL_011": 181,
+          "SKILL_019": 181,
+          "SKILL_012": 176,
+          "SKILL_006": 172,
+          "SKILL_002": 173,
+          "BASIC_ATTACK": 1316
+        }
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 12362500,
+      "baseline": {
+        "rawDamage": 213466,
+        "netHpReduction": 211268,
+        "enemyHealing": 3457,
+        "rounds": 23.45,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 131,
+          "SKILL_008": 127,
+          "SKILL_011": 131,
+          "SKILL_019": 128,
+          "SKILL_012": 131,
+          "SKILL_028": 581,
+          "SKILL_021": 116,
+          "SKILL_027": 113,
+          "SKILL_032": 112,
+          "SKILL_034": 110,
+          "BASIC_ATTACK": 601
+        }
+      },
+      "candidate": {
+        "rawDamage": 443943,
+        "netHpReduction": 444832,
+        "enemyHealing": 5580,
+        "rounds": 30,
+        "survivors": 4.6,
+        "enemySkillActions": {
+          "SKILL_001": 199,
+          "SKILL_008": 196,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_002": 389,
+          "SKILL_006": 393,
+          "BASIC_ATTACK": 1167
+        }
+      },
+      "counter": {
+        "rawDamage": 415584,
+        "netHpReduction": 416208,
+        "enemyHealing": 5473,
+        "rounds": 30,
+        "survivors": 4.65,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 199,
+          "SKILL_012": 199,
+          "SKILL_002": 392,
+          "SKILL_006": 397,
+          "BASIC_ATTACK": 1162
+        }
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 34650000,
+      "baseline": {
+        "rawDamage": 318067,
+        "netHpReduction": 315508,
+        "enemyHealing": 4323,
+        "rounds": 29.35,
+        "survivors": 1.95,
+        "enemySkillActions": {
+          "SKILL_008": 158,
+          "SKILL_001": 156,
+          "SKILL_011": 158,
+          "SKILL_019": 156,
+          "SKILL_012": 158,
+          "SKILL_028": 758,
+          "SKILL_021": 155,
+          "SKILL_032": 138,
+          "SKILL_027": 138,
+          "SKILL_034": 136,
+          "BASIC_ATTACK": 794
+        }
+      },
+      "candidate": {
+        "rawDamage": 512250,
+        "netHpReduction": 512746,
+        "enemyHealing": 7145,
+        "rounds": 30,
+        "survivors": 4.6,
+        "enemySkillActions": {
+          "SKILL_008": 200,
+          "SKILL_001": 199,
+          "SKILL_011": 199,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_002": 592,
+          "SKILL_006": 578,
+          "BASIC_ATTACK": 779
+        }
+      },
+      "counter": {
+        "rawDamage": 476221,
+        "netHpReduction": 477530,
+        "enemyHealing": 7052,
+        "rounds": 30,
+        "survivors": 4.6,
+        "enemySkillActions": {
+          "SKILL_008": 200,
+          "SKILL_001": 193,
+          "SKILL_011": 200,
+          "SKILL_019": 199,
+          "SKILL_012": 200,
+          "SKILL_002": 587,
+          "SKILL_006": 577,
+          "BASIC_ATTACK": 781
+        }
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 190000,
+      "baseline": {
+        "rawDamage": 43518,
+        "netHpReduction": 43518,
+        "enemyHealing": 0,
+        "rounds": 19.8,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_008": 226,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 136,
+          "SKILL_001": 76,
+          "BASIC_ATTACK": 1056
+        }
+      },
+      "candidate": {
+        "rawDamage": 46791,
+        "netHpReduction": 46791,
+        "enemyHealing": 0,
+        "rounds": 20.5,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 79,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_009": 65,
+          "BASIC_ATTACK": 1110
+        }
+      },
+      "counter": {
+        "rawDamage": 52936,
+        "netHpReduction": 52936,
+        "enemyHealing": 0,
+        "rounds": 23.95,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 83,
+          "SKILL_008": 163,
+          "SKILL_011": 162,
+          "SKILL_019": 160,
+          "SKILL_012": 160,
+          "SKILL_009": 74,
+          "BASIC_ATTACK": 1305
+        }
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 2100000,
+      "baseline": {
+        "rawDamage": 141379,
+        "netHpReduction": 140916,
+        "enemyHealing": 2152,
+        "rounds": 14.9,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 90,
+          "SKILL_008": 90,
+          "SKILL_011": 90,
+          "SKILL_019": 88,
+          "SKILL_012": 86,
+          "SKILL_021": 373,
+          "BASIC_ATTACK": 608
+        }
+      },
+      "candidate": {
+        "rawDamage": 269125,
+        "netHpReduction": 268028,
+        "enemyHealing": 3990,
+        "rounds": 24.95,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 174,
+          "SKILL_008": 175,
+          "SKILL_011": 170,
+          "SKILL_019": 168,
+          "SKILL_012": 168,
+          "SKILL_009": 163,
+          "SKILL_015": 163,
+          "BASIC_ATTACK": 1258
+        }
+      },
+      "counter": {
+        "rawDamage": 381749,
+        "netHpReduction": 376936,
+        "enemyHealing": 4812,
+        "rounds": 30,
+        "survivors": 4.7,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_009": 199,
+          "SKILL_015": 198,
+          "BASIC_ATTACK": 1551
+        }
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 13500000,
+      "baseline": {
+        "rawDamage": 409472,
+        "netHpReduction": 409394,
+        "enemyHealing": 4303,
+        "rounds": 26.15,
+        "survivors": 0.05,
+        "enemySkillActions": {
+          "SKILL_001": 145,
+          "SKILL_008": 180,
+          "SKILL_011": 145,
+          "SKILL_019": 142,
+          "SKILL_012": 142,
+          "SKILL_032": 136,
+          "SKILL_035": 449,
+          "SKILL_021": 133,
+          "SKILL_028": 132,
+          "SKILL_027": 131,
+          "SKILL_034": 114,
+          "BASIC_ATTACK": 687
+        }
+      },
+      "candidate": {
+        "rawDamage": 676975,
+        "netHpReduction": 677291,
+        "enemyHealing": 6458,
+        "rounds": 30,
+        "survivors": 4.65,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 199,
+          "SKILL_012": 196,
+          "SKILL_009": 397,
+          "SKILL_015": 399,
+          "BASIC_ATTACK": 1152
+        }
+      },
+      "counter": {
+        "rawDamage": 599388,
+        "netHpReduction": 594425,
+        "enemyHealing": 4963,
+        "rounds": 30,
+        "survivors": 4.4,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 199,
+          "SKILL_011": 200,
+          "SKILL_019": 198,
+          "SKILL_012": 196,
+          "SKILL_009": 373,
+          "SKILL_015": 349,
+          "BASIC_ATTACK": 1247
+        }
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 41800000,
+      "baseline": {
+        "rawDamage": 486465,
+        "netHpReduction": 487638,
+        "enemyHealing": 4043,
+        "rounds": 29.45,
+        "survivors": 2.15,
+        "enemySkillActions": {
+          "SKILL_059": 20,
+          "SKILL_001": 158,
+          "SKILL_008": 197,
+          "SKILL_011": 158,
+          "SKILL_019": 158,
+          "SKILL_012": 158,
+          "SKILL_032": 157,
+          "SKILL_035": 491,
+          "SKILL_021": 156,
+          "SKILL_028": 156,
+          "SKILL_027": 156,
+          "SKILL_034": 133,
+          "BASIC_ATTACK": 818
+        }
+      },
+      "candidate": {
+        "rawDamage": 703641,
+        "netHpReduction": 701279,
+        "enemyHealing": 6549,
+        "rounds": 30,
+        "survivors": 4.1,
+        "enemySkillActions": {
+          "SKILL_059": 20,
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_009": 596,
+          "SKILL_015": 580,
+          "BASIC_ATTACK": 796
+        }
+      },
+      "counter": {
+        "rawDamage": 746483,
+        "netHpReduction": 741030,
+        "enemyHealing": 5453,
+        "rounds": 30,
+        "survivors": 4.5,
+        "enemySkillActions": {
+          "SKILL_059": 20,
+          "SKILL_001": 195,
+          "SKILL_008": 199,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_009": 553,
+          "SKILL_015": 512,
+          "BASIC_ATTACK": 894
+        }
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 210000,
+      "baseline": {
+        "rawDamage": 45521,
+        "netHpReduction": 45521,
+        "enemyHealing": 0,
+        "rounds": 19.9,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 102,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 139,
+          "SKILL_010": 94,
+          "BASIC_ATTACK": 1090
+        }
+      },
+      "candidate": {
+        "rawDamage": 43668,
+        "netHpReduction": 43668,
+        "enemyHealing": 0,
+        "rounds": 18.9,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 104,
+          "SKILL_008": 133,
+          "SKILL_011": 133,
+          "SKILL_019": 133,
+          "SKILL_012": 129,
+          "SKILL_018": 69,
+          "BASIC_ATTACK": 1072
+        }
+      },
+      "counter": {
+        "rawDamage": 51101,
+        "netHpReduction": 51101,
+        "enemyHealing": 0,
+        "rounds": 23.15,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 104,
+          "SKILL_008": 163,
+          "SKILL_011": 162,
+          "SKILL_019": 161,
+          "SKILL_012": 158,
+          "SKILL_018": 64,
+          "BASIC_ATTACK": 1300
+        }
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 4300000,
+      "baseline": {
+        "rawDamage": 326128,
+        "netHpReduction": 322820,
+        "enemyHealing": 4713,
+        "rounds": 30,
+        "survivors": 1.9,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 199,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_015": 998,
+          "BASIC_ATTACK": 981
+        }
+      },
+      "candidate": {
+        "rawDamage": 204350,
+        "netHpReduction": 204227,
+        "enemyHealing": 3160,
+        "rounds": 22.55,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 159,
+          "SKILL_008": 156,
+          "SKILL_011": 151,
+          "SKILL_019": 145,
+          "SKILL_012": 147,
+          "SKILL_018": 104,
+          "BASIC_ATTACK": 1219,
+          "SKILL_030": 81
+        }
+      },
+      "counter": {
+        "rawDamage": 259639,
+        "netHpReduction": 255430,
+        "enemyHealing": 4209,
+        "rounds": 29.8,
+        "survivors": 2.15,
+        "enemySkillActions": {
+          "SKILL_001": 199,
+          "SKILL_008": 199,
+          "SKILL_011": 199,
+          "SKILL_019": 197,
+          "SKILL_012": 199,
+          "SKILL_018": 139,
+          "BASIC_ATTACK": 1689,
+          "SKILL_030": 101
+        }
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 5700000,
+      "baseline": {
+        "rawDamage": 179337,
+        "netHpReduction": 176354,
+        "enemyHealing": 3118,
+        "rounds": 19.4,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 105,
+          "SKILL_008": 111,
+          "SKILL_011": 111,
+          "SKILL_019": 109,
+          "SKILL_012": 106,
+          "BASIC_ATTACK": 477,
+          "SKILL_021": 103,
+          "SKILL_028": 102,
+          "SKILL_027": 96,
+          "SKILL_032": 94,
+          "SKILL_034": 94,
+          "SKILL_030": 321,
+          "SKILL_070": 55
+        }
+      },
+      "candidate": {
+        "rawDamage": 339763,
+        "netHpReduction": 336524,
+        "enemyHealing": 4195,
+        "rounds": 29.65,
+        "survivors": 1.15,
+        "enemySkillActions": {
+          "SKILL_001": 199,
+          "SKILL_008": 199,
+          "SKILL_011": 198,
+          "SKILL_019": 199,
+          "SKILL_012": 198,
+          "SKILL_018": 275,
+          "BASIC_ATTACK": 1332,
+          "SKILL_030": 199,
+          "SKILL_070": 126
+        }
+      },
+      "counter": {
+        "rawDamage": 441240,
+        "netHpReduction": 436954,
+        "enemyHealing": 4286,
+        "rounds": 30,
+        "survivors": 3.45,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_018": 277,
+          "BASIC_ATTACK": 1368,
+          "SKILL_030": 200,
+          "SKILL_070": 134
+        }
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 15100000,
+      "baseline": {
+        "rawDamage": 269539,
+        "netHpReduction": 265796,
+        "enemyHealing": 3828,
+        "rounds": 23.55,
+        "survivors": 0.45,
+        "enemySkillActions": {
+          "SKILL_019": 133,
+          "SKILL_001": 101,
+          "SKILL_008": 130,
+          "SKILL_011": 128,
+          "SKILL_012": 128,
+          "SKILL_027": 125,
+          "BASIC_ATTACK": 613,
+          "SKILL_021": 121,
+          "SKILL_028": 120,
+          "SKILL_032": 118,
+          "SKILL_030": 402,
+          "SKILL_057": 92,
+          "SKILL_034": 90
+        }
+      },
+      "candidate": {
+        "rawDamage": 372491,
+        "netHpReduction": 368236,
+        "enemyHealing": 4904,
+        "rounds": 29.9,
+        "survivors": 1.6,
+        "enemySkillActions": {
+          "SKILL_019": 200,
+          "SKILL_001": 189,
+          "SKILL_008": 199,
+          "SKILL_011": 199,
+          "SKILL_012": 160,
+          "BASIC_ATTACK": 1174,
+          "SKILL_018": 434,
+          "SKILL_030": 288,
+          "SKILL_057": 120
+        }
+      },
+      "counter": {
+        "rawDamage": 547560,
+        "netHpReduction": 542640,
+        "enemyHealing": 4920,
+        "rounds": 30,
+        "survivors": 3.8,
+        "enemySkillActions": {
+          "SKILL_019": 200,
+          "SKILL_001": 196,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_012": 160,
+          "BASIC_ATTACK": 1180,
+          "SKILL_018": 436,
+          "SKILL_030": 276,
+          "SKILL_057": 120
+        }
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 171000,
+      "baseline": {
+        "rawDamage": 40912,
+        "netHpReduction": 40912,
+        "enemyHealing": 0,
+        "rounds": 18.9,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_011": 218,
+          "SKILL_008": 132,
+          "SKILL_019": 132,
+          "SKILL_012": 127,
+          "SKILL_001": 79,
+          "BASIC_ATTACK": 1034
+        }
+      },
+      "candidate": {
+        "rawDamage": 42915,
+        "netHpReduction": 42915,
+        "enemyHealing": 0,
+        "rounds": 20.2,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 77,
+          "SKILL_008": 139,
+          "SKILL_011": 139,
+          "SKILL_019": 139,
+          "SKILL_012": 139,
+          "SKILL_035": 40,
+          "BASIC_ATTACK": 1122
+        }
+      },
+      "counter": {
+        "rawDamage": 41075,
+        "netHpReduction": 41075,
+        "enemyHealing": 0,
+        "rounds": 20.15,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 81,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 138,
+          "SKILL_035": 40,
+          "BASIC_ATTACK": 1118
+        }
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 2160000,
+      "baseline": {
+        "rawDamage": 162161,
+        "netHpReduction": 147680,
+        "enemyHealing": 16120,
+        "rounds": 16.55,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_019": 567,
+          "SKILL_011": 120,
+          "SKILL_001": 109,
+          "SKILL_008": 107,
+          "BASIC_ATTACK": 591,
+          "SKILL_012": 100
+        }
+      },
+      "candidate": {
+        "rawDamage": 161818,
+        "netHpReduction": 160169,
+        "enemyHealing": 3221,
+        "rounds": 16.05,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 118,
+          "SKILL_011": 234,
+          "SKILL_019": 112,
+          "SKILL_012": 103,
+          "SKILL_035": 60,
+          "SKILL_008": 102,
+          "BASIC_ATTACK": 822
+        }
+      },
+      "counter": {
+        "rawDamage": 137948,
+        "netHpReduction": 135450,
+        "enemyHealing": 2499,
+        "rounds": 16,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 120,
+          "SKILL_011": 232,
+          "SKILL_019": 106,
+          "SKILL_012": 100,
+          "SKILL_008": 100,
+          "BASIC_ATTACK": 816,
+          "SKILL_035": 60
+        }
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 6545000,
+      "baseline": {
+        "rawDamage": 177108,
+        "netHpReduction": 175504,
+        "enemyHealing": 2580,
+        "rounds": 16.4,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 92,
+          "SKILL_008": 90,
+          "SKILL_011": 95,
+          "SKILL_019": 91,
+          "SKILL_012": 91,
+          "SKILL_021": 87,
+          "SKILL_061": 83,
+          "SKILL_027": 385,
+          "SKILL_028": 75,
+          "SKILL_067": 71,
+          "SKILL_032": 75,
+          "SKILL_034": 72,
+          "BASIC_ATTACK": 255
+        }
+      },
+      "candidate": {
+        "rawDamage": 305266,
+        "netHpReduction": 303484,
+        "enemyHealing": 5077,
+        "rounds": 24.9,
+        "survivors": 0.05,
+        "enemySkillActions": {
+          "SKILL_011": 480,
+          "SKILL_019": 167,
+          "SKILL_012": 168,
+          "SKILL_001": 165,
+          "SKILL_061": 125,
+          "SKILL_035": 167,
+          "BASIC_ATTACK": 954,
+          "SKILL_008": 117,
+          "SKILL_067": 83
+        }
+      },
+      "counter": {
+        "rawDamage": 292482,
+        "netHpReduction": 288283,
+        "enemyHealing": 4200,
+        "rounds": 24.4,
+        "survivors": 0.1,
+        "enemySkillActions": {
+          "SKILL_011": 471,
+          "SKILL_019": 164,
+          "SKILL_012": 163,
+          "SKILL_001": 158,
+          "SKILL_061": 123,
+          "SKILL_035": 161,
+          "BASIC_ATTACK": 933,
+          "SKILL_008": 115,
+          "SKILL_067": 82
+        }
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 25440000,
+      "baseline": {
+        "rawDamage": 423383,
+        "netHpReduction": 424014,
+        "enemyHealing": 4100,
+        "rounds": 27.3,
+        "survivors": 0.2,
+        "enemySkillActions": {
+          "SKILL_001": 148,
+          "SKILL_019": 148,
+          "SKILL_008": 148,
+          "SKILL_011": 148,
+          "SKILL_012": 145,
+          "SKILL_021": 139,
+          "SKILL_027": 672,
+          "SKILL_028": 139,
+          "SKILL_032": 130,
+          "BASIC_ATTACK": 707,
+          "SKILL_034": 128
+        }
+      },
+      "candidate": {
+        "rawDamage": 559482,
+        "netHpReduction": 562420,
+        "enemyHealing": 3582,
+        "rounds": 28.9,
+        "survivors": 0.8,
+        "enemySkillActions": {
+          "SKILL_011": 793,
+          "SKILL_012": 194,
+          "SKILL_001": 191,
+          "SKILL_019": 188,
+          "SKILL_008": 182,
+          "SKILL_035": 300,
+          "BASIC_ATTACK": 973
+        }
+      },
+      "counter": {
+        "rawDamage": 555439,
+        "netHpReduction": 551687,
+        "enemyHealing": 3752,
+        "rounds": 28.9,
+        "survivors": 1.4,
+        "enemySkillActions": {
+          "SKILL_011": 792,
+          "SKILL_012": 194,
+          "SKILL_001": 183,
+          "SKILL_019": 192,
+          "SKILL_008": 192,
+          "SKILL_035": 285,
+          "BASIC_ATTACK": 999
+        }
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "beginner",
+      "partyPower": 58740,
+      "maxHp": 225500,
+      "baseline": {
+        "rawDamage": 45212,
+        "netHpReduction": 45212,
+        "enemyHealing": 0,
+        "rounds": 20.35,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 128,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_006": 113,
+          "BASIC_ATTACK": 1139
+        }
+      },
+      "candidate": {
+        "rawDamage": 45717,
+        "netHpReduction": 14147,
+        "enemyHealing": 31570,
+        "rounds": 20,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 140,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_003": 140,
+          "BASIC_ATTACK": 1130
+        }
+      },
+      "counter": {
+        "rawDamage": 45355,
+        "netHpReduction": 13785,
+        "enemyHealing": 31570,
+        "rounds": 20,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 140,
+          "SKILL_008": 140,
+          "SKILL_011": 140,
+          "SKILL_019": 140,
+          "SKILL_012": 140,
+          "SKILL_003": 140,
+          "BASIC_ATTACK": 1132
+        }
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "intermediate",
+      "partyPower": 159312,
+      "maxHp": 4200000,
+      "baseline": {
+        "rawDamage": 328530,
+        "netHpReduction": 324301,
+        "enemyHealing": 4787,
+        "rounds": 30,
+        "survivors": 2.15,
+        "enemySkillActions": {
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "SKILL_015": 999,
+          "BASIC_ATTACK": 989
+        }
+      },
+      "candidate": {
+        "rawDamage": 277553,
+        "netHpReduction": 11646,
+        "enemyHealing": 269318,
+        "rounds": 26.1,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 180,
+          "SKILL_008": 176,
+          "SKILL_011": 176,
+          "SKILL_019": 175,
+          "SKILL_012": 176,
+          "SKILL_003": 171,
+          "SKILL_006": 172,
+          "BASIC_ATTACK": 1300
+        }
+      },
+      "counter": {
+        "rawDamage": 229946,
+        "netHpReduction": 6285,
+        "enemyHealing": 223661,
+        "rounds": 25.4,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 177,
+          "SKILL_008": 174,
+          "SKILL_011": 171,
+          "SKILL_019": 169,
+          "SKILL_012": 167,
+          "SKILL_006": 163,
+          "BASIC_ATTACK": 1292,
+          "SKILL_003": 159
+        }
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "advanced",
+      "partyPower": 199554,
+      "maxHp": 10642500,
+      "baseline": {
+        "rawDamage": 204807,
+        "netHpReduction": 202714,
+        "enemyHealing": 3254,
+        "rounds": 24.15,
+        "survivors": 0,
+        "enemySkillActions": {
+          "SKILL_001": 133,
+          "SKILL_008": 134,
+          "SKILL_011": 134,
+          "SKILL_019": 134,
+          "SKILL_012": 129,
+          "SKILL_028": 123,
+          "SKILL_027": 123,
+          "SKILL_032": 591,
+          "SKILL_021": 121,
+          "BASIC_ATTACK": 620,
+          "SKILL_034": 110
+        }
+      },
+      "candidate": {
+        "rawDamage": 628978,
+        "netHpReduction": 15529,
+        "enemyHealing": 617453,
+        "rounds": 30,
+        "survivors": 4.55,
+        "enemySkillActions": {
+          "SKILL_001": 198,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "BASIC_ATTACK": 1438,
+          "SKILL_006": 399,
+          "SKILL_029": 100
+        }
+      },
+      "counter": {
+        "rawDamage": 635657,
+        "netHpReduction": 13594,
+        "enemyHealing": 622063,
+        "rounds": 30,
+        "survivors": 5,
+        "enemySkillActions": {
+          "SKILL_001": 192,
+          "SKILL_008": 199,
+          "SKILL_011": 199,
+          "SKILL_019": 200,
+          "SKILL_012": 200,
+          "BASIC_ATTACK": 1463,
+          "SKILL_006": 376,
+          "SKILL_029": 100
+        }
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "expert",
+      "partyPower": 260160,
+      "maxHp": 34650000,
+      "baseline": {
+        "rawDamage": 470190,
+        "netHpReduction": 472316,
+        "enemyHealing": 2721,
+        "rounds": 29.95,
+        "survivors": 2.65,
+        "enemySkillActions": {
+          "SKILL_019": 160,
+          "SKILL_001": 160,
+          "SKILL_008": 160,
+          "SKILL_011": 160,
+          "SKILL_012": 160,
+          "SKILL_032": 738,
+          "SKILL_028": 159,
+          "SKILL_027": 159,
+          "SKILL_021": 158,
+          "SKILL_034": 140,
+          "BASIC_ATTACK": 793
+        }
+      },
+      "candidate": {
+        "rawDamage": 861936,
+        "netHpReduction": 31605,
+        "enemyHealing": 837375,
+        "rounds": 30,
+        "survivors": 4.65,
+        "enemySkillActions": {
+          "SKILL_019": 200,
+          "SKILL_001": 200,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_012": 200,
+          "SKILL_006": 800,
+          "BASIC_ATTACK": 1035,
+          "SKILL_029": 100
+        }
+      },
+      "counter": {
+        "rawDamage": 716515,
+        "netHpReduction": 6783,
+        "enemyHealing": 709732,
+        "rounds": 30,
+        "survivors": 4.05,
+        "enemySkillActions": {
+          "SKILL_019": 200,
+          "SKILL_001": 197,
+          "SKILL_008": 200,
+          "SKILL_011": 200,
+          "SKILL_012": 199,
+          "SKILL_006": 743,
+          "BASIC_ATTACK": 1122,
+          "SKILL_029": 100
+        }
+      }
+    }
+  ]
+}

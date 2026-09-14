@@ -12,6 +12,8 @@ import GuildIdentity from "../profile/GuildIdentity";
 import OutlawCard from "../ui/OutlawCard";
 import SectionHeader from "../ui/SectionHeader";
 import "./RaidTop.css";
+import RaidStrategySummary from "./RaidStrategySummary";
+import RaidRewardComparison from "./RaidRewardComparison";
 
 const FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' fill='%23151d2a'/%3E%3Ccircle cx='64' cy='43' r='18' fill='%23697482'/%3E%3Cpath d='M24 118V98a40 40 0 0 1 80 0v20' fill='%23697482'/%3E%3C/svg%3E";
 const BACKGROUND_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cpath fill='%23151d2a' d='M0 0h128v128H0z'/%3E%3C/svg%3E";
@@ -117,9 +119,10 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
     </section>}
     <section aria-label="今日の強敵" className="raid-top__section"><SectionHeader title="今日の強敵" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
       <ResourceNotice resource={data.dailyTargets} onRefresh={onRefresh} disabled={disabled} unavailable="本日の対象エリアは未確認です" />
-      {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>この敵に挑む</OutlawButton></div></OutlawCard>)}</div>}
+      {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><RaidStrategySummary areaId={enemy.baseId} /><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>この敵に挑む</OutlawButton></div></OutlawCard>)}</div>}
       {data.dailyTargets.status === "ready" && !data.canCreate && <p className="raid-top__muted">現在、新たな挑戦は受け付けていません</p>}
     </section>
+    <RaidRewardComparison />
     <section aria-label="開催中のレイドを探す" className="raid-top__section raid-top__browse"><OutlawButton loadingLabel="" fullWidth onClick={onBrowse} disabled={disabled}><span className="raid-top__browse-copy"><strong>開催中のレイドを探す</strong><small>ほかの挑戦者に加勢する</small></span><span aria-hidden="true">›</span></OutlawButton></section>
   </div>;
 }

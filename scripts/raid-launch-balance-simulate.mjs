@@ -23,7 +23,7 @@ const effectsUrl = url(stripTypeScriptTypes(fs.readFileSync('src/domain/battle/c
 const runtimeUrl = url(stripTypeScriptTypes(fs.readFileSync('src/domain/battle/canonical_runtime.ts','utf8')).replace('./canonical_effects.ts',effectsUrl));
 const engineUrl = url(stripTypeScriptTypes(fs.readFileSync('supabase/functions/resolve-battle/engine.ts','utf8')).replace('../../../src/domain/battle/canonical_runtime.ts',runtimeUrl));
 export const { resolveBattle } = await import(engineUrl);
-const calculationUrl = url(stripTypeScriptTypes(fs.readFileSync('src/domain/gameplay/canonical/calculations.ts','utf8')).replace('./data/equipment_progression_20260821.json',pathToFileURL(path.resolve(sourceDirectory,'equipment_progression_20260821.json')).href));
+const calculationUrl = url(stripTypeScriptTypes(fs.readFileSync('src/domain/gameplay/canonical/calculations.ts','utf8')).replaceAll(/\.\/data\/([a-zA-Z0-9_]+\.json)/g,(_,file)=>pathToFileURL(path.resolve(sourceDirectory,file)).href));
 const { canonicalCharacterStats, canonicalEquipmentFlatStat, canonicalEquipmentLevelAllowed } = await import(calculationUrl);
 export const difficulties = ['beginner','intermediate','advanced','expert'];
 const labels = ['初級','中級','上級','超級'];
@@ -61,7 +61,7 @@ export function makeParty(tier,targetOverride) {
   const members=ids.map((id,index)=>({slot:index+1,characterId:id,characterName:characterMap.get(id).name,level:1,awakeningLevel:awakening,equipment:eqIds.map(equipmentId=>({equipmentId,level:eqLevel,plus:eqPlus})),skills:skillNumbers[index].map(n=>({skillId:`SKILL_${String(n).padStart(3,'0')}`,plus:tier}))}));
   function refresh(member) {
     const c=characterMap.get(member.characterId);
-    member.baseStats=canonicalCharacterStats(Object.fromEntries(statKeys.map(k=>[k,c[`lv1_${k}`]])),Object.fromEntries(statKeys.map(k=>[k,c[`lv100_${k}`]])),member.level,member.awakeningLevel);
+    member.baseStats=canonicalCharacterStats(Object.fromEntries(statKeys.map(k=>[k,c[`lv1_${k}`]])),Object.fromEntries(statKeys.map(k=>[k,c[`lv100_${k}`]])),member.level,member.awakeningLevel,c.growth_pattern);
     member.equipmentStats=equipmentStats(member.equipment);
     member.finalStats=Object.fromEntries(statKeys.map(k=>[k,member.baseStats[k]+member.equipmentStats[k]]));
     member.power=member.finalStats.hp+member.finalStats.atk+member.finalStats.def;

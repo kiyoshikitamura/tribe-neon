@@ -175,7 +175,7 @@
       "characterId": "char_kenji_01",
       "name": "ケンジ",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_001"
@@ -287,7 +287,7 @@
       "characterId": "char_kenji_01",
       "name": "ケンジ",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_011"
@@ -357,7 +357,7 @@
       "characterId": "char_takuro_01",
       "name": "タクロウ",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_011"
@@ -371,7 +371,7 @@
       "characterId": "char_leon_01",
       "name": "レオン",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_011"
@@ -473,7 +473,7 @@
       "characterId": "char_chang_01",
       "name": "チャン",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_021",
@@ -488,7 +488,7 @@
       "characterId": "char_takuro_01",
       "name": "タクロウ",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_021",
@@ -503,7 +503,7 @@
       "characterId": "char_leon_01",
       "name": "レオン",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_021",
@@ -563,7 +563,7 @@
       "characterId": "char_naoto_01",
       "name": "ナオト",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_004"
@@ -591,7 +591,7 @@
       "characterId": "char_sawat_01",
       "name": "サワット",
       "growthPattern": "SPEEDSTER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_004"
@@ -619,7 +619,7 @@
       "characterId": "char_minami_01",
       "name": "ミナミ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_004"
@@ -633,7 +633,7 @@
       "characterId": "char_yukina_01",
       "name": "ユキナ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_004"
@@ -661,7 +661,7 @@
       "characterId": "char_jihoon_01",
       "name": "ジフン",
       "growthPattern": "SPEEDSTER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_004"
@@ -675,7 +675,7 @@
       "characterId": "char_naoto_01",
       "name": "ナオト",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_020"
@@ -703,7 +703,7 @@
       "characterId": "char_sawat_01",
       "name": "サワット",
       "growthPattern": "SPEEDSTER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_020"
@@ -731,7 +731,7 @@
       "characterId": "char_minami_01",
       "name": "ミナミ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_020"
@@ -745,7 +745,7 @@
       "characterId": "char_yukina_01",
       "name": "ユキナ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_020"
@@ -773,7 +773,7 @@
       "characterId": "char_jihoon_01",
       "name": "ジフン",
       "growthPattern": "SPEEDSTER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_020"
@@ -787,7 +787,7 @@
       "characterId": "char_sora_01",
       "name": "ソラ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_065",
@@ -802,7 +802,7 @@
       "characterId": "char_reina_01",
       "name": "レイナ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_066",
@@ -817,7 +817,7 @@
       "characterId": "char_noa_01",
       "name": "ノア",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_020"
@@ -845,7 +845,7 @@
       "characterId": "char_minami_01",
       "name": "ミナミ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_033",
@@ -860,7 +860,7 @@
       "characterId": "char_yukina_01",
       "name": "ユキナ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_033",
@@ -890,7 +890,7 @@
       "characterId": "char_jihoon_01",
       "name": "ジフン",
       "growthPattern": "SPEEDSTER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_033",
@@ -920,7 +920,7 @@
       "characterId": "char_sora_01",
       "name": "ソラ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_065",
@@ -935,7 +935,7 @@
       "characterId": "char_reina_01",
       "name": "レイナ",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_066",
@@ -950,7 +950,7 @@
       "characterId": "char_noa_01",
       "name": "ノア",
       "growthPattern": "SPEEDSTER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_033",
@@ -1009,7 +1009,7 @@
       "characterId": "char_shun_01",
       "name": "シュン",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_006"
@@ -1079,7 +1079,7 @@
       "characterId": "char_shin_01",
       "name": "シン",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_006"
@@ -1093,7 +1093,7 @@
       "characterId": "char_yuki_01",
       "name": "ユウキ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_006"
@@ -1121,7 +1121,7 @@
       "characterId": "char_shun_01",
       "name": "シュン",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_016"
@@ -1191,7 +1191,7 @@
       "characterId": "char_shin_01",
       "name": "シン",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_016"
@@ -1205,7 +1205,7 @@
       "characterId": "char_yuki_01",
       "name": "ユウキ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_016"
@@ -1219,7 +1219,7 @@
       "characterId": "char_takeshi_01",
       "name": "タケシ",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_016"
@@ -1233,7 +1233,7 @@
       "characterId": "char_riki_01",
       "name": "リキ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_016"
@@ -1307,7 +1307,7 @@
       "characterId": "char_shin_01",
       "name": "シン",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_024",
@@ -1322,7 +1322,7 @@
       "characterId": "char_yuki_01",
       "name": "ユウキ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_024",
@@ -1337,7 +1337,7 @@
       "characterId": "char_joe_01",
       "name": "ジョー",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_024",
@@ -1352,7 +1352,7 @@
       "characterId": "char_takeshi_01",
       "name": "タケシ",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_024",
@@ -1367,7 +1367,7 @@
       "characterId": "char_riki_01",
       "name": "リキ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_024",
@@ -1455,7 +1455,7 @@
       "characterId": "char_souta_01",
       "name": "ソウタ",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_008"
@@ -1497,7 +1497,7 @@
       "characterId": "char_makoto_01",
       "name": "マコト",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_008"
@@ -1511,7 +1511,7 @@
       "characterId": "char_rin_01",
       "name": "リン",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_008"
@@ -1525,7 +1525,7 @@
       "characterId": "char_shion_01",
       "name": "シオン",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_008"
@@ -1567,7 +1567,7 @@
       "characterId": "char_souta_01",
       "name": "ソウタ",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_012"
@@ -1609,7 +1609,7 @@
       "characterId": "char_makoto_01",
       "name": "マコト",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_012"
@@ -1623,7 +1623,7 @@
       "characterId": "char_rin_01",
       "name": "リン",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_012"
@@ -1637,7 +1637,7 @@
       "characterId": "char_shion_01",
       "name": "シオン",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_012"
@@ -1694,7 +1694,7 @@
       "characterId": "char_cecile_01",
       "name": "セシル",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_070",
@@ -1724,7 +1724,7 @@
       "characterId": "char_makoto_01",
       "name": "マコト",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_022",
@@ -1739,7 +1739,7 @@
       "characterId": "char_rin_01",
       "name": "リン",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_022",
@@ -1754,7 +1754,7 @@
       "characterId": "char_shion_01",
       "name": "シオン",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_022",
@@ -1829,7 +1829,7 @@
       "characterId": "char_cecile_01",
       "name": "セシル",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_070",
@@ -1844,7 +1844,7 @@
       "characterId": "char_sakura_01",
       "name": "サクラ",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_069",
@@ -1859,7 +1859,7 @@
       "characterId": "char_masato_01",
       "name": "マサト",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_005"
@@ -1873,7 +1873,7 @@
       "characterId": "char_yoshihiko_01",
       "name": "ヨシヒコ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_005"
@@ -1915,7 +1915,7 @@
       "characterId": "char_aoi_01",
       "name": "アオイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_005"
@@ -1929,7 +1929,7 @@
       "characterId": "char_mei_01",
       "name": "メイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_005"
@@ -1943,7 +1943,7 @@
       "characterId": "char_ren_01",
       "name": "レン",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_005"
@@ -1957,7 +1957,7 @@
       "characterId": "char_serika_01",
       "name": "セリカ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_005"
@@ -1971,7 +1971,7 @@
       "characterId": "char_masato_01",
       "name": "マサト",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_015"
@@ -1985,7 +1985,7 @@
       "characterId": "char_yoshihiko_01",
       "name": "ヨシヒコ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_015"
@@ -2027,7 +2027,7 @@
       "characterId": "char_aoi_01",
       "name": "アオイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_015"
@@ -2041,7 +2041,7 @@
       "characterId": "char_mei_01",
       "name": "メイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_015"
@@ -2055,7 +2055,7 @@
       "characterId": "char_ren_01",
       "name": "レン",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_015"
@@ -2069,7 +2069,7 @@
       "characterId": "char_serika_01",
       "name": "セリカ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_015"
@@ -2083,7 +2083,7 @@
       "characterId": "char_alice_01",
       "name": "アリス",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_067",
@@ -2098,7 +2098,7 @@
       "characterId": "char_rui_01",
       "name": "ルイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_015"
@@ -2112,7 +2112,7 @@
       "characterId": "char_maya_01",
       "name": "マヤ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_068",
@@ -2141,7 +2141,7 @@
       "characterId": "char_aoi_01",
       "name": "アオイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_025",
@@ -2156,7 +2156,7 @@
       "characterId": "char_mei_01",
       "name": "メイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_025",
@@ -2171,7 +2171,7 @@
       "characterId": "char_ren_01",
       "name": "レン",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_025",
@@ -2186,7 +2186,7 @@
       "characterId": "char_serika_01",
       "name": "セリカ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_025",
@@ -2216,7 +2216,7 @@
       "characterId": "char_alice_01",
       "name": "アリス",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_067",
@@ -2231,7 +2231,7 @@
       "characterId": "char_rui_01",
       "name": "ルイ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_025",
@@ -2246,7 +2246,7 @@
       "characterId": "char_maya_01",
       "name": "マヤ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_068",
@@ -2261,7 +2261,7 @@
       "characterId": "char_seiya_01",
       "name": "セイヤ",
       "growthPattern": "LUCKY_STAR",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_025",
@@ -2291,7 +2291,7 @@
       "characterId": "char_gou_01",
       "name": "ダイスケ",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_001"
@@ -2305,7 +2305,7 @@
       "characterId": "char_kenji_01",
       "name": "ケンジ",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_001"
@@ -2347,7 +2347,7 @@
       "characterId": "char_daimon_01",
       "name": "ダイモン",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_001"
@@ -2361,7 +2361,7 @@
       "characterId": "char_mark_01",
       "name": "マーク",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_001"
@@ -2389,7 +2389,7 @@
       "characterId": "char_chang_01",
       "name": "チャン",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_001"
@@ -2403,7 +2403,7 @@
       "characterId": "char_gou_01",
       "name": "ダイスケ",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_011"
@@ -2417,7 +2417,7 @@
       "characterId": "char_kenji_01",
       "name": "ケンジ",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_011"
@@ -2459,7 +2459,7 @@
       "characterId": "char_daimon_01",
       "name": "ダイモン",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_011"
@@ -2473,7 +2473,7 @@
       "characterId": "char_mark_01",
       "name": "マーク",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_011"
@@ -2501,7 +2501,7 @@
       "characterId": "char_chang_01",
       "name": "チャン",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_011"
@@ -2515,7 +2515,7 @@
       "characterId": "char_tetsu_01",
       "name": "テツ",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_061",
@@ -2530,7 +2530,7 @@
       "characterId": "char_lucas_01",
       "name": "ルーカス",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_062",
@@ -2573,7 +2573,7 @@
       "characterId": "char_daimon_01",
       "name": "ダイモン",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_021",
@@ -2588,7 +2588,7 @@
       "characterId": "char_mark_01",
       "name": "マーク",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_021",
@@ -2618,7 +2618,7 @@
       "characterId": "char_chang_01",
       "name": "チャン",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_021",
@@ -2633,7 +2633,7 @@
       "characterId": "char_yuji_01",
       "name": "ユウジ",
       "growthPattern": "ATTACKER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_021",
@@ -2648,7 +2648,7 @@
       "characterId": "char_tetsu_01",
       "name": "テツ",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_061",
@@ -2663,7 +2663,7 @@
       "characterId": "char_lucas_01",
       "name": "ルーカス",
       "growthPattern": "ATTACKER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_062",
@@ -2737,7 +2737,7 @@
       "characterId": "char_tatsuya_01",
       "name": "タツヤ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_006"
@@ -2751,7 +2751,7 @@
       "characterId": "char_tomoya_01",
       "name": "トモヤ",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_008"
@@ -2793,7 +2793,7 @@
       "characterId": "char_makoto_01",
       "name": "マコト",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_008"
@@ -2807,7 +2807,7 @@
       "characterId": "char_rin_01",
       "name": "リン",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_008"
@@ -2821,7 +2821,7 @@
       "characterId": "char_shion_01",
       "name": "シオン",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_008"
@@ -2849,7 +2849,7 @@
       "characterId": "char_tatsuya_01",
       "name": "タツヤ",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_016"
@@ -2863,7 +2863,7 @@
       "characterId": "char_tomoya_01",
       "name": "トモヤ",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_012"
@@ -2905,7 +2905,7 @@
       "characterId": "char_makoto_01",
       "name": "マコト",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_012"
@@ -2919,7 +2919,7 @@
       "characterId": "char_rin_01",
       "name": "リン",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_012"
@@ -2933,7 +2933,7 @@
       "characterId": "char_shion_01",
       "name": "シオン",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_012"
@@ -2947,7 +2947,7 @@
       "characterId": "char_genji_01",
       "name": "ゲンジ",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_063",
@@ -2962,7 +2962,7 @@
       "characterId": "char_long_01",
       "name": "ロン",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_064",
@@ -2977,7 +2977,7 @@
       "characterId": "char_sakura_01",
       "name": "サクラ",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_069",
@@ -2992,7 +2992,7 @@
       "characterId": "char_cecile_01",
       "name": "セシル",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_070",
@@ -3022,7 +3022,7 @@
       "characterId": "char_makoto_01",
       "name": "マコト",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_022",
@@ -3037,7 +3037,7 @@
       "characterId": "char_rin_01",
       "name": "リン",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_022",
@@ -3052,7 +3052,7 @@
       "characterId": "char_shion_01",
       "name": "シオン",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_022",
@@ -3067,7 +3067,7 @@
       "characterId": "char_joe_01",
       "name": "ジョー",
       "growthPattern": "DEFENDER",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_024",
@@ -3082,7 +3082,7 @@
       "characterId": "char_genji_01",
       "name": "ゲンジ",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_063",
@@ -3097,7 +3097,7 @@
       "characterId": "char_long_01",
       "name": "ロン",
       "growthPattern": "DEFENDER",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_064",
@@ -3112,7 +3112,7 @@
       "characterId": "char_sakura_01",
       "name": "サクラ",
       "growthPattern": "BALANCED",
-      "weight": 2,
+      "weight": 6,
       "localAffinity": "LOCAL",
       "skillLoadout": [
         "SKILL_069",
@@ -3127,7 +3127,7 @@
       "characterId": "char_cecile_01",
       "name": "セシル",
       "growthPattern": "BALANCED",
-      "weight": 1,
+      "weight": 3,
       "localAffinity": "CROSS_AREA",
       "skillLoadout": [
         "SKILL_070",

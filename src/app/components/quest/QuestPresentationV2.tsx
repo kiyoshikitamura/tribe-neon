@@ -4,6 +4,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useGame } from "@/app/context/GameContext";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import { CANONICAL_QUEST_ENEMY_POOLS } from "@/domain/gameplay/canonical/quests";
+import { questAreaIdentity, questAreaRewardItemIds } from "@/domain/gameplay/canonical/questAreaIdentity";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { getCharacterLocationBackground, isCharacterHometown } from "@/utils/characterVisualAssets";
 import CharacterPresentation from "../character/CharacterPresentation";
@@ -181,8 +182,8 @@ export default function QuestPresentationV2() {
         {Array.from({ length: Math.max(0, 5 - activePatrols.length) }, (_, index) => <button className="quest-v2-empty-slot" key={index} onClick={startSelection}><span className="quest-v2-slot-number">{String(activePatrols.length + index + 1).padStart(2, "0")}</span><strong>未探索<small>探索先を選ぶ</small></strong><span className="quest-v2-slot-plus" aria-hidden="true">＋</span></button>)}
       </section>}
       {selectionVisible && <>
-      {selectionStep === "DESTINATION" ? <section className="quest-v2-town-list" aria-label="街を選ぶ">{TOWNS.map(([id, label]) => <button key={id} onClick={() => { game.setSelectedTown(id); game.setSelectedCourse(initialQuestCourseId(game.patrolCourses || [], id)); game.setSelectedPatrolMember(null); setSelectionStep("REVIEW"); game.playCyberSe("click"); }}><img src={`/bg/bg_street_${id}.jpg`} alt="" /><strong>{label}</strong><span aria-hidden="true">›</span></button>)}</section> : <>
-        <section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}><div><strong>{townName}</strong><small>空き枠 {Math.max(0, 5 - activePatrols.length)}</small></div></section>
+      {selectionStep === "DESTINATION" ? <section className="quest-v2-town-list" aria-label="街を選ぶ">{TOWNS.map(([id, label]) => <button key={id} onClick={() => { game.setSelectedTown(id); game.setSelectedCourse(initialQuestCourseId(game.patrolCourses || [], id)); game.setSelectedPatrolMember(null); setSelectionStep("REVIEW"); game.playCyberSe("click"); }}><img src={`/bg/bg_street_${id}.jpg`} alt="" /><span className="quest-v2-town-copy"><strong>{label}</strong><small>{questAreaIdentity(id)?.enemy}</small><em>主な報酬：{questAreaRewardItemIds(game.patrolCourses || [], id).map(canonicalItemName).join("・") || "報酬を確認中…"}</em></span><span className="quest-v2-town-arrow" aria-hidden="true">›</span></button>)}</section> : <>
+        <section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}><div><strong>{townName}</strong><small>空き枠 {Math.max(0, 5 - activePatrols.length)}</small><p className="quest-v2-area-enemy">{questAreaIdentity(game.selectedTown)?.enemy}</p></div></section>
         {selectionStep === "REVIEW" && <>
           <button className="quest-v2-back" onClick={() => setSelectionStep("DESTINATION")}>街を選び直す</button>
           <section className="quest-v2-courses" aria-label="級を選ぶ">{questCoursesForTown(game.patrolCourses || [], game.selectedTown).map((course: any) => <button key={course.id} className={`${game.selectedCourse === course.id ? "active" : ""} ${course.is_unlocked === false ? "locked" : ""}`} aria-pressed={game.selectedCourse === course.id} disabled={course.is_unlocked === false} onClick={() => { game.setSelectedCourse(course.id); game.playCyberSe("click"); }}><strong>{difficulty(course.level_type)}</strong><small>{course.is_unlocked === false ? "前の難度をクリアで解放" : course.is_first_cleared ? "クリア済・再挑戦可" : "選択可能"}</small></button>)}</section>

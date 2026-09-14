@@ -112,8 +112,14 @@
 .quest-v2-town-list{display:grid;gap:10px}
 .quest-v2-town-list>button{position:relative;display:grid;grid-template-columns:90px minmax(0,1fr) 24px;align-items:center;gap:14px;min-height:88px;overflow:hidden;border:1px solid #75664c;border-radius:5px;background:linear-gradient(100deg,#232628,#10151d);color:#f3e9d6;text-align:left;padding:0 14px 0 0}
 .quest-v2-town-list>button>img{width:90px;height:88px;object-fit:cover}
-.quest-v2-town-list>button>strong{font-family:TNStreetBattle,'Hiragino Sans',sans-serif;font-size:23px;font-weight:400}
-.quest-v2-town-list>button>span{font-size:24px;color:#c8b680}
+.quest-v2-town-copy>strong{font-family:TNStreetBattle,'Hiragino Sans',sans-serif;font-size:23px;font-weight:400}
+.quest-v2-town-arrow{font-size:24px;color:#c8b680}
 .quest-v2-shell .tutorial-wire-progress-title>span,.quest-v2-shell .tutorial-wire-speedup>h2{font-family:TNStreetBattle,'Hiragino Sans',sans-serif;font-size:clamp(22px,6vw,28px);line-height:1.4;font-weight:400}
 .quest-v2-character-grid em{white-space:nowrap;overflow:visible;text-overflow:clip;font-size:11px;line-height:1.5}
 .quest-v2-speed-actions .outlaw-button{font-size:12px}
+
+.quest-v2-town-copy{display:flex;flex-direction:column;gap:5px;padding:12px 0;min-width:0}
+.quest-v2-town-copy>small{font-size:12px;color:#ddd3c1;line-height:1.4}
+.quest-v2-town-copy>em{font-size:11px;font-style:normal;color:#d6bd82;line-height:1.5;overflow-wrap:anywhere}
+.quest-v2-town-list>button>img{height:100%;min-height:110px}
+.quest-v2-area-enemy{margin:6px 0 0;font-size:12px;color:#e4d5bb}

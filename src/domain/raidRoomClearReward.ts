@@ -1,6 +1,7 @@
 import type { RaidRoomRpcClient } from './raidRoomRpcTransport';
 
 export interface RaidRoomClearReward {
+  dailyBonus?: { dayKey: string; won: boolean; items: { itemId: string; quantity: number }[]; sourceRoomId: string; issuedAt: string };
   roomId: string;
   status: 'not_eligible' | 'unconfigured' | 'pending' | 'issued';
   clearGate: { status: 'unknown' | 'not_succeeded' | 'succeeded'; ruleVersion: number; contributionDamage: number; minimumContributionDamage: number | null; cleared: boolean };
@@ -48,7 +49,22 @@ export function createRaidRoomClearRewardClient(client: RaidRoomRpcClient) {
       const issuedAt = date(r.issuedAt), expiresAt = date(r.expiresAt);
       if (r.status === 'issued' && (!issuedAt || items.length === 0 || (items.some(item => item.delivery !== 'DIRECT') && !expiresAt))) throw new Error('Incomplete clear reward receipt');
       if (r.status !== 'issued' && items.length !== 0) throw new Error('Unexpected clear reward receipt');
-      return { roomId, status: r.status as RaidRoomClearReward['status'], issuedAt, expiresAt, items,
+      let dailyBonus: RaidRoomClearReward['dailyBonus'];
+      if (r.dailyBonus != null) {
+        const daily = object(r.dailyBonus);
+        if (daily.sourceRoomId !== roomId || typeof daily.won !== 'boolean' || !Array.isArray(daily.items)
+          || typeof daily.dayKey !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(daily.dayKey)) throw new Error('Invalid daily reward receipt');
+        const dailyIssuedAt = date(daily.issuedAt);
+        if (!dailyIssuedAt) throw new Error('Missing daily reward receipt time');
+        const dailyItems = daily.items.map(value => {
+          const item = object(value), quantity = number(item.quantity);
+          if (quantity < 1) throw new Error('Invalid daily reward quantity');
+          return { itemId: text(item.itemId), quantity };
+        });
+        if (daily.won !== (dailyItems.length > 0)) throw new Error('Invalid daily reward draw');
+        dailyBonus = { dayKey: daily.dayKey, won: daily.won, items: dailyItems, sourceRoomId: roomId, issuedAt: dailyIssuedAt };
+      }
+      return { roomId, status: r.status as RaidRoomClearReward['status'], issuedAt, expiresAt, items, ...(dailyBonus ? { dailyBonus } : {}),
         clearGate: { status: gate.status as RaidRoomClearReward['clearGate']['status'], ruleVersion, contributionDamage: number(gate.contributionDamage), cleared: gate.cleared, minimumContributionDamage: gate.minimumContributionDamage === null ? null : number(gate.minimumContributionDamage) } };
     },
   };
