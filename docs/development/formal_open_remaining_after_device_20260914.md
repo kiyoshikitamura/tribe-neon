@@ -22,7 +22,7 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | Guild tenure | 9/14本流で加入日Day1確定。JST日付差+1をMission同期へ接続 | Preview検証結果はguild_tenure_day_origin_decision_20260914.md参照。Production未反映 |
 | 売上KPI | Preview refresh_kpi_revenueも未実装stub | 別スレッドからF10–F13/PURの計上時刻、分母、返金、QA/Sandbox除外定義を回収 |
 | Season切替 | Claim/1位限定Emblemの定義準備済み。実切替なし | インターバルPvP/Rate/Wins、POWER/GUILD_POWERの新Season契約を確定 |
-| ガチャPool差異 | 仕様FIX済み。monetization_release_20260912.mdとPreviewに確率・汎用/専用Poolあり。未定義/データなしという整理を訂正 | 本流の統合監査で収録ID・属性・提供割合表示・実抽選処理を照合。別スレッド起票不要 |
+| ガチャPool差異 | 本流READ ONLY監査でSpecial収録ID/属性/確率/抽選関数とcatalog計算一致。欠落・重複等0。データ修正不要 | 実ブラウザの表示/CTA引数、実抽選/paid lot E2Eは未確認。special_gacha_integrated_readonly_audit_20260914.md参照 |
 | 素材統合 | manifest/正規化ZIP/eye previewの3ファイル受領済み。ローカル実行環境障害で内容未読・未統合 | 環境復旧後に添付と参照先を照合して統合。実機確認は残件とまとめる |
 
 ## 再適用禁止のPreview課金Migration対応
