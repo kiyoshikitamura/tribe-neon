@@ -30,6 +30,26 @@
           "item_id": "EQUIP_LB_PART",
           "quantity": 4
         }
+      ],
+      "honors": [
+        {
+          "id": "season_power_champion_profile_title_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_TITLE",
+          "display_name": "個人総合力 Season Champion 称号",
+          "grade": "champion",
+          "ranking_type": "POWER",
+          "rank_min": 1
+        },
+        {
+          "id": "season_power_champion_profile_badge_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_BADGE",
+          "display_name": "個人総合力 Season Champion Badge",
+          "grade": "champion",
+          "ranking_type": "POWER",
+          "rank_min": 1
+        }
       ]
     },
     {
@@ -60,6 +80,26 @@
         {
           "item_id": "EQUIP_LB_PART",
           "quantity": 3
+        }
+      ],
+      "honors": [
+        {
+          "id": "season_power_top3_profile_title_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_TITLE",
+          "display_name": "個人総合力 TOP3 称号",
+          "grade": "top3",
+          "ranking_type": "POWER",
+          "rank_min": 2
+        },
+        {
+          "id": "season_power_top3_profile_badge_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_BADGE",
+          "display_name": "個人総合力 TOP3 Badge",
+          "grade": "top3",
+          "ranking_type": "POWER",
+          "rank_min": 2
         }
       ]
     },
@@ -92,6 +132,26 @@
           "item_id": "EQUIP_LB_PART",
           "quantity": 3
         }
+      ],
+      "honors": [
+        {
+          "id": "season_power_top10_profile_title_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_TITLE",
+          "display_name": "個人総合力 TOP10 称号",
+          "grade": "top10",
+          "ranking_type": "POWER",
+          "rank_min": 4
+        },
+        {
+          "id": "season_power_top10_profile_badge_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_BADGE",
+          "display_name": "個人総合力 TOP10 Badge",
+          "grade": "top10",
+          "ranking_type": "POWER",
+          "rank_min": 4
+        }
       ]
     },
     {
@@ -119,6 +179,17 @@
           "item_id": "EQUIP_LB_PART",
           "quantity": 2
         }
+      ],
+      "honors": [
+        {
+          "id": "season_power_top30_profile_badge_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_BADGE",
+          "display_name": "個人総合力 TOP30 Badge",
+          "grade": "top30",
+          "ranking_type": "POWER",
+          "rank_min": 11
+        }
       ]
     },
     {
@@ -137,6 +208,17 @@
         {
           "item_id": "EQUIP_EXP_L",
           "quantity": 3
+        }
+      ],
+      "honors": [
+        {
+          "id": "season_power_top100_profile_badge_20260914",
+          "owner_scope": "USER",
+          "slot": "PROFILE_BADGE",
+          "display_name": "個人総合力 TOP100 Badge",
+          "grade": "top100",
+          "ranking_type": "POWER",
+          "rank_min": 31
         }
       ]
     }
@@ -171,6 +253,35 @@
           "item_id": "EQUIP_LB_PART",
           "quantity": 3
         }
+      ],
+      "honors": [
+        {
+          "id": "season_guild_power_champion_guild_emblem_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_EMBLEM",
+          "display_name": "Guild総合力 Season Champion Emblem",
+          "grade": "champion",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 1
+        },
+        {
+          "id": "season_guild_power_champion_guild_base_background_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_BASE_BACKGROUND",
+          "display_name": "Guild総合力 Season Champion Decoration",
+          "grade": "champion",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 1
+        },
+        {
+          "id": "season_guild_power_champion_guild_title_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_TITLE",
+          "display_name": "Guild総合力 Season Champion",
+          "grade": "champion",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 1
+        }
       ]
     },
     {
@@ -202,6 +313,26 @@
           "item_id": "EQUIP_LB_PART",
           "quantity": 2
         }
+      ],
+      "honors": [
+        {
+          "id": "season_guild_power_top3_guild_emblem_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_EMBLEM",
+          "display_name": "Guild総合力 TOP3 Emblem",
+          "grade": "top3",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 2
+        },
+        {
+          "id": "season_guild_power_top3_guild_base_background_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_BASE_BACKGROUND",
+          "display_name": "Guild総合力 TOP3 Decoration",
+          "grade": "top3",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 2
+        }
       ]
     },
     {
@@ -224,6 +355,26 @@
         {
           "item_id": "EQUIP_LB_PART",
           "quantity": 2
+        }
+      ],
+      "honors": [
+        {
+          "id": "season_guild_power_top10_guild_base_background_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_BASE_BACKGROUND",
+          "display_name": "Guild総合力 TOP10 Decoration",
+          "grade": "top10",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 4
+        },
+        {
+          "id": "season_guild_power_top10_guild_badge_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_BADGE",
+          "display_name": "Guild総合力 TOP10 Badge",
+          "grade": "top10",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 4
         }
       ]
     },
@@ -251,6 +402,17 @@
         {
           "item_id": "EQUIP_EXP_L",
           "quantity": 2
+        }
+      ],
+      "honors": [
+        {
+          "id": "season_guild_power_top20_guild_badge_20260914",
+          "owner_scope": "GUILD",
+          "slot": "GUILD_BADGE",
+          "display_name": "Guild総合力 TOP20 Badge",
+          "grade": "top20",
+          "ranking_type": "GUILD_POWER",
+          "rank_min": 11
         }
       ]
     }

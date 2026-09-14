@@ -1,3 +1,4 @@
+import SeasonHonors from "./profile/SeasonHonors";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/utils/supabase";
@@ -115,6 +116,7 @@ export default function SettingsPanel() {
           <div className="settings-edit-actions"><OutlawButton variant="secondary" disabled={game.profileLoading} onClick={() => { resetDrafts(); setProfileEditing(false); }}>キャンセル</OutlawButton><OutlawButton variant="primary" isLoading={game.profileLoading} loadingLabel="保存中…" disabled={!usernameDraft.trim()} onClick={() => void saveProfile()}>保存</OutlawButton></div>
         </EditableSettingSection>
 
+        <SeasonHonors ownerId={game.session?.user?.id} scope="USER" editable onEquipped={(slot, id) => { if (slot === "PROFILE_TITLE") game.setTitleEquipped(id); }} />
         {!isPreOpen && <EditableSettingSection title="ホーム演出" helper="所持中の装飾を選択できます" editing={homeEditing} pending={game.profileLoading} onEdit={() => setHomeEditing(true)} summary={<dl className="settings-summary"><div><dt>背景</dt><dd>{game.selectedBgMode === "auto" ? "現在地に合わせる" : availableBackgrounds.find((item) => item.id === game.selectedBgMode)?.name || "未設定"}</dd></div><div><dt>前景</dt><dd>{availableFrontEffects.find((item) => item.id === game.equippedFrontEffect)?.name || "なし"}</dd></div><div><dt>内装</dt><dd>{availableInteriors.find((item) => item.id === game.interiorItem)?.name || "なし"}</dd></div></dl>}>
           <ChoiceGroup label="背景" value={backgroundDraft} disabled={game.profileLoading} onChange={setBackgroundDraft} options={[{ value: "auto", label: "現在地に合わせる" }, ...availableBackgrounds.filter((item) => item.id !== "auto").map((item) => ({ value: item.id, label: item.name }))]} />
           <ChoiceGroup label="前景エフェクト" value={foregroundDraft} disabled={game.profileLoading} onChange={setForegroundDraft} options={availableFrontEffects.map((item) => ({ value: item.id, label: item.name }))} />

@@ -1,5 +1,6 @@
 "use client";
 
+import SeasonHonors from "./profile/SeasonHonors";
 import React, { useEffect, useState } from "react";
 import { useGame } from "../context/GameContext";
 import "./GuildTab.css";
@@ -346,6 +347,7 @@ export default function GuildTab() {
             <small>{guildRoleLabel(userGuildMember?.role)}</small>
           </div>
           {(isMaster || isSubMaster) && <OutlawButton className="guild-emblem-change" onClick={() => setEmblemEditorOpen(true)}>エンブレム変更</OutlawButton>}
+          <SeasonHonors ownerId={userGuild.id} scope="GUILD" editable={isMaster} />
           <div className="guild-identity-attributes"><span>メイン属性 <b>{guildAlignmentLabel(userGuild.main_alignment)}</b></span><i>×</i><span>サブ属性 <b>{guildAlignmentLabel(userGuild.sub_alignment)}</b></span></div>
           <div className="guild-level-progress"><span>Lv EXP</span><div className="xp-bar-container"><div className="xp-bar-fill" style={{ width: `${xpPercent}%` }} /></div><small>{xpNeeded > 0 ? `${userGuild.xp} / ${xpNeeded}` : "MAX"}</small></div>
         </section>

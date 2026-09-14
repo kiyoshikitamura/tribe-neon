@@ -19,7 +19,7 @@ const nonEmptyString = (value: unknown): value is string => typeof value === "st
 
 const GUILD_COSMETIC_NAMES: Record<string, string> = {
   guild_preopen_2026_participation: "プレオープン参加記念ギルド装飾",
-  guild_preopen_2026_rank_1: "プレオープン第1位限定ギルド装飾",
+  guild_preopen_2026_rank_1: "プレオープン第1位限定ギルド紋章",
   guild_preopen_2026_rank_2: "プレオープン第2位限定ギルド装飾",
   guild_preopen_2026_rank_3: "プレオープン第3位限定ギルド装飾",
 };

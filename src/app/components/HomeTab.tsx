@@ -1,4 +1,5 @@
 "use client";
+import SeasonHonors, { isSeasonHonorTitle } from "./profile/SeasonHonors";
 import { nextBeginnerAction } from "@/domain/mission/beginnerJourney";
 import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
@@ -157,7 +158,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   } = useGame();
 
   const equippedTitleName = ownedTitles.find((title: { id: string }) => title.id === titleEquipped)?.name || titleEquipped;
-  const visibleEquippedTitle = equippedTitleName && !["title_none", "称号なし", "No Title", "半グレの首領"].includes(equippedTitleName)
+  const visibleEquippedTitle = equippedTitleName && !isSeasonHonorTitle(titleEquipped) && !["title_none", "称号なし", "No Title", "半グレの首領"].includes(equippedTitleName)
     ? equippedTitleName
     : null;
 
@@ -710,6 +711,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
         {leaderLine && leaderLine.characterId === leaderCharacterId && <div className="mypage-leader-line">{leaderLine.text}</div>}
 
         {/* 層構造装飾: z-4 称号プレートバナー */}
+        <SeasonHonors ownerId={session?.user?.id} scope="USER" />
         {visibleEquippedTitle && (
           <div className="mypage-title-banner-layer">
             <span className="mypage-title-banner-badge">{visibleEquippedTitle}</span>

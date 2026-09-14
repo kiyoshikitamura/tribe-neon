@@ -29,7 +29,7 @@ const PREOPEN_GUILD_COSMETIC_FALLBACK: RankingRewardTier[] = [
     to: 1,
     itemId: "guild_preopen_2026_rank_1",
     quantity: 1,
-    displayName: "プレオープン第1位限定ギルド装飾",
+    displayName: "プレオープン第1位限定ギルド紋章",
     rewardKind: "cosmetic",
   },
 ];

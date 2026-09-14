@@ -1,6 +1,6 @@
 # 正式公開 残件台帳 — 2026-09-14 実機修正後
 
-今回再開の基準: ed215459dc1b895fe94b17fd28d66c991a3ba0d6。追加の実装・検証はformal_open_bug_consumption_progress_20260914.mdを参照。
+今回再開の基準: 9eb5083839ec71bcabc2e7eaed0a613faa56d1a8。追加の実装・検証はformal_open_bug_consumption_progress_20260914.mdを参照。
 Preview DB: sufvuqdnqohpfzkwxohq。
 本流方針: 実装・Previewまで。仕様議論は別スレッド。Production反映なし。
 
@@ -42,9 +42,9 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 | Character/Equipment EXP | 必要EXP/余剰保持/最終Lv100だけ使用不可を9/14本流で確定。混合atomic RPC・xpをPreview適用済み、UI候補実装。DB rollback検証PASS | growth_exp_preview_implementation_20260914.md参照。専用Preview適用・Build・実機受入状況を区別する |
 | Guild tenure | 9/14本流で加入日Day1確定。JST日付差+1をMission同期へ接続 | Preview検証結果はguild_tenure_day_origin_decision_20260914.md参照。Production未反映 |
 | 売上KPI | 公開後残件へ移動。集計完成はリリース必須Gateにしない | 計上・返金・分母・除外定義を別途確定。購入・付与・返金記録の保持と照合は課金受入で確認 |
-| Season切替 | 3カテゴリとも正式オープンと同時開始。終了10/1 00:00 JST維持。Season報酬MD/XLSX全Tier一致 | 開始契約・報酬・在籍資格・既存Cosmetic ID接続を実装。公開時刻は推測しない。実切替なし |
+| Season切替 | 3カテゴリとも正式オープンと同時開始。終了10/1 00:00 JST維持。Season報酬MD/XLSX全Tier一致 | 開始契約・全9Tier/16名誉報酬・連続7日在籍・所持/表示をPreview適用。cutoffと月次runnerの運営接続、実機受入は残る。実切替なし |
 | ガチャPool差異 | 本流READ ONLY監査でSpecial収録ID/属性/確率/抽選関数とcatalog計算一致。欠落・重複等0。データ修正不要 | 実ブラウザの表示/CTA引数、実抽選/paid lot E2Eは未確認。special_gacha_integrated_readonly_audit_20260914.md参照 |
-| 素材統合 | ローカル復旧・添付読取済み。承認18PNGを無加工格納、目元10点をcanonicalへ接続 | Guild都市紋章は旧8種と異なるため所持品を上書きしない。実機確認は残件とまとめる |
+| 素材統合 | ローカル復旧・添付読取済み。承認18PNGを無加工格納、目元10点をcanonicalへ接続 | 承認により都市7種を新規登録し既存8種を保持。Preopen1位画像も接続。実機確認は残件とまとめる |
 
 ## 成長曲線の実装状況
 旧fixtureの対応待ちは解除。現在のcanonical JSON60名の既存割当(5型各12名)を維持し、6型指数をserver/clientへ接続。任意の型再配分なし。360ケースの一致、current Power整合をPreviewで検証済み。実UI受入は残す。
@@ -66,7 +66,7 @@ Preview DB: sufvuqdnqohpfzkwxohq。
 - F10–F13/PURの正式値は一般的なARPU定義から創作しない。
 
 ## ユーザーへ依頼する未決事項
-Season間PvP・報酬数量の定義待ちは解消。売上KPI集計は公開後対応。新たな依頼はCosmetic ID等、実監査で不足が確定した項目に限定する。
+Season間PvP・報酬数量・新規Cosmetic登録・連続在籍7日・旧POWER終了は承認済み。旧POWERはPreviewでCLOSED。詳細はformal_open_approved_decisions_20260914.md。売上KPI集計は公開後対応。
 
 ## 現在の制約と停止点
 作業環境exec-server復旧。最新ed21545のcheckout・添付読取が可能。対象Vercel teamへの接続は403のため配信設定診断は不可。再認証依頼を繰り返さず、この制約を明示する。

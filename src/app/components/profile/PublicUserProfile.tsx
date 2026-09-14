@@ -1,5 +1,6 @@
 "use client";
 
+import SeasonHonors, { isSeasonHonorTitle } from "./SeasonHonors";
 import { useState } from "react";
 import CharacterPresentation from "../character/CharacterPresentation";
 import UserAvatar from "./UserAvatar";
@@ -78,7 +79,7 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
   const [selectedCharacter, setSelectedCharacter] = useState<PublicProfileCharacter | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<SkillCardMaster | null>(null);
   const bio = publicBioText(profile.bio);
-  const title = publicTitleText(profile.titleName);
+  const title = isSeasonHonorTitle(profile.titleName) ? null : publicTitleText(profile.titleName);
   const leader = profile.leaderCharacterId ? { characterId: profile.leaderCharacterId } : undefined;
   const isOtherUser = Boolean(currentUserId && profile.id && profile.id !== currentUserId);
 
@@ -90,6 +91,7 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
           <ProfileCharacter character={leader} leader />
           <div><h2>{profile.username}</h2><div className="public-profile-meta"><span>Lv.{Math.max(1, Number(profile.level || 1))}</span>{profile.guildId && profile.guildName ? <button type="button" onClick={() => onGuild?.(profile.guildId!)}><GuildIdentity guildId={profile.guildId} name={profile.guildName} /></button> : <span>未所属</span>}{title && <span>称号 {title}</span>}{profile.dailyPvpRank ? <span>デイリー {profile.dailyPvpRank}位</span> : null}</div>{isOtherUser && onDm && <OutlawButton variant="primary" className="public-profile-dm-action" onClick={() => onDm(profile.id)}>DMを送る</OutlawButton>}</div>
         </section>
+        <SeasonHonors ownerId={profile.id} scope="USER" />
         {bio && <section className="public-profile-bio" aria-label="自己紹介"><h3>自己紹介</h3><p>{bio}</p></section>}
         {profile.party && profile.party.length > 0 && <section className="public-profile-deck"><h3>{isOtherUser ? "DECK" : "MY DECK"}</h3><div>{profile.party.slice(0, 5).map((character, index) => <button type="button" key={`${character.characterId}:${index}`} onClick={() => setSelectedCharacter(character)} aria-label={`${character.name || "キャラクター"}の詳細`}><ProfileCharacter character={character} />{typeof character.level === "number" && <small>Lv.{character.level}</small>}</button>)}</div></section>}
         {selectedCharacter && <section className="public-profile-character-detail" aria-label={`${selectedCharacter.name || "キャラクター"}の詳細`}>
