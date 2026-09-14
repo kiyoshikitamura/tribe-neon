@@ -10,7 +10,8 @@ export async function postNpcYajiMessage(
   baseId: string,
   triggerReason: string
 ) {
-  if (!session) return;
+  // Legacy NPC chatter is a Mock fixture, not an authenticated player post.
+  if (!usingMockSupabase || !session) return;
   const npcs = ["リュウ", "カイ", "シン", "ハヤト", "ユキ"];
   const npc = npcs[Math.floor(Math.random() * npcs.length)];
 

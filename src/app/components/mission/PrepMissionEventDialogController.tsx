@@ -98,8 +98,16 @@ export default function PrepMissionEventDialogController() {
       setImageReady(!parsed?.imageUrl);
       setImageFailed(false);
       if (!parsed) setPrepMissionDialogCheckComplete(true);
-    })();
-    return () => { cancelled = true; };
+    })().catch((error) => {
+      if (!cancelled) {
+        console.warn("Failed to load preparation mission dialog", error);
+        setPrepMissionDialogCheckComplete(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+      if (requestedKeyRef.current === requestKey) requestedKeyRef.current = "";
+    };
   }, [activeTab, session?.user?.id, beginnerJourney?.reflow_completed, setPrepMissionDialogCheckComplete]);
 
   useEffect(() => {

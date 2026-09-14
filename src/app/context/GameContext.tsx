@@ -1147,15 +1147,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // ログインボーナスのチェックと受取処理 (RPC呼び出し)
   const checkAndClaimLoginBonus = async (userId: string) => {
     try {
-      const { data: masterData } = await supabase
-        .from("login_bonus_master")
-        .select("*")
-        .order("day_number", { ascending: true });
+      // Fetch presentation data and the idempotent claim together.
+      const [masterResponse, claimResponse] = await Promise.all([
+        supabase.from("login_bonus_master").select("*").order("day_number", { ascending: true }),
+        supabase.rpc("process_login_bonus"),
+      ]);
+      const { data: masterData } = masterResponse;
       if (masterData && masterData.length > 0) {
         setLoginBonusMasters(masterData as LoginBonusMaster[]);
       }
 
-      const { data: result, error } = await supabase.rpc("process_login_bonus");
+      const { data: result, error } = claimResponse;
       if (error) {
         console.warn("Failed to process login bonus RPC:", error);
         return;
@@ -1199,7 +1201,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     void checkAndClaimLoginBonus(userId);
   }, [activeTab, onboardingState?.gameplay_authorized, session?.user?.id, showTitleView]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const userId = session?.user?.id;
     const emailConfirmationPending = Boolean(
       userId

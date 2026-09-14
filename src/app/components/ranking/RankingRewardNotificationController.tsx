@@ -25,8 +25,6 @@ export default function RankingRewardNotificationController() {
     setRankingRewardNotificationCheckComplete,
   } = useGame();
   const [pending, setPending] = useState<PendingRankingRewardNotification | null>(null);
-  const previousHomeRef = useRef(false);
-  const requestInFlightRef = useRef(false);
   const requestedUserRef = useRef<string | null>(null);
   const presentedKeyRef = useRef<string | null>(null);
 
@@ -44,23 +42,20 @@ export default function RankingRewardNotificationController() {
     const userId = session?.user?.id || null;
     if (requestedUserRef.current !== userId) {
       requestedUserRef.current = userId;
-      previousHomeRef.current = false;
       presentedKeyRef.current = null;
       setPending(null);
       setRankingRewardNotificationCheckComplete(false);
     }
     const isHome = activeTab === "home";
-    const enteredHome = isHome && !previousHomeRef.current;
-    previousHomeRef.current = isHome;
     if (!isHome) {
       setRankingRewardNotificationCheckComplete(false);
       return;
     }
-    if (!userId || !enteredHome || requestInFlightRef.current) return;
+    if (!userId) return;
     setRankingRewardNotificationCheckComplete(false);
 
     let cancelled = false;
-    requestInFlightRef.current = true;
+    setPending(null);
     void (async () => {
       try {
         const { data, error } = await supabase.rpc("get_my_pending_ranking_reward_notification");
@@ -71,8 +66,11 @@ export default function RankingRewardNotificationController() {
         }
         if (!cancelled && error) console.warn("Failed to load ranking reward notification", error);
         if (!cancelled && error) setRankingRewardNotificationCheckComplete(true);
-      } finally {
-        requestInFlightRef.current = false;
+      } catch (error) {
+        if (!cancelled) {
+          console.warn("Failed to load ranking reward notification", error);
+          setRankingRewardNotificationCheckComplete(true);
+        }
       }
     })();
     return () => { cancelled = true; };

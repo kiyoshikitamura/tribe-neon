@@ -63,6 +63,12 @@ function AppContent() {
     showLoginBonusModal,
     setShowLoginBonusModal,
     loginBonusClaimResult,
+    loginBonusCheckComplete,
+    prepMissionDialogCheckComplete,
+    rankingRewardNotificationCheckComplete,
+    showPrepMissionDialog,
+    showAccountAuthenticationModal,
+    showAuthenticationReminder,
     setShowInboxPanel,
     setInboxPanelTab,
     navigateTab,
@@ -79,6 +85,14 @@ function AppContent() {
   const { playBgm } = useAudio();
   const tutorialStep = onboardingState?.tutorial_step;
   const isMandatoryTutorial = Boolean(tutorialStep && !onboardingState?.gameplay_authorized);
+  // Reserve Home input before asynchronous entry checks can present a dialog.
+  // Existing dialogs keep their own controls; never put a blocker above them.
+  const homeEntryPending = activeTab === "home" && !showTitleView
+    && Boolean(onboardingState?.gameplay_authorized) && !battleState
+    && (!loginBonusCheckComplete || !prepMissionDialogCheckComplete || !rankingRewardNotificationCheckComplete)
+    && !showLoginBonusModal && !showPrepMissionDialog
+    && !showAccountAuthenticationModal && !showAuthenticationReminder && !confirmDialogConfig;
+
 
   React.useLayoutEffect(() => {
     const resetCanvasOrigin = () => {
@@ -283,7 +297,10 @@ function AppContent() {
             <PrepMissionEventDialogController />
             <RankingRewardNotificationController />
             <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
-            <GlobalInteractionBlocker isBlocking={globalInteractionBlocking} />
+            {homeEntryPending && <CanonicalDialog title="ログイン情報を確認中" loading>
+              <BrandedLoading label="ログイン情報を確認中" />
+            </CanonicalDialog>}
+            <GlobalInteractionBlocker isBlocking={globalInteractionBlocking || homeEntryPending} />
           </>
         )}
       >
