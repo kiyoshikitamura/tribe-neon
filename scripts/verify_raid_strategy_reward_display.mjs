@@ -4,6 +4,9 @@ import { createRaidRoomClearRewardClient } from '../src/domain/raidRoomClearRewa
 assert.equal(Object.keys(RAID_AREA_STRATEGIES).length, 7);
 assert.equal(getRaidAreaStrategy('SHIBUYA').counter, '耐久・SPD対策');
 assert.equal(getRaidAreaStrategy('UNKNOWN'), null);
+assert.equal(getRaidAreaStrategy('AKIHABARA', true).identity, '状態異常型');
+assert.equal(getRaidAreaStrategy('YOKOHAMA', true).identity, '持久・回復型');
+assert.equal(getRaidAreaStrategy('AKIHABARA', false).identity, '速度・バランス型');
 const policies = ['beginner','intermediate','advanced','expert'].map((difficulty, i) => ({difficulty, enabled:i<2, status:i<2?'ACTIVE':'PENDING_CONTRIBUTION', version:2, instanceItems:[{itemId:'SKILL_MANUAL',quantity:1}], daily:{chanceBp:3000, items:[{itemId:'NORMAL_GACHA_TICKET_RANDOM',quantity:1}]}}));
 assert.equal(parseRaidRewardPolicies(policies).length, 4);
 for (const mutate of [p=>p[2].enabled=true,p=>p[0].daily.chanceBp=10001,p=>p[0].instanceItems[0].quantity=0,p=>p[3].difficulty='beginner']) {

@@ -1,0 +1,563 @@
+{
+  "status": "PENDING_USER_FIX",
+  "version": "2026-09-14-review-v2",
+  "rows": [
+    {
+      "area": "SHINJUKU",
+      "difficulty": "EASY",
+      "poolId": "QUEST_SHINJUKU_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        }
+      ]
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "EASY",
+      "poolId": "QUEST_SHIBUYA_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ]
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "EASY",
+      "poolId": "QUEST_IKEBUKURO_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 4000
+        }
+      ]
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "EASY",
+      "poolId": "QUEST_ROPPONGI_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 200
+        }
+      ]
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "EASY",
+      "poolId": "QUEST_AKIHABARA_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ]
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "EASY",
+      "poolId": "QUEST_KAWASAKI_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 200
+        }
+      ]
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "EASY",
+      "poolId": "QUEST_YOKOHAMA_EASY_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 3000
+        }
+      ]
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_SHINJUKU_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_SHIBUYA_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_IKEBUKURO_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_ROPPONGI_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1000
+        }
+      ]
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_AKIHABARA_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_KAWASAKI_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "NORMAL",
+      "poolId": "QUEST_YOKOHAMA_NORMAL_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 500
+        }
+      ]
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "HARD",
+      "poolId": "QUEST_SHINJUKU_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 8400
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "HARD",
+      "poolId": "QUEST_SHIBUYA_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 600
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 400
+        }
+      ]
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "HARD",
+      "poolId": "QUEST_IKEBUKURO_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 8000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 1600
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "HARD",
+      "poolId": "QUEST_ROPPONGI_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 600
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ]
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "HARD",
+      "poolId": "QUEST_AKIHABARA_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 900
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 900
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 900
+        }
+      ]
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "HARD",
+      "poolId": "QUEST_KAWASAKI_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 600
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ]
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "HARD",
+      "poolId": "QUEST_YOKOHAMA_HARD_20260914",
+      "rolls": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ]
+    }
+  ]
+}

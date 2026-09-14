@@ -9,8 +9,16 @@ export const RAID_AREA_STRATEGIES = {
   kawasaki: { identity: '高火力型', counter: 'SPD・短期決戦', description: '高い攻撃力に注意。先手と集中攻撃を意識。', target: '超火力型 / ATK最大 / 低耐久' },
   yokohama: { identity: '耐久型', counter: '継続火力', description: '高めのHPに、継続して火力を出せる編成で対抗。', target: '持久型 / HP / 回復 / 耐久' },
 } as const;
-export function getRaidAreaStrategy(areaId: string) {
-  return RAID_AREA_STRATEGIES[areaId.toLowerCase() as keyof typeof RAID_AREA_STRATEGIES] ?? null;
+export const RAID_ACTIVE_STRATEGIES = {
+  ...RAID_AREA_STRATEGIES,
+  roppongi: { identity: 'スキル型', counter: '妨害・継続火力', description: '攻撃強化と防御低下を使う敵。行動を妨害して攻撃をつなぐ。', target: 'Buff / Debuff' },
+  akihabara: { identity: '状態異常型', counter: '状態解除・回復', description: 'スタンや沈黙に注意。状態解除と回復で行動を維持。', target: 'STUN / SILENCE' },
+  kawasaki: { identity: '高火力・低耐久型', counter: '火力・短期決戦', description: '攻撃力が高く、耐久は低め。火力を集中して攻める。', target: 'ATK / 低耐久' },
+  yokohama: { identity: '持久・回復型', counter: '継続火力・妨害', description: '回復と防御で粘る敵。攻撃を継続して貢献ダメージを積む。', target: 'HP / 回復' },
+} as const;
+export function getRaidAreaStrategy(areaId: string, active = false) {
+  const strategies = active ? RAID_ACTIVE_STRATEGIES : RAID_AREA_STRATEGIES;
+  return strategies[areaId.toLowerCase() as keyof typeof RAID_AREA_STRATEGIES] ?? null;
 }
 
 export type RaidRewardPolicy = {
@@ -18,6 +26,7 @@ export type RaidRewardPolicy = {
   enabled: boolean;
   status: 'ACTIVE' | 'PENDING_CONTRIBUTION';
   version: 2;
+  strategyVersion?: string | null;
   instanceItems: { itemId: string; quantity: number }[];
   daily: { chanceBp: number; items: { itemId: string; quantity: number }[] };
 };

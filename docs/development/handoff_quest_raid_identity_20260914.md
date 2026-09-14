@@ -130,3 +130,17 @@ WIN=200 CASH＋RAID_POINT_TICKET1、LOSE=50 CASH。3勝は各勝利合計3枚、
 Preview追加適用済み: Repository 20260914223252_pvp_battle_raid_ticket_rewards.sql → 実version20260914223627。再適用禁止。
 サーバー実receipt・Exactly-once・TOP表示・Resultチケット強調・任意Raid CTAを実装。DB rollback/SSR検証PASS。実機は残件。
 Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の未完了はこの追加で解消していない。
+
+## 最新状態：残件対応の追記（以前の未適用記載より優先）
+
+- 基準remote 2c9602efa0934b13a8d80974dc4375dffd5ecb26。
+- Raid28profileをPreviewへ適用済み。Repository `20260914231128_raid_strategy_profiles_activation.sql` → 実version **20260914231249**。これで本件適用済みは計5件。すべて再適用禁止。Production接続・反映なし。
+- 全140memberの生成検査を通過。既存14 combat snapshotは適用前後同一hash。旧operations SQLも再実行しない。
+- 新規Raid選択の7地域ヒントを実装。policyのstrategyVersionが全4難度2026-09-14の場合だけ有効化。高難度報酬は引き続き保留。
+- 共有HPの減少はraw damageから計算し、ローカル敵HP純減ではない。横浜の回復量だけを理由とした保留判断を訂正。1枠の通常Skill変更・独立評価seedで全28条件の平均改善を確認。実戦受入とは区別。
+- Quest21Poolの確定用候補・素材別供給比較を quest_identity_review_candidate_20260914.md/.json に作成。未承認・DB未適用。
+- 仕様確定3点を quest_raid_remaining_decisions_20260914.md に具体化。確率案／開始時CASH固定案／累積applied上級3%・超級5%以上案。採用決定は未取得、実装済みと扱わない。
+- 最終typecheck・Raid表示・PvP/Raid/Ranking master・PvP実コンポーネントSSR・webpack build PASS。mock buildで実接続受入ではない。
+- Raid Instance/Daily・Quest発見Raid CASH/EXP・PvP報酬のDB回帰を再実行し全PASS・ROLLBACK。
+- 初回PvP finalize2本の並列送信はDB時刻上で直列だった。同時競合検証は未完。専用QAデータは削除確認済み。
+- 実機E2E、固定Preview URL/接続DB照合は未完。Vercel対象team参照403・ローカル認証なし。GitHub配信statusだけで実機確認済みとはしない。

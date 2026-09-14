@@ -39,7 +39,7 @@ const pvpUi = fs.readFileSync("src/app/components/PvpTab.tsx", "utf8");
 for (const token of ["公式戦", "模擬戦", "pvp_match_rewards_master", "PvpBattleRewards"]) assert(pvpUi.includes(token), token);
 for (const retired of ["勝利 CASH 500", "敗北 CASH 250", "防衛・履歴", "防衛設定を保存"]) assert(!pvpUi.includes(retired), retired);
 const raidUi = fs.readFileSync("src/app/components/RaidTab.tsx", "utf8");
-for (const token of ["profileType", "Guild Contribution", "selectedRaid"]) assert(raidUi.includes(token), token);
+for (const token of ["profileType", "RaidRoomConnectedBrowser", "selectedRaid"]) assert(raidUi.includes(token), token);
 const freeze = fs.readFileSync("specs/production/gameplay_foundation/pvp_raid_ranking_production_freeze_20260822.md", "utf8");
 assert(freeze.includes("Authority Gap: **0**"));
 console.log("PvP / Raid / Ranking production master verification PASS");

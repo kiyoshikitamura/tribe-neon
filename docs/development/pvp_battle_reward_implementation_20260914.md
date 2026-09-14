@@ -26,7 +26,7 @@ Target: `sufvuqdnqohpfzkwxohq`。今回の追加1件のみ。既存Quest/Raid3�
 - 実start RPC→fixture勝敗finalize：3勝＋1敗650 CASH/チケット3、5回startでBP5→0、RATE・Daily/Season勝利数+3、retry同一receipt、旧Replayの非遡及、素材/3戦Bonus/Presentの追加なし。
 - 既存use_action_resource_ticketでチケット1消費・Raid Point0→1。
 - Item付与故障注入でCASH・rank・ledger・finalizeの全体rollback。authenticated/anonからfinalize実行不可。
-- 2セッション同時の確定済みReplay retryで同一receipt・CASH不変。初回finalize同士の同時競合は実測しておらず、行ロック・一意制約で保護。
+- 並列送信した確定済みReplay retryで同一receipt・CASH不変。ただしDB上の処理重複は未証明。初回finalize同士の同時競合は実測しておらず、行ロック・一意制約で保護。
 - 実TOP/ResultコンポーネントのSSR検証PASS。同期前の報酬捏造なし、対戦相手より前に報酬、WINチケット強調・任意CTA、LOSE/旧receiptに新チケットCTAなし。子画像・音声はmock。
 - SQL試験変更は全ROLLBACK。実戦E2E・ブラウザ/実機表示とは区別する。
 
@@ -40,3 +40,9 @@ Target: `sufvuqdnqohpfzkwxohq`。今回の追加1件のみ。既存Quest/Raid3�
 - 最終typecheck・TOP/Result SSR PASS。
 - 既存verify_pvp_raid_production.mjsのPvP報酬期待値を新仕様へ更新。PvP/数値部分は通過したが、後段の旧Raid文言 `Guild Contribution` の検査でFAIL。今回対象外の表示を戻して検査を通す変更はしていない。
 - ローカルwebpack build PASS（NEXT_PUBLIC_USE_MOCK_DB=true）。実接続・実機の代替ではない。
+
+### 残件対応の追記
+
+- 初回finalize2本を並列送信。両方200 CASH/チケット1の同一receiptだが、DB実行区間は23:14:58–23:15:00と23:15:02–23:15:04で重ならなかった。同時競合PASSとは扱わない。直接の独立DB接続で再検証が必要。
+- 専用QA user/replay/ledger/feed/projection/defense logを削除し残存なしを確認。auth userは作成していない。
+- 既存verify_pvp_raid_production.mjsの旧Guild Contribution検査を現行RaidRoomConnectedBrowser接続検査へ更新しPASS。UIの旧文言復元は不要だった。

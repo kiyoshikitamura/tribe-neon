@@ -7,8 +7,8 @@
 上級・超級の `enabled=false / PENDING_CONTRIBUTION` は「新報酬：付与条件調整中」。
 実受取表示は `get_raid_room_clear_reward_v1().dailyBonus` の別枠receiptを使用し、Instanceと混同しない。
 
-新しいStats / Skill構成 / 難度別攻略強度は未適用。以下は既存Repositoryから作成した調整候補であり、本番またはPreview実DBへの一致を断定しない。
-現在UIは既存Statsに基づく限定したヒントを表示。六本木のSkill主体、秋葉原の妨害、横浜の回復、川崎の低耐久を実装済みとは訴求しない。
+2026-09-14追記：28profileをPreviewへ適用済み。既存14件のsnapshotは保持。Production未適用。以下の旧Stats・途中検証は経緯として残す。最新の評価・適用記録は末尾を優先する。
+UIはServerのstrategyVersionが全4難度で2026-09-14の場合だけ新しい編成ヒントを表示する。
 
 ## 現行Stats（canonical raid_production_20260830.json）
 
@@ -70,3 +70,13 @@
 - 横浜は全難度で回復スキルの発動を確認したが、最大HP比例回復が大きく対策有効性を確認できない。超級の平均raw 861,936に対し戦闘終了時の敵HP純減31,605。SILENCE候補では純減6,783。実ledgerのapplied contributionとは別指標。
 - UIを全7地域の新攻略ヒントへ切り替える条件は未達。数値候補を受入済みとは扱わず未適用を維持。
 - 全結果: raid_strategy_simulation_20260914.json。再現: node --experimental-strip-types scripts/verify_raid_strategy_simulation.mjs。実接続E2E・実機受入の代替ではない。
+
+## 最新：Preview適用と共有HP指標の訂正
+
+- Migration 20260914231128_raid_strategy_profiles_activation.sql → Preview実version 20260914231249。再適用禁止。28profile適用、全140member生成確認。
+- 既存14 snapshotのhashは適用前後とも f34cba8f40cde0e136b7d750cc806d25。既存room/replayの保存編成を変更しない。
+- 正式finalizeは非late時に min(playerRawDamage, shared current_hp) を適用する。戦闘内の回復は共有HPを回復しない。先の横浜netHP評価は実貢献・共有HP減少の評価には使用できない。
+- scripts/measure_raid_counter_loadouts.mjs：同一キャラ・育成・装備で通常Skill1枠だけ交換。5seedで候補を選び、別20seedで評価。raid_counter_loadouts_20260914.jsonに結果保存。
+- 全28条件で対策候補の平均raw damageが改善。超級は新宿1.252倍、渋谷1.247倍、池袋1.368倍、六本木1.277倍、秋葉原1.618倍、川崎1.231倍、横浜1.101倍。
+- 合成partyによる局所比較。汎用回復への交換効果も含む。実プレイヤーの所持率・全編成での優位性・難度が上がるほど必ず対策要求が強まることは未証明。実戦/実機受入は残る。
+- 旧operations候補SQLは旧baseline guard付きのため再実行しない。新報酬の上級/超級gateは未確定のまま無効。
