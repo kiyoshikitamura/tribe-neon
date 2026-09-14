@@ -35,6 +35,7 @@ export default function RaidRewardComparison({ selected }: { selected?: RaidDiff
         <h4>{difficulty.label}</h4>
         {difficulty.id === 'expert' && <p>推奨総合力 260,000以上</p>}
         {!policy.enabled && <p className="raid-reward-comparison__status">新報酬：付与条件調整中</p>}
+        {policy.enabled && policy.eligibility && <p>{policy.eligibility.minimumContributionBp > 0 ? `撃破前に参加し、最大HPの${policy.eligibility.minimumContributionBp / 100}%以上の累積貢献で獲得` : '撃破前に1戦以上参加すると獲得'}</p>}
         <p>撃破ごと：{policy.instanceItems.map(itemLabel).join(' / ')}</p>
         <p className="raid-reward-comparison__daily">1日1回：{policy.daily.items.map(itemLabel).join(' / ')}{policy.daily.chanceBp < 10000 ? `（${policy.daily.chanceBp / 100}%）` : ' 確定'}</p>
       </article>;

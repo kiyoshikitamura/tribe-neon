@@ -31,7 +31,7 @@ begin
  end loop;
  if n<>21 then raise exception 'expected 21 courses, got %',n; end if;
  -- 既存version1の実Snapshotで受取。新式へ再計算されないことを確認。
- select p0.id,p0.user_id,p0.hometown_bonus_snapshot,q0.cash_reward
+ select p0.id,p0.user_id,p0.hometown_bonus_snapshot,p0.base_cash_snapshot
  into old_p,u,old_snap,base from user_patrols p0 join canonical_quest_master q0
  on q0.version='2026-08-30' and q0.quest_id=coalesce(p0.course_id,p0.quest_id)
  where (p0.hometown_bonus_snapshot->>'version')::int=1 and q0.is_production_enabled

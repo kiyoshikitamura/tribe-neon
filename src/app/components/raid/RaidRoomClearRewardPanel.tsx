@@ -53,7 +53,7 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
     {error && <p role="alert">討伐報酬を取得できませんでした。再度お試しください。</p>}
     {reward && rewardIdentity === identity && <>
       <p role="status">{reward.status === 'issued' && reward.items.some(item => item.delivery !== 'DIRECT') ? '以前の報酬はプレゼントBOXで確認できます。' : labels[reward.status]}</p>
-      {reward.clearGate.minimumContributionDamage !== null && <p>開催中の累積貢献ダメージが{reward.clearGate.minimumContributionDamage.toLocaleString('ja-JP')}を超え、ボスを撃破すると対象です。</p>}
+      {reward.clearGate.minimumContributionDamage !== null && <p>開催中の累積貢献ダメージが{reward.clearGate.minimumContributionDamage.toLocaleString('ja-JP')}{reward.clearGate.comparison === 'GTE' ? '以上で、1戦以上参加して' : 'を超え、'}ボスを撃破すると対象です。</p>}
       <p>対象の貢献ダメージ：{reward.clearGate.contributionDamage.toLocaleString('ja-JP')}</p>
       <p className="raid-room-muted">レイド終了後に確定した戦闘は討伐報酬の貢献に含みません。</p>
       <p className="raid-room-muted">討伐報酬は1人につきレイドごとに1回。条件達成時に所持資産へ反映されます。</p>

@@ -22,3 +22,8 @@ assert.equal((await parse({...base,dailyBonus:{...daily,won:false,items:[]}})).d
 await assert.rejects(parse({...base,dailyBonus:{...daily,sourceRoomId:'room-b'}}));
 await assert.rejects(parse({...base,dailyBonus:{...daily,won:false}}));
 console.log('PASS: seven hints, authority policy fail-closed, legacy receipt, daily winner/loser, cross-room rejection');
+
+const activePolicies=policies.map(p=>({...p,enabled:true,status:'ACTIVE',eligibility:{minimumBattles:1,minimumContributionBp:p.difficulty==='advanced'?300:p.difficulty==='expert'?500:0,metric:'APPLIED',comparison:'GTE'}}));
+assert.equal(parseRaidRewardPolicies(activePolicies)[3].eligibility.minimumContributionBp,500);
+assert.throws(()=>parseRaidRewardPolicies(activePolicies.map(p=>({...p,eligibility:{...p.eligibility,metric:'RAW'}}))));
+assert.equal((await parse({...base,clearGate:{...base.clearGate,comparison:'GTE'}})).clearGate.comparison,'GTE');

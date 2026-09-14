@@ -139,7 +139,7 @@
           "probabilityBp": 10000
         },
         {
-          "itemId": "EQUIP_EXP_S",
+          "itemId": "CHAR_EXP_S",
           "quantity": 1,
           "probabilityBp": 2000
         }
@@ -154,9 +154,14 @@
           "probabilityBp": 10000
         },
         {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
           "itemId": "EQUIP_EXP_M",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "SKILL_MANUAL",
@@ -174,9 +179,14 @@
           "probabilityBp": 10000
         },
         {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 2000
+        },
+        {
           "itemId": "EQUIP_EXP_L",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8400
         },
         {
           "itemId": "SKILL_MANUAL",
@@ -201,12 +211,17 @@
         {
           "itemId": "CHAR_EXP_S",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_S",
           "quantity": 1,
           "probabilityBp": 2000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 100
         }
       ]
     },
@@ -221,12 +236,17 @@
         {
           "itemId": "EQUIP_EXP_M",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
           "probabilityBp": 500
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 300
         }
       ]
     },
@@ -251,12 +271,17 @@
         {
           "itemId": "EQUIP_LB_PART",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 600
         },
         {
           "itemId": "NORMAL_GACHA_TICKET_RANDOM",
           "quantity": 1,
-          "probabilityBp": 300
+          "probabilityBp": 100
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 400
         }
       ]
     },
@@ -266,12 +291,12 @@
         {
           "itemId": "CHAR_EXP_S",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_S",
           "quantity": 1,
-          "probabilityBp": 2000
+          "probabilityBp": 4000
         }
       ]
     },
@@ -281,12 +306,17 @@
         {
           "itemId": "CHAR_EXP_M",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_M",
           "quantity": 1,
           "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 2000
         },
         {
           "itemId": "SKILL_MANUAL",
@@ -301,12 +331,17 @@
         {
           "itemId": "CHAR_EXP_L",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_L",
           "quantity": 1,
           "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 1600
         },
         {
           "itemId": "SKILL_MANUAL",
@@ -331,12 +366,17 @@
         {
           "itemId": "CHAR_EXP_S",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_S",
           "quantity": 1,
           "probabilityBp": 2000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 200
         }
       ]
     },
@@ -351,12 +391,12 @@
         {
           "itemId": "EQUIP_EXP_M",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
-          "probabilityBp": 500
+          "probabilityBp": 1000
         }
       ]
     },
@@ -376,17 +416,17 @@
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 2000
         },
         {
           "itemId": "EQUIP_LB_PART",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 600
         },
         {
           "itemId": "NORMAL_GACHA_TICKET_RANDOM",
           "quantity": 1,
-          "probabilityBp": 300
+          "probabilityBp": 100
         }
       ]
     },
@@ -396,12 +436,17 @@
         {
           "itemId": "CHAR_EXP_S",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_S",
           "quantity": 1,
           "probabilityBp": 2000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
         }
       ]
     },
@@ -416,12 +461,17 @@
         {
           "itemId": "EQUIP_EXP_M",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
-          "probabilityBp": 500
+          "probabilityBp": 200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
         }
       ]
     },
@@ -441,17 +491,17 @@
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 900
         },
         {
           "itemId": "EQUIP_LB_PART",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 900
         },
         {
           "itemId": "NORMAL_GACHA_TICKET_RANDOM",
           "quantity": 1,
-          "probabilityBp": 300
+          "probabilityBp": 900
         }
       ]
     },
@@ -461,12 +511,17 @@
         {
           "itemId": "CHAR_EXP_S",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "EQUIP_EXP_S",
           "quantity": 1,
           "probabilityBp": 2000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 200
         }
       ]
     },
@@ -481,12 +536,17 @@
         {
           "itemId": "EQUIP_EXP_M",
           "quantity": 1,
-          "probabilityBp": 10000
+          "probabilityBp": 8000
         },
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
-          "probabilityBp": 500
+          "probabilityBp": 200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
         }
       ]
     },
@@ -506,17 +566,17 @@
         {
           "itemId": "SKILL_MANUAL",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 600
         },
         {
           "itemId": "EQUIP_LB_PART",
           "quantity": 1,
-          "probabilityBp": 1200
+          "probabilityBp": 2000
         },
         {
           "itemId": "NORMAL_GACHA_TICKET_RANDOM",
           "quantity": 1,
-          "probabilityBp": 300
+          "probabilityBp": 100
         }
       ]
     },
@@ -531,7 +591,7 @@
         {
           "itemId": "EQUIP_EXP_S",
           "quantity": 1,
-          "probabilityBp": 2000
+          "probabilityBp": 3000
         }
       ]
     },

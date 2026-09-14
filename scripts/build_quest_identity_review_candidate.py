@@ -1,4 +1,4 @@
-"""未承認の21Pool候補と素材別比較を生成。DB接続・適用なし。"""
+"""承認済み21Poolと素材別比較を生成。DB接続・適用なし。"""
 import json
 from pathlib import Path
 areas=['SHINJUKU','SHIBUYA','IKEBUKURO','ROPPONGI','AKIHABARA','KAWASAKI','YOKOHAMA']
@@ -14,7 +14,7 @@ quest_source=Path('src/domain/gameplay/canonical/data/quests_20260830.json').rea
 assert '"NORMAL_GACHA_TICKET_RANDOM"' in quest_source
 ids.add('NORMAL_GACHA_TICKET_RANDOM')
 rows=[]
-text=['# Quest地域別報酬：21Pool確定用候補','','**未承認・未適用。** 初級から7地域の報酬を区別する案。抽選の期待個数を示す。','渋谷は既存Normalスキルチケット、六本木は指南書で区別する。初級へのチケット/指南書/パーツ追加は新規供給となる。','素材間の円換算は未確定のため総期待価値同等とは判断しない。割引商品は価値基準に使用しない。','','|地域|難度|キャラ素材|装備素材|指南書|パーツ|Normal RANDOM|Normal SKILL|','|---|---|---:|---:|---:|---:|---:|---:|']
+text=['# Quest地域別報酬：21Pool確定用候補','','**ユーザー承認済み。** 初級から7地域の報酬を区別する案。抽選の期待個数を示す。','渋谷は既存Normalスキルチケット、六本木は指南書で区別する。初級へのチケット/指南書/パーツ追加は新規供給となる。','素材間の円換算は未確定のため総期待価値同等とは判断しない。割引商品は価値基準に使用しない。','','|地域|難度|キャラ素材|装備素材|指南書|パーツ|Normal RANDOM|Normal SKILL|','|---|---|---:|---:|---:|---:|---:|---:|']
 for tier,suffix in [('EASY','S'),('NORMAL','M'),('HARD','L')]:
  keys=[f'CHAR_EXP_{suffix}',f'EQUIP_EXP_{suffix}','SKILL_MANUAL','EQUIP_LB_PART','NORMAL_GACHA_TICKET_RANDOM','NORMAL_GACHA_TICKET_SKILL'];assert all(i in ids for i in keys)
  for area,v in zip(areas,values[tier]):
@@ -29,7 +29,7 @@ for tier in values:
  for i,item in enumerate(['キャラ素材','装備素材','指南書','パーツ','Normal RANDOM','Normal SKILL']):
   col=[r[i] for r in values[tier]];m=max(col);h=m+(min(200,10000-m%10000) if m%10000 else 0)
   text.append(f'|{tier}|{item}|{base[tier][i]/10000:g}|{sum(col)/70000:.4f}|{areas[col.index(m)]}|{m/10000:g}|{h/10000:g}|')
-text+=['','## 確定依頼','','この21Poolを採用するか。初級の新規供給、地元一致で1%→3%となるTicket供給、素材間の価値差を含めた判断が必要。','確定後は独立Poolの抽選行だけを更新。Energy・時間・EXP・CASH・地元Snapshot・ガチャ内部確率は変更しない。']
-Path('docs/development/quest_identity_review_candidate_20260914.json').write_text(json.dumps({'status':'PENDING_USER_FIX','version':'2026-09-14-review-v2','rows':rows},ensure_ascii=False,indent=2)+'\n')
+text+=['','## 承認記録','','2026-09-14の3案承認により採用。初級の新規供給、地元一致で1%→3%となるTicket供給を含む。','独立Poolの抽選行を更新。Energy・時間・EXP・CASH・地元Snapshot・ガチャ内部確率は変更しない。']
+Path('docs/development/quest_identity_review_candidate_20260914.json').write_text(json.dumps({'status':'APPROVED','version':'2026-09-14-review-v2','rows':rows},ensure_ascii=False,indent=2)+'\n')
 Path('docs/development/quest_identity_review_candidate_20260914.md').write_text('\n'.join(text)+'\n')
 print('21 candidate pools, existing item IDs, supply comparison generated; DB unchanged')

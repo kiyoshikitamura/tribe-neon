@@ -7,7 +7,7 @@ declare v_user uuid;v_rooms uuid[];v_room uuid;v_difficulty text;v_i integer;v_c
 begin
  if (select jsonb_object_agg(difficulty,chance_bp) from public.raid_daily_clear_bonus_rules)
  <> '{"beginner":3000,"intermediate":5000,"advanced":10000,"expert":10000}'::jsonb then raise exception 'Daily probability master mismatch';end if;
- if exists(select 1 from public.raid_room_clear_reward_rules where difficulty in ('advanced','expert') and (enabled or minimum_contribution_damage is not null)) then raise exception 'Unfixed gate was activated';end if;
+ if exists(select 1 from public.raid_room_clear_reward_rules where not enabled or minimum_contribution_bp is distinct from case difficulty when 'advanced' then 300 when 'expert' then 500 else 0 end) then raise exception 'Approved gate mismatch';end if;
  select user_id into v_user from (
   select l.user_id,count(distinct r.id) n from public.raid_rooms r
   join public.raid_damage_logs l on l.raid_boss_instance_id=r.raid_boss_instance_id
@@ -33,9 +33,10 @@ begin
    cleared_at='2026-09-14 15:30:00+00',outcome_finalized_at='2026-09-14 15:30:00+00'
    where id in (select raid_boss_instance_id from public.raid_rooms where id=any(v_rooms));
   if v_difficulty in ('advanced','expert') then
+   update public.raid_room_clear_reward_rules set enabled=false where difficulty=v_difficulty;
    if public._issue_raid_room_clear_rewards_v1(v_rooms[1])<>0 then raise exception 'Pending high difficulty issued rewards';end if;
    -- Test-only fixture unlock, NOT a proposed contribution value.
-   update public.raid_room_clear_reward_rules set enabled=true,minimum_contribution_damage=0 where difficulty=v_difficulty;
+   update public.raid_room_clear_reward_rules set enabled=true,minimum_contribution_damage=0,minimum_contribution_bp=0 where difficulty=v_difficulty;
   end if;
   -- Deterministic hit fixture; actual probability values were asserted above.
   update public.raid_daily_clear_bonus_rules set chance_bp=10000 where difficulty=v_difficulty;

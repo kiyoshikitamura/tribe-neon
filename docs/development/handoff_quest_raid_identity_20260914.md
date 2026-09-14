@@ -144,3 +144,17 @@ Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の�
 - Raid Instance/Daily・Quest発見Raid CASH/EXP・PvP報酬のDB回帰を再実行し全PASS・ROLLBACK。
 - 初回PvP finalize2本の並列送信はDB時刻上で直列だった。同時競合検証は未完。専用QAデータは削除確認済み。
 - 実機E2E、固定Preview URL/接続DB照合は未完。Vercel対象team参照403・ローカル認証なし。GitHub配信statusだけで実機確認済みとはしない。
+
+## 最新：3案承認後の実装（以前の未決表記より優先）
+
+- ユーザー「良いです」により、21Pool案・開始時CASH固定・上級3%／超級5%累積appliedをFIX。再承認不要。
+- Repository `20260914234114_quest_raid_approved_reward_identity.sql` → Preview実version **20260914234801**。本件適用済みは計6件。既存5件は再適用していない。Production接続・変更なし。
+- 21Pool抽選行を承認済み数値へ変更。canonical JSONとPreview DB完全一致をrollback試験で確認。既存Normal Skill Ticket使用、RANDOMは既存具体ID解決。
+- 新規QuestはINSERT時にbase_cash_snapshotをServer保存。受取と発見Raid追加CASHがこれを使用。更新による上書きを拒否。開始後Master変更でも保持。
+- 既存未受取13件は全件切替前開始のため600/1200/2000を固定。受取済み109件は変更なし。地元Snapshot全行保持。
+- 適用前後：completedHash=123b759f942cc71bd2355e6365ccfdce、hometownHash=21f1aacac6dd35f65ff011279d327e39、raid enemy snapshotHash=dcdf8e924e2849bdc2d82e0c55af4a05で一致。
+- 上級/超級のInstance/Daily報酬を有効化。同Instanceの正式・non-lateのapplied damageを累積。閾値ceil(保存max_hp×3%/5%)、比較>=。既存受給ledgerは保持し一括遡及配布なし。
+- UI：高難度3%/5%条件、実閾値の「以上」、進行中Questの保存額＋地元加算による獲得予定CASHを接続。旧receiptの>比較表示を保持。
+- 追加境界DB試験PASS：旧/新CASH、Master変更、Snapshot上書き拒否、再送、発見Raid基礎額、3%/5%未満・一致・端数切上げ、討伐戦の集計、late除外、Instance/Daily一回。試験は全ROLLBACK。
+- 既存DB回帰PASS：地元21course、Raid Instance/Daily/JST、Quest発見Raid、PvP3勝1敗/Point/Ranking/Inventory/故障rollback。表示検証・typecheck・webpack build PASS。mock buildは実機代替ではない。
+- 仕様判断3点は解消。残件は実機E2E、独立DBセッションの初回finalize同時競合、配信固定URL/接続DBの照合。Vercel参照403とローカル認証不足は継続。

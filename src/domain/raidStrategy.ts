@@ -26,6 +26,7 @@ export type RaidRewardPolicy = {
   enabled: boolean;
   status: 'ACTIVE' | 'PENDING_CONTRIBUTION';
   version: 2;
+  eligibility?: { minimumBattles: number; minimumContributionBp: number; metric: 'APPLIED'; comparison: 'GTE' };
   strategyVersion?: string | null;
   instanceItems: { itemId: string; quantity: number }[];
   daily: { chanceBp: number; items: { itemId: string; quantity: number }[] };
@@ -42,6 +43,7 @@ export function parseRaidRewardPolicies(value: unknown): RaidRewardPolicy[] {
       if (!Array.isArray(items) || items.length === 0 || items.some(item => !item || typeof item.itemId !== 'string'
         || !item.itemId || !Number.isSafeInteger(item.quantity) || item.quantity < 1)) throw new Error('Invalid raid reward items');
     }
+    if (row.eligibility != null && (row.eligibility.minimumBattles !== 1 || !Number.isInteger(row.eligibility.minimumContributionBp) || row.eligibility.minimumContributionBp < 0 || row.eligibility.minimumContributionBp > 10000 || row.eligibility.metric !== 'APPLIED' || row.eligibility.comparison !== 'GTE')) throw new Error('Invalid raid eligibility');
     seen.add(row.difficulty);
   }
   return value as RaidRewardPolicy[];

@@ -1847,6 +1847,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             rewards_accrued: p.rewards_accrued,
             encounterSnapshot: p.encounter_snapshot,
             hometownBonusSnapshot: p.hometown_bonus_snapshot,
+            baseCashSnapshot: p.base_cash_snapshot,
             started_at: p.started_at,
             expires_at: p.expires_at
           };

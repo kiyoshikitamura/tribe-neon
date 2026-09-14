@@ -42,6 +42,7 @@ export function usePatrol(
     rewards_accrued?: any;
     encounterSnapshot?: any;
     hometownBonusSnapshot?: any;
+    baseCashSnapshot?: number;
     started_at?: string;
     expires_at?: string;
   }>>([]);
@@ -203,6 +204,7 @@ export function usePatrol(
         battle_result: null,
         encounterSnapshot,
         hometownBonusSnapshot: res.data.hometown_bonus_snapshot,
+        baseCashSnapshot: res.data.base_cash_snapshot,
         started_at: startedAt.toISOString(),
         expires_at: expiresAt.toISOString()
       };

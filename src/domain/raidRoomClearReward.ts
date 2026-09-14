@@ -4,7 +4,7 @@ export interface RaidRoomClearReward {
   dailyBonus?: { dayKey: string; won: boolean; items: { itemId: string; quantity: number }[]; sourceRoomId: string; issuedAt: string };
   roomId: string;
   status: 'not_eligible' | 'unconfigured' | 'pending' | 'issued';
-  clearGate: { status: 'unknown' | 'not_succeeded' | 'succeeded'; ruleVersion: number; contributionDamage: number; minimumContributionDamage: number | null; cleared: boolean };
+  clearGate: { comparison?: 'GTE'; status: 'unknown' | 'not_succeeded' | 'succeeded'; ruleVersion: number; contributionDamage: number; minimumContributionDamage: number | null; cleared: boolean };
   issuedAt: string | null;
   expiresAt: string | null;
   items: { itemId: string; quantity: number; presentId: string | null; delivery?: 'DIRECT' | 'PRESENT'; presentStatus: string | null; claimedAt: string | null; expiresAt: string | null }[];
@@ -65,7 +65,7 @@ export function createRaidRoomClearRewardClient(client: RaidRoomRpcClient) {
         dailyBonus = { dayKey: daily.dayKey, won: daily.won, items: dailyItems, sourceRoomId: roomId, issuedAt: dailyIssuedAt };
       }
       return { roomId, status: r.status as RaidRoomClearReward['status'], issuedAt, expiresAt, items, ...(dailyBonus ? { dailyBonus } : {}),
-        clearGate: { status: gate.status as RaidRoomClearReward['clearGate']['status'], ruleVersion, contributionDamage: number(gate.contributionDamage), cleared: gate.cleared, minimumContributionDamage: gate.minimumContributionDamage === null ? null : number(gate.minimumContributionDamage) } };
+        clearGate: { ...(gate.comparison === 'GTE' ? { comparison: 'GTE' as const } : {}), status: gate.status as RaidRoomClearReward['clearGate']['status'], ruleVersion, contributionDamage: number(gate.contributionDamage), cleared: gate.cleared, minimumContributionDamage: gate.minimumContributionDamage === null ? null : number(gate.minimumContributionDamage) } };
     },
   };
 }
