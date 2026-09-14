@@ -71,3 +71,15 @@ Season間PvP・報酬数量・新規Cosmetic登録・連続在籍7日・旧POWER
 ## 現在の制約と停止点
 作業環境exec-server復旧。最新ed21545のcheckout・添付読取が可能。対象Vercel teamへの接続は403のため配信設定診断は不可。再認証依頼を繰り返さず、この制約を明示する。
 公開準備完了とは判定しない。旧fixture成長型の無断継承や未確定KPI/Season規則の創作、Production公開、Season実リセット、運営告知配信は行わない。
+
+## 追加不具合・要望（2026-09-14）
+
+| 案件 | 状況 | 残件 |
+|---|---|---|
+| 覚醒の書：別キャラへ続けて使えない | 対象所持IDを無視した旧Leader/global判定を修正。操作テスト・実RPC rollback検証PASS | 新PreviewのA→B操作受入 |
+| 装備／スキルLB確認 | 別対象への応答誤反映・旧段階参照・装備の誤CASH制限を修正。canonical必要パーツ表示。操作テスト・実RPC rollback検証PASS | 対象切替とreload受入 |
+| おすすめスキル | 旧一括導線消失、現個別処理の旧ID制限を特定。要望監査済み | 個別おすすめスキル導線案の仕様確定後に実装 |
+| Raid拠点別報酬 | 現Previewは拠点差なし。要望監査済み | 拠点別品目・数量・討伐／救援の適用範囲確定 |
+| 地元一致ボーナス | 現式・最大例を監査。二重適用ではなく固定加算の影響。数値変更なし | CASH／Dropの係数・上限、進行中Questの適用境界を別スレッドで決定 |
+
+根拠: growth_target_switch_fix_20260914.md、hometown_bonus_audit_20260914.md、recommendation_and_raid_reward_requests_20260914.md。

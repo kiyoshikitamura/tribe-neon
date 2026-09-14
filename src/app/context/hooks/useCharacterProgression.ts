@@ -10,6 +10,7 @@ import { canonicalEquipmentFlatStat, canonicalSkillSlotCount } from "@/domain/ga
 import type { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
 import { beginActionPerformance } from "@/utils/actionPerformance";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
+import { CANONICAL_EQUIPMENT_LIMIT_BREAK } from "@/domain/gameplay/canonical/masters";
 import { runCompositeOperation } from "@/domain/async/runCompositeOperation";
 
 const sumPower = (stats: { hp: number; atk: number; def: number; spd: number; luk: number }) =>
@@ -211,16 +212,22 @@ export function useCharacterProgression(
   const handleCharacterGrowthBatch = (requested: GrowthRequest[]) =>
     executeExpGrowth("CHARACTER", requested);
 
-  const handleCharacterAwaken = async () => {
-    if (!session || characterAwaken >= 5) return;
+  const handleCharacterAwaken = async (characterDbId: string) => {
+    if (!session?.user?.id) return;
+    // The page passes an owned character ID. The legacy characterAwaken state
+    // describes the profile leader and must not gate another character's growth.
+    const character = userCharactersDbList.find((entry) => entry.id === characterDbId);
+    if (!character) {
+      setErrorMessage("覚醒対象のキャラクターが見つかりません。");
+      return;
+    }
+    if (Number(character.awakening_level || 0) >= 5) {
+      setErrorMessage("このキャラクターは最大覚醒に到達しています。");
+      return;
+    }
     if (!beginUpgradeAction()) return;
     playCyberSe("click");
     try {
-      const character = userCharactersDbList.find((entry) => entry.character_id === upgradeSelectedCharId);
-      if (!character) {
-        setErrorMessage("覚醒対象のキャラクターが見つかりません。");
-        return;
-      }
       const res = await supabase.rpc("awaken_character", { p_character_id: character.id });
 
       if (res.error) {
@@ -249,6 +256,7 @@ export function useCharacterProgression(
       await syncBootstrapData(session.user.id);
     } catch (err) {
       console.warn(err);
+      setErrorMessage("覚醒結果を確認できませんでした。再読み込みして状態を確認してください。");
     } finally {
       endUpgradeAction();
     }
@@ -640,22 +648,26 @@ export function useCharacterProgression(
     executeExpGrowth("EQUIPMENT", requested);
 
   const handleEquipmentLimitBreak = async (useWildcard: boolean = false) => {
-    if (!session || !selectedEquipment) return;
-    if (equipmentLimitBreak >= 10) return;
-
-    const cost = (equipmentLimitBreak + 1) * 1000;
-    if (cash < cost) {
-      setErrorMessage("キャッシュ不足です。");
+    if (!session?.user?.id || !selectedEquipment) return;
+    const equipment = userEquipmentsList.find((entry) => entry.id === selectedEquipment.id);
+    if (!equipment) {
+      setErrorMessage("限界突破対象の装備が見つかりません。");
       return;
     }
+    const currentLb = Number(equipment.plus_val || 0);
+    if (currentLb >= CANONICAL_EQUIPMENT_LIMIT_BREAK.max_level) {
+      setErrorMessage("これ以上限界突破できません。");
+      return;
+    }
+    const requiredParts = CANONICAL_EQUIPMENT_LIMIT_BREAK.cost_curve[currentLb];
 
     if (useWildcard) {
-      if (equipLbParts < 1) {
+      if (equipLbParts < requiredParts) {
         setErrorMessage("代用素材「万能カスタムツール [装備]」が不足しています。");
         return;
       }
     } else {
-      const dupes = userEquipmentsList.filter(e => e.id !== selectedEquipment.id && e.equipment_id === selectedEquipment.equipment_id && e.equipped_character_id === null);
+      const dupes = userEquipmentsList.filter(e => e.id !== equipment.id && e.equipment_id === equipment.equipment_id && e.equipped_character_id === null);
       if (dupes.length < 1) {
         setErrorMessage("同名の予備装備品が見つかりません。「万能カスタムツール [装備]」を代用してください。");
         return;
@@ -664,16 +676,15 @@ export function useCharacterProgression(
 
     if (!beginUpgradeAction()) return;
     playCyberSe("gacha");
-    const nextLb = equipmentLimitBreak + 1;
     try {
       let targetDupeId = null;
       if (!useWildcard) {
-        const dupes = userEquipmentsList.filter(e => e.id !== selectedEquipment.id && e.equipment_id === selectedEquipment.equipment_id && e.equipped_character_id === null);
+        const dupes = userEquipmentsList.filter(e => e.id !== equipment.id && e.equipment_id === equipment.equipment_id && e.equipped_character_id === null);
         targetDupeId = dupes[0]?.id;
       }
 
       const res = await supabase.rpc("limit_break_equipment", {
-        p_equipment_id: selectedEquipment.id,
+        p_equipment_id: equipment.id,
         p_use_wildcard: useWildcard,
         p_dupe_id: targetDupeId
       });
@@ -687,27 +698,35 @@ export function useCharacterProgression(
         return;
       }
 
+      const nextLb = Number(res.data?.plus_val ?? currentLb + 1);
       await syncBootstrapData(session.user.id);
+      setSelectedEquipment((prev: any) => prev?.id === equipment.id ? { ...prev, plus_val: nextLb } : prev);
       setConfirmDialogConfig({ isOpen: true, title: "限界突破", message: `限界突破が+${nextLb}になりました。`, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
     } catch (err: any) {
       console.warn(err.message);
+      setErrorMessage("限界突破結果を確認できませんでした。再読み込みして状態を確認してください。");
     } finally {
       endUpgradeAction();
     }
   };
 
   const handleSkillUpgrade = async (useWildcard: boolean = false) => {
-    if (!session || !selectedSkill) return;
-    if (selectedSkill.plus_val >= 10) {
+    if (!session?.user?.id || !selectedSkill) return;
+    const skill = userSkillsList.find((entry) => entry.id === selectedSkill.id);
+    if (!skill) {
+      setErrorMessage("限界突破対象のスキルが見つかりません。");
+      return;
+    }
+    if (Number(skill.plus_val || 0) >= 10) {
       setErrorMessage("これ以上限界突破できません。");
       return;
     }
 
-    const skillMaster = CANONICAL_SKILL_VIEW.find(s => s.id === selectedSkill.skill_card_id);
+    const skillMaster = CANONICAL_SKILL_VIEW.find(s => s.id === skill.skill_card_id);
     if (!skillMaster) return;
 
     const isExclusive = !!skillMaster.is_exclusive;
-    const required_cash = (selectedSkill.plus_val + 1) * 1000;
+    const required_cash = (Number(skill.plus_val || 0) + 1) * 1000;
 
     if (cash < required_cash) {
       setErrorMessage("キャッシュ不足です。");
@@ -721,7 +740,7 @@ export function useCharacterProgression(
         return;
       }
     } else {
-      const dupes = userSkillsList.filter(s => s.id !== selectedSkill.id && s.skill_card_id === selectedSkill.skill_card_id && s.equipped_character_id === null);
+      const dupes = userSkillsList.filter(s => s.id !== skill.id && s.skill_card_id === skill.skill_card_id && s.equipped_character_id === null);
       if (dupes.length < 1) {
         setErrorMessage(`同名の予備スキルカードが見つかりません。「${isExclusive ? "限界突破の書 [専用スキル]" : "限界突破の書 [スキル]"}」を代用してください。`);
         return;
@@ -734,12 +753,12 @@ export function useCharacterProgression(
     try {
       let targetDupeId = null;
       if (!useWildcard) {
-        const dupes = userSkillsList.filter(s => s.id !== selectedSkill.id && s.skill_card_id === selectedSkill.skill_card_id && s.equipped_character_id === null);
+        const dupes = userSkillsList.filter(s => s.id !== skill.id && s.skill_card_id === skill.skill_card_id && s.equipped_character_id === null);
         targetDupeId = dupes[0]?.id;
       }
 
       const res = await supabase.rpc("limit_break_skill", {
-        p_skill_id: selectedSkill.id,
+        p_skill_id: skill.id,
         p_use_wildcard: useWildcard,
         p_dupe_id: targetDupeId
       });
@@ -753,12 +772,13 @@ export function useCharacterProgression(
         return;
       }
 
-      const nextLb = selectedSkill.plus_val + 1;
+      const nextLb = Number(res.data?.plus_val ?? Number(skill.plus_val || 0) + 1);
       await syncBootstrapData(session.user.id);
-      setSelectedSkill((prev: any) => prev ? { ...prev, plus_val: nextLb } : null);
+      setSelectedSkill((prev: any) => prev?.id === skill.id ? { ...prev, plus_val: nextLb } : prev);
       setConfirmDialogConfig({ isOpen: true, title: "限界突破", message: `スキルカードの限界突破が+${nextLb}になりました。`, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
     } catch (err: any) {
       console.warn(err.message);
+      setErrorMessage("限界突破結果を確認できませんでした。再読み込みして状態を確認してください。");
     } finally {
       endUpgradeAction();
     }

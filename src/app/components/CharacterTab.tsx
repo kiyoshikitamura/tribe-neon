@@ -1,4 +1,5 @@
 "use client";
+import { CANONICAL_EQUIPMENT_LIMIT_BREAK } from "@/domain/gameplay/canonical/masters";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
@@ -1069,7 +1070,7 @@ export default function CharacterTab() {
                       <span className="char-material-copy"><CanonicalItemIcon itemId="EQUIP_EXP_S" alt="" className="char-material-art" />カスタムオイル・小 {equipExpS} / <CanonicalItemIcon itemId="EQUIP_LB_PART" alt="" className="char-material-art" />改造パーツ {equipLbParts}</span>
                       <button onClick={() => void handleEquipmentLevelUp("EQUIP_EXP_S", 1)} disabled={upgradeLoading || equipExpS < 1}>Lv +1</button>
                       <button onClick={() => void handleEquipmentLimitBreak(false)} disabled={upgradeLoading || (selectedEquipment.plus_val || 0) >= 10}>同名装備</button>
-                      <button onClick={() => void handleEquipmentLimitBreak(true)} disabled={upgradeLoading || equipLbParts < 1 || (selectedEquipment.plus_val || 0) >= 10}>改造パーツ</button>
+                      <button onClick={() => void handleEquipmentLimitBreak(true)} disabled={upgradeLoading || equipLbParts < (CANONICAL_EQUIPMENT_LIMIT_BREAK.cost_curve[Number(selectedEquipment.plus_val || 0)] ?? 0) || (selectedEquipment.plus_val || 0) >= CANONICAL_EQUIPMENT_LIMIT_BREAK.max_level}>改造パーツ</button>
                     </div>
                   )}
                 </section>
