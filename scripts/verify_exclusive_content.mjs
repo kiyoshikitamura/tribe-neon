@@ -8,11 +8,12 @@ function load(file) {
   if (file.endsWith('.json')) return JSON.parse(fs.readFileSync(file, 'utf8'));
   const exports = {};
   const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true },
+    compilerOptions: { module: ts.ModuleKind.CommonJS, esModuleInterop: true, jsx: ts.JsxEmit.ReactJSX },
   }).outputText;
   vm.runInNewContext(code, { exports, require: (name) => {
-    const resolved = path.resolve(path.dirname(file), name);
-    return load(resolved.endsWith('.json') ? resolved : `${resolved}.ts`);
+    if (name === "react" || name === "react/jsx-runtime" || name.endsWith(".css") || name.includes("CharacterPresentation") || name.includes("ExclusiveBattlePresentation")) return {};
+    const resolved = name.startsWith("@/") ? path.resolve("src", name.slice(2)) : path.resolve(path.dirname(file), name);
+    return load(/\.(json|tsx?)$/.test(resolved) ? resolved : `${resolved}.ts`);
   }});
   return exports;
 }
@@ -60,3 +61,18 @@ assert.ok(cutInSource.includes('if (!visible || paused) return;'));
 assert.ok(cutInSource.includes('clock.remainingMs - (performance.now() - startedAt)'));
 assert.ok(fs.readFileSync('src/app/components/battle/ExclusiveBattlePresentation.tsx','utf8').includes('index * 120'));
 console.log('PASS: approved dialogue, snapshot owner guard, authoritative outcome wait, repeated activation, phase-mounted cut-in, pause, 120ms bands');
+
+const resolver = load(path.resolve('src/app/components/battle/BattleEffectPresentation.tsx')).resolveBattleSkillPresentation;
+const cue = { charName: 'アゲハ', skillName: 'ネオン・アクセル' };
+for (const key of ['id', 'skill_card_id', 'skill_id']) {
+  const participant = { characterId: 'char_ageha_01', rarity: 'SSR', skills: [{ [key]: 'SKILL_055', name: cue.skillName }] };
+  const result = resolver(cue, participant);
+  assert.equal(result.skillId, 'SKILL_055');
+  assert.ok(result.dialogue, 'server snapshot fallback must resolve exclusive dialogue');
+  assert.equal(resolver(cue, { ...participant, characterId: 'char_go_01' }).dialogue, undefined);
+}
+assert.equal(resolver(cue, { characterId: 'char_ageha_01', skills: [] }).dialogue, undefined);
+assert.equal(resolver(null), null);
+assert.ok(streetSource.includes('resolveBattleSkillPresentation(props.skillCutIn, actor)'));
+assert.ok(streetSource.includes(': fallback?.dialogue'));
+console.log('PASS: fallback SKILL_055 aliases, owner guard, missing skill, null cue, Street resolver wiring');

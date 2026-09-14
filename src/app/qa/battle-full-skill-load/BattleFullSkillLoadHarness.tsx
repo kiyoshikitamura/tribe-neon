@@ -153,9 +153,15 @@ export default function BattleFullSkillLoadHarness({withSetup = false}: {withSet
     setActionPresentation(null);
     setAuthoritativeTimeline([]);
     setBattleState("ENDING");
-    schedule(() => setBattleState("OUTCOME"), 760);
-    schedule(() => setBattleState("RESULT"), 1740);
+
   }, [audio.stopBgm, clearTimers, replay.events, schedule]);
+
+  // Outcome timers belong to screen lifecycle, not replay event cleanup.
+  useEffect(() => {
+    if (battleState !== "ENDING" && battleState !== "OUTCOME") return;
+    const timer = window.setTimeout(() => setBattleState(battleState === "ENDING" ? "OUTCOME" : "RESULT"), battleState === "ENDING" ? 760 : 980);
+    return () => window.clearTimeout(timer);
+  }, [battleState]);
 
   const reset = useCallback(() => {
     clearTimers();

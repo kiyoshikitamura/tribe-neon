@@ -12,6 +12,7 @@ import { isInternalBattleLabel } from "@/domain/presentation/battleSkillLabels";
 import "./StreetBattle.css";
 import { exclusiveSkillForBattleMember } from "@/domain/presentation/exclusiveContent";
 import { EXCLUSIVE_SKILL_DIALOGUE } from "@/domain/presentation/exclusiveSkillDialogue";
+import { resolveBattleSkillPresentation } from "./BattleEffectPresentation";
 import { ExclusiveEquipmentIntro, ExclusiveSkillSequence } from "./ExclusiveBattlePresentation";
 
 const impact = "/effects/battle-v3/street-impact.webp";
@@ -42,15 +43,16 @@ export default function StreetBattleViewer(props:QuestBattleViewerProps) {
   const actorId = action?.unit.actorId ?? props.targetLine?.fromId ?? props.authoritativeTimeline?.[0]?.id ?? props.timeline[props.timelineIndex]?.id;
   const actor = all.find(p=>p.id===actorId);
   const master = masterFor(actor);
-  const skill = CANONICAL_SKILL_VIEW.find(s=>s.id===action?.unit.skillId);
+  const fallback = !action ? resolveBattleSkillPresentation(props.skillCutIn, actor) : null;
+  const skill = CANONICAL_SKILL_VIEW.find(s=>s.id===(action?.unit.skillId ?? fallback?.skillId));
   const skillRarity = skill?.rarity;
   const isSkill = action ? action.tier!=="NORMAL" : Boolean(props.skillCutIn && !/通常攻撃|ATTACK/i.test(props.skillCutIn.skillName));
   const rawName = action?.skillName || props.skillCutIn?.skillName || "通常攻撃";
   const skillName = isInternalBattleLabel(rawName) ? "スキル発動" : rawName;
   const casting = isSkill && (action ? action.beat==="ACTOR" : Boolean(props.skillCutIn) && !props.damagePopup);
   const exclusive = exclusiveSkillForBattleMember(actor?.characterId ?? "", action?.unit.skillId ?? "");
-  const dialogue = exclusive ? EXCLUSIVE_SKILL_DIALOGUE[exclusive.id] : null;
-  const fullscreen = Boolean(exclusive) || master?.rarity==="SSR";
+  const dialogue = action ? (exclusive ? EXCLUSIVE_SKILL_DIALOGUE[exclusive.id] : null) : fallback?.dialogue;
+  const fullscreen = Boolean(dialogue) || master?.rarity==="SSR";
   const special = isSkill && (skillRarity==="SR" || skillRarity==="SSR");
   const resolving = action && action.beat!=="ACTOR";
   const groups = resolving ? action.unit.targets.filter(g=>g.events.some(e=>!isActiveEffectSync(e))) : [];

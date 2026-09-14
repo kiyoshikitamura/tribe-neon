@@ -30,6 +30,7 @@ export type BattleImpactKind = "impact" | "slash" | "muzzle";
 type BattleCutInTier = "STANDARD" | "SR" | "SSR";
 
 export type BattleSkillPresentation = {
+  skillId?: string;
   charName: string;
   skillName: string;
   tier: BattleCutInTier | null;
@@ -149,6 +150,7 @@ export function resolveBattleSkillPresentation(
   const isBasicAttack = isBasicAttackPresentation(skillId, safeSkillName);
 
   return {
+    skillId,
     charName: safeBattleCharacterName(cutIn.charName),
     skillName: safeSkillName,
     tier: isBasicAttack ? null : actorRarity === "SSR" ? "SSR" : actorRarity === "SR" ? "SR" : "STANDARD",
