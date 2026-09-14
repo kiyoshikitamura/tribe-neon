@@ -3280,7 +3280,7 @@ export function useBattle(options: UseBattleOptions) {
             { label: "累計貢献ダメージ", value: Number(raidResultTemp.personalContribution || 0).toLocaleString() },
             { label: "ボス残りHP", value: Number(raidResultTemp.remainingBossHp || 0).toLocaleString() },
           ],
-          reward: raidResultTemp.roomId ? "討伐・救援報酬はレイドの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。" : raidResultTemp.rewardProjectionUnavailable
+          reward: raidResultTemp.roomId ? "討伐・救援報酬はレイドの「報酬」で確認できます。条件達成時に所持資産へ反映されます。" : raidResultTemp.rewardProjectionUnavailable
             ? "報酬はサーバーで確定済み"
             : Array.isArray(raidResultTemp.grantedRewards) && raidResultTemp.grantedRewards.length > 0
               ? "獲得報酬"

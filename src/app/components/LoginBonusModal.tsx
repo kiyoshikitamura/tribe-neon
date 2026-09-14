@@ -12,6 +12,7 @@ interface LoginBonusModalProps {
   claimResult: LoginBonusClaimResult | null;
   onClose: () => void;
   onOpenPresents: () => void;
+  onOpenBag?: () => void;
 }
 
 export const LoginBonusModal: React.FC<LoginBonusModalProps> = ({
@@ -20,6 +21,7 @@ export const LoginBonusModal: React.FC<LoginBonusModalProps> = ({
   claimResult,
   onClose,
   onOpenPresents,
+  onOpenBag,
 }) => {
   const orderedMasters = useMemo(() => [...masters].sort((left, right) => left.day_number - right.day_number), [masters]);
   const masterDays = useMemo(() => orderedMasters.map((master) => master.day_number), [orderedMasters]);
@@ -63,7 +65,7 @@ export const LoginBonusModal: React.FC<LoginBonusModalProps> = ({
                 </div>
               </div>
               <div className="login-bonus-reward-desc">
-                プレゼントBOXに保存されました
+                {claimResult?.delivery === 'DIRECT' ? '獲得しました' : 'プレゼントBOXに保存されました'}
               </div>
             </div>
           )}
@@ -128,7 +130,8 @@ export const LoginBonusModal: React.FC<LoginBonusModalProps> = ({
             className="login-bonus-btn login-bonus-btn-primary"
             onClick={() => {
               onClose();
-              onOpenPresents();
+              if (claimResult?.delivery === 'DIRECT') onOpenBag?.();
+              else onOpenPresents();
             }}
           >
             <svg
@@ -143,7 +146,7 @@ export const LoginBonusModal: React.FC<LoginBonusModalProps> = ({
             >
               <polyline points="20 6 9 17 5 12" />
             </svg>
-            プレゼントBOXへ
+            {claimResult?.delivery === 'DIRECT' ? 'マイバッグへ' : 'プレゼントBOXへ'}
           </button>
         </div>
       </div>

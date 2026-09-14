@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RaidRoomActivityTracker } from '../../../domain/raidRoomActivitySync';
 import { createRaidRoomController } from '../../../domain/raidRoomClient';
 import { createRaidRoomRpcTransport, type RaidRoomRpcAuthorities, type RaidRoomRpcClient } from '../../../domain/raidRoomRpcTransport';
@@ -21,6 +21,7 @@ export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps
   rpcClient: RaidRoomRpcClient;
   authorities?: RaidRoomRpcAuthorities;
   onOpenPresents?: () => void | Promise<void>;
+  onDirectReward?: () => Promise<void>;
   rescueId?: string | null;
   userId?: string;
   activityTracker?: RaidRoomActivityTracker;
@@ -30,7 +31,35 @@ export interface RaidRoomConnectedBrowserProps extends Omit<RaidRoomBrowserProps
 }
 
 /** 接続元の認証client・画面遷移・全体操作blockを受け取る。既存GameContextを変更しない。 */
-export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, userId, activityTracker, refreshRevision, returnRoomId, loadTop, ...browserProps }: RaidRoomConnectedBrowserProps) {
+export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescueId, onOpenPresents, onDirectReward, userId, activityTracker, refreshRevision, returnRoomId, loadTop, ...browserProps }: RaidRoomConnectedBrowserProps) {
+  const assetSyncRef = useRef({ userId, onDirectReward });
+  useLayoutEffect(() => { assetSyncRef.current = { userId, onDirectReward }; }, [userId, onDirectReward]);
+  const assetSyncFlight = useRef<{ userId?: string; promise: Promise<void> } | null>(null);
+  const [assetSyncErrorOwner, setAssetSyncErrorOwner] = useState<string | null>(null);
+  // Keep this callback stable across bootstrap renders; refreshing a projection
+  // must never refetch/regrant a reward or create an effect loop.
+  const syncDirectReward = useCallback(async () => {
+    const owner = assetSyncRef.current.userId;
+    const sync = assetSyncRef.current.onDirectReward;
+    if (!owner || !sync) return;
+    if (assetSyncFlight.current?.userId === owner) return assetSyncFlight.current.promise;
+    const flight = { userId: owner, promise: Promise.resolve() };
+    flight.promise = (async () => {
+      try {
+        await sync();
+        if (assetSyncRef.current.userId === owner) setAssetSyncErrorOwner(null);
+      } catch {
+        if (assetSyncRef.current.userId === owner) setAssetSyncErrorOwner(owner);
+      } finally {
+        if (assetSyncFlight.current === flight) assetSyncFlight.current = null;
+      }
+    })();
+    assetSyncFlight.current = flight;
+    return flight.promise;
+  }, []);
+  useEffect(() => {
+    if (returnRoomId) void syncDirectReward();
+  }, [returnRoomId, refreshRevision, userId, syncDirectReward]);
   const loadDisplay = useCallback((roomId: string) => getRaidRoomDisplay(rpcClient, roomId), [rpcClient]);
   const loadListPage = useCallback((difficulty: import('../../../domain/raidRoom').RaidDifficultyId, offset: number) => activityTracker ? activityTracker.observePage(() => loadRaidListPage(rpcClient, difficulty, offset)) : loadRaidListPage(rpcClient, difficulty, offset), [rpcClient, activityTracker]);
   const loadEnemyInfo = useCallback((variant: string, difficulty: import('../../../domain/raidRoom').RaidDifficultyId) => loadRaidEnemyInfo(rpcClient, variant, difficulty), [rpcClient]);
@@ -78,9 +107,9 @@ export default function RaidRoomConnectedBrowser({ rpcClient, authorities, rescu
     }).catch(() => { if (current) setLinkError(true); });
     return () => { current = false; };
   }, [connection, rescueClient, rescueId, enableRescue, linkRevision]);
-  return <>{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} loadListPage={loadListPage} loadEnemyInfo={loadEnemyInfo} currentUserId={userId} loadDisplay={loadDisplay} topData={top.data} onTopRefresh={top.refresh} listRefreshRevision={refreshRevision} controller={connection.controller} renderRewards={enableRescue || enableParticipation ? (roomId, close, display) => <div key={`${userId ?? ""}:${roomId}`}>
+  return <>{assetSyncErrorOwner === userId && <div role="alert"><p>所持資産の表示を更新できませんでした。通信状態を確認して更新してください。</p><OutlawButton loadingLabel="" onClick={() => void syncDirectReward()}>所持資産を更新</OutlawButton></div>}{linkError && <><p role="alert">救援先を開けませんでした。所属や公開状態を確認してください。</p><OutlawButton loadingLabel="" onClick={() => setLinkRevision(value => value + 1)}>再試行</OutlawButton></>}<RaidRoomBrowser {...browserProps} loadListPage={loadListPage} loadEnemyInfo={loadEnemyInfo} currentUserId={userId} loadDisplay={loadDisplay} topData={top.data} onTopRefresh={top.refresh} listRefreshRevision={refreshRevision} controller={connection.controller} renderRewards={enableRescue || enableParticipation ? (roomId, close, display) => <div key={`${userId ?? ""}:${roomId}`}>
       <h3>討伐報酬</h3>
-      <RaidRoomClearRewardPanel plan={display?.clearPlan} client={clearRewardClient} roomId={roomId} userId={userId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} />
-      {enableRescue && <><h3>救援成功報酬</h3><RaidRoomRescueRewardPanel plan={display?.rescuePlan} client={rewardClient} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /></>}
+      <RaidRoomClearRewardPanel plan={display?.clearPlan} client={clearRewardClient} onDirectReward={syncDirectReward} roomId={roomId} userId={userId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} />
+      {enableRescue && <><h3>救援成功報酬</h3><RaidRoomRescueRewardPanel plan={display?.rescuePlan} client={rewardClient} onDirectReward={syncDirectReward} roomId={roomId} onOpenPresents={onOpenPresents ? async () => { await onOpenPresents(); close(); } : undefined} /></>}
     </div> : browserProps.renderRewards} renderRescue={enableRescue ? (room, disabled) => <RaidRoomRescuePanel key={room.roomId} client={rescueClient} userId={userId} roomId={room.roomId} disabled={disabled} setInteractionBlocking={browserProps.setInteractionBlocking} /> : undefined} /></>;
 }

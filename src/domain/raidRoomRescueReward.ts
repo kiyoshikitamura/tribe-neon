@@ -6,7 +6,7 @@ export interface RaidRoomRescueReward {
   rescueGate: { status: 'unknown' | 'not_succeeded' | 'succeeded'; minimumBattles: number | null; minimumContributionDamage: number | null };
   issuedAt: string | null;
   expiresAt: string | null;
-  items: { itemId: string; quantity: number; presentId: string; presentStatus: string | null; claimedAt: string | null; expiresAt: string | null }[];
+  items: { itemId: string; quantity: number; presentId: string | null; delivery?: 'DIRECT' | 'PRESENT'; presentStatus: string | null; claimedAt: string | null; expiresAt: string | null }[];
 }
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid rescue reward');
@@ -36,10 +36,14 @@ export function createRaidRoomRescueRewardClient(client: RaidRoomRpcClient) {
       const items = r.items.map(value => {
         const item = object(value), quantity = number(item.quantity);
         if (quantity < 1) throw new Error('Invalid rescue reward quantity');
-        return { itemId: text(item.itemId), quantity, presentId: text(item.presentId), presentStatus: item.presentStatus === null ? null : text(item.presentStatus), claimedAt: date(item.claimedAt), expiresAt: date(item.expiresAt) };
+        const delivery = item.delivery ?? 'PRESENT';
+        if (delivery !== 'DIRECT' && delivery !== 'PRESENT') throw new Error('Invalid reward delivery');
+        const claimedAt = date(item.claimedAt), expiresAt = date(item.expiresAt);
+        if (delivery === 'DIRECT' && (item.presentId !== null || !claimedAt || expiresAt !== null)) throw new Error('Invalid direct reward receipt');
+        return { itemId: text(item.itemId), quantity, ...(item.delivery === undefined ? {} : { delivery: delivery as 'DIRECT' | 'PRESENT' }), presentId: delivery === 'DIRECT' ? null : text(item.presentId), presentStatus: item.presentStatus === null ? null : text(item.presentStatus), claimedAt, expiresAt };
       });
       const issuedAt = date(r.issuedAt), expiresAt = date(r.expiresAt);
-      if (r.status === 'issued' && (!issuedAt || !expiresAt || items.length === 0)) throw new Error('Incomplete rescue reward receipt');
+      if (r.status === 'issued' && (!issuedAt || items.length === 0 || (items.some(item => item.delivery !== 'DIRECT') && !expiresAt))) throw new Error('Incomplete rescue reward receipt');
       if (r.status !== 'issued' && items.length !== 0) throw new Error('Unexpected rescue reward receipt');
       return { roomId, status: r.status as RaidRoomRescueReward['status'], issuedAt, expiresAt, items,
         rescueGate: { status: gate.status as RaidRoomRescueReward['rescueGate']['status'], minimumBattles: gate.minimumBattles === null ? null : number(gate.minimumBattles), minimumContributionDamage: gate.minimumContributionDamage === null ? null : number(gate.minimumContributionDamage) } };

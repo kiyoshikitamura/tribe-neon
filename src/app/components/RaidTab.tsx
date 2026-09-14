@@ -206,7 +206,7 @@ export default function RaidTab() {
     <HubPage className="raid-view" title="レイド" hideVisualHeader status={readiness.status} onRetry={readiness.retry}>
       {roomUiEnabled && <RaidRoomConnectedBrowser
         key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId} userId={session?.user?.id}
-        rpcClient={supabase} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
+        rpcClient={supabase} onDirectReward={async () => { if (session?.user?.id) await syncBootstrapData(session.user.id); }} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
         activityTracker={raidRoomActivityTracker} refreshRevision={raidTopRefreshRevision + recoveryRevision}
         returnRoomId={raidRoomReturnTarget?.userId === session?.user?.id ? raidRoomReturnTarget?.roomId : undefined}
         onOpenPresents={openRescuePresents}

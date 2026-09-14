@@ -26,6 +26,7 @@ export interface LoginBonusReward {
 }
 
 export interface LoginBonusClaimResult {
+  delivery?: 'DIRECT' | 'PRESENT';
   claimed: boolean;
   already_claimed?: boolean;
   reason?: string;

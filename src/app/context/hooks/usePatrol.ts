@@ -440,7 +440,6 @@ export function usePatrol(
       };
 
       setLastPatrolRewards(rewardSummary);
-      if (!options?.suppressResultModal) setShowPatrolRewardModal(true);
 
       // The claim is authoritative at this point. Remove the completed quest
       // from the local projection before the battle result releases its screen;
@@ -451,7 +450,7 @@ export function usePatrol(
       setActivePatrols((current) => current.filter((entry) => entry.id !== patrolId));
       setHasActivePatrolBattle((current) => targetPatrol.has_battle_event ? false : current);
 
-      void Promise.allSettled([
+      await Promise.allSettled([
         syncBootstrapData(session.user.id),
         addGuildXpAndContributionByAction("QUEST", patrolId),
       ]).then((results) => {
@@ -459,6 +458,7 @@ export function usePatrol(
           if (result.status === "rejected") console.warn("Patrol post-claim refresh failed:", result.reason);
         });
       });
+      if (!options?.suppressResultModal) setShowPatrolRewardModal(true);
       return true;
     } catch (err: any) {
       traceTutorialJourney("speed_up_exception", { patrolId, reason: err?.message || String(err) });

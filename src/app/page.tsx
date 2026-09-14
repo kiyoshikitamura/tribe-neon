@@ -65,6 +65,7 @@ function AppContent() {
     loginBonusClaimResult,
     setShowInboxPanel,
     setInboxPanelTab,
+    navigateTab,
   } = useGame();
   const [homeResumeSnapshot, setHomeResumeSnapshot] = React.useState<ReturnType<typeof readHomeResumeSnapshot>>(null);
   React.useEffect(() => {
@@ -260,6 +261,7 @@ function AppContent() {
               claimResult={loginBonusClaimResult}
               onClose={() => setShowLoginBonusModal(false)}
               onOpenPresents={() => { setShowInboxPanel(true); setInboxPanelTab("presents"); }}
+              onOpenBag={() => navigateTab("bag")}
             />}
 
             {/* Layer 4: フルスクリーンパネル */}

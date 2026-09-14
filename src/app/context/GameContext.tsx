@@ -1172,6 +1172,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (claimRes.claimed) {
+          // Direct gameplay grants must be reflected in Bag and balances before
+          // the success dialog opens. Legacy Present grants still refresh too.
+          await syncBootstrapData(userId);
           if (onboardingState?.gameplay_authorized && activeTab === "home") {
             setShowLoginBonusModal(true);
             setPresentsPrefetched(false);

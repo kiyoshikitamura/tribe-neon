@@ -17,7 +17,12 @@ begin
  if coalesce(cardinality(v_ids),0) not between 1 and 5 then
    raise exception 'saved main formation required' using errcode='23514';
  end if;
- v_player:=public.build_server_battle_snapshot(v_uid,v_ids,'PLAYER'); v_enemy:=v_patrol.encounter_snapshot->'members'; v_enemy_tactic:=coalesce(v_patrol.encounter_snapshot->>'enemyTactic','BALANCED'); v_seed:=floor(random()*2147483646)::bigint+1;
+ -- Keep the existing tutorial adjustments; these are pass-through outside Tutorial Battle.
+ v_player:=public.apply_tutorial_player_snapshot(v_uid,public.build_server_battle_snapshot(v_uid,v_ids,'PLAYER'));
+ v_enemy:=v_patrol.encounter_snapshot->'members';
+ v_enemy:=public.apply_tutorial_enemy_snapshot(v_uid,v_player,v_enemy);
+ v_enemy_tactic:=coalesce(v_patrol.encounter_snapshot->>'enemyTactic','BALANCED');
+ v_seed:=floor(random()*2147483646)::bigint+1;
  insert into public.battle_replay_sessions(requester_user_id,battle_mode,source_reference_id,tactic_id,enemy_tactic_id,random_seed,player_snapshot,enemy_snapshot,resolution_authority) values(v_uid,'QUEST',p_patrol_id,p_tactic_id,v_enemy_tactic,v_seed,v_player,v_enemy,'PATROL_SERVER') returning id into v_replay;
  return jsonb_build_object('replay_session_id',v_replay,'player_snapshot',v_player,'enemy_snapshot',v_enemy,'enemy_tactic',v_enemy_tactic);
 end $$;
