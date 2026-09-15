@@ -9,7 +9,7 @@ type BillingAggregate = { payers: Set<string>; revenue: number };
 export const SAVED_DEFINITION = "kpi-overview-saved-v1";
 const BILLING_AUTHORITY = "billing_orders.status=GRANTED,billing_mode=live,granted_at(JST)";
 
-// 認証済みAPI内でのみ使用。閲覧では保存テーブルのSELECTだけを実行する。
+// 認証済みAPI内でのみ使用。Product / Community は保存済み結果のみを読む。
 export async function readSavedOverview(period: string, from: string, to: string, origin: string): Promise<SavedRecord[]> {
   const service = serviceClient();
   if (!service || origin !== process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()) throw new Error("KPI configuration unavailable");
@@ -35,6 +35,7 @@ function billingKey(timestamp: string, period: "daily" | "monthly") {
   return period === "daily" ? jstDate : jstDate.slice(0, 7);
 }
 
+// 課金KPIだけは確定済み注文台帳をAuthorityとして読む。Grant履歴からは売上を算出しない。
 async function readBillingOverview(period: "daily" | "monthly", from: string, to: string, origin: string): Promise<Map<string, BillingAggregate>> {
   const service = serviceClient();
   if (!service || origin !== process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()) throw new Error("KPI billing configuration unavailable");
@@ -57,7 +58,6 @@ async function readBillingOverview(period: "daily" | "monthly", from: string, to
   }
   return aggregates;
 }
-const cachedBillingRead = unstable_cache(readBillingOverview, ["kpi-billing-granted-live-v1"], { revalidate: 60 });
 
 export async function savedOverviewResponse(request: NextRequest, period: "daily" | "monthly") {
   const range = rangeFrom(request);
@@ -69,7 +69,7 @@ export async function savedOverviewResponse(request: NextRequest, period: "daily
     const to = period === "monthly" ? range.to.slice(0, 7) + "-01" : range.to;
     const [saved, billing] = await Promise.all([
       cachedRead(period, from, to, origin),
-      cachedBillingRead(period, from, to, origin),
+      readBillingOverview(period, from, to, origin),
     ]);
     const byDate = new Map(saved.map((row) => [row.period_start, row]));
     const keys: string[] = [];
