@@ -87,6 +87,15 @@ export function sessionMatchesMode(id: unknown, mode: BillingMode) {
   return typeof id === "string" && (mode === "live" ? /^cs_live_[a-zA-Z0-9]+$/ : /^cs_test_[a-zA-Z0-9]+$/).test(id);
 }
 
+/** 別hostnameへ戻すと購入元のブラウザセッションを引き継げないため、予約前に拒否する。 */
+export function validateCheckoutOrigin(request: Request, returnOrigin: string) {
+  const requestOrigin = new URL(request.url).origin;
+  const browserOrigin = request.headers.get("origin");
+  if (requestOrigin !== returnOrigin || (browserOrigin !== null && browserOrigin !== returnOrigin)) {
+    throw new BillingError(`購入用URL（${returnOrigin}）でログインし、ショップを開いてください。`, 409);
+  }
+}
+
 export function uuid(value: unknown): string {
   if (typeof value !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value))
     throw new BillingError("購入番号が不正です。");

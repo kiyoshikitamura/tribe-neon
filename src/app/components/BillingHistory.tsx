@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { billingFetch, clearBillingRequest } from "@/utils/billing_client";
 import { SHOP_PRODUCTS_MASTER } from "@/utils/shop_master_data";
@@ -11,8 +11,10 @@ export default function BillingHistory() {
   const [orders,setOrders] = useState<Order[] | null>(null);
   const [busy,setBusy] = useState(false);
   const [message,setMessage] = useState("");
+  const inFlight = useRef(false);
   const load = async (order?: Order) => {
-    if (busy) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true); setMessage("");
     try {
       const {data} = await supabase.auth.getSession();
@@ -24,17 +26,19 @@ export default function BillingHistory() {
       }
       setOrders((await billingFetch("history",data.session.access_token)).orders);
     } catch(error) { setMessage(error instanceof Error ? error.message : "購入履歴を確認できませんでした。"); }
-    finally { setBusy(false); }
+    finally { inFlight.current = false; setBusy(false); }
   };
   return <section aria-label="購入履歴">
     <OutlawButton variant="secondary" onClick={()=>void load()} disabled={busy}>購入履歴</OutlawButton>
     {busy && <span className="shop-btn-spinner" aria-label="処理中" />}
     {message && <p role="status">{message}</p>}
     {orders?.length === 0 && <p>購入履歴はありません。</p>}
-    {orders?.map(order=><OutlawCard key={order.id}>
+    {orders && orders.length > 0 && <div className="shop-history-list" role="region" aria-label="注文一覧" tabIndex={0}>
+    {orders.map(order=><OutlawCard key={order.id}>
       <p>{SHOP_PRODUCTS_MASTER.find(p=>p.id===order.product_id)?.title ?? order.product_id} / {order.amount_jpy.toLocaleString("ja-JP")}円</p>
       <p>{new Date(order.created_at).toLocaleString("ja-JP",{timeZone:"Asia/Tokyo"})} / {order.status==="GRANTED"?"配送済み":order.status==="EXPIRED"?"期限終了":"お支払い待ち"}</p>
       {order.status==="PENDING" && <OutlawButton variant="secondary" disabled={busy} onClick={()=>void load(order)}>購入状況を再確認</OutlawButton>}
     </OutlawCard>)}
+    </div>}
   </section>;
 }

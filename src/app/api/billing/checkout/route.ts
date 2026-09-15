@@ -1,10 +1,11 @@
-import { BillingError, uuid, validateSession } from "@/server/billing/contracts";
+import { BillingError, uuid, validateSession, validateCheckoutOrigin } from "@/server/billing/contracts";
 import { billingService, billingFailure, billingResponse } from "@/server/billing/service";
 import { catalogMatches, PAID_PRODUCT_IDS } from "@/server/billing/catalog";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const billing = billingService();
+    validateCheckoutOrigin(request, billing.config.origin);
     const userId = await billing.authenticatedUser(request);
     const input = await request.json();
     const requestId = uuid(input.requestId);

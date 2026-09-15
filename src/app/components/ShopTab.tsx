@@ -25,19 +25,23 @@ function Bundle({ product }: { product: ShopProduct }) {
 export default function ShopTab() {
   const [availability, setAvailability] = useState<"loading" | "available" | "unavailable">("loading");
   const [sandbox, setSandbox] = useState(false);
+  const [availabilityAttempt, setAvailabilityAttempt] = useState(0);
   const [disabledProductIds, setDisabledProductIds] = useState<string[]>([]);
   useEffect(() => {
     let active = true;
-    fetch("/api/billing/config", { cache: "no-store" })
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    fetch("/api/billing/config", { cache: "no-store", signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject())
       .then(data => {
         if (!active) return;
         setAvailability(data.available === true && data.catalogVersion === "20260913" ? "available" : "unavailable");
         setDisabledProductIds(Array.isArray(data.disabledProductIds) ? data.disabledProductIds : []);
         setSandbox(data.mode === "sandbox");
-      }).catch(() => { if (active) setAvailability("unavailable"); });
-    return () => { active = false; };
-  }, []);
+      }).catch(() => { if (active) setAvailability("unavailable"); })
+      .finally(() => window.clearTimeout(timeout));
+    return () => { active = false; window.clearTimeout(timeout); controller.abort(); };
+  }, [availabilityAttempt]);
   const {
     shopSubTab, setShopSubTab, userShopPurchases, boughtResultModal,
     setBoughtResultModal, handleBuyNormalProduct, handleBuyStripeProduct,
@@ -111,12 +115,18 @@ export default function ShopTab() {
   return <div className="view-container shop-tab-container">
     <SectionHeader title="ショップ" />
     {sandbox && availability === "available" && <p className="shop-billing-notice">テスト決済環境</p>}
-    {availability === "available" && <><BillingHistory /><PaidAssetExpiry /></>}
     <SubTabNav tabs={[{id:"LIMITED",label:"パック・ダイア"},{id:"NORMAL",label:"通常ショップ"}]}
       activeTabId={shopSubTab} onSelect={setShopSubTab} />
     {availability === "loading" && <div className="shop-status"><span className="shop-btn-spinner" aria-label="購入情報を確認中" /></div>}
-    {availability === "unavailable" && <p className="shop-status">ただいま購入できません。</p>}
+    {availability === "unavailable" && <div className="shop-status" role="status">
+      <p>ただいま購入できません。</p>
+      <OutlawButton variant="secondary" onClick={() => {
+        setAvailability("loading");
+        setAvailabilityAttempt(attempt => attempt + 1);
+      }}>再確認する</OutlawButton>
+    </div>}
     <div className="scroll-container flex-1 shop-scroll-body">
+      {availability === "available" && <><BillingHistory /><PaidAssetExpiry /></>}
       {shopSubTab === "LIMITED" ? <>
         <section className="shop-section" aria-label="パック">
           {packs.map(productCard)}

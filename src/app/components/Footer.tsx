@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useGame } from "../context/GameContext";
+import { isFeatureOpen } from "@/domain/operations/operations";
 import "./Footer.css";
 
 export default function Footer() {
@@ -16,16 +17,18 @@ export default function Footer() {
     setChatChannel,
     setDmRecipientId,
     setShowTribeChatPanel,
+    featureOperatingStates,
   } = useGame();
   const hasFreeGacha = dailyFreeGachaReady && Object.values(dailyFreeGachaFlags).some(Boolean);
   const communityUnreadCount = Number(chatUnreadCounts?.GUILD || 0) + Number(dmUnreadTotal || 0);
+  const shopOpen = isFeatureOpen("SHOP", featureOperatingStates);
 
   const navItems = [
     { id: "home", label: "マイページ", icon: "/ui/icon_footer_mypage.png" },
     { id: "bbs", label: "コミュニティ", icon: "/ui/icon_community.png" },
     { id: "character", label: "キャラ", icon: "/ui/icon_footer_character.png" },
     { id: "gacha", label: "ガチャ", icon: "/ui/icon_footer_gacha.png" },
-    { id: "shop-upcoming", label: "ショップ", icon: "/ui/icon_footer_shop.png", upcoming: true },
+    { id: "shop", label: "ショップ", icon: "/ui/icon_footer_shop.png", upcoming: !shopOpen },
   ];
 
   return (

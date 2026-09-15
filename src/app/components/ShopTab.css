@@ -226,3 +226,6 @@
 .shop-paid-expiry-list { list-style:none; padding:0; margin:8px 0; max-height:240px; overflow-y:auto; }
 .shop-paid-expiry-list li { border-bottom:1px solid #343d4a; padding:10px 4px; font-size:12px; }
 .shop-paid-expiry-list time { display:block; margin-top:6px; color:#d7bd87; }
+
+.shop-history-list { max-height:240px; overflow-y:auto; overscroll-behavior:contain; margin:8px 0; }
+.shop-scroll-body { min-height:0; }

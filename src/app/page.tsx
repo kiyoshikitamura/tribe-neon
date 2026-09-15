@@ -3,6 +3,7 @@
 import QuestRaidEncounter from "./components/quest/QuestRaidEncounter";
 import BeginnerMissionRewardCta from "./components/mission/BeginnerMissionRewardCta";
 import React from "react";
+import { isFeatureOpen } from "@/domain/operations/operations";
 import dynamic from "next/dynamic";
 import { useAssetTierPreloader } from "./hooks/useImagePreloader";
 import { BOOT_CRITICAL_ASSETS, DEFERRED_ASSETS, TUTORIAL_CRITICAL_ASSETS, TUTORIAL_STEP_ASSET_MANIFESTS } from "./lib/screenManifests";
@@ -18,6 +19,7 @@ const PatrolTab = dynamic(() => import("./components/PatrolTab"), { loading: Tab
 const PvpTab = dynamic(() => import("./components/PvpTab"), { loading: TabLoading });
 const RaidTab = dynamic(() => import("./components/RaidTab"), { loading: TabLoading });
 const GachaTab = dynamic(() => import("./components/GachaTab"), { loading: TabLoading });
+const ShopTab = dynamic(() => import("./components/ShopTab"), { loading: TabLoading });
 const GuildTab = dynamic(() => import("./components/GuildTab"), { loading: TabLoading });
 const CharacterTab = dynamic(() => import("./components/CharacterTab"), { loading: TabLoading });
 const MenuTab = dynamic(() => import("./components/MenuTab"), { loading: TabLoading });
@@ -58,6 +60,7 @@ function AppContent() {
     confirmDialogConfig,
     globalInteractionBlocking,
     maintenanceEnabled,
+    featureOperatingStates,
     loginBonusMasters,
     userLoginBonus,
     showLoginBonusModal,
@@ -311,6 +314,7 @@ function AppContent() {
         {activeTab === "pvp" && <PvpTab />}
         {activeTab === "raid" && <RaidTab />}
         {activeTab === "gacha" && <GachaTab />}
+        {activeTab === "shop" && isFeatureOpen("SHOP", featureOperatingStates) && <ShopTab />}
         {activeTab === "guild" && <GuildTab />}
         {activeTab === "character" && <CharacterTab />}
 
