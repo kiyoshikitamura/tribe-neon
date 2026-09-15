@@ -4,7 +4,7 @@
 .shop-scroll-body::-webkit-scrollbar-thumb { background:rgba(160,160,170,.3); border-radius:3px; }
 .shop-section { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
 .shop-section-title { font-size:13px; font-weight:700; }
-.shop-tax-note { font-size:10px; font-weight:400; color:#aeb7c5; }
+.shop-tax-note { font-size:10px; font-weight:400; color:#aeb7c5; margin:0 0 8px; }
 .shop-account-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:6px; padding:4px 0 8px; }
 .shop-account-button.outlaw-button { min-height:32px; padding:5px 10px; font-size:11px; letter-spacing:0; }
 .shop-tab-container .shop-sub-tabs { margin-bottom:10px; grid-template-columns:minmax(0,1fr); }
@@ -20,7 +20,7 @@
 .shop-limit-badge { flex-shrink:0; font-size:10px; color:#d7bd87; }
 .shop-bundle-text { margin:4px 0 0; font-size:11px; line-height:1.5; color:#cbd5e1; overflow-wrap:anywhere; }
 .shop-dia-breakdown { font-size:10px; font-weight:400; color:#aeb7c5; }
-.shop-buy-button.outlaw-button { min-height:38px; padding:7px 9px; font-size:11px; letter-spacing:0; }
+.shop-buy-button.outlaw-button { width:96px; height:38px; min-height:38px; padding:7px 6px; font-size:11px; letter-spacing:0; white-space:nowrap; }
 .shop-product-row { padding:9px 10px; }
 .shop-product-row .shop-card-title { font-size:12px; }
 .shop-card-desc { font-size:11px; color:#94a3b8; margin-top:4px; line-height:1.4; }

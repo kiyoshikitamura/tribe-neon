@@ -38,3 +38,7 @@ PC側の7850cf6（サーバー運営状態を使うショップ遷移修正）�
 ## Preview表示確認追記
 
 7c3fb48のQA画面で実商品順・履歴/期限ダイアログを確認。共通CSSによるタブ幅上書きとカード内二重paddingを発見し、ショップ限定の詳細度とpaddingで訂正。GRANTEDが初期bootstrapより遅れた場合の購入回数/Present表示更新も、同一ユーザー・注文につき1回の背景同期で追加対応。
+
+## 追加指定対応
+
+タブ直下に「価格は全て税込み表示です」を追加。全商品CTAを96×38px、価格のみ表示へ統一（売切れ/準備中は状態表示維持）。新しいお知らせ正本は `config/formal_release_announcement_20260915.json`。ユーザー指定全文を使用し、旧7.2文案より優先。Preview今回記事1件の訂正SQL `preview_approved_formal_release_news_20260915.sql` 適用済み。新シーズン開始の文言は「正式オープン翌日」。Season/Production操作なし。

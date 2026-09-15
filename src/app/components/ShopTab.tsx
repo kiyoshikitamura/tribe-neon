@@ -109,7 +109,7 @@ export default function ShopTab() {
       <OutlawButton variant="primary" className="shop-buy-button"
         aria-label={`${product.title.replaceAll("ダイア", "ダイヤ")}を${price}で購入`}
         disabled={disabled || soldOut || disabledProductIds.includes(product.id)} onClick={() => confirmPurchase(product)}>
-        {busy ? <span className="shop-btn-spinner" aria-label="処理中" /> : soldOut ? "購入済み" : disabledProductIds.includes(product.id) ? "準備中" : `${price} 購入`}
+        {busy ? <span className="shop-btn-spinner" aria-label="処理中" /> : soldOut ? "購入済み" : disabledProductIds.includes(product.id) ? "準備中" : price}
       </OutlawButton>
     </OutlawCard>;
   };
@@ -120,6 +120,7 @@ export default function ShopTab() {
     <div className="shop-account-actions"><BillingHistory /><PaidAssetExpiry /></div>
     <SubTabNav className="shop-sub-tabs" tabs={[{id:"LIMITED",label:"スペシャルショップ"},{id:"NORMAL",label:"ダイヤショップ"}]}
       activeTabId={shopSubTab} onSelect={setShopSubTab} />
+    <p className="shop-tax-note">価格は全て税込み表示です</p>
     {availability === "loading" && <div className="shop-status"><span className="shop-btn-spinner" aria-label="購入情報を確認中" /></div>}
     {availability === "unavailable" && <div className="shop-status" role="status">
       <p>ただいま購入できません。</p>
@@ -135,7 +136,7 @@ export default function ShopTab() {
           <p className="shop-expiry-notice">{PACK_EXPIRY_NOTICE}</p>
         </section>
         <section className="shop-section" aria-label="ダイヤ">
-          <div className="shop-section-title">ダイヤ <span className="shop-tax-note">価格は税込</span></div>
+          <div className="shop-section-title">ダイヤ</div>
           {diamonds.map(productCard)}
         </section>
       </> : <section className="shop-section" aria-label="ダイヤショップ">{normal.map(productCard)}</section>}
