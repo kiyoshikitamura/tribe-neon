@@ -58,3 +58,14 @@ Preview DB: `sufvuqdnqohpfzkwxohq`。Production接続・変更・公開なし。
 最終webpack build（NEXT_PUBLIC_USE_MOCK_DB=true）PASS。Mock buildは実接続試験の代用ではない。
 PvP TOP/Result実コンポーネントSSR、専用演出sequence、画像キャッシュ・同時要求・timeout/error後retryもPASS。
 配信結果は別記録へ追記する。
+
+## 配信確認済み
+
+- 実配信SHA: `10d5d53ce7af1c77bd6e4013ebbb9574af65d16c`
+- 固定Preview: https://tribe-neon-2uzqq0hq5-kiyoshi-kitamura.vercel.app/
+- Deployment: `dpl_HyWX7xhmYBbaga9Fh4ann8Mxum4e`、READY、source=git、target=null。
+- GitHub `Vercel – tribe-neon` success。別Project `chat-fix-preview` のfailureと区別。
+- 固定URLの `/api/billing/config` HTTP200、commitSha一致、raidRoomUiEnabled=true、preview_database=true。
+- preview_databaseは配信環境のURL設定一致。DB実RPC試験の証拠は本書上記の別試験。
+- 課金available=false / ENVIRONMENT_INVALIDは従来の設定残件。今回のUI修正により解消したとは扱わない。
+- 本追記は配信後の記録。コードの実機確認には上記固定URLを使用する。
