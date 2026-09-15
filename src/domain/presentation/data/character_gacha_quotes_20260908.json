@@ -1,0 +1,254 @@
+{
+  "quotes": [
+    {
+      "characterId": "char_tetsu_01",
+      "quote": "前座は終わりだ。ここからは俺の時間だぜ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_takuro_01",
+      "quote": "面倒な話は後だ。誰を黙らせりゃいい？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_lucas_01",
+      "quote": "いいチームだな。俺の入る場所、空いてるか？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_leon_01",
+      "quote": "俺を呼ぶとは、なかなか見る目があるな。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_takeshi_01",
+      "quote": "前に立つのは俺だ。お前は安心して指示を出せ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_genji_01",
+      "quote": "慌てるな。長く立っていた奴が最後に勝つ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_riki_01",
+      "quote": "細けぇことは苦手だが、仲間は見捨てねえ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_long_01",
+      "quote": "交わした約束は守る。それが俺の流儀だ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_sora_01",
+      "quote": "面白そうなことしてるね。僕も混ぜてよ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_reina_01",
+      "quote": "待ってるだけの夜なんて、つまんないでしょ？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_noa_01",
+      "quote": "迎えに来たよ。一人で無茶するのは終わり。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_taiga_01",
+      "quote": "準備は済ませてある。合図だけくれ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_alice_01",
+      "quote": "ようこそ。ここから先は、私と遊びましょ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_rui_01",
+      "quote": "ねえ、知りたい？　この街の、誰にも言えない話。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_maya_01",
+      "quote": "私を味方につけるなんて、欲張りな人ね。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_seiya_01",
+      "quote": "偶然に任せる気はない。勝てる手を選ぼう。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_sakura_01",
+      "quote": "綺麗な話だけで済むなら、私を呼ばないでしょ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_martina_01",
+      "quote": "せっかくの夜でしょ。派手に楽しもうよ！",
+      "enabled": true
+    },
+    {
+      "characterId": "char_kageyama_01",
+      "quote": "目立つ役は任せる。後始末はこちらでやろう。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_cecile_01",
+      "quote": "強がらなくていいよ。頼れる相手が増えたんだから。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_chang_01",
+      "quote": "信用は言葉では買えん。働きで示してもらおう。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_daimon_01",
+      "quote": "筋の通らねえ話なら、相手が誰でも引かねえ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_mark_01",
+      "quote": "退屈な仕事じゃないだろうな？　期待してるぜ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_yuji_01",
+      "quote": "君に賭ける価値があるか、確かめさせてもらうよ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_joe_01",
+      "quote": "ずいぶん軽い挨拶だな。握手くらいしようぜ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_ren_male_01",
+      "quote": "お前が前を向くなら、背中くらい預かるさ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_shin_01",
+      "quote": "まずは約束を守れ。話はそれからだ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_yuki_01",
+      "quote": "困ってるなら早く言えよ。もう仲間だろ？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_jihoon_01",
+      "quote": "大げさな歓迎はいらない。仕事で覚えてくれ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_kaito_01",
+      "quote": "捕まえたつもり？　ついてくのは俺の気分次第。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_minami_01",
+      "quote": "ひとり増えるだけで、できることも増えるよね！",
+      "enabled": true
+    },
+    {
+      "characterId": "char_yukina_01",
+      "quote": "大人しくしてて、とは言わないよね？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_aoi_01",
+      "quote": "その話、もう少し聞かせて。ちょっと気になる。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_mei_01",
+      "quote": "ね、今ちょっと当たりだって思ったでしょ？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_ren_01",
+      "quote": "人が選ばない方って、ちょっと気にならない？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_serika_01",
+      "quote": "私に声をかけたのね。安くは済まないわよ？",
+      "enabled": true
+    },
+    {
+      "characterId": "char_makoto_01",
+      "quote": "できることから片づけよう。話は歩きながらで。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_momoko_01",
+      "quote": "おかえりって言える仲間、増やしていこうよ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_rin_01",
+      "quote": "力を抜いて。焦っていては、手元が狂うわ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_shion_01",
+      "quote": "騒がしい夜ね。でも、嫌いじゃないわ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_gou_01",
+      "quote": "おう、呼んだか？　じっとしてるのは性に合わねえ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_kenji_01",
+      "quote": "借りはきっちり返す。今日のことも忘れねえよ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_shun_01",
+      "quote": "口数は少ないけど、話はちゃんと聞いてるから。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_tatsuya_01",
+      "quote": "愛想は期待すんな。仕事ならちゃんとやる。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_naoto_01",
+      "quote": "いい話は、人が運んでくる。君とも仲良くしたいね。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_sawat_01",
+      "quote": "言葉は少しずつでいい。一緒に動けば伝わるさ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_masato_01",
+      "quote": "その作戦、もうひと工夫したら面白くなりそう。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_yoshihiko_01",
+      "quote": "お、いいところに来た。ちょうど暇してたんだ。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_souta_01",
+      "quote": "派手なことより、任されたことをちゃんとやりたい。",
+      "enabled": true
+    },
+    {
+      "characterId": "char_tomoya_01",
+      "quote": "俺の名前も覚えといて。損はさせないからさ。",
+      "enabled": true
+    }
+  ]
+}

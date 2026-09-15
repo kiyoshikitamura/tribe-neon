@@ -2109,7 +2109,7 @@ export function useBattle(options: UseBattleOptions) {
           ? 80
           : 500
         : outcomeUnit
-          ? battlePresentationImpactAt(battleSpeed, previousTier)
+          ? battlePresentationImpactAt(battleSpeed, previousTier, battleMode !== "RAID")
           : replayEvent.type === "EFFECT" && replayEvent.payload.kind === "ACTIVE_EFFECT_SYNC"
             ? 40
             : replayEvent.type === "RESULT"
@@ -2249,7 +2249,7 @@ export function useBattle(options: UseBattleOptions) {
           if (firstDamage) playCyberSe(firstDamage.event.payload.hit === false ? "click" : "hit");
           else if (firstHeal || firstShield) playCyberSe("click");
 
-          const remainingBudget = Math.max(180, battlePresentationBudget(actionTier, battleSpeed) - battlePresentationImpactAt(battleSpeed, actionTier));
+          const remainingBudget = Math.max(180, battlePresentationBudget(actionTier, battleSpeed, battleMode !== "RAID") - battlePresentationImpactAt(battleSpeed, actionTier, battleMode !== "RAID"));
           presentationTimersRef.current.push(setTimeout(() => {
             setActionPresentation({ unit: outcomeUnit, beat: "RETURN", tier: actionTier, skillName: actionSkillName });
             setPresentationPhase("HP_TRANSITION");

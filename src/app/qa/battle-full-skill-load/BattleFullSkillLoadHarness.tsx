@@ -21,7 +21,7 @@ import {
 } from "@/domain/presentation/battlePresentationUnit";
 import "./battle-full-skill-load.css";
 
-type BattleScreenState = "PLAYING" | "ENDING" | "OUTCOME" | "RESULT";
+type BattleScreenState = "SETUP" | "PLAYING" | "ENDING" | "OUTCOME" | "RESULT";
 type DamagePopup = { val: number; type: "dmg" | "heal" | "shield"; isCritical?: boolean; x: number; y: number; charId: string };
 
 const toParticipant = (unit: BattleUnitInput): ParticipantState => ({
@@ -70,7 +70,7 @@ const projectEffects = (participant: ParticipantState, payload: Record<string, u
   };
 };
 
-export default function BattleFullSkillLoadHarness() {
+export default function BattleFullSkillLoadHarness({withSetup = false}: {withSetup?: boolean}) {
   const audio = useAudio();
   const resolved = useMemo(() => resolveBattleFullSkillLoadFixture(), []);
   const { fixture, replay } = resolved;
@@ -196,8 +196,8 @@ export default function BattleFullSkillLoadHarness() {
       if (!unit) { advance(40); return; }
       const skillName = skillNames.get(skillId) ?? (skill ? "スキル発動" : "通常攻撃");
       const tier = battlePresentationTier(skill, actor?.rarity);
-      const budget = battlePresentationBudget(tier, speed);
-      const impactAt = battlePresentationImpactAt(speed, tier);
+      const budget = battlePresentationBudget(tier, speed, true);
+      const impactAt = battlePresentationImpactAt(speed, tier, true);
       const nextActors = replay.events.slice(eventIndex).filter((entry) => entry.type === "ACTION").slice(0, 4).map((entry) => {
         const id = String(entry.payload.actorId ?? "");
         const participant = participants.find((candidate) => candidate.id === id);
@@ -364,7 +364,7 @@ export default function BattleFullSkillLoadHarness() {
     audio.playBgm("BATTLE");
     audio.playSe("BATTLE_START");
     setStarted(true);
-    setBattleState("PLAYING");
+    setBattleState(withSetup ? "SETUP" : "PLAYING");
     setEventIndex(0);
   };
   const skip = () => {
@@ -435,7 +435,7 @@ export default function BattleFullSkillLoadHarness() {
     presentationPhase: phase,
     actionPresentation,
     authoritativeTimeline,
-    launchBattlePlaying: () => undefined,
+    launchBattlePlaying: () => setBattleState("PLAYING"),
     confirmPreparedPvpBattle: async () => true,
     cancelPreparedPvpBattle: () => true,
     confirmPreparedRaidBattle: async () => true,
