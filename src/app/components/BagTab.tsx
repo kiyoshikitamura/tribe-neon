@@ -5,6 +5,7 @@ import { useGame } from "../context/GameContext";
 import { canUseEnergyDrink } from "@/domain/gameplay/canonical/action_resources";
 import { ITEMS_MASTER_DATA, ItemMaster } from "@/utils/items_master_data";
 import CanonicalDialog from "./ui/CanonicalDialog";
+import { battleDisplayText } from "@/domain/presentation/battleTerminology";
 import "./BagTab.css";
 
 export default function BagTab() {
@@ -136,7 +137,7 @@ export default function BagTab() {
                 <div className="bag-item-meta">
                   <span className="bag-item-name">{item.name}</span>
                 </div>
-                <p className="bag-item-desc">{item.description}</p>
+                <p className="bag-item-desc">{battleDisplayText(item.description)}</p>
                 <div className="bag-item-action-row">
                   <div className="bag-item-quantity">
                     所持数: <span className="quantity-num">{qty}</span>
@@ -164,7 +165,7 @@ export default function BagTab() {
         <CanonicalDialog title={selectedItem.name} onClose={itemUseLoading ? undefined : () => setSelectedItem(null)}>
             <div className="recover-modal-body text-center">
               <img className="item-production-art item-production-art--detail" src={selectedItem.assetPath} alt="" aria-hidden="true" />
-              <p className="text-gray-300 font-size-8 mb-3">{selectedItem.description}</p>
+              <p className="text-gray-300 font-size-8 mb-3">{battleDisplayText(selectedItem.description)}</p>
               <div className="font-size-8 text-cyan-400 font-bold mb-4">
                 所持数: {itemQuantities[selectedItem.id] || 0} 個
               </div>

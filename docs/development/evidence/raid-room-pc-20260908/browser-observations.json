@@ -1,0 +1,20 @@
+{
+  "observed_at_jst": "2026-09-08T17:22:00+09:00",
+  "method": "Existing authenticated browser UI, read only",
+  "deployment": {
+    "id": "dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+    "environment": "Preview",
+    "status": "Ready",
+    "sha": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+    "url": "https://tribe-neon-705g1hvhg-kiyoshi-kitamura.vercel.app/",
+    "source": "https://vercel.com/kiyoshi-kitamura/tribe-neon/FEpuwaPT6EnYqfgNBUgeAd4XcioM"
+  },
+  "public_preview_config": {
+    "NEXT_PUBLIC_APP_ENV": "preview",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://sufvuqdnqohpfzkwxohq.supabase.co",
+    "NEXT_PUBLIC_RAID_ROOM_UI_ENABLED": "not registered in all-environment search",
+    "NEXT_PUBLIC_USE_MOCK_DB": "only Production row found; Preview not registered"
+  },
+  "auth_site_url": "https://tribe-neon-mobile-preview.vercel.app",
+  "mutations": []
+}

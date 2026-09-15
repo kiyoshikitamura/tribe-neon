@@ -1,0 +1,41 @@
+{
+  "at": "2026-09-09T12:02:01.878Z",
+  "value": {
+    "screen": "R0908R01\nTRIBE R0908Guild01\nLv.5 · EXP 0/300\n総合力\n90,884\nMENU\n☰\n9\n2,000\n170\n⚡\n100/100\nレイド\nトップへ\n更新\n初級\n横浜\nブルー・レクイエム\n挑戦者\nR0908N01\nR0908Guild01\nあなた\n通常参加\n残HP\n100%\n開催中\n35,000,000 / 35,000,000\n残り 23時間58分\n期限 9/10 20:59 JST\n2人\n登録参加者\n敵情報\n参加者\n報酬\nあなたの貢献\n貢献ダメージ\n未確認\n戦闘回数\n0戦\n\n参加済み\n\n出撃時に編成を確認します。\n\n出撃準備\n救援状況\n\n救援依頼は挑戦者が送信します。\n\n救援情報を更新\nマイページ\nコミュニティ\n2\nキャラ\nガチャ\nFREE\nショップ\n準備中",
+    "calls": [
+      {
+        "role": "rescue",
+        "rpc": "join_raid_room_rescue_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "register_raid_room_v1",
+        "status": 200
+      }
+    ],
+    "memberships": [
+      {
+        "roomId": "49d374ae-1aeb-4a0b-b95d-0ecda3d3fbd2",
+        "membership": {
+          "value": "member",
+          "status": "available"
+        }
+      },
+      {
+        "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+        "membership": {
+          "value": "rescue",
+          "status": "available"
+        }
+      },
+      {
+        "roomId": "c796086c-9596-450c-ba20-1f067c7aff9b",
+        "membership": {
+          "value": "rescue",
+          "status": "available"
+        }
+      }
+    ]
+  }
+}

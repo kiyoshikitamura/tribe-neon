@@ -24,27 +24,20 @@ const completeCommonOpening = async (page: Page) => {
   await expect(page.locator('[data-gacha-transition-state="show_results"]')).toBeVisible();
 };
 
-test("opening neon grammar and bottom-right SKIP remain safe at iPhone 14 geometry", async ({ page }) => {
+test("character arrival and SKIP remain safe at iPhone 14 geometry", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await openTransitionFixture(page, { delay: 500 });
+  const fixture = await openTransitionFixture(page, { delay: 500 });
   await page.locator('[data-gacha-category="CHARACTER"]').click();
   await page.getByRole("button", { name: "10回 10,000キャッシュ" }).click();
-  const opening = page.locator("[data-gacha-common-opening]");
-  await expect(opening).toBeVisible();
-  await expect(opening).not.toContainText("NEON LINK");
-  await expect(opening).not.toContainText("TOKYO NIGHT");
-  await expect(page.locator(".gacha-opening-neon")).toHaveCSS("mix-blend-mode", "screen");
-  const skip = page.locator(".gacha-opening-skip");
-  await expect(page.locator("[data-gacha-logo-gate]")).toBeVisible();
+  await expect(page.locator(".cg-city-scene img")).toHaveCount(7);
+  const skip = page.getByRole("button", { name: "SKIP", exact: true });
   await expect(skip).toBeVisible();
-  const geometry = await page.evaluate(() => {
-    const skipRect = document.querySelector<HTMLElement>(".gacha-opening-skip")!.getBoundingClientRect();
-    return { right: skipRect.right, bottom: skipRect.bottom, width: innerWidth, height: innerHeight, scrollWidth: document.documentElement.scrollWidth };
-  });
-  expect(geometry.right).toBeLessThanOrEqual(geometry.width);
-  expect(geometry.bottom).toBeLessThanOrEqual(geometry.height);
-  expect(geometry.bottom).toBeGreaterThan(geometry.height - 100);
-  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width);
+  const rect = await skip.boundingBox();
+  expect(rect!.x + rect!.width).toBeLessThanOrEqual(390);
+  expect(rect!.y + rect!.height).toBeLessThanOrEqual(844);
+  await skip.click();
+  await expect(page.locator(".cg-mini")).toHaveCount(10);
+  await expect(fixture).toHaveAttribute("data-mutation-count", "1");
 });
 
 const readFirstPaintedProcessingSurface = (page: Page) => page.evaluate(() => new Promise<Record<string, unknown>>((resolve) => {
@@ -227,11 +220,11 @@ for (const count of [1, 10] as const) {
     await page.locator('[data-gacha-category="CHARACTER"]').click();
     await page.getByRole("button", { name: count === 1 ? "1回 1,000キャッシュ" : "10回 10,000キャッシュ" }).click();
     await expect(page.locator("[data-gacha-common-opening]")).toBeVisible();
-    await completeCommonOpening(page);
-    await expect(page.locator(".tutorial-gacha-reveal")).toBeVisible();
+    await page.getByRole("button", { name: "ガチャ結果を開く", exact: true }).click();
+    await expect(page.locator(".cg-reveal")).toBeVisible();
     if (count === 10) {
-      await page.locator(".tutorial-gacha-skip").click();
-      await expect(page.locator(".gacha-result-card")).toHaveCount(10);
+      await page.getByRole("button", { name: "SKIP", exact: true }).click();
+      await expect(page.locator(".cg-mini")).toHaveCount(10);
     }
   });
 }

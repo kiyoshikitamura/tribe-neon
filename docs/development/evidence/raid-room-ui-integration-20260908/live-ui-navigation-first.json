@@ -1,0 +1,14 @@
+{
+  "url": "https://tribe-neon-e7c2teguw-kiyoshi-kitamura.vercel.app",
+  "at": "2026-09-08T12:01:46.049Z",
+  "requests": [],
+  "responses": [],
+  "screens": [
+    {
+      "name": "failure",
+      "body": "R0908H01\nTRIBE R0908Guild01\nLv.5 · EXP 0/300\n総合力\n74,466\nMENU\n☰\n10\n1,500\n170\n⚡\n95/100\n+1 3:35\nACTIVITY\nQAsk927d\n総戦力ランキング1位に到達\n›\n新宿\nSHINJUKU\n›\n未認証\nボーナス\nミッション\n1\nランキング\nレイド\nギルド\nバトル\nクエスト\nギルドバトル\n準備中\n無料スキル／装備ガチャを引こう\n›\n‹\n›\nマイページ\nコミュニティ\nキャラ\nガチャ\nFREE\nショップ\n準備中"
+    }
+  ],
+  "errors": [],
+  "failure": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'レイド', exact: true })\u001b[22m\n\n    at C:\\Users\\Kiyoshi Kitamura\\Documents\\Codex\\2026-09-08\\2-375a0ad-21-raid-migration-14\\outputs\\verify-room-street-live.mjs:10:120"
+}

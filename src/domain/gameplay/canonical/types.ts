@@ -1,3 +1,7 @@
+import type growthSource from "./data/character_growth_20260914.json";
+
+export type CanonicalGrowthPattern = keyof typeof growthSource.exponents;
+
 export type CanonicalStats = Readonly<{ hp: number; atk: number; def: number; spd: number; luk: number }>;
 
 export type CanonicalCharacter = Readonly<{
@@ -6,6 +10,7 @@ export type CanonicalCharacter = Readonly<{
   rarity: "N" | "R" | "SR" | "SSR";
   attribute: "JUSTICE" | "ORDER" | "EVIL" | "CHAOS";
   hometown: string;
+  growth_pattern: CanonicalGrowthPattern;
   lv1: CanonicalStats;
   lv100: CanonicalStats;
 }>;

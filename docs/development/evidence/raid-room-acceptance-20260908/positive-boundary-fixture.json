@@ -1,0 +1,281 @@
+{
+  "boss": {
+    "id": "c127f1da-9a60-4919-b351-6a99412574d7",
+    "max_hp": 32000000,
+    "status": "CLEARED",
+    "base_id": "shinjuku",
+    "boss_id": "RAID_SHINJUKU_V1",
+    "outcome": "DEFEAT_SUCCESS",
+    "cycle_id": "2ba03349-e1bd-4c23-b2d0-e62a07412c06",
+    "cleared_at": "2026-09-08T11:17:58.643622+00:00",
+    "created_at": "2026-09-08T10:35:48.596767+00:00",
+    "current_hp": 0,
+    "expires_at": "2026-09-09T10:35:48.611071+00:00",
+    "spawned_at": "2026-09-08T10:35:48.611071+00:00",
+    "raid_day_key": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+    "respawn_after": null,
+    "rotation_date": "2026-09-08",
+    "boss_master_id": "RAID_SHINJUKU_V1",
+    "raid_variant_id": "RAID_SHINJUKU_V1",
+    "outcome_finalized_at": "2026-09-08T11:17:58.643622+00:00"
+  },
+  "logs": [
+    {
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "battle_replay_session_id": "9977a359-e9fc-422b-a847-65a557f45786",
+      "raw_damage": 3117
+    },
+    {
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "battle_replay_session_id": "b8b0f7ae-b75a-47f4-8252-21db32916a20",
+      "raw_damage": 3113
+    },
+    {
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "battle_replay_session_id": "9813e530-3943-4cf1-ba81-409dc52530e4",
+      "raw_damage": 3118
+    },
+    {
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "battle_replay_session_id": "b9d5d133-63cc-40dc-8520-78fd02164bf8",
+      "raw_damage": 3160
+    },
+    {
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "battle_replay_session_id": "f6eebc22-b810-44c7-968b-28818eacde7d",
+      "raw_damage": 2417
+    },
+    {
+      "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "battle_replay_session_id": "e8a876c2-6a8a-4808-b76f-4af1065b8ea6",
+      "raw_damage": 3590
+    }
+  ],
+  "room": {
+    "id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+    "created_at": "2026-09-08T10:35:48.611071+00:00",
+    "difficulty_id": "beginner",
+    "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+    "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+  },
+  "starts": [
+    {
+      "replay_session_id": "9977a359-e9fc-422b-a847-65a557f45786",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3"
+    },
+    {
+      "replay_session_id": "b8b0f7ae-b75a-47f4-8252-21db32916a20",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3"
+    },
+    {
+      "replay_session_id": "9813e530-3943-4cf1-ba81-409dc52530e4",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3"
+    },
+    {
+      "replay_session_id": "b9d5d133-63cc-40dc-8520-78fd02164bf8",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3"
+    },
+    {
+      "replay_session_id": "f6eebc22-b810-44c7-968b-28818eacde7d",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3"
+    },
+    {
+      "replay_session_id": "e8a876c2-6a8a-4808-b76f-4af1065b8ea6",
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3"
+    }
+  ],
+  "replays": [
+    {
+      "id": "b9d5d133-63cc-40dc-8520-78fd02164bf8",
+      "battle_mode": "RAID",
+      "official_context": {
+        "cost": 1,
+        "baseId": "shinjuku",
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "costType": "RAID_POINT",
+        "bossMaxHp": 32000000,
+        "startedAt": "2026-09-08T11:17:19.57941+00:00",
+        "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "difficultyId": "beginner",
+        "bossHpAtStart": 18769,
+        "raidVariantId": "RAID_SHINJUKU_V1",
+        "roomExpiresAt": "2026-09-09T10:35:48.611071+00:00",
+        "formationPower": 90884,
+        "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "raidRoomVersion": 1,
+        "remainingRaidPoints": 2
+      },
+      "requester_user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "finalization_result": {
+        "lateFinalization": false
+      },
+      "finalization_status": "FINALIZED",
+      "source_reference_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "resolution_authority": "RAID_SERVER"
+    },
+    {
+      "id": "9813e530-3943-4cf1-ba81-409dc52530e4",
+      "battle_mode": "RAID",
+      "official_context": {
+        "cost": 1,
+        "baseId": "shinjuku",
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "costType": "RAID_POINT",
+        "bossMaxHp": 32000000,
+        "startedAt": "2026-09-08T11:17:17.468151+00:00",
+        "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "difficultyId": "beginner",
+        "bossHpAtStart": 21887,
+        "raidVariantId": "RAID_SHINJUKU_V1",
+        "roomExpiresAt": "2026-09-09T10:35:48.611071+00:00",
+        "formationPower": 90884,
+        "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "raidRoomVersion": 1,
+        "remainingRaidPoints": 3
+      },
+      "requester_user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "finalization_result": {
+        "lateFinalization": false
+      },
+      "finalization_status": "FINALIZED",
+      "source_reference_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "resolution_authority": "RAID_SERVER"
+    },
+    {
+      "id": "e8a876c2-6a8a-4808-b76f-4af1065b8ea6",
+      "battle_mode": "RAID",
+      "official_context": {
+        "cost": 1,
+        "baseId": "shinjuku",
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "costType": "RAID_POINT",
+        "bossMaxHp": 32000000,
+        "startedAt": "2026-09-08T11:17:23.133272+00:00",
+        "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "difficultyId": "beginner",
+        "bossHpAtStart": 13192,
+        "raidVariantId": "RAID_SHINJUKU_V1",
+        "roomExpiresAt": "2026-09-09T10:35:48.611071+00:00",
+        "formationPower": 90884,
+        "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "raidRoomVersion": 1,
+        "remainingRaidPoints": 0
+      },
+      "requester_user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "finalization_result": {
+        "lateFinalization": false
+      },
+      "finalization_status": "FINALIZED",
+      "source_reference_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "resolution_authority": "RAID_SERVER"
+    },
+    {
+      "id": "f6eebc22-b810-44c7-968b-28818eacde7d",
+      "battle_mode": "RAID",
+      "official_context": {
+        "cost": 1,
+        "baseId": "shinjuku",
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "costType": "RAID_POINT",
+        "bossMaxHp": 32000000,
+        "startedAt": "2026-09-08T11:17:21.044693+00:00",
+        "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "difficultyId": "beginner",
+        "bossHpAtStart": 15609,
+        "raidVariantId": "RAID_SHINJUKU_V1",
+        "roomExpiresAt": "2026-09-09T10:35:48.611071+00:00",
+        "formationPower": 90884,
+        "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "raidRoomVersion": 1,
+        "remainingRaidPoints": 1
+      },
+      "requester_user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "finalization_result": {
+        "lateFinalization": false
+      },
+      "finalization_status": "FINALIZED",
+      "source_reference_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "resolution_authority": "RAID_SERVER"
+    },
+    {
+      "id": "b8b0f7ae-b75a-47f4-8252-21db32916a20",
+      "battle_mode": "RAID",
+      "official_context": {
+        "cost": 1,
+        "baseId": "shinjuku",
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "costType": "RAID_POINT",
+        "bossMaxHp": 32000000,
+        "startedAt": "2026-09-08T11:17:15.707539+00:00",
+        "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "difficultyId": "beginner",
+        "bossHpAtStart": 25000,
+        "raidVariantId": "RAID_SHINJUKU_V1",
+        "roomExpiresAt": "2026-09-09T10:35:48.611071+00:00",
+        "formationPower": 90884,
+        "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "raidRoomVersion": 1,
+        "remainingRaidPoints": 4
+      },
+      "requester_user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "finalization_result": {
+        "lateFinalization": false
+      },
+      "finalization_status": "FINALIZED",
+      "source_reference_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "resolution_authority": "RAID_SERVER"
+    },
+    {
+      "id": "9977a359-e9fc-422b-a847-65a557f45786",
+      "battle_mode": "RAID",
+      "official_context": {
+        "cost": 0,
+        "baseId": "shinjuku",
+        "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "costType": "FREE_FIRST",
+        "bossMaxHp": 32000000,
+        "startedAt": "2026-09-08T10:36:46.867041+00:00",
+        "raidDayKey": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "difficultyId": "beginner",
+        "bossHpAtStart": 32000000,
+        "raidVariantId": "RAID_SHINJUKU_V1",
+        "roomExpiresAt": "2026-09-09T10:35:48.611071+00:00",
+        "formationPower": 90884,
+        "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "raidRoomVersion": 1,
+        "remainingRaidPoints": 5
+      },
+      "requester_user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "finalization_result": {
+        "lateFinalization": false
+      },
+      "finalization_status": "FINALIZED",
+      "source_reference_id": "c127f1da-9a60-4919-b351-6a99412574d7",
+      "resolution_authority": "RAID_SERVER"
+    }
+  ],
+  "functions": [
+    {
+      "md5": "f0c8737188ddbd097ccaad607e0b15bc",
+      "name": "_issue_raid_room_clear_rewards_v1",
+      "definition": "CREATE OR REPLACE FUNCTION public._issue_raid_room_clear_rewards_v1(p_room_id uuid)\n RETURNS integer\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare v_room public.raid_rooms%rowtype;v_boss public.raid_bosses%rowtype;\n v_rule public.raid_room_clear_reward_rules%rowtype;v_member record;v_item record;\n v_progress jsonb;v_items jsonb;v_issued timestamptz;v_present uuid;v_inserted integer;v_count integer:=0;\nbegin\n select * into strict v_room from public.raid_rooms where id=p_room_id;\n -- 呼出元finalizerはReplay→bossを保持済み。別Replay/Userの強いロックを取得しない。\n select * into strict v_boss from public.raid_bosses where id=v_room.raid_boss_instance_id for update;\n if v_boss.outcome is distinct from 'DEFEAT_SUCCESS' then return 0;end if;\n select * into v_rule from public.raid_room_clear_reward_rules where difficulty=v_room.difficulty_id for share;\n if not found or not v_rule.enabled or v_rule.minimum_contribution_damage is null then return 0;end if;\n perform 1 from public.raid_room_clear_reward_items where difficulty=v_room.difficulty_id for share;\n if not found then return 0;end if;\n select jsonb_agg(jsonb_build_object('item_id',item_id,'quantity',quantity) order by item_id) into v_items\n  from public.raid_room_clear_reward_items where difficulty=v_room.difficulty_id;\n for v_member in select user_id from public.raid_room_members where room_id=p_room_id order by user_id loop\n  if exists(select 1 from public.raid_room_clear_rewards where room_id=p_room_id and user_id=v_member.user_id) then continue;end if;\n  v_progress:=public._raid_room_clear_reward_progress_v1(p_room_id,v_member.user_id);\n  if v_progress->'clearGate'->>'status' is distinct from 'succeeded' then continue;end if;\n  v_issued:=clock_timestamp();\n  insert into public.raid_room_clear_rewards(room_id,user_id,rule_version,\n   finalized_battles,contribution_damage,clear_gate,issued_at,expires_at)\n  values(p_room_id,v_member.user_id,v_rule.rule_version,\n   (v_progress->>'finalizedBattles')::bigint,(v_progress->>'contributionDamage')::bigint,\n   v_progress->'clearGate',v_issued,v_issued+interval '30 days') on conflict do nothing;\n  get diagnostics v_inserted=row_count;\n  if v_inserted=0 then continue;end if;\n  for v_item in select * from jsonb_to_recordset(v_items) as item(item_id text,quantity integer) order by item_id loop\n   insert into public.presents(user_id,item_id,quantity,message,status,created_at,expire_at,source_kind,source_key,source_metadata)\n   values(v_member.user_id,v_item.item_id,v_item.quantity,'レイド討伐報酬','UNCLAIMED',v_issued,v_issued+interval '30 days',\n    'RAID_ROOM_CLEAR',p_room_id::text||':'||v_item.item_id,\n    jsonb_build_object('roomId',p_room_id,'ruleVersion',(v_progress->'clearGate'->>'ruleVersion')::bigint))\n   returning id into v_present;\n   insert into public.raid_room_clear_reward_grants values(p_room_id,v_member.user_id,v_item.item_id,v_item.quantity,v_present);\n  end loop;\n  v_count:=v_count+1;\n end loop;\n return v_count;\nend $function$\n"
+    },
+    {
+      "md5": "72b6ceb513fec4ccbb9c66215350852b",
+      "name": "_raid_room_clear_reward_progress_v1",
+      "definition": "CREATE OR REPLACE FUNCTION public._raid_room_clear_reward_progress_v1(p_room_id uuid, p_user_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare v_room public.raid_rooms%rowtype;v_boss public.raid_bosses%rowtype;\n v_rule public.raid_room_clear_reward_rules%rowtype;v_count bigint:=0;v_damage bigint:=0;v_status text;\nbegin\n select * into strict v_room from public.raid_rooms where id=p_room_id;\n select * into strict v_boss from public.raid_bosses where id=v_room.raid_boss_instance_id;\n select * into v_rule from public.raid_room_clear_reward_rules where difficulty=v_room.difficulty_id;\n select count(*),coalesce(sum(l.raw_damage),0) into v_count,v_damage\n from public.raid_damage_logs l\n join public.battle_replay_sessions b on b.id=l.battle_replay_session_id\n join public.raid_room_battle_start_requests s on s.replay_session_id=b.id and s.user_id=p_user_id and s.room_id=p_room_id\n join public.raid_room_members m on m.room_id=p_room_id and m.user_id=p_user_id\n where l.raid_boss_instance_id=v_room.raid_boss_instance_id and l.user_id=p_user_id\n  and b.requester_user_id=p_user_id and b.source_reference_id=v_room.raid_boss_instance_id\n  and b.battle_mode='RAID' and b.resolution_authority='RAID_SERVER'\n  and b.official_context->>'roomId'=p_room_id::text\n  and b.finalization_status='FINALIZED'\n  and b.finalization_result->'lateFinalization'='false'::jsonb;\n if v_rule.minimum_contribution_damage is null then v_status:='unknown';\n elsif v_count>0 and v_damage>v_rule.minimum_contribution_damage and v_boss.outcome='DEFEAT_SUCCESS' then v_status:='succeeded';\n else v_status:='not_succeeded';end if;\n return jsonb_build_object('finalizedBattles',v_count,'contributionDamage',v_damage,\n  'clearGate',jsonb_build_object('status',v_status,'ruleVersion',coalesce(v_rule.rule_version,1),\n   'contributionDamage',v_damage,'minimumContributionDamage',v_rule.minimum_contribution_damage,\n   'cleared',coalesce(v_boss.outcome='DEFEAT_SUCCESS',false)));\nend $function$\n"
+    }
+  ]
+}

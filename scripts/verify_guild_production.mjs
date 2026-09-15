@@ -10,7 +10,7 @@ assert.equal(master.expSources.filter((x) => x.enabled !== false).reduce((sum, x
 assert.deepEqual(master.recruitmentModes, ["OPEN_JOIN", "APPLICATION_REQUIRED", "CLOSED"]);
 assert.equal(master.donation.cashCost, 5000);
 assert.equal(master.donation.guildExp, 20);
-assert.deepEqual(master.creation, { userLevel: 5, cashCost: 5000, nameMin: 1, nameMax: 12 });
+assert.deepEqual(master.creation, { userLevel: 5, cashCost: 500, nameMin: 1, nameMax: 12 });
 assert.equal(Object.keys(master.recommendation.weights).length, 11);
 assert.equal(master.combatBuffEnabled, false);
 assert.equal(master.gvgState, "CLOSED");
@@ -18,7 +18,7 @@ assert.equal(master.friendState, "OMIT");
 const guildUi = readFileSync(new URL("../src/app/components/GuildTab.tsx", import.meta.url), "utf8");
 const rankingUi = readFileSync(new URL("../src/app/components/RankingTab.tsx", import.meta.url), "utf8");
 const context = readFileSync(new URL("../src/app/context/GameContext.tsx", import.meta.url), "utf8");
-assert.ok(guildUi.includes('value="OPEN_JOIN"') && guildUi.includes('value="APPLICATION_REQUIRED"') && guildUi.includes('value="CLOSED"'));
+assert.ok(guildUi.includes('{ value: "OPEN_JOIN"') && guildUi.includes('{ value: "APPLICATION_REQUIRED"') && guildUi.includes('{ value: "CLOSED"'));
 assert.ok(guildUi.includes("資金＆ショップ") && guildUi.includes("COMING SOON"));
 assert.ok(!guildUi.includes("ギルド献金") && !guildUi.includes("装飾ショップ"));
 assert.ok(!guildUi.includes("GvG / PRE-OPEN"));

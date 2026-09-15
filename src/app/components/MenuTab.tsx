@@ -10,18 +10,20 @@ export default function MenuTab() {
     setShowInboxPanel,
     setInboxPanelTab,
     setShowSettingsPanel,
+    setShowLoginBonusModal,
     playCyberSe
   } = useGame();
 
   const MENU_ITEMS = [
     { label: "クエスト", action: () => navigateTab("patrol"), color: "green" },
-    { label: "PvP", action: () => navigateTab("pvp"), color: "blue" },
+    { label: "バトル", action: () => navigateTab("pvp"), color: "blue" },
     { label: "レイド", action: () => navigateTab("raid"), color: "orange" },
     { label: "ランキング", action: () => navigateTab("ranking"), color: "silver" },
     { label: "BBS", action: () => navigateTab("bbs"), color: "silver" },
     { label: "所持品", action: () => navigateTab("bag"), color: "silver" },
     { label: "ミッション", action: () => setShowMissionPanel(true), color: "cyan" },
     { label: "プレゼント", action: () => { setShowInboxPanel(true); setInboxPanelTab("presents"); }, color: "magenta" },
+    { label: "ログインボーナス", action: () => setShowLoginBonusModal(true), color: "gold" },
     { label: "設定", action: () => setShowSettingsPanel(true), color: "white" },
   ];
 

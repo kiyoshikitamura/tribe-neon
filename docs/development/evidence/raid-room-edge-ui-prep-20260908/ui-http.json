@@ -1,0 +1,65 @@
+{
+  "url": "https://tribe-neon-705g1hvhg-kiyoshi-kitamura.vercel.app/",
+  "status": 200,
+  "checked_at": "2026-09-08T10:00:33.382Z",
+  "chunks": [
+    {
+      "path": "/_next/static/chunks/27jktro2p5rq9.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/0iec5q4ack_04.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/1-otopta3ipqh.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/turbopack-40xexpsw9ux0s.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/05-c3ty_6dwfk.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/14mrh2-p_w84d.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/33u3ilb991i2x.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/3hl62n8-8v_td.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/3d5e75704krz7.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/04qppl_9aog7s.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/0sid96m0hvmsm.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/2_f6sddw2rp3p.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/0cz1d0mv5g_q7.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    },
+    {
+      "path": "/_next/static/chunks/3noyb9zod8tkp.js?dpl=dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "status": 200
+    }
+  ],
+  "preview_ref_found": true,
+  "limitation": "Fixed previously observed deployment URL only. No current alias/env control-plane assertion or authenticated gameplay."
+}

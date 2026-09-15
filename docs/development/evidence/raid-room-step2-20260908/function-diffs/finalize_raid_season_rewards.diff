@@ -1,0 +1,94 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_season_rewards.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_season_rewards.candidate.sql
+index 09981f6..e4a3bbf 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_season_rewards.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/finalize_raid_season_rewards.candidate.sql
+@@ -1,86 +1 @@
+-CREATE OR REPLACE FUNCTION public.finalize_raid_season_rewards(p_season_id uuid)
+- RETURNS integer
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
+-declare
+-  v_season public.ranking_seasons%rowtype;
+-  v_row record;
+-  v_member record;
+-  v_granted integer := 0;
+-begin
+-  select * into v_season from public.ranking_seasons where id=p_season_id for update;
+-  if not found or v_season.ranking_type<>'RAID'
+-     or not (v_season.status in ('FINALIZING','CLOSED')
+-       or (v_season.status='ACTIVE' and v_season.ends_at<=clock_timestamp())) then
+-    raise exception 'Raid season is not finalizable' using errcode='23514';
+-  end if;
+-
+-  insert into public.ranking_raid_personal_season_snapshots(
+-    season_id,user_id,contribution,rank_position,achieved_at
+-  )
+-  select p_season_id,ranked.user_id,ranked.contribution,ranked.rank_position,ranked.achieved_at
+-  from (
+-    select totals.*,
+-      rank() over(order by totals.contribution desc) rank_position
+-    from (
+-      select log.user_id,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at
+-      from public.raid_damage_logs log
+-      where log.raid_boss_instance_id is not null
+-        and log.created_at>=v_season.starts_at and log.created_at<v_season.ends_at
+-      group by log.user_id
+-    ) totals
+-  ) ranked
+-  on conflict do nothing;
+-
+-  insert into public.ranking_raid_guild_season_snapshots(
+-    season_id,guild_id,contribution,rank_position,achieved_at
+-  )
+-  select p_season_id,ranked.guild_id,ranked.contribution,ranked.rank_position,ranked.achieved_at
+-  from (
+-    select totals.*,
+-      rank() over(order by totals.contribution desc) rank_position
+-    from (
+-      select log.guild_id,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at
+-      from public.raid_damage_logs log
+-      where log.raid_boss_instance_id is not null and log.guild_id is not null
+-        and log.created_at>=v_season.starts_at and log.created_at<v_season.ends_at
+-      group by log.guild_id
+-    ) totals
+-  ) ranked
+-  on conflict do nothing;
+-
+-  for v_row in
+-    select snapshot.* from public.ranking_raid_personal_season_snapshots snapshot
+-    where snapshot.season_id=p_season_id
+-    order by snapshot.rank_position,snapshot.achieved_at,snapshot.user_id
+-  loop
+-    v_granted := v_granted + public.grant_canonical_ranking_season_reward(
+-      p_season_id,'RAID_PERSONAL',v_row.user_id,v_row.user_id,v_row.rank_position
+-    );
+-  end loop;
+-
+-  for v_row in
+-    select snapshot.* from public.ranking_raid_guild_season_snapshots snapshot
+-    where snapshot.season_id=p_season_id
+-    order by snapshot.rank_position,snapshot.achieved_at,snapshot.guild_id
+-  loop
+-    -- The frozen master holds guild funds. Preserve the established authority:
+-    -- only users who contributed for this guild in this exact season receive it.
+-    for v_member in
+-      select distinct log.user_id
+-      from public.raid_damage_logs log
+-      where log.guild_id=v_row.guild_id
+-        and log.raid_boss_instance_id is not null
+-        and log.created_at>=v_season.starts_at and log.created_at<v_season.ends_at
+-    loop
+-      v_granted := v_granted + public.grant_canonical_ranking_season_reward(
+-        p_season_id,'RAID_GUILD',v_member.user_id,v_row.guild_id,v_row.rank_position
+-      );
+-    end loop;
+-  end loop;
+-  return v_granted;
+-end;
+-$function$
+-;
+\ No newline at end of file
++create or replace function public.finalize_raid_season_rewards(p_season_id uuid) returns integer language sql security definer set search_path=public as $$ select 0 $$;
+\ No newline at end of file

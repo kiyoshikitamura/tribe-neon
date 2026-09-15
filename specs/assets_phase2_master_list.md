@@ -4,6 +4,8 @@
 
 本ドキュメントは、Phase 2 において生成・透過処理・組み込みを行うすべてのグラフィックアセット（**全60キャラクター**、**背景画像**、**スキル/装備/アイテム/演出素材**、**UIパーツ/称号バナー**）を完全に網羅・リスト化したマスター仕様書です。
 
+> **現行Production参照（2026-08-21以降）**: 本書の旧ルート直下パス、`member_*`仮名、PNG背景パス、未作成一覧は制作履歴です。Runtime正本は`src/domain/gameplay/canonical/data/`と`src/domain/presentation/production_creatives.ts`、配置信頼性の正本は`specs/production/gameplay_foundation/character_alpha_release_audit_20260821.md`および`scripts/verify_final_asset_production.mjs`です。60体画像を再生成・再設計する根拠として本書を使用しません。
+
 ---
 
 ## 1. 全60キャラクター再定義 ＆ アセット管理リスト (全60名)

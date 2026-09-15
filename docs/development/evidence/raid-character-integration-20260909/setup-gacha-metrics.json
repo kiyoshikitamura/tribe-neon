@@ -1,0 +1,262 @@
+[
+  {
+    "file": "setup-prologue-375x844.png",
+    "metrics": {
+      "width": 373,
+      "scrollWidth": 373,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 375,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-guide-375x844.png",
+    "metrics": {
+      "width": 373,
+      "scrollWidth": 373,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 375,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-name-375x844.png",
+    "metrics": {
+      "width": 373,
+      "scrollWidth": 373,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 375,
+      "height": 844
+    }
+  },
+  {
+    "file": "gacha-summary-375x844.png",
+    "metrics": {
+      "width": 375,
+      "scrollWidth": 375,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 375,
+      "height": 844
+    }
+  },
+  {
+    "file": "gacha-reveal-375x844.png",
+    "metrics": {
+      "width": 375,
+      "scrollWidth": 375,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 375,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-prologue-390x844.png",
+    "metrics": {
+      "width": 388,
+      "scrollWidth": 388,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-guide-390x844.png",
+    "metrics": {
+      "width": 388,
+      "scrollWidth": 388,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-name-390x844.png",
+    "metrics": {
+      "width": 388,
+      "scrollWidth": 388,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "gacha-summary-390x844.png",
+    "metrics": {
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "gacha-reveal-390x844.png",
+    "metrics": {
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-prologue-430x844.png",
+    "metrics": {
+      "width": 428,
+      "scrollWidth": 428,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 430,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-guide-430x844.png",
+    "metrics": {
+      "width": 428,
+      "scrollWidth": 428,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 430,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-name-430x844.png",
+    "metrics": {
+      "width": 428,
+      "scrollWidth": 428,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 430,
+      "height": 844
+    }
+  },
+  {
+    "file": "gacha-summary-430x844.png",
+    "metrics": {
+      "width": 430,
+      "scrollWidth": 430,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 430,
+      "height": 844
+    }
+  },
+  {
+    "file": "gacha-reveal-430x844.png",
+    "metrics": {
+      "width": 430,
+      "scrollWidth": 430,
+      "height": 844,
+      "scrollHeight": 844
+    },
+    "viewport": {
+      "width": 430,
+      "height": 844
+    }
+  },
+  {
+    "file": "setup-prologue-390x600.png",
+    "metrics": {
+      "width": 388,
+      "scrollWidth": 388,
+      "height": 600,
+      "scrollHeight": 600
+    },
+    "viewport": {
+      "width": 390,
+      "height": 600
+    }
+  },
+  {
+    "file": "setup-guide-390x600.png",
+    "metrics": {
+      "width": 388,
+      "scrollWidth": 388,
+      "height": 600,
+      "scrollHeight": 600
+    },
+    "viewport": {
+      "width": 390,
+      "height": 600
+    }
+  },
+  {
+    "file": "setup-name-390x600.png",
+    "metrics": {
+      "width": 388,
+      "scrollWidth": 388,
+      "height": 600,
+      "scrollHeight": 600
+    },
+    "viewport": {
+      "width": 390,
+      "height": 600
+    }
+  },
+  {
+    "file": "gacha-summary-390x600.png",
+    "metrics": {
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 600,
+      "scrollHeight": 600
+    },
+    "viewport": {
+      "width": 390,
+      "height": 600
+    }
+  },
+  {
+    "file": "gacha-reveal-390x600.png",
+    "metrics": {
+      "width": 390,
+      "scrollWidth": 390,
+      "height": 600,
+      "scrollHeight": 600
+    },
+    "viewport": {
+      "width": 390,
+      "height": 600
+    }
+  }
+]

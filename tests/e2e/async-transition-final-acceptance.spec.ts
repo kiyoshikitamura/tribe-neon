@@ -33,10 +33,16 @@ test.beforeEach(async ({ page }) => {
 
 async function enterGame(page: Page) {
   await page.goto("/");
-  const entry = page.getByRole("button", { name: /TAP TO START|続きから/ });
-  await expect(entry).toBeVisible();
-  await entry.click();
+  const tapToStart = page.getByRole("button", { name: "TAP TO START" });
+  await expect(tapToStart).toBeVisible();
+  await tapToStart.click();
+  await page.getByRole("button", { name: "続きから" }).click();
   await expect(page.locator(".header-mobile")).toBeVisible();
+  const loginBonus = page.getByRole("dialog", { name: "ログインボーナス" });
+  await loginBonus.waitFor({ state: "visible", timeout: 3_000 }).catch(() => undefined);
+  if (await loginBonus.isVisible()) {
+    await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
+  }
 }
 
 for (const delay of DELAYS) {
@@ -56,7 +62,9 @@ for (const delay of DELAYS) {
     const receipt = page.getByRole("dialog", { name: "報酬獲得" });
     await probe.destinationPaint(receipt);
     await probe.unlock(operation);
-    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_presents") || "[]").filter((row: { message?: string }) => row.message === "ミッション報酬").length)).toBe(1);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_presents") || "[]").filter((row: { message?: string }) => row.message === "ミッション報酬").length)).toBe(0);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_user_items") || "[]").find((row: { item_id?: string; quantity?: number }) => row.item_id === "CHAR_EXP_S")?.quantity)).toBe(1);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_mission_reward_delivery_ledger") || "[]").filter((row: { delivery_status?: string }) => row.delivery_status === "DELIVERED").length)).toBe(1);
     probe.assertContract();
     await probe.attach(testInfo);
   });

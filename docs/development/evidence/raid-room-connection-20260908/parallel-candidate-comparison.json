@@ -1,0 +1,73 @@
+{
+  "candidates": [
+    {
+      "ref": "origin/codex/raid-room-rescue-20260908",
+      "tip": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+      "changes": 0
+    },
+    {
+      "ref": "origin/codex/kpi-daily-monthly-20260908",
+      "tip": "314b38f170001a1d88f57e05e39e9eeb866b0dc3",
+      "changes": 15
+    },
+    {
+      "ref": "origin/codex/gacha-presentation-v3-20260908",
+      "tip": "55a6a9b95032dffc8e82c59c3c318016a3cfa89a",
+      "changes": 75
+    }
+  ],
+  "overlaps": [
+    {
+      "ref": "origin/codex/kpi-daily-monthly-20260908",
+      "overlap_with_raid": [
+        "scripts/verify_kpi_tutorial_union.mjs"
+      ]
+    },
+    {
+      "ref": "origin/codex/gacha-presentation-v3-20260908",
+      "overlap_with_raid": [
+        ".github/workflows/quality.yml",
+        "package.json",
+        "src/hooks/useBattle.ts"
+      ]
+    }
+  ],
+  "edgeDiff": [
+    {
+      "file": "supabase/functions/resolve-battle/engine.ts",
+      "candidate_sha256": "ef929655b9ab9f9ff310e7174df01ef24682d681e960adf856e30c78087aff97",
+      "deployed_sha256": "ef929655b9ab9f9ff310e7174df01ef24682d681e960adf856e30c78087aff97",
+      "same_normalized_source": true
+    },
+    {
+      "file": "supabase/functions/resolve-battle/engine_test.ts",
+      "candidate_sha256": "647c5ce4a77cd43fc3271eccc9473465b29ff7b2dc8e176eeb2a05da42c49484",
+      "deployed_sha256": null,
+      "same_normalized_source": false
+    },
+    {
+      "file": "supabase/functions/resolve-battle/index.ts",
+      "candidate_sha256": "749fc02e9a91cefaf3710326c4e4f0115edbe9828b40f94aba32d55eedff8a0e",
+      "deployed_sha256": "cb482b85920d45cca767a1646e56cdbcc0b8ac1bb1c0195759674bfebff8f757",
+      "same_normalized_source": false
+    },
+    {
+      "file": "supabase/functions/resolve-battle/raid-room-route.ts",
+      "candidate_sha256": "d81dc62a502dda3d9657521e0020cc8dacd90987e5e2b3e8e801d7ca855f6fa3",
+      "deployed_sha256": null,
+      "same_normalized_source": false
+    },
+    {
+      "file": "src/domain/battle/canonical_effects.ts",
+      "candidate_sha256": "67197b5e59259c68c4908ee30110378e7ed4b34a36d951695d22a126ae79679f",
+      "deployed_sha256": "67197b5e59259c68c4908ee30110378e7ed4b34a36d951695d22a126ae79679f",
+      "same_normalized_source": true
+    },
+    {
+      "file": "src/domain/battle/canonical_runtime.ts",
+      "candidate_sha256": "0d07290dbcd727ec10dd086e95b107e1da3d7871515854f306a6ce9ccb46f0df",
+      "deployed_sha256": "02c4bb6ea203008d7e8aec9f9fba71d0aa7099e85eee2f266d5e2acc3f759085",
+      "same_normalized_source": false
+    }
+  ]
+}

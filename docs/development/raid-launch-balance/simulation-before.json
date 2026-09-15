@@ -1,0 +1,7393 @@
+{
+  "mode": "before",
+  "seeds": [
+    104729,
+    130363,
+    155921
+  ],
+  "engine": "現repo Edge resolveBattle → 未改変 canonical runtime",
+  "profiles": [
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_reiji_01",
+          "characterName": "レイジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_054",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_mio_01",
+          "characterName": "ミオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_060",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_takuro_01",
+          "characterName": "タクロウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_leon_01",
+          "characterName": "レオン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_kageyama_01",
+          "characterName": "カゲヤマ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_reiji_01",
+          "characterName": "レイジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_054",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_mio_01",
+          "characterName": "ミオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_060",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_takuro_01",
+          "characterName": "タクロウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_leon_01",
+          "characterName": "レオン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_kageyama_01",
+          "characterName": "カゲヤマ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_reiji_01",
+          "characterName": "レイジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_054",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_mio_01",
+          "characterName": "ミオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_060",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_takuro_01",
+          "characterName": "タクロウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_leon_01",
+          "characterName": "レオン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_kageyama_01",
+          "characterName": "カゲヤマ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_reiji_01",
+          "characterName": "レイジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_054",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_mio_01",
+          "characterName": "ミオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_060",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_takuro_01",
+          "characterName": "タクロウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_leon_01",
+          "characterName": "レオン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_021",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_kageyama_01",
+          "characterName": "カゲヤマ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6400000,
+            "atk": 9500,
+            "def": 6200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_ageha_01",
+          "characterName": "アゲハ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_055",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_leo_01",
+          "characterName": "レオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_056",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sora_01",
+          "characterName": "ソラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_065",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_reina_01",
+          "characterName": "レイナ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_066",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_noa_01",
+          "characterName": "ノア",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_ageha_01",
+          "characterName": "アゲハ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_055",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_leo_01",
+          "characterName": "レオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_056",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sora_01",
+          "characterName": "ソラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_065",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_reina_01",
+          "characterName": "レイナ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_066",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_noa_01",
+          "characterName": "ノア",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_ageha_01",
+          "characterName": "アゲハ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_055",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_leo_01",
+          "characterName": "レオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_056",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sora_01",
+          "characterName": "ソラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_065",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_reina_01",
+          "characterName": "レイナ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_066",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_noa_01",
+          "characterName": "ノア",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_ageha_01",
+          "characterName": "アゲハ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_055",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_leo_01",
+          "characterName": "レオ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_056",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sora_01",
+          "characterName": "ソラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_065",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_reina_01",
+          "characterName": "レイナ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_066",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_noa_01",
+          "characterName": "ノア",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 5600000,
+            "atk": 8800,
+            "def": 5500,
+            "spd": 470,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_koharu_01",
+          "characterName": "コハル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_053",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_takeshi_01",
+          "characterName": "タケシ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_momoko_01",
+          "characterName": "モモコ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_koharu_01",
+          "characterName": "コハル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_053",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_takeshi_01",
+          "characterName": "タケシ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_momoko_01",
+          "characterName": "モモコ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_koharu_01",
+          "characterName": "コハル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_053",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_takeshi_01",
+          "characterName": "タケシ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_momoko_01",
+          "characterName": "モモコ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_IKEBUKURO_V1",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_koharu_01",
+          "characterName": "コハル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_053",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_takeshi_01",
+          "characterName": "タケシ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_momoko_01",
+          "characterName": "モモコ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_022",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7200000,
+            "atk": 8200,
+            "def": 8200,
+            "spd": 340,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_kaede_01",
+          "characterName": "カエデ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_059",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_seiya_01",
+          "characterName": "セイヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_kaede_01",
+          "characterName": "カエデ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_059",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_seiya_01",
+          "characterName": "セイヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_kaede_01",
+          "characterName": "カエデ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_059",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_seiya_01",
+          "characterName": "セイヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_ROPPONGI_V1",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_kaede_01",
+          "characterName": "カエデ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_059",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_seiya_01",
+          "characterName": "セイヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6800000,
+            "atk": 8700,
+            "def": 7700,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_karen_01",
+          "characterName": "カレン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_057",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_miyabi_01",
+          "characterName": "ミヤビ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_058",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_alice_01",
+          "characterName": "アリス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_067",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_rui_01",
+          "characterName": "ルイ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_karen_01",
+          "characterName": "カレン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_057",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_miyabi_01",
+          "characterName": "ミヤビ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_058",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_alice_01",
+          "characterName": "アリス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_067",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_rui_01",
+          "characterName": "ルイ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_karen_01",
+          "characterName": "カレン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_057",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_miyabi_01",
+          "characterName": "ミヤビ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_058",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_alice_01",
+          "characterName": "アリス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_067",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_rui_01",
+          "characterName": "ルイ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_AKIHABARA_V1",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_karen_01",
+          "characterName": "カレン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_057",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_miyabi_01",
+          "characterName": "ミヤビ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_058",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_alice_01",
+          "characterName": "アリス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_067",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_rui_01",
+          "characterName": "ルイ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_025",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_maya_01",
+          "characterName": "マヤ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 6000000,
+            "atk": 8400,
+            "def": 6500,
+            "spd": 430,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_068",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_032",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_go_01",
+          "characterName": "ゴウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_051",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_kengo_01",
+          "characterName": "ケンゴ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_052",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_tetsu_01",
+          "characterName": "テツ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_061",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_lucas_01",
+          "characterName": "ルーカス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_062",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_go_01",
+          "characterName": "ゴウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_051",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_kengo_01",
+          "characterName": "ケンゴ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_052",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_tetsu_01",
+          "characterName": "テツ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_061",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_lucas_01",
+          "characterName": "ルーカス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_062",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_go_01",
+          "characterName": "ゴウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_051",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_kengo_01",
+          "characterName": "ケンゴ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_052",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_tetsu_01",
+          "characterName": "テツ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_061",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_lucas_01",
+          "characterName": "ルーカス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_062",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_KAWASAKI_V1",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_go_01",
+          "characterName": "ゴウ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_051",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_kengo_01",
+          "characterName": "ケンゴ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_052",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_tetsu_01",
+          "characterName": "テツ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_061",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_lucas_01",
+          "characterName": "ルーカス",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_062",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_027",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_riki_01",
+          "characterName": "リキ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7600000,
+            "atk": 10500,
+            "def": 6000,
+            "spd": 350,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_024",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "beginner",
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_genji_01",
+          "characterName": "ゲンジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_063",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_long_01",
+          "characterName": "ロン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_064",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "intermediate",
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_genji_01",
+          "characterName": "ゲンジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_063",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_long_01",
+          "characterName": "ロン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_064",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "advanced",
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_genji_01",
+          "characterName": "ゲンジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_063",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_long_01",
+          "characterName": "ロン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_064",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "expert",
+      "raidVariantId": "RAID_YOKOHAMA_V1",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "members": [
+        {
+          "slot": 1,
+          "characterId": "char_genji_01",
+          "characterName": "ゲンジ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_063",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 2,
+          "characterId": "char_long_01",
+          "characterName": "ロン",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_064",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_031",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 3,
+          "characterId": "char_sakura_01",
+          "characterName": "サクラ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_069",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 4,
+          "characterId": "char_cecile_01",
+          "characterName": "セシル",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_070",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_026",
+              "plus": 0
+            }
+          ]
+        },
+        {
+          "slot": 5,
+          "characterId": "char_taiga_01",
+          "characterName": "タイガ",
+          "level": 30,
+          "awakeningLevel": 0,
+          "baseStats": {
+            "hp": 7000000,
+            "atk": 8900,
+            "def": 7200,
+            "spd": 390,
+            "luk": 0
+          },
+          "equipment": [],
+          "skills": [
+            {
+              "skillId": "SKILL_033",
+              "plus": 0
+            },
+            {
+              "skillId": "SKILL_034",
+              "plus": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "beginner",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 2,
+        "max": 2
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 2,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "5f69b3ce38c61d89b5adf2226471585c5b2869defe335c4a87400a0eb61c2290"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "e5068792addc81612031da95391be884e28b3724054dfaeff27cd88a92bc15af"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "f2b767327917acdfc20844de81de484bcdab44e0407daee3f17b947c6661d491"
+        }
+      ]
+    },
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "intermediate",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 20747,
+        "average": 20948.333333333332,
+        "max": 21298
+      },
+      "rounds": {
+        "min": 4,
+        "max": 4
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 1503,
+        "average": 1528,
+        "worst": 1543
+      },
+      "uniformSupplyHours": 2618.6877010331546,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 21298,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11905
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 3059
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3240
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3094
+            }
+          ],
+          "replaySha256": "e10a302b55bdbb7d408aa2b47c1385522ea78644ecc1a3a354c47d75c93f20ef"
+        },
+        {
+          "seed": 130363,
+          "damage": 20747,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11499
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 3008
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3047
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3193
+            }
+          ],
+          "replaySha256": "7901df37e6fcfd418c4194ee24ab07a416ba559758e06390ce29d220575a1978"
+        },
+        {
+          "seed": 155921,
+          "damage": 20800,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11410
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 3211
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3206
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 2973
+            }
+          ],
+          "replaySha256": "369c9b338c6c1d68f10152547fa564c6190c4f7195e11c36e3cd0a60341640ee"
+        }
+      ]
+    },
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "advanced",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 29926,
+        "average": 36044.333333333336,
+        "max": 41609
+      },
+      "rounds": {
+        "min": 5,
+        "max": 5
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 770,
+        "average": 888,
+        "worst": 1070
+      },
+      "uniformSupplyHours": 631.3213049362051,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 36598,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14812
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 11219
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 10567
+            }
+          ],
+          "replaySha256": "2eee06aac2d64872ee209348c3d9104a23d49d737a89389675b50fafacd3edd2"
+        },
+        {
+          "seed": 130363,
+          "damage": 29926,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14308
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 7153
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 8465
+            }
+          ],
+          "replaySha256": "109f8367dcbcf4f744dd6f5610f9da73a50feb4bce7a639b4ef0da382ba5bf9d"
+        },
+        {
+          "seed": 155921,
+          "damage": 41609,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7634
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14198
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 11342
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 8435
+            }
+          ],
+          "replaySha256": "6f835c9445099fd89f00b4e1985fe1b16e9d1a3fdee74c005e14e2ee8629f655"
+        }
+      ]
+    },
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "expert",
+      "raidName": "キングス・クラウン",
+      "maxHp": 32000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 50177,
+        "average": 50691.333333333336,
+        "max": 51511
+      },
+      "rounds": {
+        "min": 5,
+        "max": 6
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 622,
+        "average": 632,
+        "worst": 638
+      },
+      "uniformSupplyHours": 183.64265244073758,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 50386,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9632
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 17960
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 13669
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4644
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4481
+            }
+          ],
+          "replaySha256": "01f5b10570ecc6081d943a3c9abe491db4aa2d8a77b77a3e4da7e96fdae8d2ff"
+        },
+        {
+          "seed": 130363,
+          "damage": 50177,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9939
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 17350
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 12987
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 9901
+            }
+          ],
+          "replaySha256": "820a55f2d2d610e83487a6a84531e1bd3692d5f29b2c4459fc7e1081d39fe0e6"
+        },
+        {
+          "seed": 155921,
+          "damage": 51511,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9254
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 17216
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 15596
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4742
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4703
+            }
+          ],
+          "replaySha256": "96e2522f9e59f8b7590a627c5e334500059cbd6299158c2bab08fa80bcfb4365"
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "beginner",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 2,
+        "max": 2
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 2,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "e8923a878671526ce19a4b8046b15fc18f3de7de03c177b38b2259be61fe25a3"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "f5a3f4c78e695daaed68a1bedbdca0d585e8a3f0e3876f1133892ad8069a2206"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "9d0812f0df4f0276de75d0be9dc6408dcd52a7f4109ee22ec98fc23900280f54"
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "intermediate",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 22080,
+        "average": 22600.666666666668,
+        "max": 23052
+      },
+      "rounds": {
+        "min": 4,
+        "max": 4
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 1215,
+        "average": 1239,
+        "worst": 1269
+      },
+      "uniformSupplyHours": 2123.8311554231436,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 22670,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 13043
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2729
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3837
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3061
+            }
+          ],
+          "replaySha256": "1a5aec0dd45a46a73f5ebf160e9bf79d66bb22df69eece36b90b77adec3dcb3b"
+        },
+        {
+          "seed": 130363,
+          "damage": 23052,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 13722
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 3021
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3299
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3010
+            }
+          ],
+          "replaySha256": "efc867591bcd9916cb3ee7375feb01600527d05bfffcef5265c22a46236df5a0"
+        },
+        {
+          "seed": 155921,
+          "damage": 22080,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12544
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2637
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3686
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3213
+            }
+          ],
+          "replaySha256": "a91b9d926c914ed6fb02abad9e3cd344e0e8c983230beb25be65327d778d9071"
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "advanced",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 37358,
+        "average": 43574,
+        "max": 47029
+      },
+      "rounds": {
+        "min": 5,
+        "max": 5
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 596,
+        "average": 643,
+        "worst": 750
+      },
+      "uniformSupplyHours": 456.94935308007325,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 47029,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8056
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 16227
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 14418
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4545
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3783
+            }
+          ],
+          "replaySha256": "60524cec2bcc77b97961c15e09c4367280b32a1f6edb90444361c843aa5ae582"
+        },
+        {
+          "seed": 130363,
+          "damage": 46335,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8313
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 17075
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 11208
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 6019
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3720
+            }
+          ],
+          "replaySha256": "fd24fddd30e98d68319f24f35100ad09633afafb61a5514278677bef734f2c68"
+        },
+        {
+          "seed": 155921,
+          "damage": 37358,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 15607
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 13247
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4533
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3971
+            }
+          ],
+          "replaySha256": "b7d88a91ea9da8f3ffa494025dbe4a0b4e2b14fc8a026d33830b476855bcf762"
+        }
+      ]
+    },
+    {
+      "areaId": "SHIBUYA",
+      "difficultyId": "expert",
+      "raidName": "ハイスピード・スターズ",
+      "maxHp": 28000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 51276,
+        "average": 67595.66666666667,
+        "max": 76164
+      },
+      "rounds": {
+        "min": 6,
+        "max": 7
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 368,
+        "average": 415,
+        "worst": 547
+      },
+      "uniformSupplyHours": 120.50261425221356,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 75347,
+          "rounds": 7,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9765
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 46090
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 14949
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4543
+            }
+          ],
+          "replaySha256": "b354219512052a943ca12c90458641be2768838d24d6ef4ec4ae6721ddbaab8e"
+        },
+        {
+          "seed": 130363,
+          "damage": 51276,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 10077
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 20705
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 8827
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 7200
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4467
+            }
+          ],
+          "replaySha256": "3c57111d5c1643e001bb287c3c5892ff9b11dfd7695a144ef70626d04250fc53"
+        },
+        {
+          "seed": 155921,
+          "damage": 76164,
+          "rounds": 7,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9382
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 46152
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 15861
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4769
+            }
+          ],
+          "replaySha256": "206b023707ca2c22e6ca7d7b7639255d51740fd8617d3089c227581fa27b99ea"
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "beginner",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 2,
+        "max": 3
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 3,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "f46bd02d30d94f7f2150c8c87c035f1fbcd9942266fa19abdca3e5517861312e"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 3,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "4908cdde564a7d3891a6df6f2ba389b5b075f29c02812290c32ddc7dcecbb0bb"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 3,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "9e27af7f1ad3ac98f0a6584f433c3952df361fed06859cdd932677a6e2cc95fa"
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "intermediate",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 30558,
+        "average": 32388,
+        "max": 33518
+      },
+      "rounds": {
+        "min": 6,
+        "max": 8
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 1075,
+        "average": 1112,
+        "worst": 1179
+      },
+      "uniformSupplyHours": 1905.4676335150584,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 33088,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 13279
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 5307
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 8067
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 6435
+            }
+          ],
+          "replaySha256": "40dc1602c2cd29a5254033bf5be96e8ec42dab811df5d4741266a6e019c58b09"
+        },
+        {
+          "seed": 130363,
+          "damage": 33518,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14178
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 5314
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 7481
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 6545
+            }
+          ],
+          "replaySha256": "f2f5a33720b6edd9b29366114c9dba815ceb032d7fd0ffb74ca09d6a9a1a8914"
+        },
+        {
+          "seed": 155921,
+          "damage": 30558,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 6154
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12759
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 5530
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 6115
+            }
+          ],
+          "replaySha256": "d6ada5cef836a87e91835d854b8143026cc511c83837d62f994d7403306959eb"
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "advanced",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 48202,
+        "average": 51253.666666666664,
+        "max": 55481
+      },
+      "rounds": {
+        "min": 9,
+        "max": 9
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 649,
+        "average": 703,
+        "worst": 747
+      },
+      "uniformSupplyHours": 499.4764602207322,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 50078,
+          "rounds": 9,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7976
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 27401
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 6655
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 8046
+            }
+          ],
+          "replaySha256": "8424865842c739686362ac42ef41310a7860fe88a69e277c07e330455d661878"
+        },
+        {
+          "seed": 130363,
+          "damage": 55481,
+          "rounds": 9,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7376
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 26218
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 6652
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 5087
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 10148
+            }
+          ],
+          "replaySha256": "a7dda2943233c0774b0034c661056d18bce1f081cbc0bf4f7e38ffbff2948e34"
+        },
+        {
+          "seed": 155921,
+          "damage": 48202,
+          "rounds": 9,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7699
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 24541
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 8390
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 7572
+            }
+          ],
+          "replaySha256": "20a932736d72d0258abbb2d1192a4c2bf3350b743525224f299486f68356204a"
+        }
+      ]
+    },
+    {
+      "areaId": "IKEBUKURO",
+      "difficultyId": "expert",
+      "raidName": "アイアンウォール",
+      "maxHp": 36000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 88903,
+        "average": 96896,
+        "max": 105673
+      },
+      "rounds": {
+        "min": 9,
+        "max": 12
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 341,
+        "average": 372,
+        "worst": 405
+      },
+      "uniformSupplyHours": 108.08214242824546,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 105673,
+          "rounds": 12,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 27979
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 47897
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 7956
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 10147
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 11694
+            }
+          ],
+          "replaySha256": "da4b364c23e14c275208bfea1428e1918938c9ea1c894ddf25daf57f11a5aa26"
+        },
+        {
+          "seed": 130363,
+          "damage": 96112,
+          "rounds": 9,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 27482
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 47160
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 9963
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 11507
+            }
+          ],
+          "replaySha256": "903a0aa2dc397e764355ac7e6b71e5bf815dd6ebebff8d6c08b9e9cf81be9cd7"
+        },
+        {
+          "seed": 155921,
+          "damage": 88903,
+          "rounds": 9,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 22660
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 48978
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 7937
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 9328
+            }
+          ],
+          "replaySha256": "35d0f65158a0dcb24570aaaf99756ad2737501e119fb6085a2288102e2ccd128"
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "beginner",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 2,
+        "max": 2
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 3,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "5588754e006c0c3dd14b83b173c4dfd9ff4fe8536382cb9c761d7b548977709c"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "58099a683bb3dafb35d6da592d7c2cf1e8bfd93e6fd55f36dc449b73cb33d427"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "4e971899c2ff414ff64f60f8d73aeb5bdc60d1d7266b767e34a3adbf07f43039"
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "intermediate",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 25847,
+        "average": 27331.666666666668,
+        "max": 28480
+      },
+      "rounds": {
+        "min": 5,
+        "max": 5
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 1194,
+        "average": 1244,
+        "worst": 1316
+      },
+      "uniformSupplyHours": 2132.5342137586786,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 25847,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 5928
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11625
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2473
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 5821
+            }
+          ],
+          "replaySha256": "ced3883771544e8f73f730d7d97bc5b91cd39b955f7a3f7e51fc1097c953ab0d"
+        },
+        {
+          "seed": 130363,
+          "damage": 28480,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 6107
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12963
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 3777
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 2822
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 2811
+            }
+          ],
+          "replaySha256": "b9ca17176f8564e36565d8c56c6efd407fbac5df45fa600137d905ed4ab732d9"
+        },
+        {
+          "seed": 155921,
+          "damage": 27668,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 5851
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12669
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2556
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 2271
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4321
+            }
+          ],
+          "replaySha256": "881816c4e41821a703391c039e47698b8ba742545d76c599c575c00ace5f05e2"
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "advanced",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 40882,
+        "average": 42996,
+        "max": 45649
+      },
+      "rounds": {
+        "min": 6,
+        "max": 6
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 745,
+        "average": 791,
+        "worst": 832
+      },
+      "uniformSupplyHours": 562.326211223783,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 42457,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7416
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14466
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 8922
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4157
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 7496
+            }
+          ],
+          "replaySha256": "5b3a635d5d35c97fb45899a80253ab430e7bc462f53bc87595a7a6052f026b75"
+        },
+        {
+          "seed": 130363,
+          "damage": 45649,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7640
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 16128
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 10423
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4381
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 7077
+            }
+          ],
+          "replaySha256": "fe1993e830bec96238ddd5b98fc52b4ec21d52811e2b9008a39825eb56aa1229"
+        },
+        {
+          "seed": 155921,
+          "damage": 40882,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7320
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 15764
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 8712
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3746
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 5340
+            }
+          ],
+          "replaySha256": "ba9d5fb60f6ec45a1f8a993f24179f0e88c0ffeb7ef8c43000817f18f43a4816"
+        }
+      ]
+    },
+    {
+      "areaId": "ROPPONGI",
+      "difficultyId": "expert",
+      "raidName": "ロイヤル・フラッシュ",
+      "maxHp": 34000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 78171,
+        "average": 81082.33333333333,
+        "max": 84247
+      },
+      "rounds": {
+        "min": 7,
+        "max": 8
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 404,
+        "average": 420,
+        "worst": 435
+      },
+      "uniformSupplyHours": 121.98599478195938,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 80829,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8990
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 41402
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 17271
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 13166
+            }
+          ],
+          "replaySha256": "0e31ed8e93107963df328895c7a2ad4ff4fbd2127c3e780ded694c034c6d87b1"
+        },
+        {
+          "seed": 130363,
+          "damage": 84247,
+          "rounds": 7,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9261
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 43656
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 16378
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4157
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 10795
+            }
+          ],
+          "replaySha256": "0a3e85d38c0233a850fb8a5fabc9c76fd4706db980a5e00ea617c8276c8ba2ac"
+        },
+        {
+          "seed": 155921,
+          "damage": 78171,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8873
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 45051
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 14478
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3357
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 6412
+            }
+          ],
+          "replaySha256": "f2d37a42f98e9a52962264a542f61f2ff3d8ae59d50cf6cec5db27384e6c42b5"
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "beginner",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 2,
+        "max": 2
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 3,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "0d73ce43f6a954aa8649c01908ea571c9321e184f0821092df45850ea2807f37"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "df8ba82a9c3e399fb0c24b8d885595d6d41ed29b279767f8c582e5ea875689e9"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "32f3c493e9903c63a89f8b0957376f0b958803140ea6e6490c1e7005597342e3"
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "intermediate",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 22529,
+        "average": 24001.333333333332,
+        "max": 25871
+      },
+      "rounds": {
+        "min": 5,
+        "max": 5
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 1160,
+        "average": 1250,
+        "worst": 1332
+      },
+      "uniformSupplyHours": 2142.7381018514848,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 22529,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11826
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2534
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 5093
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3076
+            }
+          ],
+          "replaySha256": "3a9e7480a715fa16375b74f44dfdb437b2fb1a5ced7d11c33aba3aa370647a1b"
+        },
+        {
+          "seed": 130363,
+          "damage": 25871,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12580
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2492
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 5054
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 5745
+            }
+          ],
+          "replaySha256": "157621ba39b6c6471d9e2198e7bd8aa92cd148cd00e70f6652144379f72c9827"
+        },
+        {
+          "seed": 155921,
+          "damage": 23604,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11349
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 3192
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3156
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 5907
+            }
+          ],
+          "replaySha256": "b2fe4a7e79811207ca9f8931ec19b8b72fd096a296b6ca29de28d115674c77cb"
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "advanced",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 43422,
+        "average": 47484,
+        "max": 50505
+      },
+      "rounds": {
+        "min": 6,
+        "max": 6
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 595,
+        "average": 632,
+        "worst": 691
+      },
+      "uniformSupplyHours": 449.27414146519527,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 43422,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8240
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14715
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 13396
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3270
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3801
+            }
+          ],
+          "replaySha256": "83107df51b1f73147a6e073ec852a4f246311ef7d7247e041895c1fb596caf4f"
+        },
+        {
+          "seed": 130363,
+          "damage": 48525,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7619
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 15653
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 9755
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3484
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 12014
+            }
+          ],
+          "replaySha256": "e0354c57f406ac476ef7b5e7f1f3929d4bec99d935ad4ea25abbecdd75bcfd9d"
+        },
+        {
+          "seed": 155921,
+          "damage": 50505,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7953
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 14121
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 10798
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 6514
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 11119
+            }
+          ],
+          "replaySha256": "b9af59ac8cd533b8e45e3e105d93db69ce493fe7769aa073bb19d0be54df45e6"
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "expert",
+      "raidName": "グリッチ・コード",
+      "maxHp": 30000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 71853,
+        "average": 76913.66666666667,
+        "max": 86912
+      },
+      "rounds": {
+        "min": 8,
+        "max": 8
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 346,
+        "average": 391,
+        "worst": 418
+      },
+      "uniformSupplyHours": 113.46842642537815,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 71853,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9988
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 17843
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 19708
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 9742
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 14572
+            }
+          ],
+          "replaySha256": "f35cb7034fec0ba209ff920f87f7726df9791f3d248b2b5bc6dec19268060af5"
+        },
+        {
+          "seed": 130363,
+          "damage": 71976,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9236
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 18981
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 17911
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 15737
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 10111
+            }
+          ],
+          "replaySha256": "3ad42ff19a4713f80c928400ab2e80c73527ff3ca508817ad4acaf1cf2b4088c"
+        },
+        {
+          "seed": 155921,
+          "damage": 86912,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9641
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 41834
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 15964
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3587
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 15886
+            }
+          ],
+          "replaySha256": "398b6019c66268f970b0e9c43dcad6b6dbf78e790286eb8c0f20de45eb9e6cad"
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "beginner",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 2,
+        "max": 2
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 2,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "d00b1f39c19a95d44b8d1affae9bb4d749d2bcdd62a2dc324613de25c63bba43"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "9d58bd0fa6400a188e80ee43bd52aa6cc572c168f74b06f9bdf8d1be8625d748"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 2,
+          "survivors": 0,
+          "playersActed": 2,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "c1c5dad07833f1eff4f04901167d79dce8b2e0588f445d75c8e920a798c16fda"
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "intermediate",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 21819,
+        "average": 22454.333333333332,
+        "max": 23058
+      },
+      "rounds": {
+        "min": 4,
+        "max": 4
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 1649,
+        "average": 1693,
+        "worst": 1742
+      },
+      "uniformSupplyHours": 2901.126307150386,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 22486,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12897
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2559
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3302
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3728
+            }
+          ],
+          "replaySha256": "fd7c868e5124b829a38cb100d8fa20682a70631c8a3fe0fec1961204d5240984"
+        },
+        {
+          "seed": 130363,
+          "damage": 23058,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 13643
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2516
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3053
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3846
+            }
+          ],
+          "replaySha256": "3a0c51a1423ee1a00f020ea18e35ce32f8f8449d64ac72708eb4ef5a381464f3"
+        },
+        {
+          "seed": 155921,
+          "damage": 21819,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 12365
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2686
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3187
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3581
+            }
+          ],
+          "replaySha256": "07ef83bc03bab15093810ebec7b56b819b24a850348c0963314b214c76663911"
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "advanced",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 30660,
+        "average": 33391.333333333336,
+        "max": 38018
+      },
+      "rounds": {
+        "min": 4,
+        "max": 5
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 4,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 1000,
+        "average": 1139,
+        "worst": 1240
+      },
+      "uniformSupplyHours": 809.258556777873,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 30660,
+          "rounds": 4,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 16046
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 5901
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4874
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3839
+            }
+          ],
+          "replaySha256": "15a28585f8d1b0f5a7288eed239b5356efd5bf977995cbb21cafa93cddc92107"
+        },
+        {
+          "seed": 130363,
+          "damage": 31496,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 4,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 16975
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 6012
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 3755
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4754
+            }
+          ],
+          "replaySha256": "43163f78e43b2378fdb64ae5fc08c45837f79ae86b6330f39c7a309f682ace11"
+        },
+        {
+          "seed": 155921,
+          "damage": 38018,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8031
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 15384
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 6051
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 4864
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3688
+            }
+          ],
+          "replaySha256": "8ee3e53728e697609c42c3ce565988bb7d7374c74c0292550d5cd712638dd24e"
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "expert",
+      "raidName": "ブレイクダウン",
+      "maxHp": 38000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 73072,
+        "average": 74875.66666666667,
+        "max": 76816
+      },
+      "rounds": {
+        "min": 5,
+        "max": 6
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 495,
+        "average": 508,
+        "worst": 521
+      },
+      "uniformSupplyHours": 147.6386915359078,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 76816,
+          "rounds": 5,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 10086
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 46980
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 7304
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 12446
+            }
+          ],
+          "replaySha256": "ba1787513283b98e5cac806338394c5521f17ae9d713b1659c5b99adf9e8d34d"
+        },
+        {
+          "seed": 130363,
+          "damage": 73072,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9326
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 46270
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 7169
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 10307
+            }
+          ],
+          "replaySha256": "ae2b7f9c67ab9d068a4ee23178ee4b2e937d94f5f4094240833c10ea6e8421d2"
+        },
+        {
+          "seed": 155921,
+          "damage": 74739,
+          "rounds": 6,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9735
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 47726
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 7272
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 5578
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 4428
+            }
+          ],
+          "replaySha256": "6eb08d5ef252d0920bfeea7570671d9b953f89c26821b450f0904c35454a30d6"
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "beginner",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "partyPower": 58740,
+      "seedCount": 3,
+      "damage": {
+        "min": 0,
+        "average": 0,
+        "max": 0
+      },
+      "rounds": {
+        "min": 3,
+        "max": 3
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 3,
+      "participants": [
+        2,
+        3
+      ],
+      "battlesPerPerson24h": [
+        2,
+        3
+      ],
+      "totalBattles24h": [
+        4,
+        9
+      ],
+      "neededBattles": {
+        "best": null,
+        "average": null,
+        "worst": null
+      },
+      "uniformSupplyHours": null,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 0,
+          "rounds": 3,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "e59dc6f4e8109ebde35add77e7382c9279d4efbf1a5a7c1f98f9d947466ed921"
+        },
+        {
+          "seed": 130363,
+          "damage": 0,
+          "rounds": 3,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "a3499db3d89d1b70a925aa4c941df8a2417520afe06ad03a47b6f6812febec9e"
+        },
+        {
+          "seed": 155921,
+          "damage": 0,
+          "rounds": 3,
+          "survivors": 0,
+          "playersActed": 3,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_kenji_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_sawat_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_shun_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_masato_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_tomoya_01",
+              "damage": 0
+            }
+          ],
+          "replaySha256": "3b93cd67edf135fbe210a4b0e34f81919410ab05769ab078162dfcc777413c15"
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "intermediate",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "partyPower": 200786,
+      "seedCount": 3,
+      "damage": {
+        "min": 23444,
+        "average": 36918.333333333336,
+        "max": 56572
+      },
+      "rounds": {
+        "min": 7,
+        "max": 8
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        3,
+        5
+      ],
+      "battlesPerPerson24h": [
+        3,
+        4
+      ],
+      "totalBattles24h": [
+        9,
+        20
+      ],
+      "neededBattles": {
+        "best": 619,
+        "average": 949,
+        "worst": 1493
+      },
+      "uniformSupplyHours": 1625.208794185364,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 56572,
+          "rounds": 7,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 6346
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 29395
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2607
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 11623
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 6601
+            }
+          ],
+          "replaySha256": "54efba97fcd1a556e24f48e22df7887c1013a8227832b6e529d50ffcd01d8ddf"
+        },
+        {
+          "seed": 130363,
+          "damage": 23444,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 6266
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 11610
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 2667
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 2901
+            }
+          ],
+          "replaySha256": "173c960ce83bebe95712958cadafb0a4af2b057eea588d28c8a27e3137feebf1"
+        },
+        {
+          "seed": 155921,
+          "damage": 30739,
+          "rounds": 7,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 8973
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 13066
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 5547
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 3153
+            }
+          ],
+          "replaySha256": "4a2516d3edaccca1f30343290e61a66e69705dc38f6baed88f88afb8a6846e71"
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "advanced",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 60279,
+        "average": 63185,
+        "max": 68601
+      },
+      "rounds": {
+        "min": 8,
+        "max": 8
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 511,
+        "average": 554,
+        "worst": 581
+      },
+      "uniformSupplyHours": 393.9050231682977,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 60675,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 7939
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 31594
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 12782
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 8360
+            }
+          ],
+          "replaySha256": "03219b465dd848cd4014846c19617aa2401fad86367c64010f0e02a6bede1699"
+        },
+        {
+          "seed": 130363,
+          "damage": 68601,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9407
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 26991
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 17162
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 15041
+            }
+          ],
+          "replaySha256": "5b309520e6d385c0ff6d88a7330fa81f0535bf3e83a1dc3c5a93029588a81abf"
+        },
+        {
+          "seed": 155921,
+          "damage": 60279,
+          "rounds": 8,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 11226
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 28211
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 12722
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 8120
+            }
+          ],
+          "replaySha256": "910e376eea57171f5702870d4200353fe9f97da732a4a6fdb7fd541c9b7ac228"
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "expert",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 35000000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 72817,
+        "average": 80646,
+        "max": 93500
+      },
+      "rounds": {
+        "min": 9,
+        "max": 10
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 375,
+        "average": 434,
+        "worst": 481
+      },
+      "uniformSupplyHours": 126.25323242092827,
+      "samples": [
+        {
+          "seed": 104729,
+          "damage": 75621,
+          "rounds": 10,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 9623
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 38311
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 18109
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 9578
+            }
+          ],
+          "replaySha256": "40d77f9276fdd59e11b495728c8923efdbfbff668157795053b9422d6072959e"
+        },
+        {
+          "seed": 130363,
+          "damage": 93500,
+          "rounds": 10,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 23304
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 36186
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 18968
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 15042
+            }
+          ],
+          "replaySha256": "0d63053b3754519dd69e4fb562e116ad62d63db9c682fad0b00700c776ea3c1b"
+        },
+        {
+          "seed": 155921,
+          "damage": 72817,
+          "rounds": 9,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 13608
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 34208
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 15235
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 0
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 9766
+            }
+          ],
+          "replaySha256": "f1c29fe136a7bc42d4465c90de4e3f5149d1e7bc9735e05869ec015c47a8d7ad"
+        }
+      ]
+    }
+  ],
+  "exactSnapshotCorrection": "上級5人の装備HPを現在SQL実計算値へ各1減算。影響する上級7組だけ同じseedで再実測。共有HP変更なし。"
+}

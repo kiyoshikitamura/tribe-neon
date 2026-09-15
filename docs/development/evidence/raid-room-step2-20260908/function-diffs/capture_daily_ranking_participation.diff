@@ -1,0 +1,21 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/capture_daily_ranking_participation.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/capture_daily_ranking_participation.candidate.sql
+index 0f6f425..20b7b05 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/capture_daily_ranking_participation.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/capture_daily_ranking_participation.candidate.sql
+@@ -1,6 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.capture_daily_ranking_participation()
+- RETURNS trigger
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.capture_daily_ranking_participation()
++returns trigger language plpgsql security definer set search_path=public as $$
+@@ -9,0 +6 @@ begin
++  if new.battle_mode='RAID' then return new; end if;
+@@ -22,2 +19 @@ end;
+-$function$
+-;
+\ No newline at end of file
++$$;
+\ No newline at end of file

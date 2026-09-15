@@ -1,0 +1,240 @@
+{
+  "baseline_before": [
+    {
+      "matches": true,
+      "check_name": "public function body/signature/owner/ACL"
+    },
+    {
+      "matches": true,
+      "check_name": "migration history"
+    },
+    {
+      "matches": true,
+      "check_name": "Cron jobs"
+    },
+    {
+      "matches": true,
+      "check_name": "columns"
+    },
+    {
+      "matches": true,
+      "check_name": "constraints"
+    },
+    {
+      "matches": true,
+      "check_name": "triggers"
+    },
+    {
+      "matches": true,
+      "check_name": "table RLS and grants"
+    },
+    {
+      "matches": true,
+      "check_name": "indexes"
+    },
+    {
+      "matches": true,
+      "check_name": "policies"
+    }
+  ],
+  "baseline_after": [
+    {
+      "matches": true,
+      "check_name": "public function body/signature/owner/ACL"
+    },
+    {
+      "matches": true,
+      "check_name": "migration history"
+    },
+    {
+      "matches": true,
+      "check_name": "Cron jobs"
+    },
+    {
+      "matches": true,
+      "check_name": "columns"
+    },
+    {
+      "matches": true,
+      "check_name": "constraints"
+    },
+    {
+      "matches": true,
+      "check_name": "triggers"
+    },
+    {
+      "matches": true,
+      "check_name": "table RLS and grants"
+    },
+    {
+      "matches": true,
+      "check_name": "indexes"
+    },
+    {
+      "matches": true,
+      "check_name": "policies"
+    }
+  ],
+  "all_baseline_checks_pass": true,
+  "rows": [
+    {
+      "table": "users",
+      "before": {
+        "md5": "b868375386785c9dfdad599129f9005f",
+        "count": 19
+      },
+      "after": {
+        "md5": "b868375386785c9dfdad599129f9005f",
+        "count": 19
+      },
+      "unchanged": true
+    },
+    {
+      "table": "guilds",
+      "before": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "after": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "unchanged": true
+    },
+    {
+      "table": "presents",
+      "before": {
+        "md5": "f1743f61e13f0f16c0e3d9bc3e31ab0e",
+        "count": 12
+      },
+      "after": {
+        "md5": "f1743f61e13f0f16c0e3d9bc3e31ab0e",
+        "count": 12
+      },
+      "unchanged": true
+    },
+    {
+      "table": "raid_bosses",
+      "before": {
+        "md5": "8dc3f9460bcb0188993a96652ded9e4d",
+        "count": 39
+      },
+      "after": {
+        "md5": "8dc3f9460bcb0188993a96652ded9e4d",
+        "count": 39
+      },
+      "unchanged": true
+    },
+    {
+      "table": "guild_members",
+      "before": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "after": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "unchanged": true
+    },
+    {
+      "table": "raid_damage_logs",
+      "before": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "after": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "unchanged": true
+    },
+    {
+      "table": "battle_replay_events",
+      "before": {
+        "md5": "633ac3819862677a894b9caa81dc5501",
+        "count": 297
+      },
+      "after": {
+        "md5": "633ac3819862677a894b9caa81dc5501",
+        "count": 297
+      },
+      "unchanged": true
+    },
+    {
+      "table": "kpi_aggregation_runs",
+      "before": {
+        "md5": "d1ef56f024b5bcb1690bdf305a1a583f",
+        "count": 13
+      },
+      "after": {
+        "md5": "d1ef56f024b5bcb1690bdf305a1a583f",
+        "count": 13
+      },
+      "unchanged": true
+    },
+    {
+      "table": "kpi_metric_snapshots",
+      "before": {
+        "md5": "aa99066ff9d56737dd6af1d218d29618",
+        "count": 48
+      },
+      "after": {
+        "md5": "aa99066ff9d56737dd6af1d218d29618",
+        "count": 48
+      },
+      "unchanged": true
+    },
+    {
+      "table": "battle_replay_sessions",
+      "before": {
+        "md5": "fe43a2442a2099efb225525f3213c42a",
+        "count": 5
+      },
+      "after": {
+        "md5": "fe43a2442a2099efb225525f3213c42a",
+        "count": 5
+      },
+      "unchanged": true
+    },
+    {
+      "table": "kpi_overview_saved_results",
+      "before": {
+        "md5": "26594fbbc0a93057f465f280284bab79",
+        "count": 355
+      },
+      "after": {
+        "md5": "26594fbbc0a93057f465f280284bab79",
+        "count": 355
+      },
+      "unchanged": true
+    },
+    {
+      "table": "raid_instance_user_progress",
+      "before": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "after": {
+        "md5": "d751713988987e9331980363e24189ce",
+        "count": 0
+      },
+      "unchanged": true
+    },
+    {
+      "table": "ranking_reward_notifications",
+      "before": {
+        "md5": "a284c22de00db085646c847676e4649b",
+        "count": 16
+      },
+      "after": {
+        "md5": "a284c22de00db085646c847676e4649b",
+        "count": 16
+      },
+      "unchanged": true
+    }
+  ],
+  "cron_unchanged": true,
+  "room_relation_after": null,
+  "legacy_setting_relation_after": null
+}

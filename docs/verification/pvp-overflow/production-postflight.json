@@ -1,0 +1,46 @@
+[
+  {
+    "postflight": {
+      "functions": [
+        {
+          "proacl": "{=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+          "proname": "canonical_pvp_expected_score",
+          "proconfig": null,
+          "prosecdef": false,
+          "definition_md5": "4a7b585263a5ba777c84c8cbfda989dd"
+        },
+        {
+          "proacl": "{=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+          "proname": "canonical_pvp_rating_delta",
+          "proconfig": null,
+          "prosecdef": false,
+          "definition_md5": "9072fc7fe6c9df578ed18b05135ef058"
+        },
+        {
+          "proacl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+          "proname": "get_pvp_opponents_page",
+          "proconfig": [
+            "search_path=public"
+          ],
+          "prosecdef": true,
+          "definition_md5": "636f7e768a3a554ba2b4a7f02f4bf372"
+        },
+        {
+          "proacl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+          "proname": "start_pvp_battle",
+          "proconfig": [
+            "search_path=public"
+          ],
+          "prosecdef": true,
+          "definition_md5": "56157fe8200aa512a459b6fbd8333474"
+        }
+      ],
+      "migration": [
+        {
+          "name": "pvp_opponents_power_multiply_bigint",
+          "version": "20260909003245"
+        }
+      ]
+    }
+  }
+]

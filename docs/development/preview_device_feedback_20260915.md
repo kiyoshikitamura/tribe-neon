@@ -1,0 +1,71 @@
+# GAME03 / TRIBE NEON — 実機指摘18件の修正・調査
+
+対象: `codex/formal-open-integration-preview-20260914`、基準 `929f34caf73ccb747c3f873b304ef33c0c9a5eb3`。
+Preview DB: `sufvuqdnqohpfzkwxohq`。Production接続・変更・公開なし。
+本書は2026-09-15の追加指摘に対する記録。既存の課金・PvP実競合・正式OPEN判断の残件は取り消さない。
+
+## 対応一覧
+
+| # | 指摘 | 対応 |
+|---|---|---|
+| 1 | ギルドエンブレムで改行崩れ | プロフィールの子spanへ枠が重複適用されるCSSを修正し、枠内中央寄せ |
+| 2 | ガイドでおまかせスキルが行われない | 既存一度限りのガイドRPCへスキル配分を追加。所持不足でも完了可能 |
+| 3 | クエスト拠点報酬が長文 | 実報酬IDのアイコンのみへ。ランダムチケットは3種を重ね表示 |
+| 4 | Battle TOP報酬の占有が大きい | 見出しを整理し勝利・敗北の2行へ、余白を縮小 |
+| 5 | Raid特徴のテキスト過多・CTA不揃い | 型と説明だけにし、ヒント削除。カード下端にCTAを統一 |
+| 6 | Raid報酬のテキスト過多 | アイコン×Nへ統一。「撃破前に」削除、「撃破」へ短縮。日次確率を先頭表示。確率・数量・1日1回は維持 |
+| 7 | Raid敵の読み込みが毎回遅い | 出撃前の仮BOSSでキャラ画像解決に失敗する箇所を修正。仮BOSSだけ正規variant画像を使い、実snapshotを優先。画像の重複ロード・デコードを共有、失敗時再試行可能 |
+| 8 | Raidのみ「戦闘終了」 | 未討伐時はRESULT／バトル結果へ。共有HP未討伐を勝利として表示しない |
+| 9 | PvP勝利チケット枠不要 | 専用枠を除去し、実受領報酬をコンパクトに表示 |
+| 10 | PvP勝利「レイドに挑戦」不要 | CTAを削除 |
+| 11 | 正式リリースお知らせ追加 | Preview newsへ新規1件追加。既存記事UPDATE/DELETEなし。本番追加は別承認 |
+| 12 | 回復上限のダイアログがエラーに見える | 3アイテムとも「最大値なので回復できません。」へ。RPC上限エラーと通信エラーを区別 |
+| 13 | 強敵出現がキャラに被る | 画像の負の余白を廃止し、見出しと画像を通常配置 |
+| 14 | 専用スキル・装備を識別できない | canonical対象キャラから[〇〇専用]を表示名の先頭・詳細へ。20スキル/10装備、キャラアイコン追加なし |
+| 15 | 大量所持時スクロールのレイヤー異常 | 育成対象のstickyを解除し、一覧の重なりをナビ下へ限定 |
+| 16 | スキル装備対象アイコンのリーダー等が被る | コンパクトアイコンの該当テキストを非表示 |
+| 17 | 専用装備所持時おまかせ装備が失敗 | 単体・一括RPCの旧専用キャラ参照をcanonicalに統一。専用品優先のNULL順序も修正 |
+| 18 | 専用スキル・装備の戦闘演出が未確認 | 実snapshot・ACTIONを調査。下記参照。専用装備の演出素材も事前ロード対象へ |
+
+## Preview DB変更
+
+- 新規Migration: `20260915053404_canonical_exclusive_loadout_and_guide_skills.sql`。
+- Preview実適用versionも `20260915053404`、name=`canonical_exclusive_loadout_and_guide_skills`。**適用済み・再適用禁止**。
+- 既存7件のMigration再適用なし。今回変更はRPC定義で、既存の装備・編成・育成状態は一括変更しない。
+- 適用前の候補・適用後の定義で、専用装備全10種の単体/一括装着、対象外キャラ拒否、メイン配分、ガイドスキル装備、一度限りの再実行制御を実行してPASS。全試験データはROLLBACK。
+- 新規privateスキル配分関数はauthenticatedからEXECUTE不可を確認。
+- お知らせ: `news.id=1`、`release_key=formal-release-update-20260915`。Previewは追加前0件。追加専用SQLは `supabase/operations/preview_formal_release_news_20260915.sql`、同じkeyの再実行は追加しない。
+- 正式OPEN日程・課金開始を未確定のまま公告しないよう、記事は今回の機能更新内容のみ。Production既存お知らせは未変更。
+
+## 専用演出の調査結果と再確認条件
+
+- 確認した対象ユーザーの最新PvP（ID先頭`af7a3114`）は専用装備0。
+- ミヤビ専用`SKILL_058`は装着済みだがACTIONは0回。作戦は`ATTACK_PRIORITY`。4ラウンド以降に使用可能な妨害スキルで、通常攻撃/別の攻撃スキルが選択されていた。
+- 確認したRaid（ID先頭`da443a8a`）は専用スキル・専用装備とも0。
+- これらの戦闘で演出が出ないのは未装備・未発動による。snapshotの装備IDキーは正常。AI・スキル効果・発動可能ラウンドは変更しない。
+- 再確認: 対応キャラへ専用装備/専用スキルを装着した**新しい戦闘**で、スキル優先かつ使用可能ラウンド以降の実発動を確認する。固定効果の専用装備は開始時演出、スキル演出は実発動時。
+- 画像待ちの修正は表示解決・事前ロードの改善。サーバーRPC自体の速度改善、実機での短縮時間は未測定。
+
+## 検証と残件
+
+- Preview DB実RPC試験: 上記PASS・ROLLBACK。
+- 型チェック、ガイドのmock回帰、バッグ回復上限・成功receipt保持・連打・ユーザー切替、Quest/Raid表示ロジック回帰: PASS。
+- ブラウザ画面の検証は未実施。環境にChromium実行ファイルがなく、取得先がタイムアウト。実機受入PASSにはしない。
+- 旧`verify_game03_short_tutorial_character_setup`は現行WORLD_INTROに対しFREE_GACHAを要求する既存不整合でFAIL。今回のガイド専用試験とは区別。
+- 実機で改行・スクロール・画像表示、専用装備のおまかせ、専用演出を再確認する。
+- PvP初回finalizeの実競合は従来どおり未完了。課金Sandbox設定・実決済試験・正式OPEN日時・Production承認も別の残件として維持。
+
+最終webpack build（NEXT_PUBLIC_USE_MOCK_DB=true）PASS。Mock buildは実接続試験の代用ではない。
+PvP TOP/Result実コンポーネントSSR、専用演出sequence、画像キャッシュ・同時要求・timeout/error後retryもPASS。
+配信結果は別記録へ追記する。
+
+## 配信確認済み
+
+- 実配信SHA: `10d5d53ce7af1c77bd6e4013ebbb9574af65d16c`
+- 固定Preview: https://tribe-neon-2uzqq0hq5-kiyoshi-kitamura.vercel.app/
+- Deployment: `dpl_HyWX7xhmYBbaga9Fh4ann8Mxum4e`、READY、source=git、target=null。
+- GitHub `Vercel – tribe-neon` success。別Project `chat-fix-preview` のfailureと区別。
+- 固定URLの `/api/billing/config` HTTP200、commitSha一致、raidRoomUiEnabled=true、preview_database=true。
+- preview_databaseは配信環境のURL設定一致。DB実RPC試験の証拠は本書上記の別試験。
+- 課金available=false / ENVIRONMENT_INVALIDは従来の設定残件。今回のUI修正により解消したとは扱わない。
+- 本追記は配信後の記録。コードの実機確認には上記固定URLを使用する。

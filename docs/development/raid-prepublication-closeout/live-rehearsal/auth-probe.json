@@ -1,0 +1,33 @@
+{
+  "at": "2026-09-09T15:04:32.817Z",
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "roles": [
+    {
+      "role": "host",
+      "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "status": "AUTH_PASS",
+      "readRpc": "get_raid_top_daily_v1",
+      "rpcError": {
+        "code": "PGRST202",
+        "message": "Could not find the function public.get_raid_top_daily_v1 without parameters in the schema cache"
+      }
+    },
+    {
+      "role": "normal",
+      "expectedUser": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "status": "AUTH_BLOCKED",
+      "code": "refresh_token_not_found",
+      "message": "Invalid Refresh Token: Refresh Token Not Found"
+    },
+    {
+      "role": "rescue",
+      "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "status": "AUTH_PASS",
+      "readRpc": "get_raid_top_daily_v1",
+      "rpcError": {
+        "code": "PGRST202",
+        "message": "Could not find the function public.get_raid_top_daily_v1 without parameters in the schema cache"
+      }
+    }
+  ]
+}

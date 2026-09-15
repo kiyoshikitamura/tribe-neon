@@ -1,0 +1,23 @@
+CREATE OR REPLACE FUNCTION public.get_raid_rankings(p_instance_id uuid)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$ select public.get_raid_rankings(p_instance_id,100,0) $function$
+;
+CREATE OR REPLACE FUNCTION public.get_raid_rankings(p_instance_id uuid, p_limit integer DEFAULT 100, p_offset integer DEFAULT 0)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare v_uid uuid:=auth.uid(); v_day text;
+begin
+ if v_uid is null then raise exception 'authentication required' using errcode='42501'; end if; if p_limit not between 1 and 100 or p_offset not between 0 and 10000 then raise exception 'invalid pagination' using errcode='22023'; end if;
+ select raid_day_key into v_day from public.raid_bosses where id=p_instance_id; if v_day is null then raise exception 'Raid day not found' using errcode='P0002'; end if;
+ return jsonb_build_object(
+ 'individual',coalesce((with totals as(select log.user_id,u.username,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at from public.raid_damage_logs log join public.raid_bosses boss on boss.id=log.raid_boss_instance_id and boss.raid_day_key=v_day join public.users u on u.id=log.user_id group by log.user_id,u.username),ranked as(select *,rank()over(order by contribution desc)rank_position from totals)select jsonb_agg(to_jsonb(page)order by contribution desc,achieved_at,user_id)from(select * from ranked order by contribution desc,achieved_at,user_id limit p_limit offset p_offset)page),'[]'::jsonb),
+ 'guild',coalesce((with totals as(select log.guild_id,g.name guild_name,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at,count(distinct log.user_id)::integer participant_count from public.raid_damage_logs log join public.raid_bosses boss on boss.id=log.raid_boss_instance_id and boss.raid_day_key=v_day join public.guilds g on g.id=log.guild_id where log.guild_id is not null group by log.guild_id,g.name),ranked as(select *,rank()over(order by contribution desc)rank_position from totals)select jsonb_agg(to_jsonb(page)order by contribution desc,achieved_at,guild_id)from(select * from ranked order by contribution desc,achieved_at,guild_id limit p_limit offset p_offset)page),'[]'::jsonb),
+ 'selfRank',(with totals as(select log.user_id,sum(log.raw_damage)::bigint contribution,min(log.created_at) achieved_at from public.raid_damage_logs log join public.raid_bosses boss on boss.id=log.raid_boss_instance_id and boss.raid_day_key=v_day group by log.user_id),ranked as(select *,rank()over(order by contribution desc)rank_position from totals)select to_jsonb(ranked)from ranked where user_id=v_uid));
+end $function$
+;

@@ -1,0 +1,103 @@
+{
+  "phase": "open",
+  "at": "2026-09-09T17:56:06.468Z",
+  "status": "PASS",
+  "pre": [
+    {
+      "state": {
+        "kpi": [
+          {
+            "hash": "e5da97325d85412cccc4d894e57140be",
+            "name": "kpi_daily_engagement_v1"
+          },
+          {
+            "hash": "103e6b634a4db1da6ca6e7d870dd63c6",
+            "name": "refresh_kpi_overview_saved_results"
+          }
+        ],
+        "cron": [
+          {
+            "jobid": 1,
+            "active": true,
+            "command": "select public.cleanup_expired_anonymous_onboarding();",
+            "jobname": "anonymous-onboarding-cleanup-daily",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "0 18 * * *",
+            "username": "postgres"
+          },
+          {
+            "jobid": 2,
+            "active": true,
+            "command": "select public.finalize_daily_ranking_rewards();",
+            "jobname": "daily-ranking-reward-finalize-jst-midnight",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "0 15 * * *",
+            "username": "postgres"
+          },
+          {
+            "jobid": 3,
+            "active": true,
+            "command": "select public.finalize_preopen_guild_power_season();",
+            "jobname": "preopen-guild-power-finalize-20260909-jst",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "* 15 8 9 *",
+            "username": "postgres"
+          },
+          {
+            "jobid": 4,
+            "active": true,
+            "command": "select public.advance_ranking_season('PVP',clock_timestamp());",
+            "jobname": "ranking-pvp-monthly-jst",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "0 15 * * *",
+            "username": "postgres"
+          },
+          {
+            "jobid": 5,
+            "active": true,
+            "command": "select public.advance_ranking_season('RAID',clock_timestamp());",
+            "jobname": "ranking-raid-weekly-jst",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "0 15 * * 0",
+            "username": "postgres"
+          },
+          {
+            "jobid": 9,
+            "active": true,
+            "command": "set statement_timeout='120s'; select public.refresh_kpi_overview_saved_results();",
+            "jobname": "kpi-overview-saved-results-half-hourly",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "7,37 * * * *",
+            "username": "postgres"
+          },
+          {
+            "jobid": 10,
+            "active": true,
+            "command": "select public.finalize_expired_raid_rooms_v1(100);",
+            "jobname": "raid-room-expiry-minute",
+            "database": "postgres",
+            "nodename": "localhost",
+            "nodeport": 5432,
+            "schedule": "* * * * *",
+            "username": "postgres"
+          }
+        ],
+        "pending": 0,
+        "bossHash": "27a882d7844f6bb4b7c8217b02c767c2"
+      }
+    }
+  ],
+  "result": []
+}

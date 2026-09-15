@@ -1,0 +1,15 @@
+.raid-result-details{margin:14px 0;padding:14px;border:1px solid var(--ui-border);border-radius:var(--ui-radius-lg,12px);background:var(--ui-bg-raised);color:var(--ui-text-primary);text-align:left;min-width:0}
+.raid-result-details__states{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.raid-result-details__states>div{display:grid;gap:4px}
+.raid-result-details__states span,.raid-result-details__stats dt{font-size:11px;color:var(--ui-text-secondary)}
+.raid-result-details__states strong{font-size:17px;font-weight:800}
+.raid-result-details__stats{margin:12px 0;display:grid;gap:8px}
+.raid-result-details__stats>div{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid var(--ui-border);padding-bottom:8px}
+.raid-result-details__stats dd{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;margin:0;overflow-wrap:anywhere}
+.raid-result-details__note{font-size:11px;line-height:1.7;color:var(--ui-text-secondary);margin:10px 0 0;overflow-wrap:anywhere}
+.raid-result-details__notice{font-size:12px;line-height:1.65;border-left:2px solid var(--ui-border);padding-left:10px;margin:12px 0}
+
+/* Keep receipt text legible beside the existing display-font MVP presentation. */
+.battle-result-summary .raid-result-details{font-family:var(--font-ui);width:100%}
+.battle-result-summary .raid-result-details p{font-size:11px;line-height:1.7;text-align:left;color:var(--ui-text-secondary);margin:10px 0 0}
+.battle-result-summary .raid-result-details__states strong{font-weight:800}

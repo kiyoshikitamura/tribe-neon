@@ -1,0 +1,78 @@
+(node:35052) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-09/game03-tribe-neon-raid-preview-step6/src/domain/raidRoomClient.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\game03-tribe-neon-raid-preview-step6\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Room切替後の古い成功応答は新Roomと参加者を書き換えない (8.3194ms)
+✔ 古い失敗応答も切替先の成功を壊さない (1.6759ms)
+✔ 更新の順序逆転でも最新応答を保持する (1.0024ms)
+✔ 取得中・未取得・参加不可を参加許可へ変換しない (1.2019ms)
+✔ 参加連打は一要求・救援ID保持、失敗後再試行できる (1.7452ms)
+✔ 一覧取得の失敗から再取得できる (1.0332ms)
+✔ 取得失敗・dispose後に古い参加許可を利用しない (2.045ms)
+✔ disposeは購読通知と進行中応答の反映を停止する (0.7962ms)
+✔ 参加登録は連打を抑止し詳細を更新、既存combinedjoinを呼ばない (0.8262ms)
+✔ 参加失敗後は資格を破棄し再取得、古い登録応答で選択を戻さない (0.6824ms)
+✔ 救援帰属未接続では登録RPCへ救援IDを黙って捨てて送らない (1.0336ms)
+✔ 作成した主催Roomもbriefingと参加者を取得する (5.2555ms)
+✔ 公開Room未参加では参加者APIを呼ばず、登録後にだけ取得する (0.3845ms)
+✔ 救援リンク選択からの参加は通常登録を使わず救援IDを保持 (0.5432ms)
+(node:45220) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-09/game03-tribe-neon-raid-preview-step6/src/domain/raidRoom.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\game03-tribe-neon-raid-preview-step6\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 4難度の参加下限と推奨値を別々に保持する (2.9373ms)
+✔ intermediate: 総合力159999の境界 (0.3728ms)
+✔ intermediate: 総合力160000の境界 (1.0601ms)
+✔ intermediate: 総合力160001の境界 (0.173ms)
+✔ intermediate: 未取得値を0や参加可と扱わない (0.2021ms)
+✔ intermediate: 不正値を暗黙変換しない (0.3183ms)
+✔ advanced: 総合力199999の境界 (0.1241ms)
+✔ advanced: 総合力200000の境界 (0.1148ms)
+✔ advanced: 総合力200001の境界 (0.1473ms)
+✔ advanced: 未取得値を0や参加可と扱わない (0.1775ms)
+✔ advanced: 不正値を暗黙変換しない (0.1343ms)
+✔ expert: 総合力239999の境界 (0.1713ms)
+✔ expert: 総合力240000の境界 (0.1629ms)
+✔ expert: 総合力240001の境界 (0.2781ms)
+✔ expert: 未取得値を0や参加可と扱わない (0.1896ms)
+✔ expert: 不正値を暗黙変換しない (0.1745ms)
+✔ 初級は総合力ゲートのみ無制限で、Room参加全体の許可を返さない (0.2155ms)
+✔ 未知難度を初級へフォールバックしない (0.1885ms)
+(node:35696) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-09/game03-tribe-neon-raid-preview-step6/src/domain/raidRoomJoinPresentation.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\game03-tribe-neon-raid-preview-step6\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ level、定員、終了をサーバー理由から区別する (1.7899ms)
+✔ unknownは不足を断定せずpassedは表示しない (0.3614ms)
+✔ 取得済み総合力と必要値、未取得を区別 (19.9048ms)
+✔ create拒否をadapter→controllerへ伝搬、現在値readは1回 (4.739ms)
+✔ create補完失敗/不正値は0と断定しない {"data":null,"error":{"message":"offline"}} (0.2981ms)
+✔ create補完失敗/不正値は0と断定しない {"data":{"total_power":null},"error":null} (0.1841ms)
+✔ create補完失敗/不正値は0と断定しない {"data":{"total_power":"123"},"error":null} (0.2775ms)
+✔ level/未取得/日次変更は余分なpower取得なし (0.4071ms)
+✔ 未知エラー本文は表示せず汎用失敗に留める (0.2464ms)
+(node:41436) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-09/game03-tribe-neon-raid-preview-step6/src/domain/raidRoomRpcTransport.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\game03-tribe-neon-raid-preview-step6\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ list RPC は全ページを取り込み、呼出し名と offset を維持する (3.3696ms)
+✔ detail は RPC 応答を受理し serverEligibility unknown を保持する (0.55ms)
+✔ 参加者 RPC は raw/applied と現在所属/戦闘所属を別々に保持する (0.4423ms)
+✔ 不正 DTO・別 Room 応答を拒否する (1.2466ms)
+✔ RPC error・不正ページ・循環ページを空成功に変換しない (0.5254ms)
+✔ 参加・報酬の未接続は明示失敗し RPC を呼ばない (0.3543ms)
+✔ 注入された参加・報酬 authority を利用し rescueId と確定 Replay を保持する (0.4234ms)
+✔ 注入 authority の別 Room・空 Replay・負報酬を拒否する (0.3812ms)
+✔ ineligible空reasonsを保持し、eligibleへ矛盾理由を混入した応答を拒否 (0.4357ms)
+✔ 生成は明示opt-in、契約キーを送り未接続参加を成功にしない (0.5833ms)
+✔ 生成の停止エラー・不正DTO・候補重複は成功にしない (0.2752ms)
+✔ 参加登録とbriefingはopt-in、正規RPC引数とreceiptを保持する (0.3595ms)
+✔ 参加receipt別Roomや不正briefingを拒否し資格を捏造しない (0.1808ms)
+ℹ tests 54
+ℹ suites 0
+ℹ pass 54
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 227.1587

@@ -1,0 +1,15 @@
+{
+  "source": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "files": {
+    "20260908175140_raid_top_daily_authority.sql": "36621aa30007457f5e190896ffed90e3a0631e10eafc4cd469007537cb5ca14d",
+    "20260908175143_raid_top_aggregate_api.sql": "34e1225b717b267760ebe90495203162630680fb52b67e9c08b0121d4b2d3d18",
+    "20260908181251_raid_room_display_projection.sql": "7944c2a068ea7ec78be6ad88823dbdc5aeac2ee0027a7000bc0003b8b7757e73",
+    "20260909023226_raid_remaining_pages_projection.sql": "14cb3052ffe7218730aab65640f0f484634d4cf43f8e4d56158dcc320b3a7ffb"
+  },
+  "payloadSha256": "cd7310f1ccc9b3a988fbd0fe8aed56e1015dbe4aa08b30ce5c3ca293e2e85298",
+  "rollbackDriverSha256": "8198e03a21f7a2eacbbc7271bfb8f1df1062d32c5b636cfb44e60d103e449367",
+  "commitDriverSha256": "81d9630c3435e82f5979cb4df2250766386c9988f09acbdc91f5fe95513ab6db",
+  "executionId": "c19b5615-aaed-4c29-a3cd-73a2a801729e",
+  "rollbackId": "a41bd81d-bc19-42f4-a858-ef15da5d2521"
+}

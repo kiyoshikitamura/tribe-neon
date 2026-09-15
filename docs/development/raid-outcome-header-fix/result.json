@@ -1,0 +1,113 @@
+{
+  "scope": "Actual BattleResultSummary and Header, synthetic finalized receipt and resource balances. No live battles or DB writes.",
+  "checks": [
+    {
+      "width": 375,
+      "scenario": "cleared",
+      "title": "討伐成功",
+      "pass": true
+    },
+    {
+      "width": 375,
+      "scenario": "member",
+      "title": "戦闘終了",
+      "pass": true
+    },
+    {
+      "width": 375,
+      "scenario": "expired",
+      "title": "開催終了",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "scenario": "cleared",
+      "title": "討伐成功",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "scenario": "member",
+      "title": "戦闘終了",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "scenario": "expired",
+      "title": "開催終了",
+      "pass": true
+    },
+    {
+      "width": 430,
+      "scenario": "cleared",
+      "title": "討伐成功",
+      "pass": true
+    },
+    {
+      "width": 430,
+      "scenario": "member",
+      "title": "戦闘終了",
+      "pass": true
+    },
+    {
+      "width": 430,
+      "scenario": "expired",
+      "title": "開催終了",
+      "pass": true
+    },
+    {
+      "width": 375,
+      "rp": 5,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 375,
+      "rp": 2,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 375,
+      "rp": 0,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "rp": 5,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "rp": 2,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "rp": 0,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "rp": 5,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "rp": 2,
+      "header": true,
+      "pass": true
+    },
+    {
+      "width": 430,
+      "rp": 0,
+      "header": true,
+      "pass": true
+    }
+  ]
+}

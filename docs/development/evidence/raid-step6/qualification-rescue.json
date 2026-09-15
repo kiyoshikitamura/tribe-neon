@@ -1,0 +1,142 @@
+{
+  "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+  "role": "rescue",
+  "attempts": [
+    {
+      "payload": {
+        "p_room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "7e86665c-55af-4ae3-947b-45c27997b29a"
+      },
+      "startStatus": 200,
+      "startCode": null,
+      "replayId": "3adce099-56df-40ad-8a2b-53d2a9ac0beb",
+      "resolveStatus": 200,
+      "resolveCode": null,
+      "rawDamage": 3854,
+      "appliedDamage": 3854,
+      "remainingBossHp": 27988250,
+      "winner": "ENEMY",
+      "resolved": true,
+      "sameReplay": true,
+      "ackStatus": 200,
+      "acknowledged": true
+    },
+    {
+      "payload": {
+        "p_room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "5a59f0b3-f763-40fb-8edb-5449cd1a16e5"
+      },
+      "startStatus": 200,
+      "startCode": null,
+      "replayId": "b62618d1-e7cc-4348-ac83-75e6ecaf0300",
+      "resolveStatus": 200,
+      "resolveCode": null,
+      "rawDamage": 3922,
+      "appliedDamage": 3922,
+      "remainingBossHp": 27984328,
+      "winner": "ENEMY",
+      "resolved": true,
+      "sameReplay": true,
+      "ackStatus": 200,
+      "acknowledged": true
+    },
+    {
+      "payload": {
+        "p_room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "8dd5f432-e5a0-4990-ba8a-4d6a711aba31"
+      },
+      "startStatus": 200,
+      "startCode": null,
+      "replayId": "24ca1081-74c6-4654-8d75-0a27dd66505c",
+      "resolveStatus": 200,
+      "resolveCode": null,
+      "rawDamage": 3966,
+      "appliedDamage": 3966,
+      "remainingBossHp": 27980362,
+      "winner": "ENEMY",
+      "resolved": true,
+      "sameReplay": true,
+      "ackStatus": 200,
+      "acknowledged": true
+    },
+    {
+      "payload": {
+        "p_room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "1294654c-b982-4474-a6a9-34b22b3256c0"
+      },
+      "startStatus": 200,
+      "startCode": null,
+      "replayId": "9388ca11-545e-463c-a08f-37107f9879f1",
+      "resolveStatus": 200,
+      "resolveCode": null,
+      "rawDamage": 4214,
+      "appliedDamage": 4214,
+      "remainingBossHp": 27976148,
+      "winner": "ENEMY",
+      "resolved": true,
+      "sameReplay": true,
+      "ackStatus": 200,
+      "acknowledged": true
+    },
+    {
+      "payload": {
+        "p_room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "9310f410-402f-4027-b2ff-81bc807634c2"
+      },
+      "startStatus": 200,
+      "startCode": null,
+      "replayId": "0b6fe0f7-0f72-4542-a539-03ccbdca8838",
+      "resolveStatus": 200,
+      "resolveCode": null,
+      "rawDamage": 4048,
+      "appliedDamage": 4048,
+      "remainingBossHp": 27972100,
+      "winner": "ENEMY",
+      "resolved": true,
+      "sameReplay": true,
+      "ackStatus": 200,
+      "acknowledged": true
+    }
+  ],
+  "goalReached": true
+}

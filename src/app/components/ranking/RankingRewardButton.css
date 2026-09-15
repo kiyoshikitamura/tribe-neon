@@ -1,0 +1,14 @@
+.ranking-period-row .ranking-reward-button {
+  min-height: 28px;
+  padding: 0 9px;
+  border: 1px solid rgba(0, 240, 255, .34);
+  border-radius: 4px;
+  background: rgba(4, 18, 28, .9);
+  color: var(--neon-cyan);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.ranking-period-row .ranking-reward-button:active {
+  transform: scale(.95);
+}

@@ -7,6 +7,7 @@ import rankingRewardsSource from "./data/ranking_season_rewards_20260830.json" w
 
 export const CANONICAL_PVP_PRODUCTION = Object.freeze(pvpSource);
 export const CANONICAL_PVP_MATCHMAKING = Object.freeze(matchmakingSource);
+export const CANONICAL_RANKING_REWARDS = Object.freeze(rankingRewardsSource);
 export const CANONICAL_PVP_RANKING_REWARDS = Object.freeze(rankingRewardsSource);
 export const CANONICAL_RAID_PRODUCTION = Object.freeze(raidSource);
 export const CANONICAL_RAID_BOSSES = Object.freeze({

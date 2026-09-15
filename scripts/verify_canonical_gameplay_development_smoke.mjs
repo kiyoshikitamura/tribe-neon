@@ -101,7 +101,7 @@ const output = JSON.parse(result.stdout.trim().split(/\r?\n/).at(-1));
 const source = new Map(CANONICAL_CHARACTERS.map((character) => [character.character_id, character]));
 for (const row of output.stats) {
   const character = source.get(row.character_id);
-  const expected = canonicalCharacterStats(character.lv1, character.lv100, row.level, row.awakening);
+  const expected = canonicalCharacterStats(character.lv1, character.lv100, row.level, row.awakening, character.growth_pattern);
   for (const stat of ["hp", "atk", "def", "spd", "luk"]) {
     if (expected[stat] !== row.stats[stat]) throw new Error(`TS/DB stat mismatch: ${row.character_id} Lv${row.level} +${row.awakening} ${stat}`);
   }
@@ -114,7 +114,7 @@ for (const skillId of ["SKILL_047", "SKILL_048", "SKILL_054", "SKILL_055"]) {
   if (!snapshotSkills.some((skill) => skill.skillId === skillId && Array.isArray(skill.effects))) throw new Error(`${skillId} effects did not reach snapshot`);
 }
 const go = source.get("char_go_01");
-const expectedGo = canonicalCharacterStats(go.lv1, go.lv100, 50, 5);
+const expectedGo = canonicalCharacterStats(go.lv1, go.lv100, 50, 5, go.growth_pattern);
 const weapon = CANONICAL_EQUIPMENTS.find((entry) => entry.equipment_id === "WEAPON_004");
 if (output.snapshot[0]?.stats?.atk !== expectedGo.atk + canonicalEquipmentFlatStat(weapon.base_stats.atk,100,1)
   || output.snapshot[0]?.stats?.spd !== expectedGo.spd + canonicalEquipmentFlatStat(weapon.base_stats.spd,100,1)) {

@@ -1,0 +1,328 @@
+{
+  "before": {
+    "at": "2026-09-08T14:53:22.695334+00:00",
+    "rooms": [
+      {
+        "boss": {
+          "id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+          "max_hp": 32000000,
+          "status": "ACTIVE",
+          "base_id": "shinjuku",
+          "boss_id": "RAID_SHINJUKU_V1",
+          "outcome": null,
+          "cycle_id": "acad6e7c-2706-412d-bb48-2dda1be3a003",
+          "cleared_at": null,
+          "created_at": "2026-09-08T10:40:55.018596+00:00",
+          "current_hp": 32000000,
+          "expires_at": "2026-09-09T10:40:55.031663+00:00",
+          "spawned_at": "2026-09-08T10:40:55.031663+00:00",
+          "raid_day_key": "ROOM:56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+          "respawn_after": null,
+          "rotation_date": "2026-09-08",
+          "boss_master_id": "RAID_SHINJUKU_V1",
+          "raid_variant_id": "RAID_SHINJUKU_V1",
+          "outcome_finalized_at": null
+        },
+        "room": {
+          "id": "3972a461-b45f-4b02-8142-75f294461ae3",
+          "created_at": "2026-09-08T10:40:55.031663+00:00",
+          "difficulty_id": "beginner",
+          "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "raid_boss_instance_id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d"
+        }
+      },
+      {
+        "boss": {
+          "id": "c127f1da-9a60-4919-b351-6a99412574d7",
+          "max_hp": 32000000,
+          "status": "CLEARED",
+          "base_id": "shinjuku",
+          "boss_id": "RAID_SHINJUKU_V1",
+          "outcome": "DEFEAT_SUCCESS",
+          "cycle_id": "2ba03349-e1bd-4c23-b2d0-e62a07412c06",
+          "cleared_at": "2026-09-08T11:17:58.643622+00:00",
+          "created_at": "2026-09-08T10:35:48.596767+00:00",
+          "current_hp": 0,
+          "expires_at": "2026-09-09T10:35:48.611071+00:00",
+          "spawned_at": "2026-09-08T10:35:48.611071+00:00",
+          "raid_day_key": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+          "respawn_after": null,
+          "rotation_date": "2026-09-08",
+          "boss_master_id": "RAID_SHINJUKU_V1",
+          "raid_variant_id": "RAID_SHINJUKU_V1",
+          "outcome_finalized_at": "2026-09-08T11:17:58.643622+00:00"
+        },
+        "room": {
+          "id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+          "created_at": "2026-09-08T10:35:48.611071+00:00",
+          "difficulty_id": "beginner",
+          "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+        }
+      },
+      {
+        "boss": {
+          "id": "2866c14f-7bc3-4a1f-bc86-32970872e845",
+          "max_hp": 32000000,
+          "status": "ACTIVE",
+          "base_id": "shinjuku",
+          "boss_id": "RAID_SHINJUKU_V1",
+          "outcome": null,
+          "cycle_id": "0eb6ecbd-b366-463e-9b3e-872111c3b2ea",
+          "cleared_at": null,
+          "created_at": "2026-09-08T12:03:41.206358+00:00",
+          "current_hp": 31981746,
+          "expires_at": "2026-09-09T12:03:41.214526+00:00",
+          "spawned_at": "2026-09-08T12:03:41.214526+00:00",
+          "raid_day_key": "ROOM:2866c14f-7bc3-4a1f-bc86-32970872e845",
+          "respawn_after": null,
+          "rotation_date": "2026-09-08",
+          "boss_master_id": "RAID_SHINJUKU_V1",
+          "raid_variant_id": "RAID_SHINJUKU_V1",
+          "outcome_finalized_at": null
+        },
+        "room": {
+          "id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+          "created_at": "2026-09-08T12:03:41.214526+00:00",
+          "difficulty_id": "beginner",
+          "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "raid_boss_instance_id": "2866c14f-7bc3-4a1f-bc86-32970872e845"
+        }
+      }
+    ],
+    "members": [
+      {
+        "room_id": "3972a461-b45f-4b02-8142-75f294461ae3",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "joined_at": "2026-09-08T10:40:55.033982+00:00"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "joined_at": "2026-09-08T10:36:45.036824+00:00"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+        "joined_at": "2026-09-08T10:36:45.510292+00:00"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "joined_at": "2026-09-08T10:35:48.613264+00:00"
+      },
+      {
+        "room_id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "joined_at": "2026-09-08T12:29:16.391523+00:00"
+      },
+      {
+        "room_id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "joined_at": "2026-09-08T12:03:41.216381+00:00"
+      }
+    ],
+    "guildMembers": [
+      {
+        "id": "85f8a6a1-bc02-460d-96a6-fef9bc0bf07b",
+        "role": "MEMBER",
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "joined_at": "2026-09-08T10:28:11.342556+00:00",
+        "total_contribution": 0,
+        "contribution_points": 0,
+        "weekly_contribution": 0
+      },
+      {
+        "id": "f889f2ac-76e5-4651-be61-5a4bdc73cfb8",
+        "role": "MEMBER",
+        "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "joined_at": "2026-09-08T10:28:11.827657+00:00",
+        "total_contribution": 0,
+        "contribution_points": 0,
+        "weekly_contribution": 0
+      },
+      {
+        "id": "7cc93032-0d25-4296-9636-431e5fc03f1b",
+        "role": "MASTER",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "joined_at": "2026-09-08T10:28:10.882002+00:00",
+        "total_contribution": 0,
+        "contribution_points": 0,
+        "weekly_contribution": 0
+      }
+    ],
+    "originalUsers": {
+      "hash": "b868375386785c9dfdad599129f9005f",
+      "count": 19
+    }
+  },
+  "after": {
+    "at": "2026-09-08T14:57:28.454839+00:00",
+    "rooms": [
+      {
+        "boss": {
+          "id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+          "max_hp": 32000000,
+          "status": "ACTIVE",
+          "base_id": "shinjuku",
+          "boss_id": "RAID_SHINJUKU_V1",
+          "outcome": null,
+          "cycle_id": "acad6e7c-2706-412d-bb48-2dda1be3a003",
+          "cleared_at": null,
+          "created_at": "2026-09-08T10:40:55.018596+00:00",
+          "current_hp": 32000000,
+          "expires_at": "2026-09-09T10:40:55.031663+00:00",
+          "spawned_at": "2026-09-08T10:40:55.031663+00:00",
+          "raid_day_key": "ROOM:56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+          "respawn_after": null,
+          "rotation_date": "2026-09-08",
+          "boss_master_id": "RAID_SHINJUKU_V1",
+          "raid_variant_id": "RAID_SHINJUKU_V1",
+          "outcome_finalized_at": null
+        },
+        "room": {
+          "id": "3972a461-b45f-4b02-8142-75f294461ae3",
+          "created_at": "2026-09-08T10:40:55.031663+00:00",
+          "difficulty_id": "beginner",
+          "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "raid_boss_instance_id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d"
+        }
+      },
+      {
+        "boss": {
+          "id": "c127f1da-9a60-4919-b351-6a99412574d7",
+          "max_hp": 32000000,
+          "status": "CLEARED",
+          "base_id": "shinjuku",
+          "boss_id": "RAID_SHINJUKU_V1",
+          "outcome": "DEFEAT_SUCCESS",
+          "cycle_id": "2ba03349-e1bd-4c23-b2d0-e62a07412c06",
+          "cleared_at": "2026-09-08T11:17:58.643622+00:00",
+          "created_at": "2026-09-08T10:35:48.596767+00:00",
+          "current_hp": 0,
+          "expires_at": "2026-09-09T10:35:48.611071+00:00",
+          "spawned_at": "2026-09-08T10:35:48.611071+00:00",
+          "raid_day_key": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+          "respawn_after": null,
+          "rotation_date": "2026-09-08",
+          "boss_master_id": "RAID_SHINJUKU_V1",
+          "raid_variant_id": "RAID_SHINJUKU_V1",
+          "outcome_finalized_at": "2026-09-08T11:17:58.643622+00:00"
+        },
+        "room": {
+          "id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+          "created_at": "2026-09-08T10:35:48.611071+00:00",
+          "difficulty_id": "beginner",
+          "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+        }
+      },
+      {
+        "boss": {
+          "id": "2866c14f-7bc3-4a1f-bc86-32970872e845",
+          "max_hp": 32000000,
+          "status": "ACTIVE",
+          "base_id": "shinjuku",
+          "boss_id": "RAID_SHINJUKU_V1",
+          "outcome": null,
+          "cycle_id": "0eb6ecbd-b366-463e-9b3e-872111c3b2ea",
+          "cleared_at": null,
+          "created_at": "2026-09-08T12:03:41.206358+00:00",
+          "current_hp": 31981746,
+          "expires_at": "2026-09-09T12:03:41.214526+00:00",
+          "spawned_at": "2026-09-08T12:03:41.214526+00:00",
+          "raid_day_key": "ROOM:2866c14f-7bc3-4a1f-bc86-32970872e845",
+          "respawn_after": null,
+          "rotation_date": "2026-09-08",
+          "boss_master_id": "RAID_SHINJUKU_V1",
+          "raid_variant_id": "RAID_SHINJUKU_V1",
+          "outcome_finalized_at": null
+        },
+        "room": {
+          "id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+          "created_at": "2026-09-08T12:03:41.214526+00:00",
+          "difficulty_id": "beginner",
+          "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "raid_boss_instance_id": "2866c14f-7bc3-4a1f-bc86-32970872e845"
+        }
+      }
+    ],
+    "members": [
+      {
+        "room_id": "3972a461-b45f-4b02-8142-75f294461ae3",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "joined_at": "2026-09-08T10:40:55.033982+00:00"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "joined_at": "2026-09-08T10:36:45.036824+00:00"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+        "joined_at": "2026-09-08T10:36:45.510292+00:00"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "joined_at": "2026-09-08T10:35:48.613264+00:00"
+      },
+      {
+        "room_id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "joined_at": "2026-09-08T12:29:16.391523+00:00"
+      },
+      {
+        "room_id": "c796086c-9596-450c-ba20-1f067c7aff9b",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "joined_at": "2026-09-08T12:03:41.216381+00:00"
+      }
+    ],
+    "guildMembers": [
+      {
+        "id": "85f8a6a1-bc02-460d-96a6-fef9bc0bf07b",
+        "role": "MEMBER",
+        "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "joined_at": "2026-09-08T10:28:11.342556+00:00",
+        "total_contribution": 0,
+        "contribution_points": 0,
+        "weekly_contribution": 0
+      },
+      {
+        "id": "f889f2ac-76e5-4651-be61-5a4bdc73cfb8",
+        "role": "MEMBER",
+        "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "joined_at": "2026-09-08T10:28:11.827657+00:00",
+        "total_contribution": 0,
+        "contribution_points": 0,
+        "weekly_contribution": 0
+      },
+      {
+        "id": "7cc93032-0d25-4296-9636-431e5fc03f1b",
+        "role": "MASTER",
+        "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "joined_at": "2026-09-08T10:28:10.882002+00:00",
+        "total_contribution": 0,
+        "contribution_points": 0,
+        "weekly_contribution": 0
+      }
+    ],
+    "originalUsers": {
+      "hash": "b868375386785c9dfdad599129f9005f",
+      "count": 19
+    }
+  },
+  "checks": {
+    "originalUsers": true,
+    "rooms": true,
+    "members": true,
+    "guildMembers": true
+  }
+}

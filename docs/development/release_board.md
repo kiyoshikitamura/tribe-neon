@@ -1,3 +1,126 @@
+# Character公開候補 — Tutorial命中修正統合（配信・人受入は別ゲート）
+
+894bcb6を基準に84a1231の未包含の命中差分だけを統合。実Tutorialの通常攻撃/スキル命中、HP/数字同期、カットイン解除、SKIP非表示、Resultから継続までを配信受入工程へ追加。候補SHA・ローカル結果・実接続・人受入は [専用記録](character_release_tutorial_hit_gate.md) で分離管理。単独Deploy・DB変更なし。
+
+# 承認トップ構成への修正 — VALIDATED（ローカル）
+
+基準065e77a、共通素材894bcb6を限定採用。トップ4入口・挑戦者表記・共通Identity/Profile、自己DM非表示。型/Mock build、関連140件PASS。390x844/600の画面・位置保持・報酬スクロール確認。人の実機受入/実配信は未確認。外部変更なし。[報告](raid_approved_top_report.md)。
+
+# レイドUI 第4工程 — VALIDATED（ローカル、Preview/実機未受入）
+
+基準8665d29から専用branchで敵選択・敵情報・開催中一覧・救援・Resultを実装。既存Raid/Character/Setup/Gachaを保持。型/Mock build/lint0errors、Raid242＋共有5＋parser36、隔離PG22群、Setup/Gacha17と既知fixture2件PASS。181枚の画面証跡、未適用3SQL＋新表示SQL1本、接続範囲と残件は [統合報告](raid_step4_report.md)。実HTTP/Preview/物理端末の受入ではない。push/Deploy/外部DB適用/運用変更なし。
+
+# レイドトップ第2工程 — VALIDATED（隔離DB・表示境界、Preview未接続）
+
+RAID-TOP-A/B/C/P-02。基準c397df2から専用ローカルbranchで日次2エリア正本・集約API・画面接続を実装。実PG10群＋同時性2群、追加TS6件、既存関連205件、型/Mock build PASS。隔離PGの実SQL返値を実loader/parser/表示へ通した検証であり、PostgREST/GoTrue/Preview/実機の接続完了ではない。日次→集約→frontendの適用順と残件は [統合報告](raid_top_step2_report.md)。ローカルcommitのみ、外部適用・運用変更なし。
+
+# レイドトップ第1工程 — VALIDATED（実機受入・集約API接続待ち）
+
+RAID-TOP-A/B/C/P-01。基準70cb1f2から専用ローカルworktreeでトップ4セクションと既存導線を実装。全体型・Mock build、新規16件・関連既存189件PASS、390px画面証跡保存。日次2エリアと本人参加/救援の集約readは既存APIにないため契約/Mockのみ、製品は未取得表示。実機Human PASSではない。詳細 [統合報告](raid_top_step1_report.md)。ローカルcommitのみ、push/Deploy/DB/運用変更/追加ZIPなし。
+
+# Raid第20工程 — VALIDATED（対象回帰・CI不整合修正）
+
+RAID-A/B/C/P-20の親レビュー完了。通常lint OOM修正、本人貢献Mock、順位廃止E2E/Room ref更新、旧RPC静的検証の追随。aef63ebの独立CIでMock6・ブラウザ18件・build PASS、通常CI lint0errors/型PASS。追加静的検証は親で全assert・切替4件・eslint PASS。詳細raid_room_phase20_integration.md。
+
+全CI合格・全体開発完了ではない。広域E2E8件FAIL（認証/KPI/Home等）、追加静的検証のremote CI、設定値、独立Preview接続、実DB/実Cron/多接続/実機が残る。運用フラグ無効、実DB/手動Deployなし。次は設定値と接続を揃え、実Previewの縦通し確認へ進む。
+
+# Raid第19工程 — VALIDATED
+
+RAID-A/B/C/P-19。A: SQL250〜263統合fixture、B: 開催通知更新、C: 通知/画面検証、親: レビュー・全体検証・残件整理。親レビュー・SQL統合6/通知13/切替3/Room28/戦闘hook17、全体型・Mock build PASS。実DB/Deploy/運用切替なし。詳細raid_room_phase19_integration.md。
+
+# Raid第18工程 — VALIDATED
+
+旧Raid生成・新規開始の停止設定、Room方式での旧画面/起動時取得の置換。RAID-A/B/C/P-18。AはSQL263、Bは画面/共有状態、Cは独立検証、親はレビュー・統合を専有。初期値で旧運用を維持し、開始済み確定/Present受取を保持する。親レビュー・SQL11/Activity4/切替画面3/既存Room画面28/戦闘hook17、全体型・Mock build PASS。実DB・Deploy・運用切替は未実施。詳細raid_room_phase18_integration.md。
+
+# Raid第17工程 — VALIDATED（設定・切替準備）
+
+RAID-A/C/P-17。オフライン設定生成・未入力template・切替手順。親Node11 PASS、固定SHA経路レビュー。製品停止実装/実SQL実行/実機確認ではない。旧生成/開始停止guardと旧UI置換、数値、Preview接続が残る。詳細raid_room_phase17_integration.md。
+
+# Raid第16工程 — VALIDATED
+
+討伐報酬のACTIVE累積貢献判定・Present接続・表示。RAID-A/B/C/P-16。親レビュー・SQL10/討伐画面4/Room画面28/共通86/全体型/Mock build PASS。数値未投入、設定無効。SQL262未適用、実DB/Deployなし。詳細raid_room_phase16_integration.md。
+
+# Raid第15工程 — VALIDATED
+
+レイドランキング・順位報酬生成停止、製品導線撤去。RAID-A/B/C/P-15。過去データ/Present・Room参加者貢献・他ランキング維持。親レビュー・SQL8/順位画面5/Room画面28/共通83/全体型/Mock build PASS。SQL261未適用。実DB/Deployなし。詳細raid_room_phase15_integration.md。
+
+# Raid第14工程 — VALIDATED
+
+救援依頼の再読込後の同一要求再送、残るランキング/別報酬の根拠照合。RAID-A/B/C/P-14。親レビュー・共通83/React28/全体型/Mock build PASS。Aは根拠文書のレビューでランキング実装ではない。実DB/Deployなし。詳細raid_room_phase14_integration.md。
+
+# Raid第13工程 — VALIDATED
+
+救援成功の本人Room1回・Present自動送付30日・報酬表示と既存Present受取接続。RAID-A/B/C/P-13。親レビューとSQL9件、共通79件、React24件、実useBattle17件、全体型/Mock build PASS。品目数量未投入、運用false。実DB/実機/ランキング切替・通常参加/主催者報酬は残件。詳細raid_room_phase13_integration.md。
+
+# Raid第12工程 — VALIDATED
+
+救援依頼・Activity/Guild Chat両公開先各3回・救援参加帰属・製品導線。RAID-A/B/C/P-12。親検証: SQL12件、共通76件、React22件、実useBattle17件、全体型/Mock build PASS。実DB/Deploy/有効化なし。報酬/ランキング・実DB/実機は未完了。詳細raid_room_phase12_integration.md。
+
+# Raid第11工程 — VALIDATED
+
+A: 未確認開始の一覧/ack/未開始取消、B: 保存消失からの復帰/取消導線、C: 実SQL/実hook検証、P: 親レビュー/統合。RAID-A/B/C/P-11。親検証: SQL11件、共通71件、React20件、実useBattle17件、全体型/Mock build PASS。実DB/Deploy/運用有効化なし。救援/報酬/ランキング接続、破損localの未知要求解除、実DB/多接続/実機は残件。詳細raid_room_phase11_integration.md。
+
+# Raid第10工程 — VALIDATED
+
+A: 期限batch/Cron・本人開始receipt参照、B: 再読込時の未確定戦闘復帰、C: SQL/復帰回帰検証、P: 親レビュー・統合。担当契約 RAID-A/B/C/P-10。親検証: SQL13件、共通71件（pending8含む）、React20件、実useBattle13件、全体Mock build・型検証PASS。運用設定false、実DB/Deploy未実施。実Cron/実機・救援/報酬/ランキング切替・記録消失や復帰拒否時の取消導線は残件。詳細raid_room_phase10_integration.md。
+
+# Raid第9工程 — VALIDATED
+
+A: Room専用確定/期限終了/Edge分岐、B: 製品戦闘導線と保存Replay再試行、C: SQL/実フック検証、P: 親レビュー・統合。期限後はraw貢献を保存しapplied0、終了HP/討伐不変。旧日次/Guild/ranking参加triggerを分離。
+
+親検証: SQL16件、共通63件（Edge4・attempt7を含む）、既存React20件、実useBattle5件、全体Mock build・最終型検証PASS。作成/開始設定false、製品Room露出既定false。救援/報酬・ランキング切替・期限Cron・未確定通信のreload復帰・実DB/実機は未完了。詳細raid_room_phase9_integration.md。
+
+# Raid第8工程 — VALIDATED
+
+追加確定3条件をspecへ記録。A: 公開参照/参加/戦闘開始RPC、B: 参加・事前表示接続、C: SQL検証、P: 統合。実確定/報酬未接続で開始フラグfalse。
+
+親検証: SQL22件、共通52件、React20件、全体TypeScript・Mock build PASS。実DB・実戦闘/確定・実機未完了。詳細raid_room_phase8_integration.md。
+
+# Raid第7工程 — VALIDATED
+
+A: 旧Raid経路からRoomを分離。B: 参加登録と既存戦闘導線の接続契約。C: SQL回帰検証。P: 親レビュー・統合。生成フラグfalseを維持し、公開参加・戦闘・報酬接続の完了と扱わない。
+
+親レビュー・PGlite実SQL14件PASS。B-07は接続契約文書のレビュー完了で、公開参加/戦闘コード実装ではない。詳細: raid_room_phase7_integration.md。
+
+# Raid第6工程 — VALIDATED
+
+基準67070ed。Room作成追加消費なしを確認。A-06: 認証・Lv5・総合力を確認する公開生成RPC、本人単位request冪等性、boss選択肢参照。B-06: 生成操作・adapter・QA fixture。C-06: 生成SQLの条件・再送・副作用検証。P-06: 親統合。旧開始/終了/報酬経路との分離前の誤運用を防ぐため、生成APIの有効化設定は初期false。実DB適用・公開参加/戦闘/救援/報酬接続はこの工程で完了扱いにしない。
+
+親検証: 生成SQL20件、共通45件、React19件、全体TypeScript・Mock build PASS。詳細: raid_room_phase6_integration.md。
+
+# Raid第5工程 — VALIDATED
+
+基準SHA: `94ed7cc7bcc4a093a0395d2f027c6c9b06ba0ed1`。2026-09-08、開催数上限は同時開催Room数10/10/10/5、終了は開始から24時間または撃破と確認済み。第4工程以前の「上限集計単位・期限未確認」はこの決定で解消。
+
+A-05: 非公開Room登録・参加台帳更新、開催数・期限・定員のDB整合性。B-05: 残り時間と期限切れ操作抑止。C-05: SQL境界・再送・権限検証。P-05: 親レビュー・仕様照合・統合。公開生成/参加、戦闘・救援・報酬接続と実DB・実機確認は未完了。
+
+親検証: lifecycle SQL19件、既存条件SQL14件、React操作16件、共通43件、全体TypeScript・Mock build PASS。多接続競合・実DB・実機は未検証。詳細: raid_room_phase5_integration.md。
+
+# Raid第4工程 — VALIDATED
+A-04: 非公開サーバー条件判定と設定分離、C-04: SQL/境界/権限検証。B-04: Previewで発見したRaid操作中ラベルの規約修正（共有OutlawButtonはB専有）。親は仕様根拠照合・レビュー・統合を担当。生成/参加writerは構造条件の根拠未確認のため未着手。バランス再検討は行わない。A/B/C/P-04は親レビュー・機械検証済み。条件SQL14件、React操作10件、既存共通43件、全体Mock build/型検証PASS。既存PreviewのサンプルRoom操作をChromeで確認したが、実DB戦闘・報酬・実機Human PASSは未到達。詳細: raid_room_phase4_integration.md。
+
+# Raid第3工程 — VALIDATED
+A-03: Room台帳/参照RPC、B-03: 実RPC adapter/画面接続、C-03: SQL/adapter検証。親が全体typecheckと統合を担当。作業ルートはraid-room-repoのgit checkoutへ移行。PR #27更新時の完了通知を有効化。未検証を完了通知しない。A/B/C/P-03は親レビュー完了。共通43件、SQL/接続18件（adapter9重複）、全体typecheck、Mock全体build、QA HTTP/SSRがPASS。ブラウザ・実機・実DB適用は未検証。詳細はraid_room_phase3_integration.md。
+
+# Raid第2工程 — VALIDATED
+A-02: Room通信controller / B-02: Room画面 / C-02: 操作・競合テスト。担当契約はagent_tasks/RAID-*-02.md。親は統合とQA導線を担当。共通処理34件・React操作7件と対象strict TypeScriptを検証。開発用 /qa/raid-room を追加、配信URL未発行。実DB接続と本番切替は未実施。
+
+# Raid Room V1 — 現在の開発作業
+基準: b08e396e657615afd6dfddc05bbec37d21561a25 / branch: codex/raid-room-rescue-20260908
+親: このチャット。子A/B/Cを排他的ファイル範囲で管理する。初回はA型・条件 → B表示/C検証 → 親レビューの順。
+|Task|Owner|Status|範囲|
+|---|---|---|---|
+|[RAID-A-01](agent_tasks/RAID-A-01.md)|raid_a_readiness|VALIDATED|src/domain/raidRoom.ts、docs/development/raid_room_api_contract.md|
+|[RAID-B-01](agent_tasks/RAID-B-01.md)|raid_b_readiness|VALIDATED|src/domain/raidRoomPresentation.ts|
+|[RAID-C-01](agent_tasks/RAID-C-01.md)|raid_c_readiness|VALIDATED|tests/raid-room/、docs/development/raid_room_validation.md|
+仕様: [raid_room_rescue_v1.md](../../specs/raid_room_rescue_v1.md)
+全機能の到達順: 共通契約 → Room/参加/戦闘縦通し → 救援/参加者 → 報酬/新旧切替 → Preview複数人検証 → 実機調整 → Release判断。
+既存概算91〜158時間は参考レンジ。自律稼働時間の保証ではない。各縦通し完了時に実績と残作業を更新する。
+初回Task完了を新Raid実装完了やHuman PASSと扱わない。
+以下は固定SHAに残る2026-09-02の履歴。現在の既存製品の状態を再判定したものではなく、新Raidの開始阻害条件へ自動転用しない。
+
+---
+
 # Release Board
 
 ## RELEASE GATE
@@ -6,17 +129,36 @@
 
 `NOT READY`
 
-理由:
+2026-09-02時点の判定。Machine ValidationとHuman PASSを同一視しない。
 
-- Battle Presentation V2 Human PASS required
-- Login Bonus UX required
+Blocker:
+
+- Battle Presentation V2 full Skill load stress Human PASS未記録
+- Login Bonus UX Human PASS未記録
+- Final Cross-Screen Human Acceptance未完了（Desktop / 390×844 / 412×915）
+- iPhone Safari / Android Chrome / PC ChromeのProduction候補実機QA未完了
+- Audio Lifecycle A–O Human Acceptance未完了
+- Production Smoke未完了
+- Analytics、広告CV計測、エラー監視のprovider / ID / DSN未確定・未検証
+- OGP / favicon / robotsのRelease確認未完了
+
+Machine evidence:
+
+- Battle Full Skill Load fixture / Battle Presentation contract: `PASS`
+- Login Bonus recognition contract: `PASS`
+- Operations exposure contract: `PASS`
+- Final asset technical integrity / Production Creative x9 contract: `PASS`
+
+上記Machine PASSは作業中treeの結果を含む。Release Candidate SHA固定後に同一SHAで再実行し、証跡へ記録する。
+
+詳細判定は [Pre-Release GO / NO-GO Checklist](pre_release_go_no_go_checklist.md)、未確定入力は [Release Gate Input Record](release_gate_input_record.md) を正とする。
 
 ## ACTIVE WORKSTREAMS
 
 ### BATTLE-PRES-V2
 
 **PRIORITY:** P1 / PRE-OPEN BLOCKER  
-**STATUS:** READY
+**STATUS:** MACHINE PASS / HUMAN REVIEW REQUIRED
 
 **PURPOSE:**
 
@@ -39,10 +181,16 @@ Machine Validation
 → PASS
 ```
 
+**CURRENT EVIDENCE:**
+
+- Canonical Replay固定fixture、5対5、high Skill loadのMachine ValidationはPASS
+- Production QA routeは公開せず、Preview / DevelopmentのQA routeでHuman確認する
+- Actor → Target → Attack → Impact → Damage → HP Transition → DefeatのHuman追跡可否は未判定
+
 ### LOGIN-BONUS-UX
 
 **PRIORITY:** P1 / PRE-OPEN BLOCKER  
-**STATUS:** READY
+**STATUS:** MACHINE PASS / HUMAN REVIEW REQUIRED
 
 **PURPOSE:**
 
@@ -58,10 +206,16 @@ Login Bonusをユーザーが認知し、翌日以降も何が獲得できるか
 - Economy値を推測で変更しない。
 - Canonical reward masterを勝手に変更しない。
 
+**CURRENT EVIDENCE:**
+
+- 30日cycle、当日・翌日・未来・受取済み表示、同日冪等性のMachine ValidationはPASS
+- 390×844 / 412×915のautomated coverageは存在する
+- 当日獲得の認知、翌日以降の理解、overflow / tap targetのHuman Visual / UX PASSは未記録
+
 ### INVITE-OMISSION
 
 **PRIORITY:** P1  
-**STATUS:** READY
+**STATUS:** MACHINE PASS / HUMAN REVIEW REQUIRED
 
 **RELEASE DECISION:**
 
@@ -77,6 +231,16 @@ Pre-OpenからInvite機能を`OMIT`する。
 - 将来復旧可能性を保持する。
 - DB破壊・migration rollbackを行わない。
 
+**CURRENT RELEASE MATRIX:**
+
+- `INVITE` / `FRIEND` / `FRIEND_HELPER`: `OMIT`
+- `SHOP` / `GVG`: `UPCOMING`
+- `PAYMENT` / `SPECIAL_GACHA`: `CLOSED`
+- `GUILD_COMBAT_BUFF`: `OMIT`
+- `PVP` / `RAID` / `GUILD`: `OPEN`
+
+現行Operations feature-stateをAuthorityとする。旧文書の露出表と矛盾する場合、旧表をRelease証拠に使用しない。Desktop / 390×844 / 412×915で非表示、dead navigation不在、safe-area、戻る・進む、OPEN機能の継続露出をHuman確認する。
+
 ## AVAILABLE PARALLEL SLOT
 
 ### SLOT-4
@@ -84,3 +248,21 @@ Pre-OpenからInvite機能を`OMIT`する。
 `UNASSIGNED`
 
 Main AI Agentがdependency / file overlapを確認してから割り当てること。
+
+
+## Raid初回成果
+A/B/Cの指定範囲は親レビュー済み。対象26テストPASS、strict TypeScript PASS。実画面・DB・Preview接続未実施。次工程はRoomの取得/表示/操作の接続契約と画面。構造条件はspecの未確認事項を照合し、依存する処理だけを保留する。
+
+
+## RAID-DETAIL-STEP3
+
+STATUS: MACHINE PASS / HUMAN REVIEW REQUIRED。基準4e50a455から専用ローカルbranch。戦況詳細・参加者・報酬を統合。227件、隔離DB表示4群＋第2工程10群、型/Mock build PASS。追加SQL1本、Preview/HTTP認証/実端末は待ち。詳細は raid_detail_step3_report.md。
+
+## RAID-CHARACTER 固定候補統合
+
+9fe5909 + a02754c を専用ローカルbranchで統合。最新本番同期ではない。Fresh Mock完走、双方回帰・型/build・lint 0 errors。旧Room活動fixtureのbrowser1件FAIL、実HTTP/Preview/人の実端末受入は未完了。詳細 raid_character_integration_report.md。外部反映なし。
+
+
+## RAID-PREVIEW-STEP5
+
+専用ローカル候補で本番実配信550c022・完成Character1a38636・Raid49222deを統合。型/Mock build/回帰PASS。Preview未適用Raid4本の実履歴・定義を読み取り照合し適用/復旧手順を準備。外部変更なし。実HTTP3役・実Fresh装備403・実機受入を残す。詳細 raid_step5_integration_report.md / raid_step5_preview_plan.md。最新本番同期済みとは扱わない。

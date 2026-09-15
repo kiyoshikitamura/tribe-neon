@@ -1,7 +1,12 @@
 export const QA_PRESENTATION_SCENARIOS = [
+  ["card-visual-geometry", "Card Visual / common Character geometry"],
+  ["card-visual-skill-levels", "Card Visual / Skill +1 to +10"],
+  ["card-visual-equipment-levels", "Card Visual / Equipment +1 to +10"],
+  ["gacha-character-v3", "Gacha Character / Rich reveal"],
   ["world-introduction", "World Introduction"],
   ["name-input-error", "Name duplicate → retry"],
   ["gacha-page", "Gacha Page"],
+  ["gacha-character-v3", "Gacha Character / Rich reveal"],
   ["gacha-production", "Gacha Production / 6 surfaces"],
   ["gacha-asset-transition", "Gacha Skill / Equipment transition"],
   ["gacha-authority-loading", "Gacha / Daily authority loading"],
@@ -40,8 +45,11 @@ export const QA_PRESENTATION_SCENARIOS = [
   ["first-home-favorite-missing", "First Home / Favorite未設定"],
   ["first-home-favorite-invalid", "First Home / Favorite不正"],
   ["first-home-activity-self", "First Home / Activity Self"],
+  ["first-home-activity-real", "First Home / Preview Activity real data"],
   ["first-home-character-tall", "First Home / Tall Character"],
   ["first-home-character-hair", "First Home / Hair Volume Character"],
+  ["first-home-campaign", "First Home / Pre-open Campaign"],
+  ["first-home-prep", "First Home / Preparation Dialog (RPC fixture)"],
 ] as const;
 
 export type QaPresentationScenarioId = typeof QA_PRESENTATION_SCENARIOS[number][0];

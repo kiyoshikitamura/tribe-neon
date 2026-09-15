@@ -78,7 +78,7 @@ const unit = (name: string, team: "PLAYER" | "ENEMY", index: number): BattleUnit
     level: BATTLE_FULL_SKILL_LOAD_LEVEL,
     awakeningLevel: BATTLE_FULL_SKILL_LOAD_AWAKENING,
     rarity: character.rarity,
-    stats: canonicalCharacterStats(character.lv1, character.lv100, BATTLE_FULL_SKILL_LOAD_LEVEL, BATTLE_FULL_SKILL_LOAD_AWAKENING),
+    stats: canonicalCharacterStats(character.lv1, character.lv100, BATTLE_FULL_SKILL_LOAD_LEVEL, BATTLE_FULL_SKILL_LOAD_AWAKENING, character.growth_pattern),
     skills: skillIds.map(canonicalSkill),
   };
 };

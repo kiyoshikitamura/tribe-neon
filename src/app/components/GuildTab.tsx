@@ -1,13 +1,15 @@
-﻿"use client";
+"use client";
 
+import SeasonHonors from "./profile/SeasonHonors";
 import React, { useEffect, useState } from "react";
 import { useGame } from "../context/GameContext";
 import "./GuildTab.css";
-import { resolvePresentableAssetUrl } from "@/utils/assetPresentation";
 import OutlawCard from "./ui/OutlawCard";
 import OutlawButton from "./ui/OutlawButton";
 import EditableSettingSection, { ChoiceGroup } from "./ui/EditableSettingSection";
 import UserIdentityRow from "./profile/UserIdentityRow";
+import { GuildEmblem, refreshGuildEmblem } from "./profile/GuildIdentity";
+import GuildEmblemEditor from "./guild/GuildEmblemEditor";
 import { supabase } from "@/utils/supabase";
 import { GUILD_PRODUCTION, guildMemberCap, guildRecruitmentMode, type GuildRecruitmentMode } from "@/domain/gameplay/canonical/guild_production";
 
@@ -42,6 +44,8 @@ const alignmentOptions = [
 
 export default function GuildTab() {
   const {
+    session,
+    onboardingState,
     userLevel,
     userGuild,
     setUserGuild,
@@ -75,7 +79,16 @@ export default function GuildTab() {
     fetchPlayerDetail,
   } = useGame();
 
+  // ページへの接触のみを記録する。加入・参加実績の代わりにはしない。
+  useEffect(() => {
+    if (!session?.user?.id || !onboardingState?.gameplay_authorized) return;
+    void supabase.rpc("record_post_tutorial_guild_view").then(({ error }) => {
+      if (error) console.warn("Guild guide contact could not be recorded", error);
+    });
+  }, [session?.user?.id, onboardingState?.gameplay_authorized]);
+
   const [guildSearchQuery, setGuildSearchQuery] = useState("");
+  const [emblemEditorOpen, setEmblemEditorOpen] = useState(false);
   const [guildDescriptionDraft, setGuildDescriptionDraft] = useState(userGuild?.description || "");
   const [recruitmentModeDraft, setRecruitmentModeDraft] = useState<GuildRecruitmentMode>(guildRecruitmentMode(userGuild?.recruitment_mode, Boolean(userGuild?.approval_required)));
   const [welcomeDraft, setWelcomeDraft] = useState(userGuild?.welcome_message || "");
@@ -216,16 +229,13 @@ export default function GuildTab() {
       && cash >= GUILD_PRODUCTION.creation.cashCost;
     const renderGuildCard = (g: any) => {
       const guild = { ...g, id: g.id || g.guild_id };
-      const guildMark = resolvePresentableAssetUrl(guild.emblem_url || guild.logo_icon);
       const pendingRequest = pendingGuildJoinRequests.find((request: any) => request.guild_id === guild.id);
       const hasOtherPendingRequest = pendingGuildJoinRequests.length > 0 && !pendingRequest;
       const isFull = Number(guild.member_count || 0) >= Number(guild.member_limit || 10);
       const recruitmentMode = guildRecruitmentMode(guild.recruitment_mode, guild.approval_required);
       return (
         <div key={guild.id} className="guild-lobby-guild-card">
-          {guildMark
-            ? <img className="guild-lobby-guild-mark" src={guildMark} alt="" />
-            : <div className="guild-lobby-guild-mark is-placeholder" aria-hidden="true" />}
+          <GuildEmblem guildId={guild.id} legacySrc={guild.emblem_url || guild.logo_icon} size="l" />
           <button className="guild-lobby-guild-info guild-detail-trigger" onClick={() => void fetchGuildDetail(guild.id)}>
             <strong>{guild.name}</strong>
             <span>Lv.{guild.level} ・ {guild.member_count || 0}/{guild.member_limit || guildMemberCap(Number(guild.level || 1))}名 ・ {isFull ? "満員" : "空きあり"} ・ {recruitmentMode === "OPEN_JOIN" ? "自由加入" : recruitmentMode === "APPLICATION_REQUIRED" ? "承認制" : "募集停止"}</span>
@@ -325,18 +335,19 @@ export default function GuildTab() {
 
   return (
     <div className={`view-container guild-main-container ${borderClass} ${decorationClass}`}>
+      {emblemEditorOpen && <GuildEmblemEditor key={userGuild.id} guildId={userGuild.id} onChanged={() => refreshGuildEmblem(userGuild.id)} onClose={() => setEmblemEditorOpen(false)} />}
       {guildSubTab === "home" && <div className="guild-my-page-scroll">
         <section className={`guild-visual-identity ${bannerClass}`} aria-label="ギルド情報">
           <div className="guild-identity-main">
-            {resolvePresentableAssetUrl(userGuild.logo_icon)
-              ? <img className="guild-identity-icon" src={resolvePresentableAssetUrl(userGuild.logo_icon) || ""} alt="" />
-              : <span className="guild-identity-icon is-default" aria-hidden="true" />}
+            <GuildEmblem guildId={userGuild.id} legacySrc={userGuild.logo_icon} size="l" />
             <div className="guild-identity-copy">
               <strong>{userGuild.name}</strong>
               <span>Lv.{userGuild.level}　{guildMembersList.length}/{userGuild.member_limit || guildMemberCap(Number(userGuild.level || 1))}人</span>
             </div>
             <small>{guildRoleLabel(userGuildMember?.role)}</small>
           </div>
+          {(isMaster || isSubMaster) && <OutlawButton className="guild-emblem-change" onClick={() => setEmblemEditorOpen(true)}>エンブレム変更</OutlawButton>}
+          <SeasonHonors ownerId={userGuild.id} scope="GUILD" editable={isMaster} />
           <div className="guild-identity-attributes"><span>メイン属性 <b>{guildAlignmentLabel(userGuild.main_alignment)}</b></span><i>×</i><span>サブ属性 <b>{guildAlignmentLabel(userGuild.sub_alignment)}</b></span></div>
           <div className="guild-level-progress"><span>Lv EXP</span><div className="xp-bar-container"><div className="xp-bar-fill" style={{ width: `${xpPercent}%` }} /></div><small>{xpNeeded > 0 ? `${userGuild.xp} / ${xpNeeded}` : "MAX"}</small></div>
         </section>
@@ -408,7 +419,7 @@ export default function GuildTab() {
                   >
                     <UserIdentityRow
                       userName={m.users?.username || "プレイヤー"}
-                      guildName={userGuild.name}
+                      guildName={userGuild.name} guildId={userGuild.id}
                       title={isMe ? "あなた" : undefined}
                       leaderCharacterId={m.users?.favorite_character_id}
                       onOpen={!isLoaderPending && !managementLocked ? () => { playCyberSe("click"); void fetchPlayerDetail(m.user_id); } : undefined}

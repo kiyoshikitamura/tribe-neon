@@ -1,0 +1,45 @@
+{
+  "sourceSha": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "userId": "2c5fa849-8400-430d-9c3c-516cd928a8c9",
+  "skipSeen": false,
+  "cutinSeen": true,
+  "samples": 217,
+  "hits": [
+    {
+      "state": "B3",
+      "atMs": 309,
+      "actor": "player_9e93b282-51d8-43fd-a808-2c6c3d3b1e69",
+      "target": "enemy_q_shinjuku_1_2",
+      "damage": 823,
+      "beforeHp": 5107,
+      "afterHp": 4284,
+      "displaySync": true,
+      "cutinAtHit": null,
+      "cutinBeforeSameActor": false,
+      "effect": {
+        "loaded": true,
+        "opacity": "0.113393",
+        "src": "/effects/battle-v3/street-impact.webp"
+      },
+      "screenshot": "hit-B3.png"
+    },
+    {
+      "state": "B4",
+      "atMs": 11705,
+      "actor": "player_97aaeb01-c74f-481f-b594-9e7e06601913",
+      "target": "enemy_q_shinjuku_1_3",
+      "damage": 2074,
+      "beforeHp": 5227,
+      "afterHp": 3153,
+      "displaySync": true,
+      "cutinAtHit": null,
+      "cutinBeforeSameActor": true,
+      "effect": {
+        "loaded": true,
+        "opacity": "0.113648",
+        "src": "/effects/battle-v3/street-impact.webp"
+      },
+      "screenshot": "hit-B4.png"
+    }
+  ]
+}

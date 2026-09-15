@@ -5,6 +5,10 @@ import { supabase } from "@/utils/supabase";
 import { guildMemberCap, guildRecruitmentMode, canEditGuildSettings, canManageGuildApplications, GUILD_PRODUCTION, type GuildRecruitmentMode } from "@/domain/gameplay/canonical/guild_production";
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 
+const guildWelcomeSessionKey = (userId: string, guildId: string) => (
+  `tribe-neon:guild-welcome-shown:${userId}:${guildId}`
+);
+
 export function useGuild(
   session: any,
   userLevel: number,
@@ -51,6 +55,9 @@ export function useGuild(
   };
 
   const openGuildWelcome = (guildId: string, guildName: string) => {
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(guildWelcomeSessionKey(session?.user?.id || "anonymous", guildId), "1");
+    }
     setConfirmDialogConfig({
       isOpen: true,
       title: "ギルドへようこそ",
@@ -72,11 +79,15 @@ export function useGuild(
 
   useEffect(() => {
     if (!session?.user?.id || !userGuildMember?.guild_id || !userGuild?.id || typeof window === "undefined") return;
-    const sessionKey = `tribe-neon:guild-welcome-shown:${session.user.id}:${userGuild.id}`;
+    const sessionKey = guildWelcomeSessionKey(session.user.id, userGuild.id);
     if (window.sessionStorage.getItem(sessionKey)) return;
     void supabase.from("user_funnel_milestones").select("milestone")
       .eq("user_id", session.user.id).eq("milestone", "guild_activation").maybeSingle()
       .then(({ data }) => {
+        // The direct-join path may have claimed this presentation while the
+        // milestone query was in flight. Re-check here to prevent a late
+        // second dialog (and duplicate Strict Mode effects) over Guild Chat.
+        if (window.sessionStorage.getItem(sessionKey)) return;
         const pendingGuildId = window.localStorage.getItem("tribe-neon:pending-guild-welcome");
         if (data) return;
         if (pendingGuildId && pendingGuildId !== userGuild.id) window.localStorage.removeItem("tribe-neon:pending-guild-welcome");
@@ -319,6 +330,12 @@ export function useGuild(
         window.localStorage.setItem("tribe-neon:pending-guild-welcome", targetGuildId);
       }
       if (!requiresApproval) playCyberSe("GUILD_JOIN");
+
+      // Claim the direct-join welcome before bootstrap publishes membership.
+      // The membership effect remains the owner for later approval joins.
+      if (!requiresApproval && typeof window !== "undefined") {
+        window.sessionStorage.setItem(guildWelcomeSessionKey(session.user.id, targetGuildId), "1");
+      }
 
       await syncBootstrapData(session.user.id);
       if (requiresApproval) {

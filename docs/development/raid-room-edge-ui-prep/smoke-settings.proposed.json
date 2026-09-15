@@ -1,0 +1,95 @@
+{
+  "environment": "preview",
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "version": 1,
+  "difficulties": [
+    {
+      "id": "beginner",
+      "rescue": {
+        "minimumBattles": 2,
+        "minimumContributionDamage": 16000,
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 1
+          }
+        ]
+      },
+      "clear": {
+        "minimumContributionDamage": 0,
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "intermediate",
+      "rescue": {
+        "minimumBattles": 2,
+        "minimumContributionDamage": 68000,
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 1
+          }
+        ]
+      },
+      "clear": {
+        "minimumContributionDamage": 0,
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "advanced",
+      "rescue": {
+        "minimumBattles": 3,
+        "minimumContributionDamage": 205000,
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 1
+          }
+        ]
+      },
+      "clear": {
+        "minimumContributionDamage": 0,
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "expert",
+      "rescue": {
+        "minimumBattles": 4,
+        "minimumContributionDamage": 290000,
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 1
+          }
+        ]
+      },
+      "clear": {
+        "minimumContributionDamage": 0,
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  ]
+}

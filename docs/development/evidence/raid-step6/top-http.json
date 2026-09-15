@@ -1,0 +1,54 @@
+{
+  "at": "2026-09-09T05:15:38.048Z",
+  "unauthenticated": {
+    "status": 401,
+    "code": "42501"
+  },
+  "roles": [
+    {
+      "role": "host",
+      "topStatus": 200,
+      "resourceStates": {
+        "rescues": "ready",
+        "dailyTargets": "ready",
+        "participating": "ready"
+      },
+      "daily": [
+        "RAID_SHIBUYA_V1",
+        "RAID_YOKOHAMA_V1"
+      ],
+      "listStatus": 200,
+      "listCount": 3
+    },
+    {
+      "role": "normal",
+      "topStatus": 200,
+      "resourceStates": {
+        "rescues": "ready",
+        "dailyTargets": "ready",
+        "participating": "ready"
+      },
+      "daily": [
+        "RAID_SHIBUYA_V1",
+        "RAID_YOKOHAMA_V1"
+      ],
+      "listStatus": 200,
+      "listCount": 3
+    },
+    {
+      "role": "rescue",
+      "topStatus": 200,
+      "resourceStates": {
+        "rescues": "ready",
+        "dailyTargets": "ready",
+        "participating": "ready"
+      },
+      "daily": [
+        "RAID_SHIBUYA_V1",
+        "RAID_YOKOHAMA_V1"
+      ],
+      "listStatus": 200,
+      "listCount": 3
+    }
+  ]
+}

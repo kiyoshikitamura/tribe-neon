@@ -1,0 +1,130 @@
+{
+  "at": "2026-09-09T05:33:40.635Z",
+  "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+  "publications": [
+    {
+      "channel": "ACTIVITY",
+      "guildId": null,
+      "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda"
+    },
+    {
+      "channel": "GUILD",
+      "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "rescueId": "86d00b65-f50e-44b3-9f79-40f6606e9075"
+    }
+  ],
+  "roles": [
+    {
+      "role": "host",
+      "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "guildReadStatus": 200,
+      "guildReadCode": null,
+      "guildIds": [
+        "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+      ],
+      "links": [
+        {
+          "channel": "ACTIVITY",
+          "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda",
+          "detailStatus": 200,
+          "detailCode": null,
+          "batchStatus": 200,
+          "batchCode": null,
+          "entryCount": 1,
+          "source": "activity",
+          "scope": "ACTIVITY",
+          "guildId": null,
+          "expectedAllowed": true
+        },
+        {
+          "channel": "GUILD",
+          "rescueId": "86d00b65-f50e-44b3-9f79-40f6606e9075",
+          "detailStatus": 200,
+          "detailCode": null,
+          "batchStatus": 200,
+          "batchCode": null,
+          "entryCount": 1,
+          "source": "guild_chat",
+          "scope": "GUILD",
+          "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+          "expectedAllowed": true
+        }
+      ]
+    },
+    {
+      "role": "normal",
+      "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "guildReadStatus": 200,
+      "guildReadCode": null,
+      "guildIds": [
+        "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+      ],
+      "links": [
+        {
+          "channel": "ACTIVITY",
+          "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda",
+          "detailStatus": 200,
+          "detailCode": null,
+          "batchStatus": 200,
+          "batchCode": null,
+          "entryCount": 1,
+          "source": "activity",
+          "scope": "ACTIVITY",
+          "guildId": null,
+          "expectedAllowed": true
+        },
+        {
+          "channel": "GUILD",
+          "rescueId": "86d00b65-f50e-44b3-9f79-40f6606e9075",
+          "detailStatus": 200,
+          "detailCode": null,
+          "batchStatus": 200,
+          "batchCode": null,
+          "entryCount": 1,
+          "source": "guild_chat",
+          "scope": "GUILD",
+          "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+          "expectedAllowed": true
+        }
+      ]
+    },
+    {
+      "role": "rescue",
+      "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "guildReadStatus": 200,
+      "guildReadCode": null,
+      "guildIds": [
+        "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+      ],
+      "links": [
+        {
+          "channel": "ACTIVITY",
+          "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda",
+          "detailStatus": 200,
+          "detailCode": null,
+          "batchStatus": 200,
+          "batchCode": null,
+          "entryCount": 1,
+          "source": "activity",
+          "scope": "ACTIVITY",
+          "guildId": null,
+          "expectedAllowed": true
+        },
+        {
+          "channel": "GUILD",
+          "rescueId": "86d00b65-f50e-44b3-9f79-40f6606e9075",
+          "detailStatus": 200,
+          "detailCode": null,
+          "batchStatus": 200,
+          "batchCode": null,
+          "entryCount": 1,
+          "source": "guild_chat",
+          "scope": "GUILD",
+          "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+          "expectedAllowed": true
+        }
+      ]
+    }
+  ],
+  "guildNegative": "UNVERIFIED: no confirmed outside-Guild role among the three existing QA accounts; membership unchanged"
+}

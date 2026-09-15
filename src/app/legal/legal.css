@@ -1,8 +1,36 @@
 .legal-page {
-  min-height: 100dvh;
-  padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  height: 100dvh;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 16px max(24px, env(safe-area-inset-bottom, 0px));
   background: radial-gradient(circle at top, #1c2234 0%, #0b0f19 48%, #05070b 100%);
   color: #edf0f7;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  overscroll-behavior-y: contain;
+  scrollbar-color: rgba(160, 160, 170, 0.58) rgba(68, 72, 82, 0.24);
+  scrollbar-width: thin;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+.legal-page--from-game {
+  padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+}
+
+.legal-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.legal-page::-webkit-scrollbar-track {
+  background: rgba(68, 72, 82, 0.24);
+}
+
+.legal-page::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(160, 160, 170, 0.58);
+  background-clip: padding-box;
 }
 
 .legal-page-card {
@@ -13,10 +41,14 @@
   border-radius: 12px;
   background: rgba(12, 16, 27, 0.94);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.38);
+  box-sizing: border-box;
 }
 
 .legal-page-back,
 .legal-page-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: #80dfff;
   text-underline-offset: 3px;
 }
@@ -55,8 +87,21 @@
   font-size: 14px;
 }
 
-.legal-page-content ul {
+.legal-page-content ul,
+.legal-page-content ol {
   padding-left: 1.4em;
+}
+
+.legal-page-content li + li {
+  margin-top: 0.45em;
+}
+
+.legal-page-content a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #80dfff;
+  text-underline-offset: 3px;
 }
 
 .legal-page-notice {
@@ -80,4 +125,87 @@
   margin: 22px 0 0;
   color: #818898;
   font-size: 11px;
+}
+
+.legal-page-scroll-track {
+  position: fixed;
+  z-index: 5;
+  top: max(14px, env(safe-area-inset-top, 0px));
+  right: max(3px, env(safe-area-inset-right, 0px));
+  bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  width: 4px;
+  border-radius: 999px;
+  background: rgba(68, 72, 82, 0.3);
+  pointer-events: none;
+}
+
+.legal-page-scroll-thumb {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  min-height: 24px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(205, 207, 214, 0.72), rgba(126, 130, 141, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.legal-page-close-bar {
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 10px 16px max(10px, env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.96) 28%);
+  pointer-events: none;
+}
+
+.legal-page-close {
+  display: flex;
+  width: min(calc(100% - 20px), 398px);
+  min-height: 52px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(190, 200, 220, 0.42);
+  border-radius: 8px;
+  color: #edf0f7;
+  background: linear-gradient(180deg, rgba(35, 42, 57, 0.98), rgba(17, 22, 34, 0.98));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 14px rgba(0, 0, 0, 0.5);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.legal-page-close:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 412px) {
+  .legal-page {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .legal-page-card {
+    padding: 18px;
+  }
+
+  .legal-page-content p,
+  .legal-page-content li {
+    font-size: 16px;
+  }
+
+  .legal-page-nav {
+    display: grid;
+    gap: 2px;
+  }
+
+  .legal-page-scroll-track {
+    right: max(2px, env(safe-area-inset-right, 0px));
+  }
 }

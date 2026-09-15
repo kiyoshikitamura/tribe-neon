@@ -3,160 +3,104 @@
 import { useEffect, useRef, useState } from "react";
 import { useGame } from "../context/GameContext";
 import { supabase } from "@/utils/supabase";
+import { getTutorialCompletionAssetStatus, preloadTutorialCompletionAssets } from "../lib/tutorialCompletionAssets";
 import CharacterPresentation from "./character/CharacterPresentation";
-import BrandedLoading from "./ui/BrandedLoading";
-import { getTutorialCompletionAssetStatus, preloadTutorialCompletionAssets, TUTORIAL_COMPLETION_ASSETS } from "../lib/tutorialCompletionAssets";
+import TypewriterText from "./tutorial/TypewriterText";
 import "./TutorialRuleGuide.css";
 
-const slides = [
-  {
-    key: "WORLD",
-    image: "/branding/tutorial/world.webp",
-    alt: "夜の街で暮らすアゲハとレオ、行き交うさまざまな人々",
-    title: "いろんな奴が、この街で生きてる。",
-    body: <>新宿、渋谷、池袋、六本木、秋葉原。川崎、横浜。<br />街が違えば、そこにいる奴らも違う。まずは、この世界を好きに歩いてみよう。</>,
-  },
-  {
-    key: "POWER",
-    image: "/branding/tutorial/power.webp",
-    alt: "仲間を育成し、スキルや装備を整えるゴウとカエデ",
-    title: "仲間を集めて、もっと強くなる。",
-    body: <>キャラクター、スキル、装備。組み合わせて育てれば、総合力はもっと上がる。<br />強くなったら、バトルでその力を試そう。</>,
-  },
-  {
-    key: "TRIBE",
-    image: "/branding/tutorial/tribe.webp",
-    alt: "レイジを中心に集まったTRIBEの仲間たち",
-    title: "気の合う奴らと、TRIBEへ。",
-    body: <>この街には、たくさんのプレイヤーがいる。仲間を見つけて、TRIBEに集まろう。<br />そしていつか、<strong>自分たちのTRIBEで頂点を目指せ。</strong><br /><small>TRIBE設立はプレイヤーLv5で解放</small></>,
-  },
-] as const;
-
-const SLIDE_SWAP_MS = 180;
-const SLIDE_TRANSITION_MS = 420;
+const AGEHA_END_MESSAGE = "これで基本はバッチリ！\nあとは街に出て、好きに遊んでみて。";
 
 export default function TutorialRuleGuide() {
-  const { onboardingState, setOnboardingState, playCyberSe } = useGame();
-  const [index, setIndex] = useState(0);
-  const [phase, setPhase] = useState<"BRIDGE" | "SLIDES">("BRIDGE");
+  const { onboardingState, setOnboardingState, setActiveTab, setGlobalInteractionBlocking, playCyberSe } = useGame();
   const [working, setWorking] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [imageFailed, setImageFailed] = useState(false);
+  const [phase, setPhase] = useState<"AGEHA_END" | "FINAL_GUIDE">("AGEHA_END");
   const workingRef = useRef(false);
-  const timersRef = useRef<number[]>([]);
+  const mountedRef = useRef(true);
   const tutorialStep = onboardingState?.tutorial_step;
 
   useEffect(() => {
-    if (tutorialStep !== "RULE_GUIDE") return;
-    void preloadTutorialCompletionAssets();
-  }, [tutorialStep]);
-
-  useEffect(() => () => {
-    timersRef.current.forEach(window.clearTimeout);
-    timersRef.current = [];
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
   }, []);
 
-  useEffect(() => setImageFailed(false), [index]);
+  useEffect(() => {
+    if (tutorialStep === "RULE_GUIDE") {
+      setPhase("AGEHA_END");
+      void preloadTutorialCompletionAssets();
+    }
+  }, [tutorialStep]);
 
   if (tutorialStep !== "RULE_GUIDE") return null;
-  const slide = slides[index];
 
-  const next = async () => {
+  if (phase === "AGEHA_END") {
+    return <div className="tutorial-rule-screen tutorial-ageha-end-screen" role="dialog" aria-modal="true" aria-label="アゲハのチュートリアル終了案内" data-acceptance-state="AGEHA_END_MESSAGE">
+      <section className="tutorial-ageha-end-frame">
+        <div className="tutorial-ageha-end-character" aria-hidden="true"><CharacterPresentation src="/characters/ageha_transparent_asset.png" alt="" variant="dialogue-bust" metadata={false} /></div>
+        <div className="tutorial-ageha-end-dialogue"><strong>アゲハ</strong><TypewriterText text={AGEHA_END_MESSAGE} speedMs={34} /></div>
+        <button className="semantic-cta semantic-cta--primary tutorial-ageha-end-cta" onClick={() => { playCyberSe("click"); setPhase("FINAL_GUIDE"); }}>次へ</button>
+      </section>
+    </div>;
+  }
+
+  const complete = async () => {
     if (workingRef.current) return;
     workingRef.current = true;
-    playCyberSe("click");
-
-    if (phase === "BRIDGE") {
-      setWorking(true);
-      await preloadTutorialCompletionAssets();
-      setPhase("SLIDES");
-      setWorking(false);
-      workingRef.current = false;
-      return;
-    }
-
-    if (index < slides.length - 1) {
-      setTransitioning(true);
-      timersRef.current.push(window.setTimeout(() => setIndex((value) => value + 1), SLIDE_SWAP_MS));
-      timersRef.current.push(window.setTimeout(() => {
-        setTransitioning(false);
-        workingRef.current = false;
-      }, SLIDE_TRANSITION_MS));
-      return;
-    }
-
     setWorking(true);
+    setGlobalInteractionBlocking(true);
     setError(null);
+    playCyberSe("click");
+    const isAnonymous = Boolean(onboardingState?.is_anonymous);
     try {
-      const { error: progressError } = await supabase.rpc("advance_tutorial_progress", { p_expected_step: "RULE_GUIDE", p_next_step: "COMPLETE" });
-      if (progressError) {
-        setError("進行を保存できませんでした。通信状態を確認して、もう一度お試しください。");
+      // 保存済みの再試行・応答消失でも、サーバーの完了状態を確認して復帰する。
+      try {
+        await supabase.rpc("advance_tutorial_progress", { p_expected_step: "RULE_GUIDE", p_next_step: "COMPLETE" });
+      } catch {
+        // 通信失敗時も完了済みかを読み直す。未完了なら下の検証で遷移を止める。
+      }
+      const { data: authoritativeState, error: stateError } = await supabase.rpc("get_current_onboarding_state");
+      const completionState = authoritativeState as {
+        tutorial_step?: string;
+        authentication_pending?: boolean;
+        gameplay_authorized?: boolean;
+      } | null;
+      const validAnonymousCompletion = Boolean(
+        completionState
+        && completionState.tutorial_step === "COMPLETE"
+        && completionState.authentication_pending === true
+        && completionState.gameplay_authorized === true,
+      );
+      const validAuthenticatedCompletion = Boolean(
+        completionState
+        && completionState.tutorial_step === "COMPLETE"
+        && completionState.gameplay_authorized === true,
+      );
+      if (stateError || !completionState || (isAnonymous ? !validAnonymousCompletion : !validAuthenticatedCompletion)) {
+        if (mountedRef.current) setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
         return;
       }
-      setOnboardingState((current: any) => current ? { ...current, tutorial_step: "COMPLETE" } : current);
+      // 確認済みの完了状態と表示先を同時に切り替え、背後のクエストへ戻さない。
+      if (mountedRef.current) {
+        setActiveTab("home");
+        setOnboardingState(completionState);
+      }
+    } catch {
+      if (mountedRef.current) setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
     } finally {
       workingRef.current = false;
-      setWorking(false);
+      setGlobalInteractionBlocking(false);
+      if (mountedRef.current) setWorking(false);
     }
   };
 
-  if (phase === "BRIDGE") {
-    return (
-      <div className="tutorial-rule-screen tutorial-completion-bridge" role="dialog" aria-modal="true" aria-label="チュートリアル完了" data-acceptance-state="COMPLETION_DIALOGUE" data-completion-assets={getTutorialCompletionAssetStatus()}>
-        <div className="tutorial-rule-preload" aria-hidden="true">
-          {TUTORIAL_COMPLETION_ASSETS.map((src) => <img key={src} src={src} alt="" />)}
-        </div>
-        <section className="tutorial-completion-scene">
-          <div className="tutorial-completion-ageha" aria-hidden="true">
-            <CharacterPresentation src="/characters/ageha_transparent_asset.png" alt="" variant="dialogue-bust" />
-          </div>
-          <div className="tutorial-completion-dialogue">
-            <small>アゲハ</small>
-            <p>これでチュートリアルは終わり。<br />最後に、TRIBE NEONの世界を紹介するね。</p>
-            {working && <BrandedLoading className="tutorial-completion-loading" label="世界紹介を準備中" />}
-            <button className="semantic-cta semantic-cta--primary width-100" onClick={() => void next()} disabled={working} aria-busy={working}>次へ</button>
-          </div>
-        </section>
-      </div>
-    );
-  }
-
   return (
-    <div className="tutorial-rule-screen" role="dialog" aria-modal="true" aria-label="チュートリアル完了案内" data-rule-slide={slide.key} data-acceptance-state={slide.key}>
-      <div className="tutorial-rule-preload" aria-hidden="true">
-        {TUTORIAL_COMPLETION_ASSETS.map((src) => <img key={src} src={src} alt="" />)}
-      </div>
-      <section className={`tutorial-rule-card tutorial-rule-card--${slide.key.toLowerCase()} ${transitioning ? "is-transitioning" : ""}`}>
-        <div className="tutorial-rule-illustration">
-          {!imageFailed ? <img
-            src={slide.image}
-            alt={slide.alt}
-            onError={() => setImageFailed(true)}
-          /> : <BrandedLoading className="tutorial-rule-image-fallback" label={`${slide.key}を準備中`} />}
-          <div className="tutorial-rule-illustration-shade" aria-hidden="true" />
-        </div>
-
-        <div className="tutorial-rule-content">
-          <div className="tutorial-rule-heading">
-            <span className="tutorial-rule-kicker">{slide.key}</span>
-            <span className="tutorial-rule-count">{index + 1} / {slides.length}</span>
-          </div>
-          <h2>{slide.title}</h2>
-          <div className="tutorial-rule-body">{slide.body}</div>
-          <div className="tutorial-rule-progress" aria-label={`${index + 1} / ${slides.length}`}>
-            {slides.map((entry, slideIndex) => <i key={entry.key} className={slideIndex === index ? "active" : ""} />)}
-          </div>
-          {error && <div className="tutorial-rule-error" role="alert">{error}</div>}
-          <button
-            className="semantic-cta semantic-cta--primary width-100"
-            onClick={() => void next()}
-            disabled={working || transitioning}
-            aria-busy={working || transitioning}
-          >
-            {working ? "保存中..." : index < slides.length - 1 ? "次へ" : "アカウント登録へ"}
-          </button>
-        </div>
+    <div className="tutorial-rule-screen" role="dialog" aria-modal="true" aria-label="チュートリアル最終案内" data-acceptance-state="FINAL_GUIDE" data-completion-assets={getTutorialCompletionAssetStatus()}>
+      <section className="tutorial-final-guide-frame">
+        <img src="/branding/tutorial/tutorial_final_guide_bg.png" alt="ここからは、仲間と遊ぼう。レイドで助け合い、ギルドでつながる。あと、キミの自由だ。" />
+        {error && <div className="tutorial-final-guide-error" role="alert">{error}</div>}
+        <button className="tutorial-final-guide-cta" onClick={() => void complete()} disabled={working} aria-busy={working} aria-label="街へ出る →">
+          <span className="visually-hidden">街へ出る →</span>
+        </button>
       </section>
     </div>
   );

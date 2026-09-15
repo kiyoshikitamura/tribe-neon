@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-09-09T07:05:21.191968Z",
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "roomId": "3972a461-b45f-4b02-8142-75f294461ae3",
+  "currentHp": 32000000,
+  "maxHp": 32000000,
+  "status": "ACTIVE",
+  "outcome": null,
+  "outcomeFinalizedAt": null,
+  "expiresAt": "2026-09-09T10:40:55.031663Z",
+  "roomMd5": "fcb843a1e0a947318806edc580044ae8",
+  "bossMd5": "a6b8e91f9b6bf9b33e2bbcc79aa3b96d",
+  "matchesPriorEvidence": true,
+  "naturalExpiry": "UNVERIFIED: deadline has not arrived; no expiry was forced",
+  "method": "independent read-only SELECT, compared with phase6 final-protection-readback"
+}

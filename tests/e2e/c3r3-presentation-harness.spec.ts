@@ -17,7 +17,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("launcher exposes every approved presentation fixture and preserves human-only judgments", async ({ page }) => {
-  await expect(page.locator("nav [data-scenario-id]")).toHaveCount(25);
+  const scenarioIds = await page.locator("nav [data-scenario-id]").evaluateAll((entries) =>
+    entries.map((entry) => entry.getAttribute("data-scenario-id")).filter(Boolean)
+  );
+  expect(scenarioIds).toHaveLength(43);
+  expect(new Set(scenarioIds).size).toBe(scenarioIds.length);
   await expect(page.locator('[data-compliance-id="world-intro"]')).toHaveAttribute("data-status", "HUMAN_REQUIRED");
   await expect(page.locator('[data-compliance-id="skill-2x"]')).toHaveAttribute("data-status", "HUMAN_REQUIRED");
   await expect(page.locator('[data-compliance-id="battle-result"]')).toHaveAttribute("data-status", "HUMAN_REQUIRED");
@@ -124,27 +128,28 @@ test("production battle viewer renders actual 5v3 roster without empty slots", a
   await page.screenshot({ path: test.info().outputPath("quest-battle-5v3-390.png"), fullPage: true });
 });
 
-test("tutorial presentation advances from learned 1x actions to 2x and remains user-toggleable", async ({ page }) => {
+test("battle starts at 2x and toggles between 2x and 1x", async ({ page }) => {
   await openScenario(page, "battle-2x");
   await expect(page.locator(".quest-battle-viewer")).toHaveAttribute("data-battle-speed", "2");
   await page.locator(".speed-toggle-btn").click();
   await expect(page.locator(".quest-battle-viewer")).toHaveAttribute("data-battle-speed", "1");
+  await page.locator(".speed-toggle-btn").click();
+  await expect(page.locator(".quest-battle-viewer")).toHaveAttribute("data-battle-speed", "2");
 });
 
-test("SSR skill cut-in overlays the full roster rather than the center action column", async ({ page }) => {
+test("SSR skill cut-in stays inside the reserved presentation strip", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openScenario(page, "battle-ssr-skill");
-  const viewer = await page.locator(".quest-battle-viewer").boundingBox();
+  const slot = await page.locator(".battle-cutin-slot").boundingBox();
   const cutIn = await page.locator(".battle-skill-cutin.is-ssr").boundingBox();
-  expect(viewer).not.toBeNull();
+  expect(slot).not.toBeNull();
   expect(cutIn).not.toBeNull();
-  expect(Math.abs(cutIn!.x - viewer!.x)).toBeLessThanOrEqual(1);
-  expect(Math.abs(cutIn!.width - viewer!.width)).toBeLessThanOrEqual(2);
+  await expect(page.locator(".battle-cutin-slot > .battle-skill-cutin.is-ssr")).toBeVisible();
+  expect(await page.locator(".battle-cutin-slot").evaluate((element) => getComputedStyle(element).overflow)).toBe("hidden");
   const target = page.locator('.battle-party-zone.is-enemy article#enemy-1');
   const hpFill = target.locator(".battle-unit-hp i");
   const hpBefore = await hpFill.evaluate((element) => (element as HTMLElement).style.width);
-  await expect(page.locator(".battle-skill-cutin")).toHaveCount(0, { timeout: 1_250 });
-  await expect(page.locator(".battle-skill-resolution-vfx")).toBeVisible({ timeout: 700 });
+  await expect(page.locator(".battle-skill-cutin")).toHaveCount(0, { timeout: 1_600 });
   await expect(page.locator('[data-action-phase="impact"], [data-action-phase="damage"], [data-action-phase="hp-transition"]')).toBeVisible({ timeout: 1_600 });
   const impact = page.locator(".battle-unit-impact-vfx");
   await expect(impact).toBeVisible();
@@ -257,11 +262,11 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
     }
 
     await openScenario(page, "battle-ssr-skill");
-    const viewer = await page.locator(".quest-battle-viewer").boundingBox();
+    const slot = await page.locator(".battle-cutin-slot").boundingBox();
     const cutIn = await page.locator(".battle-skill-cutin.is-ssr").boundingBox();
-    expect(viewer).not.toBeNull();
+    expect(slot).not.toBeNull();
     expect(cutIn).not.toBeNull();
-    expect(Math.abs(cutIn!.width - viewer!.width)).toBeLessThanOrEqual(2);
+    expect(Math.abs(cutIn!.width - slot!.width)).toBeLessThanOrEqual(2);
 
     await openScenario(page, "battle-result-win");
     await expect(page.locator(".battle-result-mvp-copy strong")).not.toContainText(/ケンゴ|レオ|ミオ|ミヤビ|カレン/);

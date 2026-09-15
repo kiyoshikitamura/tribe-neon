@@ -1,0 +1,18 @@
+{
+  "results": [
+    "actual SQL catalog: invoker/definer empty search_path ACL private RLS CASCADE",
+    "first bootstrap persists exact five and projects identical power input",
+    "three logout/relogin projections have zero duplicate grants",
+    "committed grant with lost response reconciles and retry adds zero",
+    "partial DB failure yields zero phantom rows; retry atomic five",
+    "post-commit read failure then relogin reconciles five without another grant",
+    "logout during grant hides old-user response; same user relogin reads once",
+    "legacy empty inventory cannot receive new enrollment grant",
+    "spent equipment receipt prevents regrant on later empty bootstrap"
+  ],
+  "projection": "actual GameContext source",
+  "sqlSource": "supabase/migrations/20260909075933_initial_equipment_authority.sql",
+  "engine": "in-memory PGlite",
+  "externalExecuted": false,
+  "multiConnectionConcurrencyTested": false
+}

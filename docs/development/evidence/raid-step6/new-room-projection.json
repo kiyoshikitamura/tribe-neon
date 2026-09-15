@@ -1,0 +1,38 @@
+[
+  {
+    "role": "host",
+    "membership": "owner",
+    "participants": {
+      "value": 3,
+      "status": "available"
+    },
+    "enemyStatus": 200,
+    "enemySkillCharacterCount": 5,
+    "rescueCount": 1,
+    "rewardStatus": 200
+  },
+  {
+    "role": "normal",
+    "membership": "member",
+    "participants": {
+      "value": 3,
+      "status": "available"
+    },
+    "enemyStatus": 200,
+    "enemySkillCharacterCount": 5,
+    "rescueCount": 1,
+    "rewardStatus": 200
+  },
+  {
+    "role": "rescue",
+    "membership": "rescue",
+    "participants": {
+      "value": 3,
+      "status": "available"
+    },
+    "enemyStatus": 200,
+    "enemySkillCharacterCount": 5,
+    "rescueCount": 1,
+    "rewardStatus": 200
+  }
+]

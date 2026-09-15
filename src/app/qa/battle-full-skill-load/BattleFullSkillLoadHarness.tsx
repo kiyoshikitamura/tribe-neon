@@ -20,13 +20,17 @@ import {
   type BattleActionPresentation,
 } from "@/domain/presentation/battlePresentationUnit";
 import "./battle-full-skill-load.css";
+import { exclusiveSkillForBattleMember, EXCLUSIVE_CONTENT } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_SKILL_PREFIX_MS, EXCLUSIVE_EQUIPMENT_INTRO_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 
-type BattleScreenState = "PLAYING" | "ENDING" | "OUTCOME" | "RESULT";
+type BattleScreenState = "SETUP" | "PLAYING" | "ENDING" | "OUTCOME" | "RESULT";
 type DamagePopup = { val: number; type: "dmg" | "heal" | "shield"; isCritical?: boolean; x: number; y: number; charId: string };
 
 const toParticipant = (unit: BattleUnitInput): ParticipantState => ({
   id: unit.id,
   characterId: unit.characterId ?? unit.id,
+  // Synthetic QA fixture only; the production adapter reads server equipment snapshots.
+  equipmentMasterIds: EXCLUSIVE_CONTENT.filter(entry => entry.kind === "EQUIPMENT" && entry.characterId === unit.characterId).map(entry => entry.id),
   name: unit.name,
   alignment: unit.alignment,
   level: unit.level ?? 100,
@@ -70,7 +74,7 @@ const projectEffects = (participant: ParticipantState, payload: Record<string, u
   };
 };
 
-export default function BattleFullSkillLoadHarness() {
+export default function BattleFullSkillLoadHarness({withSetup = false}: {withSetup?: boolean}) {
   const audio = useAudio();
   const resolved = useMemo(() => resolveBattleFullSkillLoadFixture(), []);
   const { fixture, replay } = resolved;
@@ -85,6 +89,7 @@ export default function BattleFullSkillLoadHarness() {
   const playerRef = useRef(initialPlayers);
   const enemyRef = useRef(initialEnemies);
   const [started, setStarted] = useState(false);
+  const [equipmentIntroComplete, setEquipmentIntroComplete] = useState(false);
   const [battleState, setBattleState] = useState<BattleScreenState>("PLAYING");
   const [eventIndex, setEventIndex] = useState(0);
   const [players, setPlayers] = useState(initialPlayers);
@@ -92,9 +97,11 @@ export default function BattleFullSkillLoadHarness() {
   const [round, setRound] = useState(1);
   const [speed, setSpeed] = useState(1);
   const [paused, setPaused] = useState(false);
+  const [qaPauseAt, setQaPauseAt] = useState("none");
+  const qaPauseDone = useRef(false);
   const [phase, setPhase] = useState<BattlePresentationPhase>("IDLE");
   const [actionPresentation, setActionPresentation] = useState<BattleActionPresentation | null>(null);
-  const [skillCutIn, setSkillCutIn] = useState<{ charName: string; skillName: string } | null>(null);
+  const [skillCutIn, setSkillCutIn] = useState<{ charName: string; skillName: string; actorId?: string; skillId?: string; actionKey?: number } | null>(null);
   const [targetLine, setTargetLine] = useState<{ fromId: string; toId: string } | null>(null);
   const [shakingId, setShakingId] = useState<string | null>(null);
   const [damagePopup, setDamagePopup] = useState<DamagePopup | null>(null);
@@ -146,9 +153,15 @@ export default function BattleFullSkillLoadHarness() {
     setActionPresentation(null);
     setAuthoritativeTimeline([]);
     setBattleState("ENDING");
-    schedule(() => setBattleState("OUTCOME"), 760);
-    schedule(() => setBattleState("RESULT"), 1740);
+
   }, [audio.stopBgm, clearTimers, replay.events, schedule]);
+
+  // Outcome timers belong to screen lifecycle, not replay event cleanup.
+  useEffect(() => {
+    if (battleState !== "ENDING" && battleState !== "OUTCOME") return;
+    const timer = window.setTimeout(() => setBattleState(battleState === "ENDING" ? "OUTCOME" : "RESULT"), battleState === "ENDING" ? 760 : 980);
+    return () => window.clearTimeout(timer);
+  }, [battleState]);
 
   const reset = useCallback(() => {
     clearTimers();
@@ -170,13 +183,23 @@ export default function BattleFullSkillLoadHarness() {
     setAuthoritativeTimeline([]);
     setSkipPending(false);
     setBattleState("PLAYING");
+    qaPauseDone.current = false;
     setStarted(false);
+    setEquipmentIntroComplete(false);
   }, [audio.stopBgm, clearTimers, initialEnemies, initialPlayers]);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
   useEffect(() => {
-    if (!started || paused || battleState !== "PLAYING") return;
+    if (!started || paused || equipmentIntroComplete) return;
+    const timer = setTimeout(() => setEquipmentIntroComplete(true), EXCLUSIVE_EQUIPMENT_INTRO_MS);
+    return () => clearTimeout(timer);
+  }, [started, paused, equipmentIntroComplete]);
+
+  useEffect(() => {
+    // Cancel already scheduled presentation work before the pause early return.
+    clearTimers();
+    if (!started || paused || !equipmentIntroComplete || battleState !== "PLAYING") return;
     const event = replay.events[eventIndex];
     if (!event) return;
     const payload = event.payload;
@@ -196,14 +219,15 @@ export default function BattleFullSkillLoadHarness() {
       if (!unit) { advance(40); return; }
       const skillName = skillNames.get(skillId) ?? (skill ? "スキル発動" : "通常攻撃");
       const tier = battlePresentationTier(skill, actor?.rarity);
-      const budget = battlePresentationBudget(tier, speed);
-      const impactAt = battlePresentationImpactAt(speed);
+      const exclusivePrefix = exclusiveSkillForBattleMember(actor?.characterId ?? "", skillId) ? EXCLUSIVE_SKILL_PREFIX_MS : 0;
+      const budget = battlePresentationBudget(tier, speed, true) + exclusivePrefix;
+      const impactAt = battlePresentationImpactAt(speed, tier, true) + exclusivePrefix;
       const nextActors = replay.events.slice(eventIndex).filter((entry) => entry.type === "ACTION").slice(0, 4).map((entry) => {
         const id = String(entry.payload.actorId ?? "");
         const participant = participants.find((candidate) => candidate.id === id);
         return { id, name: participant?.name ?? "キャラクター", isEnemy: teamById.get(id) === true };
       });
-      setSkillCutIn({ charName: actor?.name ?? "キャラクター", skillName });
+      setSkillCutIn({ charName: actor?.name ?? "キャラクター", skillName, actorId, skillId, actionKey: eventIndex });
       setTargetLine(null);
       setShakingId(null);
       setDamagePopup(null);
@@ -357,14 +381,31 @@ export default function BattleFullSkillLoadHarness() {
     }
 
     advance(40);
-  }, [battleState, clearTimers, enterResult, eventIndex, paused, replay.events, replaceParticipant, schedule, skillNames, speed, started, teamById]);
+  }, [battleState, clearTimers, enterResult, equipmentIntroComplete, eventIndex, paused, replay.events, replaceParticipant, schedule, skillNames, speed, started, teamById]);
+
+  // Preview-only inspection controls: pause the actual shared display at a reproducible point.
+  useEffect(() => {
+    if (!started || battleState !== "PLAYING" || paused || qaPauseDone.current || qaPauseAt === "none") return;
+    let delay: number;
+    if (qaPauseAt === "equipment") {
+      if (equipmentIntroComplete) return;
+      delay = 850;
+    } else {
+      if (actionPresentation?.beat !== "ACTOR") return;
+      const actor = [...players, ...enemies].find(entry => entry.id === actionPresentation.unit.actorId);
+      if (!exclusiveSkillForBattleMember(actor?.characterId ?? "", actionPresentation.unit.skillId)) return;
+      delay = qaPauseAt === "dialogue" ? 350 : EXCLUSIVE_SKILL_PREFIX_MS + 250;
+    }
+    const timer = setTimeout(() => { qaPauseDone.current = true; setPaused(true); }, delay);
+    return () => clearTimeout(timer);
+  }, [started, battleState, paused, qaPauseAt, equipmentIntroComplete, actionPresentation, players, enemies]);
 
   const start = async () => {
     await audio.unlockAudio();
     audio.playBgm("BATTLE");
     audio.playSe("BATTLE_START");
     setStarted(true);
-    setBattleState("PLAYING");
+    setBattleState(withSetup ? "SETUP" : "PLAYING");
     setEventIndex(0);
   };
   const skip = () => {
@@ -435,7 +476,7 @@ export default function BattleFullSkillLoadHarness() {
     presentationPhase: phase,
     actionPresentation,
     authoritativeTimeline,
-    launchBattlePlaying: () => undefined,
+    launchBattlePlaying: () => setBattleState("PLAYING"),
     confirmPreparedPvpBattle: async () => true,
     cancelPreparedPvpBattle: () => true,
     confirmPreparedRaidBattle: async () => true,
@@ -465,6 +506,7 @@ export default function BattleFullSkillLoadHarness() {
       <div className="battle-stress-rosters"><article><b>PLAYER</b><span>{fixture.player.map((unit) => unit.name).join(" / ")}</span></article><article><b>ENEMY</b><span>{fixture.enemy.map((unit) => unit.name).join(" / ")}</span></article></div>
       <dl><div><dt>Replay</dt><dd>{replaySkillCount} Skill actions / {replay.rounds} rounds / {replay.events.length} events</dd></div><div><dt>Quest / Area</dt><dd>{fixture.location.questId} → {fixture.location.townId}</dd></div><div><dt>Expected BG</dt><dd>{fixture.location.expectedBackgroundPath}</dd></div><div><dt>Runtime Battle BG</dt><dd>{fixture.location.runtimeBattleBackgroundPath ?? "UNCONNECTED — Human AcceptanceでFAIL判定"}</dd></div></dl>
       <details><summary>Current Skills ({skills.length})</summary><p>{skills.map((skill) => `${skill.id} ${skill.name}`).join(" / ")}</p></details>
+      <label>QA停止位置<select value={qaPauseAt} onChange={event => setQaPauseAt(event.target.value)}><option value="none">停止なし</option><option value="equipment">装備帯</option><option value="dialogue">専用台詞</option><option value="cutin">専用カットイン</option></select></label>
       <button type="button" onClick={start}>Stress Battleを開始</button>
     </section> : <GameContext.Provider value={context}><CardBattleView /></GameContext.Provider>}
     {started && <aside className="battle-stress-audit" data-location-parity={fixture.location.runtimeBattleBackgroundPath === fixture.location.expectedBackgroundPath ? "pass" : "fail"}><b>{round}/{replay.rounds}</b><span>EVENT {Math.min(eventIndex + 1, replay.events.length)}/{replay.events.length}</span><span>BG {fixture.location.runtimeBattleBackgroundPath ? "CONNECTED" : "UNCONNECTED / FAIL"}</span></aside>}

@@ -1,0 +1,551 @@
+{
+  "purpose": "偏り・異常条件に該当した組だけ追加3seed。設定再変更なし。",
+  "criteria": "全員行動未達、Damage0、Max/Min>1.5、供給換算時間12〜18h外、8round未満、round幅8以上、1段階下の平均Damageの85%未満",
+  "rows": [
+    {
+      "areaId": "SHINJUKU",
+      "difficultyId": "expert",
+      "raidName": "キングス・クラウン",
+      "maxHp": 25200000,
+      "partyPower": 279587,
+      "seedCount": 3,
+      "damage": {
+        "min": 304433,
+        "average": 478425,
+        "max": 619022
+      },
+      "rounds": {
+        "min": 30,
+        "max": 30
+      },
+      "survivors": {
+        "min": 2,
+        "max": 4
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        10,
+        20
+      ],
+      "standardParticipants": 15,
+      "battlesPerPerson24h": [
+        5,
+        6
+      ],
+      "totalBattles24h": [
+        50,
+        120
+      ],
+      "neededBattles": {
+        "best": 41,
+        "average": 53,
+        "worst": 83
+      },
+      "uniformSupplyHours": 15.323005885790021,
+      "samples": [
+        {
+          "seed": 196613,
+          "damage": 619022,
+          "rounds": 30,
+          "survivors": 4,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 396456
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 41066
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 88383
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 31410
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 61707
+            }
+          ],
+          "replaySha256": "8630d1676c38ee5182cb0bbefc065ce089e52fb441834c17929dd4250dfd666a"
+        },
+        {
+          "seed": 216091,
+          "damage": 511820,
+          "rounds": 30,
+          "survivors": 4,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 298033
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 41065
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 88768
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 30463
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 53491
+            }
+          ],
+          "replaySha256": "647ee2a3de8fee20309401499f8dfc727bb08c707b600bfc7006296f67e1473e"
+        },
+        {
+          "seed": 262147,
+          "damage": 304433,
+          "rounds": 30,
+          "survivors": 2,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 101533
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 40587
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 85416
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 30617
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 46280
+            }
+          ],
+          "replaySha256": "9c26cd18645f63e18e53c637725471a4d0054b350b1ff22eb9decf5d06d02228"
+        }
+      ]
+    },
+    {
+      "areaId": "AKIHABARA",
+      "difficultyId": "advanced",
+      "raidName": "グリッチ・コード",
+      "maxHp": 5300000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 251226,
+        "average": 317431.3333333333,
+        "max": 370360
+      },
+      "rounds": {
+        "min": 24,
+        "max": 26
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 15,
+        "average": 17,
+        "worst": 22
+      },
+      "uniformSupplyHours": 11.873084012570347,
+      "samples": [
+        {
+          "seed": 196613,
+          "damage": 370360,
+          "rounds": 26,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 64334
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 176686
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 40350
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 36476
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 52514
+            }
+          ],
+          "replaySha256": "98e01b3e8b0ab07a8b5070cdf10deecf7b402687e9061983dee82948d038e422"
+        },
+        {
+          "seed": 216091,
+          "damage": 251226,
+          "rounds": 26,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 41849
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 84866
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 67146
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 25289
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 32076
+            }
+          ],
+          "replaySha256": "2c617edb3e3c30cae848f2d66a044115746d971fabca5a1eb1fdf6049cb6ece6"
+        },
+        {
+          "seed": 262147,
+          "damage": 330708,
+          "rounds": 24,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 36050
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 170774
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 68846
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 17756
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 37282
+            }
+          ],
+          "replaySha256": "134f159034fb67ab40c2b8881196ae637457f8ac95c01af0a7acee4783984140"
+        }
+      ]
+    },
+    {
+      "areaId": "KAWASAKI",
+      "difficultyId": "advanced",
+      "raidName": "ブレイクダウン",
+      "maxHp": 4700000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 198417,
+        "average": 213454.66666666666,
+        "max": 225668
+      },
+      "rounds": {
+        "min": 18,
+        "max": 19
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 21,
+        "average": 23,
+        "worst": 24
+      },
+      "uniformSupplyHours": 15.657761314918806,
+      "samples": [
+        {
+          "seed": 196613,
+          "damage": 198417,
+          "rounds": 19,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 27090
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 101292
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 27770
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 15146
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 27119
+            }
+          ],
+          "replaySha256": "76a848f82d74d8379242af0e4ddadc56349775ba775bd72f2e8f6b3563c13dd0"
+        },
+        {
+          "seed": 216091,
+          "damage": 225668,
+          "rounds": 18,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 27305
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 134396
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 21035
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 20755
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 22177
+            }
+          ],
+          "replaySha256": "8d41bcfab5f810d779a2b06fdc866e8e8029aa0b087d569df05f4773bc572c19"
+        },
+        {
+          "seed": 262147,
+          "damage": 216279,
+          "rounds": 19,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 30750
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 103736
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 27950
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 22342
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 31501
+            }
+          ],
+          "replaySha256": "10bd040c8ab7ec8754d1ef1908430367eadc781c0b2b7dbd4ff089453bfc4b5c"
+        }
+      ]
+    },
+    {
+      "areaId": "YOKOHAMA",
+      "difficultyId": "advanced",
+      "raidName": "ブルー・レクイエム",
+      "maxHp": 8100000,
+      "partyPower": 240562,
+      "seedCount": 3,
+      "damage": {
+        "min": 427160,
+        "average": 460095.6666666667,
+        "max": 480481
+      },
+      "rounds": {
+        "min": 29,
+        "max": 29
+      },
+      "survivors": {
+        "min": 0,
+        "max": 0
+      },
+      "minimumPlayersActed": 5,
+      "participants": [
+        5,
+        10
+      ],
+      "standardParticipants": 7.5,
+      "battlesPerPerson24h": [
+        4,
+        5
+      ],
+      "totalBattles24h": [
+        20,
+        50
+      ],
+      "neededBattles": {
+        "best": 17,
+        "average": 18,
+        "worst": 19
+      },
+      "uniformSupplyHours": 12.519135513121546,
+      "samples": [
+        {
+          "seed": 196613,
+          "damage": 427160,
+          "rounds": 29,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 73235
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 239600
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 44979
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 27182
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 42164
+            }
+          ],
+          "replaySha256": "f4355ed49e6e3b8fa544d100d5dc464c4851d1773b12d5fec275ae1b974752a8"
+        },
+        {
+          "seed": 216091,
+          "damage": 472646,
+          "rounds": 29,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 83596
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 261969
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 45350
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 27072
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 54659
+            }
+          ],
+          "replaySha256": "8205c7fce1bc51b0f72b2bb9daa76334dcd0134fc6264534eeca92c7c93972ed"
+        },
+        {
+          "seed": 262147,
+          "damage": 480481,
+          "rounds": 29,
+          "survivors": 0,
+          "playersActed": 5,
+          "enemySurvivors": 5,
+          "damageByCharacter": [
+            {
+              "characterId": "char_lucas_01",
+              "damage": 87340
+            },
+            {
+              "characterId": "char_kaito_01",
+              "damage": 266871
+            },
+            {
+              "characterId": "char_shin_01",
+              "damage": 47490
+            },
+            {
+              "characterId": "char_aoi_01",
+              "damage": 27295
+            },
+            {
+              "characterId": "char_momoko_01",
+              "damage": 51485
+            }
+          ],
+          "replaySha256": "9a06c6208baea317af8da7633c40f7cf0a3a17109ab205258e4eb75d31a88983"
+        }
+      ]
+    }
+  ],
+  "exactSnapshotCorrection": "上級追加3組だけ同じseedで再実測。共有HP変更なし。"
+}

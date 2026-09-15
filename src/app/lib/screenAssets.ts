@@ -92,14 +92,29 @@ function loadImage(src: string, timeoutMs: number): Promise<boolean> {
       resolve(loaded);
     };
     const timer = window.setTimeout(() => finish(false), timeoutMs);
-    image.onload = () => finish(true);
+    const finishAfterDecode = () => {
+      if (typeof image.decode !== "function") {
+        finish(image.naturalWidth > 0);
+        return;
+      }
+      void image.decode()
+        .then(() => finish(image.naturalWidth > 0))
+        .catch(() => finish(image.naturalWidth > 0));
+    };
+    image.onload = finishAfterDecode;
     image.onerror = () => finish(false);
     image.src = src;
-    if (image.complete && image.naturalWidth > 0) finish(true);
+    if (image.complete && image.naturalWidth > 0) finishAfterDecode();
   });
 
-  imagePromiseCache.set(src, promise);
-  return promise;
+  const tracked = promise.then((loaded) => {
+    // A transient timeout/network failure must not poison every later screen
+    // that requests the same asset during this session.
+    if (!loaded) imagePromiseCache.delete(src);
+    return loaded;
+  });
+  imagePromiseCache.set(src, tracked);
+  return tracked;
 }
 
 export async function preloadAsset(asset: AssetRequest, timeoutMs = 12000): Promise<AssetResult> {

@@ -5,6 +5,7 @@ import { supabase, usingMockSupabase } from "@/utils/supabase";
 import { getExternalBrowserUrl, getOAuthCallbackUrl, isXInAppBrowser } from "@/utils/browserDetection";
 import { beginActionPerformance } from "@/utils/actionPerformance";
 import { clearHomeResumeSnapshot } from "@/app/lib/homeResumePresentation";
+import { bindCurrentAcquisitionJourney } from "@/utils/kpiInstrumentation";
 
 export const EXISTING_GOOGLE_LOGIN_INTENT_KEY = "tribe_existing_google_login_intent";
 
@@ -13,11 +14,24 @@ export type OnboardingState = {
   is_anonymous: boolean;
   has_profile: boolean;
   tutorial_step: string | null;
+  authentication_pending: boolean;
   auth_method: "EMAIL" | "GOOGLE" | null;
   is_legacy_authenticated: boolean;
   identity_integrity_valid: boolean;
   gameplay_authorized: boolean;
 };
+
+// UI routing only. Registration is independently authorized again in the DB.
+// No browser flag or email comparison can enable the maintenance exception.
+export async function canInitializeMaintenanceGooglePlayer(state: OnboardingState): Promise<boolean> {
+  if (state.has_profile || state.is_anonymous || state.auth_method !== "GOOGLE" || !state.identity_integrity_valid) return false;
+  try {
+    const { data, error } = await supabase.rpc("can_initialize_maintenance_google_player");
+    return !error && data === true;
+  } catch {
+    return false;
+  }
+}
 
 export function useAuth(
   playCyberSe: (type: string) => void,
@@ -89,9 +103,18 @@ export function useAuth(
     }
     if (!beginAuthAction()) return;
     try {
+      // Keep the explicit title-login intent across the auth-state callback so
+      // a verified EMAIL player can enter only after the onboarding authority
+      // confirms that this UID owns playable data.
+      localStorage.setItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY, JSON.stringify({
+        startedAt: Date.now(),
+        method: "EMAIL",
+        sourceUserId: session?.user?.id || null,
+      }));
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
     } catch (e: any) {
+      localStorage.removeItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY);
       setErrorMessage(e.message);
     } finally {
       endAuthAction();
@@ -114,7 +137,7 @@ export function useAuth(
       }));
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo: getOAuthCallbackUrl() }
+        options: { redirectTo: getOAuthCallbackUrl(), queryParams: { prompt: "select_account" } }
       });
       if (error) throw error;
     } catch (e: any) {
@@ -241,6 +264,9 @@ export function useAuth(
       if (data?.status !== "success" && data?.status !== "already_initialized") {
         throw new Error("Unexpected initialization response");
       }
+      // Game Start remains initialize_current_player + kpi_subjects.registered_at.
+      // Telemetry follows the authoritative success and never rolls gameplay back.
+      void bindCurrentAcquisitionJourney(true);
       setErrorMessage(null);
       actionPerformance.mark("response");
       const tutorialStep = typeof data?.tutorial_step === "string" ? data.tutorial_step : "WORLD_INTRO";
@@ -249,10 +275,11 @@ export function useAuth(
       // between the name screen and the world-introduction overlay.
       setOnboardingState({
         user_id: session.user.id,
-        is_anonymous: true,
+        is_anonymous: session.user.is_anonymous === true,
         has_profile: true,
         tutorial_step: tutorialStep,
-        auth_method: null,
+        authentication_pending: false,
+        auth_method: onboardingState?.auth_method ?? null,
         is_legacy_authenticated: false,
         identity_integrity_valid: true,
         gameplay_authorized: false,

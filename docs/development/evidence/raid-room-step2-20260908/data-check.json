@@ -1,0 +1,206 @@
+{
+  "variants": [
+    {
+      "hp": 32000000,
+      "enabled": true,
+      "members": [
+        "char_reiji_01",
+        "char_mio_01",
+        "char_takuro_01",
+        "char_leon_01",
+        "char_kageyama_01"
+      ],
+      "variant": "RAID_SHINJUKU_V1",
+      "boss_master_fk_exists": true
+    },
+    {
+      "hp": 28000000,
+      "enabled": true,
+      "members": [
+        "char_ageha_01",
+        "char_leo_01",
+        "char_sora_01",
+        "char_reina_01",
+        "char_noa_01"
+      ],
+      "variant": "RAID_SHIBUYA_V1",
+      "boss_master_fk_exists": true
+    },
+    {
+      "hp": 36000000,
+      "enabled": true,
+      "members": [
+        "char_koharu_01",
+        "char_takeshi_01",
+        "char_momoko_01",
+        "char_riki_01",
+        "char_sakura_01"
+      ],
+      "variant": "RAID_IKEBUKURO_V1",
+      "boss_master_fk_exists": true
+    },
+    {
+      "hp": 34000000,
+      "enabled": true,
+      "members": [
+        "char_kaede_01",
+        "char_taiga_01",
+        "char_maya_01",
+        "char_seiya_01",
+        "char_cecile_01"
+      ],
+      "variant": "RAID_ROPPONGI_V1",
+      "boss_master_fk_exists": true
+    },
+    {
+      "hp": 30000000,
+      "enabled": true,
+      "members": [
+        "char_karen_01",
+        "char_miyabi_01",
+        "char_alice_01",
+        "char_rui_01",
+        "char_maya_01"
+      ],
+      "variant": "RAID_AKIHABARA_V1",
+      "boss_master_fk_exists": true
+    },
+    {
+      "hp": 38000000,
+      "enabled": true,
+      "members": [
+        "char_go_01",
+        "char_kengo_01",
+        "char_tetsu_01",
+        "char_lucas_01",
+        "char_riki_01"
+      ],
+      "variant": "RAID_KAWASAKI_V1",
+      "boss_master_fk_exists": true
+    },
+    {
+      "hp": 35000000,
+      "enabled": true,
+      "members": [
+        "char_genji_01",
+        "char_long_01",
+        "char_sakura_01",
+        "char_cecile_01",
+        "char_taiga_01"
+      ],
+      "variant": "RAID_YOKOHAMA_V1",
+      "boss_master_fk_exists": true
+    }
+  ],
+  "item_master": [
+    {
+      "id": "AWAKENING_BOOK",
+      "name": "覚醒の書",
+      "enabled": true
+    },
+    {
+      "id": "CHAR_EXP_L",
+      "name": "強化ドリンク・大",
+      "enabled": true
+    },
+    {
+      "id": "CHAR_EXP_M",
+      "name": "強化ドリンク・中",
+      "enabled": true
+    },
+    {
+      "id": "CHAR_EXP_S",
+      "name": "強化ドリンク・小",
+      "enabled": true
+    },
+    {
+      "id": "EQUIP_EXP_S",
+      "name": "カスタムオイル・小",
+      "enabled": true
+    },
+    {
+      "id": "SKILL_MANUAL",
+      "name": "スキル指南書",
+      "enabled": true
+    },
+    {
+      "id": "EQUIP_LB_PART",
+      "name": "改造パーツ",
+      "enabled": true
+    },
+    {
+      "id": "ENERGY_DRINK",
+      "name": "エナジードリンク",
+      "enabled": true
+    },
+    {
+      "id": "EQUIP_EXP_L",
+      "name": "カスタムオイル・大",
+      "enabled": true
+    },
+    {
+      "id": "EQUIP_EXP_M",
+      "name": "カスタムオイル・中",
+      "enabled": true
+    },
+    {
+      "id": "NORMAL_GACHA_TICKET_CHARACTER",
+      "name": "キャラクターガチャチケット",
+      "enabled": true
+    },
+    {
+      "id": "NORMAL_GACHA_TICKET_SKILL",
+      "name": "スキルガチャチケット",
+      "enabled": true
+    },
+    {
+      "id": "NORMAL_GACHA_TICKET_EQUIPMENT",
+      "name": "装備ガチャチケット",
+      "enabled": true
+    },
+    {
+      "id": "SPECIAL_TICKET_CHARACTER",
+      "name": "SPキャラクターチケット",
+      "enabled": true
+    },
+    {
+      "id": "SPECIAL_TICKET_SKILL",
+      "name": "SPスキルチケット",
+      "enabled": true
+    },
+    {
+      "id": "SPECIAL_TICKET_EQUIPMENT",
+      "name": "SP装備チケット",
+      "enabled": true
+    },
+    {
+      "id": "PVP_POINT_TICKET",
+      "name": "ファイトチケット",
+      "enabled": true
+    },
+    {
+      "id": "RAID_POINT_TICKET",
+      "name": "レイドチケット",
+      "enabled": true
+    }
+  ],
+  "observed_at": "2026-09-08T08:45:07.072037+00:00",
+  "users_count": 19,
+  "guilds_count": 0,
+  "social_types": [
+    {
+      "count": 11,
+      "activity_type": "SSR_CHARACTER"
+    },
+    {
+      "count": 3,
+      "activity_type": "POWER_RANK_1"
+    }
+  ],
+  "pending_legacy_raid_replays": 0,
+  "ranking_notifications_count": 16,
+  "not_null_raid_insert_columns": [
+    "boss_id",
+    "expires_at"
+  ]
+}

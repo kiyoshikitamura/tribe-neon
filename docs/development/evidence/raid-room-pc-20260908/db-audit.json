@@ -1,0 +1,2331 @@
+{
+  "identity": {
+    "role": "postgres",
+    "version": "PostgreSQL 17.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+    "database": "postgres",
+    "read_only": "on"
+  },
+  "cron_jobs": [
+    {
+      "name": "anonymous-onboarding-cleanup-daily",
+      "jobid": 2,
+      "active": true,
+      "schedule": "0 18 * * *",
+      "command_md5": "286a8f00696379805b73b2f963006c3a"
+    },
+    {
+      "name": "ranking-pvp-monthly-jst",
+      "jobid": 3,
+      "active": true,
+      "schedule": "0 15 * * *",
+      "command_md5": "046f2a1da9ffd91e32e4c3132d690926"
+    },
+    {
+      "name": "ranking-raid-weekly-jst",
+      "jobid": 4,
+      "active": true,
+      "schedule": "0 15 * * 0",
+      "command_md5": "15c1521c1c9c4228abe1ed04a73573c8"
+    },
+    {
+      "name": "daily-ranking-reward-finalize-jst-midnight",
+      "jobid": 5,
+      "active": true,
+      "schedule": "0 15 * * *",
+      "command_md5": "75b9440ea8ebd89784fd9bbb37b0c754"
+    },
+    {
+      "name": "preopen-guild-power-finalize-20260909-jst",
+      "jobid": 7,
+      "active": true,
+      "schedule": "* 15 8 9 *",
+      "command_md5": "17ed1efb1910786fa13c753a660eb741"
+    },
+    {
+      "name": "kpi-overview-saved-results-half-hourly",
+      "jobid": 12,
+      "active": true,
+      "schedule": "7,37 * * * *",
+      "command_md5": "d8f781c9dbd3c42066f7e736ad414b39"
+    }
+  ],
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "3a22d60e7a35ab3ef1b8703ded57d697",
+      "args": "p_boss_id text, p_max_hp integer, p_base_id text",
+      "name": "admin_respawn_raid_boss",
+      "security_definer": true
+    },
+    {
+      "acl": "{=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "e817f2add5cb0a890b3c586950603372",
+      "args": "p_date date",
+      "name": "canonical_raid_rotation_pair",
+      "security_definer": false
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "087cc231b3713064f63d6d82b4579738",
+      "args": "p_present_id uuid",
+      "name": "claim_present",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "d5b68be10a35dc997b988ac0c7ab3b7d",
+      "args": "p_user_id uuid, p_present_id uuid",
+      "name": "claim_present",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "811c883465c9b2873d94c5fcb6608077",
+      "args": "p_user_id uuid, p_cost_type text, p_cost_amount integer",
+      "name": "consume_raid_attempt",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "cf6f969c0fead39caf03e938a3c8035a",
+      "args": "p_instance_id uuid",
+      "name": "finalize_expired_raid_instance",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "4c163c4a20a5d53e582aef6ecbeb8c3b",
+      "args": "p_replay_id uuid, p_result jsonb",
+      "name": "finalize_raid_battle",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "89c6d881f5b0e51f078b4de76db374c2",
+      "args": "p_season_id uuid",
+      "name": "finalize_raid_season_rewards",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "0b7bd71d9f916fac8fc2d8f8cd602f27",
+      "args": "",
+      "name": "get_active_raids",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "3d709a09c6d662ffd83cd810d2205159",
+      "args": "",
+      "name": "get_current_raid_attempt_state",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "7ad2e0aab34e6de5129c35ba6094ae97",
+      "args": "p_replay_id uuid",
+      "name": "get_current_raid_battle_rewards",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "198b233a6ac618d5818029d6d67ffd02",
+      "args": "p_instance_id uuid",
+      "name": "get_raid_rankings",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "7c2d410943836b817d0bb398fbac589a",
+      "args": "p_instance_id uuid, p_limit integer, p_offset integer",
+      "name": "get_raid_rankings",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "cd2dc85cd79d886b60b2b799ae36fc6c",
+      "args": "p_limit integer, p_offset integer",
+      "name": "get_raid_season_rankings",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "cdabfc06d5b97cba0eb421b0527209ac",
+      "args": "p_instance_id uuid, p_user_id uuid",
+      "name": "grant_canonical_raid_day_clear_reward",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "5a3f42643af32b17a44148ce925383d6",
+      "args": "p_instance uuid, p_user uuid, p_type text, p_key text",
+      "name": "grant_canonical_raid_reward",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "af4d3ce78d3ea35c4bed07595b21e2ba",
+      "args": "p_boss_id text",
+      "name": "grant_raid_completion_xp",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "faef18f9bfda9ee5283f7d4828baf30a",
+      "args": "p_instance_id uuid, p_user_id uuid, p_reward_id integer, p_reason text",
+      "name": "grant_raid_reward",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "5a7c2f185063303cdd712f6074a047e7",
+      "args": "",
+      "name": "raid_boss_defeat",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "f3a9d94dc4982e5fdec0c6e9711625c9",
+      "args": "",
+      "name": "raid_season_reset",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "7d8bb02940db32b284c745e474c2df30",
+      "args": "p_user_id uuid, p_boss_id text, p_damage integer",
+      "name": "record_raid_boss_damage",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "aed48467e3910accde968188a0a8fce5",
+      "args": "p_user_id uuid, p_boss_id text, p_damage integer",
+      "name": "record_raid_boss_damage_v2",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "6d69b483885138f73d785d5b0799e2d2",
+      "args": "p_cleared_instance_id uuid",
+      "name": "respawn_cleared_raid_slot",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "78acdf6b00285ef001ea8c0d753eeab5",
+      "args": "",
+      "name": "rotate_daily_raids",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "md5": "51c403bd073c8cb3841c366e774ecddc",
+      "args": "p_instance_id uuid, p_character_ids text[], p_tactic text",
+      "name": "start_raid_battle",
+      "security_definer": true
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "md5": "db263ff3e5eddae1bf468f328dffef44",
+      "args": "p_user_id uuid",
+      "name": "sync_and_evaluate_raid_timeout",
+      "security_definer": true
+    }
+  ],
+  "extensions": [
+    {
+      "name": "pgcrypto",
+      "version": "1.3"
+    },
+    {
+      "name": "pg_cron",
+      "version": "1.6.4"
+    }
+  ],
+  "migrations": [
+    {
+      "name": "initial_schema",
+      "version": "20260731000000"
+    },
+    {
+      "name": "rpc_functions",
+      "version": "20260731000001"
+    },
+    {
+      "name": "seed_master_data",
+      "version": "20260731000002"
+    },
+    {
+      "name": "phase2_rpc_functions",
+      "version": "20260803000000"
+    },
+    {
+      "name": "phase2_rpc_lb_v2",
+      "version": "20260803000001"
+    },
+    {
+      "name": "phase2_rpc_guild",
+      "version": "20260803000002"
+    },
+    {
+      "name": "phase2_rpc_guild_misc",
+      "version": "20260803000003"
+    },
+    {
+      "name": "phase2_rpc_guild_deco",
+      "version": "20260803000004"
+    },
+    {
+      "name": "phase2_rpc_inventory",
+      "version": "20260803000005"
+    },
+    {
+      "name": "phase2_rpc_inventory2",
+      "version": "20260803000006"
+    },
+    {
+      "name": "phase2_rpc_patrol",
+      "version": "20260803000007"
+    },
+    {
+      "name": "phase2_rpc_battle",
+      "version": "20260803000008"
+    },
+    {
+      "name": "phase2_rpc_raid",
+      "version": "20260803000009"
+    },
+    {
+      "name": "phase2_rpc_gvg",
+      "version": "20260803000010"
+    },
+    {
+      "name": "phase3_stubs",
+      "version": "20260803000011"
+    },
+    {
+      "name": "phase3_additional",
+      "version": "20260803000012"
+    },
+    {
+      "name": "vitality_timer_recovery",
+      "version": "20260804000001"
+    },
+    {
+      "name": "gvg_bases_migration",
+      "version": "20260804000002"
+    },
+    {
+      "name": "gvg_consume_vitality",
+      "version": "20260804000003"
+    },
+    {
+      "name": "raid_attempts",
+      "version": "20260804000004"
+    },
+    {
+      "name": "raid_consume_rpc",
+      "version": "20260804000005"
+    },
+    {
+      "name": "monthly_pass",
+      "version": "20260804000006"
+    },
+    {
+      "name": "gacha_banners",
+      "version": "20260804000007"
+    },
+    {
+      "name": "user_friends",
+      "version": "20260804000008"
+    },
+    {
+      "name": "has_shown_guild_dialog",
+      "version": "20260804000009"
+    },
+    {
+      "name": "distribute_ranking_rewards",
+      "version": "20260804000011"
+    },
+    {
+      "name": "daily_reset_rpc",
+      "version": "20260804000013"
+    },
+    {
+      "name": "phase4_season_reset_rpcs",
+      "version": "20260804000014"
+    },
+    {
+      "name": "dev_rpc_reconciliation",
+      "version": "20260805000000"
+    },
+    {
+      "name": "dev_gacha_charge_rpc",
+      "version": "20260805000001"
+    },
+    {
+      "name": "character_gacha_rpc",
+      "version": "20260805000002"
+    },
+    {
+      "name": "pvp_opponents_rpc",
+      "version": "20260805000003"
+    },
+    {
+      "name": "skill_equipment_gacha_seed",
+      "version": "20260805000004"
+    },
+    {
+      "name": "asset_gacha_rpc",
+      "version": "20260805000005"
+    },
+    {
+      "name": "user_characters_identity_index",
+      "version": "20260805000006"
+    },
+    {
+      "name": "exchange_pity_reward_rpc",
+      "version": "20260805000007"
+    },
+    {
+      "name": "public_battle_loadout_rpc",
+      "version": "20260805000008"
+    },
+    {
+      "name": "public_battle_roster_rpc",
+      "version": "20260805000009"
+    },
+    {
+      "name": "public_battle_roster_by_character_rpc",
+      "version": "20260805000010"
+    },
+    {
+      "name": "public_leader_characters_rpc",
+      "version": "20260805000011"
+    },
+    {
+      "name": "owner_rls_user_assets",
+      "version": "20260805000012"
+    },
+    {
+      "name": "public_profiles_rpc",
+      "version": "20260805000013"
+    },
+    {
+      "name": "public_power_rankings_rpc",
+      "version": "20260805000014"
+    },
+    {
+      "name": "public_profiles_friend_fields",
+      "version": "20260805000015"
+    },
+    {
+      "name": "active_users_rpc",
+      "version": "20260805000016"
+    },
+    {
+      "name": "users_last_active_at",
+      "version": "20260805000017"
+    },
+    {
+      "name": "user_setup_status_rpc",
+      "version": "20260805000018"
+    },
+    {
+      "name": "owner_rls_users",
+      "version": "20260805000019"
+    },
+    {
+      "name": "owner_rls_user_progress",
+      "version": "20260805000020"
+    },
+    {
+      "name": "fix_power_ranking_column",
+      "version": "20260805000021"
+    },
+    {
+      "name": "owner_rls_user_invitations",
+      "version": "20260805000022"
+    },
+    {
+      "name": "split_rls_user_power_rankings",
+      "version": "20260805000023"
+    },
+    {
+      "name": "owner_rls_payments_presents",
+      "version": "20260805000024"
+    },
+    {
+      "name": "login_bonus_30_cycle",
+      "version": "20260805000025"
+    },
+    {
+      "name": "users_username_length",
+      "version": "20260805000026"
+    },
+    {
+      "name": "replace_pvp_tickets_with_points",
+      "version": "20260805000027"
+    },
+    {
+      "name": "gvg_session_foundation",
+      "version": "20260805000028"
+    },
+    {
+      "name": "battle_replay_foundation",
+      "version": "20260805000029"
+    },
+    {
+      "name": "gvg_matching_snapshot",
+      "version": "20260805000030"
+    },
+    {
+      "name": "gvg_damage_resolution",
+      "version": "20260805000031"
+    },
+    {
+      "name": "gvg_lifecycle",
+      "version": "20260805000032"
+    },
+    {
+      "name": "gvg_matchmaking",
+      "version": "20260805000033"
+    },
+    {
+      "name": "gvg_membership_lock",
+      "version": "20260805000034"
+    },
+    {
+      "name": "gvg_read_policy",
+      "version": "20260805000035"
+    },
+    {
+      "name": "gvg_timeout_timestamp",
+      "version": "20260805000036"
+    },
+    {
+      "name": "gvg_defense_lock",
+      "version": "20260805000037"
+    },
+    {
+      "name": "battle_replay_server_seed",
+      "version": "20260805000038"
+    },
+    {
+      "name": "gvg_full_defense_snapshot",
+      "version": "20260805000039"
+    },
+    {
+      "name": "gvg_matchmaking_candidate",
+      "version": "20260805000040"
+    },
+    {
+      "name": "title_ownership",
+      "version": "20260805000041"
+    },
+    {
+      "name": "equip_owned_title",
+      "version": "20260805000042"
+    },
+    {
+      "name": "profile_daily_change_limit",
+      "version": "20260805000043"
+    },
+    {
+      "name": "profile_field_validation",
+      "version": "20260805000044"
+    },
+    {
+      "name": "gvg_attack_log_read_policy",
+      "version": "20260805000045"
+    },
+    {
+      "name": "enforce_equipped_title_ownership",
+      "version": "20260805000046"
+    },
+    {
+      "name": "pvp_defense_tactic_and_opponents",
+      "version": "20260805000047"
+    },
+    {
+      "name": "raid_completion_xp",
+      "version": "20260805000048"
+    },
+    {
+      "name": "gvg_one_pending_attack_per_user",
+      "version": "20260805000049"
+    },
+    {
+      "name": "tutorial_progress_foundation",
+      "version": "20260805000050"
+    },
+    {
+      "name": "tutorial_free_patrol_instant",
+      "version": "20260805000051"
+    },
+    {
+      "name": "tutorial_patrol_battle",
+      "version": "20260805000052"
+    },
+    {
+      "name": "initialize_anonymous_player",
+      "version": "20260805000053"
+    },
+    {
+      "name": "single_auth_method",
+      "version": "20260805000054"
+    },
+    {
+      "name": "guild_member_cap",
+      "version": "20260805000055"
+    },
+    {
+      "name": "guild_decoration_permissions",
+      "version": "20260805000056"
+    },
+    {
+      "name": "guild_shop_price_validation",
+      "version": "20260805000057"
+    },
+    {
+      "name": "guild_member_permissions",
+      "version": "20260805000058"
+    },
+    {
+      "name": "guild_settings_permissions",
+      "version": "20260805000059"
+    },
+    {
+      "name": "guild_creation_and_join_security",
+      "version": "20260805000060"
+    },
+    {
+      "name": "direct_message_permissions",
+      "version": "20260805000061"
+    },
+    {
+      "name": "bbs_foundation",
+      "version": "20260805000062"
+    },
+    {
+      "name": "guild_donation_resolution",
+      "version": "20260805000063"
+    },
+    {
+      "name": "public_profile_guild_affiliation",
+      "version": "20260805000064"
+    },
+    {
+      "name": "realtime_community_tables",
+      "version": "20260805000065"
+    },
+    {
+      "name": "chat_message_foundation",
+      "version": "20260805000066"
+    },
+    {
+      "name": "gvg_attack_resolution_authorization",
+      "version": "20260805000067"
+    },
+    {
+      "name": "gvg_resolve_from_server_replay",
+      "version": "20260806000068"
+    },
+    {
+      "name": "cancel_unresolved_gvg_attack",
+      "version": "20260806000069"
+    },
+    {
+      "name": "restore_user_progression_columns",
+      "version": "20260806000070"
+    },
+    {
+      "name": "remove_legacy_initialize_new_user_overload",
+      "version": "20260806000071"
+    },
+    {
+      "name": "cancel_pending_gvg_replay",
+      "version": "20260806000072"
+    },
+    {
+      "name": "harden_direct_message_rls",
+      "version": "20260806000073"
+    },
+    {
+      "name": "add_direct_message_read_state",
+      "version": "20260806000074"
+    },
+    {
+      "name": "add_guild_compatibility_columns",
+      "version": "20260806000075"
+    },
+    {
+      "name": "add_progression_compatibility_columns",
+      "version": "20260806000076"
+    },
+    {
+      "name": "fix_gvg_snapshot_character_id_types",
+      "version": "20260806000077"
+    },
+    {
+      "name": "fix_uuid_present_claim",
+      "version": "20260806000078"
+    },
+    {
+      "name": "fix_claim_all_presents",
+      "version": "20260806000079"
+    },
+    {
+      "name": "add_legacy_reward_schema_compatibility",
+      "version": "20260806000080"
+    },
+    {
+      "name": "resolve_remaining_legacy_lint",
+      "version": "20260806000081"
+    },
+    {
+      "name": "retire_incompatible_legacy_rpcs",
+      "version": "20260806000082"
+    },
+    {
+      "name": "retire_remaining_legacy_rpc_overloads",
+      "version": "20260806000083"
+    },
+    {
+      "name": "reimplement_admin_season_resets",
+      "version": "20260806000084"
+    },
+    {
+      "name": "fix_raid_season_reset_schema",
+      "version": "20260806000085"
+    },
+    {
+      "name": "google_player_bootstrap_and_qa_fixture",
+      "version": "20260807000086"
+    },
+    {
+      "name": "cosmetics_foundation",
+      "version": "20260807000087"
+    },
+    {
+      "name": "cosmetics_equip_rpcs",
+      "version": "20260807000088"
+    },
+    {
+      "name": "cosmetic_ownership_sync",
+      "version": "20260807000089"
+    },
+    {
+      "name": "qa_cosmetic_fixture",
+      "version": "20260807000090"
+    },
+    {
+      "name": "fix_qa_cosmetic_fixture_access",
+      "version": "20260807000091"
+    },
+    {
+      "name": "make_cosmetic_unlock_legacy_safe",
+      "version": "20260807000092"
+    },
+    {
+      "name": "character_cosmetic_equip",
+      "version": "20260807000093"
+    },
+    {
+      "name": "home_banner_master",
+      "version": "20260807000094"
+    },
+    {
+      "name": "guild_cosmetic_legacy_sync",
+      "version": "20260807000095"
+    },
+    {
+      "name": "equip_guild_cosmetic",
+      "version": "20260807000096"
+    },
+    {
+      "name": "secure_competition_decks",
+      "version": "20260809000097"
+    },
+    {
+      "name": "secure_patrol_start",
+      "version": "20260809000098"
+    },
+    {
+      "name": "reload_patrol_rpc_schema",
+      "version": "20260809000099"
+    },
+    {
+      "name": "secure_patrol_instant_completion",
+      "version": "20260810000100"
+    },
+    {
+      "name": "secure_patrol_reward_claim",
+      "version": "20260810000101"
+    },
+    {
+      "name": "ui1_review_fixture",
+      "version": "20260810000102"
+    },
+    {
+      "name": "ui1_runtime_contracts",
+      "version": "20260810000103"
+    },
+    {
+      "name": "onboarding_state_rpc",
+      "version": "20260812000104"
+    },
+    {
+      "name": "initialize_current_player",
+      "version": "20260812000105"
+    },
+    {
+      "name": "complete_authentication_hardening",
+      "version": "20260812000106"
+    },
+    {
+      "name": "auth_identity_integrity",
+      "version": "20260812000107"
+    },
+    {
+      "name": "m1_rpc_anon_execute_lockdown",
+      "version": "20260812000108"
+    },
+    {
+      "name": "tutorial_patrol_instant_flow",
+      "version": "20260812000109"
+    },
+    {
+      "name": "patrol_reward_claim",
+      "version": "20260812000110"
+    },
+    {
+      "name": "patrol_npc_master_read",
+      "version": "20260812000111"
+    },
+    {
+      "name": "patrol_battle_enemy_rpc",
+      "version": "20260812000112"
+    },
+    {
+      "name": "tutorial_patrol_enemy_master",
+      "version": "20260812000113"
+    },
+    {
+      "name": "restore_tutorial_battle_retry",
+      "version": "20260812000114"
+    },
+    {
+      "name": "patrol_instant_costs",
+      "version": "20260812000115"
+    },
+    {
+      "name": "patrol_ap_atomicity",
+      "version": "20260812000116"
+    },
+    {
+      "name": "mandatory_patrol_npc_battles",
+      "version": "20260812000117"
+    },
+    {
+      "name": "patrol_equipment_snapshot",
+      "version": "20260812000118"
+    },
+    {
+      "name": "secure_character_equipment_loadout",
+      "version": "20260812000119"
+    },
+    {
+      "name": "secure_character_awakening",
+      "version": "20260812000120"
+    },
+    {
+      "name": "secure_provisional_progression",
+      "version": "20260812000121"
+    },
+    {
+      "name": "equipment_level_battle_curve",
+      "version": "20260812000122"
+    },
+    {
+      "name": "replaceable_skill_battle_master",
+      "version": "20260812000123"
+    },
+    {
+      "name": "secure_character_skill_loadout",
+      "version": "20260812000124"
+    },
+    {
+      "name": "normal_gacha_contract",
+      "version": "20260812000125"
+    },
+    {
+      "name": "provisional_character_gacha_master",
+      "version": "20260812000126"
+    },
+    {
+      "name": "secure_guild_membership_flow",
+      "version": "20260812000127"
+    },
+    {
+      "name": "canonical_guild_roles",
+      "version": "20260812000128"
+    },
+    {
+      "name": "secure_chat_read_state",
+      "version": "20260812000129"
+    },
+    {
+      "name": "secure_bbs_read_state",
+      "version": "20260812000130"
+    },
+    {
+      "name": "secure_direct_message_unread",
+      "version": "20260812000131"
+    },
+    {
+      "name": "secure_login_bonus_cycle",
+      "version": "20260812000132"
+    },
+    {
+      "name": "secure_mission_foundation",
+      "version": "20260812000133"
+    },
+    {
+      "name": "internal_mission_progress_dispatch",
+      "version": "20260812000134"
+    },
+    {
+      "name": "provisional_open_beta_missions",
+      "version": "20260812000135"
+    },
+    {
+      "name": "m8_critical_economy_rpc_lockdown",
+      "version": "20260813000136"
+    },
+    {
+      "name": "m8_critical_economy_rpc_lockdown_postflight",
+      "version": "20260813000137"
+    },
+    {
+      "name": "m8_secure_gacha_state_tables",
+      "version": "20260813000138"
+    },
+    {
+      "name": "m8_retire_unsafe_legacy_mutations",
+      "version": "20260813000139"
+    },
+    {
+      "name": "remove_client_qa_fixtures",
+      "version": "20260813000140"
+    },
+    {
+      "name": "schema_convergence",
+      "version": "20260813000141"
+    },
+    {
+      "name": "restore_canonical_guild_role_rpc",
+      "version": "20260813000142"
+    },
+    {
+      "name": "restore_canonical_guild_lifecycle_rpcs",
+      "version": "20260813000143"
+    },
+    {
+      "name": "official_battle_replay_contract",
+      "version": "20260813000144"
+    },
+    {
+      "name": "server_authoritative_pvp",
+      "version": "20260813000145"
+    },
+    {
+      "name": "server_authoritative_raid",
+      "version": "20260813000146"
+    },
+    {
+      "name": "funnel_milestones_and_guild_recommendation",
+      "version": "20260813000147"
+    },
+    {
+      "name": "server_funnel_event_hooks",
+      "version": "20260813000148"
+    },
+    {
+      "name": "p0_plus_funnel_enhancement",
+      "version": "20260813000149"
+    },
+    {
+      "name": "feature_freeze_friend_time_contracts",
+      "version": "20260813000150"
+    },
+    {
+      "name": "m9_tutorial_growth_contract",
+      "version": "20260814000151"
+    },
+    {
+      "name": "m9_v0_public_display_contracts",
+      "version": "20260817000152"
+    },
+    {
+      "name": "m9_activation_public_guild_and_ranking",
+      "version": "20260817000153"
+    },
+    {
+      "name": "ranking_power_p0_foundation",
+      "version": "20260817000154"
+    },
+    {
+      "name": "jst_midnight_daily_contract",
+      "version": "20260817000155"
+    },
+    {
+      "name": "ranking_source_table_lockdown",
+      "version": "20260817000156"
+    },
+    {
+      "name": "retire_direct_pvp_ranking_policy",
+      "version": "20260817000157"
+    },
+    {
+      "name": "public_guild_base_snapshot",
+      "version": "20260817000158"
+    },
+    {
+      "name": "gacha_launch_control_foundation",
+      "version": "20260817000159"
+    },
+    {
+      "name": "gacha_launch_control_rpcs",
+      "version": "20260817000160"
+    },
+    {
+      "name": "m9x_cold_start_social_foundation",
+      "version": "20260818000161"
+    },
+    {
+      "name": "m9x_activity_welcome_retention",
+      "version": "20260818000162"
+    },
+    {
+      "name": "m9x_tutorial_formation_runtime_fix",
+      "version": "20260818000163"
+    },
+    {
+      "name": "m9x_tutorial_character_continuity",
+      "version": "20260819000164"
+    },
+    {
+      "name": "m9x_tutorial_starter_skill",
+      "version": "20260819000165"
+    },
+    {
+      "name": "m9x_fresh_player_zero_roster",
+      "version": "20260820000166"
+    },
+    {
+      "name": "m9x_patrol_battle_idempotency",
+      "version": "20260820000167"
+    },
+    {
+      "name": "gameplay_foundation_canonical",
+      "version": "20260821000168"
+    },
+    {
+      "name": "canonical_character_stats_bigint",
+      "version": "20260821000169"
+    },
+    {
+      "name": "canonical_battle_runtime_snapshot",
+      "version": "20260821000170"
+    },
+    {
+      "name": "canonical_battle_snapshot_character_id",
+      "version": "20260821000171"
+    },
+    {
+      "name": "equipment_level_curve_final",
+      "version": "20260821000172"
+    },
+    {
+      "name": "mission_production_master",
+      "version": "20260821000173"
+    },
+    {
+      "name": "economy_foundation_canonical",
+      "version": "20260822000174"
+    },
+    {
+      "name": "character_awakening_copy_equivalent",
+      "version": "20260822000175"
+    },
+    {
+      "name": "user_level_action_resource_foundation",
+      "version": "20260822000176"
+    },
+    {
+      "name": "user_level_rpc_access",
+      "version": "20260822000177"
+    },
+    {
+      "name": "action_resource_recovery_projection",
+      "version": "20260822000178"
+    },
+    {
+      "name": "user_level_recovery_ticket_final",
+      "version": "20260822000179"
+    },
+    {
+      "name": "user_level_cap_constraint",
+      "version": "20260822000180"
+    },
+    {
+      "name": "quest_production_foundation",
+      "version": "20260822000181"
+    },
+    {
+      "name": "quest_master_read_policies",
+      "version": "20260822000182"
+    },
+    {
+      "name": "retire_legacy_quest_speedup_rpc",
+      "version": "20260822000183"
+    },
+    {
+      "name": "pvp_raid_ranking_production",
+      "version": "20260822000184"
+    },
+    {
+      "name": "quest_gameplay_v2",
+      "version": "20260822000185"
+    },
+    {
+      "name": "guild_production_social_core",
+      "version": "20260823000186"
+    },
+    {
+      "name": "guild_production_compatibility_guards",
+      "version": "20260823000187"
+    },
+    {
+      "name": "operations_preopen_exposure",
+      "version": "20260823000188"
+    },
+    {
+      "name": "operations_closed_rpc_grants",
+      "version": "20260823000189"
+    },
+    {
+      "name": "tutorial_first_home_canonical_reconciliation",
+      "version": "20260823000190"
+    },
+    {
+      "name": "remove_noncanonical_character_gacha_pool_rows",
+      "version": "20260823000191"
+    },
+    {
+      "name": "tutorial_canonical_growth_before_formation",
+      "version": "20260823000192"
+    },
+    {
+      "name": "tutorial_growth_milestone_authority",
+      "version": "20260823000193"
+    },
+    {
+      "name": "reconcile_character_ssr_candidate_pool",
+      "version": "20260824000194"
+    },
+    {
+      "name": "tutorial_durability_and_anonymous_cleanup",
+      "version": "20260825000195"
+    },
+    {
+      "name": "account_switch_lifecycle",
+      "version": "20260825000196"
+    },
+    {
+      "name": "pvp_opponent_pagination",
+      "version": "20260826000197"
+    },
+    {
+      "name": "profile_bio_identity_default",
+      "version": "20260826000198"
+    },
+    {
+      "name": "gameplay_reset_authority",
+      "version": "20260827000199"
+    },
+    {
+      "name": "patrol_replay_idempotency_convergence",
+      "version": "20260827000200"
+    },
+    {
+      "name": "ranking_server_projection",
+      "version": "20260827000201"
+    },
+    {
+      "name": "raid_battle_reward_projection",
+      "version": "20260827000202"
+    },
+    {
+      "name": "guild_activation_identity_projection",
+      "version": "20260827000203"
+    },
+    {
+      "name": "phase5_activation_mission_handoff",
+      "version": "20260828000191"
+    },
+    {
+      "name": "guild_human_acceptance_projection",
+      "version": "20260828000204"
+    },
+    {
+      "name": "guild_attribute_submaster_authority",
+      "version": "20260828000205"
+    },
+    {
+      "name": "guild_creation_level5_authority",
+      "version": "20260828000206"
+    },
+    {
+      "name": "guild_join_cooldown_authority",
+      "version": "20260828000207"
+    },
+    {
+      "name": "gacha_result_projection_parity",
+      "version": "20260828000208"
+    },
+    {
+      "name": "account_switch_power_projection_delete_guard",
+      "version": "20260828000209"
+    },
+    {
+      "name": "canonical_preapply_compatibility_preservation",
+      "version": "20260829000209"
+    },
+    {
+      "name": "canonical_master_freeze_runtime",
+      "version": "20260830000210"
+    },
+    {
+      "name": "canonical_raid_runtime_reward_convergence",
+      "version": "20260830000211"
+    },
+    {
+      "name": "existing_patrol_replay_snapshot_convergence",
+      "version": "20260830000212"
+    },
+    {
+      "name": "canonical_authority_rls_convergence",
+      "version": "20260830000213"
+    },
+    {
+      "name": "canonical_quest_enemy_unique_runtime_ids",
+      "version": "20260831000214"
+    },
+    {
+      "name": "anonymous_tutorial_cleanup_24h",
+      "version": "20260831000215"
+    },
+    {
+      "name": "optional_account_authentication",
+      "version": "20260901000219"
+    },
+    {
+      "name": "post_tutorial_loadout_guide",
+      "version": "20260901000220"
+    },
+    {
+      "name": "activation_membership_mission_handoff",
+      "version": "20260902000221"
+    },
+    {
+      "name": "daily_mission_authority_convergence",
+      "version": "20260902000222"
+    },
+    {
+      "name": "daily_mission_authority_corrections",
+      "version": "20260902000223"
+    },
+    {
+      "name": "starter_cash_authority",
+      "version": "20260902000224"
+    },
+    {
+      "name": "mission_direct_grant_refresh",
+      "version": "20260902000225"
+    },
+    {
+      "name": "location_movement_authority",
+      "version": "20260902000226"
+    },
+    {
+      "name": "ranking_season_lifecycle",
+      "version": "20260902000227"
+    },
+    {
+      "name": "ranking_season_lifecycle_revert",
+      "version": "20260902000228"
+    },
+    {
+      "name": "ranking_season_lifecycle_authority",
+      "version": "20260902000229"
+    },
+    {
+      "name": "ranking_lifecycle_safety_convergence",
+      "version": "20260902000230"
+    },
+    {
+      "name": "daily_ranking_reward_authority",
+      "version": "20260903000234"
+    },
+    {
+      "name": "preopen_gvg_preparation_missions",
+      "version": "20260903000235"
+    },
+    {
+      "name": "preopen_gvg_preparation_period_extension",
+      "version": "20260903000236"
+    },
+    {
+      "name": "preopen_guild_power_season_authority",
+      "version": "20260903000237"
+    },
+    {
+      "name": "preopen_promotion_asset_urls",
+      "version": "20260903000238"
+    },
+    {
+      "name": "public_ranking_reward_master_projection",
+      "version": "20260904000239"
+    },
+    {
+      "name": "recent_social_activity_authority",
+      "version": "20260904000240"
+    },
+    {
+      "name": "production_daily_activity_schema_parity",
+      "version": "20260904000242"
+    },
+    {
+      "name": "kpi_measurement_fact_foundation",
+      "version": "20260904000243"
+    },
+    {
+      "name": "kpi_measurement_lifecycle_hooks",
+      "version": "20260904000244"
+    },
+    {
+      "name": "kpi_snapshot_foundation",
+      "version": "20260904000245"
+    },
+    {
+      "name": "kpi_snapshot_refresh_rpcs",
+      "version": "20260904000246"
+    },
+    {
+      "name": "kpi_measurement_security",
+      "version": "20260904000247"
+    },
+    {
+      "name": "kpi_timeseries_dashboard",
+      "version": "20260905000248"
+    },
+    {
+      "name": "kpi_authority_extensions",
+      "version": "20260906000249"
+    },
+    {
+      "name": "acquisition_attribution_landing_authority",
+      "version": "20260907000250"
+    },
+    {
+      "name": "kpi_overview_saved_results",
+      "version": "20260908041511"
+    }
+  ],
+  "cron_recent": [
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T08:07:00.343123+00:00",
+      "start_time": "2026-09-08T08:07:00.149025+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T07:37:00.315886+00:00",
+      "start_time": "2026-09-08T07:37:00.068044+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T07:07:00.308239+00:00",
+      "start_time": "2026-09-08T07:07:00.079032+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T06:37:00.35415+00:00",
+      "start_time": "2026-09-08T06:37:00.115368+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T06:07:00.325017+00:00",
+      "start_time": "2026-09-08T06:07:00.091078+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T05:37:00.33587+00:00",
+      "start_time": "2026-09-08T05:37:00.174871+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T05:07:00.338927+00:00",
+      "start_time": "2026-09-08T05:07:00.10275+00:00"
+    },
+    {
+      "jobid": 12,
+      "status": "succeeded",
+      "end_time": "2026-09-08T04:37:00.375334+00:00",
+      "start_time": "2026-09-08T04:37:00.107553+00:00"
+    },
+    {
+      "jobid": 2,
+      "status": "succeeded",
+      "end_time": "2026-09-07T18:00:00.198057+00:00",
+      "start_time": "2026-09-07T18:00:00.147456+00:00"
+    },
+    {
+      "jobid": 3,
+      "status": "succeeded",
+      "end_time": "2026-09-07T15:00:00.239577+00:00",
+      "start_time": "2026-09-07T15:00:00.233464+00:00"
+    },
+    {
+      "jobid": 5,
+      "status": "succeeded",
+      "end_time": "2026-09-07T15:00:00.298632+00:00",
+      "start_time": "2026-09-07T15:00:00.232206+00:00"
+    },
+    {
+      "jobid": 2,
+      "status": "succeeded",
+      "end_time": "2026-09-06T18:00:00.170376+00:00",
+      "start_time": "2026-09-06T18:00:00.122255+00:00"
+    },
+    {
+      "jobid": 4,
+      "status": "succeeded",
+      "end_time": "2026-09-06T15:00:00.278099+00:00",
+      "start_time": "2026-09-06T15:00:00.248206+00:00"
+    },
+    {
+      "jobid": 5,
+      "status": "succeeded",
+      "end_time": "2026-09-06T15:00:00.282106+00:00",
+      "start_time": "2026-09-06T15:00:00.247493+00:00"
+    },
+    {
+      "jobid": 3,
+      "status": "succeeded",
+      "end_time": "2026-09-06T15:00:00.251811+00:00",
+      "start_time": "2026-09-06T15:00:00.245494+00:00"
+    },
+    {
+      "jobid": 2,
+      "status": "succeeded",
+      "end_time": "2026-09-05T18:00:00.139485+00:00",
+      "start_time": "2026-09-05T18:00:00.090223+00:00"
+    },
+    {
+      "jobid": 3,
+      "status": "succeeded",
+      "end_time": "2026-09-05T15:00:00.289339+00:00",
+      "start_time": "2026-09-05T15:00:00.278117+00:00"
+    },
+    {
+      "jobid": 5,
+      "status": "succeeded",
+      "end_time": "2026-09-05T15:00:00.302705+00:00",
+      "start_time": "2026-09-05T15:00:00.276221+00:00"
+    },
+    {
+      "jobid": 2,
+      "status": "succeeded",
+      "end_time": "2026-09-04T18:00:00.083145+00:00",
+      "start_time": "2026-09-04T18:00:00.048588+00:00"
+    },
+    {
+      "jobid": 5,
+      "status": "succeeded",
+      "end_time": "2026-09-04T15:00:00.236873+00:00",
+      "start_time": "2026-09-04T15:00:00.19922+00:00"
+    }
+  ],
+  "raid_tables": null,
+  "project_ref": "sufvuqdnqohpfzkwxohq",
+  "code_sha": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+  "observed_at_jst": "2026-09-08T17:24:37.350+09:00",
+  "details": {
+    "counts": {
+      "items": 18,
+      "users": 19,
+      "guilds": 0,
+      "replays": 5,
+      "presents": 12
+    },
+    "columns": [
+      {
+        "type": "uuid",
+        "table": "battle_replay_sessions",
+        "column": "id"
+      },
+      {
+        "type": "uuid",
+        "table": "battle_replay_sessions",
+        "column": "requester_user_id"
+      },
+      {
+        "type": "text",
+        "table": "battle_replay_sessions",
+        "column": "battle_mode"
+      },
+      {
+        "type": "uuid",
+        "table": "battle_replay_sessions",
+        "column": "source_reference_id"
+      },
+      {
+        "type": "text",
+        "table": "battle_replay_sessions",
+        "column": "status"
+      },
+      {
+        "type": "text",
+        "table": "battle_replay_sessions",
+        "column": "tactic_id"
+      },
+      {
+        "type": "bigint",
+        "table": "battle_replay_sessions",
+        "column": "random_seed"
+      },
+      {
+        "type": "jsonb",
+        "table": "battle_replay_sessions",
+        "column": "player_snapshot"
+      },
+      {
+        "type": "jsonb",
+        "table": "battle_replay_sessions",
+        "column": "enemy_snapshot"
+      },
+      {
+        "type": "jsonb",
+        "table": "battle_replay_sessions",
+        "column": "result"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "battle_replay_sessions",
+        "column": "resolved_at"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "battle_replay_sessions",
+        "column": "created_at"
+      },
+      {
+        "type": "text",
+        "table": "battle_replay_sessions",
+        "column": "resolution_authority"
+      },
+      {
+        "type": "text",
+        "table": "battle_replay_sessions",
+        "column": "finalization_status"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "battle_replay_sessions",
+        "column": "finalized_at"
+      },
+      {
+        "type": "jsonb",
+        "table": "battle_replay_sessions",
+        "column": "finalization_result"
+      },
+      {
+        "type": "jsonb",
+        "table": "battle_replay_sessions",
+        "column": "official_context"
+      },
+      {
+        "type": "text",
+        "table": "battle_replay_sessions",
+        "column": "enemy_tactic_id"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "version"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "item_id"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "display_name"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "category"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "description"
+      },
+      {
+        "type": "boolean",
+        "table": "canonical_item_master",
+        "column": "stackable"
+      },
+      {
+        "type": "integer",
+        "table": "canonical_item_master",
+        "column": "max_stack"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "usage_type"
+      },
+      {
+        "type": "jsonb",
+        "table": "canonical_item_master",
+        "column": "source_categories"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "expiry_policy"
+      },
+      {
+        "type": "jsonb",
+        "table": "canonical_item_master",
+        "column": "runtime_usage"
+      },
+      {
+        "type": "text",
+        "table": "canonical_item_master",
+        "column": "asset_path"
+      },
+      {
+        "type": "boolean",
+        "table": "canonical_item_master",
+        "column": "is_production_enabled"
+      },
+      {
+        "type": "text",
+        "table": "canonical_raid_variants",
+        "column": "raid_variant_id"
+      },
+      {
+        "type": "text",
+        "table": "canonical_raid_variants",
+        "column": "area_id"
+      },
+      {
+        "type": "text",
+        "table": "canonical_raid_variants",
+        "column": "raid_name"
+      },
+      {
+        "type": "bigint",
+        "table": "canonical_raid_variants",
+        "column": "max_hp"
+      },
+      {
+        "type": "integer",
+        "table": "canonical_raid_variants",
+        "column": "atk"
+      },
+      {
+        "type": "integer",
+        "table": "canonical_raid_variants",
+        "column": "def"
+      },
+      {
+        "type": "integer",
+        "table": "canonical_raid_variants",
+        "column": "spd"
+      },
+      {
+        "type": "jsonb",
+        "table": "canonical_raid_variants",
+        "column": "member_character_ids"
+      },
+      {
+        "type": "boolean",
+        "table": "canonical_raid_variants",
+        "column": "is_production_enabled"
+      },
+      {
+        "type": "text",
+        "table": "canonical_raid_variants",
+        "column": "version"
+      },
+      {
+        "type": "uuid",
+        "table": "guild_members",
+        "column": "id"
+      },
+      {
+        "type": "uuid",
+        "table": "guild_members",
+        "column": "guild_id"
+      },
+      {
+        "type": "uuid",
+        "table": "guild_members",
+        "column": "user_id"
+      },
+      {
+        "type": "text",
+        "table": "guild_members",
+        "column": "role"
+      },
+      {
+        "type": "integer",
+        "table": "guild_members",
+        "column": "contribution_points"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "guild_members",
+        "column": "joined_at"
+      },
+      {
+        "type": "integer",
+        "table": "guild_members",
+        "column": "weekly_contribution"
+      },
+      {
+        "type": "integer",
+        "table": "guild_members",
+        "column": "total_contribution"
+      },
+      {
+        "type": "uuid",
+        "table": "guilds",
+        "column": "id"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "name"
+      },
+      {
+        "type": "uuid",
+        "table": "guilds",
+        "column": "leader_id"
+      },
+      {
+        "type": "integer",
+        "table": "guilds",
+        "column": "level"
+      },
+      {
+        "type": "integer",
+        "table": "guilds",
+        "column": "xp"
+      },
+      {
+        "type": "bigint",
+        "table": "guilds",
+        "column": "funds"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "main_alignment"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "sub_alignment"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "banner_id"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "decoration_id"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "guilds",
+        "column": "created_at"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "description"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "logo_icon"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "color_theme"
+      },
+      {
+        "type": "bigint",
+        "table": "guilds",
+        "column": "cash"
+      },
+      {
+        "type": "boolean",
+        "table": "guilds",
+        "column": "approval_required"
+      },
+      {
+        "type": "integer",
+        "table": "guilds",
+        "column": "auto_kick_days"
+      },
+      {
+        "type": "jsonb",
+        "table": "guilds",
+        "column": "unlocked_decorations"
+      },
+      {
+        "type": "jsonb",
+        "table": "guilds",
+        "column": "unlocked_banners"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "equipped_decoration"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "equipped_banner"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "welcome_message"
+      },
+      {
+        "type": "text",
+        "table": "guilds",
+        "column": "recruitment_mode"
+      },
+      {
+        "type": "boolean",
+        "table": "guilds",
+        "column": "is_disbanded"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "guilds",
+        "column": "disbanded_at"
+      },
+      {
+        "type": "uuid",
+        "table": "presents",
+        "column": "id"
+      },
+      {
+        "type": "uuid",
+        "table": "presents",
+        "column": "user_id"
+      },
+      {
+        "type": "text",
+        "table": "presents",
+        "column": "item_id"
+      },
+      {
+        "type": "integer",
+        "table": "presents",
+        "column": "quantity"
+      },
+      {
+        "type": "text",
+        "table": "presents",
+        "column": "message"
+      },
+      {
+        "type": "text",
+        "table": "presents",
+        "column": "status"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "presents",
+        "column": "expire_at"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "presents",
+        "column": "created_at"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "presents",
+        "column": "sent_at"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "presents",
+        "column": "claimed_at"
+      },
+      {
+        "type": "text",
+        "table": "presents",
+        "column": "source_kind"
+      },
+      {
+        "type": "text",
+        "table": "presents",
+        "column": "source_key"
+      },
+      {
+        "type": "jsonb",
+        "table": "presents",
+        "column": "source_metadata"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_bosses",
+        "column": "id"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "boss_id"
+      },
+      {
+        "type": "bigint",
+        "table": "raid_bosses",
+        "column": "current_hp"
+      },
+      {
+        "type": "bigint",
+        "table": "raid_bosses",
+        "column": "max_hp"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "base_id"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "status"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_bosses",
+        "column": "expires_at"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_bosses",
+        "column": "created_at"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_bosses",
+        "column": "cycle_id"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "boss_master_id"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_bosses",
+        "column": "spawned_at"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "outcome"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_bosses",
+        "column": "outcome_finalized_at"
+      },
+      {
+        "type": "date",
+        "table": "raid_bosses",
+        "column": "rotation_date"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "raid_variant_id"
+      },
+      {
+        "type": "text",
+        "table": "raid_bosses",
+        "column": "raid_day_key"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_bosses",
+        "column": "cleared_at"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_bosses",
+        "column": "respawn_after"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_damage_logs",
+        "column": "id"
+      },
+      {
+        "type": "text",
+        "table": "raid_damage_logs",
+        "column": "boss_id"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_damage_logs",
+        "column": "user_id"
+      },
+      {
+        "type": "bigint",
+        "table": "raid_damage_logs",
+        "column": "damage"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "raid_damage_logs",
+        "column": "created_at"
+      },
+      {
+        "type": "text",
+        "table": "raid_damage_logs",
+        "column": "raid_boss_id"
+      },
+      {
+        "type": "bigint",
+        "table": "raid_damage_logs",
+        "column": "damage_dealt"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_damage_logs",
+        "column": "raid_boss_instance_id"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_damage_logs",
+        "column": "battle_replay_session_id"
+      },
+      {
+        "type": "uuid",
+        "table": "raid_damage_logs",
+        "column": "guild_id"
+      },
+      {
+        "type": "bigint",
+        "table": "raid_damage_logs",
+        "column": "raw_damage"
+      },
+      {
+        "type": "bigint",
+        "table": "raid_damage_logs",
+        "column": "applied_damage"
+      },
+      {
+        "type": "uuid",
+        "table": "users",
+        "column": "id"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "username"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "bio"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "avatar_url"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "current_base_id"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "level"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "xp"
+      },
+      {
+        "type": "bigint",
+        "table": "users",
+        "column": "cash"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "neon_diamonds"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "vitality"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "pvp_points"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "pvp_points_last_recovered_at"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "favorite_character_id"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "title_equipped"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "equipped_background"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "equipped_front_effect"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "selected_bg_mode"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "interior_item"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "last_guild_left_at"
+      },
+      {
+        "type": "text",
+        "table": "users",
+        "column": "gift_code"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "daily_cash_skips_count"
+      },
+      {
+        "type": "jsonb",
+        "table": "users",
+        "column": "sound_settings"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "created_at"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "raid_attempts_today"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "raid_attempts_reset_at"
+      },
+      {
+        "type": "boolean",
+        "table": "users",
+        "column": "has_shown_guild_dialog"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "last_active_at"
+      },
+      {
+        "type": "date",
+        "table": "users",
+        "column": "last_username_changed_on"
+      },
+      {
+        "type": "date",
+        "table": "users",
+        "column": "last_bio_changed_on"
+      },
+      {
+        "type": "uuid",
+        "table": "users",
+        "column": "guild_id"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "diamonds"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "vitality_last_recovered_at"
+      },
+      {
+        "type": "date",
+        "table": "users",
+        "column": "last_login_date"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "updated_at"
+      },
+      {
+        "type": "date",
+        "table": "users",
+        "column": "daily_cash_skips_reset_date"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "raid_points"
+      },
+      {
+        "type": "timestamp with time zone",
+        "table": "users",
+        "column": "raid_points_last_recovered_at"
+      },
+      {
+        "type": "boolean",
+        "table": "users",
+        "column": "raid_free_entry_consumed"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "quest_free_skips_count"
+      },
+      {
+        "type": "integer",
+        "table": "users",
+        "column": "quest_paid_skips_count"
+      },
+      {
+        "type": "date",
+        "table": "users",
+        "column": "quest_skips_reset_date"
+      }
+    ],
+    "definitions": [
+      {
+        "name": "claim_present",
+        "definition": "CREATE OR REPLACE FUNCTION public.claim_present(p_present_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_user_id uuid := auth.uid();\n  v_present public.presents%ROWTYPE;\nBEGIN\n  IF v_user_id IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;\n  SELECT * INTO v_present\n  FROM public.presents\n  WHERE id = p_present_id\n    AND user_id = v_user_id\n    AND status = 'UNCLAIMED'\n    AND (expire_at IS NULL OR expire_at > clock_timestamp())\n  FOR UPDATE;\n  IF NOT FOUND THEN RAISE EXCEPTION 'Present is not claimable'; END IF;\n\n  PERFORM public.grant_present_payload(v_user_id, v_present.item_id, v_present.quantity);\n  UPDATE public.presents\n  SET status = 'CLAIMED', claimed_at = clock_timestamp()\n  WHERE id = v_present.id;\n  RETURN jsonb_build_object('status', 'success', 'present_id', v_present.id);\nEND;\n$function$\n"
+      },
+      {
+        "name": "claim_present",
+        "definition": "CREATE OR REPLACE FUNCTION public.claim_present(p_user_id uuid, p_present_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE v_present public.presents%ROWTYPE;\nBEGIN\n  IF auth.uid() IS NULL OR auth.uid() <> p_user_id THEN RAISE EXCEPTION 'not authorized'; END IF;\n  SELECT * INTO v_present FROM public.presents WHERE id = p_present_id AND user_id = p_user_id AND status = 'UNCLAIMED' FOR UPDATE;\n  IF NOT FOUND THEN RETURN jsonb_build_object('error', 'present not found or already claimed'); END IF;\n  IF v_present.item_id = 'CASH' THEN\n    UPDATE public.users SET cash = cash + v_present.quantity WHERE id = p_user_id;\n  ELSIF v_present.item_id IN ('DIA', 'DIAMOND') THEN\n    UPDATE public.users SET neon_diamonds = neon_diamonds + v_present.quantity WHERE id = p_user_id;\n  ELSIF v_present.item_id LIKE 'EQUIP_%' THEN\n    INSERT INTO public.user_equipments (user_id, equipment_id, equipment_master_id, level, plus_val)\n    VALUES (p_user_id, v_present.item_id, v_present.item_id, 1, 0);\n  ELSE\n    INSERT INTO public.user_items (user_id, item_id, quantity) VALUES (p_user_id, v_present.item_id, v_present.quantity)\n    ON CONFLICT (user_id, item_id) DO UPDATE SET quantity = public.user_items.quantity + EXCLUDED.quantity;\n  END IF;\n  UPDATE public.presents SET status = 'CLAIMED', claimed_at = now() WHERE id = p_present_id;\n  RETURN jsonb_build_object('status', 'success');\nEND;\n$function$\n"
+      },
+      {
+        "name": "finalize_raid_battle",
+        "definition": "CREATE OR REPLACE FUNCTION public.finalize_raid_battle(p_replay_id uuid, p_result jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare\n  v_replay public.battle_replay_sessions%rowtype;\n  v_instance public.raid_bosses%rowtype;\n  v_raw bigint;\n  v_applied bigint;\n  v_remaining bigint;\n  v_total bigint;\n  v_progress public.raid_instance_user_progress%rowtype;\n  v_final jsonb;\nbegin\n  select * into v_replay\n  from public.battle_replay_sessions\n  where id = p_replay_id\n  for update;\n\n  if not found\n     or v_replay.battle_mode <> 'RAID'\n     or v_replay.resolution_authority <> 'RAID_SERVER' then\n    raise exception 'not an official Raid replay' using errcode = '42501';\n  end if;\n  if v_replay.finalization_status = 'FINALIZED' then\n    return v_replay.finalization_result;\n  end if;\n  if v_replay.status <> 'PENDING'\n     or v_replay.finalization_status <> 'PENDING' then\n    raise exception 'Raid replay is not finalizable' using errcode = '23514';\n  end if;\n\n  perform public.advance_ranking_season('RAID',clock_timestamp());\n perform public.validate_official_battle_result(p_result);\n  select * into v_instance\n  from public.raid_bosses\n  where id = v_replay.source_reference_id\n  for update;\n  if not found or v_instance.raid_day_key is null or v_instance.raid_variant_id is null then\n    raise exception 'Canonical Raid instance missing' using errcode = 'P0002';\n  end if;\n\n  v_raw := greatest(coalesce((p_result->>'playerRawDamage')::bigint, 0), 0);\n  v_applied := least(v_raw, greatest(v_instance.current_hp, 0));\n  v_remaining := greatest(v_instance.current_hp - v_applied, 0);\n\n  update public.raid_bosses\n  set current_hp = v_remaining\n  where id = v_instance.id;\n\n  insert into public.raid_damage_logs(\n    boss_id, raid_boss_id, user_id, damage, damage_dealt,\n    raid_boss_instance_id, battle_replay_session_id, guild_id,\n    raw_damage, applied_damage\n  ) values (\n    v_instance.boss_id, v_instance.boss_id, v_replay.requester_user_id,\n    v_raw, v_raw, v_instance.id, p_replay_id,\n    nullif(v_replay.official_context->>'guildIdSnapshot', '')::uuid,\n    v_raw, v_applied\n  );\n\n  insert into public.raid_instance_user_progress(\n    raid_boss_instance_id, user_id, finalized_battles,\n    raid_points_consumed, last_guild_id\n  ) values (\n    v_instance.id, v_replay.requester_user_id, 1,\n    case when v_replay.official_context->>'costType' = 'RAID_POINT' then 1 else 0 end,\n    nullif(v_replay.official_context->>'guildIdSnapshot', '')::uuid\n  )\n  on conflict(raid_boss_instance_id, user_id) do update set\n    finalized_battles = public.raid_instance_user_progress.finalized_battles + 1,\n    raid_points_consumed = public.raid_instance_user_progress.raid_points_consumed\n      + excluded.raid_points_consumed,\n    last_guild_id = excluded.last_guild_id,\n    updated_at = clock_timestamp()\n  returning * into v_progress;\n\n  select coalesce(sum(raw_damage), 0) into v_total\n  from public.raid_damage_logs\n  where raid_boss_instance_id = v_instance.id\n    and user_id = v_replay.requester_user_id;\n\n  v_final := p_result || jsonb_build_object(\n    'mode', 'RAID',\n    'raidInstanceId', v_instance.id,\n    'baseId', v_instance.base_id,\n    'raidDayKey', v_instance.raid_day_key,\n    'raidVariantId', v_instance.raid_variant_id,\n    'rawDamage', v_raw,\n    'appliedDamage', v_applied,\n    'remainingBossHp', v_remaining,\n    'personalContribution', v_total,\n    'guildIdSnapshot', v_replay.official_context->>'guildIdSnapshot',\n    'participationProgress', to_jsonb(v_progress)\n  );\n\n  insert into public.battle_replay_events(\n    battle_replay_session_id, event_index, round_number, event_type, payload\n  )\n  select p_replay_id,\n         greatest(coalesce((event.value->>'index')::integer, event.ordinality::integer - 1), 0),\n         greatest(coalesce((event.value->>'round')::integer, 1), 1),\n         coalesce(nullif(event.value->>'type', ''), 'UNKNOWN'),\n         coalesce(event.value->'payload', '{}'::jsonb)\n  from jsonb_array_elements(p_result->'events') with ordinality event(value, ordinality)\n  on conflict do nothing;\n\n  update public.battle_replay_sessions\n  set status = 'RESOLVED',\n      result = v_final,\n      resolved_at = clock_timestamp(),\n      finalization_status = 'FINALIZED',\n      finalized_at = clock_timestamp(),\n      finalization_result = v_final\n  where id = p_replay_id;\n\n  perform public.evaluate_mission_progress(\n    v_replay.requester_user_id,\n    'RAID_FINALIZED_BATTLE_COUNT',\n    1\n  );\n\n  if v_remaining = 0 then\n    perform public.finalize_expired_raid_instance(v_instance.id);\n  end if;\n  return v_final;\nend\n$function$\n"
+      },
+      {
+        "name": "get_active_raids",
+        "definition": "CREATE OR REPLACE FUNCTION public.get_active_raids()\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\r\nbegin if auth.uid() is null then raise exception 'authentication required' using errcode='42501'; end if; perform public.rotate_daily_raids();\r\n return coalesce((select jsonb_agg(jsonb_build_object('id',boss.id,'bossMasterId',master.boss_id,'bossName',master.display_name,'profileType',master.profile_type,'attribute',master.attribute,'level',master.reference_level,'currentHp',boss.current_hp,'maxHp',boss.max_hp,'baseId',boss.base_id,'spawnedAt',boss.spawned_at,'expiresAt',boss.expires_at,'status',boss.status,'skillLoadout',master.skill_loadout) order by boss.base_id) from public.raid_bosses boss join public.canonical_raid_boss_master master on master.boss_id=boss.boss_master_id where boss.status='ACTIVE' and boss.expires_at>clock_timestamp()),'[]'::jsonb);\r\nend $function$\n"
+      },
+      {
+        "name": "respawn_cleared_raid_slot",
+        "definition": "CREATE OR REPLACE FUNCTION public.respawn_cleared_raid_slot(p_cleared_instance_id uuid)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare v_old public.raid_bosses%rowtype; v_new uuid;\nbegin\n perform pg_advisory_xact_lock(hashtextextended(p_cleared_instance_id::text||':respawn',0));\n select * into v_old from public.raid_bosses where id=p_cleared_instance_id and status='CLEARED' and respawn_after<=now() for update;\n if not found then return null; end if;\n if exists(select 1 from public.raid_bosses where raid_day_key=v_old.raid_day_key and base_id=v_old.base_id and status='ACTIVE') then return null; end if;\n insert into public.raid_bosses(boss_id,boss_master_id,current_hp,max_hp,base_id,status,spawned_at,expires_at,cycle_id,rotation_date,raid_variant_id,raid_day_key)\n values(v_old.boss_id,v_old.boss_master_id,v_old.max_hp,v_old.max_hp,v_old.base_id,'ACTIVE',now(),v_old.expires_at,gen_random_uuid(),v_old.rotation_date,v_old.raid_variant_id,v_old.raid_day_key) returning id into v_new;\n return v_new;\nend $function$\n"
+      },
+      {
+        "name": "rotate_daily_raids",
+        "definition": "CREATE OR REPLACE FUNCTION public.rotate_daily_raids()\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare v_today date:=(clock_timestamp() at time zone 'Asia/Tokyo')::date; v_pair text[]; v_area text; v_variant public.canonical_raid_variants%rowtype; v_start timestamptz; v_end timestamptz; v_cleared record;\nbegin\n perform pg_advisory_xact_lock(hashtextextended('CANONICAL_RAID_ROTATION:'||v_today::text,0));\n for v_cleared in select id from public.raid_bosses where status='ACTIVE' and (current_hp=0 or expires_at<=now()) for update loop perform public.finalize_expired_raid_instance(v_cleared.id); end loop;\n for v_cleared in select id from public.raid_bosses where status='CLEARED' and raid_day_key=v_today::text and respawn_after<=now() for update loop perform public.respawn_cleared_raid_slot(v_cleared.id); end loop;\n v_pair:=public.canonical_raid_rotation_pair(v_today); v_start:=(v_today::timestamp at time zone 'Asia/Tokyo'); v_end:=v_start+interval '24 hours';\n foreach v_area in array v_pair loop\n  if not exists(select 1 from public.raid_bosses where raid_day_key=v_today::text and base_id=v_area and status='ACTIVE') and not exists(select 1 from public.raid_bosses where raid_day_key=v_today::text and base_id=v_area and status='CLEARED' and respawn_after>now()) then\n   select * into v_variant from public.canonical_raid_variants where area_id=upper(v_area) and is_production_enabled order by raid_variant_id limit 1;\n   insert into public.raid_bosses(boss_id,boss_master_id,current_hp,max_hp,base_id,status,spawned_at,expires_at,cycle_id,rotation_date,raid_variant_id,raid_day_key) values(v_variant.raid_variant_id,v_variant.raid_variant_id,v_variant.max_hp,v_variant.max_hp,v_area,'ACTIVE',greatest(now(),v_start),v_end,gen_random_uuid(),v_today,v_variant.raid_variant_id,v_today::text);\n  end if;\n end loop;\nend $function$\n"
+      },
+      {
+        "name": "start_raid_battle",
+        "definition": "CREATE OR REPLACE FUNCTION public.start_raid_battle(p_instance_id uuid, p_character_ids text[], p_tactic text DEFAULT 'ATTACK_PRIORITY'::text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\ndeclare v_uid uuid:=auth.uid(); v_user public.users%rowtype; v_instance record; v_cost integer; v_cost_type text; v_guild uuid; v_players jsonb; v_enemy jsonb:='[]'; v_member text; v_entry record; v_skill_refs jsonb; v_skills jsonb; v_replay uuid; v_seed bigint; v_slot integer:=0;\nbegin\n if v_uid is null then raise exception 'authentication required' using errcode='42501'; end if;\n if p_tactic not in('ATTACK_PRIORITY','HEAL_PRIORITY','SKILL_PRIORITY','BALANCED','WEAKNESS_FOCUS') then raise exception 'invalid tactic' using errcode='22023'; end if;\n perform public.sync_and_recover_vitality_and_pvp_points(v_uid); select * into v_user from public.users where id=v_uid for update;\n if v_user.level<5 then raise exception 'player level 5 is required' using errcode='23514'; end if;\n select boss.*,variant.raid_name,variant.atk,variant.def,variant.spd,variant.member_character_ids into v_instance from public.raid_bosses boss join public.canonical_raid_variants variant on variant.raid_variant_id=boss.raid_variant_id where boss.id=p_instance_id and boss.status='ACTIVE' and boss.expires_at>now() for update of boss;\n if not found then raise exception 'Raid instance is not active' using errcode='P0002'; end if;\n if not v_user.raid_free_entry_consumed then v_cost:=0;v_cost_type:='FREE_FIRST';update public.users set raid_free_entry_consumed=true where id=v_uid;\n elsif v_user.raid_points>=1 then v_cost:=1;v_cost_type:='RAID_POINT';update public.users set raid_points=raid_points-1,raid_points_last_recovered_at=case when raid_points=5 then now() else raid_points_last_recovered_at end where id=v_uid;v_user.raid_points:=v_user.raid_points-1;\n else raise exception 'insufficient Raid points' using errcode='23514'; end if;\n select guild_id into v_guild from public.guild_members where user_id=v_uid; v_players:=public.build_server_battle_snapshot(v_uid,p_character_ids,'PLAYER');\n for v_member in select value from jsonb_array_elements_text(v_instance.member_character_ids) loop\n  v_slot:=v_slot+1; select * into v_entry from public.canonical_quest_enemy_pool_entries where version='2026-08-30' and character_id=v_member and difficulty='HARD' order by(local_affinity)desc,weight desc limit 1;\n  v_skill_refs:=coalesce(v_entry.skill_loadout,(select jsonb_agg(skill_id order by skill_id) from(select skill_id from public.canonical_skill_master where version='2026-08-21' and exclusive_character_id=v_member order by skill_id limit 2)s),(select jsonb_agg(skill_id order by skill_id) from(select skill_id from public.canonical_skill_master where version='2026-08-21' and exclusive_character_id is null order by skill_id limit 2)s),'[]'::jsonb);\n  select coalesce(jsonb_agg(jsonb_build_object('id',s.skill_id,'name',s.display_name,'activationType',s.activation_type,'cooldown',s.cooldown,'availableFromRound',s.available_from_round,'target',s.target,'effects',s.effects,'exclusiveCharacterId',s.exclusive_character_id) order by x.ordinality),'[]') into v_skills from jsonb_array_elements_text(v_skill_refs) with ordinality x(skill_id,ordinality) join public.canonical_skill_master s on s.version='2026-08-21' and s.skill_id=x.skill_id;\n  v_enemy:=v_enemy||jsonb_build_array(jsonb_build_object('id','raid_'||v_instance.id||'_'||v_slot,'characterId',v_member,'name',coalesce((select display_name from public.canonical_character_master where version='2026-08-21' and character_id=v_member),v_member),'team','ENEMY','alignment',coalesce((select attribute from public.canonical_character_master where version='2026-08-21' and character_id=v_member),'NEUTRAL'),'level',30,'stats',jsonb_build_object('hp',ceil(v_instance.max_hp::numeric/5),'atk',v_instance.atk,'def',v_instance.def,'spd',v_instance.spd,'luk',0),'equippedSkillRefs',v_skill_refs,'skills',v_skills,'equipment','[]'::jsonb));\n end loop;\n v_seed:=floor(random()*2147483646)::bigint+1;\n insert into public.battle_replay_sessions(requester_user_id,battle_mode,source_reference_id,tactic_id,random_seed,player_snapshot,enemy_snapshot,resolution_authority,finalization_status,official_context) values(v_uid,'RAID',p_instance_id,p_tactic,v_seed,v_players,v_enemy,'RAID_SERVER','PENDING',jsonb_build_object('guildIdSnapshot',v_guild,'costType',v_cost_type,'cost',v_cost,'remainingRaidPoints',v_user.raid_points,'bossHpAtStart',v_instance.current_hp,'bossMaxHp',v_instance.max_hp,'baseId',v_instance.base_id,'raidDayKey',v_instance.raid_day_key,'raidVariantId',v_instance.raid_variant_id)) returning id into v_replay;\n return jsonb_build_object('replay_session_id',v_replay,'player_snapshot',v_players,'enemy_snapshot',v_enemy,'cost_type',v_cost_type,'cost',v_cost,'remaining_raid_points',v_user.raid_points,'guild_id_snapshot',v_guild);\nend $function$\n"
+      }
+    ],
+    "cron_commands": [
+      {
+        "jobid": 2,
+        "command": "select public.cleanup_expired_anonymous_onboarding();"
+      },
+      {
+        "jobid": 3,
+        "command": "select public.advance_ranking_season('PVP',clock_timestamp());"
+      },
+      {
+        "jobid": 4,
+        "command": "select public.advance_ranking_season('RAID',clock_timestamp());"
+      },
+      {
+        "jobid": 5,
+        "command": "select public.finalize_daily_ranking_rewards();"
+      },
+      {
+        "jobid": 7,
+        "command": "select public.finalize_preopen_guild_power_season();"
+      },
+      {
+        "jobid": 12,
+        "command": "set statement_timeout='120s'; select public.refresh_kpi_overview_saved_results();"
+      }
+    ]
+  }
+}

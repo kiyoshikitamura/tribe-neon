@@ -1,0 +1,767 @@
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352609
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 1,
+  deltaMs: 1,
+  at: 1788963352610
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 4,
+  deltaMs: 3,
+  at: 1788963352613
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 4,
+  deltaMs: 0,
+  at: 1788963352613
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352627
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352627
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352627
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352627
+}
+✔ 実useBattle Room準備キャンセルでstart/resolveなし (30.3749ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 19,
+  deltaMs: 15,
+  at: 1788963352628
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352634
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352634
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352635
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352635
+}
+✔ 実useBattle RoomconfirmはRoom start/resolve、旧開始/報酬なし (6.9362ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 9,
+  deltaMs: 8,
+  at: 1788963352636
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788963352637
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352644
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352644
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352645
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352645
+}
+✔ 実useBattle resolve失敗後は同Replay再試行、再開始なし (7.2243ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352648
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352648
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352649
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 1,
+  deltaMs: 0,
+  at: 1788963352649
+}
+✔ 実useBattle 非Roomは旧開始と旧報酬参照を維持 (6.9775ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 5,
+  deltaMs: 5,
+  at: 1788963352649
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10968:10
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352650
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352653
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352653
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352653
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352653
+}
+✔ 実useBattle 開始throwは互換sessionを保存せず同request再試行 (5.0185ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788963352655
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352657
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352657
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352658
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352658
+}
+✔ 実useBattle reload後はreceiptを読むだけで同Replay確定し追加開始なし (4.6863ms)
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11016:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352660
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352661
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352661
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352661
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352661
+}
+✔ 実useBattle 開始通信不明reloadは同request同編成で再送する (3.67ms)
+Failed to create replay snapshot: Error: quota
+    at proto.setItem (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11036:11)
+    at saveRaidRoomPending (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:73:11)
+    at Object.beforeSend (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9227:30)
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:124:27)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11040:7
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352663
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352663
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352664
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352664
+}
+✔ 実useBattle 保存不可は開始/確定/互換sessionを送信しない (2.4149ms)
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11055:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 4,
+  deltaMs: 3,
+  at: 1788963352665
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352666
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352666
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352666
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352666
+}
+✔ 実useBattle 別userのpendingは復帰しない (2.6228ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788963352667
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11071:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352668
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352669
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352669
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352670
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352670
+}
+✔ 実useBattle 同時復帰呼出しはreceipt/resolve各1回 (3.1909ms)
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11087:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352672
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352673
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352673
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352673
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352673
+}
+✔ 実useBattle receipt待機中にuser変更しても旧user応答を確定へ流さない (3.4364ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352675
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352675
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352676
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352676
+}
+✔ 実useBattle 互換session保存後clear前reloadは既存sessionを再利用 (2.3964ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788963352676
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352677
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352677
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352678
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352678
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788963352678
+}
+Failed to refresh current Raid attempts: Error: transport
+    at TestContext.<anonymous> (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11129:72)
+    at Test.runInAsyncScope (node:async_hooks:227:14)
+    at Test.run (node:internal/test_runner/test:1382:25)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+✔ 実useBattle 復帰後の現在RP参照失敗でも表示値保持・確定Replay再開始なし (4.7498ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 3,
+  at: 1788963352680
+}
+✔ 実useBattle local消失はserver開始記録から同Replay復帰、startなし (1.2629ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352683
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352683
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352683
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352683
+}
+✔ 実useBattle server一覧空は自動出撃せずflag false旧bootを維持 (1.1225ms)
+Failed to clear saved Room request: Error: 出撃結果の確認記録を保存できませんでした。
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9118:115)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11184:5
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352685
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352685
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352685
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352685
+}
+✔ 実useBattle ack失敗はlocal復帰情報を保持 (2.054ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352685
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11197:7
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352687
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352688
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352688
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352688
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352688
+}
+Failed to create replay snapshot: Error: transport
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:10867:71)
+    at Object.rpc (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:148:34)
+    at C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:127:39
+    at Object.start (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:132:9)
+    at runBattleStart (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:8732:153)
+    at async Object.confirmPreparedRaidBattle (C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:9732:7)
+    at async C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-09\codex-game03-tribe-neon-ux-party\tribe-neon-validation-runtime\raid-browser-B1UNiD\browser.test.cjs:11197:7
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352689
+}
+✔ 実useBattle 取消通信失敗は保持して再試行、started復帰/cancelledのみ消去 (5.899ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352692
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352692
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352692
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352692
+}
+✔ 復帰済みRoomはpending開始なしで再生を許可し追加RPCなし (1.2996ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'lock',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352694
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'request_start',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352694
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'response',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352694
+}
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'state_update',
+  elapsedMs: 0,
+  deltaMs: 0,
+  at: 1788963352694
+}
+✔ 準備画面の古い再生callbackでも確定SnapshotのIDを上書きしない (2.011ms)
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 3,
+  deltaMs: 2,
+  at: 1788963352694
+}
+{ code: 'PGRST205', message: 'missing retired table' }
+[M9 action performance] {
+  action: 'battle_start',
+  stage: 'visual_ready',
+  elapsedMs: 2,
+  deltaMs: 2,
+  at: 1788963352696
+}
+✔ 互換table不在でもRoom RESULT確認後にackし、失敗時は結果を保持 (1606.7743ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4174.153

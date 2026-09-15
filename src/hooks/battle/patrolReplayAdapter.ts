@@ -38,6 +38,7 @@ export function patrolSnapshotToParticipants(snapshot: unknown, isEnemy: boolean
       id,
       name: String(unit.name ?? (isEnemy ? "ENEMY" : "ALLY")),
       characterId: String(unit.characterId ?? (isEnemy ? id.replace(/^enemy_/, "") : id.replace(/^ally_/, ""))),
+      equipmentMasterIds: records(unit.equipment).map((entry) => String(entry.equipmentId ?? "")).filter(Boolean),
       alignment: String(unit.alignment ?? (isEnemy ? "CHAOS" : "ORDER")),
       level: Math.max(1, numberValue(unit.level, 1)),
       awakeningLevel: Math.max(0, numberValue(unit.awakeningLevel ?? unit.awakening_level, 0)),

@@ -1,0 +1,7 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {login,rpc} from '../raid-step6/qa-http.mjs';
+if(process.env.RAID_STEP6_SUPPLEMENT_A_WRITE!=='true')throw Error('Parent normal actor permission required');
+const dir='outputs/raid-step6-supplement';fs.mkdirSync(dir,{recursive:true});const file=dir+'/a-room.json';
+const state=fs.existsSync(file)?JSON.parse(fs.readFileSync(file)):{role:'normal',requestId:crypto.randomUUID()};const save=()=>fs.writeFileSync(file,JSON.stringify(state,null,2));
+const auth=await login('normal');const recovery=await rpc(auth,'list_raid_room_battle_recoveries_v1',{p_limit:20});assert.equal(recovery.status,200);assert.equal(recovery.data.length,0,'Existing pending recovery: stop without modifying');
+if(!state.variant){const choices=await rpc(auth,'list_raid_room_boss_choices_v1');assert.equal(choices.status,200);state.variant=choices.data.choices[0].raidVariantId;save();}
+const created=await rpc(auth,'create_raid_room_v1',{p_difficulty_id:'beginner',p_raid_variant_id:state.variant,p_request_id:state.requestId});state.status=created.status;state.code=created.data?.code??null;save();assert.equal(created.status,200);if(state.roomId)assert.equal(state.roomId,created.data.roomId);state.roomId=created.data.roomId;state.ownerId=auth.id;state.room=created.data;save();console.log(JSON.stringify({roomId:state.roomId,role:state.role,variant:state.variant,status:state.status}));

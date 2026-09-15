@@ -3,10 +3,13 @@
 import { executeMockRpc } from "./mockRpc.ts";
 import { resolveBattle, type Tactic } from "../../../supabase/functions/resolve-battle/engine.ts";
 import { CANONICAL_MISSIONS } from "../../domain/gameplay/canonical/masters.ts";
+import { DEFAULT_LOGIN_BONUS_MASTERS } from "../login_bonus_master_data.ts";
 
 const isTactic = (value: unknown): value is Tactic => value === "ATTACK_PRIORITY" || value === "HEAL_PRIORITY" || value === "SKILL_PRIORITY" || value === "BALANCED" || value === "WEAKNESS_FOCUS";
 
 export class MockSupabaseClient {
+  private authSubscribers = new Set<(event: string, session: any) => void>();
+
   public getStorage(key: string, defaultVal: any = []) {
     if (typeof window === "undefined") return defaultVal;
     const data = localStorage.getItem(`mock_db_${key}`);
@@ -29,6 +32,7 @@ export class MockSupabaseClient {
         is_provisional: mission.isProvisional,
       }));
     }
+    if (key === "login_bonus_master") return DEFAULT_LOGIN_BONUS_MASTERS.map((master) => ({ ...master }));
     return defaultVal;
   }
 
@@ -68,6 +72,8 @@ export class MockSupabaseClient {
         return {
           data: {
             session: {
+              access_token: `mock:${demoId}:${authMode}`,
+              refresh_token: `mock:${demoId}:${authMode}`,
               user: {
                 id: demoId,
                 email: `demo-${demoId.substring(0, 8)}@example.com`,
@@ -82,14 +88,18 @@ export class MockSupabaseClient {
       return { data: { session: null } };
     },
     onAuthStateChange: (callback: any) => {
-      setTimeout(async () => {
+      this.authSubscribers.add(callback);
+      const initialSessionTimer = setTimeout(async () => {
         const { data } = await this.auth.getSession();
-        callback("INITIAL_SESSION", data.session);
+        if (this.authSubscribers.has(callback)) callback("INITIAL_SESSION", data.session);
       }, 50);
       return {
         data: {
           subscription: {
-            unsubscribe: () => {}
+            unsubscribe: () => {
+              clearTimeout(initialSessionTimer);
+              this.authSubscribers.delete(callback);
+            }
           }
         }
       };
@@ -120,28 +130,42 @@ export class MockSupabaseClient {
           || localStorage.getItem("tribe_demo_uuid");
         if (!demoId) {
           demoId = "00000000-0000-4000-8000-" + Math.floor(100000000000 + Math.random() * 900000000000).toString();
-          localStorage.setItem("tribe_demo_uuid", demoId);
         }
+        localStorage.setItem("tribe_demo_uuid", demoId);
         localStorage.setItem("mock_auth_mode", "EMAIL");
       }
       const { data } = await this.auth.getSession();
+      if (data.session) {
+        for (const callback of this.authSubscribers) callback("SIGNED_IN", data.session);
+      }
       return { data: { user: data.session?.user || {}, session: data.session }, error: null };
     },
     signInWithOAuth: async ({ options }: any = {}) => {
       if (typeof window !== "undefined") {
         localStorage.setItem("mock_last_oauth_redirect_to", String(options?.redirectTo || ""));
+        localStorage.setItem("mock_last_oauth_query_params", JSON.stringify(options?.queryParams || {}));
         const existingId = localStorage.getItem("mock_existing_google_user_id");
-        if (existingId) localStorage.setItem("tribe_demo_uuid", existingId);
-        localStorage.setItem("mock_auth_mode", "GOOGLE");
+        const switchIntent = JSON.parse(localStorage.getItem("tribe_existing_google_login_intent") || "null");
+        if (existingId && switchIntent?.method === "GOOGLE_SWITCH") {
+          localStorage.setItem("mock_oauth_callback_user_id", existingId);
+        } else {
+          if (existingId) localStorage.setItem("tribe_demo_uuid", existingId);
+          localStorage.setItem("mock_auth_mode", "GOOGLE");
+        }
       }
       return { data: { provider: "google" }, error: null };
     },
     setSession: async ({ access_token }: any) => {
       if (typeof window === "undefined") return { data: { session: null }, error: { message: "Browser storage is unavailable" } };
-      const userId = String(access_token || "").replace(/^mock:/, "");
+      const tokenParts = String(access_token || "").replace(/^mock:/, "").split(":");
+      const userId = tokenParts[0];
+      const authMode = tokenParts[1] || "EMAIL";
       if (!userId) return { data: { session: null }, error: { message: "Invalid session" } };
+      if (localStorage.getItem("mock_set_session_failure_user_id") === userId) {
+        return { data: { session: null }, error: { message: "Mock session switch failed" } };
+      }
       localStorage.setItem("tribe_demo_uuid", userId);
-      localStorage.setItem("mock_auth_mode", "EMAIL");
+      localStorage.setItem("mock_auth_mode", authMode);
       const { data } = await this.auth.getSession();
       return { data, error: null };
     },
@@ -166,6 +190,12 @@ export class MockSupabaseClient {
       if (localStorage.getItem("mock_email_confirmation_required") === "true") {
         localStorage.setItem("mock_pending_email", email);
         return { data: { user: { id: userId, email: null, new_email: email, is_anonymous: true, identities: [] } }, error: null };
+      }
+      const linkedUserId = localStorage.getItem("mock_email_link_user_id");
+      if (linkedUserId && linkedUserId !== userId) {
+        localStorage.setItem("tribe_demo_uuid", linkedUserId);
+        localStorage.setItem("mock_auth_mode", "EMAIL");
+        return { data: { user: { id: linkedUserId, email, is_anonymous: false, identities: [{ provider: "email", email }] } }, error: null };
       }
       localStorage.setItem("mock_auth_mode", "EMAIL");
       localStorage.removeItem("mock_pending_email");

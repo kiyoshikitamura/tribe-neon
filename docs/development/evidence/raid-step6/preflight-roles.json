@@ -1,0 +1,114 @@
+{
+  "at": "2026-09-09T05:09:09.740Z",
+  "roles": [
+    {
+      "role": "host",
+      "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "login": "PASS",
+      "profileStatus": 200,
+      "level": 5,
+      "rooms": [
+        {
+          "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+          "status": 200,
+          "state": {
+            "value": "cleared",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T10:35:48.611071+00:00",
+            "status": "available"
+          }
+        },
+        {
+          "roomId": "3972a461-b45f-4b02-8142-75f294461ae3",
+          "status": 200,
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T10:40:55.031663+00:00",
+            "status": "available"
+          }
+        }
+      ]
+    },
+    {
+      "role": "normal",
+      "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "login": "PASS",
+      "profileStatus": 200,
+      "level": 5,
+      "rooms": [
+        {
+          "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+          "status": 200,
+          "state": {
+            "value": "cleared",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T10:35:48.611071+00:00",
+            "status": "available"
+          }
+        },
+        {
+          "roomId": "3972a461-b45f-4b02-8142-75f294461ae3",
+          "status": 200,
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T10:40:55.031663+00:00",
+            "status": "available"
+          }
+        }
+      ]
+    },
+    {
+      "role": "rescue",
+      "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "login": "PASS",
+      "profileStatus": 200,
+      "level": 5,
+      "rooms": [
+        {
+          "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+          "status": 200,
+          "state": {
+            "value": "cleared",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T10:35:48.611071+00:00",
+            "status": "available"
+          }
+        },
+        {
+          "roomId": "3972a461-b45f-4b02-8142-75f294461ae3",
+          "status": 200,
+          "state": {
+            "value": "active",
+            "status": "available"
+          },
+          "expiresAt": {
+            "value": "2026-09-09T10:40:55.031663+00:00",
+            "status": "available"
+          }
+        }
+      ]
+    }
+  ],
+  "protectedRooms": [
+    {
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "reason": "Existing QA room: preserve current HP, expiry, outcomes and receipts"
+    },
+    {
+      "roomId": "3972a461-b45f-4b02-8142-75f294461ae3",
+      "reason": "Existing QA room: preserve current HP, expiry, outcomes and receipts"
+    }
+  ]
+}

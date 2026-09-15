@@ -1,0 +1,26 @@
+{
+  "source": "Read-only dedicated QA saved Replay; metadata only",
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "row": {
+    "id": "b481f2d7-80db-425f-9786-123ae7d4f9f8",
+    "battle_mode": "RAID",
+    "source_reference_id": "587bbb99-8220-48ad-8fe3-1ee1d7746b20",
+    "official_context": {
+      "cost": 1,
+      "baseId": "shibuya",
+      "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+      "costType": "RAID_POINT",
+      "bossMaxHp": 28000000,
+      "startedAt": "2026-09-09T07:10:14.706692+00:00",
+      "raidDayKey": "ROOM:587bbb99-8220-48ad-8fe3-1ee1d7746b20",
+      "difficultyId": "beginner",
+      "bossHpAtStart": 28000000,
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "roomExpiresAt": "2026-09-10T07:05:25.882034+00:00",
+      "formationPower": 78228,
+      "guildIdSnapshot": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+      "raidRoomVersion": 1,
+      "remainingRaidPoints": 3
+    }
+  }
+}

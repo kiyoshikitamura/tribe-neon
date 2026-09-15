@@ -1,0 +1,12 @@
+{
+  "at": "2026-09-09T07:33:01.077Z",
+  "status": 200,
+  "payload": {
+    "p_rescue_id": "4be49290-8be1-48d6-af5e-110d135d5b22"
+  },
+  "data": {
+    "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+    "viaRescue": true,
+    "membershipStatus": "joined"
+  }
+}

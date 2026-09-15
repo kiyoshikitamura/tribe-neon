@@ -1,0 +1,22 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_active_ranking_seasons.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_active_ranking_seasons.candidate.sql
+index a665e30..f90dc79 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_active_ranking_seasons.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/get_active_ranking_seasons.candidate.sql
+@@ -1,6 +1,2 @@
+-CREATE OR REPLACE FUNCTION public.get_active_ranking_seasons()
+- RETURNS jsonb
+- LANGUAGE plpgsql
+- STABLE SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
++create or replace function public.get_active_ranking_seasons()
++returns jsonb language plpgsql stable security definer set search_path=public as $$
+@@ -10 +6 @@ begin
+-    from public.ranking_seasons season where season.status='ACTIVE' and clock_timestamp()>=season.starts_at and clock_timestamp()<season.ends_at),'[]'::jsonb);
++    from public.ranking_seasons season where season.ranking_type<>'RAID' and season.status='ACTIVE' and clock_timestamp()>=season.starts_at and clock_timestamp()<season.ends_at),'[]'::jsonb);
+@@ -12,2 +8 @@ end;
+-$function$
+-;
+\ No newline at end of file
++$$;
+\ No newline at end of file

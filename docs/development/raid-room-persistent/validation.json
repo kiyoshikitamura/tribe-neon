@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "engine": "PGlite; isolated databases only",
+  "checks": [
+    "ROLLBACK removes payload and ledger together",
+    "payload byte tampering rejected before DDL",
+    "postflight error rolls back DDL and ledger",
+    "isolated COMMIT retains payload and complete ledger",
+    "duplicate ID and changed hash both rejected",
+    "primary key rejects duplicate record",
+    "unknown preexisting audit schema rejected",
+    "Preview standard migration routes rejected by environment and resolved project ref",
+    "generated driver is valid UTF-8 without BOM and LF only"
+  ],
+  "limitations": [
+    "Harness uses synthetic payload/baseline/postflight; real Raid bundle checked separately by verify-step2-offline --bundle.",
+    "Multiple concurrent connections/advisory lock contention not supported by this harness.",
+    "Repository wrappers are guarded; direct CLI/API/admin connections and external CI settings cannot be proven blocked locally."
+  ]
+}

@@ -1,0 +1,549 @@
+{
+  "rpc": [
+    {
+      "name": "record_kpi_acquisition_landing_v1",
+      "status": 200
+    },
+    {
+      "name": "record_kpi_acquisition_observation_v1",
+      "status": 200
+    },
+    {
+      "name": "get_direct_message_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_bbs_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_current_onboarding_state",
+      "status": 200
+    },
+    {
+      "name": "unlock_eligible_user_cosmetics",
+      "status": 200
+    },
+    {
+      "name": "sync_current_missions",
+      "status": 200
+    },
+    {
+      "name": "bind_kpi_acquisition_subject_v1",
+      "status": 200
+    },
+    {
+      "name": "sync_legacy_user_cosmetics",
+      "status": 200
+    },
+    {
+      "name": "get_direct_message_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "process_login_bonus",
+      "status": 200
+    },
+    {
+      "name": "sync_active_users",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "sync_and_recover_vitality_and_pvp_points",
+      "status": 200
+    },
+    {
+      "name": "record_current_guild_login",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_public_profiles",
+      "status": 200
+    },
+    {
+      "name": "get_public_leader_characters",
+      "status": 200
+    },
+    {
+      "name": "get_canonical_quest_progression",
+      "status": 200
+    },
+    {
+      "name": "get_current_raid_attempt_state",
+      "status": 200
+    },
+    {
+      "name": "get_recent_social_activity_feed",
+      "status": 200
+    },
+    {
+      "name": "get_pending_mission_event_dialog",
+      "status": 200
+    },
+    {
+      "name": "get_my_pending_ranking_reward_notification",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "bind_kpi_acquisition_subject_v1",
+      "status": 200
+    },
+    {
+      "name": "issue_kpi_mypage_ready_context_v1",
+      "status": 200
+    },
+    {
+      "name": "get_public_pvp_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_public_profiles",
+      "status": 200
+    },
+    {
+      "name": "acknowledge_kpi_first_mypage_access_v1",
+      "status": 409
+    },
+    {
+      "name": "get_public_guild_base_controls",
+      "status": 200
+    },
+    {
+      "name": "get_current_onboarding_state",
+      "status": 200
+    },
+    {
+      "name": "record_kpi_acquisition_landing_v1",
+      "status": 200
+    },
+    {
+      "name": "unlock_eligible_user_cosmetics",
+      "status": 200
+    },
+    {
+      "name": "get_bbs_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_direct_message_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "bind_kpi_acquisition_subject_v1",
+      "status": 200
+    },
+    {
+      "name": "sync_legacy_user_cosmetics",
+      "status": 200
+    },
+    {
+      "name": "sync_current_missions",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "sync_active_users",
+      "status": 200
+    },
+    {
+      "name": "get_direct_message_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "record_current_guild_login",
+      "status": 200
+    },
+    {
+      "name": "sync_and_recover_vitality_and_pvp_points",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_public_profiles",
+      "status": 200
+    },
+    {
+      "name": "record_kpi_acquisition_observation_v1",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "get_current_onboarding_state",
+      "status": 200
+    },
+    {
+      "name": "sync_and_recover_vitality_and_pvp_points",
+      "status": 200
+    },
+    {
+      "name": "get_canonical_quest_progression",
+      "status": 200
+    },
+    {
+      "name": "get_public_leader_characters",
+      "status": 200
+    },
+    {
+      "name": "get_current_raid_attempt_state",
+      "status": 200
+    },
+    {
+      "name": "get_public_pvp_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_my_pending_ranking_reward_notification",
+      "status": 200
+    },
+    {
+      "name": "get_recent_social_activity_feed",
+      "status": 200
+    },
+    {
+      "name": "bind_kpi_acquisition_subject_v1",
+      "status": 200
+    },
+    {
+      "name": "get_pending_mission_event_dialog",
+      "status": 200
+    },
+    {
+      "name": "acknowledge_kpi_first_mypage_access_v1",
+      "status": 409
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "get_public_profiles",
+      "status": 200
+    },
+    {
+      "name": "process_login_bonus",
+      "status": 200
+    },
+    {
+      "name": "get_public_guild_base_controls",
+      "status": 200
+    },
+    {
+      "name": "get_public_gvg_rankings",
+      "status": 200
+    },
+    {
+      "name": "list_raid_rooms_v1",
+      "status": 200
+    },
+    {
+      "name": "get_current_main_formation",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "get_public_power_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_public_guild_power_rankings",
+      "status": 200
+    },
+    {
+      "name": "sync_current_missions",
+      "status": 200
+    },
+    {
+      "name": "bind_kpi_acquisition_subject_v1",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "sync_active_users",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "record_current_guild_login",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "sync_and_recover_vitality_and_pvp_points",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_public_profiles",
+      "status": 200
+    },
+    {
+      "name": "get_canonical_quest_progression",
+      "status": 200
+    },
+    {
+      "name": "get_public_leader_characters",
+      "status": 200
+    },
+    {
+      "name": "get_current_raid_attempt_state",
+      "status": 200
+    },
+    {
+      "name": "get_public_pvp_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_public_guild_base_controls",
+      "status": 200
+    },
+    {
+      "name": "get_public_gvg_rankings",
+      "status": 200
+    },
+    {
+      "name": "list_raid_rooms_v1",
+      "status": 200
+    },
+    {
+      "name": "get_current_main_formation",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "get_public_guild_power_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_public_power_rankings",
+      "status": 200
+    },
+    {
+      "name": "list_raid_room_battle_recoveries_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_room_briefing_v1",
+      "status": 200
+    },
+    {
+      "name": "get_current_raid_attempt_state",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "sync_and_recover_vitality_and_pvp_points",
+      "status": 200
+    },
+    {
+      "name": "sync_active_users",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "sync_current_missions",
+      "status": 200
+    },
+    {
+      "name": "bind_kpi_acquisition_subject_v1",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "sync_active_users",
+      "status": 200
+    },
+    {
+      "name": "get_active_mission_events",
+      "status": 200
+    },
+    {
+      "name": "record_current_guild_login",
+      "status": 200
+    },
+    {
+      "name": "sync_and_recover_vitality_and_pvp_points",
+      "status": 200
+    },
+    {
+      "name": "get_chat_unread_counts",
+      "status": 200
+    },
+    {
+      "name": "get_public_profiles",
+      "status": 200
+    },
+    {
+      "name": "get_canonical_quest_progression",
+      "status": 200
+    },
+    {
+      "name": "get_public_leader_characters",
+      "status": 200
+    },
+    {
+      "name": "get_current_raid_attempt_state",
+      "status": 200
+    },
+    {
+      "name": "get_public_pvp_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_public_guild_base_controls",
+      "status": 200
+    },
+    {
+      "name": "get_public_gvg_rankings",
+      "status": 200
+    },
+    {
+      "name": "list_raid_rooms_v1",
+      "status": 200
+    },
+    {
+      "name": "get_current_main_formation",
+      "status": 200
+    },
+    {
+      "name": "get_my_power_snapshot",
+      "status": 200
+    },
+    {
+      "name": "get_public_power_rankings",
+      "status": 200
+    },
+    {
+      "name": "get_public_guild_power_rankings",
+      "status": 200
+    },
+    {
+      "name": "acknowledge_raid_room_battle_recovery_v1",
+      "status": 503
+    },
+    {
+      "name": "acknowledge_raid_room_battle_recovery_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_room_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_top_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_room_briefing_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_room_display_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_room_participants_v1",
+      "status": 200
+    },
+    {
+      "name": "get_raid_room_rescue_status_v1",
+      "status": 200
+    }
+  ],
+  "steps": [
+    "same replay recovered without new start",
+    "simulated ack503 keeps result/local state/server request",
+    "real ack success returns room"
+  ],
+  "startCalls": 0,
+  "replayIds": [
+    "bd809833-89cf-46b8-8bce-54eefea44f97"
+  ],
+  "ackRequests": [
+    "d675762e-cd45-4f93-833c-e97cf8094e0e",
+    "d675762e-cd45-4f93-833c-e97cf8094e0e"
+  ]
+}

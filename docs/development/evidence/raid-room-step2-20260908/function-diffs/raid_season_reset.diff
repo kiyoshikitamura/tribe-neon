@@ -1,0 +1,25 @@
+diff --git a/docs/development/evidence/raid-room-step2-20260908/function-diffs/raid_season_reset.preview.sql b/docs/development/evidence/raid-room-step2-20260908/function-diffs/raid_season_reset.candidate.sql
+index 1e67c1e..ce94fb8 100644
+--- a/docs/development/evidence/raid-room-step2-20260908/function-diffs/raid_season_reset.preview.sql
++++ b/docs/development/evidence/raid-room-step2-20260908/function-diffs/raid_season_reset.candidate.sql
+@@ -1,13 +1,5 @@
+-CREATE OR REPLACE FUNCTION public.raid_season_reset()
+- RETURNS void
+- LANGUAGE plpgsql
+- SECURITY DEFINER
+- SET search_path TO 'public'
+-AS $function$
+-BEGIN
+-  IF COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', '') <> 'admin' THEN RAISE EXCEPTION 'admin role required'; END IF;
+-  DELETE FROM public.raid_damage_logs;
+-  UPDATE public.raid_bosses SET current_hp = max_hp, status = 'ACTIVE', expires_at = now() + interval '1 day';
+-END;
+-$function$
+-;
+\ No newline at end of file
++create or replace function public.raid_season_reset() returns void language plpgsql security definer set search_path=public as $$
++begin
++ if coalesce(auth.jwt()->'app_metadata'->>'role','')<>'admin' then raise exception 'admin role required'; end if;
++ return;
++end $$;
+\ No newline at end of file

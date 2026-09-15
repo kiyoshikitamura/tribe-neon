@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const { PGlite } = await import(process.env.PGLITE_MODULE || '@electric-sql/pglite');
+const db = new PGlite();
+const qa='11111111-1111-4111-8111-111111111111', other='22222222-2222-4222-8222-222222222222';
+await db.exec(`create role anon; create role authenticated; create role service_role;
+create schema auth; grant usage on schema auth to authenticated,service_role;
+create table auth.users(id uuid primary key);
+insert into auth.users values('${qa}'),('${other}');
+create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
+create function auth.role() returns text language sql stable as $$ select nullif(current_setting('request.jwt.claim.role',true),'') $$;
+create table public.feature_operating_states(feature_key text primary key,state text,mutation_allowed boolean);
+insert into public.feature_operating_states values('MAINTENANCE','MAINTENANCE',false),('PAYMENT','OPEN',true);
+create function public.operations_feature_state(p_key text) returns text language sql stable security definer as $$ select state from public.feature_operating_states where feature_key=p_key $$;
+create table public.probe(id int primary key,value int);
+insert into public.probe values(1,0); grant select,update on public.probe to authenticated,service_role;`);
+const source=fs.readFileSync('supabase/migrations/20260823000188_operations_preopen_exposure.sql','utf8');
+for(const name of ['reject_mutation_during_maintenance','assert_feature_mutation_allowed']) {
+ const match=source.match(new RegExp('create or replace function public\\.'+name+'\\([\\s\\S]*?\\$\\$;'));
+ assert.ok(match); await db.exec(match[0]);
+}
+await db.exec('create trigger maintenance_gate before update on public.probe for each row execute function public.reject_mutation_during_maintenance();');
+await db.exec(fs.readFileSync('supabase/operations/maintenance_test_access_candidate_20260915.sql','utf8'));
+await db.exec(`insert into public.operations_maintenance_testers(user_id,expires_at,reason) values('${qa}',now()+interval '1 hour','local QA');`);
+async function identity(uid) { await db.exec(`reset role; select set_config('request.jwt.claim.sub','${uid}',false); select set_config('request.jwt.claim.role','authenticated',false); set role authenticated;`); }
+await identity(qa);
+assert.equal((await db.query('select public.is_operations_maintenance_tester() as allowed')).rows[0].allowed,true);
+await db.exec('update public.probe set value=value+1; select public.assert_feature_mutation_allowed(\'PAYMENT\');');
+await assert.rejects(()=>db.exec(`update public.operations_maintenance_testers set expires_at=now()+interval '2 hours'`),/permission denied/);
+await identity(other);
+assert.equal((await db.query('select count(*)::int as count from public.operations_maintenance_testers')).rows[0].count,0);
+await assert.rejects(()=>db.exec('update public.probe set value=value+1'),/MAINTENANCE/);
+await assert.rejects(()=>db.exec("select public.assert_feature_mutation_allowed('PAYMENT')"),/MAINTENANCE/);
+await db.exec(`reset role; update public.operations_maintenance_testers set created_at=now()-interval '2 hours',expires_at=now()-interval '1 hour';`);
+await identity(qa);
+assert.equal((await db.query('select public.is_operations_maintenance_tester() as allowed')).rows[0].allowed,false);
+await assert.rejects(()=>db.exec('update public.probe set value=value+1'),/MAINTENANCE/);
+await db.exec(`reset role; update public.operations_maintenance_testers set created_at=now(),expires_at=now()+interval '1 hour'; update public.feature_operating_states set state='CLOSED' where feature_key='PAYMENT';`);
+await identity(qa);
+await assert.rejects(()=>db.exec("select public.assert_feature_mutation_allowed('PAYMENT')"),/FEATURE_CLOSED/);
+await db.exec('reset role; delete from public.operations_maintenance_testers;');
+await identity(qa);
+await assert.rejects(()=>db.exec('update public.probe set value=value+1'),/MAINTENANCE/);
+await db.exec("reset role; update public.feature_operating_states set state='CLOSED' where feature_key='MAINTENANCE';");
+await identity(other); await db.exec('update public.probe set value=value+1');
+await db.close();
+console.log('PASS: local DB only; QA access, non-QA denial, expiry, revocation, RLS, self-grant denial, feature CLOSED retained, maintenance off.');

@@ -1,0 +1,635 @@
+{
+  "at": "2026-09-09T07:34:07.535Z",
+  "userId": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+  "self": {
+    "status": 200,
+    "data": [
+      {
+        "id": "796dfc87-d4dd-42dc-b6c2-5657334cc825",
+        "level": 5,
+        "raid_points": 5
+      }
+    ]
+  },
+  "guilds": {
+    "status": 200,
+    "data": []
+  },
+  "retry": {
+    "status": 200,
+    "data": {
+      "roomId": "513fddee-eac1-481b-8b2b-8d273131bbef",
+      "viaRescue": true,
+      "membershipStatus": "already_joined"
+    }
+  },
+  "guildDenied": {
+    "status": 403,
+    "data": {
+      "code": "42501",
+      "details": null,
+      "hint": null,
+      "message": "guild membership required"
+    }
+  },
+  "ended": {
+    "status": 200,
+    "data": {
+      "baseId": "shibuya",
+      "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+      "bossName": "ハイスピード・スターズ",
+      "raidVariantId": "RAID_SHIBUYA_V1",
+      "joinEligibility": {
+        "reason": "room_ended",
+        "status": "failed",
+        "actualPower": 77596,
+        "minimumPower": null
+      },
+      "membershipStatus": "not_joined",
+      "battleStartEnabled": true,
+      "raidBossInstanceId": "2aec4aba-e56b-4e71-bbdf-f08071ec3fa4"
+    }
+  },
+  "failures": [
+    {
+      "path": "/rest/v1/rpc/get_chat_unread_counts",
+      "status": 409
+    },
+    {
+      "path": "/rest/v1/rpc/unlock_eligible_user_cosmetics",
+      "status": 400
+    },
+    {
+      "path": "/rest/v1/rpc/get_chat_unread_counts",
+      "status": 409
+    },
+    {
+      "path": "/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+      "status": 500
+    },
+    {
+      "path": "/rest/v1/rpc/sync_and_recover_vitality_and_pvp_points",
+      "status": 500
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/rpc/advance_tutorial_progress",
+      "status": 400
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/rpc/advance_tutorial_progress",
+      "status": 400
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/guild_members",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/story_sessions",
+      "status": 406
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/user_equipments",
+      "status": 403
+    },
+    {
+      "path": "/rest/v1/battle_sessions",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/news",
+      "status": 404
+    },
+    {
+      "path": "/rest/v1/rpc/acknowledge_kpi_first_mypage_access_v1",
+      "status": 409
+    },
+    {
+      "path": "/rest/v1/rpc/acknowledge_kpi_first_mypage_access_v1",
+      "status": 409
+    }
+  ]
+}

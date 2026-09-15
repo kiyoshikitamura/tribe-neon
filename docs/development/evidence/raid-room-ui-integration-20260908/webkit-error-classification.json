@@ -1,0 +1,10 @@
+{
+  "url": "https://tribe-neon-arnbhwc0s-kiyoshi-kitamura.vercel.app",
+  "errors": [
+    {
+      "message": "TypeError: undefined is not an object (evaluating 'navigator.storage.persisted')",
+      "stack": "Unhandled Promise Rejection: TypeError: undefined is not an object (evaluating 'navigator.storage.persisted')\n    at 60662 (https://vercel.live/_next-live/feedback/feedback.html?dpl=dpl_8r263XgqahjGfYmhNm1xXryNQLbL:9:101994)\n    at n (https://vercel.live/_next-live/feedback/feedback.html?dpl=dpl_8r263XgqahjGfYmhNm1xXryNQLbL:9:124762)"
+    }
+  ],
+  "matchingSources": []
+}

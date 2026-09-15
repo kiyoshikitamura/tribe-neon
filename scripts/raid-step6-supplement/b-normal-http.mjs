@@ -1,0 +1,16 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {login,rpc,request} from '../raid-step6/qa-http.mjs';
+const out='outputs/raid-step6-supplement';const roomId='513fddee-eac1-481b-8b2b-8d273131bbef';const filename=out+'/b-normal-http.json';
+if(process.env.RAID_B_NORMAL_WRITE!=='true')throw Error('Parent QA scope required');
+if(fs.existsSync(filename))throw Error('Existing attempt; inspect before same-request recovery');
+const state={at:new Date().toISOString(),roomId,rescueRequestId:crypto.randomUUID(),powerRequestId:crypto.randomUUID(),outcome:'UNKNOWN'};
+const save=()=>fs.writeFileSync(filename,JSON.stringify(state,null,2));save();
+const auth=await login('normal');
+const self=()=>request(auth,`/rest/v1/users?select=id,level,raid_points&id=eq.${auth.id}`);
+state.before=await self();assert.equal(state.before.status,200);
+state.power=await rpc(auth,'get_my_power_snapshot');assert.equal(state.power.status,200);
+state.publication=await rpc(auth,'request_raid_room_rescue_v1',{p_room_id:roomId,p_request_id:state.rescueRequestId});save();assert.equal(state.publication.status,200);assert.equal(state.publication.data.publications.length,2);
+state.sameRequest=await rpc(auth,'request_raid_room_rescue_v1',{p_room_id:roomId,p_request_id:state.rescueRequestId});save();assert.deepEqual(state.sameRequest,state.publication);
+state.choices=await rpc(auth,'list_raid_room_boss_choices_v1');assert.equal(state.choices.status,200);
+state.powerRejected=await rpc(auth,'create_raid_room_v1',{p_difficulty_id:'intermediate',p_raid_variant_id:'RAID_SHIBUYA_V1',p_request_id:state.powerRequestId});save();
+assert.equal(state.powerRejected.status,403);assert.equal(state.powerRejected.data.code,'42501');assert.equal(state.powerRejected.data.message,'raid power requirement');
+state.after=await self();assert.deepEqual(state.after,state.before);state.outcome='PASS';save();console.log('PASS publication 2 scopes/same request; intermediate power refusal; RP unchanged');

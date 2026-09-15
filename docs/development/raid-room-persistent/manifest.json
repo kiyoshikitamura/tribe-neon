@@ -1,0 +1,10 @@
+{
+  "encoding": "UTF-8 without BOM",
+  "line_endings": "LF",
+  "change_id": "raid-room-preview-375a0ad-delta-v1",
+  "payload_sha256": "adc3bccfc6345f5fd36dfcdd1d42bbba01531882437f61f50036365ed1d77ffb",
+  "baseline_sha256": "e693e496d2e7c4ba1f7083615564ae31c04042383948853041e7de62b00ae3f9",
+  "postflight_sha256": "f847a7829caa99cddd6c8798fc3045d699d514e8e53cbab0796310164303ffae",
+  "driver_sha256": "08896f83bff86e677626c23060fec5ebc576d134dabc123021f80907b3267d1c",
+  "terminal": "ROLLBACK"
+}

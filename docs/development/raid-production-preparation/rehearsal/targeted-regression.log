@@ -1,0 +1,27 @@
+SQL engine: PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit
+✔ 実SQL250〜263を同じschemaへ順次適用し既定値を保持 (2407.5417ms)
+✔ 旧停止下でRoom作成→両公開先救援→戦闘→両Present→既存claim、再送・順位停止共存 (114.9126ms)
+✔ 通常参加者・主催者も討伐対象、救援未帰属なら救援報酬なし (50.9525ms)
+✔ 旧停止下の撃破後確定は救援のみ、討伐貢献へ混入しない (45.476ms)
+✔ 旧停止下の24時間終了と期限後確定は両報酬なし (32.8373ms)
+✔ 旧開始済みReplayは停止後も確定、旧新規開始・生成を拒否、発行済み順位Presentは受取可 (30.1092ms)
+SQL engine: PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit
+✔ 取消先行は遅い開始を拒否しRP/Replay副作用なし (2309.7904ms)
+✔ 開始先行は取消せず同receiptを返す (41.6664ms)
+✔ 同requestでも他人の取消は開始済本人へ影響しない (20.2567ms)
+✔ 未確定ackは拒否、確定後ackは冪等で戦闘経済不変 (42.1871ms)
+✔ 一覧は未ackだけlimit指定し保存payload/receipt一致、参照副作用なし (37.335ms)
+✔ 一覧limit不正は拒否、未開始ackは拒否 (9.5609ms)
+✔ 匿名権限とnull要求の拒否 (10.9463ms)
+✔ 運用false/期限後も保存済一覧とcancel startedを返す (15.5683ms)
+✔ 取消台帳はauth/service直接参照書込不可、他人のack不可 (18.6961ms)
+✔ 取消済みrequest以外は通常開始できる、再送は再消費しない (29.3734ms)
+✔ 破損receiptはlist/ack/cancel全て拒否し取消に置換しない (18.0529ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2839.2232

@@ -1,0 +1,114 @@
+{
+  "baseline": {
+    "errors": 0,
+    "warnings": 1865
+  },
+  "candidate": {
+    "errors": 0,
+    "warnings": 1901
+  },
+  "changes": [
+    {
+      "file": "docs/verification/pvp-overflow/critical-browser.mjs",
+      "before": {},
+      "after": {
+        "@typescript-eslint/no-unused-vars": 1
+      },
+      "adoptedFrom": "2b24b11f8e64f27391e5e09c09002c93ed7221e8",
+      "sameAsAdopted": true
+    },
+    {
+      "file": "src/app/admin/kpi/KpiDashboardV2.tsx",
+      "before": {
+        "@typescript-eslint/no-explicit-any": 22,
+        "react-hooks/set-state-in-effect": 1
+      },
+      "after": {
+        "@typescript-eslint/no-explicit-any": 24,
+        "react-hooks/set-state-in-effect": 1
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": false,
+      "allWarningSourceLinesInAdopted": true
+    },
+    {
+      "file": "src/app/api/admin/kpi/v2/_shared.ts",
+      "before": {
+        "@typescript-eslint/no-explicit-any": 44
+      },
+      "after": {
+        "@typescript-eslint/no-explicit-any": 54
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": false,
+      "allWarningSourceLinesInAdopted": false,
+      "warningsNotInEitherSource": []
+    },
+    {
+      "file": "src/app/components/PvpTab.tsx",
+      "before": {
+        "@typescript-eslint/no-explicit-any": 20,
+        "@next/next/no-img-element": 1
+      },
+      "after": {
+        "@typescript-eslint/no-explicit-any": 21,
+        "@next/next/no-img-element": 1
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": true
+    },
+    {
+      "file": "src/app/qa/battle-flow-v3/BattleFlowMock.tsx",
+      "before": {},
+      "after": {
+        "react-hooks/set-state-in-effect": 1,
+        "@next/next/no-img-element": 9
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": true
+    },
+    {
+      "file": "src/app/qa/battle-presentation-v3/BattlePresentationMock.tsx",
+      "before": {},
+      "after": {
+        "@next/next/no-img-element": 9
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": true
+    },
+    {
+      "file": "src/app/qa/battle-presentation-v3/StatusMock.tsx",
+      "before": {},
+      "after": {
+        "@typescript-eslint/no-unused-vars": 1
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": true
+    },
+    {
+      "file": "src/utils/mock/MockSupabaseClient.ts",
+      "before": {
+        "@typescript-eslint/no-explicit-any": 40,
+        "@typescript-eslint/no-unused-vars": 5
+      },
+      "after": {
+        "@typescript-eslint/no-explicit-any": 41,
+        "@typescript-eslint/no-unused-vars": 5
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": true
+    },
+    {
+      "file": "tests/e2e/m9-tutorial.spec.ts",
+      "before": {
+        "@typescript-eslint/no-explicit-any": 16
+      },
+      "after": {
+        "@typescript-eslint/no-explicit-any": 17
+      },
+      "adoptedFrom": "1a38636a4d8d24ce948b1467f4da974cb17cdb3d",
+      "sameAsAdopted": true
+    }
+  ],
+  "errors": []
+}

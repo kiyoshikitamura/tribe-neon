@@ -1,0 +1,42 @@
+[
+  {
+    "checks": [
+      {
+        "matches": false,
+        "check_name": "public function body/signature/owner/ACL"
+      },
+      {
+        "matches": false,
+        "check_name": "migration history"
+      },
+      {
+        "matches": true,
+        "check_name": "Cron jobs"
+      },
+      {
+        "matches": true,
+        "check_name": "columns"
+      },
+      {
+        "matches": true,
+        "check_name": "constraints"
+      },
+      {
+        "matches": true,
+        "check_name": "triggers"
+      },
+      {
+        "matches": true,
+        "check_name": "table RLS and grants"
+      },
+      {
+        "matches": true,
+        "check_name": "indexes"
+      },
+      {
+        "matches": true,
+        "check_name": "policies"
+      }
+    ]
+  }
+]

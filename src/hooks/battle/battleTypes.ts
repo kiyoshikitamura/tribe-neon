@@ -26,7 +26,7 @@ export interface UseBattleOptions {
   raidPoints?: number;
   setRaidPoints?: React.Dispatch<React.SetStateAction<number>>;
   setRaidFirstEntryFree?: React.Dispatch<React.SetStateAction<boolean>>;
-  requestRaidTopRefresh?: () => void;
+  requestRaidTopRefresh?: (roomId?: string) => void;
   cash?: number;
   setCash?: React.Dispatch<React.SetStateAction<number>>;
   diamonds?: number;
@@ -42,6 +42,7 @@ export interface UseBattleOptions {
   setRaidTotalDamage: React.Dispatch<React.SetStateAction<number>>;
   setErrorMessage: (msg: string | null) => void;
   addGuildXpAndContributionByAction: (actionType: string) => Promise<void>;
+  setGlobalInteractionBlocking?: (blocking: boolean) => void;
   setConfirmDialogConfig?: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>;
   patrolNpcs?: any[];
   patrol?: any;
@@ -64,6 +65,7 @@ export type CompatibleBattleTacticId = BattleTacticId | LegacyBattleTacticId;
 export interface ParticipantState {
   id: string; // "char_xxx" or "ENEMY_xxx" or "ENEMY"
   name: string;
+  equipmentMasterIds?: string[]; // Immutable server battle snapshot only
   characterId: string; // Master Character ID
   alignment?: string; // 繧｢繝ｩ繧､繝｡繝ｳ繝・(JUSTICE, EVIL, ORDER, CHAOS)
   level: number;

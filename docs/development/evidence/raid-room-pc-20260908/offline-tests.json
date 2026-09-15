@@ -1,0 +1,7 @@
+{
+  "command": "node --test tests/raid-room/preview-config.test.mjs",
+  "passed": 11,
+  "failed": 0,
+  "exit_code": 0,
+  "scope": "Offline config generator existing tests; no live DB execution"
+}

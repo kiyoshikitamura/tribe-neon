@@ -2,14 +2,19 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useAudio } from "@/audio/AudioProvider";
+import { raidResultHeadline } from "@/domain/raidResultPresentation";
 import { analyzeBattleResult, type BattleResultParticipant, type BattleResultReplayEvent } from "@/domain/presentation/battleResultScoring";
+import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import type { BattleModeResultDetail, BattlePresentationContext } from "@/hooks/useBattle";
 
+import RaidResultDetails from "../raid/RaidResultDetails";
 import OutlawButton from "../ui/OutlawButton";
 import CharacterPresentation from "../character/CharacterPresentation";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import "./BattleResultSummary.css";
+import "./StreetFlow.css";
+import { resolveCharacterGachaQuote } from "@/domain/presentation/characterGachaQuotes";
 
 type Props = {
   victory: boolean;
@@ -22,7 +27,9 @@ type Props = {
   modeResult?: BattleModeResultDetail | null;
   displayedRound?: number;
   onContinue: () => void | Promise<void>;
+  onRaid?: () => void | Promise<void>;
   continueControl?: ReactNode;
+  onRepeatQuest?: () => void | Promise<void>;
 };
 
 const toParticipant = (entry: any, isEnemy: boolean): BattleResultParticipant => ({
@@ -51,6 +58,9 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
     ? (victory ? "クエストクリア" : "クエスト失敗")
     : modeResult?.resultLabel;
   const isRaidResult = presentationContext?.mode === "RAID";
+  const raidReceipt = isRaidResult && modeResult?.raidReceipt && modeResult.raidReceipt.roomId === presentationContext?.raidRoomId ? modeResult.raidReceipt : undefined;
+  const roomHeadline = isRaidResult && presentationContext?.raidRoomId ? raidResultHeadline(raidReceipt, presentationContext.raidRoomId) : null;
+  const isStreetResult = !isRaidResult || Boolean(presentationContext?.raidRoomId);
   const resultEvent = [...replayEvents].reverse().find((event) => event.type === "RESULT");
   const resultReasonKey = String(resultEvent?.payload.reason ?? resultEvent?.payload.resultReason ?? resultEvent?.payload.endReason ?? "").toUpperCase();
   const eventRound = (event: BattleResultReplayEvent | undefined) => Math.max(0, Number((event as { round?: number } | undefined)?.round ?? 0));
@@ -66,8 +76,9 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
   useEffect(() => {
     if (announcedRef.current) return;
     announcedRef.current = true;
-    playSe(victory ? "VICTORY" : "DEFEAT");
-  }, [playSe, victory]);
+    if (roomHeadline === '討伐成功') playSe('VICTORY');
+    else if (!roomHeadline) playSe(victory ? "VICTORY" : "DEFEAT");
+  }, [playSe, victory, roomHeadline]);
   useEffect(() => {
     if (!victory || (!rewards && !modeResult?.reward)) return;
     const timer = window.setTimeout(() => playSe("REWARD"), 1280);
@@ -107,8 +118,9 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
   }, [mvp?.participant.id, mvp?.score.damage, mvp?.score.heal, mvp?.score.kills, mvp?.score.shield, mvp?.score.survival]);
   return (
     <section
-      className={`battle-result-summary ${victory ? "is-victory" : "is-defeat"}`}
-      aria-label={victory ? "バトル勝利" : "バトル敗北"}
+      className={`battle-result-summary ${roomHeadline ? (roomHeadline === '討伐成功' ? 'is-victory' : 'is-raid-neutral') : victory ? "is-victory" : "is-defeat"} ${isStreetResult ? "sf-root sf-screen sf-live-result" : ""}`}
+      style={isStreetResult && presentationContext?.backgroundPath ? {"--battle-background-image":`url(\'${presentationContext.backgroundPath}\')`} as React.CSSProperties : undefined}
+      aria-label={roomHeadline ?? (victory ? "バトル勝利" : "バトル敗北")}
       data-result-event-index={resultEvent ? eventIndex(resultEvent, resultEventArrayIndex) : undefined}
       data-result-event-round={resultEvent ? eventRound(resultEvent) : undefined}
       data-displayed-round={displayedRound}
@@ -119,7 +131,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
       data-final-action-round={finalRoundFor(["ACTION"])}
       data-final-damage-status-defeat-round={finalRoundFor(["DAMAGE", "STATUS", "DEFEAT"])}
     >
-      <header className="battle-result-opponent">
+      {!isStreetResult ? <>      <header className="battle-result-opponent">
         <small>{tutorial ? "VS" : "VS 対戦相手"}</small>
         <strong>{opponentLabel}</strong>
         {presentationContext?.opponentLeaderName && <span>敵リーダー　{presentationContext.opponentLeaderName}</span>}
@@ -161,18 +173,39 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           <div><b>{analysis.player.survivors}</b><span>生存人数</span><b>{analysis.enemy.survivors}</b></div>
         </section>
       )}
+</> : <>
+        <header className={`sf-heading sf-outcome ${roomHeadline || victory ? "" : "loss"}`}><small>{opponentLabel}</small><h1>{roomHeadline === "戦闘終了" ? "RESULT" : roomHeadline ?? (victory ? "VICTORY" : "DEFEAT")}</h1><p>{roomHeadline ? (roomHeadline === "戦闘終了" ? "バトル結果" : "共有レイドの確定結果") : localizedResultLabel || (victory ? "バトル勝利" : "バトル敗北")}</p></header>
+        {roundLimitResult && <p className="battle-result-reason" data-result-reason="ROUND_LIMIT" role="status">制限ラウンド終了による判定結果です</p>}
+        {mvp && <><section className="sf-mvp" aria-label={`MVP ${mvp.participant.name} ${mvp.score.total}ポイント`}>{mvpImage && <img src={mvpImage} alt={mvp.participant.name}/>}<div className="sf-mvp-copy"><small>MVP</small><h2>{mvp.participant.name}</h2><strong>{displayedTotal}<span> PT</span></strong><p>{mvpMaster && resolveCharacterGachaQuote(mvpMaster.id)}</p></div></section>
+        <div className="sf-highlights"><div><small>与ダメージ</small><b>{mvp.raw.damage.toLocaleString()}</b></div><div><small>撃破</small><b>{mvp.raw.kills}<span>体</span></b></div><div><small>回復</small><b>{mvp.raw.heal.toLocaleString()}</b></div></div></>}
+        {isRaidResult ? <RaidResultDetails victory={victory} modeResult={modeResult} roomState={raidReceipt?.roomState} lateFinalization={raidReceipt?.lateFinalization} /> : modeResult?.stats?.length ? <section className="battle-result-mode-stats" aria-label="モード戦績">{modeResult.stats.map(stat=><div key={stat.label}><small>{stat.label}</small><strong>{stat.value}</strong></div>)}</section> : null}
+        {!victory && !isRaidResult && <p className="sf-loss-advice">編成・装備スキル・作戦を見直して再挑戦しましょう。</p>}
+        {mvp && <details className="sf-details"><summary>戦績・MVPスコアの詳細</summary><section className="sf-breakdown"><h2>MVPスコア内訳</h2><dl><div><dt>与ダメージ</dt><dd>{displayedBreakdown.damage} / 40</dd></div><div><dt>撃破</dt><dd>{displayedBreakdown.kills} / 20</dd></div><div><dt>回復</dt><dd>{displayedBreakdown.heal} / 20</dd></div><div><dt>シールド</dt><dd>{displayedBreakdown.shield} / 15</dd></div><div><dt>生存</dt><dd>{displayedBreakdown.survival} / 5</dd></div></dl><h2>チーム戦果比較</h2><p>総ダメージ　味方 {analysis.player.damage.toLocaleString()} / 敵 {analysis.enemy.damage.toLocaleString()}</p><p>撃破数　味方 {analysis.player.kills} / 敵 {analysis.enemy.kills}</p><p>生存人数　味方 {analysis.player.survivors} / 敵 {analysis.enemy.survivors}</p></section></details>}
+      </>}
       {victory && (tutorial || presentationContext?.mode === "PATROL") ? (
         rewards ? (
-          <div className="battle-result-rewards" aria-label="獲得報酬">
-            <span><small>CASH</small><b>+{Number(rewards.totalCash || 0).toLocaleString()}</b></span>
-            <span><small>XP</small><b>+{Number(rewards.totalXp || 0).toLocaleString()}</b></span>
-            {rewards.dropItemName && <span><small>ITEM</small><b>{rewards.dropItemName} ×{Number(rewards.dropItemQty || 0)}</b></span>}
+          <div className="battle-result-canonical-rewards" aria-label="獲得報酬">
+            {Number(rewards.totalCash || 0) > 0 && <span>
+              <img src="/ui/icon_cash.png" alt="" />
+              <b>CASH{rewards.matchBonusApplied && <small style={{ display: "block", fontSize: "0.75em" }}>地元ボーナス +{Number(rewards.matchBonusCash).toLocaleString()} 込み</small>}</b>
+              <em>×{Number(rewards.totalCash).toLocaleString()}</em>
+            </span>}
+            {Number(rewards.totalXp || 0) > 0 && <span>
+              <span aria-hidden="true">XP</span>
+              <b>PLAYER XP</b>
+              <em>×{Number(rewards.totalXp).toLocaleString()}</em>
+            </span>}
+            {(Array.isArray(rewards.awardedItems) ? rewards.awardedItems : rewards.dropItemName ? [{ item_id: rewards.dropItemName, quantity: rewards.dropItemQty }] : []).map((item: any, index: number) => Number(item.quantity) > 0 && <span key={`${item.item_id}-${index}`}>
+              <CanonicalItemIcon itemId={String(item.item_id)} alt={canonicalItemName(String(item.item_id))} />
+              <b>{canonicalItemName(String(item.item_id))}</b>
+              <em>×{Number(item.quantity).toLocaleString()}</em>
+            </span>)}
           </div>
         ) : <div className="battle-result-settling" role="status"><span>報酬データを準備中</span><i aria-hidden="true" /></div>
-      ) : (
-        <div className="battle-result-mode-reward">
+      ) : isRaidResult && presentationContext?.raidRoomId ? null : (
+        <div className={`battle-result-mode-reward ${presentationContext?.mode === "PVP" ? "is-pvp-compact" : ""}`}>
           <strong>{modeResult?.reward || (victory ? "勝利" : "敗北")}</strong>
-          {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`}>
+          {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`} >
             <CanonicalItemIcon itemId={reward.id} alt={reward.name} />
             <b>{reward.name}</b>
             <em>×{reward.quantity.toLocaleString()}</em>
@@ -180,6 +213,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           {modeResult?.note && <p>{modeResult.note}</p>}
         </div>
       )}
+      {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・プレイヤー経験値・アイテムを獲得しました。アイテムはMy Bagで確認できます。</p>}
       {continueControl ?? <OutlawButton variant={victory ? "primary" : "secondary"} onClick={onContinue} className="battle-result-continue" disabled={victory && (tutorial || presentationContext?.mode === "PATROL") && !rewards}>
         {victory && (tutorial || presentationContext?.mode === "PATROL") ? (rewards ? "次へ" : "報酬確定中…") : modeResult?.continueLabel || "次へ"}
       </OutlawButton>}

@@ -1,0 +1,386 @@
+{
+  "checked_at": "2026-09-09T05:44:21.860206+00:00",
+  "project_ref": "sufvuqdnqohpfzkwxohq",
+  "mode": "read-only transaction; SELECT only",
+  "status": "PASS",
+  "comparison_sources": [
+    "read-data-baseline.sql",
+    "data-baseline.json",
+    "catalog-postflight.json",
+    "qa-hp-fixture-executed.sql"
+  ],
+  "tables_compared": 42,
+  "tables_unchanged": true,
+  "tables": [
+    {
+      "row_count": 3,
+      "table_name": "canonical_action_resource_master",
+      "content_md5": "e2286115e5eee7c17cc019726cdea655",
+      "unchanged": true
+    },
+    {
+      "row_count": 60,
+      "table_name": "canonical_character_master",
+      "content_md5": "8e5e973ae7a191b86529844186b6e350",
+      "unchanged": true
+    },
+    {
+      "row_count": 40,
+      "table_name": "canonical_daily_ranking_reward_master",
+      "content_md5": "a936fbdae1e1abdb81cab18b9731ad09",
+      "unchanged": true
+    },
+    {
+      "row_count": 15,
+      "table_name": "canonical_equipment_lb_slot_options",
+      "content_md5": "fb3b7e68463c10964e447562ae0fdade",
+      "unchanged": true
+    },
+    {
+      "row_count": 11,
+      "table_name": "canonical_equipment_lb_steps",
+      "content_md5": "ea9adb7b3fb08b81585665f9793365d0",
+      "unchanged": true
+    },
+    {
+      "row_count": 170,
+      "table_name": "canonical_equipment_master",
+      "content_md5": "18dcc76b96684f1976ecbc461ca7cfe4",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "canonical_gameplay_master_versions",
+      "content_md5": "c708a263814562c6f6eb5e3815d631ad",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "canonical_guild_donation_master",
+      "content_md5": "8d58120437dfea68a02b9b26775689f9",
+      "unchanged": true
+    },
+    {
+      "row_count": 7,
+      "table_name": "canonical_guild_exp_source_master",
+      "content_md5": "026a2fecf9fa3c60c421c35fd5b833e3",
+      "unchanged": true
+    },
+    {
+      "row_count": 5,
+      "table_name": "canonical_guild_progression_master",
+      "content_md5": "aaf76c1c2a988e050fa78ad6b7de1e30",
+      "unchanged": true
+    },
+    {
+      "row_count": 3,
+      "table_name": "canonical_guild_recruitment_master",
+      "content_md5": "655ed2ce29a19d756887a50ebe1eb5fd",
+      "unchanged": true
+    },
+    {
+      "row_count": 3,
+      "table_name": "canonical_guild_role_master",
+      "content_md5": "2e8562f851ab31a44160de86f970e740",
+      "unchanged": true
+    },
+    {
+      "row_count": 18,
+      "table_name": "canonical_item_master",
+      "content_md5": "68ef6fc7ed884b1482664e3b554b1251",
+      "unchanged": true
+    },
+    {
+      "row_count": 13,
+      "table_name": "canonical_master_freeze_versions",
+      "content_md5": "9ca4efeffb3111fa47f44046277cd225",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "canonical_preapply_compatibility_audit",
+      "content_md5": "aab0d87a794e8676ebf469bf3197f68c",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "canonical_pvp_production_master",
+      "content_md5": "e07a2c9f701301f2531c5b75af237a6a",
+      "unchanged": true
+    },
+    {
+      "row_count": 0,
+      "table_name": "canonical_pvp_ranking_rewards",
+      "content_md5": "d41d8cd98f00b204e9800998ecf8427e",
+      "unchanged": true
+    },
+    {
+      "row_count": 21,
+      "table_name": "canonical_quest_encounter_master",
+      "content_md5": "778cd69d90730b4e77f52dbbee22a949",
+      "unchanged": true
+    },
+    {
+      "row_count": 210,
+      "table_name": "canonical_quest_enemy_pool_entries",
+      "content_md5": "3950a5113d94cd1eaae26aafc81f6ae4",
+      "unchanged": true
+    },
+    {
+      "row_count": 42,
+      "table_name": "canonical_quest_master",
+      "content_md5": "b263142443cfed3425027372fd23aebe",
+      "unchanged": true
+    },
+    {
+      "row_count": 3,
+      "table_name": "canonical_quest_resource_cost",
+      "content_md5": "abce52224d4489f8b39e2e525886a86a",
+      "unchanged": true
+    },
+    {
+      "row_count": 33,
+      "table_name": "canonical_quest_reward_pool_items",
+      "content_md5": "8360ad74e2d1f1de29bb9d69ce9c4c0e",
+      "unchanged": true
+    },
+    {
+      "row_count": 7,
+      "table_name": "canonical_raid_boss_master",
+      "content_md5": "e6e65ecd65e656984d56d1fe8085f921",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "canonical_raid_production_master",
+      "content_md5": "1177b864ac6151f9b052dc67c495e5cc",
+      "unchanged": true
+    },
+    {
+      "row_count": 12,
+      "table_name": "canonical_raid_reward_master",
+      "content_md5": "f75fdd4b8b16cb702974ecf2f4bf6b05",
+      "unchanged": true
+    },
+    {
+      "row_count": 7,
+      "table_name": "canonical_raid_variants",
+      "content_md5": "38a5bf1f64962db9afbca4560e5afda6",
+      "unchanged": true
+    },
+    {
+      "row_count": 9,
+      "table_name": "canonical_reward_supply_sources",
+      "content_md5": "b10cf8c5627deab741c11501c3969919",
+      "unchanged": true
+    },
+    {
+      "row_count": 70,
+      "table_name": "canonical_skill_master",
+      "content_md5": "3d06eeb475f5a3abdf38f451fc0e8223",
+      "unchanged": true
+    },
+    {
+      "row_count": 100,
+      "table_name": "canonical_user_level_master",
+      "content_md5": "3236ec1c1f6b70e7420f08e4e41d1cdb",
+      "unchanged": true
+    },
+    {
+      "row_count": 10,
+      "table_name": "raid_attempt_cost_master",
+      "content_md5": "deceded75bf3150502fc63d87bcb5db0",
+      "unchanged": true
+    },
+    {
+      "row_count": 13,
+      "table_name": "raid_boss_master",
+      "content_md5": "be222d5a42493f1c7fdb3e5e0b57d4ff",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "raid_legacy_settings",
+      "content_md5": "8eb0ce933700a6b68f07450bf1dbf168",
+      "unchanged": true
+    },
+    {
+      "row_count": 3,
+      "table_name": "raid_rewards_master",
+      "content_md5": "750bcb01c5f70d21ebb7a0577f5a1ab4",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "raid_room_battle_settings",
+      "content_md5": "a8903d630d74509b55ea2b14197fb03d",
+      "unchanged": true
+    },
+    {
+      "row_count": 4,
+      "table_name": "raid_room_clear_reward_items",
+      "content_md5": "1acb750a910c32c9cf5326cb6af603bd",
+      "unchanged": true
+    },
+    {
+      "row_count": 4,
+      "table_name": "raid_room_clear_reward_rules",
+      "content_md5": "23530d44d65a1a6d83d6b1afd16b075b",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "raid_room_creation_settings",
+      "content_md5": "a8903d630d74509b55ea2b14197fb03d",
+      "unchanged": true
+    },
+    {
+      "row_count": 4,
+      "table_name": "raid_room_difficulty_rules",
+      "content_md5": "926cd45700153d752e803555f5d450fc",
+      "unchanged": true
+    },
+    {
+      "row_count": 4,
+      "table_name": "raid_room_lifecycle_rules",
+      "content_md5": "aeb9d0615016be9b505070cb7b0e3fdc",
+      "unchanged": true
+    },
+    {
+      "row_count": 4,
+      "table_name": "raid_room_rescue_reward_items",
+      "content_md5": "38b3fe256f7175d1b3a2a8c64a03eab5",
+      "unchanged": true
+    },
+    {
+      "row_count": 4,
+      "table_name": "raid_room_rescue_reward_rules",
+      "content_md5": "2d334d73e525ba3d8e6a6488ae1599da",
+      "unchanged": true
+    },
+    {
+      "row_count": 1,
+      "table_name": "raid_room_rescue_settings",
+      "content_md5": "a8903d630d74509b55ea2b14197fb03d",
+      "unchanged": true
+    }
+  ],
+  "cron": {
+    "count": 7,
+    "unchanged": true,
+    "jobs": [
+      {
+        "jobid": 2,
+        "active": true,
+        "jobname": "anonymous-onboarding-cleanup-daily",
+        "database": "postgres",
+        "schedule": "0 18 * * *",
+        "username": "postgres",
+        "command_md5": "286a8f00696379805b73b2f963006c3a"
+      },
+      {
+        "jobid": 3,
+        "active": true,
+        "jobname": "ranking-pvp-monthly-jst",
+        "database": "postgres",
+        "schedule": "0 15 * * *",
+        "username": "postgres",
+        "command_md5": "046f2a1da9ffd91e32e4c3132d690926"
+      },
+      {
+        "jobid": 4,
+        "active": true,
+        "jobname": "ranking-raid-weekly-jst",
+        "database": "postgres",
+        "schedule": "0 15 * * 0",
+        "username": "postgres",
+        "command_md5": "15c1521c1c9c4228abe1ed04a73573c8"
+      },
+      {
+        "jobid": 5,
+        "active": true,
+        "jobname": "daily-ranking-reward-finalize-jst-midnight",
+        "database": "postgres",
+        "schedule": "0 15 * * *",
+        "username": "postgres",
+        "command_md5": "75b9440ea8ebd89784fd9bbb37b0c754"
+      },
+      {
+        "jobid": 7,
+        "active": true,
+        "jobname": "preopen-guild-power-finalize-20260909-jst",
+        "database": "postgres",
+        "schedule": "* 15 8 9 *",
+        "username": "postgres",
+        "command_md5": "17ed1efb1910786fa13c753a660eb741"
+      },
+      {
+        "jobid": 12,
+        "active": true,
+        "jobname": "kpi-overview-saved-results-half-hourly",
+        "database": "postgres",
+        "schedule": "7,37 * * * *",
+        "username": "postgres",
+        "command_md5": "d8f781c9dbd3c42066f7e736ad414b39"
+      },
+      {
+        "jobid": 13,
+        "active": true,
+        "jobname": "raid-room-expiry-minute",
+        "database": "postgres",
+        "schedule": "* * * * *",
+        "username": "postgres",
+        "command_md5": "bce18b14931faafa57be352887ddb509"
+      }
+    ]
+  },
+  "flags": {
+    "unchanged": true,
+    "values": {
+      "battle": [
+        {
+          "enabled": true,
+          "singleton": true
+        }
+      ],
+      "rescue": [
+        {
+          "enabled": true,
+          "singleton": true
+        }
+      ],
+      "creation": [
+        {
+          "enabled": true,
+          "singleton": true
+        }
+      ]
+    }
+  },
+  "protected_rooms": {
+    "count": 2,
+    "unchanged": true,
+    "rows": [
+      {
+        "room_id": "3972a461-b45f-4b02-8142-75f294461ae3",
+        "boss_md5": "a6b8e91f9b6bf9b33e2bbcc79aa3b96d",
+        "room_md5": "fcb843a1e0a947318806edc580044ae8"
+      },
+      {
+        "room_id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "boss_md5": "ab75df0b2de18080af1195730aa9b9f6",
+        "room_md5": "14b2d1f2af459ea792f6e63e192c4264"
+      }
+    ]
+  },
+  "excluded_from_invariance": [
+    "QA user progression including characters/equipment/formations",
+    "new QA room and associated battle/reward/publication/member/replay rows",
+    "Presents",
+    "daily authority row and daily user claims/attempts",
+    "ranking runtime snapshots"
+  ],
+  "deployment_final_evidence": "../raid-step6/deployment-final-readback.json",
+  "edge_update_required": false,
+  "edge_evidence": "../raid-step6/edge-source-match.json"
+}

@@ -1,0 +1,10 @@
+{
+  "samples": 443,
+  "hpChanges": 4,
+  "hpChangesWithNumberAndOneEffect": 4,
+  "impactAndCutinOverlap": 0,
+  "unloadedImpactFrames": 0,
+  "browserTests": 12,
+  "browserPassed": 12,
+  "localOnly": true
+}

@@ -5,6 +5,12 @@ on:
     branches: [main, develop]
   pull_request:
 
+# 同一ブランチ／PRの新しいcommitは、古いQuality runを失効させる。
+# この制御がないと、ドキュメントだけのcommitでも全E2Eが重複起動する。
+concurrency:
+  group: quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   typecheck-and-build:
     runs-on: ubuntu-latest
@@ -36,10 +42,13 @@ jobs:
       - run: npm run verify:character-ssr-candidates
       - run: npm run verify:character-ssr-candidate-db-migration
       - run: npm run verify:ssr-gacha-quotes
+      - run: npm run verify:character-gacha-quotes
       - run: npm run verify:gacha-character-town-backgrounds
       - run: npm run verify:battle-mvp-result
       - run: npm run verify:battle-presentation
       - run: npm run verify:visual-compliance
+      - run: npm run verify:preopen-guild-power-ui
+      - run: npm run verify:guild-cosmetic-notification-ui
       - run: npm run build
 
   edge-function-check:
@@ -72,10 +81,19 @@ jobs:
       - run: deno test supabase/functions/resolve-battle/engine_test.ts
 
   browser-e2e:
+    name: browser-e2e (shard ${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     env:
-      NEXT_PUBLIC_APP_ENV: test
+      NEXT_PUBLIC_APP_ENV: preview
       NEXT_PUBLIC_USE_MOCK_DB: "true"
+      NEXT_PUBLIC_KPI_DATA_ENV: preview
+      NEXT_PUBLIC_SUPABASE_URL: https://sufvuqdnqohpfzkwxohq.supabase.co
+      CAPTURE_ACCEPTANCE_VISUALS: "0"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -83,16 +101,73 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Cache Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npm run test:e2e
+      - name: Run bounded browser shard
+        run: >-
+          timeout --signal=TERM --kill-after=30s 12m
+          node scripts/run_browser_e2e.mjs
+          --shard=${{ matrix.shard }}/4
+          --workers=2
+          --retries=0
+          --max-failures=2
       - name: Upload Playwright diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-diagnostics
+          name: playwright-diagnostics-shard-${{ matrix.shard }}
           path: |
-            test-results
-            playwright-report
+            test-results/**/test-failed-*.png
+            test-results/**/error-context.md
+            playwright-report/index.html
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 1
+
+  # 既存の広域E2Eが先に打ち切られても、Raid廃止順位/貢献/他カテゴリの回帰を実行する。
+  # 他jobの結果や既存Release Gateを置き換えない。
+  raid-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_APP_ENV: test
+      NEXT_PUBLIC_USE_MOCK_DB: "true"
+      NEXT_PUBLIC_RAID_ROOM_UI_ENABLED: "false"
+      CAPTURE_ACCEPTANCE_VISUALS: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --experimental-strip-types --test tests/raid-room/mock-contribution.test.mjs
+      - name: Cache Playwright browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Verify retained Raid contribution and retired ranking
+        run: >-
+          timeout --signal=TERM --kill-after=30s 8m
+          node scripts/run_browser_e2e.mjs
+          tests/e2e/raid-phase3.spec.ts
+          tests/e2e/ranking-phase2.spec.ts
+          tests/e2e/main-shell.spec.ts
+          --workers=2 --retries=0 --max-failures=2
+      - name: Upload Raid regression diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raid-regression-diagnostics
+          path: |
+            test-results/**/test-failed-*.png
+            test-results/**/error-context.md
+          if-no-files-found: ignore
+          retention-days: 1

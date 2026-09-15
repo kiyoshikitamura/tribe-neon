@@ -1,0 +1,14 @@
+{
+  "database": "raid_top_test_1788890589242_44972",
+  "results": [
+    {
+      "name": "日次ロック待ち中のJST境界越えは新日を再取得し旧日を生成しない",
+      "status": "PASS"
+    },
+    {
+      "name": "成功する同一要求8同時再送が同一Roomを返し生成/台帳は1件",
+      "status": "PASS"
+    }
+  ],
+  "clock": "Test-only SQL clock substitution, restored in finally; real concurrent PostgreSQL sessions."
+}

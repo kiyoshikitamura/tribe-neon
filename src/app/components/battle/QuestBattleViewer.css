@@ -140,8 +140,8 @@
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-party-label strong { display:none; }
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-party-grid { gap:3px; }
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-party .battle-unit-art { height:clamp(52px,7dvh,62px); }
-.quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-meta,
-.quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-hp-copy { display:none; }
+.quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-meta { display:flex; }
+.quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-hp-copy { display:flex; }
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-hp { width:auto;max-width:none;height:5px;margin:0 3px 2px;box-sizing:border-box;justify-self:stretch; }
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit.is-actor .battle-unit-meta { position:absolute;right:0;bottom:11px;left:0;display:block;padding:2px 3px;background:rgba(2,7,13,.86); }
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit.is-actor .battle-unit-meta strong { display:block;overflow:hidden;font-size:9px;text-align:center;text-overflow:ellipsis;white-space:nowrap; }
@@ -197,6 +197,11 @@
 .quest-battle-viewer.is-tutorial .battle-party-grid{grid-template-columns:minmax(0,1fr)}
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-party .battle-unit-meta{position:relative;right:auto;bottom:auto;left:auto;display:flex;padding:3px 3px 0;background:transparent}
 .quest-battle-viewer.is-tutorial .battle-party-zone.is-player .battle-unit-party .battle-unit-meta strong{display:block;overflow:hidden;font-size:clamp(8px,2.15vw,10px);text-align:left;text-overflow:ellipsis;white-space:nowrap}
+.quest-battle-viewer.is-stress-parity .battle-party-zone .battle-party-grid{grid-template-rows:repeat(5,clamp(58px,8dvh,68px));align-content:start}
+.quest-battle-viewer.is-stress-parity .battle-party-zone .battle-unit-party .battle-unit-art{width:45px;height:45px}
+.quest-battle-viewer.is-tutorial.is-stress-parity .battle-party-zone.is-player .battle-unit-party .battle-unit-art{width:45px;height:45px}
+.quest-battle-viewer.is-tutorial.is-stress-parity .battle-party-zone.is-player .battle-unit-party .battle-unit-hp{width:75%;height:7px;margin:0 0 0 6px;justify-self:start}
+.quest-battle-viewer.is-stress-parity .battle-party-zone .battle-unit-party .battle-unit-hp-copy{display:flex}
 .battle-action-stage{position:relative;grid-column:2;display:grid;place-items:center;min-width:0;min-height:0;overflow:visible;border:0;background:linear-gradient(180deg,transparent,rgba(255,255,255,.035),transparent);box-shadow:none}
 .battle-action-relation{display:grid;grid-template-rows:auto 24px auto 24px auto;justify-items:center;align-items:center;width:100%;color:#aab1b8;font-family:var(--font-display);font-size:7px;text-align:center;writing-mode:horizontal-tb}
 .battle-action-relation span{display:block;overflow:hidden;max-width:54px;text-overflow:ellipsis;white-space:nowrap}

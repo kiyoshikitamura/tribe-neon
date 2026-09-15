@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/utils/supabase";
+import { supabase, usingMockSupabase } from "@/utils/supabase";
 import { ParticipantState } from "./battleTypes";
 
 export async function postNpcYajiMessage(
@@ -10,13 +10,14 @@ export async function postNpcYajiMessage(
   baseId: string,
   triggerReason: string
 ) {
-  if (!session) return;
+  // Legacy NPC chatter is a Mock fixture, not an authenticated player post.
+  if (!usingMockSupabase || !session) return;
   const npcs = ["リュウ", "カイ", "シン", "ハヤト", "ユキ"];
   const npc = npcs[Math.floor(Math.random() * npcs.length)];
 
   let text = "";
   if (triggerReason === "PVP_WIN") {
-    text = `${username} がPvPで荒稼ぎしているらしいぞ。`;
+    text = `${username} がバトルで荒稼ぎしているらしいぞ。`;
   } else if (triggerReason === "GVG_WIN") {
     text = `拠点 ${baseId.toUpperCase()} でGvGが発生！ポイントが更新されました。`;
   } else if (triggerReason === "RAID_DAMAGE") {
@@ -50,6 +51,7 @@ export async function saveBattleSessionState(
   tlIdx: number,
   gvgAreaId: string | null
 ) {
+  if (!usingMockSupabase) return;
   try {
     await supabase.from("battle_sessions").update({
       player_state: { playerStates, ap: apVal, maxAp: maxApVal, tactic: tacticVal, log: logs, timelineIndex: tlIdx, gvgAreaId },

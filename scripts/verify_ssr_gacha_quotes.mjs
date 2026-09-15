@@ -29,12 +29,26 @@ assert.ok(enabled.every((entry) => typeof entry.quote === "string" && entry.quot
 assert.ok(quoteMaster.quotes.every((entry) => productionSsr.includes(entry.characterId)), "Non-SSR or unknown Character Quote entry");
 assert.ok(enabled.every((entry) => expectedQuotes.get(entry.characterId) === entry.quote), "Production SSR Quote text drifted");
 
+// CommonModals delegates both tutorial/normal Character results; presentation now owns the gate.
 const modal = await readFile(resolve(root, "src/app/components/CommonModals.tsx"), "utf8");
-assert.match(modal, /resolveSsrGachaQuote\(tutorialRevealResult\?\.characterId\)/, "Reveal must resolve Quote by canonical Character ID");
+const presentation = await readFile(resolve(root, "src/app/components/gacha/CharacterGachaPresentation.tsx"), "utf8");
+const resolver = await readFile(resolve(root, "src/domain/presentation/characterGachaQuotes.ts"), "utf8");
+const additionalQuotes = JSON.parse(await readFile(resolve(root, "src/domain/presentation/data/character_gacha_quotes_20260908.json"), "utf8")).quotes;
 assert.match(modal, /scoutResults\.every\(\(result: any\) => result\?\.type === "CHARACTER"/, "Tutorial and Normal Character pulls must share reveal flow");
-assert.match(modal, /tutorialSsrStage === "QUOTE"/, "SSR Quote gate is missing");
-assert.match(modal, /setTutorialSsrStage\("REVEAL"\)/, "SSR Quote tap must enter reveal state");
-assert.doesNotMatch(modal, /tutorial-ssr-quote[^>]*data-character-id/, "SSR identity must not be projected before reveal");
-assert.doesNotMatch(modal, /tutorial-ssr-quote[\s\S]{0,240}<h3>\{tutorialRevealResult\?\.name\}/, "SSR Character name must not appear before reveal");
-
+assert.match(modal, /<CharacterGachaPresentation results=\{scoutResults\} tutorial=\{onboardingState\?\.tutorial_step === "AUTO_FORMATION"\}/, "Character results must delegate to the shared presentation");
+assert.match(resolver, /\.\.\.SSR_GACHA_QUOTES/, "Character resolver must retain the frozen SSR Quote source");
+assert.match(resolver, /quoteById\.get\(characterId\) \?\? null/, "Character resolver must resolve by canonical Character ID");
+const combined = [...quoteMaster.quotes, ...additionalQuotes];
+assert.equal(new Set(combined.map(entry => entry.characterId)).size, combined.length, "Additional Character quotes must not shadow frozen SSR quotes");
+assert.ok(additionalQuotes.every(entry => characters.some(character => character.character_id === entry.characterId)), "Unknown Character in additional Quote master");
+assert.match(presentation, /resolveCharacterGachaQuote\(current\.characterId\)/, "Reveal must resolve Quote by canonical Character ID");
+assert.match(presentation, /setStage\(rarity === "SSR" && quote \? "QUOTE" : "REVEAL"\)/, "Initial SSR Quote gate is missing");
+assert.match(presentation, /next\.rarity\.toUpperCase\(\) === "SSR" && resolveCharacterGachaQuote\(next\.characterId\) \? "QUOTE" : "REVEAL"/, "Subsequent SSR results must retain the Quote gate");
+assert.match(presentation, /stage === "QUOTE"\) \{ if \(letters < quote\.length\) setLetters\(quote\.length\); else setStage\("REVEAL"\);/, "SSR Quote tap must complete typing then enter reveal state");
+assert.match(presentation, /data-character-id=\{stage === "QUOTE" \? undefined : current\.characterId\}/, "SSR identity must not be projected before reveal");
+assert.match(presentation, /aria-label=\{stage === "QUOTE" \? "セリフを表示して登場演出へ" :/, "SSR accessible label must not expose the name before reveal");
+const quoteBranch = presentation.match(/stage === "QUOTE" \? <div className="cg-quote-intro">([\s\S]*?)<\/div> : <div className="cg-reveal-content"/);
+assert.ok(quoteBranch, "Dedicated pre-reveal Quote branch is missing");
+assert.match(quoteBranch[1], /quote\.slice\(/, "Quote branch must render the selected canonical Quote");
+assert.doesNotMatch(quoteBranch[1], /current\.(?:name|characterId|imageUrl)|StandingArt|<h[1-6]/, "SSR Character name or identity must not appear before reveal");
 console.log(JSON.stringify({ status: "PASS", productionSsr: productionSsr.length, enabledQuotes: enabled.length, duplicate: 0, missing: 0, unknown: 0 }, null, 2));

@@ -1,0 +1,19 @@
+
+Running 12 tests using 1 worker
+
+(node:45204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 tests\e2e\battle-live-presentation.spec.ts:4:7 › live battle preparation font gate and cutins 390 (17.4s)
+  ok  2 tests\e2e\battle-live-presentation.spec.ts:4:7 › live battle preparation font gate and cutins 320 (17.5s)
+  ok  3 tests\e2e\battle-live-presentation.spec.ts:57:5 › legacy quest presentation lights the acting character inside its card (691ms)
+  ok  4 tests\e2e\character-ux-v2.spec.ts:90:5 › V2 leader entry and secondary sorted list (5.5s)
+  ok  5 tests\e2e\character-ux-v2.spec.ts:101:5 › integration preserves independent Skill and Equipment inventory filters (6.2s)
+  ok  6 tests\e2e\character-ux-v2.spec.ts:118:5 › V2 Growth tabs and progress-only Awakening (5.7s)
+  ok  7 tests\e2e\character-ux-v2.spec.ts:132:39 › V2 Equipment canonical breakdown 375 (5.7s)
+  ok  8 tests\e2e\character-ux-v2.spec.ts:132:39 › V2 Equipment canonical breakdown 390 (5.5s)
+  ok  9 tests\e2e\character-ux-v2.spec.ts:132:39 › V2 Equipment canonical breakdown 430 (5.7s)
+  ok 10 tests\e2e\character-ux-v2.spec.ts:146:5 › V2 Party draft cancel, confirm and leader authority (7.1s)
+  ok 11 tests\e2e\character-ux-v2.spec.ts:163:5 › V2 low-height equipment and party remain scrollable (6.0s)
+  ok 12 tests\e2e\tutorial-hit-effects.spec.ts:20:5 › tutorial basic and skill impacts remain synchronized through result and continuation (18.3s)
+
+  12 passed (1.7m)

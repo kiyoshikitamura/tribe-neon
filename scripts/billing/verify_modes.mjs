@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { billingConfig, validateSession, sessionMatchesMode } from '../../src/server/billing/contracts.ts';
+const sandbox={BILLING_SANDBOX_ENABLED:'true',VERCEL_ENV:'preview',NEXT_PUBLIC_SUPABASE_URL:'https://sufvuqdnqohpfzkwxohq.supabase.co',STRIPE_SECRET_KEY:'sk_test_fixture',STRIPE_WEBHOOK_SECRET:'whsec_fixture',SUPABASE_SERVICE_ROLE_KEY:'fixture',BILLING_RETURN_ORIGIN:'https://preview.example.com'};
+const live={...sandbox,BILLING_MODE:'live',BILLING_LIVE_ENABLED:'true',VERCEL_ENV:'production',NEXT_PUBLIC_SUPABASE_URL:'https://ktpolnkyyfkowxdmijww.supabase.co',STRIPE_SECRET_KEY:'sk_live_fixture',BILLING_RETURN_ORIGIN:'https://www.tribe-neon.com'};
+assert.equal(billingConfig(sandbox).mode,'sandbox');
+assert.equal(billingConfig(live).mode,'live');
+assert.equal(billingConfig({...live,NEXT_PUBLIC_SUPABASE_URL:'https://api.tribe-neon.com'}).mode,'live');
+for (const patch of [{BILLING_MODE:undefined},{BILLING_LIVE_ENABLED:undefined},{BILLING_LIVE_ENABLED:'false'},{VERCEL_ENV:'preview'},{NEXT_PUBLIC_SUPABASE_URL:sandbox.NEXT_PUBLIC_SUPABASE_URL},{STRIPE_SECRET_KEY:'sk_test_fixture'},{BILLING_RETURN_ORIGIN:sandbox.BILLING_RETURN_ORIGIN},{BILLING_RETURN_ORIGIN:'https://www.tribe-neon.com:8443'},{BILLING_MODE:'unknown'}]) assert.throws(()=>billingConfig({...live,...patch}));
+assert.throws(()=>billingConfig({...sandbox,BILLING_LIVE_ENABLED:'true',STRIPE_SECRET_KEY:'sk_live_fixture'}));
+const order={id:'order1',user_id:'user1',product_id:'growth_pack_01',amount_jpy:500,billing_mode:'live',stripe_session_id:'cs_live_first'};
+const session={id:'cs_live_first',livemode:true,status:'complete',payment_status:'paid',amount_total:500,currency:'jpy',client_reference_id:'order1',metadata:{order_id:'order1',user_id:'user1',product_id:'growth_pack_01'}};
+assert.equal(validateSession(session,order,'live'),true);
+assert.throws(()=>validateSession(session,order));
+assert.throws(()=>validateSession(session,{...order,billing_mode:'sandbox'},'live'));
+assert.throws(()=>validateSession({...session,livemode:false},order,'live'));
+assert.equal(sessionMatchesMode('cs_test_first','live'),false);
+assert.equal(sessionMatchesMode('cs_live_first','sandbox'),false);
+console.log('PASS: 本番明示設定のみ有効・DB/戻り先/鍵/mode混在拒否・注文mode固定・Sandbox互換');

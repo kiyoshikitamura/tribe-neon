@@ -21,6 +21,11 @@ const enterGame = async (page: import("@playwright/test").Page) => {
   if (await tapToStart.isVisible()) await tapToStart.click();
   if (await continueButton.isVisible()) await continueButton.click();
   await expect(header).toBeVisible();
+  const loginBonus = page.locator(".login-bonus-modal-overlay");
+  await loginBonus.waitFor({ state: "visible", timeout: 3_000 }).catch(() => undefined);
+  if (await loginBonus.isVisible()) {
+    await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
+  }
 };
 
 const openSettings = async (page: import("@playwright/test").Page) => {

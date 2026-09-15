@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./CharacterPresentation.css";
 import { getCharacterPresentationMetadata } from "./characterPresentationMetadata";
 import { getRarityBadgeAsset, getRarityFrameAsset, type RarityFrameKind } from "@/utils/rarityAssets";
 import { getAttributeBadgeAsset, getAttributeLabel } from "@/utils/attributeAssets";
+import { useScreenReadiness } from "../../hooks/useScreenReadiness";
 
-export type CharacterPresentationVariant = "portrait" | "dialogue" | "dialogue-bust" | "reveal" | "quest" | "battle-leader" | "card" | "gacha-result-compact" | "thumbnail" | "full-body" | "home-hero" | "battle" | "icon";
+export type CharacterPresentationVariant = "portrait" | "dialogue" | "dialogue-bust" | "reveal" | "quest" | "battle-leader" | "card" | "gacha-result-compact" | "thumbnail" | "full-body" | "home-hero" | "battle" | "icon" | "user-avatar";
 
 type Props = {
   src?: string;
@@ -83,16 +84,27 @@ export default function CharacterPresentation({
     "--character-home-y": `${framing.homeY}%`,
   } as React.CSSProperties;
   const frameClass = frameKind ? `has-rarity-frame is-frame-${frameKind}` : "";
-  return (
-    <figure style={presentationStyle} className={`character-presentation character-presentation-${variant} ${rarityClass} ${frameClass} ${selected ? "is-selected" : ""} ${className}`.trim()}>
-      <div className="character-presentation-art">
+  const frameSrc = rarity && frameKind ? getRarityFrameAsset(frameKind, rarity) : "";
+  const rarityBadgeSrc = rarity && rarityBadge ? getRarityBadgeAsset(rarity) : "";
+  const attributeBadgeSrc = attributeBadge ? getAttributeBadgeAsset(attribute) || "" : "";
+  const visualSources = useMemo(
+    () => [backgroundSrc, src, frameSrc, rarityBadgeSrc, attributeBadgeSrc].filter(Boolean) as string[],
+    [attributeBadgeSrc, backgroundSrc, frameSrc, rarityBadgeSrc, src],
+  );
+  const visualReadiness = useScreenReadiness({
+    assets: visualSources.map((assetSrc) => ({ src: assetSrc, required: false })),
+  });
+  const visualReady = visualSources.length === 0 || visualReadiness.status === "ready";
+  const content = (
+    <>
+      <div className="character-presentation-art" aria-hidden={!visualReady}>
         {backgroundSrc && <img className="character-presentation-background" src={backgroundSrc} alt="" aria-hidden="true" />}
         {src ? <ResilientCharacterImage key={src} src={src} alt={alt} /> : <span className="character-presentation-missing" role="img" aria-label={`${alt}の画像は準備中`} />}
         <span className="character-presentation-light" aria-hidden="true" />
       </div>
-      {rarity && frameKind !== false && frameKind && <img className={`character-presentation-frame is-${frameKind}`} src={getRarityFrameAsset(frameKind, rarity)} alt="" aria-hidden="true" />}
-      {rarity && rarityBadge && <img className="character-presentation-rarity-badge" src={getRarityBadgeAsset(rarity)} alt={rarity} />}
-      {attributeBadge && getAttributeBadgeAsset(attribute) && <img className="character-presentation-attribute-badge" src={getAttributeBadgeAsset(attribute) || ""} alt={getAttributeLabel(attribute)} />}
+      {frameSrc && <img className={`character-presentation-frame is-${frameKind}`} src={frameSrc} alt="" aria-hidden="true" />}
+      {rarityBadgeSrc && <img className="character-presentation-rarity-badge" src={rarityBadgeSrc} alt={rarity} />}
+      {attributeBadgeSrc && <img className="character-presentation-attribute-badge" src={attributeBadgeSrc} alt={getAttributeLabel(attribute)} />}
       {badge && <span className="character-presentation-badge">{badge}</span>}
       {metadata && (name || rarity || typeof level === "number") && (
         <figcaption className="character-presentation-meta">
@@ -101,6 +113,9 @@ export default function CharacterPresentation({
           {typeof level === "number" && <span>Lv.{level}</span>}
         </figcaption>
       )}
-    </figure>
+    </>
   );
+  return <figure style={presentationStyle} aria-busy={!visualReady} className={`character-presentation character-presentation-${variant} ${rarityClass} ${frameClass} ${visualReady ? "is-visual-ready" : "is-visual-loading"} ${selected ? "is-selected" : ""} ${className}`.trim()}>
+    {frameKind === "character" ? <div className="character-presentation-frame-layout">{content}</div> : content}
+  </figure>;
 }

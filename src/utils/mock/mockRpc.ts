@@ -3,10 +3,12 @@
 import { CANONICAL_CHARACTERS, CANONICAL_EQUIPMENTS, CANONICAL_MISSIONS, CANONICAL_RAID_BOSSES, CANONICAL_SKILLS } from "../../domain/gameplay/canonical/masters.ts";
 import { canonicalCharacterStats, canonicalEquipmentFlatStat, canonicalEquipmentLevelCap, canonicalSkillSlotCount } from "../../domain/gameplay/canonical/calculations.ts";
 import { applyCharacterAwakeningCopyEquivalent } from "../../domain/gameplay/canonical/awakening.ts";
-import { applyFrozenUserXp, canUseEnergyDrink, recoverCanonicalResource } from "../../domain/gameplay/canonical/action_resources.ts";
+import { CANONICAL_ACTION_RESOURCES, applyFrozenUserXp, canUseEnergyDrink, recoverCanonicalResource } from "../../domain/gameplay/canonical/action_resources.ts";
 import { CANONICAL_QUESTS, canonicalQuestById, generateCanonicalQuestEncounter, rollCanonicalQuestItems } from "../../domain/gameplay/canonical/quests.ts";
 import { parseCanonicalEffects } from "../../domain/battle/canonical_effects.ts";
 import { DEFAULT_OPERATIONS_STATE, type OperationsFeatureKey } from "../../domain/operations/operations.ts";
+import { isInsideRankingSeason, rankingSeasonWindow } from "../../domain/ranking/rankingSeason.ts";
+import { CANONICAL_RANKING_REWARDS } from "../../domain/gameplay/canonical/combat_production.ts";
 import {
   evaluateCanonicalMissionProgress,
   FUNNEL_TRIGGER_BY_MILESTONE,
@@ -16,6 +18,38 @@ import {
   type MissionMasterRow,
   type UserMissionRow,
 } from "../../domain/gameplay/canonical/mission_runtime.ts";
+
+
+function applyMockMainSkills(client: any, userId: string, party: any[]) {
+    const partyIds = new Set(party.map((entry: any) => entry.id));
+    const skills = client.getStorage("user_skills") || [];
+    skills.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
+    let skillCount = 0;
+    for (let slot = 0; slot < 6; slot += 1) {
+      for (const character of party) {
+        if (slot >= canonicalSkillSlotCount(Number(character.awakening_level || 0))) continue;
+        const alreadyHasExclusive = skills.some((entry: any) => entry.user_id === userId && entry.equipped_character_id === character.id
+          && CANONICAL_SKILLS.find((master) => master.skill_id === entry.skill_card_id)?.exclusive_character_id);
+        const candidates = skills.filter((entry: any) => {
+          if (entry.user_id !== userId || entry.equipped_character_id) return false;
+          const master = CANONICAL_SKILLS.find((item) => item.skill_id === entry.skill_card_id);
+          return master && (!master.exclusive_character_id || (master.exclusive_character_id === character.character_id && !alreadyHasExclusive));
+        }).sort((left: any, right: any) => {
+          const leftMaster = CANONICAL_SKILLS.find((entry) => entry.skill_id === left.skill_card_id)!;
+          const rightMaster = CANONICAL_SKILLS.find((entry) => entry.skill_id === right.skill_card_id)!;
+          return Number(rightMaster.exclusive_character_id === character.character_id) - Number(leftMaster.exclusive_character_id === character.character_id)
+            || Number(right.plus_val || 0) - Number(left.plus_val || 0)
+            || rarityScore(rightMaster.rarity) - rarityScore(leftMaster.rarity)
+            || leftMaster.skill_id.localeCompare(rightMaster.skill_id)
+            || String(left.id).localeCompare(String(right.id));
+        });
+        if (candidates[0]) { candidates[0].equipped_character_id = character.id; candidates[0].slot_index = slot; skillCount += 1; }
+      }
+    }
+
+    client.setStorage("user_skills", skills);
+    return skillCount;
+}
 
 const canonicalMissionRows = (): MissionMasterRow[] => CANONICAL_MISSIONS.map((mission) => ({
   id: mission.id,
@@ -43,6 +77,47 @@ const resolveCanonicalRewardItem = (rewardId: string): string => {
   }
   return rewardId;
 };
+
+const grantMockMissionReward = (client: any, userId: string, itemId: string, quantity: number) => {
+  if (!itemId || quantity <= 0) return;
+  const users = client.getStorage("users") || [];
+  const user = users.find((entry: any) => entry.id === userId);
+  if (!user) throw new Error("User not found");
+  if (itemId === "CASH") {
+    user.cash = Number(user.cash || 0) + quantity;
+    client.setStorage("users", users);
+    return;
+  }
+  if (itemId === "DIA" || itemId === "DIAMOND") {
+    user.neon_diamonds = Number(user.neon_diamonds || 0) + quantity;
+    client.setStorage("users", users);
+    return;
+  }
+  if (CANONICAL_EQUIPMENTS.some((master) => master.equipment_id === itemId)) {
+    const equipments = client.getStorage("user_equipments") || [];
+    for (let index = 0; index < quantity; index += 1) {
+      equipments.push({
+        id: `mission_equipment_${userId}_${itemId}_${Date.now()}_${index}`,
+        user_id: userId,
+        equipment_id: itemId,
+        equipment_master_id: itemId,
+        level: 1,
+        plus_val: 0,
+      });
+    }
+    client.setStorage("user_equipments", equipments);
+    return;
+  }
+  const items = client.getStorage("user_items") || [];
+  const existing = items.find((entry: any) => entry.user_id === userId && entry.item_id === itemId);
+  if (existing) existing.quantity = Number(existing.quantity || 0) + quantity;
+  else items.push({ id: `mission_item_${userId}_${itemId}`, user_id: userId, item_id: itemId, quantity });
+  client.setStorage("user_items", items);
+};
+
+const missionClaimKey = (userId: string, missionId: string, cycleDate?: string | null) => (
+  `${userId}:${missionId}:${cycleDate || "ONCE"}`
+);
 
 const canonicalQuestEnemySnapshot = (questId: string, encounterOverride?: ReturnType<typeof generateCanonicalQuestEncounter>) => {
   const encounter = encounterOverride ?? (canonicalQuestById(questId) ? generateCanonicalQuestEncounter(questId) : null);
@@ -100,6 +175,30 @@ const recordMockFunnelMilestone = (client: any, userId: string, milestone: strin
   if (trigger) evaluateMockMissionProgress(client, userId, trigger, 1);
 };
 
+const recordMockLifetimeMilestone = (client: any, userId: string, milestone: string, metadata: Record<string, unknown> = {}) => {
+  const exists = (client.getStorage("user_funnel_milestones") || [])
+    .some((entry: any) => entry.user_id === userId && entry.milestone === milestone);
+  if (!exists) recordMockFunnelMilestone(client, userId, milestone, metadata);
+};
+
+const rarityScore = (rarity?: string) => ({ SSR: 4, SR: 3, R: 2, N: 1 }[rarity || "N"] || 0);
+
+const mockCharacterPower = (character: any, equipments: any[]) => {
+  const master = CANONICAL_CHARACTERS.find((entry) => entry.character_id === character.character_id);
+  if (!master) return 0;
+  const stats = canonicalCharacterStats(master.lv1, master.lv100, Number(character.level || 1), Number(character.awakening_level || 0), master.growth_pattern);
+  const equipmentPower = equipments
+    .filter((entry: any) => entry.equipped_character_id === character.id)
+    .reduce((total: number, owned: any) => {
+      const equipment = CANONICAL_EQUIPMENTS.find((entry) => entry.equipment_id === (owned.equipment_id || owned.equipment_master_id));
+      if (!equipment || (equipment.exclusive_character_id && equipment.exclusive_character_id !== character.character_id)) return total;
+      return total + (["hp", "atk", "def"] as const).reduce((sum, key) => (
+        sum + canonicalEquipmentFlatStat(equipment.base_stats[key], Number(owned.level || 1), Number(owned.plus_val || 0))
+      ), 0);
+    }, 0);
+  return stats.hp + stats.atk + stats.def + equipmentPower;
+};
+
 const applyMockCharacterAwakeningEquivalent = (character: any) => {
   const result = applyCharacterAwakeningCopyEquivalent(
     Number(character.awakening_level || 0),
@@ -118,6 +217,25 @@ const applyMockCharacterAwakeningEquivalent = (character: any) => {
 };
 
 export async function executeMockRpc(client: any, funcName: string, params: any): Promise<any> {
+  // Explicit Room projection fixture for local navigation regression only.
+  if (funcName === "list_raid_rooms_v1" && typeof window !== "undefined") {
+    const fixture = localStorage.getItem("mock_rpc_fixture:raid_rooms");
+    if (fixture !== null) {
+      const rows = JSON.parse(fixture);
+      if (!Array.isArray(rows)) return { data: null, error: { code: "22023", message: "Invalid Room fixture" } };
+      const offset = params?.p_offset ?? 0;
+      const limit = params?.p_limit ?? 20;
+      if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 1 || limit > 100) return { data: null, error: { code: "22023", message: "Invalid pagination" } };
+      const selected = rows.filter(row => !params?.p_difficulty_id || row.difficultyId === params.p_difficulty_id);
+      return { data: { rooms: selected.slice(offset, offset + limit), nextOffset: offset + limit < selected.length ? offset + limit : null }, error: null };
+    }
+  }
+  // Explicit fresh-user test fixture only. This does not model stored Raid
+  // recovery or replace the real RPC/ack authority; absent fixture stays unsupported.
+  if (funcName === "list_raid_room_battle_recoveries_v1" && typeof window !== "undefined"
+    && localStorage.getItem("mock_rpc_fixture:empty_raid_recoveries") === "true") {
+    return { data: [], error: null };
+  }
   const qaDelay = typeof window === "undefined" ? 0 : Number(localStorage.getItem(`mock_rpc_delay_ms:${funcName}`) || 0);
   if (Number.isFinite(qaDelay) && qaDelay > 0) {
     await new Promise((resolve) => window.setTimeout(resolve, Math.min(qaDelay, 5000)));
@@ -329,11 +447,12 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
   if (funcName === "complete_activation_mission_handoff") {
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
     if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
-    const members = client.getStorage("guild_members") || [];
     const milestones = client.getStorage("user_funnel_milestones") || [];
-    const isGuildMember = members.some((entry: any) => entry.user_id === userId);
-    const hasGuildActivation = milestones.some((entry: any) => entry.user_id === userId && entry.milestone === "guild_activation");
-    if (!isGuildMember || !hasGuildActivation) {
+    const requiredMilestones = [
+      "first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout",
+      "post_tutorial_quest", "first_pvp", "first_raid",
+    ];
+    if (requiredMilestones.some((milestone) => !milestones.some((entry: any) => entry.user_id === userId && entry.milestone === milestone))) {
       return { data: null, error: { message: "activation prerequisites not met", code: "55000" } };
     }
     if (!milestones.some((entry: any) => entry.user_id === userId && entry.milestone === "activation_mission_handoff")) {
@@ -364,15 +483,78 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
   }
 
   if (funcName === "get_active_ranking_seasons") {
-    const start = new Date();
-    start.setUTCDate(1);
-    start.setUTCHours(-9, 0, 0, 0);
-    const end = new Date(start);
-    end.setUTCMonth(end.getUTCMonth() + 1);
+    const monthly = rankingSeasonWindow("PVP");
+    const weekly = rankingSeasonWindow("RAID");
     return { data: ["POWER", "GUILD_POWER", "PVP", "GVG", "RAID"].map((rankingType) => ({
       season_id: `mock-${rankingType.toLowerCase()}-season`, ranking_type: rankingType,
-      starts_at: start.toISOString(), ends_at: end.toISOString(), status: "ACTIVE",
+      starts_at: rankingType === "RAID" ? weekly.startsAt : monthly.startsAt,
+      ends_at: rankingType === "RAID" ? weekly.endsAt : monthly.endsAt,
+      status: "ACTIVE",
     })), error: null };
+  }
+
+  if (funcName === "get_recent_social_activity_feed") {
+    const now = Date.now();
+    const oldestVisibleAt = now - 24 * 60 * 60 * 1000;
+    const limit = Math.max(1, Math.min(Number(params?.p_limit || 20), 50));
+    const activities = (client.getStorage("social_activity_feed") || [])
+      .filter((entry: any) => {
+        const createdAt = Date.parse(entry.created_at || "");
+        return Number.isFinite(createdAt) && createdAt >= oldestVisibleAt && createdAt <= now;
+      })
+      .sort((left: any, right: any) => {
+        const createdAtDifference = Date.parse(right.created_at) - Date.parse(left.created_at);
+        if (createdAtDifference !== 0) return createdAtDifference;
+        if (String(left.id) === String(right.id)) return 0;
+        return String(left.id) < String(right.id) ? 1 : -1;
+      })
+      .slice(0, limit);
+    return { data: activities, error: null };
+  }
+
+  if (funcName === "get_public_ranking_reward_master") {
+    const dailyTiers = [
+      [1, 1, "L", 2],
+      [2, 3, "L", 1],
+      [4, 10, "M", 3],
+      [11, 30, "M", 2],
+      [31, 100, "M", 1],
+    ].flatMap(([rankMin, rankMax, size, quantity]) => [
+      [rankMin, rankMax, `CHAR_EXP_${size}`, quantity],
+      [rankMin, rankMax, `EQUIP_EXP_${size}`, quantity],
+    ]);
+    return { data: {
+      ...CANONICAL_RANKING_REWARDS,
+      daily: Object.fromEntries(["POWER", "GUILD_POWER", "PVP", "RAID_PERSONAL"].map((key) => [key, dailyTiers])),
+      guildSeasonCosmetics: [
+        { cosmeticId: "guild_preopen_2026_participation", displayName: "プレオープン参加記念ギルド装飾", rewardKind: "GUILD_COSMETIC", quantity: 1, isParticipation: true, eligibilityLabel: "参加ギルド" },
+        ...[1, 2, 3].map((rank) => ({ cosmeticId: `guild_preopen_2026_rank_${rank}`, displayName: `プレオープン第${rank}位限定ギルド装飾`, rewardKind: "GUILD_COSMETIC", quantity: 1, rankMin: rank, rankMax: rank })),
+      ],
+    }, error: null };
+  }
+
+  if (funcName === "get_preopen_guild_power_ranking") {
+    const guilds = client.getStorage("guilds") || [];
+    const memberships = client.getStorage("guild_members") || [];
+    const powers = client.getStorage("user_power_rankings") || [];
+    const rows = guilds.map((guild: any) => {
+      const members = memberships.filter((member: any) => member.guild_id === guild.id);
+      const currentPower = members.reduce((sum: number, member: any) => sum + Number(powers.find((power: any) => power.user_id === member.user_id)?.total_power || 0), 0);
+      return { guild_id: guild.id, name: guild.name, current_power: currentPower, member_count: members.length };
+    }).sort((a: any, b: any) => b.current_power - a.current_power)
+      .map((row: any, index: number) => ({ ...row, rank_position: index + 1 }));
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const myGuildId = memberships.find((member: any) => member.user_id === userId)?.guild_id;
+    return { data: {
+      event_key: "PREOPEN_GUILD_POWER_2026",
+      starts_at: "2026-09-03T15:00:00.000Z",
+      ends_at: "2099-12-30T15:00:00.000Z",
+      status: "ACTIVE",
+      is_current_context: true,
+      server_updated_at: new Date().toISOString(),
+      rows,
+      self_guild: rows.find((row: any) => row.guild_id === myGuildId) || null,
+    }, error: null };
   }
 
   if (funcName === "get_public_guild_power_rankings") {
@@ -405,6 +587,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
   }
 
   if (funcName === "search_guilds") {
+    if (typeof window !== "undefined" && localStorage.getItem("mock_rpc_error:search_guilds") === "true") {
+      return { data: null, error: { message: "mock guild discovery failure", code: "MOCK_ERROR" } };
+    }
     const query = String(params?.p_query || "").trim().toLocaleLowerCase();
     const guilds = client.getStorage("guilds") || [];
     const members = client.getStorage("guild_members") || [];
@@ -475,6 +660,24 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     return { data: { status: String(request.status).toLocaleLowerCase() }, error: null };
   }
 
+  if (funcName === "get_my_raid_contribution_v1") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const bosses = client.getStorage("raid_bosses") || [];
+    const instance = bosses.find((boss: any) => boss.id === params?.p_instance_id);
+    if (!instance) return { data: null, error: { message: "Raid not found", code: "P0002" } };
+    const isRoom = (client.getStorage("raid_rooms") || []).some((room: any) => room.raid_boss_instance_id === instance.id);
+    // SQL261: RoomはInstance、旧Raidは同日分。appliedではなく本人のrawを参照する。
+    const eligibleIds = new Set(bosses.filter((boss: any) => isRoom
+      ? boss.id === instance.id
+      : instance.raid_day_key != null && boss.raid_day_key === instance.raid_day_key
+    ).map((boss: any) => boss.id));
+    const contribution = (client.getStorage("raid_damage_logs") || [])
+      .filter((log: any) => log.user_id === userId && eligibleIds.has(log.raid_boss_instance_id))
+      .reduce((total: number, log: any) => total + Number(log.raw_damage ?? 0), 0);
+    return { data: { contribution }, error: null };
+  }
+
   if (funcName === "get_raid_rankings") {
     const users = client.getStorage("users") || [];
     const guilds = client.getStorage("guilds") || [];
@@ -499,7 +702,8 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
   if (funcName === "get_raid_season_rankings") {
     const users = client.getStorage("users") || [];
     const guilds = client.getStorage("guilds") || [];
-    const logs = client.getStorage("raid_damage_logs") || [];
+    const season = rankingSeasonWindow("RAID");
+    const logs = (client.getStorage("raid_damage_logs") || []).filter((log: any) => isInsideRankingSeason(log.created_at, season));
     const personalTotals = new Map<string, number>();
     const guildTotals = new Map<string, { contribution: number; participants: Set<string> }>();
     logs.forEach((log: any) => {
@@ -514,7 +718,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const individual = [...personalTotals.entries()].sort((a, b) => b[1] - a[1]).map(([userId, contribution], index) => ({ user_id: userId, username: users.find((user: any) => user.id === userId)?.username || "プレイヤー", contribution, rank_position: index + 1 }));
     const guild = [...guildTotals.entries()].sort((a, b) => b[1].contribution - a[1].contribution).map(([guildId, total], index) => ({ guild_id: guildId, guild_name: guilds.find((entry: any) => entry.id === guildId)?.name || "ギルド", contribution: total.contribution, participant_count: total.participants.size, rank_position: index + 1 }));
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
-    return { data: { season_id: "mock-raid-season", starts_at: new Date(Date.now() - 86400000).toISOString(), ends_at: new Date(Date.now() + 86400000).toISOString(), individual, guild, selfRank: individual.find((row) => row.user_id === userId) || null }, error: null };
+    return { data: { season_id: "mock-raid-season", starts_at: season.startsAt, ends_at: season.endsAt, individual, guild, selfRank: individual.find((row) => row.user_id === userId) || null }, error: null };
   }
 
   if (funcName === "get_public_gvg_rankings") {
@@ -550,6 +754,149 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("user_main_formations", formations);
     const power = (client.getStorage("user_power_rankings") || []).find((entry: any) => entry.user_id === userId)?.total_power || 0;
     return { data: { total_power: Number(power), slots: ids.length, character_ids: requested }, error: null };
+  }
+
+  if (funcName === "save_recommended_main_formation") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const characters = (client.getStorage("user_characters") || []).filter((entry: any) => entry.user_id === userId);
+    const equipments = client.getStorage("user_equipments") || [];
+    const selected = characters.slice().sort((left: any, right: any) => (
+      mockCharacterPower(right, equipments) - mockCharacterPower(left, equipments)
+      || String(left.character_id).localeCompare(String(right.character_id))
+      || String(left.id).localeCompare(String(right.id))
+    )).slice(0, 5);
+    if (selected.length === 0) return { data: null, error: { message: "owned character required", code: "P0002" } };
+    const formations = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id !== userId);
+    selected.forEach((character: any, index: number) => formations.push({ user_id: userId, slot: index + 1, user_character_id: character.id, updated_at: new Date().toISOString() }));
+    client.setStorage("user_main_formations", formations);
+    const totalPower = selected.reduce((sum: number, character: any) => sum + mockCharacterPower(character, equipments), 0);
+    const powers = client.getStorage("user_power_rankings") || [];
+    const power = powers.find((entry: any) => entry.user_id === userId);
+    if (power) power.total_power = totalPower;
+    else powers.push({ user_id: userId, total_power: totalPower, updated_at: new Date().toISOString() });
+    client.setStorage("user_power_rankings", powers);
+    return { data: { status: "success", character_ids: selected.map((entry: any) => entry.character_id), total_power: totalPower }, error: null };
+  }
+
+  if (funcName === "apply_recommended_main_loadout") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const allCharacters = client.getStorage("user_characters") || [];
+    const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+    const party = formation.map((row: any) => allCharacters.find((entry: any) => entry.user_id === userId && entry.id === row.user_character_id)).filter(Boolean);
+    if (party.length !== 5) return { data: null, error: { message: "Main Formation must contain five Characters", code: "23514" } };
+    const partyIds = new Set(party.map((entry: any) => entry.id));
+    const skills = client.getStorage("user_skills") || [];
+    const equipments = client.getStorage("user_equipments") || [];
+    skills.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
+    equipments.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
+
+    const skillCount = applyMockMainSkills(client, userId, party);
+
+    const slotCategories = ["WEAPON", "WEAPON", "HEAD", "BODY", "LEGS", "ACCESSORY", "ACCESSORY"];
+    let equipmentCount = 0;
+    for (let slot = 0; slot < slotCategories.length; slot += 1) {
+      const members = slot % 2 === 0 ? party : party.slice().reverse();
+      for (const character of members) {
+        const candidates = equipments.filter((entry: any) => {
+          if (entry.user_id !== userId || entry.equipped_character_id) return false;
+          const master = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (entry.equipment_id || entry.equipment_master_id));
+          return master?.category === slotCategories[slot] && (!master.exclusive_character_id || master.exclusive_character_id === character.character_id);
+        }).sort((left: any, right: any) => {
+          const leftMaster = CANONICAL_EQUIPMENTS.find((entry) => entry.equipment_id === (left.equipment_id || left.equipment_master_id))!;
+          const rightMaster = CANONICAL_EQUIPMENTS.find((entry) => entry.equipment_id === (right.equipment_id || right.equipment_master_id))!;
+          const contribution = (owned: any, master: any) => (["hp", "atk", "def"] as const).reduce((sum, key) => sum + canonicalEquipmentFlatStat(master.base_stats[key], Number(owned.level || 1), Number(owned.plus_val || 0)), 0);
+          return Number(rightMaster.exclusive_character_id === character.character_id) - Number(leftMaster.exclusive_character_id === character.character_id)
+            || contribution(right, rightMaster) - contribution(left, leftMaster)
+            || Number(right.level || 1) - Number(left.level || 1)
+            || Number(right.plus_val || 0) - Number(left.plus_val || 0)
+            || rarityScore(rightMaster.rarity) - rarityScore(leftMaster.rarity)
+            || leftMaster.equipment_id.localeCompare(rightMaster.equipment_id)
+            || String(left.id).localeCompare(String(right.id));
+        });
+        if (candidates[0]) { candidates[0].equipped_character_id = character.id; candidates[0].slot_index = slot; equipmentCount += 1; }
+      }
+    }
+    if (skillCount === 0 || equipmentCount === 0) return { data: null, error: { message: "Main Formation requires at least one Skill and one Equipment", code: "23514" } };
+    client.setStorage("user_skills", skills);
+    client.setStorage("user_equipments", equipments);
+    recordMockLifetimeMilestone(client, userId, "first_main_loadout", { skillCount, equipmentCount });
+    const totalPower = party.reduce((sum: number, character: any) => sum + mockCharacterPower(character, equipments), 0);
+    const powers = client.getStorage("user_power_rankings") || [];
+    const power = powers.find((entry: any) => entry.user_id === userId);
+    if (power) power.total_power = totalPower;
+    else powers.push({ user_id: userId, total_power: totalPower, updated_at: new Date().toISOString() });
+    client.setStorage("user_power_rankings", powers);
+    return { data: { status: "success", skillCount, equipmentCount, totalPower, characters: party.map((character: any) => ({
+      characterId: character.character_id, userCharacterId: character.id,
+      skillCount: skills.filter((entry: any) => entry.equipped_character_id === character.id).length,
+      equipmentCount: equipments.filter((entry: any) => entry.equipped_character_id === character.id).length,
+    })) }, error: null };
+  }
+
+  if (funcName === "get_character_setup_dialog_state") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const milestones = client.getStorage("user_funnel_milestones") || [];
+    return { data: {
+      eligible: milestones.some((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_eligible"),
+      consumed: milestones.some((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_consumed"),
+    }, error: null };
+  }
+
+  if (funcName === "complete_character_setup_dialog") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const action = String(params?.p_action || "").toUpperCase();
+    const milestones = client.getStorage("user_funnel_milestones") || [];
+    if (!userId || !milestones.some((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_eligible")) {
+      return { data: null, error: { message: "character setup dialog is unavailable", code: "42501" } };
+    }
+    const consumed = milestones.find((row: any) => row.user_id === userId && row.milestone === "character_setup_dialog_consumed");
+    if (consumed) return { data: { status: "already_consumed", result: consumed.metadata }, error: null };
+    const before = Number((client.getStorage("user_power_rankings") || []).find((row: any) => row.user_id === userId)?.total_power || 0);
+    let partyCount = 0;
+    let equipmentCount = 0;
+    let skillCount = 0;
+    if (action === "AUTO_SETUP") {
+      const formationResult = await executeMockRpc(client, "save_recommended_main_formation", {});
+      if (formationResult.error) return formationResult;
+      const allCharacters = client.getStorage("user_characters") || [];
+      const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+      const party = formation.map((row: any) => allCharacters.find((entry: any) => entry.user_id === userId && entry.id === row.user_character_id)).filter(Boolean);
+      partyCount = party.length;
+      skillCount = applyMockMainSkills(client, userId, party);
+      const partyIds = new Set(party.map((entry: any) => entry.id));
+      const equipments = client.getStorage("user_equipments") || [];
+      equipments.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
+      const categories = ["WEAPON", "WEAPON", "HEAD", "BODY", "LEGS", "ACCESSORY", "ACCESSORY"];
+      for (let slot = 0; slot < categories.length; slot += 1) {
+        const members = slot % 2 === 0 ? party : party.slice().reverse();
+        for (const character of members) {
+          const candidate = equipments.filter((entry: any) => {
+            const master = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (entry.equipment_id || entry.equipment_master_id));
+            return entry.user_id === userId && !entry.equipped_character_id && master?.category === categories[slot]
+              && (!master.exclusive_character_id || master.exclusive_character_id === character.character_id);
+          }).sort((left: any, right: any) => {
+            const lm = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (left.equipment_id || left.equipment_master_id))!;
+            const rm = CANONICAL_EQUIPMENTS.find((item) => item.equipment_id === (right.equipment_id || right.equipment_master_id))!;
+            const score = (owned: any, master: any) => (["hp", "atk", "def"] as const).reduce((sum, key) => sum + canonicalEquipmentFlatStat(master.base_stats[key], Number(owned.level || 1), Number(owned.plus_val || 0)), 0);
+            return Number(rm.exclusive_character_id === character.character_id) - Number(lm.exclusive_character_id === character.character_id)
+              || score(right, rm) - score(left, lm) || String(left.id).localeCompare(String(right.id));
+          })[0];
+          if (candidate) { candidate.equipped_character_id = character.id; candidate.slot_index = slot; equipmentCount += 1; }
+        }
+      }
+      client.setStorage("user_equipments", equipments);
+      recordMockLifetimeMilestone(client, userId, "first_main_loadout", { source: "character_setup_dialog", equipmentCount, skillCount });
+    } else if (action !== "LATER") {
+      return { data: null, error: { message: "invalid dialog action", code: "22023" } };
+    }
+    const characters = client.getStorage("user_characters") || [];
+    const equipments = client.getStorage("user_equipments") || [];
+    const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId);
+    const after = formation.reduce((sum: number, row: any) => sum + mockCharacterPower(characters.find((character: any) => character.id === row.user_character_id) || {}, equipments), 0);
+    recordMockLifetimeMilestone(client, userId, "character_setup_dialog_consumed", { action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount, skillCount });
+    return { data: { status: "success", action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount, skillCount }, error: null };
   }
 
   if (funcName === "get_current_main_formation") {
@@ -989,7 +1336,8 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const patrol = (client.getStorage("user_patrols") || []).find((entry: any) =>
       entry.id === params.p_patrol_id
       && entry.user_id === userId
-      && entry.status === "CLAIMABLE"
+      && (entry.status === "CLAIMABLE"
+        || (entry.status === "ONGOING" && Date.parse(entry.expires_at) <= Date.now()))
       && entry.has_battle_event
       && !entry.battle_resolved
     );
@@ -999,12 +1347,12 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     }
     return {
       data: {
-        id: encounter.encounterId,
-        quest_id: encounter.questId,
+        id: encounter.encounterId ?? patrol.id,
+        quest_id: patrol.course_id ?? patrol.quest_id,
         npc_name: "Canonical NPC Party",
         npc_level: encounter.members[0]?.level ?? 1,
         encounter_rate: 1,
-        enemy_data: {},
+        enemy_data: encounter,
       },
       error: null,
     };
@@ -1019,16 +1367,14 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (!patrol || !isServerComplete || !patrol.has_battle_event || patrol.battle_resolved) {
       return { data: null, error: { message: "eligible patrol encounter not found", code: "P0002" } };
     }
+    const owned = client.getStorage("user_characters") || [];
+    const formation = (client.getStorage("user_main_formations") || [])
+      .filter((entry: any) => entry.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+    const roster = formation.map((slot: any) => owned.find((entry: any) =>
+      entry.id === slot.user_character_id && entry.user_id === userId)).filter(Boolean);
+    if (!roster.length || roster.length > 5) return { data: null, error: { message: "battle formation has no supported owned character", code: "23514" } };
     patrol.status = "CLAIMABLE";
     client.setStorage("user_patrols", patrols);
-    const owned = client.getStorage("user_characters") || [];
-    const decks = client.getStorage("pvp_defense_decks") || [];
-    const deck = decks.find((entry: any) => entry.user_id === userId);
-    const deckIds = deck ? [deck.character_1_id, deck.character_2_id, deck.character_3_id, deck.character_4_id, deck.character_5_id].filter(Boolean) : [];
-    const roster = deckIds.length
-      ? deckIds.map((id: string) => owned.find((entry: any) => entry.id === id && entry.user_id === userId)).filter(Boolean)
-      : owned.filter((entry: any) => entry.user_id === userId && entry.character_id === patrol.character_id).slice(0, 1);
-    if (!roster.length) return { data: null, error: { message: "battle formation has no supported owned character", code: "23514" } };
     const equipments = client.getStorage("user_equipments") || [];
     const equippedSkills = client.getStorage("user_skills") || [];
     const playerSnapshot = roster.map((character: any) => {
@@ -1047,7 +1393,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         total.luk += canonicalEquipmentFlatStat(master.base_stats.luk, level, plusValue);
         return total;
       }, { hp: 0, atk: 0, def: 0, spd: 0, luk: 0 });
-      const characterStats = characterMaster ? canonicalCharacterStats(characterMaster.lv1, characterMaster.lv100, Math.max(1, Math.min(100, Number(character.level || 1))), Math.max(0, Math.min(5, Number(character.awakening_level || 0)))) : { hp: 1, atk: 0, def: 0, spd: 0, luk: 0 };
+      const characterStats = characterMaster ? canonicalCharacterStats(characterMaster.lv1, characterMaster.lv100, Math.max(1, Math.min(100, Number(character.level || 1))), Math.max(0, Math.min(5, Number(character.awakening_level || 0))), characterMaster.growth_pattern) : { hp: 1, atk: 0, def: 0, spd: 0, luk: 0 };
       const skillRefs = equippedSkills
         .filter((owned: any) => owned.user_id === userId && owned.equipped_character_id === character.id
           && Number(owned.slot_index) >= 0 && Number(owned.slot_index) < canonicalSkillSlotCount(Math.max(0, Math.min(5, Number(character.awakening_level || 0)))))
@@ -1079,6 +1425,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         team: "PLAYER",
         alignment: characterMaster?.attribute || "ORDER",
         characterId: character.character_id,
+        level: Math.max(1, Number(character.level || 1)),
+        awakeningLevel: Math.max(0, Number(character.awakening_level || 0)),
+        rarity: characterMaster?.rarity || "N",
         stats: {
           hp: characterStats.hp + equipmentStats.hp,
           atk: characterStats.atk + equipmentStats.atk,
@@ -1175,9 +1524,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const supportedProviders = new Set((overriddenProviders || (isAnonymous ? [] : [authMode.toLowerCase()]))
       .filter((provider) => provider === "email" || provider === "google"));
     const identityProvider = supportedProviders.size === 1 ? [...supportedProviders][0] : null;
-    const identityIntegrityValid = !isAnonymous
-      && supportedProviders.size === 1
-      && (!method || method.auth_method.toLowerCase() === identityProvider);
+    const identityIntegrityValid = (isAnonymous && supportedProviders.size === 0 && !method)
+      || (!isAnonymous && supportedProviders.size === 1
+        && (!method || method.auth_method.toLowerCase() === identityProvider));
     const hasProfile = users.some((user: any) => user.id === userId);
     const isLegacyAuthenticated = identityIntegrityValid && hasProfile && !method && (!progress?.step_id || progress.step_id === "AUTHENTICATION");
     return {
@@ -1186,10 +1535,15 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         is_anonymous: isAnonymous,
         has_profile: hasProfile,
         tutorial_step: progress?.step_id || null,
+        authentication_pending: Boolean(progress?.authentication_pending),
         auth_method: method?.auth_method || (identityProvider ? identityProvider.toUpperCase() : null),
         is_legacy_authenticated: isLegacyAuthenticated,
         identity_integrity_valid: identityIntegrityValid,
-        gameplay_authorized: hasProfile && identityIntegrityValid && ((method && progress?.step_id === "AUTHENTICATION") || isLegacyAuthenticated),
+        gameplay_authorized: hasProfile && identityIntegrityValid && (
+          (isAnonymous && progress?.step_id === "COMPLETE" && progress?.authentication_pending === true)
+          || (!isAnonymous && method && progress?.step_id === "AUTHENTICATION")
+          || isLegacyAuthenticated
+        ),
       },
       error: null,
     };
@@ -1223,20 +1577,57 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (!userId) return { data: null, error: { message: "Authentication is required" } };
     const progress = client.getStorage("tutorial_progress") || [];
     if (!progress.some((entry: any) => entry.user_id === userId)) {
-      progress.push({ user_id: userId, step_id: "WORLD_INTRO" });
+      progress.push({ user_id: userId, step_id: "FREE_GACHA" });
       client.setStorage("tutorial_progress", progress);
     }
-    return { data: "WORLD_INTRO", error: null };
+    return { data: progress.find((entry: any) => entry.user_id === userId)?.step_id || "FREE_GACHA", error: null };
   }
 
   if (funcName === "advance_tutorial_progress") {
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
     const progress = client.getStorage("tutorial_progress") || [];
     const entry = progress.find((value: any) => value.user_id === userId);
-    if (!entry || entry.step_id !== params.p_expected_step) return { data: null, error: { message: "Unexpected tutorial step" } };
+    if (!userId || !entry || entry.step_id !== params.p_expected_step) return { data: null, error: { message: "Unexpected tutorial step" } };
     entry.step_id = params.p_next_step;
+    if (params.p_next_step === "COMPLETE") {
+      entry.authentication_pending = false;
+      recordMockLifetimeMilestone(client, userId, "tutorial_complete", { source: "tutorial_progress" });
+      recordMockLifetimeMilestone(client, userId, "character_setup_dialog_eligible", { flow: "short_tutorial_v1" });
+    }
     client.setStorage("tutorial_progress", progress);
     return { data: entry.step_id, error: null };
+  }
+
+  if (funcName === "resume_short_tutorial") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const progressRows = client.getStorage("tutorial_progress") || [];
+    const progress = progressRows.find((row: any) => row.user_id === userId);
+    if (!userId || !progress) return { data: null, error: { message: "Tutorial has not started", code: "P0002" } };
+    if (progress.step_id === "WORLD_INTRO") progress.step_id = "FREE_GACHA";
+    if (progress.step_id === "RULE_GUIDE") {
+      progress.step_id = "COMPLETE";
+      recordMockLifetimeMilestone(client, userId, "tutorial_complete", { source: "tutorial_progress" });
+      recordMockLifetimeMilestone(client, userId, "character_setup_dialog_eligible", { flow: "short_tutorial_v1" });
+    }
+    if (progress.step_id === "AUTO_FORMATION") {
+      const saved = await executeMockRpc(client, "save_recommended_main_formation", {});
+      if (saved.error) return saved;
+      progress.step_id = "DISPATCH";
+    }
+    let patrol = (client.getStorage("user_patrols") || []).find((row: any) => row.user_id === userId && row.status !== "COMPLETED" && (row.course_id || row.quest_id) === "q_shinjuku_1");
+    if (progress.step_id === "DISPATCH") {
+      if (!patrol) {
+        const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
+        const owned = client.getStorage("user_characters") || [];
+        const character = owned.find((row: any) => row.id === formation[0]?.user_character_id);
+        patrol = { id: `tutorial-patrol-${userId}`, user_id: userId, course_id: "q_shinjuku_1", character_id: character?.character_id, status: "ONGOING", has_battle_event: true, battle_resolved: false, started_at: new Date().toISOString(), expires_at: new Date().toISOString() };
+        const patrols = client.getStorage("user_patrols") || []; patrols.push(patrol); client.setStorage("user_patrols", patrols);
+      }
+      progress.step_id = "FREE_INSTANT";
+    }
+    if (progress.step_id === "FREE_INSTANT") { if (patrol) patrol.status = "CLAIMABLE"; progress.step_id = "TUTORIAL_BATTLE"; }
+    client.setStorage("tutorial_progress", progressRows);
+    return { data: { status: "ready", tutorial_step: progress.step_id, patrol_id: patrol?.id || null }, error: null };
   }
 
   if (funcName === "prepare_current_tutorial_growth") {
@@ -1441,9 +1832,29 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (existingMethod && existingMethod.auth_method !== requestedMethod) return { data: null, error: { message: "A different authentication method is already linked" } };
     if (!existingMethod) methods.push({ user_id: userId, auth_method: requestedMethod });
     entry.step_id = "AUTHENTICATION";
+    entry.authentication_pending = false;
     client.setStorage("tutorial_progress", progress);
     client.setStorage("user_account_auth_methods", methods);
     return { data: "AUTHENTICATION", error: null };
+  }
+
+  if (funcName === "defer_tutorial_authentication") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const authMode = typeof window === "undefined" ? null : localStorage.getItem("mock_auth_mode");
+    const progress = client.getStorage("tutorial_progress") || [];
+    const entry = progress.find((value: any) => value.user_id === userId);
+    const methods = client.getStorage("user_account_auth_methods") || [];
+    const identities = client.getStorage("auth_identities") || [];
+    if (!userId || authMode !== "ANONYMOUS") return { data: null, error: { message: "Only the current anonymous account can defer authentication" } };
+    if (!entry || entry.step_id !== "COMPLETE") return { data: null, error: { message: "Tutorial completion is required" } };
+    if (methods.some((value: any) => value.user_id === userId)
+      || identities.some((value: any) => value.user_id === userId && value.provider !== "anonymous")) {
+      return { data: null, error: { message: "A connected identity cannot defer authentication" } };
+    }
+    entry.authentication_pending = true;
+    entry.completed_at ||= new Date().toISOString();
+    client.setStorage("tutorial_progress", progress);
+    return { data: "COMPLETE", error: null };
   }
 
   if (funcName === "discard_current_anonymous_account_for_switch") {
@@ -1545,6 +1956,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const post = { id: `chat_${Date.now()}`, title: "", user_id: userId, author_id: userId, author_name: user.username || "Player", author_avatar_url: user.avatar_url, content: p_content.trim(), target_type: p_target_type, target_id: p_target_type === "GUILD" ? membership.guild_id : null, reply_to_message_id: p_reply_to_message_id || null, is_system: false, created_at: new Date().toISOString() };
     posts.push(post);
     client.setStorage("board_posts", posts);
+    if (p_target_type === "GUILD" && userId) evaluateMockMissionProgress(client, userId, "GUILD_CHAT", 1);
     return { data: post, error: null };
   }
 
@@ -1791,7 +2203,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const user = users.find((entry: any) => entry.id === currentUserId);
     if (!user) return { data: null, error: { message: "User not found" } };
     const now = Date.now();
-    const vitality = recoverCanonicalResource(Number(user.vitality ?? 100), new Date(user.vitality_last_recovered_at ?? now).getTime(), now, "VITALITY");
+    const vitality = recoverCanonicalResource(Number(user.vitality ?? CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax), new Date(user.vitality_last_recovered_at ?? now).getTime(), now, "VITALITY");
     const pvp = recoverCanonicalResource(Number(user.pvp_points ?? 5), new Date(user.pvp_points_last_recovered_at ?? now).getTime(), now, "PVP_POINT");
     const raid = recoverCanonicalResource(Number(user.raid_points ?? 5), new Date(user.raid_points_last_recovered_at ?? now).getTime(), now, "RAID_POINT");
     user.vitality = vitality.value;
@@ -1808,7 +2220,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       out_cash: Number(user.cash || 0),
       out_diamonds: Number(user.neon_diamonds || user.diamonds || 0),
       raid_first_entry_free: !Boolean(user.raid_free_entry_consumed),
-      vitality_next_recovery_at: vitality.value < 100 ? new Date(vitality.lastRecoveredAtMs + 360_000).toISOString() : null,
+      vitality_next_recovery_at: vitality.value < CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax ? new Date(vitality.lastRecoveredAtMs + 360_000).toISOString() : null,
       pvp_next_recovery_at: pvp.value < 5 ? new Date(pvp.lastRecoveredAtMs + 7_200_000).toISOString() : null,
       raid_next_recovery_at: raid.value < 5 ? new Date(raid.lastRecoveredAtMs + 7_200_000).toISOString() : null,
     }, error: null };
@@ -2038,9 +2450,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       gift_code: null,
       bio: "歌舞伎町の覇権を握るため立ち上がる。",
       avatar_url: p_character_id === "char_reiji_01" ? "/characters/reiji_transparent_asset.png" : p_character_id === "char_rui_01" ? "/characters/rui_transparent_asset.png" : p_character_id === "char_chang_01" ? "/characters/chang_transparent_asset.png" : "/characters/reiji_transparent_asset.png",
-      cash: 10000,
+      cash: 2600,
       neon_diamonds: 200,
-      vitality: 100,
+      vitality: CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax,
       pvp_points: 5,
       sound_settings: { bgm: true, se: true },
       current_base_id: p_area_id === "shinjuku" ? "shinjuku" : p_area_id,
@@ -2200,9 +2612,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       username,
       bio: "歌舞伎町の覇権を握るため立ち上がる。",
       avatar_url: "/characters/reiji_transparent_asset.png",
-      cash: 10000,
+      cash: 2600,
       neon_diamonds: 200,
-      vitality: 100,
+      vitality: CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax,
       pvp_points: 5,
       current_base_id: "shinjuku",
       favorite_character_id: null,
@@ -2335,8 +2747,19 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const { p_user_id, p_my_points } = params;
     const users = client.getStorage("users") || [];
     const ranks = client.getStorage("pvp_ranks") || [];
+    const milestones = client.getStorage("user_funnel_milestones") || [];
+    const firstPvpPending = !milestones.some((entry: any) => entry.user_id === p_user_id && entry.milestone === "first_pvp");
+    const myPower = Number(users.find((entry: any) => entry.id === p_user_id)?.total_power || 0);
     const candidates = users
       .filter((u: any) => u.id !== p_user_id)
+      .sort((left: any, right: any) => {
+        if (!firstPvpPending || myPower <= 0) return 0;
+        const leftPower = Number(left.total_power || 0);
+        const rightPower = Number(right.total_power || 0);
+        const leftTier = leftPower < myPower ? 0 : 1;
+        const rightTier = rightPower < myPower ? 0 : 1;
+        return leftTier - rightTier || Math.abs(myPower - leftPower) - Math.abs(myPower - rightPower);
+      })
       .slice(Number(params?.p_offset || 0), Number(params?.p_offset || 0) + 5)
       .map((u: any, idx: number) => {
         const defenseIds = ["char_reiji_01", "char_rui_01", "char_chang_01"];
@@ -2346,6 +2769,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         opponent_guild_name: "No Guild",
         opponent_points: ranks.find((rank: any) => rank.user_id === u.id)?.rank_points ?? 1000,
         opponent_power: Number(u.total_power || 15000 + idx * 2500),
+        opponent_class: Number(u.total_power || 15000 + idx * 2500) < myPower ? "WEAKER" : Number(u.total_power || 15000 + idx * 2500) > myPower ? "STRONGER" : "EQUAL",
         opponent_rank: idx + 1,
         opponent_guild_id: null,
         tactic: "BALANCED",
@@ -2785,6 +3209,21 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     };
   }
 
+  if (funcName === "move_current_user_base") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const nextBaseId = String(params.p_base_id || "");
+    const canonicalBaseIds = ["shinjuku", "shibuya", "ikebukuro", "roppongi", "akihabara", "kawasaki", "yokohama"];
+    if (!userId) return { data: null, error: { message: "Player authentication required", code: "42501" } };
+    if (!canonicalBaseIds.includes(nextBaseId)) return { data: null, error: { message: "Invalid base id", code: "22023" } };
+    const users = client.getStorage("users") || [];
+    const user = users.find((entry: any) => entry.id === userId);
+    if (!user) return { data: null, error: { message: "Player was not found", code: "P0002" } };
+    const previousBaseId = user.current_base_id;
+    user.current_base_id = nextBaseId;
+    client.setStorage("users", users);
+    return { data: { status: "success", previous_base_id: previousBaseId, current_base_id: nextBaseId }, error: null };
+  }
+
   if (funcName === "claim_patrol_rewards") {
     const { p_patrol_id } = params;
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
@@ -2847,6 +3286,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("presents", presents);
     client.setStorage("user_patrols", patrols);
     evaluateMockMissionProgress(client, userId, "PATROL_CLEAR", 1);
+    const guideMilestones = client.getStorage("user_funnel_milestones") || [];
+    if (guideMilestones.some((entry: any) => entry.user_id === userId && entry.milestone === "first_main_loadout")) {
+      recordMockLifetimeMilestone(client, userId, "post_tutorial_quest", { source: "quest_claim", patrolId: p_patrol_id });
+    }
     recordMockFunnelMilestone(client, userId, "first_battle", { source: "patrol" });
     return {
       data: {
@@ -2956,14 +3399,14 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("user_missions", missions);
     const users = client.getStorage("users") || [];
     const user = users.find((row: any) => row.id === userId);
-    if (user) Object.assign(user, { level: 1, xp: 0, cash: 10000, neon_diamonds: 200, diamonds: 0, vitality: 100, pvp_points: 5, raid_points: 5, favorite_character_id: null, current_base_id: "shinjuku" });
+    if (user) Object.assign(user, { level: 1, xp: 0, cash: 2600, neon_diamonds: 200, diamonds: 0, vitality: CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax, pvp_points: 5, raid_points: 5, favorite_character_id: null, current_base_id: "shinjuku" });
     client.setStorage("users", users);
     const progressRows = client.getStorage("tutorial_progress") || [];
     const progress = progressRows.find((row: any) => row.user_id === userId);
-    if (progress) Object.assign(progress, { step_id: "WORLD_INTRO", completed_at: null });
-    else progressRows.push({ user_id: userId, step_id: "WORLD_INTRO" });
+    if (progress) Object.assign(progress, { step_id: "FREE_GACHA", completed_at: null });
+    else progressRows.push({ user_id: userId, step_id: "FREE_GACHA" });
     client.setStorage("tutorial_progress", progressRows);
-    const result = { status: "success", tutorial_step: "WORLD_INTRO", request_id: params.p_request_id };
+    const result = { status: "success", tutorial_step: "FREE_GACHA", request_id: params.p_request_id };
     requests.push({ request_id: params.p_request_id, user_id: userId, status: "COMPLETED", result });
     client.setStorage("gameplay_reset_requests", requests);
     return { data: result, error: null };
@@ -2987,6 +3430,14 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const lifetimeGrant = (client.getStorage("user_lifetime_onboarding_grants") || []).find((row: any) => row.user_id === userId);
     const lifetimeResults = lifetimeGrant?.canonical_payload?.gacha_results;
     if (!normal.length || !ssr.length) return { data: null, error: { message: "canonical tutorial gacha bucket is empty" } };
+    const claims = client.getStorage("user_daily_gacha_claims") || [];
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Tokyo" });
+    const existingClaim = claims.find((entry: any) => entry.user_id === userId && entry.gacha_type === "CHARACTER");
+    if (existingClaim?.last_claimed_date === today) {
+      return { data: null, error: { message: "daily free gacha already claimed", code: "23505" } };
+    }
+    if (existingClaim) existingClaim.last_claimed_date = today;
+    else claims.push({ user_id: userId, gacha_type: "CHARACTER", last_claimed_date: today });
     const characters = client.getStorage("user_characters") || [];
     const results = Array.from({ length: 10 }, (_, index) => {
       // Stable tutorial fixture order keeps N/R/SR visual contract assertions
@@ -3011,7 +3462,10 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     });
     const response = { status: "success", request_id: params.p_request_id, results, tutorial: true, guaranteed_ssr_slot: 10 };
     histories.push({ user_id: userId, request_id: params.p_request_id, gacha_id: "CHAR_NORMAL", payment_source: "free", pull_count: 10, status: "COMPLETED", result_payload: response });
-    client.setStorage("gacha_execution_history", histories); client.setStorage("user_characters", characters);
+    client.setStorage("gacha_execution_history", histories);
+    client.setStorage("user_daily_gacha_claims", claims);
+    client.setStorage("user_characters", characters);
+    evaluateMockMissionProgress(client, userId, "GACHA_PULL", 1);
     return { data: response, error: null };
   }
 
@@ -3093,6 +3547,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const response = { status: "success", request_id: p_request_id, results, cash: user.cash, diamonds: user.neon_diamonds };
     histories.push({ user_id: p_user_id, request_id: p_request_id, gacha_id: p_gacha_id, payment_source: p_currency_type, pull_count: p_pull_count, status: "COMPLETED", result_payload: response });
     client.setStorage("gacha_execution_history", histories);
+    if (p_currency_type === "free" && p_gacha_id === "CHAR_NORMAL" && p_pull_count === 10) {
+      evaluateMockMissionProgress(client, p_user_id, "GACHA_PULL", 1);
+    }
     return { data: response, error: null };
   }
 
@@ -3187,6 +3644,18 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     client.setStorage("user_skills", skills);
     client.setStorage("user_equipments", equipments);
     recordMockFunnelMilestone(client, p_user_id, "first_gacha", { source: gacha.gacha_type === "SKILL" ? "skill_gacha" : "equipment_gacha" });
+    const tutorialComplete = (client.getStorage("tutorial_progress") || [])
+      .some((entry: any) => entry.user_id === p_user_id && (
+        entry.step_id === "AUTHENTICATION"
+        || (entry.step_id === "COMPLETE" && entry.authentication_pending === true)
+      ));
+    if (tutorialComplete && p_currency_type === "free" && p_pull_count === 10) {
+      if (p_gacha_id === "SKILL_NORMAL") {
+        recordMockLifetimeMilestone(client, p_user_id, "first_free_skill_ten_pull", { gachaId: p_gacha_id, requestId: p_request_id, pullCount: 10 });
+      } else if (p_gacha_id === "EQUIP_NORMAL") {
+        recordMockLifetimeMilestone(client, p_user_id, "first_free_equipment_ten_pull", { gachaId: p_gacha_id, requestId: p_request_id, pullCount: 10 });
+      }
+    }
     if (p_currency_type !== "free" && (p_gacha_id === "SKILL_SPECIAL" || p_gacha_id === "EQUIP_SPECIAL")) {
       const pityPoints = client.getStorage("user_gacha_pity_points") || [];
       const pity = pityPoints.find((entry: any) => entry.user_id === p_user_id && entry.pity_master_id === "pity_special_common");
@@ -3197,6 +3666,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const response = { status: "success", request_id: p_request_id, results, cash: user.cash, diamonds: user.neon_diamonds };
     histories.push({ user_id: p_user_id, request_id: p_request_id, gacha_id: p_gacha_id, payment_source: p_currency_type, pull_count: p_pull_count, status: "COMPLETED", result_payload: response });
     client.setStorage("gacha_execution_history", histories);
+    if (p_currency_type === "free" && ["SKILL_NORMAL", "EQUIP_NORMAL"].includes(p_gacha_id) && p_pull_count === 10) {
+      evaluateMockMissionProgress(client, p_user_id, "GACHA_PULL", 1);
+    }
     return { data: response, error: null };
   }
 
@@ -3711,27 +4183,35 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (master.prerequisiteMissionId && !userMissions.some((row: any) => row.user_id === p_user_id && row.mission_id === master.prerequisiteMissionId && row.status === "CLAIMED")) {
       return { error: { message: "前提ミッションが未受取です。" } };
     }
+    const claimKey = missionClaimKey(p_user_id, p_mission_id, um.cycle_date);
+    const ledger = client.getStorage("mission_reward_delivery_ledger") || [];
+    if (ledger.some((entry: any) => entry.claim_key === claimKey)) return { error: { message: "Mission reward was already delivered." } };
+    const resolvedItemId = resolveCanonicalRewardItem(master.rewardItemId);
+    const rewards = [
+      ...(resolvedItemId && master.rewardQuantity > 0 ? [{ item_id: resolvedItemId, quantity: master.rewardQuantity }] : []),
+      ...(master.cashReward > 0 ? [{ item_id: "CASH", quantity: master.cashReward }] : []),
+    ];
+    rewards.forEach((reward) => grantMockMissionReward(client, p_user_id, reward.item_id, reward.quantity));
+    const deliveredAt = new Date().toISOString();
     um.status = "CLAIMED";
-    um.claimed_at = new Date().toISOString();
-    um.updated_at = new Date().toISOString();
-    
-    const presents = client.getStorage("presents") || [];
-    presents.push({
-      id: `mission_reward_${p_user_id}_${p_mission_id}`,
+    um.claimed_at = deliveredAt;
+    um.updated_at = deliveredAt;
+    ledger.push({
+      claim_key: claimKey,
+      user_mission_id: um.id,
       user_id: p_user_id,
-      item_id: resolveCanonicalRewardItem(master.rewardItemId),
-      quantity: master.rewardQuantity,
-      message: "ミッション報酬",
-      status: "UNCLAIMED",
-      sent_at: new Date().toISOString(),
+      mission_id: p_mission_id,
+      cycle_date: um.cycle_date || null,
+      resolved_item_id: resolvedItemId,
+      item_quantity: master.rewardQuantity,
+      cash_quantity: master.cashReward,
+      delivery_status: "DELIVERED",
+      delivered_at: deliveredAt,
     });
-    if (master.cashReward > 0) {
-      presents.push({ id:`mission_cash_${p_user_id}_${p_mission_id}`,user_id:p_user_id,item_id:"CASH",quantity:master.cashReward,message:"ミッション報酬",status:"UNCLAIMED",sent_at:new Date().toISOString() });
-    }
     unlockClaimedMissionChildren(canonicalMissionRows(), userMissions, p_user_id, p_mission_id, achievedFunnelTriggers(client, p_user_id));
     client.setStorage("user_missions", userMissions);
-    client.setStorage("presents", presents);
-    return { data: { status: "success", claimed: true, item_id: master.rewardItemId, quantity: master.rewardQuantity }, error: null };
+    client.setStorage("mission_reward_delivery_ledger", ledger);
+    return { data: { status: "success", claimed: true, mission_id: p_mission_id, delivery: "DIRECT", rewards }, error: null };
   }
 
   if (funcName === "claim_all_mission_rewards") {
@@ -3739,34 +4219,47 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const p_user_id = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
     if (!p_user_id) return { data: null, error: { message: "authentication required", code: "42501" } };
     const userMissions = client.getStorage("user_missions") || [];
-    const presents = client.getStorage("presents") || [];
     const candidates = userMissions.filter((um: any) => um.user_id === p_user_id && p_mission_ids.includes(um.mission_id) && um.status === "CLEAR");
     if (candidates.some((um: any) => !CANONICAL_MISSIONS.some((mission) => mission.id === um.mission_id && mission.isEnabled && mission.preopen))) {
       return { error: { message: "Canonical Mission Masterが見つかりません。" } };
     }
+    const ledger = client.getStorage("mission_reward_delivery_ledger") || [];
+    const duplicateClaim = candidates.find((um: any) => ledger.some((entry: any) => entry.claim_key === missionClaimKey(p_user_id, um.mission_id, um.cycle_date)));
+    if (duplicateClaim) return { error: { message: "Mission reward was already delivered." } };
     let count = 0;
+    const rewards: Array<{ mission_id: string; item_id: string; quantity: number }> = [];
     candidates.forEach((um: any) => {
         const master = CANONICAL_MISSIONS.find((mission) => mission.id === um.mission_id)!;
         if (master.prerequisiteMissionId && !userMissions.some((row: any) => row.user_id === p_user_id && row.mission_id === master.prerequisiteMissionId && row.status === "CLAIMED")) return;
+        const resolvedItemId = resolveCanonicalRewardItem(master.rewardItemId);
+        const missionRewards = [
+          ...(resolvedItemId && master.rewardQuantity > 0 ? [{ mission_id: um.mission_id, item_id: resolvedItemId, quantity: master.rewardQuantity }] : []),
+          ...(master.cashReward > 0 ? [{ mission_id: um.mission_id, item_id: "CASH", quantity: master.cashReward }] : []),
+        ];
+        missionRewards.forEach((reward) => grantMockMissionReward(client, p_user_id, reward.item_id, reward.quantity));
+        rewards.push(...missionRewards);
+        const deliveredAt = new Date().toISOString();
         um.status = "CLAIMED";
-        um.claimed_at = new Date().toISOString();
-        um.updated_at = new Date().toISOString();
-        presents.push({
-          id: `mission_reward_${p_user_id}_${um.mission_id}`,
+        um.claimed_at = deliveredAt;
+        um.updated_at = deliveredAt;
+        ledger.push({
+          claim_key: missionClaimKey(p_user_id, um.mission_id, um.cycle_date),
+          user_mission_id: um.id,
           user_id: p_user_id,
-          item_id: resolveCanonicalRewardItem(master.rewardItemId),
-          quantity: master.rewardQuantity,
-          message: "ミッション一括報酬",
-          status: "UNCLAIMED",
-          sent_at: new Date().toISOString(),
+          mission_id: um.mission_id,
+          cycle_date: um.cycle_date || null,
+          resolved_item_id: resolvedItemId,
+          item_quantity: master.rewardQuantity,
+          cash_quantity: master.cashReward,
+          delivery_status: "DELIVERED",
+          delivered_at: deliveredAt,
         });
-        if (master.cashReward > 0) presents.push({ id:`mission_cash_${p_user_id}_${um.mission_id}`,user_id:p_user_id,item_id:"CASH",quantity:master.cashReward,message:"ミッション一括報酬",status:"UNCLAIMED",sent_at:new Date().toISOString() });
         unlockClaimedMissionChildren(canonicalMissionRows(), userMissions, p_user_id, um.mission_id, achievedFunnelTriggers(client, p_user_id));
         count++;
     });
     client.setStorage("user_missions", userMissions);
-    client.setStorage("presents", presents);
-    return { data: { status: "success", claimed_count: count }, error: null };
+    client.setStorage("mission_reward_delivery_ledger", ledger);
+    return { data: { status: "success", claimed_count: count, delivery: "DIRECT", rewards }, error: null };
   }
 
   if (funcName === "admin_reset_daily_missions") {
@@ -3792,8 +4285,8 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       const condition = quest.unlockCondition;
       const prerequisite = condition.type === "FIRST_CLEAR" ? condition.questId : null;
       const memberCharacters = encounter.members.map((member) => CANONICAL_CHARACTERS.find((entry) => entry.character_id === member.characterId)!);
-      const recommendedPower = encounter.members.reduce((total,member,index) => { const stats=canonicalCharacterStats(memberCharacters[index].lv1,memberCharacters[index].lv100,member.level,member.awakening); return total+stats.hp+stats.atk+stats.def; },0);
-      return { quest_id:encounter.questId, unlock_condition:condition.type === "OPEN" ? "OPEN" : `FIRST_CLEAR:${prerequisite}`, is_unlocked:condition.type === "OPEN" || firstClears.some((entry:any)=>entry.user_id===userId&&entry.quest_id===prerequisite), is_first_cleared:firstClears.some((entry:any)=>entry.user_id===userId&&entry.quest_id===encounter.questId), enemy_tactic:encounter.enemyTactic, enemy_member_count:encounter.members.length, enemy_members:encounter.members, enemy_attributes:[...new Set(memberCharacters.map((entry)=>entry.attribute))], recommended_level:encounter.members[0]?.level ?? null, recommended_power:recommendedPower };
+      const recommendedPower = encounter.members.reduce((total,member,index) => { const stats=canonicalCharacterStats(memberCharacters[index].lv1,memberCharacters[index].lv100,member.level,member.awakening,memberCharacters[index].growth_pattern); return total+stats.hp+stats.atk+stats.def; },0);
+      return { quest_id:encounter.questId, unlock_condition:condition.type === "OPEN" ? "OPEN" : `FIRST_CLEAR:${prerequisite}`, is_unlocked:condition.type === "OPEN" || firstClears.some((entry:any)=>entry.user_id===userId&&entry.quest_id===prerequisite), is_first_cleared:firstClears.some((entry:any)=>entry.user_id===userId&&entry.quest_id===encounter.questId), enemy_tactic:encounter.enemyTactic, enemy_member_count:encounter.members.length, enemy_members:[], enemy_attributes:[...new Set(memberCharacters.map((entry)=>entry.attribute))], recommended_level:encounter.members[0]?.level ?? null, recommended_power:recommendedPower };
     }), error:null };
   }
 
@@ -3840,6 +4333,9 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       battle_resolved: false,
       encounter_snapshot: encounterSnapshot,
     });
+    if (user.vitality >= CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax) {
+      user.vitality_last_recovered_at = new Date().toISOString();
+    }
     user.vitality -= costVitality;
     client.setStorage("users", users);
     client.setStorage("user_patrols", patrols);
@@ -4087,6 +4583,24 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     if (user) user.vitality = Math.min((user.vitality || 0) + (p_amount || 100), 500);
     client.setStorage("users", users);
     return { data: { status: "success" }, error: null };
+  }
+
+  if (funcName === "set_profile_leader_v1") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    if (!userId) return { data: null, error: { message: "authentication required", code: "42501" } };
+    const characterId = params?.p_character_id;
+    const users = client.getStorage("users") || [];
+    const user = users.find((entry: any) => entry.id === userId);
+    const owned = (client.getStorage("user_characters") || []).some((entry: any) => entry.user_id === userId && entry.character_id === characterId);
+    if (!user || !owned) return { data: null, error: { message: "owned character not found", code: "P0002" } };
+    if (user.favorite_character_id !== characterId) {
+      user.favorite_character_id = characterId;
+      const hometown = CANONICAL_CHARACTERS.find(entry => entry.character_id === characterId)?.hometown;
+      const towns: Record<string, string> = { 新宿: "shinjuku", 渋谷: "shibuya", 池袋: "ikebukuro", 六本木: "roppongi", 秋葉原: "akihabara", 川崎: "kawasaki", 横浜: "yokohama" };
+      if (hometown && towns[hometown]) user.current_base_id = towns[hometown];
+      client.setStorage("users", users);
+    }
+    return { data: { status: "success", favorite_character_id: characterId }, error: null };
   }
 
   if (funcName === "update_favorite_character") {

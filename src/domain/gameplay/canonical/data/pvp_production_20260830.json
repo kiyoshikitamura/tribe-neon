@@ -6,29 +6,44 @@
   "battleCost": 1,
   "preopenPointTicketShop": false,
   "modes": {
-    "PRACTICE": { "cost": 0, "cashReward": 0, "ratingImpact": false, "rankingImpact": false, "missionProgress": false },
-    "OFFICIAL": { "cost": 1, "cashReward": 0, "ratingImpact": true, "rankingImpact": true, "missionProgress": true }
+    "PRACTICE": {
+      "cost": 0,
+      "cashReward": 0,
+      "ratingImpact": false,
+      "rankingImpact": false,
+      "missionProgress": false
+    },
+    "OFFICIAL": {
+      "cost": 1,
+      "ratingImpact": true,
+      "rankingImpact": true,
+      "missionProgress": true,
+      "winCash": 200,
+      "lossCash": 50
+    }
   },
-  "rating": { "initial": 1000, "minimum": 0, "maximum": null, "scale": 400, "winK": 32, "lossK": 16 },
-  "season": { "period": "JST_CALENDAR_MONTH", "softResetAnchor": 1000, "softResetBp": 5000 },
-  "opponentClass": { "strongerMinDifference": 101, "equalMinDifference": -100, "equalMaxDifference": 100, "weakerMaxDifference": -101 },
+  "rating": {
+    "initial": 1000,
+    "minimum": 0,
+    "maximum": null,
+    "scale": 400,
+    "winK": 32,
+    "lossK": 16
+  },
+  "season": {
+    "period": "JST_CALENDAR_MONTH",
+    "softResetAnchor": 1000,
+    "softResetBp": 5000
+  },
+  "opponentClass": {
+    "strongerMinDifference": 101,
+    "equalMinDifference": -100,
+    "equalMaxDifference": 100,
+    "weakerMaxDifference": -101
+  },
   "rewards": {
-    "perBattle": [
-      {
-        "itemId": "CHAR_EXP_S",
-        "quantity": 1
-      }
-    ],
-    "daily3": [
-      {
-        "itemId": "SKILL_MANUAL",
-        "quantity": 1
-      },
-      {
-        "itemId": "CASH",
-        "quantity": 40
-      }
-    ],
+    "perBattle": [],
+    "daily3": [],
     "weekly15Wins": [
       {
         "itemId": "NORMAL_GACHA_TICKET_RANDOM",
@@ -40,7 +55,25 @@
         "itemId": "EQUIP_LB_PART",
         "quantity": 2
       }
+    ],
+    "win": [
+      {
+        "itemId": "CASH",
+        "quantity": 200
+      },
+      {
+        "itemId": "RAID_POINT_TICKET",
+        "quantity": 1
+      }
+    ],
+    "loss": [
+      {
+        "itemId": "CASH",
+        "quantity": 50
+      }
     ]
   },
-  "rankingCash": 0
+  "rankingCash": 0,
+  "rewardRevision": "2026-09-14",
+  "rewardAuthority": "specs/pvp_battle_raid_ticket_reward_20260914.md"
 }

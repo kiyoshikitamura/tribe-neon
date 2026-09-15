@@ -1,7 +1,10 @@
 "use client";
 
+import SeasonHonors, { isSeasonHonorTitle } from "./SeasonHonors";
 import { useState } from "react";
 import CharacterPresentation from "../character/CharacterPresentation";
+import UserAvatar from "./UserAvatar";
+import GuildIdentity from "./GuildIdentity";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import OutlawButton from "../ui/OutlawButton";
 import { SkillDetailDialog, SkillIconGrid } from "../skill/SkillPresentation";
@@ -53,6 +56,7 @@ export function publicTitleText(value?: string | null) {
 function ProfileCharacter({ character, leader = false }: { character?: PublicProfileCharacter; leader?: boolean }) {
   const master = CHARACTERS_MASTER.find((entry) => entry.id === character?.characterId);
   const name = master?.jpName || character?.name || "リーダー未設定";
+  if (leader) return <UserAvatar characterId={character?.characterId} src={character?.assetIdentifier} alt={name} className="public-profile-leader-icon" />;
   return <CharacterPresentation
     src={character?.assetIdentifier || (master ? getCharacterTransparentImg(master.name) : undefined)}
     alt={name}
@@ -75,9 +79,9 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
   const [selectedCharacter, setSelectedCharacter] = useState<PublicProfileCharacter | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<SkillCardMaster | null>(null);
   const bio = publicBioText(profile.bio);
-  const title = publicTitleText(profile.titleName);
+  const title = isSeasonHonorTitle(profile.titleName) ? null : publicTitleText(profile.titleName);
   const leader = profile.leaderCharacterId ? { characterId: profile.leaderCharacterId } : undefined;
-  const isOtherUser = Boolean(profile.id && profile.id !== currentUserId);
+  const isOtherUser = Boolean(currentUserId && profile.id && profile.id !== currentUserId);
 
   return <><CanonicalDialog size="large" ariaLabel={`${profile.username}の公開プロフィール`} onClose={onClose} loading={profile.status === "loading"}>
     {profile.status === "loading" ? <div className="public-profile-loading" role="status">プロフィールを取得しています…</div>
@@ -85,8 +89,9 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
       : <div className="public-profile">
         <section className="public-profile-identity">
           <ProfileCharacter character={leader} leader />
-          <div><h2>{profile.username}</h2><div className="public-profile-meta"><span>Lv.{Math.max(1, Number(profile.level || 1))}</span>{profile.guildId && profile.guildName ? <button type="button" onClick={() => onGuild?.(profile.guildId!)}>TRIBE {profile.guildName}</button> : <span>未所属</span>}{title && <span>称号 {title}</span>}{profile.dailyPvpRank ? <span>デイリー {profile.dailyPvpRank}位</span> : null}</div></div>
+          <div><h2>{profile.username}</h2><div className="public-profile-meta"><span>Lv.{Math.max(1, Number(profile.level || 1))}</span>{profile.guildId && profile.guildName ? <button type="button" onClick={() => onGuild?.(profile.guildId!)}><GuildIdentity guildId={profile.guildId} name={profile.guildName} /></button> : <span>未所属</span>}{title && <span>称号 {title}</span>}{profile.dailyPvpRank ? <span>デイリー {profile.dailyPvpRank}位</span> : null}</div>{isOtherUser && onDm && <OutlawButton variant="primary" className="public-profile-dm-action" onClick={() => onDm(profile.id)}>DMを送る</OutlawButton>}</div>
         </section>
+        <SeasonHonors ownerId={profile.id} scope="USER" />
         {bio && <section className="public-profile-bio" aria-label="自己紹介"><h3>自己紹介</h3><p>{bio}</p></section>}
         {profile.party && profile.party.length > 0 && <section className="public-profile-deck"><h3>{isOtherUser ? "DECK" : "MY DECK"}</h3><div>{profile.party.slice(0, 5).map((character, index) => <button type="button" key={`${character.characterId}:${index}`} onClick={() => setSelectedCharacter(character)} aria-label={`${character.name || "キャラクター"}の詳細`}><ProfileCharacter character={character} />{typeof character.level === "number" && <small>Lv.{character.level}</small>}</button>)}</div></section>}
         {selectedCharacter && <section className="public-profile-character-detail" aria-label={`${selectedCharacter.name || "キャラクター"}の詳細`}>
@@ -100,7 +105,6 @@ export default function PublicUserProfile({ profile, currentUserId, onClose, onR
           {selectedCharacter.skillIds && selectedCharacter.skillIds.length > 0 && <div className="public-profile-character-skills"><h3>装備スキル</h3><SkillIconGrid skills={selectedCharacter.skillIds} onSelect={setSelectedSkill} /></div>}
         </section>}
         <div className="public-profile-power"><span>総合力</span><strong>{Math.max(0, Number(profile.totalPower || 0)).toLocaleString()}</strong></div>
-        {isOtherUser && onDm && <OutlawButton variant="primary" fullWidth onClick={() => onDm(profile.id)}>DMを送る</OutlawButton>}
       </div>}
   </CanonicalDialog>{selectedSkill && <SkillDetailDialog skill={selectedSkill} onClose={() => setSelectedSkill(null)} />}</>;
 }

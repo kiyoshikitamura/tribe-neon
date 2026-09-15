@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import "./GachaFontComparison.css";
 import { flushSync } from "react-dom";
 import BattleMatchupPresentation from "@/app/components/battle/BattleMatchupPresentation";
 import BattleResultSummary from "@/app/components/battle/BattleResultSummary";
@@ -10,6 +11,7 @@ import GachaTab from "@/app/components/GachaTab";
 import CommonModals from "@/app/components/CommonModals";
 import Header from "@/app/components/Header";
 import HomeTab from "@/app/components/HomeTab";
+import PrepMissionEventDialogController from "@/app/components/mission/PrepMissionEventDialogController";
 import MoveBaseModal from "@/app/components/MoveBaseModal";
 import CharacterPresentation from "@/app/components/character/CharacterPresentation";
 import PageShell from "@/app/components/ui/PageShell";
@@ -24,9 +26,11 @@ import { GameContext } from "@/app/context/GameContext";
 import { WORLD_STAGES } from "@/app/components/SetupView";
 import { QA_PRESENTATION_SCENARIOS, VISUAL_COMPLIANCE_GATE, type QaPresentationScenarioId } from "@/domain/presentation/qaHarness";
 import { resolveSsrGachaQuote } from "@/domain/presentation/ssrGachaQuotes";
+import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { waitForBrowserPaint } from "@/domain/presentation/browserPaint";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
+import { supabase } from "@/utils/supabase";
 import "@/app/components/SetupView.css";
 import "@/app/components/TutorialWorldIntro.css";
 import "@/app/components/CommonModals.css";
@@ -107,7 +111,7 @@ function BattleFixture({ size = 3, speed = 1, ssrSkill = false, consecutiveSkill
       : entry);
   const timeline = [...playerParty, ...enemies].map(({ id, name, isEnemy }) => ({ id, name, isEnemy }));
   const fixtureSkillName = consecutiveSkill ? consecutiveSkillName : skillDemo ? "ストリートパンチ" : "";
-  return <QuestBattleViewer battleMode="PATROL" opponentName="新宿・初級" playerParty={playerParty} enemyParty={enemies} timeline={timeline} timelineIndex={0} authoritativeTimeline={timeline.slice(0, 3)} presentationPhase={skillDemo ? skillPhase : paceDemo ? "ACTION_HOLD" : "DAMAGE"} round={4} skillCutIn={fixtureSkillName ? { charName: playerParty[0].name, skillName: fixtureSkillName } : null} targetLine={{ fromId: "player-1", toId: "enemy-1" }} shakingId={showSkillDamage ? "enemy-1" : null} damagePopup={showSkillDamage ? { charId: "enemy-1", val: ssrSkill ? 2940 : 1284, type: "dmg", isCritical: ssrSkill } : null} tactic="BALANCED" speed={liveSpeed} monthlyPassActive={false} paused={false} tutorial={size === 3 || paceDemo} onSpeedChange={setLiveSpeed} onPauseChange={() => undefined} canSkip={size === 5} skipPending={false} onSkip={() => undefined} onRetreat={() => undefined} onSound={() => undefined} />;
+  return <QuestBattleViewer battleMode="PATROL" opponentName="新宿・初級" playerParty={playerParty} enemyParty={enemies} timeline={timeline} timelineIndex={0} authoritativeTimeline={timeline.slice(0, 3)} presentationPhase={skillDemo ? skillPhase : paceDemo ? "ACTION_HOLD" : "DAMAGE"} round={4} skillCutIn={fixtureSkillName ? { actorId: playerParty[0].id, charName: playerParty[0].name, skillName: fixtureSkillName } : null} targetLine={{ fromId: "player-1", toId: "enemy-1" }} shakingId={showSkillDamage ? "enemy-1" : null} damagePopup={showSkillDamage ? { charId: "enemy-1", val: ssrSkill ? 2940 : 1284, type: "dmg", isCritical: ssrSkill } : null} tactic="BALANCED" speed={liveSpeed} monthlyPassActive={false} paused={false} tutorial={size === 3 || paceDemo} onSpeedChange={setLiveSpeed} onPauseChange={() => undefined} canSkip={size === 5} skipPending={false} onSkip={() => undefined} onRetreat={() => undefined} onSound={() => undefined} />;
 }
 
 function SsrRevealFixture() {
@@ -192,7 +196,7 @@ function GachaProductionFixture({ authorityState = "ready", resourcesAvailable =
     ] : [],
     cash: resourcesAvailable ? 100_000 : 0,
     upgradeLoading: pending,
-    onboardingState: { tutorial_step: "AUTHENTICATION" },
+    onboardingState: { tutorial_step: "AUTHENTICATION", gameplay_authorized: true },
     handleScout: async (gachaId: string, _count: number, currency: string) => {
       setPending(true);
       await new Promise((resolve) => window.setTimeout(resolve, 120));
@@ -240,7 +244,7 @@ function GachaAssetTransitionFixture() {
     ],
     cash: 100_000,
     upgradeLoading: pending,
-    onboardingState: { tutorial_step: "AUTHENTICATION" },
+    onboardingState: { tutorial_step: "AUTHENTICATION", gameplay_authorized: true },
     scoutAnimationState,
     setScoutAnimationState,
     scoutFlashingColor,
@@ -315,7 +319,42 @@ function GachaAssetTransitionFixture() {
   </GameContext.Provider>;
 }
 
-function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPMENT"; pulls?: 1 | 10 }) {
+function CharacterGachaV3Fixture() {
+  const query = useMemo(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search), []);
+  const font = ["zero", "tetsubin", "torono"].includes(query.get("font") || "") ? query.get("font")! : "";
+  const [fontReady, setFontReady] = useState(!font);
+  const [fontError, setFontError] = useState(false);
+  useEffect(() => {
+    if (!font) return;
+    let cancelled = false;
+    const family = { zero: "TNZero", tetsubin: "TNTetsubin", torono: "TNTorono" }[font]!;
+    document.fonts.load(`32px ${family}`, "新宿").then((loaded) => {
+      if (!cancelled) { setFontReady(loaded.length > 0); setFontError(!loaded.length); }
+    }).catch(() => { if (!cancelled) setFontError(true); });
+    return () => { cancelled = true; };
+  }, [font]);
+  const [scoutAnimationState, setScoutAnimationState] = useState<null | "READY" | "SHOW_RESULTS">("READY");
+  const [destination, setDestination] = useState("");
+  const sequence = query.get("single") === "true" ? [query.get("rarity") || "SSR"] : ["N", "R", "SR", "SSR", "N", "SR", "R", "SSR", "R", "SR"];
+  const results = useMemo(() => sequence.map((rarity, index) => {
+    const characters = CHARACTERS_MASTER.filter((entry) => entry.rarity === rarity);
+    const character = characters[index % characters.length];
+    return { type: "CHARACTER", characterId: character.id, name: character.jpName, rarity,
+      imageUrl: getCharacterTransparentImg(character.name), attributeKey: character.alignment,
+      role: character.homeTown, ...getCharacterBaseStats(character.id, 1, 0),
+      awakeningLevel: index > 4 ? 1 : 0,
+      convertReward: index > 4 ? "覚醒進捗 +1（1/2）" : "新規獲得" };
+  }), []);
+  const game = { scoutAnimationState, setScoutAnimationState, scoutFlashingColor: "GOLD", scoutResults: results,
+    playSe: () => undefined, playCyberSe: () => undefined,
+    onboardingState: { tutorial_step: query.get("tutorial") === "false" ? "COMPLETE" : "AUTO_FORMATION" },
+    navigateTab: (tab: string) => setDestination(tab) };
+  return <GameContext.Provider value={game as any}><div data-gacha-v3-fixture data-destination={destination} data-qa-font={font || undefined} data-qa-font-scope={query.get("fontScope") || "headings"}>
+    <button onClick={() => setScoutAnimationState("READY")}>演出を再生</button>{fontReady ? <CommonModals /> : <p role="status">{fontError ? "比較用フォントを取得できませんでした。再読み込みしてください。" : "比較用フォントを読み込み中…"}</p>}
+  </div></GameContext.Provider>;
+}
+
+function GachaAssetResultFixture({ type, pulls = 10, auditLevels = false }: { type: "SKILL" | "EQUIPMENT"; pulls?: 1 | 10; auditLevels?: boolean }) {
   const source = type === "SKILL" ? CANONICAL_SKILL_VIEW : CANONICAL_EQUIPMENT_VIEW;
   const raritySequence = ["N", "R", "SR", "SSR", "N", "R", "SR", "SSR", "R", "SR"];
   const results = raritySequence.slice(0, pulls).map((rarity, index) => {
@@ -327,8 +366,8 @@ function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPM
       rarity,
       assetPath: type === "SKILL" ? getCanonicalSkillIcon(item.id) : item.assetPath,
       converted: false,
-      progressionLevel: index < 3 ? null : index === 8 ? 3 : 1,
-      convertReward: index < 3 ? "新規獲得" : index === 8 ? "限界突破 +3" : "限界突破 +1",
+      progressionLevel: auditLevels ? index + 1 : index < 3 ? null : index === 8 ? 3 : 1,
+      convertReward: auditLevels ? `限界突破 +${index + 1}` : index < 3 ? "新規獲得" : index === 8 ? "限界突破 +3" : "限界突破 +1",
     };
   });
   const game = {
@@ -338,7 +377,7 @@ function GachaAssetResultFixture({ type, pulls = 10 }: { type: "SKILL" | "EQUIPM
     scoutResults: results,
     playSe: () => undefined,
     playCyberSe: () => undefined,
-    onboardingState: { tutorial_step: "AUTHENTICATION" },
+    onboardingState: { tutorial_step: "AUTHENTICATION", gameplay_authorized: true },
     navigateTab: () => undefined,
   };
   return <GameContext.Provider value={game as any}><div className="qa-gacha-result" data-gacha-result-type={type}><CommonModals /></div></GameContext.Provider>;
@@ -362,9 +401,30 @@ function PublicProfileFixture() {
   }} currentUserId="qa-self" onClose={() => setOpen(false)} onRetry={() => undefined} onDm={() => undefined} /> : <button type="button" onClick={() => setOpen(true)}>公開プロフィールを開く</button>}</GameContext.Provider>;
 }
 
-type HomeScenario = "first-home-fresh" | "first-home-identity-loading" | "first-home-raid" | "first-home-guild-out" | "first-home-guild-in" | "first-home-guild-pending" | "first-home-favorite-missing" | "first-home-favorite-invalid" | "first-home-activity-self" | "first-home-character-tall" | "first-home-character-hair";
+type HomeScenario = "first-home-fresh" | "first-home-identity-loading" | "first-home-raid" | "first-home-guild-out" | "first-home-guild-in" | "first-home-guild-pending" | "first-home-favorite-missing" | "first-home-favorite-invalid" | "first-home-activity-self" | "first-home-character-tall" | "first-home-character-hair" | "first-home-campaign";
 
-function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
+type PreviewActivity = {
+  id: string;
+  activity_type: string;
+  actor_user_id: string | null;
+  actor_display_name: string;
+  actor_favorite_character_id?: string | null;
+  actor_guild_name?: string | null;
+  actor_guild_id?: string | null;
+  object_master_id?: string | null;
+  display_payload?: Record<string, unknown> | null;
+  permanent?: boolean;
+  created_at: string;
+};
+
+function ProductionHomeFixture({ scenario, activityOverride, activityNowOverride }: {
+  scenario: HomeScenario;
+  activityOverride?: PreviewActivity[];
+  activityNowOverride?: number;
+}) {
+  const prepQa = String(scenario) === "first-home-prep";
+  const [showPrepMissionDialog, setShowPrepMissionDialog] = useState(false);
+  const [prepMissionDialogCheckComplete, setPrepMissionDialogCheckComplete] = useState(false);
   const [openedProfileId, setOpenedProfileId] = useState<string | null>(null);
   const [showMoveBaseModal, setShowMoveBaseModal] = useState(false);
   const identityStartsPending = scenario === "first-home-identity-loading";
@@ -420,10 +480,17 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     monthlyPassActive: false,
     isRaidActive: raidActive,
     raidBossBaseId: raidActive ? "shinjuku" : null,
-    session: null,
+    session: prepQa ? { user: { id: "00000000-0000-4000-8000-000000000405" } } : null,
+    loginBonusCheckComplete: true,
+    showLoginBonusModal: false,
+    showPrepMissionDialog,
+    setShowPrepMissionDialog,
+    prepMissionDialogCheckComplete,
+    setPrepMissionDialogCheckComplete,
+    setMissionTab: noop,
     activePatrols: [],
-    onboardingState: { tutorial_step: "AUTHENTICATION" },
-    userGuildMember: guildJoined && ctaAuthorityReady ? { role: "MEMBER" } : null,
+    onboardingState: { tutorial_step: "AUTHENTICATION", gameplay_authorized: true },
+    userGuildMember: guildJoined && ctaAuthorityReady ? { guild_id: "qa-neon-crew", role: "MEMBER" } : null,
     userGuild: guildJoined && ctaAuthorityReady ? { name: "NEON CREW" } : null,
     pendingGuildJoinRequests: scenario === "first-home-guild-pending" && ctaAuthorityReady ? [{ id: "qa-pending-request" }] : [],
     guildMembershipAuthorityReady: ctaAuthorityReady,
@@ -433,6 +500,7 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     userXp: 120,
     cash: 4200,
     diamonds: 300,
+    raidPoints: 3,
     vitality: 95,
     vitalityNextRecoveryAt: new Date(Date.now() + 180_000).toISOString(),
     setShowMissionPanel: noop,
@@ -448,28 +516,103 @@ function ProductionHomeFixture({ scenario }: { scenario: HomeScenario }) {
     playCyberSe: noop,
     fetchPlayerDetail: (userId: string) => setOpenedProfileId(userId),
   };
+  const guideMilestones = ["first_free_skill_ten_pull", "first_free_equipment_ten_pull", "first_main_loadout", "post_tutorial_quest"];
   const milestones = activationComplete
-    ? ["first_pvp", "ranking_viewed", "first_raid", "guild_activation", "activation_mission_handoff"]
-    : raidActive ? ["first_pvp", "ranking_viewed"] : [];
+    ? [...guideMilestones, "first_pvp", "ranking_viewed", "first_raid", "guild_activation", "activation_mission_handoff"]
+    : raidActive ? [...guideMilestones, "first_pvp", "ranking_viewed"] : guideMilestones;
   const activityIsSelf = scenario === "first-home-activity-self";
-  const activities = [
-    { id: "qa-activity-1", activity_type: "SSR_CHARACTER", actor_user_id: activityIsSelf ? "qa-self" : "other-user", actor_display_name: activityIsSelf ? "NEON-R" : "KAI", actor_favorite_character_id: activityIsSelf ? homeLeader.id : "char_reiji_01", actor_guild_name: "NIGHT CREW", created_at: "2026-08-28T10:15:00+09:00" },
-    { id: "qa-activity-2", activity_type: "GUILD_CREATED", actor_user_id: activityIsSelf ? "other-user" : "qa-self", actor_display_name: activityIsSelf ? "KAI" : "NEON-R", actor_favorite_character_id: activityIsSelf ? "char_reiji_01" : homeLeader.id, actor_guild_name: "NEON CREW", created_at: "2026-08-28T09:45:00+09:00" },
-    { id: "qa-activity-3", activity_type: "POWER_RANK_1", actor_user_id: "favorite-missing-user", actor_display_name: "NOIR", actor_favorite_character_id: null, actor_guild_name: null, created_at: "2026-08-27T23:30:00+09:00" },
-    ...Array.from({ length: 9 }, (_, index) => ({ id: `qa-activity-${index + 4}`, activity_type: index % 2 === 0 ? "SSR_CHARACTER" : "GUILD_CREATED", actor_user_id: `log-user-${index}`, actor_display_name: `PLAYER-${index + 1}`, actor_favorite_character_id: index % 3 === 0 ? null : "char_alice_01", actor_guild_name: index % 2 === 0 ? "NEON CREW" : null, created_at: `2026-08-${String(27 - index).padStart(2, "0")}T20:00:00+09:00` })),
+  const activityNow = activityNowOverride ?? Date.parse("2026-08-28T11:00:00+09:00");
+  const fixtureActivities = [
+    { id: "qa-activity-z", activity_type: "SSR_CHARACTER", actor_user_id: activityIsSelf ? "qa-self" : "other-user", actor_display_name: activityIsSelf ? "NEON-R" : "KAI", actor_favorite_character_id: activityIsSelf ? homeLeader.id : "char_reiji_01", actor_guild_name: "NIGHT CREW", created_at: new Date(activityNow - 5 * 60_000).toISOString() },
+    { id: "qa-activity-y", activity_type: "GUILD_CREATED", actor_user_id: activityIsSelf ? "other-user" : "qa-self", actor_display_name: activityIsSelf ? "KAI" : "NEON-R", actor_favorite_character_id: activityIsSelf ? "char_reiji_01" : homeLeader.id, actor_guild_name: "NEON CREW", display_payload: { guild_name: "NEON CREW" }, created_at: new Date(activityNow - 5 * 60_000).toISOString() },
+    { id: "qa-activity-raid", activity_type: "RAID_BOSS_DEFEATED", actor_user_id: "raid-owner", actor_display_name: "RAID OWNER", actor_favorite_character_id: "char_reiji_01", actor_guild_name: null, display_payload: { boss_name: "雷神連合総長", room_id: "qa-room" }, created_at: new Date(activityNow - 10 * 60_000).toISOString() },
+    { id: "qa-activity-x", activity_type: "POWER_RANK_1", actor_user_id: "favorite-missing-user", actor_display_name: "NOIR", actor_favorite_character_id: null, actor_guild_name: null, created_at: new Date(activityNow - 30 * 60_000).toISOString() },
+    ...Array.from({ length: 9 }, (_, index) => ({ id: `qa-activity-${index + 4}`, activity_type: index % 2 === 0 ? "SSR_CHARACTER" : "GUILD_CREATED", actor_user_id: `log-user-${index}`, actor_display_name: `PLAYER-${index + 1}`, actor_favorite_character_id: index % 3 === 0 ? null : "char_alice_01", actor_guild_name: index % 2 === 0 ? "NEON CREW" : null, display_payload: index % 2 === 0 ? {} : { guild_name: `TRIBE-${index + 1}` }, created_at: new Date(activityNow - (index + 1) * 60 * 60_000).toISOString() })),
+    { id: "qa-activity-expired", activity_type: "GUILD_CREATED", actor_user_id: "expired-user", actor_display_name: "OLD USER", actor_favorite_character_id: null, actor_guild_name: null, created_at: new Date(activityNow - 25 * 60 * 60_000).toISOString() },
   ];
+  const activities = activityOverride ?? fixtureActivities;
   return <GameContext.Provider value={game}>
     <div className="qa-production-home" data-home-scenario={scenario} data-raid-active={String(raidActive)} data-guild-joined={String(guildJoined)} data-cta-authority-ready={String(ctaAuthorityReady)} data-identity-authority-ready={String(identityAuthorityReady)}>
       <PageShell header={<Header />} footer={<Footer />}>
-        <HomeTab qaState={{ socialActivities: activities, funnelMilestones: milestones, ctaAuthorityReady }} />
+        <HomeTab qaState={{
+          socialActivities: activities,
+          socialActivityNowMs: activityNow,
+          funnelMilestones: milestones,
+          ctaAuthorityReady,
+          guildDiscoveryState: ctaAuthorityReady && !guildJoined ? "available" : "pending",
+          bannerAuthority: scenario === "first-home-campaign" || prepQa ? "campaign" : "normal",
+        }} />
         <MoveBaseModal />
+        {prepQa && <PrepMissionEventDialogController />}
         {openedProfileId && <output data-opened-profile-id={openedProfileId} />}
       </PageShell>
     </div>
   </GameContext.Provider>;
 }
 
+function PreviewRealActivityFixture() {
+  const [state, setState] = useState<{ status: "loading" | "ready" | "error"; activities: PreviewActivity[]; observedAt: number; message?: string }>({
+    status: "loading",
+    activities: [],
+    observedAt: 0,
+  });
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      const actorId = new URLSearchParams(window.location.search).get("actor")?.trim() || "";
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actorId)) {
+        if (active) setState({ status: "error", activities: [], observedAt: 0, message: "actor UUIDを指定してください。" });
+        return;
+      }
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        if (active) setState({ status: "error", activities: [], observedAt: 0, message: "Preview QAへログインしてください。" });
+        return;
+      }
+      const response = await fetch(`/api/qa/activity?actor=${encodeURIComponent(actorId)}`, {
+        headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
+        cache: "no-store",
+      });
+      const payload = await response.json().catch(() => null) as null | {
+        activities?: Array<Record<string, unknown>>;
+        profile?: Record<string, unknown>;
+      };
+      if (!active) return;
+      if (!response.ok || !payload) {
+        setState({ status: "error", activities: [], observedAt: 0, message: "実Activityを読み込めませんでした。" });
+        return;
+      }
+      const profile = payload.profile || null;
+      const activities = (Array.isArray(payload.activities) ? payload.activities : []).map((row) => ({
+        ...row,
+        actor_user_id: row.actor_user_id ? String(row.actor_user_id) : null,
+        actor_display_name: String(profile?.username || row.actor_display_name || "プレイヤー"),
+        actor_favorite_character_id: profile?.favorite_character_id || null,
+        actor_guild_name: profile?.guild_name || null,
+        actor_guild_id: profile?.guild_id || row.guild_id || null,
+        display_payload: row.display_payload && typeof row.display_payload === "object" ? row.display_payload as Record<string, unknown> : null,
+      })) as PreviewActivity[];
+      setState(activities.length > 0
+        ? { status: "ready", activities, observedAt: Date.now() }
+        : { status: "error", activities: [], observedAt: 0, message: "対象actorのActivityがありません。" });
+    })();
+    return () => { active = false; };
+  }, []);
+
+  if (state.status !== "ready") return <div className="qa-activity-real-status" role="status" data-status={state.status}>
+    {state.status === "loading" ? "Preview実Activityを読み込み中…" : state.message}
+  </div>;
+  return <ProductionHomeFixture
+    scenario="first-home-activity-self"
+    activityOverride={state.activities}
+    activityNowOverride={state.observedAt}
+  />;
+}
+
 function Scenario({ id }: { id: QaPresentationScenarioId }) {
+  if (id === "card-visual-geometry") return <div data-card-visual-geometry style={{display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:8}}>{["N","R","SR","SSR"].map(rarity => <CharacterPresentation key={rarity} src={getCharacterTransparentImg(CHARACTERS_MASTER[0].name)} alt={rarity} variant="thumbnail" rarity={rarity} frameKind="character" metadata={false} />)}</div>;
+  if (id === "gacha-character-v3") return <CharacterGachaV3Fixture />;
+  if (id === "first-home-activity-real") return <PreviewRealActivityFixture />;
   if (id.startsWith("first-home-")) return <ProductionHomeFixture scenario={id as HomeScenario} />;
   if (id === "gacha-ssr-reveal") return <SsrRevealFixture />;
   if (id === "battle-5v3") return <BattleFixture size={3} />;
@@ -490,6 +633,8 @@ function Scenario({ id }: { id: QaPresentationScenarioId }) {
   if (id === "gacha-authority-loading") return <GachaProductionFixture authorityState="loading" />;
   if (id === "gacha-entitlement-empty") return <GachaProductionFixture authorityState="consumed" />;
   if (id === "gacha-resource-empty") return <GachaProductionFixture resourcesAvailable={false} />;
+  if (id === "card-visual-skill-levels") return <GachaAssetResultFixture type="SKILL" auditLevels />;
+  if (id === "card-visual-equipment-levels") return <GachaAssetResultFixture type="EQUIPMENT" auditLevels />;
   if (id === "gacha-skill-result") return <GachaAssetResultFixture type="SKILL" />;
   if (id === "gacha-skill-result-one") return <GachaAssetResultFixture type="SKILL" pulls={1} />;
   if (id === "gacha-equipment-result") return <GachaAssetResultFixture type="EQUIPMENT" />;
@@ -511,6 +656,6 @@ export default function QaPresentationHarness() {
     if (QA_PRESENTATION_SCENARIOS.some(([id]) => id === requested)) setScenario(requested as QaPresentationScenarioId);
   }, []);
   const label = useMemo(() => QA_PRESENTATION_SCENARIOS.find(([id]) => id === scenario)?.[1], [scenario]);
-  const fullscreenHome = scenario.startsWith("first-home-") || scenario.startsWith("gacha-production") || scenario.startsWith("gacha-asset-") || scenario.startsWith("gacha-authority-") || scenario.startsWith("gacha-entitlement-") || scenario.startsWith("gacha-skill-") || scenario.startsWith("gacha-equipment-");
+  const fullscreenHome = scenario.startsWith("card-visual-") || scenario.startsWith("first-home-") || scenario.startsWith("gacha-production") || scenario.startsWith("gacha-asset-") || scenario.startsWith("gacha-authority-") || scenario.startsWith("gacha-entitlement-") || scenario.startsWith("gacha-skill-") || scenario.startsWith("gacha-equipment-");
   return <main className={`qa-harness${fullscreenHome ? " is-home-preview" : ""}`} data-qa-harness="presentation"><header><div><small>PREVIEW / DEVELOPMENT ONLY</small><h1>Human QA Harness</h1><p>{label}</p></div><a href="#compliance">Visual Compliance</a></header><nav aria-label="QA scenarios">{QA_PRESENTATION_SCENARIOS.map(([id, name]) => <button key={id} className={scenario === id ? "is-active" : ""} aria-pressed={scenario === id} onClick={() => setScenario(id)} data-scenario-id={id}>{name}</button>)}</nav><section className="qa-stage" data-active-scenario={scenario}><Scenario key={scenario} id={scenario} /></section><section id="compliance" className="qa-compliance"><h2>Visual Compliance Precheck</h2><p>客観的Contractは自動検証。見た目の品質はHuman ReviewまでPASSにしません。</p>{VISUAL_COMPLIANCE_GATE.map((item) => <article key={item.id} data-compliance-id={item.id} data-status={item.status}><div><strong>{item.specification}</strong><small>AUTO {item.automatedPrecheck}</small></div><b>{item.status}</b><p>{item.evidence}</p></article>)}</section></main>;
 }

@@ -1,4 +1,4 @@
-import actionResourceData from "./data/action_resources_20260822.json" with { type: "json" };
+import actionResourceData from "./data/action_resources_20260914.json" with { type: "json" };
 import userLevelData from "./data/user_level_progression_20260822.json" with { type: "json" };
 
 export const CANONICAL_ACTION_RESOURCES = actionResourceData;

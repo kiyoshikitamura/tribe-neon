@@ -1,7 +1,34 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/utils/supabase";
+import { supabase, usingMockSupabase } from "@/utils/supabase";
+import {
+  projectDirectMessageIdentities,
+  type DirectMessageProfileRow,
+  type DirectMessageRow,
+} from "./directMessageConversations";
+
+const GUILD_CHAT_REFRESH_TIMEOUT_MS = 12_000;
+
+function getChatSendErrorMessage(error: unknown) {
+  const message = String((error as { message?: unknown })?.message || "").toLowerCase();
+  if (message.includes("reply target is unavailable")) {
+    return "返信先が現在のチャンネルで利用できないため、返信を解除して送信してください。";
+  }
+  if (message.includes("chat cooldown is active")) {
+    return "送信間隔が短すぎます。少し待ってからもう一度お試しください。";
+  }
+  if (message.includes("guild membership required")) {
+    return "ギルドメンバーのみギルドチャットへ送信できます。";
+  }
+  if (message.includes("invalid chat message")) {
+    return "メッセージは1〜140文字で入力してください。";
+  }
+  if (message.includes("jwt") || message.includes("session") || message.includes("auth")) {
+    return "セッションを確認できませんでした。画面を更新して、もう一度お試しください。";
+  }
+  return "メッセージを送信できませんでした。入力内容を確認して、もう一度お試しください。";
+}
 
 export function useChat(
   session: any,
@@ -9,7 +36,8 @@ export function useChat(
   userGuildMember: any,
   showTribeChatPanel: boolean,
   playCyberSe: (type: string) => void,
-  setErrorMessage: (message: string) => void
+  setErrorMessage: (message: string) => void,
+  refreshAfterGuildChat: (userId: string) => Promise<void>
 ) {
   const currentUserId = session?.user?.id as string | undefined;
   const [guildChats, setGuildChats] = useState<any[]>([]);
@@ -100,6 +128,34 @@ export function useChat(
     void refreshChatUnreadCounts();
   }, [refreshChatUnreadCounts]);
 
+  // The visible chat feed owns its Realtime subscription outside this hook.
+  // While DM is selected that feed intentionally unsubscribes, so keep Guild
+  // unread notification authority live without fetching or exposing messages.
+  useEffect(() => {
+    if (!currentUserId || !userGuildMember?.guild_id || chatChannel !== "DM") return;
+
+    const channel = supabase
+      .channel(`guild_chat_unread_${currentUserId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "board_posts", filter: "target_type=eq.GUILD" },
+        () => { void refreshChatUnreadCounts(); }
+      )
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") void refreshChatUnreadCounts();
+      });
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") void refreshChatUnreadCounts();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      supabase.removeChannel(channel);
+    };
+  }, [chatChannel, currentUserId, refreshChatUnreadCounts, userGuildMember?.guild_id]);
+
   useEffect(() => {
     if (!showTribeChatPanel || chatChannel === "DM") return;
     void markChatChannelRead(chatChannel);
@@ -156,26 +212,80 @@ export function useChat(
     return () => clearTimeout(timer);
   }, [chatCooldown]);
 
+  const hydrateDirectMessage = useCallback(async (message: DirectMessageRow) => {
+    if (!currentUserId) return;
+    const { data: participants, error } = await supabase.rpc("get_public_profiles", {
+      p_user_ids: [...new Set([message.sender_id, message.recipient_id])]
+    });
+    if (error) console.warn("direct message participant fetch error:", error.message);
+    const [hydratedMessage] = projectDirectMessageIdentities(
+      [message],
+      currentUserId,
+      (Array.isArray(participants) ? participants : []) as DirectMessageProfileRow[]
+    );
+    setDirectMessages((previous) => previous.some((entry) => entry.id === message.id)
+      ? previous.map((entry) => entry.id === message.id
+        ? {
+            ...entry,
+            ...hydratedMessage,
+            sender_name: hydratedMessage.sender_name || entry.sender_name || null,
+            recipient_name: hydratedMessage.recipient_name || entry.recipient_name || null,
+            participant_name: hydratedMessage.participant_name || entry.participant_name || "ユーザー",
+          }
+        : entry)
+      : [...previous, hydratedMessage]);
+  }, [currentUserId]);
+
   const fetchDirectMessages = useCallback(async () => {
-    if (!currentUserId || !dmRecipientId) {
+    if (!currentUserId) {
       setDirectMessages([]);
       return;
     }
+    if (!showTribeChatPanel || chatChannel !== "DM") return;
 
-    const { data, error } = await supabase
-      .from("direct_messages")
-      .select("*")
-      .or(`and(sender_id.eq.${currentUserId},recipient_id.eq.${dmRecipientId}),and(sender_id.eq.${dmRecipientId},recipient_id.eq.${currentUserId})`)
-      .order("created_at", { ascending: true });
-    if (error) {
-      console.warn("direct_messages fetch error:", error.message);
-      return;
+    const pageSize = 500;
+    const rawMessages: DirectMessageRow[] = [];
+    let page = 0;
+    while (true) {
+      let query = supabase
+        .from("direct_messages")
+        .select("*")
+        .or(`and(sender_id.eq.${currentUserId}),and(recipient_id.eq.${currentUserId})`)
+        .order("created_at", { ascending: false });
+      query = usingMockSupabase
+        ? query.limit(pageSize)
+        : query.range(page * pageSize, (page + 1) * pageSize - 1);
+      const { data, error } = await query;
+      if (error) {
+        console.warn("direct_messages fetch error:", error.message);
+        return;
+      }
+      const rows = (data || []) as DirectMessageRow[];
+      rawMessages.push(...rows);
+      if (usingMockSupabase || rows.length < pageSize) break;
+      page += 1;
     }
-    const messages = data || [];
+    const actorIds = [...new Set(rawMessages.flatMap((message) => (
+      [message.sender_id, message.recipient_id]
+    )).filter(Boolean))];
+    const actorProfiles: DirectMessageProfileRow[] = [];
+    for (let start = 0; start < actorIds.length; start += 100) {
+      const actorChunk = actorIds.slice(start, start + 100);
+      const { data: participants, error: participantError } = await supabase.rpc("get_public_profiles", {
+        p_user_ids: actorChunk
+      });
+      if (participantError) {
+        console.warn("direct message participants fetch error:", participantError.message);
+      } else {
+        actorProfiles.push(...(Array.isArray(participants) ? participants : []));
+      }
+    }
+    const messages = projectDirectMessageIdentities(rawMessages, currentUserId, actorProfiles)
+      .sort((left, right) => String(left.created_at || "").localeCompare(String(right.created_at || "")));
     setDirectMessages(messages);
-    if (showTribeChatPanel && chatChannel === "DM") {
+    if (showTribeChatPanel && chatChannel === "DM" && dmRecipientId) {
       void markDirectMessagesRead(messages
-        .filter((message) => message.recipient_id === currentUserId && !message.is_read)
+        .filter((message) => message.sender_id === dmRecipientId && message.recipient_id === currentUserId && !message.is_read)
         .map((message) => message.id));
     }
   }, [currentUserId, dmRecipientId, showTribeChatPanel, chatChannel, markDirectMessagesRead]);
@@ -197,13 +307,14 @@ export function useChat(
           const isConversationMessage = (message.sender_id === currentUserId && message.recipient_id === dmRecipientId)
             || (message.sender_id === dmRecipientId && message.recipient_id === currentUserId);
           if (isConversationMessage) {
-            setDirectMessages((previous) => previous.some((entry) => entry.id === message.id) ? previous : [...previous, message]);
+            void hydrateDirectMessage(message);
             if (showTribeChatPanel && chatChannel === "DM" && message.recipient_id === currentUserId && !message.is_read) {
               void markDirectMessagesRead([message.id]);
             } else {
               void refreshDirectMessageUnreadCounts();
             }
-          } else if (message.recipient_id === currentUserId) {
+          } else if (message.recipient_id === currentUserId || message.sender_id === currentUserId) {
+            void hydrateDirectMessage(message);
             void refreshDirectMessageUnreadCounts();
           }
         }
@@ -227,7 +338,7 @@ export function useChat(
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       supabase.removeChannel(channel);
     };
-  }, [session?.user?.id, dmRecipientId, showTribeChatPanel, chatChannel, fetchDirectMessages, markDirectMessagesRead, refreshDirectMessageUnreadCounts]);
+  }, [session?.user?.id, dmRecipientId, showTribeChatPanel, chatChannel, fetchDirectMessages, hydrateDirectMessage, markDirectMessagesRead, refreshDirectMessageUnreadCounts]);
 
   const handleSendChat = async () => {
     if (!session || !chatInput.trim() || chatCooldown > 0 || chatSending) return;
@@ -266,10 +377,19 @@ export function useChat(
       setChatInput("");
       setChatReplyTo(null);
       setChatCooldown(chatChannel === "GUILD" ? 3 : 10);
+      if (chatChannel === "GUILD") {
+        // 送信RPCは確定済み。無関係な全体同期の遅延を送信UIへ波及させない。
+        const refreshTimeout = new Promise<void>((_, reject) => {
+          setTimeout(() => reject(new Error("guild chat post-send refresh timed out")), GUILD_CHAT_REFRESH_TIMEOUT_MS);
+        });
+        void Promise.race([refreshAfterGuildChat(session.user.id), refreshTimeout]).catch((refreshError) => {
+          console.warn("Guild chat mission projection refresh failed:", refreshError);
+        });
+      }
     } catch (err: any) {
       setGuildChats((previous) => previous.filter((message) => message.id !== temporaryMessageId));
       console.warn(err.message);
-      setErrorMessage("メッセージを送信できませんでした。入力内容を確認して、もう一度お試しください。");
+      setErrorMessage(getChatSendErrorMessage(err));
     } finally {
       setChatSending(false);
     }
@@ -295,7 +415,7 @@ export function useChat(
         message: data?.message || text.trim(),
         created_at: data?.created_at || new Date().toISOString()
       };
-      setDirectMessages((prev) => prev.some((message) => message.id === sentMessage.id) ? prev : [...prev, sentMessage]);
+      await hydrateDirectMessage(sentMessage);
       return true;
     } catch (err: any) {
       console.warn("direct message send error:", err.message);

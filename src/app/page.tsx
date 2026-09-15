@@ -1,9 +1,12 @@
 "use client";
 
+import QuestRaidEncounter from "./components/quest/QuestRaidEncounter";
+import BeginnerMissionRewardCta from "./components/mission/BeginnerMissionRewardCta";
 import React from "react";
+import { isFeatureOpen } from "@/domain/operations/operations";
 import dynamic from "next/dynamic";
 import { useAssetTierPreloader } from "./hooks/useImagePreloader";
-import { BOOT_CRITICAL_ASSETS, DEFERRED_ASSETS, TUTORIAL_CRITICAL_ASSETS } from "./lib/screenManifests";
+import { BOOT_CRITICAL_ASSETS, DEFERRED_ASSETS, TUTORIAL_CRITICAL_ASSETS, TUTORIAL_STEP_ASSET_MANIFESTS } from "./lib/screenManifests";
 import { GameProvider, useGame } from "./context/GameContext";
 import { AudioProvider, useAudio } from "@/audio/AudioProvider";
 import AuthView from "./components/AuthView";
@@ -16,6 +19,7 @@ const PatrolTab = dynamic(() => import("./components/PatrolTab"), { loading: Tab
 const PvpTab = dynamic(() => import("./components/PvpTab"), { loading: TabLoading });
 const RaidTab = dynamic(() => import("./components/RaidTab"), { loading: TabLoading });
 const GachaTab = dynamic(() => import("./components/GachaTab"), { loading: TabLoading });
+const ShopTab = dynamic(() => import("./components/ShopTab"), { loading: TabLoading });
 const GuildTab = dynamic(() => import("./components/GuildTab"), { loading: TabLoading });
 const CharacterTab = dynamic(() => import("./components/CharacterTab"), { loading: TabLoading });
 const MenuTab = dynamic(() => import("./components/MenuTab"), { loading: TabLoading });
@@ -35,23 +39,77 @@ import ConfirmDialog from "./components/ui/ConfirmDialog";
 import GlobalInteractionBlocker from "./components/ui/GlobalInteractionBlocker";
 import PageShell from "./components/ui/PageShell";
 import TitleView from "./components/TitleView";
+import TitleLegalFooter from "./components/TitleLegalFooter";
 import MoveBaseModal from "./components/MoveBaseModal";
 import TutorialWorldIntro from "./components/TutorialWorldIntro";
 import TutorialRuleGuide from "./components/TutorialRuleGuide";
-import TutorialAuthentication from "./components/TutorialAuthentication";
+import AccountAuthenticationModal from "./components/TutorialAuthentication";
+import AuthenticationReminderModal from "./components/AuthenticationReminderModal";
 import BrandedLoading from "./components/ui/BrandedLoading";
 import CanonicalDialog from "./components/ui/CanonicalDialog";
 import HomeResumeShell from "./components/HomeResumeShell";
+import BillingStatusDialog from "./components/BillingStatusDialog";
+import { LoginBonusModal } from "./components/LoginBonusModal";
+import RankingRewardNotificationController from "./components/ranking/RankingRewardNotificationController";
+import PrepMissionEventDialogController from "./components/mission/PrepMissionEventDialogController";
 import { markHomeReloadStage, readHomeResumeSnapshot } from "./lib/homeResumePresentation";
+import { initializeAcquisitionAttribution } from "@/utils/acquisitionAttribution";
 
 function AppContent() {
   const { session, authLoading, authenticatedProjectionReady, authenticatedProjectionError, retryAuthenticatedProjection, isSetupRequired, onboardingState, activeTab, showTitleView, battleState,
     handleLogout,
+    syncBootstrapData,
     confirmDialogConfig,
     globalInteractionBlocking,
-    maintenanceEnabled
+    maintenanceEnabled,
+    featureOperatingStates,
+    loginBonusMasters,
+    userLoginBonus,
+    showLoginBonusModal,
+    setShowLoginBonusModal,
+    loginBonusClaimResult,
+    loginBonusCheckComplete,
+    prepMissionDialogCheckComplete,
+    rankingRewardNotificationCheckComplete,
+    showPrepMissionDialog,
+    showAccountAuthenticationModal,
+    showAuthenticationReminder,
+    setShowInboxPanel,
+    setInboxPanelTab,
+    navigateTab,
   } = useGame();
+  const billingOwnerRef = React.useRef(session?.user.id);
+  React.useLayoutEffect(() => { billingOwnerRef.current = session?.user.id; }, [session?.user.id]);
+  const refreshGrantedPurchase = React.useCallback((owner: string) => {
+    if (!session?.user.id || owner !== session.user.id || owner !== billingOwnerRef.current) return;
+    return syncBootstrapData(owner);
+  }, [session?.user.id, syncBootstrapData]);
+  const [billingOrderId, setBillingOrderId] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("billing_order")) setBillingOrderId(params.get("billing_order") || "");
+  }, []);
+  const resumedBillingOrder = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    // Operating states hydrate after onboarding. The initial safe-tab guard
+    // may select Home until SHOP is known to be open; resume once after that.
+    const resumeKey = `${session?.user.id}:${billingOrderId}`;
+    if (billingOrderId === null || !onboardingState?.gameplay_authorized
+      || !isFeatureOpen("SHOP", featureOperatingStates) || resumedBillingOrder.current === resumeKey) return;
+    resumedBillingOrder.current = resumeKey;
+    navigateTab("shop");
+  }, [billingOrderId, session?.user.id, onboardingState?.gameplay_authorized, featureOperatingStates, navigateTab]);
+  const closeBillingStatus = () => {
+    setBillingOrderId(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("billing_order");
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    navigateTab("shop");
+  };
   const [homeResumeSnapshot, setHomeResumeSnapshot] = React.useState<ReturnType<typeof readHomeResumeSnapshot>>(null);
+  React.useEffect(() => {
+    void initializeAcquisitionAttribution();
+  }, []);
   React.useLayoutEffect(() => {
     markHomeReloadStage("reload", 0);
     const snapshot = readHomeResumeSnapshot();
@@ -59,7 +117,15 @@ function AppContent() {
   }, []);
   const { playBgm } = useAudio();
   const tutorialStep = onboardingState?.tutorial_step;
-  const isMandatoryTutorial = Boolean(tutorialStep && tutorialStep !== "AUTHENTICATION");
+  const isMandatoryTutorial = Boolean(tutorialStep && !onboardingState?.gameplay_authorized);
+  // Reserve Home input before asynchronous entry checks can present a dialog.
+  // Existing dialogs keep their own controls; never put a blocker above them.
+  const homeEntryPending = activeTab === "home" && !showTitleView
+    && Boolean(onboardingState?.gameplay_authorized) && !battleState
+    && (!loginBonusCheckComplete || !prepMissionDialogCheckComplete || !rankingRewardNotificationCheckComplete)
+    && !showLoginBonusModal && !showPrepMissionDialog
+    && !showAccountAuthenticationModal && !showAuthenticationReminder && !confirmDialogConfig;
+
 
   React.useLayoutEffect(() => {
     const resetCanvasOrigin = () => {
@@ -77,10 +143,16 @@ function AppContent() {
     ? homeResumeSnapshot
     : null;
   useAssetTierPreloader(TUTORIAL_CRITICAL_ASSETS, "TUTORIAL_CRITICAL", bootAssets.ready);
+  const currentTutorialAssets = TUTORIAL_STEP_ASSET_MANIFESTS[tutorialStep || ""] || [];
+  const tutorialScreenAssets = useAssetTierPreloader(
+    currentTutorialAssets,
+    "TUTORIAL_CRITICAL",
+    bootAssets.ready && isMandatoryTutorial && currentTutorialAssets.length > 0,
+  );
   useAssetTierPreloader(
     DEFERRED_ASSETS,
     "DEFERRED",
-    bootAssets.ready && !showTitleView && tutorialStep === "AUTHENTICATION",
+    bootAssets.ready && !showTitleView && Boolean(onboardingState?.gameplay_authorized),
   );
 
   React.useEffect(() => {
@@ -111,12 +183,34 @@ function AppContent() {
             <BrandedLoading label="起動中" />
           )}
         </div>
+        <TitleLegalFooter boot />
       </div>
     );
   }
 
   if (authLoading && ownedHomeResumeSnapshot) {
     return <HomeResumeShell snapshot={ownedHomeResumeSnapshot} />;
+  }
+
+  if (isMandatoryTutorial && currentTutorialAssets.length > 0 && !tutorialScreenAssets.ready) {
+    return (
+      <div className="app-container">
+        <div className="app-loading-screen app-loading-screen--boot" role="status" aria-live="polite">
+          {tutorialScreenAssets.settled && tutorialScreenAssets.requiredFailed ? <>
+            <strong>画面に必要な画像を読み込めませんでした</strong>
+            <button className="semantic-cta semantic-cta--primary" onClick={() => window.location.reload()}>再読み込み</button>
+          </> : <BrandedLoading label="画面を準備中" />}
+        </div>
+      </div>
+    );
+  }
+
+  // A Checkout return must wait for session validation instead of flashing
+  // the title behind an in-progress payment status check.
+  if (billingOrderId !== null && authLoading) {
+    return <div className="app-container"><div className="app-loading-screen app-loading-screen--boot">
+      <BrandedLoading label="ショップに戻っています" />
+    </div></div>;
   }
 
   // 1. タイトル画面 (一番最初に表示)
@@ -198,7 +292,7 @@ function AppContent() {
             <button className="claim-reward-btn font-weight-bold py-2 width-100" onClick={() => void handleLogout()}>
               ログアウトして戻る
             </button>
-            <ConfirmDialog {...confirmDialogConfig} />
+            <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
           </div>
         </div>
       </div>
@@ -216,6 +310,14 @@ function AppContent() {
             {/* Layer 3: コンパクトモーダル */}
             <CommonModals />
             <MoveBaseModal />
+            {showLoginBonusModal && <LoginBonusModal
+              masters={loginBonusMasters}
+              currentStep={userLoginBonus?.current_step || loginBonusClaimResult?.current_step || 1}
+              claimResult={loginBonusClaimResult}
+              onClose={() => setShowLoginBonusModal(false)}
+              onOpenPresents={() => { setShowInboxPanel(true); setInboxPanelTab("presents"); }}
+              onOpenBag={() => navigateTab("bag")}
+            />}
 
             {/* Layer 4: フルスクリーンパネル */}
             <TribeChatModal />
@@ -229,19 +331,34 @@ function AppContent() {
             <CardBattleView />
             <TutorialWorldIntro />
             <TutorialRuleGuide />
-            <TutorialAuthentication />
+            <AuthenticationReminderModal />
+            <AccountAuthenticationModal />
 
             {/* Layer 6: 最上位の共通ダイアログとブロッカー */}
-            <ConfirmDialog {...confirmDialogConfig} />
-            <GlobalInteractionBlocker isBlocking={globalInteractionBlocking} />
+            <PrepMissionEventDialogController />
+            <RankingRewardNotificationController />
+            {billingOrderId !== null && onboardingState?.gameplay_authorized && <BillingStatusDialog
+              key={`${session.user.id}:${billingOrderId}`}
+              orderId={billingOrderId}
+              onGranted={refreshGrantedPurchase}
+              onClose={closeBillingStatus}
+            />}
+            <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
+            {homeEntryPending && <CanonicalDialog title="ログイン情報を確認中" loading>
+              <BrandedLoading label="ログイン情報を確認中" />
+            </CanonicalDialog>}
+            <GlobalInteractionBlocker isBlocking={globalInteractionBlocking || homeEntryPending} />
           </>
         )}
       >
+        <QuestRaidEncounter />
+        <BeginnerMissionRewardCta />
         {activeTab === "home" && <HomeTab />}
         {(activeTab === "patrol" || activeTab === "quest") && <PatrolTab />}
         {activeTab === "pvp" && <PvpTab />}
         {activeTab === "raid" && <RaidTab />}
         {activeTab === "gacha" && <GachaTab />}
+        {activeTab === "shop" && isFeatureOpen("SHOP", featureOperatingStates) && <ShopTab />}
         {activeTab === "guild" && <GuildTab />}
         {activeTab === "character" && <CharacterTab />}
 

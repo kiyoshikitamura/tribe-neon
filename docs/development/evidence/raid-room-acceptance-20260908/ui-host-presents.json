@@ -1,0 +1,37 @@
+{
+  "role": "host",
+  "requests": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"606e6885-db16-480e-98a9-de11b30be7f9\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/claim_present",
+      "body": "{\"p_present_id\":\"80a388c3-9f08-4846-be20-8ad188b34e67\"}"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "status": 200,
+      "body": {
+        "status": "acknowledged",
+        "requestId": "606e6885-db16-480e-98a9-de11b30be7f9"
+      }
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/claim_present",
+      "status": 200,
+      "body": {
+        "status": "success",
+        "present_id": "80a388c3-9f08-4846-be20-8ad188b34e67"
+      }
+    }
+  ],
+  "recovered": [
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n3,664\n共有HPへの反映\n3,664\n累計貢献ダメージ\n7,323\nボス残りHP\n5,938\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る"
+  ],
+  "errors": [],
+  "before": "未受取: 11件\n一括受け取り\nレイド討伐報酬\nカスタムオイル・小 × 1\n期限: あと30日\n受け取る\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る",
+  "after": "未受取: 10件\n一括受け取り\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る"
+}

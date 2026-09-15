@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "at": "2026-09-09T19:01:44.589Z",
+  "newsId": 1,
+  "messages": [
+    {
+      "id": "d0718b02-2747-54c6-a3ff-d517011a9a34",
+      "content": "お知らせが更新されました。",
+      "is_system": true,
+      "user_id": null,
+      "author_id": null,
+      "target_type": "GLOBAL"
+    }
+  ]
+}

@@ -1,298 +1,80 @@
-/* Matte Outlaw UI ログインボーナスモーダル */
 .login-bonus-modal-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(8, 10, 15, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  animation: fadeInModal 0.25s ease-out;
+  position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
+  box-sizing: border-box; width: 100%; height: 100dvh;
+  padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
+  overflow: hidden; background: rgba(4, 8, 15, .9);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  animation: loginBonusFadeIn .2s ease-out;
 }
-
-@keyframes fadeInModal {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
+@keyframes loginBonusFadeIn { from { opacity: 0; } to { opacity: 1; } }
 .login-bonus-modal-card {
-  width: 100%;
-  max-width: 100%;
-  max-height: 90vh;
-  background: linear-gradient(165deg, rgba(28, 32, 42, 0.95) 0%, rgba(16, 18, 25, 0.98) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
+  position: relative; display: flex; flex-direction: column; box-sizing: border-box;
+  width: min(100%, 430px); max-height: 100%; overflow: hidden;
+  border: 1px solid rgba(84, 230, 255, .34); border-radius: 14px; color: #f5f8fc;
+  background: linear-gradient(165deg, rgba(22, 31, 44, .98), rgba(7, 11, 19, .99));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .72), inset 0 1px 0 rgba(255, 255, 255, .12);
 }
-
-/* ヘッダー */
 .login-bonus-modal-header {
-  padding: 20px 24px 14px;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  position: relative;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
+  flex: 0 0 auto; padding: 13px 16px 10px; border-bottom: 1px solid rgba(255, 255, 255, .08);
+  text-align: center; background: linear-gradient(180deg, rgba(0, 226, 255, .07), transparent);
 }
-
-.login-bonus-title {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #f0f3f8;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-.login-bonus-subtitle {
-  font-size: 11px;
-  color: #8a94a6;
-  margin-top: 4px;
-  letter-spacing: 0.05em;
-}
-
-/* スクロールコンテンツエリア */
-.login-bonus-modal-body {
-  padding: 16px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-/* スクロールバーのつや消しメタル統一 */
-.login-bonus-modal-body::-webkit-scrollbar {
-  width: 6px;
-}
-.login-bonus-modal-body::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
-.login-bonus-modal-body::-webkit-scrollbar-thumb {
-  background: rgba(160, 160, 170, 0.3);
-  border-radius: 3px;
-}
-
-/* 獲得報酬ハイライトカード */
+.login-bonus-title { margin: 0; color: #f6fbff; font-size: 19px; font-weight: 900; letter-spacing: .1em; text-shadow: 0 0 14px rgba(0, 225, 255, .3); }
+.login-bonus-subtitle { margin-top: 3px; color: #9aaabd; font-size: 10px; font-weight: 700; letter-spacing: .04em; }
+.login-bonus-modal-body { flex: 1 1 auto; min-height: 0; padding: 10px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.login-bonus-modal-body::-webkit-scrollbar { width: 4px; }
+.login-bonus-modal-body::-webkit-scrollbar-thumb { border-radius: 2px; background: rgba(102, 221, 244, .34); }
 .login-bonus-reward-banner {
-  background: linear-gradient(135deg, rgba(220, 160, 40, 0.15) 0%, rgba(20, 24, 32, 0.8) 100%);
-  border: 1px solid rgba(240, 190, 60, 0.4);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 24px rgba(230, 170, 30, 0.15);
+  position: relative; margin-bottom: 8px; padding: 9px 12px; overflow: hidden;
+  border: 1px solid rgba(255, 203, 77, .56); border-radius: 10px; text-align: center;
+  background: linear-gradient(135deg, rgba(109, 75, 14, .42), rgba(12, 20, 31, .92)); box-shadow: 0 0 20px rgba(255, 190, 45, .12);
 }
-
-.login-bonus-reward-banner::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 60%);
-  animation: rotateGlow 12s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes rotateGlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.login-bonus-banner-badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
-  color: #ffd700;
-  background: rgba(255, 215, 0, 0.15);
-  border: 1px solid rgba(255, 215, 0, 0.4);
-  padding: 2px 10px;
-  border-radius: 20px;
-  margin-bottom: 8px;
-  letter-spacing: 0.05em;
-}
-
-.login-bonus-reward-name {
-  font-size: 18px;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
-
-.login-bonus-reward-desc {
-  font-size: 11px;
-  color: #a0aec0;
-}
-
-/* 30日分グリッド */
-.login-bonus-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-}
-
+.login-bonus-banner-badge { display: inline-flex; padding: 2px 9px; border: 1px solid rgba(255, 217, 109, .45); border-radius: 99px; color: #ffe28b; background: rgba(255, 200, 55, .12); font-size: 9px; font-weight: 900; letter-spacing: .06em; }
+.login-bonus-reward-visual { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 6px; }
+.login-bonus-reward-art { width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255, 215, 88, .35)); }
+.login-bonus-reward-name { color: #fff; font-size: 14px; font-weight: 900; text-align: left; }
+.login-bonus-reward-qty { margin-top: 1px; color: #ffe07c; font-size: 13px; font-weight: 900; text-align: left; }
+.login-bonus-reward-desc { margin-top: 4px; color: #aeb9c7; font-size: 9px; }
+.login-bonus-next-summary { display: flex; align-items: center; min-height: 30px; margin-bottom: 7px; padding: 4px 8px; gap: 6px; border: 1px solid rgba(178, 114, 255, .46); border-radius: 7px; color: #e3d1ff; background: rgba(83, 37, 139, .16); }
+.login-bonus-next-summary span { margin-right: auto; font-size: 9px; font-weight: 800; }
+.login-bonus-next-summary strong { color: #cda9ff; font-size: 10px; }
+.login-bonus-next-summary b { color: #fff; font-size: 10px; }
+.login-bonus-next-art { width: 24px; height: 24px; object-fit: contain; }
+.login-bonus-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; width: 100%; }
 .login-bonus-cell {
-  background: rgba(25, 30, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 8px 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 72px;
-  position: relative;
-  transition: all 0.2s ease;
+  position: relative; display: grid; grid-template-rows: auto 1fr auto auto; justify-items: center;
+  box-sizing: border-box; min-width: 0; min-height: 69px; padding: 5px 2px 4px; overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .12); border-radius: 7px; color: inherit;
+  background: rgba(25, 34, 48, .82); font: inherit; cursor: pointer;
 }
-
-.login-bonus-cell-day {
-  font-size: 10px;
-  font-weight: 700;
-  color: #718096;
-}
-
-.login-bonus-cell-icon {
-  font-size: 11px;
-  font-weight: 700;
-  color: #e2e8f0;
-  text-align: center;
-  margin: 4px 0;
-  line-height: 1.2;
-}
-
-.login-bonus-cell-qty {
-  font-size: 10px;
-  color: #a0aec0;
-}
-
-/* 注目日 (is_featured) */
-.login-bonus-cell.featured {
-  background: linear-gradient(180deg, rgba(50, 42, 20, 0.8) 0%, rgba(25, 30, 42, 0.8) 100%);
-  border: 1px solid rgba(240, 190, 60, 0.5);
-  box-shadow: inset 0 0 12px rgba(240, 190, 60, 0.15);
-}
-
-.login-bonus-cell.featured .login-bonus-cell-day {
-  color: #ecc94b;
-}
-
-.login-bonus-cell-featured-label {
-  position: absolute;
-  top: -6px;
-  right: -4px;
-  background: #d69e2e;
-  color: #1a202c;
-  font-size: 8px;
-  font-weight: 800;
-  padding: 1px 4px;
-  border-radius: 4px;
-}
-
-/* 受取済み (CLAIMED / PAST) */
-.login-bonus-cell.claimed {
-  background: rgba(15, 18, 26, 0.4);
-  border-color: rgba(255, 255, 255, 0.04);
-  opacity: 0.65;
-}
-
-.login-bonus-stamp {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-12deg);
-  background: rgba(229, 62, 62, 0.85);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 900;
-  padding: 2px 8px;
-  border-radius: 4px;
-  border: 1.5px solid #ffffff;
-  letter-spacing: 0.1em;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-/* 本日取得 (CURRENT / TODAY) */
-.login-bonus-cell.today {
-  background: linear-gradient(180deg, rgba(49, 130, 206, 0.3) 0%, rgba(20, 30, 45, 0.8) 100%);
-  border: 1.5px solid #63b3ed;
-  box-shadow: 0 0 16px rgba(99, 179, 237, 0.4), inset 0 0 10px rgba(99, 179, 237, 0.2);
-  animation: pulseToday 2s infinite ease-in-out;
-}
-
-@keyframes pulseToday {
-  0% { border-color: #63b3ed; box-shadow: 0 0 12px rgba(99, 179, 237, 0.4); }
-  50% { border-color: #90cdf4; box-shadow: 0 0 22px rgba(144, 205, 244, 0.7); }
-  100% { border-color: #63b3ed; box-shadow: 0 0 12px rgba(99, 179, 237, 0.4); }
-}
-
-.login-bonus-cell.today .login-bonus-cell-day {
-  color: #90cdf4;
-}
-
-/* フッターボタンエリア */
-.login-bonus-modal-footer {
-  padding: 14px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  gap: 12px;
-  background: rgba(12, 14, 20, 0.6);
-}
-
-.login-bonus-btn {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.login-bonus-btn:active {
-  transform: scale(0.95);
-}
-
-.login-bonus-btn-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: #cbd5e0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.login-bonus-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
-}
-
-.login-bonus-btn-primary {
-  background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-  color: #ffffff;
-  border: 1px solid rgba(144, 205, 244, 0.4);
-  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
-}
-
-.login-bonus-btn-primary:hover {
-  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-}
-.login-bonus-item-art { width: 40px; height: 40px; object-fit: contain; }
+.login-bonus-cell:active { transform: scale(.97); }
+.login-bonus-cell.selected { outline: 1px solid #fff; outline-offset: 1px; }
+.login-bonus-cell-day { color: #9cabbc; font-size: 8px; font-weight: 900; letter-spacing: .02em; white-space: nowrap; }
+.login-bonus-cell-icon { display: grid; min-height: 28px; place-items: center; }
+.login-bonus-item-art { width: 30px; height: 30px; object-fit: contain; }
+.login-bonus-cell-qty { color: #f3f7fb; font-size: 9px; font-weight: 900; white-space: nowrap; }
+.login-bonus-cell-state { margin-top: 1px; color: #8291a2; font-size: 7px; font-weight: 900; letter-spacing: .04em; white-space: nowrap; }
+.login-bonus-cell.featured::before { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 11px rgba(255, 200, 65, .16); }
+.login-bonus-cell-featured-label { position: absolute; top: 0; right: 0; padding: 1px 3px; border-radius: 0 5px 0 4px; color: #211700; background: #e4b943; font-size: 6px; font-weight: 900; }
+.login-bonus-cell.state-received { border-color: rgba(72, 220, 169, .35); background: linear-gradient(155deg, rgba(22, 72, 63, .56), rgba(13, 26, 30, .86)); }
+.login-bonus-cell.state-received .login-bonus-cell-state { color: #77e9c2; }
+.login-bonus-cell.state-received .login-bonus-item-art { opacity: .66; }
+.login-bonus-cell.state-today { z-index: 1; border: 2px solid #ffd158; background: linear-gradient(155deg, rgba(130, 85, 8, .66), rgba(34, 29, 22, .96)); box-shadow: 0 0 13px rgba(255, 205, 76, .42), inset 0 0 11px rgba(255, 221, 117, .18); animation: loginBonusToday 2s ease-in-out infinite; }
+.login-bonus-cell.state-today .login-bonus-cell-day, .login-bonus-cell.state-today .login-bonus-cell-state { color: #ffe38f; }
+@keyframes loginBonusToday { 50% { box-shadow: 0 0 18px rgba(255, 205, 76, .64), inset 0 0 12px rgba(255, 221, 117, .24); } }
+.login-bonus-cell.state-next { border-color: #b77aff; background: linear-gradient(155deg, rgba(91, 43, 149, .62), rgba(28, 21, 39, .94)); box-shadow: inset 0 0 10px rgba(185, 123, 255, .2); }
+.login-bonus-cell.state-next .login-bonus-cell-day, .login-bonus-cell.state-next .login-bonus-cell-state { color: #d7b5ff; }
+.login-bonus-cell.state-future { border-color: rgba(139, 164, 192, .17); background: rgba(20, 28, 40, .74); }
+.login-bonus-mini-detail { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; margin-top: 7px; padding: 7px 9px; border: 1px solid rgba(107, 218, 239, .3); border-radius: 7px; background: rgba(5, 20, 30, .74); }
+.login-bonus-mini-art { width: 30px; height: 30px; object-fit: contain; }
+.login-bonus-mini-detail span { display: flex; min-width: 0; flex-direction: column; }
+.login-bonus-mini-detail small { color: #75dff3; font-size: 8px; font-weight: 900; }
+.login-bonus-mini-detail strong { overflow: hidden; color: #f5f8fb; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.login-bonus-mini-detail b { color: #fff; font-size: 11px; }
+.login-bonus-cycle-note { margin: 7px 2px 0; color: #91a1b4; font-size: 8px; font-weight: 700; text-align: center; }
+.login-bonus-modal-footer { display: flex; flex: 0 0 auto; gap: 8px; padding: 9px 10px; border-top: 1px solid rgba(255, 255, 255, .08); background: rgba(4, 8, 14, .72); }
+.login-bonus-btn { display: flex; flex: 1; align-items: center; justify-content: center; min-width: 0; min-height: 40px; padding: 8px; gap: 5px; border-radius: 7px; font-size: 11px; font-weight: 900; cursor: pointer; }
+.login-bonus-btn:active { transform: scale(.97); }
+.login-bonus-btn-secondary { border: 1px solid rgba(255, 255, 255, .14); color: #cbd5e0; background: rgba(255, 255, 255, .07); }
+.login-bonus-btn-primary { border: 1px solid rgba(83, 224, 249, .43); color: #fff; background: linear-gradient(135deg, #087f9a, #175a83); box-shadow: 0 3px 12px rgba(0, 201, 235, .18); }
+@media (max-width: 360px) { .login-bonus-grid { gap: 4px; } .login-bonus-cell { min-height: 65px; } .login-bonus-item-art { width: 27px; height: 27px; } }
+@media (prefers-reduced-motion: reduce) { .login-bonus-modal-overlay, .login-bonus-cell.state-today { animation: none; } }

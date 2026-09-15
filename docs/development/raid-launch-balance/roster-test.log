@@ -1,0 +1,13 @@
+✔ difficulty roster from server replaces static variant members while preserving area and party name (1.6602ms)
+✔ unknown, duplicate, missing and mismatched server roster references are rejected (0.5586ms)
+✔ legacy display callers keep the canonical variant roster (0.1316ms)
+✔ create selection displays server leader and hides static leader while room data is unknown (10.9956ms)
+✔ room detail unknown roster does not fall back to canonical five characters (0.5483ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23.3069

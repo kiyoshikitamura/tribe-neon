@@ -1,0 +1,14 @@
+[
+  {
+    "Test": "m9-tutorial-first-quest-co-c4864--to-the-completion-boundary",
+    "BaselineSHA": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+    "Baseline": "# Instructions\n\n- Following Playwright test failed.\n- Explain why, be concise, respect Playwright best practices.\n- Provide a snippet of code with the fix, if possible.\n\n# Test info\n\n- Name: m9-tutorial.spec.ts >> first quest connects dispatch, official battle, and one reward to the completion boundary\n- Location: tests\\e2e\\m9-tutorial.spec.ts:665:5\n\n# Error details\n\n```\nError: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByLabel('出撃パーティ').locator('.character-presentation-thumbnail')\nExpected: 1\nReceived: 0\nTimeout:  8000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 8000ms\n  - waiting for getByLabel('出撃パーティ').locator('.character-presentation-thumbnail')\n    20 × locator resolved to 0 elements\n       - unexpected value \"0\"\n\n```\n\n",
+    "Integration": "# Instructions\n\n- Following Playwright test failed.\n- Explain why, be concise, respect Playwright best practices.\n- Provide a snippet of code with the fix, if possible.\n\n# Test info\n\n- Name: m9-tutorial.spec.ts >> first quest connects dispatch, official battle, and one reward to the completion boundary\n- Location: tests\\e2e\\m9-tutorial.spec.ts:665:5\n\n# Error details\n\n```\nError: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByLabel('出撃パーティ').locator('.character-presentation-thumbnail')\nExpected: 1\nReceived: 0\nTimeout:  8000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 8000ms\n  - waiting for getByLabel('出撃パーティ').locator('.character-presentation-thumbnail')\n    20 × locator resolved to 0 elements\n       - unexpected value \"0\"\n\n```\n\n"
+  },
+  {
+    "Test": "m9-tutorial-first-quest-de-2bead--the-battle-action-boundary",
+    "BaselineSHA": "2d2d2b1563e92f1471f9c86fa8a7cc59040ec726",
+    "Baseline": "# Instructions\n\n- Following Playwright test failed.\n- Explain why, be concise, respect Playwright best practices.\n- Provide a snippet of code with the fix, if possible.\n\n# Test info\n\n- Name: m9-tutorial.spec.ts >> first quest desktop presentation >> reaches the battle action boundary\n- Location: tests\\e2e\\m9-tutorial.spec.ts:978:5\n\n# Error details\n\n```\nTimeoutError: locator.evaluate: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('.battle-roster-stage')\n\n```\n\n",
+    "Integration": "# Instructions\n\n- Following Playwright test failed.\n- Explain why, be concise, respect Playwright best practices.\n- Provide a snippet of code with the fix, if possible.\n\n# Test info\n\n- Name: m9-tutorial.spec.ts >> first quest desktop presentation >> reaches the battle action boundary\n- Location: tests\\e2e\\m9-tutorial.spec.ts:978:5\n\n# Error details\n\n```\nTimeoutError: locator.evaluate: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator('.battle-roster-stage')\n\n```\n\n"
+  }
+]

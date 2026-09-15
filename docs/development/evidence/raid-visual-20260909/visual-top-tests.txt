@@ -1,0 +1,35 @@
+✔ 7エリア/5体の現行マスター素材は存在し日次fixtureは2エリアのみ (5.0124ms)
+✔ empty: 0件は枠を省き1/複数件は維持 (81.0267ms)
+✔ single: 0件は枠を省き1/複数件は維持 (35.8421ms)
+An update to RaidTop inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+✔ multiple: 0件は枠を省き1/複数件は維持 (52.897ms)
+✔ loading: 0件と区別し捏造カードなし (3.1752ms)
+✔ error: 0件と区別し捏造カードなし (15.4087ms)
+✔ unavailable: 0件と区別し捏造カードなし (19.3388ms)
+✔ 救援タップは対象IDと救援元参照を保持 (37.4779ms)
+✔ 敵のタップは選択callbackだけを発火 (20.3788ms)
+✔ 主催/通常参加/救援参加を保持し人数をonline扱いしない (24.6848ms)
+✔ 終了した救援は戦況を見る導線に変更 (39.5159ms)
+✔ Browserトップは一覧取得をせず明示browseで取得 (26.0023ms)
+✔ snapshot境界は不正日次・重複部屋・人物URLを拒否、unknownは維持 (2.4967ms)
+✔ Connectedトップ帰還revisionで一括再取得し参戦中HPを更新、一覧RPCなし (39.6491ms)
+✔ useRaidTopは本人切替で古いsnapshotを即隠し遅延応答を破棄、エラーを0件にしない (227.867ms)
+✔ トップ救援→既存詳細→参加は公開登録を使わず救援RPCへ元参照を渡す (80.89ms)
+✔ 参戦中の続きへは対象を保持しownerと参加者の表示を混同しない (28.8846ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1440.1915

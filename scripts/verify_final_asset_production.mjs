@@ -117,7 +117,7 @@ assert.deepEqual(inventory, {
   item: 18,
   townBackground: 7,
   gachaBackground: 3,
-  promotion: 14,
+  promotion: 23,
 });
 
 const rarityFrameDimensions = {};
@@ -127,7 +127,7 @@ for (const rarity of ["n", "r", "sr", "ssr"]) {
 }
 assert.deepEqual(new Set(Object.values(rarityFrameDimensions)), new Set(["192x192"]));
 const globalCss = fs.readFileSync(path.join(SOURCE_ROOT, "app/globals.css"), "utf8");
-assert.match(globalCss, /equipment-frame-n\.png[\s\S]*scale\(1\.319\)/, "Equipment N-frame geometry correction is missing");
+assert.doesNotMatch(globalCss, /equipment-frame-n\.png[\s\S]*scale\(1\.319\)/, "Normalized Equipment N must not use the legacy geometry correction");
 
 const raidMaster = JSON.parse(fs.readFileSync(
   path.join(SOURCE_ROOT, "domain/gameplay/canonical/data/raid_production_20260830.json"),

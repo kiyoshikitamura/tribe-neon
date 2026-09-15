@@ -1,0 +1,462 @@
+{
+  "status": "PASS",
+  "unchanged": [
+    "Cron 7 definitions",
+    "24-hour expiry Room and boss full rows",
+    "migration history count 275",
+    "original 19 users full-row hash"
+  ],
+  "sharedAliasesUnchanged": [
+    {
+      "alias": "code-wirth-dawn-git-develop-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_H2BJggEZzDwoUZwJjXYtY9Mps9xa",
+      "url": "code-wirth-dawn-3il69467g-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-git-main-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8JSs5646MSsgkDitrJPGoMArkH5e",
+      "url": "code-wirth-dawn-9iemvmbxg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-git-release-onboarding-681f69-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_FbGEbFo6fdBeWPe5vFXWYTKeqMhd",
+      "url": "code-wirth-dawn-e6ugxdoqf-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8JSs5646MSsgkDitrJPGoMArkH5e",
+      "url": "code-wirth-dawn-9iemvmbxg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-kiyoshikitamura-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_6aGeMJwrfXZvj5Xqw7NnAyXxP72B",
+      "url": "code-wirth-dawn-nttr9wds3-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-tdxh-git-develop-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_2tzGdDacF4HUNJXoYTuk3jMgVzYt",
+      "url": "code-wirth-dawn-tdxh-y39ob7vwc-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-tdxh-git-main-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_GfkuX9vhJgmHCDJghgKsFTyiZcft",
+      "url": "code-wirth-dawn-tdxh-i1qjkqb1s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-tdxh-git-release-onboar-f058d4-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_Hyd2AQNg9mv3XFfVQJtKH6hc9Coy",
+      "url": "code-wirth-dawn-tdxh-8we72t3bi-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-tdxh-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_GfkuX9vhJgmHCDJghgKsFTyiZcft",
+      "url": "code-wirth-dawn-tdxh-i1qjkqb1s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn-tdxh.vercel.app",
+      "deploymentId": "dpl_GfkuX9vhJgmHCDJghgKsFTyiZcft",
+      "url": "code-wirth-dawn-tdxh-i1qjkqb1s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn.com",
+      "deploymentId": "dpl_8JSs5646MSsgkDitrJPGoMArkH5e",
+      "url": "code-wirth-dawn-9iemvmbxg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "code-wirth-dawn.vercel.app",
+      "deploymentId": "dpl_8JSs5646MSsgkDitrJPGoMArkH5e",
+      "url": "code-wirth-dawn-9iemvmbxg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "game04-git-codex-game04-shell-home-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_DvsqnR8xSNraDfdJhq4qnDMCLFQm",
+      "url": "game04-knnwyft3f-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "game04-git-codex-implementation-roadmap-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_51QiJgK6rSs2kfy1YKqgHLxb51eZ",
+      "url": "game04-qqmekdz79-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "game04-git-main-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_ErTtZzXCmtfsxFQizM7iUfWzmFBf",
+      "url": "game04-opnero71k-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "game04-gray.vercel.app",
+      "deploymentId": "dpl_ErTtZzXCmtfsxFQizM7iUfWzmFBf",
+      "url": "game04-opnero71k-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "game04-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_ErTtZzXCmtfsxFQizM7iUfWzmFBf",
+      "url": "game04-opnero71k-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "kpi-preview.tribe-neon.com",
+      "deploymentId": "dpl_DFmBYsAi4xbV4KFkghwtXJMRkKC6",
+      "url": "tribe-neon-k6a6al5eb-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "kpi.tribe-neon.com",
+      "deploymentId": "dpl_D41Yz1QnP21UazKYr6oAK32p1omJ",
+      "url": "tribe-neon-eeilqujxd-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tirbe-neon-git-main-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_kELBZZ2U3qRMibpyeePBDFGYxfKx",
+      "url": "tirbe-neon-n9ltin9yz-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tirbe-neon-git-refactor-phase-2a-gamecontext-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_Eym7DxBGjdw25XBsxoKhRpWiPHwi",
+      "url": "tirbe-neon-pkkxvy6c0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tirbe-neon-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_kELBZZ2U3qRMibpyeePBDFGYxfKx",
+      "url": "tirbe-neon-n9ltin9yz-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tirbe-neon.vercel.app",
+      "deploymentId": "dpl_73A7dsAKVLxBgFVuM9H4mLW6F3E6",
+      "url": "tribe-neon-kgkfs7za0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-agent-task-registry-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_N8w48TXeD3Lsg7r28CYzNk6gAo3H",
+      "url": "tribe-neon-e5jw58ud6-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-acceptance-bugfix-f46072-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_7vBCyRkkGjzEbKawH7VvgBPrLGJF",
+      "url": "tribe-neon-l6b7hldf9-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-acceptance-fresh-02892ac-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_bkSiahtyP14raiFeG9NwsjGjZxkM",
+      "url": "tribe-neon-lzwync464-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-acceptance-fresh-4352d4f-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_Ad6Xhty59Q8kL6TyekMUpsPSdvEZ",
+      "url": "tribe-neon-ovlr40m2y-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-acceptance-fresh-e045f34-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_EanfqmFQep2RFVDkTLeGH9meXzwo",
+      "url": "tribe-neon-o3zk0jx61-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-acceptance-fresh-f087c54-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_BmBadsfhU9pQ9Cw9nkpwvv4tFebi",
+      "url": "tribe-neon-c9iuddmaw-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-acceptance-wave-20260902-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_J6bstBenXJcFztnzYXfof1xwuWbZ",
+      "url": "tribe-neon-gbf9fx6uh-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-admin-delete-large-294dbd-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_F9DRZT8juak74gSLwx83j2UZJkDt",
+      "url": "tribe-neon-8slaohucu-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-battle-full-skill-36bce6-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_41gcXfbowseT79p6ypSUNrXQdtLU",
+      "url": "tribe-neon-ibazd1vm7-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-ci-baseline-reconc-512c78-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_7w6erHhkTUajN4ZtaQceJjprPaEA",
+      "url": "tribe-neon-7krspuqdn-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-fix-browser-e2e-ci-hang-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_EsErF9zLNbBHCa9Pucf556eDFkhi",
+      "url": "tribe-neon-5v3qfu59y-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-fix-google-account-167762-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8YF9arxXAaMNoJQyNhfp7LpnEESn",
+      "url": "tribe-neon-7rio4iou0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-gacha-battle-produ-7bd122-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_FVkckKmiWQjPumfpm17p7MoPh2jy",
+      "url": "tribe-neon-n75nr69o9-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-gacha-presentation-bb7575-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_7mrLHpU3GhRUnvMoXcQ9xxW7RVBc",
+      "url": "tribe-neon-ez9pu96gb-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-human-ng-remediati-49702c-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_DJTgsa2gnNpcZ5eY693cCgiNrg1d",
+      "url": "tribe-neon-4t8ms6vul-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-integrate-optional-a12f60-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8fNNJCWXgNS76NCqxvKRyfiFu69X",
+      "url": "tribe-neon-g7ffgnx4h-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-iphone14-presentat-ac48e3-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_HBsV1HGvHDDeGWiG6q3F1ei3ujSc",
+      "url": "tribe-neon-ocgdj2myg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-kpi-daily-monthly-3c7bba-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_9tum21AmyF1zGybfFL6Przco7zNE",
+      "url": "tribe-neon-7g8bmrpbj-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-kpi-dashboard-prev-4945ab-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_DFmBYsAi4xbV4KFkghwtXJMRkKC6",
+      "url": "tribe-neon-k6a6al5eb-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-kpi-dashboard-prod-c6324e-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_D41Yz1QnP21UazKYr6oAK32p1omJ",
+      "url": "tribe-neon-eeilqujxd-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-kpi-v2-m2-preview-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_H585wd8EpxkErwpamMTLdz4J2PrQ",
+      "url": "tribe-neon-etyn9l3g3-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-main-integration-20260831-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_G9RoD2rDqAqDd1Y3TTiPxtGeKdjV",
+      "url": "tribe-neon-8k9fk32f7-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-migrate-msi-workspace-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_B62g5Pwc4v76uyJUJTa3ui2eds2w",
+      "url": "tribe-neon-ekzxdibb0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-optional-account-a-4b8b0c-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_FTFB1FZda8HKPZExLq2C37FosY9F",
+      "url": "tribe-neon-7lfrnoop4-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-phase5-activation-preview-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_ErpwpN7JMxycJzHR4efZR4R8B7sJ",
+      "url": "tribe-neon-gd0n95php-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-phase5-home-cta-preview-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_ALMedhfmLXjnw4RdsbFScCuLkq1T",
+      "url": "tribe-neon-52r1sfc8w-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-phase6a-preview-20260828-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_A3jJqJCrmZa437Cxz2uSJqEhFweS",
+      "url": "tribe-neon-e7xw4i7t8-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-post-tutorial-load-36cf2d-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_HKSVgAoJiaE3L61quUEk1x92UBXi",
+      "url": "tribe-neon-ezhhdjvmi-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-preview-rc-tutoria-caaa2d-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_2cCBQALqw8LBeVwTTxJ6EQoGvWyt",
+      "url": "tribe-neon-d5npks8do-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-production-custom-4b3be3-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_EdBcjYNQ6YgCPyicCVxR5RA7pm9f",
+      "url": "tribe-neon-iz2yizyh8-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-raid-room-pc-prefl-581ab3-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_CKeNtv2Hx5Zdr4yobtgLeg3J4wWC",
+      "url": "tribe-neon-afi14ptsl-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-raid-room-rescue-20260908-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_FEpuwaPT6EnYqfgNBUgeAd4XcioM",
+      "url": "tribe-neon-705g1hvhg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-ranking-stale-test-3769b8-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_FXtqioVyMFaiN6Yi4ExK692FZaZd",
+      "url": "tribe-neon-nyp9jnxh2-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-targeted-acceptanc-4a5850-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_HkH2dCArb6A1cvpkTZoFEk5pU1ot",
+      "url": "tribe-neon-i6uf65jf1-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-task-factory-found-7a6028-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8zFnZP5MFAsUuXvWCEAEJTxD4pXN",
+      "url": "tribe-neon-574xrwpkx-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-task-factory-foundation-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_B4gYTVPRvECjLN35twYfYHPz6rXs",
+      "url": "tribe-neon-p17sdjldl-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-title-legal-links-7901fc-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_4fzL7q5ZoZKk93NGkRZNTyiL4eiH",
+      "url": "tribe-neon-f47c7s70d-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn01-activation-lifecycle-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_6NcysKKuoSKxTd98QKnjh2jDHLBT",
+      "url": "tribe-neon-1asnpr1sy-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn02-gacha-mission-f18de1-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_5qCBmtNgWiSBR3Wbz8huX15f1g92",
+      "url": "tribe-neon-28nmyjnyc-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn03-quest-battle-start-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_BkDdN3LLsgTwD91dpqhMdFGRLjPm",
+      "url": "tribe-neon-kkofynds8-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn04-raid-enemy-roster-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8KzJ2LDtHA1HCBF2sD2oSxjo97vg",
+      "url": "tribe-neon-8k9yaojgx-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn05-battle-default-speed-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_B2WvjGVBe4C3pYf1rPyvwN924X2e",
+      "url": "tribe-neon-4wkxxgvi6-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn06-starter-cash-9e69ef-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_B2ryjytzsac4LmzV6ra9BcgFw3t7",
+      "url": "tribe-neon-f2lo4kcxd-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn07-dm-inbox-thread-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_Girz4RC5AFC6EnCRGRhGHJQnmrgS",
+      "url": "tribe-neon-1w7bvrdrb-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn08-battle-terminology-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_4fYK2TBvD4ToqRu7YmanDkjozUMv",
+      "url": "tribe-neon-m3dphrt4x-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn09-raid-ranking-f0342b-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_8nxVYRXCErgY5NkCmckMeBr7JjkP",
+      "url": "tribe-neon-6ylyr4nuy-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn09-ranking-rewar-69bedf-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_F6Yqm764od6UkkVhzZvMfbtwEosd",
+      "url": "tribe-neon-991m6t9a1-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn09a-raid-playbac-ccf579-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_Vdf1qvPrVXYRYahmUb2sLKsSAPQZ",
+      "url": "tribe-neon-mgh8rea94-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn10-mission-direct-grant-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_AMF7BTZaXr9HUo18nXzDCM1XJ2Mw",
+      "url": "tribe-neon-f7rc0u2lr-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn11-location-quest-sync-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_HxsoUMCrh3DTdumtNxWZakS9xk12",
+      "url": "tribe-neon-fe7flfzyt-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn12-community-shell-ux-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_D8aY65SzYnNVdX8AbS6sMsDinVN8",
+      "url": "tribe-neon-3sb2u637k-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-tn13-inventory-projection-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_7p8fkfQoGLtnDMCqcrEhKBy6GubL",
+      "url": "tribe-neon-ji4lc6wk9-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-world-intro-skip-20260907-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_EgyEnxkHsXpEF369eMFG3F4v1b5Z",
+      "url": "tribe-neon-7cbf20l55-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-codex-x-ads-crawler-meta-a244b1-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_CUJD8XGtBZm4DKK1KsCCEF37nwKt",
+      "url": "tribe-neon-nolge5wyj-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-develop-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_A6DDHosrcWKsMWfZSSomoCXPUreD",
+      "url": "tribe-neon-jdttpfyc1-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-m9x-round5-visual-remediation-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_334VrJHaEeBT5SH1KiBA2Adsd6UZ",
+      "url": "tribe-neon-d68iksj09-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-git-main-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_7qmqsYqhTCrcNqRfWf2giBytS3s2",
+      "url": "tribe-neon-cu8jbanep-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_73A7dsAKVLxBgFVuM9H4mLW6F3E6",
+      "url": "tribe-neon-kgkfs7za0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon-mobile-preview.vercel.app",
+      "deploymentId": "dpl_G9RoD2rDqAqDd1Y3TTiPxtGeKdjV",
+      "url": "tribe-neon-8k9fk32f7-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "tribe-neon.com",
+      "deploymentId": "dpl_73A7dsAKVLxBgFVuM9H4mLW6F3E6",
+      "url": "tribe-neon-kgkfs7za0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "winner-life-app-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_GaAQj7cEC8PoBAHWoxutUUXSABLP",
+      "url": "winner-life-bxisi8w5s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "winner-life-app-kiyoshikitamura-kiyoshi-kitamura.vercel.app",
+      "deploymentId": "dpl_GaAQj7cEC8PoBAHWoxutUUXSABLP",
+      "url": "winner-life-bxisi8w5s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "winner-life-app.vercel.app",
+      "deploymentId": "dpl_GaAQj7cEC8PoBAHWoxutUUXSABLP",
+      "url": "winner-life-bxisi8w5s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "winnerlifelog2026.com",
+      "deploymentId": "dpl_GaAQj7cEC8PoBAHWoxutUUXSABLP",
+      "url": "winner-life-bxisi8w5s-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "www.code-wirth-dawn.com",
+      "deploymentId": "dpl_8JSs5646MSsgkDitrJPGoMArkH5e",
+      "url": "code-wirth-dawn-9iemvmbxg-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "www.tribe-neon.com",
+      "deploymentId": "dpl_73A7dsAKVLxBgFVuM9H4mLW6F3E6",
+      "url": "tribe-neon-kgkfs7za0-kiyoshi-kitamura.vercel.app"
+    },
+    {
+      "alias": "www.winnerlifelog2026.com",
+      "deploymentId": "dpl_GaAQj7cEC8PoBAHWoxutUUXSABLP",
+      "url": "winner-life-bxisi8w5s-kiyoshi-kitamura.vercel.app"
+    }
+  ],
+  "checkedAt": "2026-09-08T12:28:27.540Z"
+}

@@ -14,11 +14,16 @@ const expectedGachaPaths = {
   SKILL_NORMAL: "/promotion/gacha_normal_skill.jpg",
   EQUIP_NORMAL: "/promotion/gacha_normal_equipment.jpg"
 };
-const expectedMyPagePaths = [1, 2, 3].map((order) => `/promotion/mypage_banner_0${order}.png`);
+const expectedMyPagePaths = [
+  "/promotion/mypage_banner_quest.webp",
+  "/promotion/mypage_banner_battle.webp",
+  "/promotion/mypage_banner_ranking.webp",
+  "/promotion/mypage_banner_community.webp",
+];
 
-assert.equal(PRODUCTION_CREATIVES.length, 9, "Production Creative slot count must be 9");
-assert.equal(new Set(PRODUCTION_CREATIVES.map((creative) => creative.id)).size, 9, "Creative IDs must be unique");
-assert.equal(new Set(PRODUCTION_CREATIVES.map((creative) => creative.assetPath)).size, 9, "Creative paths must be unique");
+assert.equal(PRODUCTION_CREATIVES.length, 10, "Production Creative slot count must be 10");
+assert.equal(new Set(PRODUCTION_CREATIVES.map((creative) => creative.id)).size, 10, "Creative IDs must be unique");
+assert.equal(new Set(PRODUCTION_CREATIVES.map((creative) => creative.assetPath)).size, 10, "Creative paths must be unique");
 assert.ok(PRODUCTION_CREATIVES.every((creative) => creative.enabled), "All frozen slots must be enabled");
 assert.ok(PRODUCTION_CREATIVES.filter((creative) => creative.slot.startsWith("GACHA_")).every((creative) => creative.available), "All six delivered Gacha banners must be available");
 
@@ -32,7 +37,7 @@ for (const [gachaId, expectedPath] of Object.entries(expectedGachaPaths)) {
 
 const productionMyPage = resolveAvailableMyPageCreatives();
 assert.deepEqual(productionMyPage?.map((creative) => creative.assetPath), expectedMyPagePaths);
-assert.deepEqual(productionMyPage?.map((creative) => creative.destination), ["guild", "raid", null]);
+assert.deepEqual(productionMyPage?.map((creative) => creative.destination), ["patrol", "pvp", "ranking", "community"]);
 assert.ok(productionMyPage?.every((creative) => creative.width === 1200 && creative.height === 200));
 
 const deliveredFixture = PRODUCTION_CREATIVES.map((creative) => ({ ...creative, available: true }));
@@ -42,11 +47,11 @@ for (const [gachaId, expectedPath] of Object.entries(expectedGachaPaths)) {
 
 const deliveredMyPage = resolveAvailableMyPageCreatives(deliveredFixture);
 assert.deepEqual(deliveredMyPage?.map((creative) => creative.assetPath), expectedMyPagePaths);
-assert.deepEqual(deliveredMyPage?.map((creative) => creative.order), [1, 2, 3]);
-assert.deepEqual(deliveredMyPage?.map((creative) => creative.destination), ["guild", "raid", null]);
+assert.deepEqual(deliveredMyPage?.map((creative) => creative.order), [1, 2, 3, 4]);
+assert.deepEqual(deliveredMyPage?.map((creative) => creative.destination), ["patrol", "pvp", "ranking", "community"]);
 assert.ok(deliveredMyPage?.every((creative) => creative.width === 1200 && creative.height === 200));
 
-const partialFixture = deliveredFixture.map((creative) => creative.id === "mypage_banner_03" ? { ...creative, available: false } : creative);
+const partialFixture = deliveredFixture.map((creative) => creative.id === "mypage_banner_community" ? { ...creative, available: false } : creative);
 assert.equal(resolveAvailableMyPageCreatives(partialFixture), null, "Partial My Page delivery must not replace fallback");
 
-console.log("Production Creative x9 integration verification PASS");
+console.log("Production Creative x10 integration verification PASS");

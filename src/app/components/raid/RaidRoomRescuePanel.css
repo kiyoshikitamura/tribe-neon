@@ -1,0 +1,12 @@
+.raid-rescue-panel{margin-top:12px!important;padding:14px!important}
+.raid-rescue-panel__heading{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.raid-rescue-panel__heading img{width:28px;height:28px;object-fit:contain}
+.raid-rescue-panel__heading h3{font-size:14px;font-weight:800;margin:0}
+.raid-rescue-panel__channels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 10px}
+.raid-rescue-panel__channels>div{background:rgba(255,255,255,.03);border:1px solid var(--ui-border);border-radius:8px;padding:10px}
+.raid-rescue-panel__channels dt{font-size:11px;color:var(--ui-text-secondary)}
+.raid-rescue-panel__channels dd{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;margin:5px 0 0}
+.raid-rescue-panel__channels small{display:block;font-size:10px;font-weight:500;color:var(--ui-text-secondary)}
+.raid-rescue-panel p{font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+.raid-rescue-panel__contribution{border-left:2px solid var(--ui-border);padding-left:10px}
+.raid-rescue-panel .outlaw-button{margin:5px 6px 0 0;min-height:44px}

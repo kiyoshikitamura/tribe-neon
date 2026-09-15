@@ -1,0 +1,157 @@
+{
+  "status": "PASS",
+  "seed": 20260829,
+  "roster": {
+    "player": [
+      "アゲハ",
+      "レオ",
+      "ミヤビ",
+      "ゴウ",
+      "コハル"
+    ],
+    "enemy": [
+      "ソラ",
+      "タイガ",
+      "ケンゴ",
+      "レイジ",
+      "ノア"
+    ]
+  },
+  "skillSlotsPerUnit": 6,
+  "currentSkillIds": [
+    "SKILL_002",
+    "SKILL_014",
+    "SKILL_025",
+    "SKILL_030",
+    "SKILL_038",
+    "SKILL_055",
+    "SKILL_040",
+    "SKILL_056",
+    "SKILL_058",
+    "SKILL_011",
+    "SKILL_019",
+    "SKILL_027",
+    "SKILL_036",
+    "SKILL_046",
+    "SKILL_051",
+    "SKILL_053",
+    "SKILL_049",
+    "SKILL_052",
+    "SKILL_054"
+  ],
+  "currentLoadouts": {
+    "アゲハ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_030 暗号ジャミング",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_055 ネオン・アクセル"
+    ],
+    "レオ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_056 ストリート・フロウ"
+    ],
+    "ミヤビ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_058 宵闇の幻惑"
+    ],
+    "ゴウ": [
+      "SKILL_011 チャージスラッシュ",
+      "SKILL_019 バーストラッシュ",
+      "SKILL_027 血の強襲",
+      "SKILL_036 一騎当千・無慈悲の一撃",
+      "SKILL_046 毒蜘蛛の檻",
+      "SKILL_051 剛拳・一撃必倒"
+    ],
+    "コハル": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_053 喧嘩上等"
+    ],
+    "ソラ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_049 無力化の広域閃光爆弾"
+    ],
+    "タイガ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_049 無力化の広域閃光爆弾"
+    ],
+    "ケンゴ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_052 修羅の猛攻"
+    ],
+    "レイジ": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_030 暗号ジャミング",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_054 覇王の威圧"
+    ],
+    "ノア": [
+      "SKILL_002 クイックシールド",
+      "SKILL_014 スモークスクリーン",
+      "SKILL_025 催涙ガス噴射",
+      "SKILL_038 絶対防御・鉄壁の要塞",
+      "SKILL_040 漆黒の広域強酸大散布",
+      "SKILL_049 無力化の広域閃光爆弾"
+    ]
+  },
+  "replay": {
+    "winner": "PLAYER",
+    "rounds": 13,
+    "events": 283,
+    "actions": 100,
+    "skillActions": 35
+  },
+  "patterns": {
+    "A": "PASS",
+    "B": "PASS",
+    "C": "PASS",
+    "D": "PASS",
+    "E": "PASS",
+    "F": "PASS",
+    "G": "PASS",
+    "H": "PASS",
+    "I": "PASS"
+  },
+  "location": {
+    "questId": "QUEST_SHINJUKU_HARD",
+    "questName": "トー横前",
+    "townId": "shinjuku",
+    "difficulty": "HARD",
+    "expectedBackgroundPath": "/bg/bg_street_shinjuku.jpg",
+    "runtimeBattleBackgroundPath": "/bg/bg_street_shinjuku.jpg",
+    "parityGate": "PASS"
+  },
+  "productionImpact": 0
+}
+
+(node:38784) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/battle/fullSkillLoadFixture.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)

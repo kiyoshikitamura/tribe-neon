@@ -12,7 +12,7 @@
         "SR": 9,
         "SSR": 1
       },
-      "cashPerPull": 100,
+      "cashPerPull": 1000,
       "pity": null
     },
     {
@@ -41,7 +41,7 @@
         "SR": 17,
         "SSR": 3
       },
-      "cashPerPull": 100,
+      "cashPerPull": 1000,
       "pity": null
     },
     {
@@ -67,7 +67,7 @@
         "SR": 20,
         "SSR": 5
       },
-      "cashPerPull": 100,
+      "cashPerPull": 1000,
       "pity": null
     },
     {

@@ -94,6 +94,8 @@ const audioContract = read("src/audio/audioContract.ts");
 const fullSkillHarness = read("src/app/qa/battle-full-skill-load/BattleFullSkillLoadHarness.tsx");
 const globals = read("src/app/globals.css");
 const setup = read("src/app/components/SetupView.tsx");
+const mockRpc = read("src/utils/mock/mockRpc.ts");
+const snapshotMetadataMigration = read("supabase/migrations/20260902000232_battle_snapshot_presentation_metadata.sql");
 assert.match(runtime, /setBattleResultReplayEvents\(replayEventsTemp\)/, "Result must retain an immutable replay event snapshot");
 assert.match(runtime, /if \(tutorialBattleActive \|\| battleState !== "PLAYING"/, "In-battle skip must explicitly reject the first tutorial");
 assert.match(runtime, /find\(\(entry\) => entry\.type === "RESULT"\)/, "Skip must use the authoritative result event");
@@ -102,8 +104,13 @@ assert.match(viewer, /data-party-size=/, "Roster must expose its authoritative p
 assert.doesNotMatch(viewer, />CURRENT<|`NEXT \$\{index\}`/, "Battle V2 must not render CURRENT/NEXT presentation");
 assert.doesNotMatch(viewer, /className="battle-action-stage/, "Battle V2 must not render a central action stage");
 assert.match(runtime, /buildBattlePresentationUnit\(authoritativeEvents/, "Production replay must use the presentation-only ACTION builder");
+for (const field of ["characterId", "level", "awakeningLevel", "rarity"]) {
+  assert.match(snapshotMetadataMigration, new RegExp(`'${field}'`), `Production snapshot must project ${field}`);
+}
+assert.match(mockRpc, /rarity: characterMaster\?\.rarity \|\| "N"/, "Mock replay snapshot must preserve Canonical Character rarity");
 assert.match(runtime, /waitForRenderedBattleHpParity/, "RESULT must wait for rendered HP parity before leaving the field");
-assert.match(runtime, /setTimeout\(\(\) => void finishCanonicalResult\(\), 120\)/, "RESULT parity must retry the same canonical terminal event instead of stalling Journey playback");
+assert.match(runtime, /waitForBattleHpParityGate/, "ACTION, RESULT and Skip parity must use the finite liveness gate");
+assert.doesNotMatch(runtime, /setTimeout\(\(\) => void finishCanonicalResult\(\), 120\)/, "RESULT parity must not retry forever");
 assert.match(runtime, /playerPartyStatesRef\.current = canonicalPlayers;[\s\S]*enemyPartyStatesRef\.current = canonicalEnemies;/, "RESULT must commit the canonical terminal HP projection before its visual gate");
 assert.match(runtime, /waitForRenderedBattleActionHpParity/, "Every HP-changing ACTION must wait for DOM and fill parity before advancing");
 assert.match(runtime, /recordBattleHpProjection/, "Every ACTION HP projection must be traced before RESULT");
@@ -167,7 +174,8 @@ assert.match(portrait, /hp\.toLocaleString\(\)\} \/ \{maxHp\.toLocaleString\(\)/
 assert.doesNotMatch(portrait, /Math\.round\(hpPercent\)\}%/, "Visible Battle HP must not use percentage copy");
 for (const tone of ["damage", "heal", "status"]) assert.match(effects, new RegExp(`battle-target-effect is-${tone}`), `${tone} must retain its distinct icon-local effect layer`);
 for (const tone of ["buff", "debuff", "shield", "poison", "bleed", "stun"]) assert.doesNotMatch(effects, new RegExp(`battle-target-effect is-${tone}`), `${tone} Apply must not duplicate the unit overlay inside the icon`);
-assert.ok(portrait.indexOf("battle-unit-identity-badges") < portrait.indexOf("<strong>{participant.name}</strong>"), "Attribute badge must precede the character name on both mirrored sides");
+const raidPortrait = portrait.slice(portrait.indexOf("className={`battle-unit-art"));
+assert.ok(raidPortrait.indexOf("battle-unit-identity-badges") < raidPortrait.indexOf("<strong>{participant.name}</strong>"), "Legacy Raid attribute badge must precede the character name on both mirrored sides");
 assert.match(portraitCss, /--character-battle-icon-scale/, "Battle icons must use presentation-only face crop metadata");
 assert.match(effectsCss, /--character-cutin-scale/, "Premium cut-ins must use normalized presentation-only crop metadata");
 assert.match(effectsCss, /\.battle-cutin-slot \.battle-skill-cutin \.battle-cutin-character/, "SR and SSR cut-ins must share one crop template with equal specificity");

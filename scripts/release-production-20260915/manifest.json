@@ -1,0 +1,404 @@
+[
+  {
+    "name": "quest_cash_hotfix_canonicalization",
+    "version": "20260908163547",
+    "files": [],
+    "normalized_name": "quest_cash_hotfix_canonicalization",
+    "decision": "EXCLUDED",
+    "reason": "superseded by latest quest claim"
+  },
+  {
+    "name": "raid_step6_daily_top_display_pages",
+    "version": "20260909051355",
+    "files": [],
+    "normalized_name": "raid_step6_daily_top_display_pages",
+    "decision": "EXCLUDED",
+    "reason": "existing raid runtime present; baseline convergence separately checked"
+  },
+  {
+    "name": "initial_equipment_authority",
+    "version": "20260909090055",
+    "files": [
+      "supabase/migrations/20260909075933_initial_equipment_authority.sql"
+    ],
+    "normalized_name": "initial_equipment_authority",
+    "decision": "EXCLUDED",
+    "reason": "private.initial_equipment_receipts and public function already exist"
+  },
+  {
+    "name": "normalize_gacha_stage1",
+    "version": "20260911085107",
+    "files": [
+      "supabase/migrations/20260911100100_normalize_gacha_stage1.sql"
+    ],
+    "normalized_name": "normalize_gacha_stage1",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "billing_sandbox_foundation",
+    "version": "20260911132848",
+    "files": [],
+    "normalized_name": "billing_sandbox_foundation",
+    "decision": "BILLING_PARENT_APPLIED"
+  },
+  {
+    "name": "billing_special_payment_boundary",
+    "version": "20260911133203",
+    "files": [],
+    "normalized_name": "billing_special_payment_boundary",
+    "decision": "BILLING_PARENT_APPLIED"
+  },
+  {
+    "name": "daily_free_gacha_rates_v1",
+    "version": "20260911170125",
+    "files": [],
+    "normalized_name": "daily_free_gacha_rates_v1",
+    "decision": "EXCLUDED",
+    "reason": "Production daily_free_gacha_rate_adjustment already applied; preserve Production"
+  },
+  {
+    "name": "20260913105642_quest_raid_encounter",
+    "version": "20260913114154",
+    "files": [
+      "supabase/migrations/20260913105642_quest_raid_encounter.sql"
+    ],
+    "normalized_name": "quest_raid_encounter",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "20260913105839_billing_paid_pack_lots",
+    "version": "20260913114209",
+    "files": [
+      "supabase/migrations/20260913105839_billing_paid_pack_lots.sql"
+    ],
+    "normalized_name": "billing_paid_pack_lots",
+    "decision": "BILLING_PARENT_APPLIED"
+  },
+  {
+    "name": "20260913111028_billing_checkout_mode_contract",
+    "version": "20260913114321",
+    "files": [
+      "supabase/migrations/20260913111028_billing_checkout_mode_contract.sql"
+    ],
+    "normalized_name": "billing_checkout_mode_contract",
+    "decision": "BILLING_PARENT_APPLIED"
+  },
+  {
+    "name": "20260913105913_special_gacha_release_contract",
+    "version": "20260913114919",
+    "files": [
+      "supabase/migrations/20260913105913_special_gacha_release_contract.sql"
+    ],
+    "normalized_name": "special_gacha_release_contract",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "20260913120930_quest_raid_approved_occurrence_and_double_rewards",
+    "version": "20260913121454",
+    "files": [
+      "supabase/migrations/20260913120930_quest_raid_approved_occurrence_and_double_rewards.sql"
+    ],
+    "normalized_name": "quest_raid_approved_occurrence_and_double_rewards",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "20260913120945_billing_dia_approved_contract",
+    "version": "20260913123800",
+    "files": [
+      "supabase/migrations/20260913120945_billing_dia_approved_contract.sql"
+    ],
+    "normalized_name": "billing_dia_approved_contract",
+    "decision": "BILLING_PARENT_APPLIED"
+  },
+  {
+    "name": "20260913133311_guild_emblem_standard_identity",
+    "version": "20260913222728",
+    "files": [
+      "supabase/migrations/20260913133311_guild_emblem_standard_identity.sql"
+    ],
+    "normalized_name": "guild_emblem_standard_identity",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "20260913142410_quest_raid_combat_snapshot",
+    "version": "20260913222738",
+    "files": [
+      "supabase/migrations/20260913142410_quest_raid_combat_snapshot.sql"
+    ],
+    "normalized_name": "quest_raid_combat_snapshot",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "raid_room_mission_finalization_hooks",
+    "version": "20260914110821",
+    "files": [
+      "supabase/migrations/20260914072512_raid_room_mission_finalization_hooks.sql"
+    ],
+    "normalized_name": "raid_room_mission_finalization_hooks",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "profile_leader_authority_v1",
+    "version": "20260914110825",
+    "files": [
+      "supabase/migrations/20260914072613_profile_leader_authority_v1.sql"
+    ],
+    "normalized_name": "profile_leader_authority_v1",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "formal_open_ap_max_50",
+    "version": "20260914110829",
+    "files": [
+      "supabase/migrations/20260914074959_formal_open_ap_max_50.sql"
+    ],
+    "normalized_name": "formal_open_ap_max_50",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "quest_main_formation_authority",
+    "version": "20260914110835",
+    "files": [
+      "supabase/migrations/20260914075032_quest_main_formation_authority.sql"
+    ],
+    "normalized_name": "quest_main_formation_authority",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "skill_enhancement_mission_terminology",
+    "version": "20260914110839",
+    "files": [
+      "supabase/migrations/20260914110224_skill_enhancement_mission_terminology.sql"
+    ],
+    "normalized_name": "skill_enhancement_mission_terminology",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "gameplay_direct_reward_delivery",
+    "version": "20260914110949",
+    "files": [
+      "supabase/migrations/20260914110219_gameplay_direct_reward_delivery.sql"
+    ],
+    "normalized_name": "gameplay_direct_reward_delivery",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "formal_open_season_claim_contract",
+    "version": "20260914112919",
+    "files": [
+      "supabase/migrations/20260914112059_formal_open_season_claim_contract.sql"
+    ],
+    "normalized_name": "formal_open_season_claim_contract",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "release_news_foundation",
+    "version": "20260914115053",
+    "files": [
+      "supabase/migrations/20260909163114_release_news_foundation.sql"
+    ],
+    "normalized_name": "release_news_foundation",
+    "decision": "EXCLUDED",
+    "reason": "Production news table all10columns already exists; preserve existing news"
+  },
+  {
+    "name": "pvp_opponent_main_formation_start",
+    "version": "20260914115426",
+    "files": [
+      "supabase/migrations/20260914115128_pvp_opponent_main_formation_start.sql"
+    ],
+    "normalized_name": "pvp_opponent_main_formation_start",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "guild_tenure_day_one_projection",
+    "version": "20260914124608",
+    "files": [
+      "supabase/migrations/20260914124315_guild_tenure_day_one_projection.sql"
+    ],
+    "normalized_name": "guild_tenure_day_one_projection",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "growth_exp_authority",
+    "version": "20260914131858",
+    "files": [
+      "supabase/migrations/20260914153000_growth_exp_authority.sql"
+    ],
+    "normalized_name": "growth_exp_authority",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "preopen_rank_one_reward_projection",
+    "version": "20260914131957",
+    "files": [
+      "supabase/migrations/20260914210000_preopen_rank_one_reward_projection.sql"
+    ],
+    "normalized_name": "preopen_rank_one_reward_projection",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "canonical_character_growth_runtime",
+    "version": "20260914134359",
+    "files": [
+      "supabase/migrations/20260914220000_canonical_character_growth_runtime.sql"
+    ],
+    "normalized_name": "canonical_character_growth_runtime",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "gameplay_battle_activity_direct_rewards",
+    "version": "20260914134438",
+    "files": [
+      "supabase/migrations/20260914160000_gameplay_battle_activity_direct_rewards.sql"
+    ],
+    "normalized_name": "gameplay_battle_activity_direct_rewards",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "season_rewards_power_master_and_snapshot",
+    "version": "20260914143830",
+    "files": [
+      "supabase/migrations/20260914143144_season_rewards_power_master_and_snapshot.sql"
+    ],
+    "normalized_name": "season_rewards_power_master_and_snapshot",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "formal_open_simultaneous_season_start",
+    "version": "20260914143857",
+    "files": [
+      "supabase/migrations/20260914112648_formal_open_pvp_scheduled_transition.sql"
+    ],
+    "normalized_name": "formal_open_simultaneous_season_start",
+    "decision": "INCLUDE_DEFINITION_ONLY",
+    "reason": "Function dependency for monthly rollover; actual invocation deferred, newest next-day timing requires operational reconciliation"
+  },
+  {
+    "name": "approved_city_and_preopen_emblems",
+    "version": "20260914154355",
+    "files": [
+      "supabase/migrations/20260914154152_approved_city_and_preopen_emblems.sql"
+    ],
+    "normalized_name": "approved_city_and_preopen_emblems",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "monthly_power_approved_honors",
+    "version": "20260914154725",
+    "files": [
+      "supabase/migrations/20260914154052_monthly_power_approved_honors.sql"
+    ],
+    "normalized_name": "monthly_power_approved_honors",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "quest_hometown_fixed_bonus",
+    "version": "20260914170951",
+    "files": [
+      "supabase/migrations/20260914170757_quest_hometown_fixed_bonus.sql"
+    ],
+    "normalized_name": "quest_hometown_fixed_bonus",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "raid_instance_daily_rewards_v2",
+    "version": "20260914174142",
+    "files": [
+      "supabase/migrations/20260914173738_raid_instance_daily_rewards_v2.sql"
+    ],
+    "normalized_name": "raid_instance_daily_rewards_v2",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "quest_raid_cash_xp_bonus",
+    "version": "20260914174158",
+    "files": [
+      "supabase/migrations/20260914173853_quest_raid_cash_xp_bonus.sql"
+    ],
+    "normalized_name": "quest_raid_cash_xp_bonus",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "quest_area_identity_formal_open",
+    "version": "20260914174340",
+    "files": [
+      "supabase/migrations/20260914174319_quest_area_identity_formal_open.sql"
+    ],
+    "normalized_name": "quest_area_identity_formal_open",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "pvp_battle_raid_ticket_rewards",
+    "version": "20260914223627",
+    "files": [
+      "supabase/migrations/20260914223252_pvp_battle_raid_ticket_rewards.sql"
+    ],
+    "normalized_name": "pvp_battle_raid_ticket_rewards",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "raid_strategy_profiles_activation",
+    "version": "20260914231249",
+    "files": [
+      "supabase/migrations/20260914231128_raid_strategy_profiles_activation.sql"
+    ],
+    "normalized_name": "raid_strategy_profiles_activation",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "quest_raid_approved_reward_identity",
+    "version": "20260914234801",
+    "files": [
+      "supabase/migrations/20260914234114_quest_raid_approved_reward_identity.sql"
+    ],
+    "normalized_name": "quest_raid_approved_reward_identity",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "monthly_power_rollover_definition",
+    "version": "20260915000930",
+    "files": [
+      "supabase/migrations/20260915000741_monthly_power_rollover_definition.sql"
+    ],
+    "normalized_name": "monthly_power_rollover_definition",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "canonical_exclusive_loadout_and_guide_skills",
+    "version": "20260915053404",
+    "files": [
+      "supabase/migrations/20260915053404_canonical_exclusive_loadout_and_guide_skills.sql"
+    ],
+    "normalized_name": "canonical_exclusive_loadout_and_guide_skills",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "preview_google_replacement_guard",
+    "version": "20260915063809",
+    "files": [
+      "supabase/migrations/20260915063809_preview_google_replacement_guard.sql"
+    ],
+    "normalized_name": "preview_google_replacement_guard",
+    "decision": "EXCLUDED",
+    "reason": "Preview-only excluded"
+  },
+  {
+    "name": "quest_victory_reward_authority",
+    "version": "20260915090229",
+    "files": [
+      "supabase/migrations/20260915090229_quest_victory_reward_authority.sql"
+    ],
+    "normalized_name": "quest_victory_reward_authority",
+    "decision": "INCLUDE"
+  },
+  {
+    "name": "special_gacha_pity_per_banner",
+    "version": "20260915113959",
+    "files": [
+      "supabase/migrations/20260915113959_special_gacha_pity_per_banner.sql"
+    ],
+    "normalized_name": "special_gacha_pity_per_banner",
+    "decision": "INCLUDE"
+  }
+]

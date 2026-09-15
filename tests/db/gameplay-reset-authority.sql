@@ -102,7 +102,7 @@ do $$ begin
   if not exists(select 1 from public.user_missions where user_id='10000000-0000-4000-8000-000000000001' and status='CLAIMED') then raise exception 'claimed mission was deleted'; end if;
   if exists(select 1 from public.user_missions where user_id='10000000-0000-4000-8000-000000000001' and status='PROGRESS' and current_progress<>0) then raise exception 'mission progress was not reset'; end if;
   if not exists(select 1 from public.tutorial_progress where user_id='10000000-0000-4000-8000-000000000001' and step_id='WORLD_INTRO') then raise exception 'tutorial was not reset'; end if;
-  if not exists(select 1 from public.users where id='10000000-0000-4000-8000-000000000001' and username='free' and level=1 and xp=0 and cash=10000 and neon_diamonds=200 and diamonds=0 and vitality=100 and pvp_points=5 and raid_points=5 and current_base_id='shinjuku' and favorite_character_id is null) then raise exception 'fresh defaults or identity mismatch'; end if;
+  if not exists(select 1 from public.users where id='10000000-0000-4000-8000-000000000001' and username='free' and level=1 and xp=0 and cash=2600 and neon_diamonds=200 and diamonds=0 and vitality=100 and pvp_points=5 and raid_points=5 and current_base_id='shinjuku' and favorite_character_id is null) then raise exception 'fresh defaults or identity mismatch'; end if;
 end $$;
 
 update public.tutorial_progress set step_id='FREE_GACHA' where user_id='10000000-0000-4000-8000-000000000001';

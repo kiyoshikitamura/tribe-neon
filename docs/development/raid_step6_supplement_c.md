@@ -1,0 +1,49 @@
+# 第6工程補完 C — 初期装備403の局所候補
+
+基準 b8ad912782f49fb6a58eef4f12b0cea95856e4f0。共有source・外部DB・Fresh認証・QA actorは変更していない。以下はローカル候補であり、本番/Preview承認・適用済みの修正ではない。
+
+## 最新照合
+
+Character実worktree HEAD91f7a7d、直近履歴はd7cbaab/ce11f58/1a38636。GameContext未コミット変更なし。親も最新Character threadを照合し、403修正は未実施と確認した。1a38636は失敗INSERTを仮所持へ投影しない修正のみで、5件の直接INSERTは残る。
+
+正式SQL121はauthenticatedのuser_equipments INSERT/DELETEを明示REVOKE、119は装備変更RPCへ移行してUPDATEも制限。SQL105初期化はキャラ付与だったが、166でFreshは0キャラへ変更、最新190のinitialize_current_playerも0キャラ・正規tutorialガチャ起点。199のresetは装備を削除し、lifetime onboarding台帳は装備を保存しない。初期5件の付与RPCは発見できず、ガチャ/Present内部付与を無償bootstrap代替に使う根拠もない。403回避のためのINSERT grant復活は行わない。
+
+## 候補の前提（本番承認未済）
+
+新規initialize_current_playerのusers INSERT直後だけ、private.initial_equipment_receiptsへPENDINGを同一transactionで登録する。既存user分岐に遡及登録しない。ゼロ所持から初回と推測しない。
+
+本人の引数なしensure_initial_equipment_v1はusers FOR UPDATE→receipt FOR UPDATEの順にロック。userなし/未認証を拒否。台帳なしnot_eligible、既存所持ありSKIPPEDで封じる。正規COMPLETED tutorialガチャ履歴と所有キャラが揃ってから、既存canonical5種/slot0,2,3,4,5/level1/plus0/既存optionsを一括INSERTし永続receiptをGRANTEDへ更新する。サーバー固定値でありcallerはuser/item/数値を指定できない。
+
+先頭キャラはcreated_at,id昇順と定義した。旧charsData先頭にはorder指定がなく、この決定順序は既存と完全同一とは保証できないため承認事項。receiptは売却やreset後も保持し、所持が再び0でも再付与しない。既存403 Freshの遡及救済はこの候補では行えず、別途対象限定の承認が必要。
+
+public wrapperはinvoker、private authorityのみdefiner/search_path空/auth.uid()確認。private台帳はRLS有効・authenticated/anonに権限なし。公開RPCはauthenticatedのみ、private実行権限も引数なし同一制限。schemaが既にある環境を前提にCREATE SCHEMA IF NOT EXISTSとする。正式migrationではないため番号を発行していない。採用時にCLI migration newで生成し、既存関数名衝突・現DDL/advisors/実多接続を別途確認する。
+
+## 親への統合提案
+
+- scripts/raid-step6-supplement/c-equipment-candidate.sql: 未適用schema/RPC候補。
+- outputs/raid-step6-supplement/c-initializer-candidate.sql: 最新190定義から新規user分岐への台帳INSERT1行だけを挿入した実行済ローカル候補。
+- scripts/raid-step6-supplement/c-equipment-projection.txt: GameContext equipment bootstrapブロック置換案。共有sourceへ未適用。
+
+projectionは直接5INSERTを除去し、空所持/キャラあり時だけ本人RPCを1回呼ぶ。RPC応答不明でも再SELECTして保存済rowsのみ使用。RPC成功JSONから仮rowを生成しない。読取失敗を0件にしない。RPC後/再読取後の認証切替・logoutでは旧user結果を返さない。再SELECTの同じequipsDataをUI投影と既存syncUserPowerへ渡し、計算式を変更しない。既存8件の仮装備テストは旧5directINSERTを前提にするため、そのまま新方式のPASSとは呼べない。
+
+## 今回の検証
+
+node scripts/raid-step6-supplement/c-equipment-test.mjs: PGlite0.5.8・完全memory内の候補SQL15群PASS。未認証/current user不在/anon API拒否、既存0所持非eligible、正規ガチャ前pending、直接INSERT拒否、canonical5件/slot/options、8回queue再送同receipt、売却/reset相当の全行削除後非再付与、既所持skip封印、途中INSERT障害全ロールバックと再試行、本人分離/private表拒否、master不足fail closed。
+
+node scripts/raid-step6-supplement/c-projection-test.mjs: 候補projection6群PASS。UI/総合力へ同保存済projection、既所持はRPCなし、RPC応答不明後のread照合、拒否時仮装備なし、read失敗非0扱い、logout/別認証応答破棄。
+
+8回queueは単一PGlite接続の再送検証で、実複数接続ロック待ちの証明ではない。reset/sell/gachaとの同時競合はactor row lock設計を静的照合しただけで、実SQL全体との多接続検証は未実施。reset全RPCの統合・GameProvider全体の型/build・HTTP403解消・Fresh正常保存成功は未検証。上記を外部PASSとしない。
+
+結果JSON: outputs/raid-step6-supplement/c-equipment-local.json / c-projection-local.json。候補の製品適用と既存403ユーザーへの救済は親レビュー後の別判断。
+
+Supabase公式Database Functionsのinvoker/definerとsearch_path/実行権限を照合: https://supabase.com/docs/guides/database/functions 。changelog.mdはwebツールでcontent-type非対応のため取得不可、ここでは新しいSupabase APIを導入していない。
+
+親の補完: 同changelog.mdをNodeの通常HTTP GETで取得（200）し確認。掲載のself-hosted/SAML/GraphQL変更を、この候補のHosted Postgres関数経路への変更とは扱わない。仮想GameContext置換は親が371ファイルの型検証を追加しdiagnostics0。製品buildや実HTTP保存成功の検証とは区別する。
+
+## アカウント削除経路の追加レビュー
+
+SQL196 discard_current_anonymous_account_for_switch はauth.users→public.usersをロックし、本人の未連携匿名アカウント/外部履歴なしを確認してpublic.usersとauth.usersを同transactionで削除する。SQL195の休眠匿名cleanupも同じ順のDELETEを持ち、FK違反をskipとして扱う。manual/development_delete_audited_qa_users.sqlにもpublic.users→auth.usersの削除経路がある。NO ACTIONのままではこの新台帳だけで正規破棄を阻害・cleanupをskipさせるため、候補FKをON DELETE CASCADEへ変更した。既存SQL199 user_lifetime_onboarding_grantsも同じCASCADEである。
+
+通常reset_current_gameplay(SQL199)はpublic.usersのfavorite_character_id/進行値をUPDATEし、装備/所持キャラ等をDELETEする。public.users自体は削除しないため、今回のFK変更でreset時に台帳が消えることはない。『一生一度』の範囲は残存public.users identityで、承認済みアカウント全削除なら台帳も終端として消す。削除済authを同UUIDで管理再作成する特殊運用は今回未定義・対象外であり、resetの別名としてpublic.usersを削除してよいとはしない。
+
+追加ローカル2群PASS（合計SQL15＋projection6）: profileを残すUPDATE/装備削除ではreceiptを保持し再付与0、public.users DELETEではPENDING/GRANTED/SKIPPEDの3状態の台帳がcascadeで消え、そのidentityからのgrantはprofile不在で拒否。実discard/cleanup関数全体の認証/外部履歴fixtureや実DBは実行していない。

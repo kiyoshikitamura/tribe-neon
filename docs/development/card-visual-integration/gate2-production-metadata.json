@@ -1,0 +1,730 @@
+[
+  {
+    "filename": "character-card-n.png",
+    "path": "public/ui/rarity/character-card-n.png",
+    "group": "Character",
+    "design": "RAW",
+    "source": "01_character_frame_n_RAW.png",
+    "sourceSha256": "44ce5063445d3884bab73d98812ab514963125b6ea99b5ac63d4c45bc271abc8",
+    "width": 300,
+    "height": 420,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 64791,
+    "sha256": "a4bb64e10226b4445fabdb9bbf591668b3f1f5616d0de19deeee5934c88e4fdb",
+    "alphaSha256": "b2fa48f25284bc0c2367324ac9085cb25c54447c9f0722d3463642a1d26b46db",
+    "bounds": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "placement": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "notes": "N source alpha authority; piecewise rail geometry registration; source material pixels only."
+  },
+  {
+    "filename": "character-card-r.png",
+    "path": "public/ui/rarity/character-card-r.png",
+    "group": "Character",
+    "design": "POLISHED",
+    "source": "02_character_frame_r_POLISHED.png",
+    "sourceSha256": "670d660b082a1e5a24d6c861a9087bf90145af1771ff64bdf01e8251d1d4c83a",
+    "width": 300,
+    "height": 420,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 69740,
+    "sha256": "790d5be8c9f85df241e5353642843b85aa5635826235d9a427960a6f2d2b4fe6",
+    "alphaSha256": "b2fa48f25284bc0c2367324ac9085cb25c54447c9f0722d3463642a1d26b46db",
+    "bounds": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "placement": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "notes": "N source alpha authority; piecewise rail geometry registration; source material pixels only."
+  },
+  {
+    "filename": "character-card-sr.png",
+    "path": "public/ui/rarity/character-card-sr.png",
+    "group": "Character",
+    "design": "NIGHT REFLECTION",
+    "source": "03_character_frame_sr_NIGHT_REFLECTION.png",
+    "sourceSha256": "99a7a4768b368e362baced87e60147775c47ef94228cebf543eebc58c3613c08",
+    "width": 300,
+    "height": 420,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 72158,
+    "sha256": "491253159d9366cc26e8e5e2de0b680c69ccc3ebedf3d610d38ceabaea761c00",
+    "alphaSha256": "b2fa48f25284bc0c2367324ac9085cb25c54447c9f0722d3463642a1d26b46db",
+    "bounds": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "placement": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "notes": "N source alpha authority; piecewise rail geometry registration; source material pixels only."
+  },
+  {
+    "filename": "character-card-ssr.png",
+    "path": "public/ui/rarity/character-card-ssr.png",
+    "group": "Character",
+    "design": "SIGNATURE",
+    "source": "04_character_frame_ssr_SIGNATURE.png",
+    "sourceSha256": "367bb790f0ae26eaf2d8c7e27db0cde5ee3ff7a2143e3bb7a1b975097a00e936",
+    "width": 300,
+    "height": 420,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 74073,
+    "sha256": "4497e391fdd9e617fb635c7f4c3210cc7f8aeafc25c91ab0f9b83202b9855401",
+    "alphaSha256": "b2fa48f25284bc0c2367324ac9085cb25c54447c9f0722d3463642a1d26b46db",
+    "bounds": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "placement": [
+      8,
+      20,
+      284,
+      380
+    ],
+    "notes": "N source alpha authority; piecewise rail geometry registration; source material pixels only."
+  },
+  {
+    "filename": "rarity-badge-n.png",
+    "path": "public/ui/rarity/rarity-badge-n.png",
+    "group": "Rarity Badge",
+    "design": "RAW",
+    "source": "05_rarity_badge_n_RAW.png",
+    "sourceSha256": "2693b339812623362b64fe178c85e97a6728f8328c5d88cb07fe875b7cbee23b",
+    "width": 256,
+    "height": 160,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 42838,
+    "sha256": "bb24ad3ff24ca106497ee723cf2831b045362e3128bb93dd490f9737af70bfd7",
+    "alphaSha256": "e43a4e62b6afa58901ead16085f68cfd3b7be15ec9bdf3d9ce49638392acbccc",
+    "bounds": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "placement": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "rarity-badge-r.png",
+    "path": "public/ui/rarity/rarity-badge-r.png",
+    "group": "Rarity Badge",
+    "design": "POLISHED",
+    "source": "06_rarity_badge_r_POLISHED.png",
+    "sourceSha256": "064c6a4e382826dc57bf61e13fa5f8b9277cb85c8bbf9bef05411134d671db25",
+    "width": 256,
+    "height": 160,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 46019,
+    "sha256": "26e3a2e1efe890da09710154990d4cf521c6db8df7cecb3fd120e2a4f3a17f3c",
+    "alphaSha256": "e43a4e62b6afa58901ead16085f68cfd3b7be15ec9bdf3d9ce49638392acbccc",
+    "bounds": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "placement": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "rarity-badge-sr.png",
+    "path": "public/ui/rarity/rarity-badge-sr.png",
+    "group": "Rarity Badge",
+    "design": "NIGHT REFLECTION",
+    "source": "07_rarity_badge_sr_NIGHT_REFLECTION.png",
+    "sourceSha256": "446fce7fd18680abca0079b4fb61ad573fdf82f3977a6f047a6fc74c88c579d8",
+    "width": 256,
+    "height": 160,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 50323,
+    "sha256": "e4864e417725ede62796644efecbc810ba18853937c50081e9285965805eca08",
+    "alphaSha256": "e43a4e62b6afa58901ead16085f68cfd3b7be15ec9bdf3d9ce49638392acbccc",
+    "bounds": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "placement": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "rarity-badge-ssr.png",
+    "path": "public/ui/rarity/rarity-badge-ssr.png",
+    "group": "Rarity Badge",
+    "design": "SIGNATURE",
+    "source": "08_rarity_badge_ssr_SIGNATURE.png",
+    "sourceSha256": "f2fcfb8e8c039f8c2ce32a9eb4a065489ff161f6d89efcd25128b5495c042361",
+    "width": 256,
+    "height": 160,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 51805,
+    "sha256": "e40a438c499bf6e68b4c649aedda6a92ac7f358e2560e58eed2713049cfa9635",
+    "alphaSha256": "e43a4e62b6afa58901ead16085f68cfd3b7be15ec9bdf3d9ce49638392acbccc",
+    "bounds": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "placement": [
+      8,
+      44,
+      240,
+      72
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "badge-awakening-plus-1.png",
+    "path": "public/ui/rarity/badge-awakening-plus-1.png",
+    "group": "Awakening",
+    "design": "badge-awakening-plus-1.png",
+    "source": "09_awakening_badges_plus1_to_plus5_sheet.png",
+    "sourceSha256": "7109fb3130402d58e5878fd4866266761e967bdda64181b7dd569c5388421d98",
+    "width": 384,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 139922,
+    "sha256": "f871fef3e959c966d499de4ce546d048e08e74e9d901b3c2cd11d3dd03a105d8",
+    "alphaSha256": "304f8d602e34a65f270344f9afec0c684eda5ad4fac6c3f0fb3c000b49c2511e",
+    "bounds": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "placement": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "badge-awakening-plus-2.png",
+    "path": "public/ui/rarity/badge-awakening-plus-2.png",
+    "group": "Awakening",
+    "design": "badge-awakening-plus-2.png",
+    "source": "09_awakening_badges_plus1_to_plus5_sheet.png",
+    "sourceSha256": "7109fb3130402d58e5878fd4866266761e967bdda64181b7dd569c5388421d98",
+    "width": 384,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 144361,
+    "sha256": "8e69b41b7a851848c2e40c3b7f0e068d7a90d0ce4f375628801e60e464ca06ca",
+    "alphaSha256": "304f8d602e34a65f270344f9afec0c684eda5ad4fac6c3f0fb3c000b49c2511e",
+    "bounds": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "placement": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "badge-awakening-plus-3.png",
+    "path": "public/ui/rarity/badge-awakening-plus-3.png",
+    "group": "Awakening",
+    "design": "badge-awakening-plus-3.png",
+    "source": "09_awakening_badges_plus1_to_plus5_sheet.png",
+    "sourceSha256": "7109fb3130402d58e5878fd4866266761e967bdda64181b7dd569c5388421d98",
+    "width": 384,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 151726,
+    "sha256": "96e49d709f6f80419e43b2c231fca23b9204319d35c2b2fd4dbcc6d782cd4e48",
+    "alphaSha256": "304f8d602e34a65f270344f9afec0c684eda5ad4fac6c3f0fb3c000b49c2511e",
+    "bounds": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "placement": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "badge-awakening-plus-4.png",
+    "path": "public/ui/rarity/badge-awakening-plus-4.png",
+    "group": "Awakening",
+    "design": "badge-awakening-plus-4.png",
+    "source": "09_awakening_badges_plus1_to_plus5_sheet.png",
+    "sourceSha256": "7109fb3130402d58e5878fd4866266761e967bdda64181b7dd569c5388421d98",
+    "width": 384,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 149353,
+    "sha256": "f443d2517041e2f944878ecaf7bb7a13d6325349b621903f7915eb925b440073",
+    "alphaSha256": "304f8d602e34a65f270344f9afec0c684eda5ad4fac6c3f0fb3c000b49c2511e",
+    "bounds": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "placement": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "badge-awakening-plus-5.png",
+    "path": "public/ui/rarity/badge-awakening-plus-5.png",
+    "group": "Awakening",
+    "design": "badge-awakening-plus-5.png",
+    "source": "09_awakening_badges_plus1_to_plus5_sheet.png",
+    "sourceSha256": "7109fb3130402d58e5878fd4866266761e967bdda64181b7dd569c5388421d98",
+    "width": 384,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 152411,
+    "sha256": "c1f3afdb27420c07faec7471f134417481a3e6256779955ca939ecd3591eea92",
+    "alphaSha256": "304f8d602e34a65f270344f9afec0c684eda5ad4fac6c3f0fb3c000b49c2511e",
+    "bounds": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "placement": [
+      32,
+      7,
+      320,
+      178
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "badge-new.png",
+    "path": "public/ui/rarity/badge-new.png",
+    "group": "NEW",
+    "design": "NEW",
+    "source": "10_new_badge.png",
+    "sourceSha256": "a95297bbe24efa9c949d684dd4f7bf0dbaaf92c39da19e4cb0b8288568046bfa",
+    "width": 384,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 111912,
+    "sha256": "1e4db6b8881b46fa4f2f91348bdc53ed03e6d4c81e82f49f2d2ef936c64d6008",
+    "alphaSha256": "0b5bac8bc8406dbb4261ffa7bb7255831a59c00a7fc529047942290e06630425",
+    "bounds": [
+      12,
+      32,
+      360,
+      128
+    ],
+    "placement": [
+      12,
+      32,
+      360,
+      128
+    ],
+    "notes": "Trimmed transparent canvas; source paint and brush lettering retained."
+  },
+  {
+    "filename": "attribute-badge-chaos.png",
+    "path": "public/ui/rarity/attribute-badge-chaos.png",
+    "group": "Attribute",
+    "design": "attribute-badge-chaos.png",
+    "source": "11_attribute_badges_4_sheet.png",
+    "sourceSha256": "ad8b1c699970130b2d10d5db87a9dfec625e3d7ec19a1397423aea5ea7aacc1d",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 51073,
+    "sha256": "ca89785000d0e8442f794e46a58fbad846a24f9532dfd4bcdef0b97c4bc855e2",
+    "alphaSha256": "60fed7ed7f1a99b9a43f41e5bfac97ccc2af78eae5ef5c1b82af2739f8f63f45",
+    "bounds": [
+      7,
+      45,
+      179,
+      102
+    ],
+    "placement": [
+      6,
+      45,
+      180,
+      102
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "attribute-badge-evil.png",
+    "path": "public/ui/rarity/attribute-badge-evil.png",
+    "group": "Attribute",
+    "design": "attribute-badge-evil.png",
+    "source": "11_attribute_badges_4_sheet.png",
+    "sourceSha256": "ad8b1c699970130b2d10d5db87a9dfec625e3d7ec19a1397423aea5ea7aacc1d",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 49833,
+    "sha256": "e92c88a49652dc233811130548883c63295fa4421383cb53f8125b6d8b4e5e11",
+    "alphaSha256": "60fed7ed7f1a99b9a43f41e5bfac97ccc2af78eae5ef5c1b82af2739f8f63f45",
+    "bounds": [
+      7,
+      45,
+      179,
+      102
+    ],
+    "placement": [
+      6,
+      45,
+      180,
+      102
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "attribute-badge-justice.png",
+    "path": "public/ui/rarity/attribute-badge-justice.png",
+    "group": "Attribute",
+    "design": "attribute-badge-justice.png",
+    "source": "11_attribute_badges_4_sheet.png",
+    "sourceSha256": "ad8b1c699970130b2d10d5db87a9dfec625e3d7ec19a1397423aea5ea7aacc1d",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 49408,
+    "sha256": "cecc4f16253776f0c9787d6091662f35d3c46878baddf6e11e88cae1d50ac2ff",
+    "alphaSha256": "60fed7ed7f1a99b9a43f41e5bfac97ccc2af78eae5ef5c1b82af2739f8f63f45",
+    "bounds": [
+      7,
+      45,
+      179,
+      102
+    ],
+    "placement": [
+      6,
+      45,
+      180,
+      102
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "attribute-badge-order.png",
+    "path": "public/ui/rarity/attribute-badge-order.png",
+    "group": "Attribute",
+    "design": "attribute-badge-order.png",
+    "source": "11_attribute_badges_4_sheet.png",
+    "sourceSha256": "ad8b1c699970130b2d10d5db87a9dfec625e3d7ec19a1397423aea5ea7aacc1d",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 49930,
+    "sha256": "06c4aee963f32de5d0dc06c681beadea819f09771a6d256c9c54c1c168b01ccc",
+    "alphaSha256": "60fed7ed7f1a99b9a43f41e5bfac97ccc2af78eae5ef5c1b82af2739f8f63f45",
+    "bounds": [
+      7,
+      45,
+      179,
+      102
+    ],
+    "placement": [
+      6,
+      45,
+      180,
+      102
+    ],
+    "notes": "Common first-design alpha; plate outer bounds registered; transparent margins; source typography retained."
+  },
+  {
+    "filename": "skill-frame-n.png",
+    "path": "public/ui/rarity/skill-frame-n.png",
+    "group": "Item Frame",
+    "design": "RAW",
+    "source": "12_item_frame_n_RAW.png",
+    "sourceSha256": "88e5ecef4d355ca46d4df84360e3b781b4610e7a071e80565a0564dd0f616571",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 23920,
+    "sha256": "f69db6c7d7c115a9a1ce3a32dd9765993a4de4541a230b6066b442b5a57c2ce8",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "equipment-frame-n.png",
+    "path": "public/ui/rarity/equipment-frame-n.png",
+    "group": "Item Frame",
+    "design": "RAW",
+    "source": "12_item_frame_n_RAW.png",
+    "sourceSha256": "88e5ecef4d355ca46d4df84360e3b781b4610e7a071e80565a0564dd0f616571",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 23920,
+    "sha256": "f69db6c7d7c115a9a1ce3a32dd9765993a4de4541a230b6066b442b5a57c2ce8",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "skill-frame-r.png",
+    "path": "public/ui/rarity/skill-frame-r.png",
+    "group": "Item Frame",
+    "design": "POLISHED",
+    "source": "13_item_frame_r_POLISHED.png",
+    "sourceSha256": "d5db0cce3a10a4d54c01f36156f57d445173500d945457ed6f1764e889e4d477",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 26596,
+    "sha256": "6b7edf1de22c9da2f4c775b8851c331587ff505273882edd10fea104c92a0c8d",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "equipment-frame-r.png",
+    "path": "public/ui/rarity/equipment-frame-r.png",
+    "group": "Item Frame",
+    "design": "POLISHED",
+    "source": "13_item_frame_r_POLISHED.png",
+    "sourceSha256": "d5db0cce3a10a4d54c01f36156f57d445173500d945457ed6f1764e889e4d477",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 26596,
+    "sha256": "6b7edf1de22c9da2f4c775b8851c331587ff505273882edd10fea104c92a0c8d",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "skill-frame-sr.png",
+    "path": "public/ui/rarity/skill-frame-sr.png",
+    "group": "Item Frame",
+    "design": "NIGHT REFLECTION",
+    "source": "14_item_frame_sr_NIGHT_REFLECTION.png",
+    "sourceSha256": "61d9e03e33569df6eac02e9c58fa4318beb4c8aed3c34fda32fcd02af03dce14",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 27969,
+    "sha256": "16144745a31a515087f1503c566a89cb1d11c17cb103a72a8b9ce9991f3d732d",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "equipment-frame-sr.png",
+    "path": "public/ui/rarity/equipment-frame-sr.png",
+    "group": "Item Frame",
+    "design": "NIGHT REFLECTION",
+    "source": "14_item_frame_sr_NIGHT_REFLECTION.png",
+    "sourceSha256": "61d9e03e33569df6eac02e9c58fa4318beb4c8aed3c34fda32fcd02af03dce14",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 27969,
+    "sha256": "16144745a31a515087f1503c566a89cb1d11c17cb103a72a8b9ce9991f3d732d",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "skill-frame-ssr.png",
+    "path": "public/ui/rarity/skill-frame-ssr.png",
+    "group": "Item Frame",
+    "design": "SIGNATURE",
+    "source": "15_item_frame_ssr_SIGNATURE.png",
+    "sourceSha256": "58cef69edcb703f4cb141419fb6f68f12a61b7f4d66018880694eac419fcf594",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 29335,
+    "sha256": "1485c2c760db927da4287fbe0b0175fc5d91c53d093132ae3323858206549723",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  },
+  {
+    "filename": "equipment-frame-ssr.png",
+    "path": "public/ui/rarity/equipment-frame-ssr.png",
+    "group": "Item Frame",
+    "design": "SIGNATURE",
+    "source": "15_item_frame_ssr_SIGNATURE.png",
+    "sourceSha256": "58cef69edcb703f4cb141419fb6f68f12a61b7f4d66018880694eac419fcf594",
+    "width": 192,
+    "height": 192,
+    "mode": "RGBA",
+    "alpha": true,
+    "fileSize": 29335,
+    "sha256": "1485c2c760db927da4287fbe0b0175fc5d91c53d093132ae3323858206549723",
+    "alphaSha256": "79bb31027e14450ed3f9bac7b13c8cd7dfbf84b4950b1ba354316667050412b8",
+    "bounds": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "placement": [
+      6,
+      6,
+      180,
+      180
+    ],
+    "notes": "Shared Item N alpha geometry; Skill and Equipment export byte-identical."
+  }
+]

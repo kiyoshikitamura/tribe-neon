@@ -44,7 +44,9 @@
 .battle-unit.is-defeated { opacity: .46; filter: grayscale(1); transform: none; }
 
 .battle-unit-popup { position: absolute; z-index: 9; top: 34%; right: -12px; left: -12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; pointer-events: none; animation: battle-number-pop .56s cubic-bezier(.16, 1, .3, 1) both; }
-.battle-unit-popup small { padding: 2px 4px; color: #111; background: #f4d26f; font-size: 7px; font-weight: 1000; letter-spacing: .08em; }
+.battle-unit-popup::before { position:absolute;bottom:calc(100% - 2px);left:50%;padding:0;border:0;background:transparent;font-family:var(--font-display),var(--font-ui),sans-serif;font-size:clamp(9px,2.7vw,12px);font-style:italic;font-weight:1000;line-height:1;pointer-events:none;transform:translateX(-50%) skewX(-10deg);animation:battle-hit-word 420ms cubic-bezier(.16,1,.3,1) both; }
+.battle-unit-popup.is-critical::before { content:"CRITICAL";color:#ffd36b;letter-spacing:.04em;text-shadow:0 1px 0 #020307,0 0 10px #ffb52f; }
+.battle-unit-popup.is-weak:not(.is-critical)::before { content:"WEAK";color:#70efff;letter-spacing:.12em;text-shadow:0 1px 0 #020307,0 0 10px #16dbe9; }
 .battle-unit-popup strong { color: #ffeff1; font-size: clamp(24px, 7vw, 42px); line-height: 1; -webkit-text-stroke: 1px rgba(55, 0, 10, .9); text-shadow: 0 2px 0 #240006, 0 0 18px rgba(255, 55, 87, .92); }
 .battle-unit-popup.is-heal strong { color: #91ffc0; text-shadow: 0 2px 0 #003514, 0 0 18px rgba(75, 255, 145, .72); }
 .battle-unit-popup.is-shield strong { color: #91ddff; text-shadow: 0 2px 0 #00243a, 0 0 18px rgba(75, 190, 255, .72); }
@@ -86,7 +88,6 @@
 .battle-unit-party.battle-unit-player .battle-unit-popup{right:auto;left:4px;max-width:calc(100% - 8px);justify-content:flex-start}
 .battle-unit-party.battle-unit-enemy .battle-unit-popup{right:4px;left:auto;max-width:calc(100% - 8px);justify-content:flex-end}
 .battle-unit-party .battle-unit-popup strong{font-size:clamp(17px,5vw,27px)}
-.battle-unit-party .battle-unit-popup small{font-size:6px}
 .battle-unit-party .battle-unit-impact-vfx .battle-asset-impact{right:-42%}
 @media(max-width:374px){.battle-unit-party{grid-template-columns:42px minmax(0,1fr);min-height:45px}.battle-unit-party .battle-unit-statuses{left:44px}.battle-unit-party .battle-unit-identity-badges img{height:12px}.battle-unit-growth{font-size:7px}}
 

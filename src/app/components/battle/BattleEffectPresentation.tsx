@@ -5,6 +5,10 @@ import CharacterPresentation from "../character/CharacterPresentation";
 import type { BattleParticipantView } from "./BattleUnitPortrait";
 import type { BattleTargetResolutionGroup } from "@/domain/presentation/battlePresentationUnit";
 import "./BattleEffectPresentation.css";
+import "./ExclusiveBattlePresentation.css";
+import { ExclusiveSkillSequence } from "./ExclusiveBattlePresentation";
+import { exclusiveSkillForBattleMember } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_SKILL_DIALOGUE, EXCLUSIVE_SKILL_PREFIX_MS } from "@/domain/presentation/exclusiveSkillDialogue";
 import { isInternalBattleLabel, safeBattleCharacterName } from "@/domain/presentation/battleSkillLabels";
 import {
   battleStatusApplyLabel,
@@ -26,10 +30,12 @@ export type BattleImpactKind = "impact" | "slash" | "muzzle";
 type BattleCutInTier = "STANDARD" | "SR" | "SSR";
 
 export type BattleSkillPresentation = {
+  skillId?: string;
   charName: string;
   skillName: string;
   tier: BattleCutInTier | null;
   impact: BattleImpactKind;
+  dialogue?: string;
 };
 
 const effectAsset: Record<BattleImpactKind, string> = {
@@ -64,7 +70,7 @@ export function BattleUnitApplyOverlay({ group, side }: { group: BattleTargetRes
   </div>;
 }
 
-export function BattleTargetReaction({ group, side }: { group: BattleTargetResolutionGroup; side: "player" | "enemy" }) {
+export function BattleTargetReaction({ group, side, advantage = false }: { group: BattleTargetResolutionGroup; side: "player" | "enemy"; advantage?: boolean }) {
   const damageEvents = group.events.filter((event) => event.type === "DAMAGE");
   const healEvents = group.events.filter((event) => event.type === "HEAL");
   const hasDamage = damageEvents.length > 0;
@@ -101,7 +107,8 @@ export function BattleTargetReaction({ group, side }: { group: BattleTargetResol
     {hasHeal && <i className="battle-target-effect is-heal" aria-hidden="true" />}
     {tones.has("status") && <i className="battle-target-effect is-status" aria-hidden="true" />}
     <span className="battle-target-reaction-copy">
-      {critical && !missed && <em>CRITICAL</em>}
+      {critical && !missed && <em className="is-critical">CRITICAL</em>}
+      {advantage && hasDamage && !missed && <em className="is-weak">WEAK</em>}
       {missed ? <strong className="battle-target-number is-miss">MISS</strong> : hasDamage ? <strong className="battle-target-number is-damage" data-battle-number="damage">−{damage.toLocaleString()}</strong> : null}
       {hasHeal && <strong className="battle-target-number is-heal" data-battle-number="heal">+{heal.toLocaleString()}</strong>}
       {iconStateCues.slice(0, 2).map(({ event, tone }, index) => <small key={`${event.index}-${index}`} className={`is-${tone}`}>{battleStatusLabel(event.payload)}</small>)}
@@ -132,21 +139,23 @@ function resolveImpactKind(skill: Record<string, unknown> | undefined): BattleIm
 }
 
 export function resolveBattleSkillPresentation(
-  cutIn: { charName: string; skillName: string } | null,
+  cutIn: { charName: string; skillName: string; actorId?: string; skillId?: string } | null,
   participant?: BattleParticipantView,
 ): BattleSkillPresentation | null {
-  if (!cutIn) return null;
+  if (!cutIn || (cutIn.actorId && cutIn.actorId !== participant?.id)) return null;
   const safeSkillName = isInternalBattleLabel(cutIn.skillName) ? "スキル発動" : cutIn.skillName;
-  const skill = participant?.skills?.find((entry) => String(entry.name ?? "") === safeSkillName);
+  const skill = participant?.skills?.find((entry) => cutIn.skillId ? String(entry.id ?? entry.skill_card_id ?? entry.skill_id ?? "") === cutIn.skillId : String(entry.name ?? "") === safeSkillName);
   const skillId = String(skill?.id ?? skill?.skill_card_id ?? skill?.skill_id ?? "");
   const actorRarity = stringValue(participant?.rarity);
   const isBasicAttack = isBasicAttackPresentation(skillId, safeSkillName);
 
   return {
+    skillId,
     charName: safeBattleCharacterName(cutIn.charName),
     skillName: safeSkillName,
     tier: isBasicAttack ? null : actorRarity === "SSR" ? "SSR" : actorRarity === "SR" ? "SR" : "STANDARD",
     impact: resolveImpactKind(skill),
+    dialogue: exclusiveSkillForBattleMember(participant?.characterId ?? "", skillId) ? EXCLUSIVE_SKILL_DIALOGUE[skillId] : undefined,
   };
 }
 
@@ -165,11 +174,13 @@ type CutInProps = {
   participant?: BattleParticipantView;
   imageSrc?: string;
   speed: number;
+  actionKey?: string | number;
+  paused?: boolean;
 };
 
-export function BattleSkillCutIn({ presentation, participant, imageSrc, speed }: CutInProps) {
+export function BattleSkillCutIn({ presentation, participant, imageSrc, speed, actionKey, paused = false }: CutInProps) {
   const [visible, setVisible] = useState<BattleSkillPresentation | null>(null);
-  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clockRef = useRef({ remainingMs: 0 });
   const lastPresentationKeyRef = useRef("");
 
   useLayoutEffect(() => {
@@ -178,22 +189,29 @@ export function BattleSkillCutIn({ presentation, participant, imageSrc, speed }:
       setVisible(null);
       return;
     }
-    const presentationKey = `${presentation.charName}:${presentation.skillName}:${presentation.tier}`;
+    const presentationKey = `${actionKey ?? "legacy"}:${presentation.charName}:${presentation.skillName}:${presentation.tier}`;
     if (lastPresentationKeyRef.current === presentationKey) return;
     lastPresentationKeyRef.current = presentationKey;
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     setVisible(presentation);
-    const minimumDuration = speed > 1 ? 720 : presentation.tier === "SSR" ? 1100 : 960;
-    hideTimerRef.current = setTimeout(() => setVisible(null), minimumDuration);
-  }, [presentation, speed]);
+    const minimumDuration = speed > 1 ? 780 : presentation.tier === "SSR" ? 1300 : 1100;
+    clockRef.current = { remainingMs: minimumDuration + (presentation.dialogue ? EXCLUSIVE_SKILL_PREFIX_MS : 0) };
+  }, [actionKey, presentation, speed]);
 
-  useEffect(() => () => {
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-  }, []);
+  useEffect(() => {
+    if (!visible || paused) return;
+    const clock = clockRef.current;
+    const startedAt = performance.now();
+    const timer = setTimeout(() => setVisible(null), clock.remainingMs);
+    return () => {
+      clearTimeout(timer);
+      clock.remainingMs = Math.max(0, clock.remainingMs - (performance.now() - startedAt));
+    };
+  }, [visible, paused]);
 
-  if (!visible?.tier || visible.tier === "STANDARD") return null;
+  if (!visible?.tier) return null;
   const tier = visible.tier.toLowerCase();
   return (
+    <ExclusiveSkillSequence key={actionKey} dialogue={visible.dialogue} paused={paused}>
     <div className={`battle-skill-cutin is-${tier} is-speed-${speed > 1 ? "fast" : "normal"}`} aria-label={`${visible.charName} ${visible.skillName}`}>
       <img className="battle-cutin-darken" src={BATTLE_EFFECT_ASSETS.screenDarken} alt="" aria-hidden="true" />
       <img
@@ -211,7 +229,7 @@ export function BattleSkillCutIn({ presentation, participant, imageSrc, speed }:
         <strong>{visible.skillName}</strong>
         <span>{visible.charName}</span>
       </div>
-    </div>
+    </div></ExclusiveSkillSequence>
   );
 }
 

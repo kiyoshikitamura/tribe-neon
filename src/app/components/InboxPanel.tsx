@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
 import SubTabNav from "./ui/SubTabNav";
@@ -6,6 +7,7 @@ import OutlawButton from "./ui/OutlawButton";
 import CanonicalDialog from "./ui/CanonicalDialog";
 import CanonicalItemIcon from "./ui/CanonicalItemIcon";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
+import { battleDisplayText } from "@/domain/presentation/battleTerminology";
 import "./InboxPanel.css";
 
 function PresentRewardIcon({ itemId }: { itemId: string }) {
@@ -21,6 +23,8 @@ export default function InboxPanel() {
     inboxPanelTab,
     setInboxPanelTab,
     newsList,
+    setNewsList,
+    markNewsRead,
     presents,
     handleClaimPresent,
     handleClaimAllPresents,
@@ -30,10 +34,28 @@ export default function InboxPanel() {
 
   const [selectedNews, setSelectedNews] = useState<any | null>(null);
 
+  // Refresh on opening so already logged-in players can read a new release.
+  // Publication and time-window filtering are enforced by news RLS.
+  useEffect(() => {
+    if (!showInboxPanel || inboxPanelTab !== "news") return;
+    let cancelled = false;
+    void supabase.from("news").select("*").order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled || error || !data) return;
+        setNewsList(data.map((news) => ({
+          ...news,
+          id: String(news.id),
+          date: new Date(news.start_at).toLocaleDateString(),
+        })));
+      });
+    return () => { cancelled = true; };
+  }, [showInboxPanel, inboxPanelTab, setNewsList]);
+
   if (!showInboxPanel) return null;
 
   const handleClose = () => {
     if (presentClaimLoading) return;
+    setSelectedNews(null);
     setShowInboxPanel(false);
   };
 
@@ -48,7 +70,7 @@ export default function InboxPanel() {
           <div
             key={news.id}
             className="inbox-news-item active-scale-effect"
-            onClick={() => { setSelectedNews(news); playCyberSe("click"); }}
+            onClick={() => { setSelectedNews(news); markNewsRead(news); playCyberSe("click"); }}
           >
             <div className="inbox-news-item-header">
               {news.category === "IMPORTANT" && <span className="news-badge important">重要</span>}
@@ -83,7 +105,7 @@ export default function InboxPanel() {
           unclaimedPresents.map((p: any) => (
             <div key={p.id} className="inbox-present-item">
               <div className="inbox-present-info">
-                <div className="inbox-present-title">{p.title || p.message}</div>
+                <div className="inbox-present-title">{battleDisplayText(p.title || p.message)}</div>
                 <div className="inbox-present-reward">{(() => { const itemId = String(p.itemId || p.item_id || ""); const quantity = Number(p.qty ?? p.quantity ?? 0); return <><PresentRewardIcon itemId={itemId} /><span>{canonicalItemName(itemId)} <strong>× {quantity.toLocaleString()}</strong></span></>; })()}</div>
                 <div className="inbox-present-expire">{p.expireText || "期限なし"}</div>
               </div>
@@ -105,7 +127,12 @@ export default function InboxPanel() {
 
   return (
     <>
-      <FullScreenPanel title="受信箱" onClose={handleClose} className={presentClaimLoading ? "inbox-panel-pending" : ""}>
+      <FullScreenPanel
+        title="受信箱"
+        onClose={handleClose}
+        closeDisabled={presentClaimLoading}
+        className={presentClaimLoading ? "inbox-panel-pending" : ""}
+      >
         <div className="inbox-panel-container-inner" aria-busy={presentClaimLoading}>
           <SubTabNav
             tabs={[

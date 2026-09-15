@@ -1,0 +1,15 @@
+{
+  "executedAt": "2026-09-09T14:39:15.504Z",
+  "exitCode": 0,
+  "files": [
+    {
+      "file": "tests/db/raid-room-integrated.test.mjs",
+      "sha256": "7a0c4a3c43d935e7a75f27539e2c82593975a1613a04304dffbd6b881f45b9bc"
+    },
+    {
+      "file": "tests/db/raid-room-recovery-controls.test.mjs",
+      "sha256": "d765518db407c66dca982676ec0414ea6f256cd8254b8513a3201d44a255f057"
+    }
+  ],
+  "scope": "PGlite minimal fixture with actual Raid migrations. Synthetic users, battle snapshots/results and rewards. Not the Production catalog or Supabase HTTP flow. Covers normal/rescue lifecycle, duplicate reward/claim, expiry, legacy cutover and recovery controls."
+}

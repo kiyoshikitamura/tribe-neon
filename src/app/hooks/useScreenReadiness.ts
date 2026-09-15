@@ -6,7 +6,7 @@ import { AssetRequest, AssetResult, preloadAssetManifest } from "../lib/screenAs
 export type ScreenReadinessStatus = "loading" | "ready" | "error";
 
 interface ScreenReadinessOptions {
-  assets?: AssetRequest[];
+  assets?: readonly AssetRequest[];
   dataReady?: boolean;
   dataError?: unknown;
   timeoutMs?: number;
@@ -16,24 +16,25 @@ export function useScreenReadiness({ assets = [], dataReady = true, dataError, t
   const manifestJson = JSON.stringify(assets);
   const manifest = useMemo<AssetRequest[]>(() => JSON.parse(manifestJson), [manifestJson]);
   const [attempt, setAttempt] = useState(0);
-  const [assetResults, setAssetResults] = useState<AssetResult[]>([]);
-  const [assetsSettled, setAssetsSettled] = useState(manifest.length === 0);
+  const manifestKey = manifest.map((asset) => `${asset.src}:${asset.fallbackSrc || ""}:${asset.required !== false}`).join("|");
+  const [result, setResult] = useState<{ key: string; assets: AssetResult[] } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     if (manifest.length === 0) return;
     void preloadAssetManifest(manifest, timeoutMs).then((results) => {
       if (cancelled) return;
-      setAssetResults(results);
-      setAssetsSettled(true);
+      setResult({ key: manifestKey, assets: results });
     });
     return () => { cancelled = true; };
-  }, [manifest, attempt, timeoutMs]);
+  }, [manifest, manifestKey, attempt, timeoutMs]);
 
   const retry = useCallback(() => {
-    setAssetsSettled(manifest.length === 0);
     setAttempt((value) => value + 1);
-  }, [manifest.length]);
+  }, []);
+
+  const assetsSettled = manifest.length === 0 || result?.key === manifestKey;
+  const assetResults = result?.key === manifestKey ? result.assets : [];
 
   const requiredAssetFailed = assetResults.some((result) => {
     const request = manifest.find((asset) => asset.src === result.requestedSrc);

@@ -20,7 +20,7 @@ requireText("src/app/components/MissionPanel.tsx", "loadingLabel=\"受取中…\
 requireText("src/app/components/InboxPanel.tsx", "isLoading={presentClaimLoading}", "present claim-all feedback");
 requireText("src/app/components/TribeChatModal.tsx", "loadingLabel=\"送信中…\"", "guild chat feedback");
 requireText("src/app/components/HomeTab.tsx", "tutorialStep === \"AUTO_FORMATION\" ? \"character\" : \"patrol\"", "tutorial formation to first quest CTA");
-requireText("src/app/components/HomeTab.tsx", "title: \"ミッションを進めよう\"", "one-line final Mission handoff CTA");
+requireText("src/app/components/HomeTab.tsx", "title: \"ミッションを確認\"", "one-line final Mission handoff CTA");
 requireText("src/app/components/HomeTab.tsx", "return null;", "completed joined Home omits the large CTA");
 forbidText("src/app/components/HomeTab.tsx", "key: \"mission_reward\"", "mission reward must remain a compact badge rather than a large Home CTA");
 requireText("src/app/components/GuildTab.tsx", "おすすめギルド", "guild recommendation section");
@@ -34,6 +34,7 @@ requireText("src/app/components/MoveBaseModal.tsx", "CANONICAL_QUEST_TOWNS", "ba
 forbidText("src/app/components/MoveBaseModal.tsx", "junk_bazaar", "legacy base removed");
 forbidText("src/app/components/MoveBaseModal.tsx", "ジャンクバザール", "legacy base copy removed");
 requireText("src/app/components/HomeTab.tsx", "const miniNavigationItems = [", "Home mini navigation remains directly available");
+requireText("src/app/context/GameContext.tsx", "mission.trigger_type !== \"USER_INVITE\" || featureUiExposure(\"INVITE\") === \"ACTIVE\"", "invitation missions follow pre-open exposure");
 requireText("src/app/components/HomeTab.tsx", "onClick: () => navigateTab(\"ranking\")", "Ranking remains a direct community action");
 requireText("src/app/components/BbsTab.tsx", "get_public_profiles", "BBS identity batch projection");
 requireText("src/app/components/BbsTab.tsx", "<UserIdentityRow", "BBS shared identity");

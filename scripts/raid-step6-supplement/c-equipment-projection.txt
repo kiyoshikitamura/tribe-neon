@@ -1,0 +1,25 @@
+      // LOCAL PROPOSAL: replace equipment bootstrap block, not applied to GameContext.
+      const readPersistedEquipment = () => supabase.from("user_equipments")
+        .select("*").eq("user_id", userId).order("created_at", { ascending: false });
+      const initialEquipment = await readPersistedEquipment();
+      if (currentAuthUserIdRef.current !== userId) return;
+      if (initialEquipment.error || !initialEquipment.data) throw new Error("Equipment projection unavailable");
+      let equipsData = initialEquipment.data;
+      if (equipsData.length === 0 && charsData?.length) {
+        const grant = await supabase.rpc("ensure_initial_equipment_v1");
+        if (currentAuthUserIdRef.current !== userId) return;
+        // Even after a lost response, reconcile persisted rows. Never reconstruct a grant.
+        const refreshedEquipment = await readPersistedEquipment();
+        if (currentAuthUserIdRef.current !== userId) return;
+        if (refreshedEquipment.error || !refreshedEquipment.data) throw new Error("Equipment projection unavailable");
+        equipsData = refreshedEquipment.data;
+        if (grant.error) console.warn("Initial equipment authority unavailable", grant.error.code);
+      }
+      setUserEquipmentsList(equipsData);
+      const currentEquip = equipsData.find(e => e.id === selectedEquipment?.id) || equipsData[0] || null;
+      setSelectedEquipment(currentEquip);
+      setEquipmentLevel(currentEquip?.level ?? 1);
+      setEquipmentLimitBreak(currentEquip?.plus_val ?? 0);
+      setSubOptions(currentEquip?.random_options || []);
+      // Existing next syncUserPower(userId, charsData, equipsData || [], localDeck)
+      // consumes this same persisted projection; no formula change.

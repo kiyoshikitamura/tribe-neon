@@ -1,0 +1,16 @@
+.guild-emblem-editor { outline: none; }
+.guild-emblem-editor .canonical-dialog-actions { grid-auto-flow: row; }
+.guild-emblem-editor .canonical-dialog-actions button { white-space: nowrap; font-size: 14px; }
+.guild-emblem-editor-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
+.guild-emblem-editor-option { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; padding: 10px 3px; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; background: #0c1420; color: var(--ui-text-primary); cursor: pointer; }
+.guild-emblem-editor-option img { width: min(100%,56px); height: auto; aspect-ratio: 1; object-fit: contain; }
+.guild-emblem-editor-option span { font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+.guild-emblem-editor-option.is-selected { border-color: #dfbd79; background: #29251e; box-shadow: inset 0 0 0 1px #dfbd79; }
+.guild-emblem-editor-option:focus-visible { outline: 2px solid #32d6e2; outline-offset: 2px; }
+.guild-emblem-editor-option:disabled { cursor: default; }
+.guild-emblem-editor-preview { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 16px; padding: 14px; border: 1px solid rgba(223,189,121,.45); border-radius: 8px; background: radial-gradient(ellipse at center,rgba(223,189,121,.12),transparent); color: var(--ui-text-primary); }
+.guild-emblem-editor-preview img { object-fit: contain; }
+.guild-emblem-editor-status { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 12px 0; }
+.guild-emblem-editor-status p { margin: 0; }
+.guild-emblem-editor-error { color: #ffb7b7; margin: 14px 0 0; }
+@media(max-width:340px) { .guild-emblem-editor-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }

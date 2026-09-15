@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 
 test.use({ viewport: { width: 390, height: 844 } });
+test.setTimeout(60_000);
+const captureAcceptanceVisuals = process.env.CAPTURE_ACCEPTANCE_VISUALS === "1";
 
-test("normal Quest becomes claimable without reload after natural expiry", async ({ page }) => {
+test("normal Quest starts its Canonical battle from the per-dispatch encounter snapshot", async ({ page }, testInfo) => {
   await page.addInitScript(() => {
     const userId = "00000000-0000-4000-8000-000000000925";
     const now = Date.now();
@@ -29,7 +31,7 @@ test("normal Quest becomes claimable without reload after natural expiry", async
       awakening_level: 0,
     }]));
     localStorage.setItem("mock_db_quests", JSON.stringify([{
-      id: "q_shinjuku_1",
+      id: "QUEST_SHINJUKU_EASY",
       name: "歌舞伎町一番街",
       town_id: "shinjuku",
       level_type: "EASY",
@@ -41,7 +43,7 @@ test("normal Quest becomes claimable without reload after natural expiry", async
     localStorage.setItem("mock_db_user_patrols", JSON.stringify([{
       id: "normal-natural-expiry",
       user_id: userId,
-      course_id: "q_shinjuku_1",
+      course_id: "QUEST_SHINJUKU_EASY",
       character_id: "char_reiji_01",
       started_at: new Date(now - 285_000).toISOString(),
       expires_at: new Date(now + 15_000).toISOString(),
@@ -50,8 +52,8 @@ test("normal Quest becomes claimable without reload after natural expiry", async
       battle_resolved: false,
       battle_result: null,
       encounter_snapshot: {
-        encounterId: "encounter_q_shinjuku_1_natural_expiry",
-        questId: "q_shinjuku_1",
+        encounterId: "encounter_QUEST_SHINJUKU_EASY_natural_expiry",
+        questId: "QUEST_SHINJUKU_EASY",
         townId: "shinjuku",
         difficulty: "EASY",
         enemyTactic: "BALANCED",
@@ -63,31 +65,39 @@ test("normal Quest becomes claimable without reload after natural expiry", async
         ],
       },
     }]));
-    localStorage.setItem("mock_db_patrol_npcs", JSON.stringify([{
-      id: "encounter_q_shinjuku_1_natural_expiry",
-      quest_id: "q_shinjuku_1",
-      npc_name: "Canonical NPC Party",
-      npc_level: 5,
-      members: [
-        { characterId: "char_tomoya_01", level: 5 },
-        { characterId: "char_kenji_01", level: 5 },
-        { characterId: "char_shin_01", level: 5 },
-      ],
-    }]));
   });
 
   await page.goto("/");
-  await page.getByRole("button", { name: "続きから" }).click();
+  const titleAction = page.getByRole("button", { name: "TAP TO START" });
+  const continueAction = page.getByRole("button", { name: "続きから" });
+  await expect(titleAction.or(continueAction)).toBeVisible();
+  if (await titleAction.isVisible()) await titleAction.click();
+  await expect(continueAction).toBeVisible();
+  await continueAction.click();
   const header = page.locator(".header-mobile");
   await expect(header).toBeVisible();
+  const loginBonus = page.getByRole("dialog", { name: "ログインボーナス" });
+  await expect(loginBonus).toBeVisible();
+  await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
 
   await page.locator(".circle-menu-btn.conquest").click();
   await expect(page.locator(".patrol-container")).toBeVisible();
   await expect(page.getByText(/残り時間 00:\d{2}/)).toBeVisible();
-  await expect(page.getByRole("button", { name: "バトルへ" })).toBeVisible({ timeout: 20_000 });
+  const battleStart = page.getByRole("button", { name: "バトルへ" });
+  await expect(battleStart).toBeVisible({ timeout: 20_000 });
+  await expect(battleStart).toBeEnabled();
   await expect(page.locator('[data-quest-state="BATTLE_READY"]')).toBeVisible();
+  await expect(page.locator(".quest-v2-battle-enemies article")).toHaveCount(3);
+  if (captureAcceptanceVisuals) await page.screenshot({ path: testInfo.outputPath("before-canonical-quest-battle-start.png"), fullPage: true });
 
-  const geometry = await page.locator(".patrol-container").evaluate((node) => ({
+  await battleStart.click();
+  const sortieAction = page.getByRole("button", { name: "バトルスタート", exact: true });
+  await expect(page.locator(".battle-screen")).toBeVisible({ timeout: 20_000 });
+  await expect(sortieAction).toBeVisible();
+  await expect(sortieAction).toBeEnabled();
+  if (captureAcceptanceVisuals) await page.screenshot({ path: testInfo.outputPath("after-canonical-quest-battle-start.png"), fullPage: true });
+
+  const geometry = await page.locator(".battle-screen").evaluate((node) => ({
     scrollWidth: node.scrollWidth,
     clientWidth: node.clientWidth,
   }));

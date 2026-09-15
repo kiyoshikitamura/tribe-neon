@@ -1,0 +1,23 @@
+{
+  "observedAt": "2026-09-15T00:38:59Z",
+  "url": "https://tribe-neon-git-codex-formal-open-integr-800ed5-kiyoshi-kitamura.vercel.app/api/billing/config",
+  "httpStatus": 200,
+  "response": {
+    "available": false,
+    "diagnostics": {
+      "code": "ENVIRONMENT_INVALID",
+      "commitSha": "db20428a09c99a252ddc8060813fb88803951705",
+      "checks": {
+        "mode_sandbox": true,
+        "sandbox_enabled": false,
+        "non_production_runtime": true,
+        "preview_database": true,
+        "stripe_test_key_present": false,
+        "webhook_signing_secret_present": false,
+        "service_role_present": true,
+        "return_origin_valid": false,
+        "return_origin_matches_request": null
+      }
+    }
+  }
+}

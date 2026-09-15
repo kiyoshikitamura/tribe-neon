@@ -1,0 +1,57 @@
+[
+  {
+    "role": "host",
+    "name": "create_guild_v2",
+    "args": {
+      "p_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "p_guild_name": "R0908Guild01",
+      "p_creation_cost": 500
+    },
+    "result": {
+      "success": true,
+      "error": null,
+      "data": {
+        "status": "success",
+        "guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "cash_spent": 500
+      },
+      "count": null,
+      "status": 200,
+      "statusText": "OK"
+    }
+  },
+  {
+    "role": "normal",
+    "name": "join_guild",
+    "args": {
+      "p_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+    },
+    "result": {
+      "success": true,
+      "error": null,
+      "data": {
+        "status": "success"
+      },
+      "count": null,
+      "status": 200,
+      "statusText": "OK"
+    }
+  },
+  {
+    "role": "rescue",
+    "name": "join_guild",
+    "args": {
+      "p_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50"
+    },
+    "result": {
+      "success": true,
+      "error": null,
+      "data": {
+        "status": "success"
+      },
+      "count": null,
+      "status": 200,
+      "statusText": "OK"
+    }
+  }
+]

@@ -1,0 +1,652 @@
+{
+  "status": "LOCAL_CANDIDATE_NOT_LIVE_ACCEPTANCE",
+  "metric": "min(playerRawDamage, full shared HP); matches non-late finalize. Battle-local healing does not refill shared HP.",
+  "method": "One general skill substitution; unchanged characters/stats/equipment. Select using 5 training seeds and evaluate using 20 different seeds.",
+  "train": [
+    104729,
+    112648,
+    120567,
+    128486,
+    136405
+  ],
+  "holdout": [
+    800011,
+    807930,
+    815849,
+    823768,
+    831687,
+    839606,
+    847525,
+    855444,
+    863363,
+    871282,
+    879201,
+    887120,
+    895039,
+    902958,
+    910877,
+    918796,
+    926715,
+    934634,
+    942553,
+    950472
+  ],
+  "rows": [
+    {
+      "area": "SHINJUKU",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 220000,
+      "baseline": {
+        "appliedAtFullHp": 47416,
+        "survivors": 0,
+        "rounds": 20.8
+      },
+      "counter": {
+        "appliedAtFullHp": 76340,
+        "survivors": 0.9,
+        "rounds": 29.7
+      },
+      "ratio": 1.610005061582588,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_009",
+        "to": "SKILL_039"
+      }
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 3500000,
+      "baseline": {
+        "appliedAtFullHp": 204534,
+        "survivors": 0,
+        "rounds": 19.45
+      },
+      "counter": {
+        "appliedAtFullHp": 366890,
+        "survivors": 0.35,
+        "rounds": 29.4
+      },
+      "ratio": 1.7937848963986427,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_039"
+      }
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 15200000,
+      "baseline": {
+        "appliedAtFullHp": 416808,
+        "survivors": 0.65,
+        "rounds": 28.8
+      },
+      "counter": {
+        "appliedAtFullHp": 613580,
+        "survivors": 4.35,
+        "rounds": 30
+      },
+      "ratio": 1.472092666167636,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_001",
+        "to": "SKILL_039"
+      }
+    },
+    {
+      "area": "SHINJUKU",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 28700000,
+      "baseline": {
+        "appliedAtFullHp": 485723,
+        "survivors": 1.8,
+        "rounds": 29.6
+      },
+      "counter": {
+        "appliedAtFullHp": 608020,
+        "survivors": 3.7,
+        "rounds": 30
+      },
+      "ratio": 1.2517834238856302,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_039"
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 200000,
+      "baseline": {
+        "appliedAtFullHp": 44529,
+        "survivors": 0,
+        "rounds": 20.65
+      },
+      "counter": {
+        "appliedAtFullHp": 52624,
+        "survivors": 0,
+        "rounds": 22.9
+      },
+      "ratio": 1.1817916414022323,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_002",
+        "to": "SKILL_013"
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 3600000,
+      "baseline": {
+        "appliedAtFullHp": 241001,
+        "survivors": 0,
+        "rounds": 23.2
+      },
+      "counter": {
+        "appliedAtFullHp": 284585,
+        "survivors": 0.95,
+        "rounds": 28.75
+      },
+      "ratio": 1.1808457226318563,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_017",
+        "to": "SKILL_013"
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 15800000,
+      "baseline": {
+        "appliedAtFullHp": 357952,
+        "survivors": 1.3,
+        "rounds": 29.7
+      },
+      "counter": {
+        "appliedAtFullHp": 497798,
+        "survivors": 2.35,
+        "rounds": 29.65
+      },
+      "ratio": 1.3906836670838547,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_013"
+      }
+    },
+    {
+      "area": "SHIBUYA",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 31300000,
+      "baseline": {
+        "appliedAtFullHp": 486542,
+        "survivors": 1.25,
+        "rounds": 29.85
+      },
+      "counter": {
+        "appliedAtFullHp": 606889,
+        "survivors": 2.95,
+        "rounds": 30
+      },
+      "ratio": 1.2473517188649694,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_013"
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 215250,
+      "baseline": {
+        "appliedAtFullHp": 45114,
+        "survivors": 0,
+        "rounds": 20.55
+      },
+      "counter": {
+        "appliedAtFullHp": 77632,
+        "survivors": 0,
+        "rounds": 19.05
+      },
+      "ratio": 1.720796205169127,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_002",
+        "to": "SKILL_022"
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 4200000,
+      "baseline": {
+        "appliedAtFullHp": 228759,
+        "survivors": 0,
+        "rounds": 26.2
+      },
+      "counter": {
+        "appliedAtFullHp": 306027,
+        "survivors": 0.2,
+        "rounds": 27.45
+      },
+      "ratio": 1.3377703172334203,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_001",
+        "to": "SKILL_022"
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 12362500,
+      "baseline": {
+        "appliedAtFullHp": 414771,
+        "survivors": 4.65,
+        "rounds": 30
+      },
+      "counter": {
+        "appliedAtFullHp": 611680,
+        "survivors": 4.85,
+        "rounds": 30
+      },
+      "ratio": 1.4747414838549464,
+      "change": {
+        "slot": 1,
+        "from": "SKILL_008",
+        "to": "SKILL_022"
+      }
+    },
+    {
+      "area": "IKEBUKURO",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 34650000,
+      "baseline": {
+        "appliedAtFullHp": 499510,
+        "survivors": 4.65,
+        "rounds": 30
+      },
+      "counter": {
+        "appliedAtFullHp": 683391,
+        "survivors": 4.6,
+        "rounds": 30
+      },
+      "ratio": 1.368122760305099,
+      "change": {
+        "slot": 1,
+        "from": "SKILL_008",
+        "to": "SKILL_022"
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 190000,
+      "baseline": {
+        "appliedAtFullHp": 46970,
+        "survivors": 0,
+        "rounds": 20.55
+      },
+      "counter": {
+        "appliedAtFullHp": 56541,
+        "survivors": 0,
+        "rounds": 19.45
+      },
+      "ratio": 1.2037683627847562,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_002",
+        "to": "SKILL_018"
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 2100000,
+      "baseline": {
+        "appliedAtFullHp": 262743,
+        "survivors": 0,
+        "rounds": 25.35
+      },
+      "counter": {
+        "appliedAtFullHp": 311469,
+        "survivors": 0,
+        "rounds": 26.1
+      },
+      "ratio": 1.1854511823340679,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_006",
+        "to": "SKILL_018"
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 13500000,
+      "baseline": {
+        "appliedAtFullHp": 660942,
+        "survivors": 4.5,
+        "rounds": 30
+      },
+      "counter": {
+        "appliedAtFullHp": 702428,
+        "survivors": 4.35,
+        "rounds": 30
+      },
+      "ratio": 1.0627679887191313,
+      "change": {
+        "slot": 4,
+        "from": "SKILL_003",
+        "to": "SKILL_018"
+      }
+    },
+    {
+      "area": "ROPPONGI",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 41800000,
+      "baseline": {
+        "appliedAtFullHp": 720759,
+        "survivors": 4.1,
+        "rounds": 30
+      },
+      "counter": {
+        "appliedAtFullHp": 920742,
+        "survivors": 4.8,
+        "rounds": 30
+      },
+      "ratio": 1.2774616758167432,
+      "change": {
+        "slot": 4,
+        "from": "SKILL_003",
+        "to": "SKILL_018"
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 210000,
+      "baseline": {
+        "appliedAtFullHp": 43685,
+        "survivors": 0,
+        "rounds": 18.85
+      },
+      "counter": {
+        "appliedAtFullHp": 63997,
+        "survivors": 0,
+        "rounds": 26.75
+      },
+      "ratio": 1.4649650909923315,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_009",
+        "to": "SKILL_039"
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 4300000,
+      "baseline": {
+        "appliedAtFullHp": 202566,
+        "survivors": 0,
+        "rounds": 22.15
+      },
+      "counter": {
+        "appliedAtFullHp": 334936,
+        "survivors": 1.75,
+        "rounds": 29.95
+      },
+      "ratio": 1.6534660308245215,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_023"
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 5700000,
+      "baseline": {
+        "appliedAtFullHp": 304552,
+        "survivors": 1.05,
+        "rounds": 29.5
+      },
+      "counter": {
+        "appliedAtFullHp": 490843,
+        "survivors": 3.35,
+        "rounds": 30
+      },
+      "ratio": 1.6116886443037641,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_006",
+        "to": "SKILL_023"
+      }
+    },
+    {
+      "area": "AKIHABARA",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 15100000,
+      "baseline": {
+        "appliedAtFullHp": 377975,
+        "survivors": 1.15,
+        "rounds": 28.8
+      },
+      "counter": {
+        "appliedAtFullHp": 611470,
+        "survivors": 3.1,
+        "rounds": 30
+      },
+      "ratio": 1.6177524968582577,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_001",
+        "to": "SKILL_023"
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 171000,
+      "baseline": {
+        "appliedAtFullHp": 44168,
+        "survivors": 0,
+        "rounds": 20.7
+      },
+      "counter": {
+        "appliedAtFullHp": 53710,
+        "survivors": 0,
+        "rounds": 18.55
+      },
+      "ratio": 1.2160387610940047,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_002",
+        "to": "SKILL_011"
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 2160000,
+      "baseline": {
+        "appliedAtFullHp": 167562,
+        "survivors": 0,
+        "rounds": 16.25
+      },
+      "counter": {
+        "appliedAtFullHp": 185272,
+        "survivors": 0,
+        "rounds": 16.1
+      },
+      "ratio": 1.1056922213867106,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_011"
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 6545000,
+      "baseline": {
+        "appliedAtFullHp": 311229,
+        "survivors": 0.05,
+        "rounds": 25.05
+      },
+      "counter": {
+        "appliedAtFullHp": 331429,
+        "survivors": 0,
+        "rounds": 25.95
+      },
+      "ratio": 1.0649039774571136,
+      "change": {
+        "slot": 4,
+        "from": "SKILL_008",
+        "to": "SKILL_035"
+      }
+    },
+    {
+      "area": "KAWASAKI",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 25440000,
+      "baseline": {
+        "appliedAtFullHp": 540762,
+        "survivors": 0.8,
+        "rounds": 28.85
+      },
+      "counter": {
+        "appliedAtFullHp": 665689,
+        "survivors": 2.8,
+        "rounds": 29.95
+      },
+      "ratio": 1.2310203009826874,
+      "change": {
+        "slot": 4,
+        "from": "SKILL_003",
+        "to": "SKILL_035"
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "beginner",
+      "power": 58740,
+      "maxHp": 225500,
+      "baseline": {
+        "appliedAtFullHp": 45981,
+        "survivors": 0,
+        "rounds": 20
+      },
+      "counter": {
+        "appliedAtFullHp": 54382,
+        "survivors": 0,
+        "rounds": 18
+      },
+      "ratio": 1.1827059002631521,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_002",
+        "to": "SKILL_011"
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "intermediate",
+      "power": 159312,
+      "maxHp": 4200000,
+      "baseline": {
+        "appliedAtFullHp": 262691,
+        "survivors": 0,
+        "rounds": 26.45
+      },
+      "counter": {
+        "appliedAtFullHp": 318748,
+        "survivors": 0,
+        "rounds": 26.9
+      },
+      "ratio": 1.2133952057740844,
+      "change": {
+        "slot": 3,
+        "from": "SKILL_001",
+        "to": "SKILL_030"
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "advanced",
+      "power": 199554,
+      "maxHp": 10642500,
+      "baseline": {
+        "appliedAtFullHp": 639114,
+        "survivors": 4.55,
+        "rounds": 30
+      },
+      "counter": {
+        "appliedAtFullHp": 708718,
+        "survivors": 4.6,
+        "rounds": 30
+      },
+      "ratio": 1.1089070181532559,
+      "change": {
+        "slot": 5,
+        "from": "SKILL_015",
+        "to": "SKILL_011"
+      }
+    },
+    {
+      "area": "YOKOHAMA",
+      "difficulty": "expert",
+      "power": 260160,
+      "maxHp": 34650000,
+      "baseline": {
+        "appliedAtFullHp": 858127,
+        "survivors": 4.6,
+        "rounds": 30
+      },
+      "counter": {
+        "appliedAtFullHp": 944450,
+        "survivors": 4.9,
+        "rounds": 30
+      },
+      "ratio": 1.100594667222917,
+      "change": {
+        "slot": 4,
+        "from": "SKILL_013",
+        "to": "SKILL_011"
+      }
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "baseSha": "648a513038284cfbcb65d3cf3a74ce02872cc9c4",
+  "sha256Scope": "Git blob bytes, text LF and one final newline; PNG unchanged",
+  "artifacts": [
+    {
+      "file": "c-authority-local.json",
+      "bytes": 981,
+      "sha256": "d4bc78fbdcfbfb7dfa3fefac29b844db75ed89a965ee7faa71f97564c7eefdf5",
+      "originalSha256": "f0339bf779f35e9562c4f3ab35d543efd085244ede018a81c375b342d592919e"
+    },
+    {
+      "file": "c-equipment-vertical.json",
+      "bytes": 934,
+      "sha256": "e5e36bffe5545cf264ef9f951437a553d5926a6091f5a2173ea9e78721b078f1",
+      "originalSha256": "ad7122dfcef7066223076158b1913d9fa7961f8f74c35da0927591cd4cfca33c"
+    },
+    {
+      "file": "typecheck.json",
+      "bytes": 112,
+      "sha256": "123cfd8cef67ec170716741303e371e4014f47fafde80cd9e4e0df8308ad85ea",
+      "originalSha256": "1a4ae61ee607c658afe881d7c0aa94b9160013bf52e717aca4846c3ebce90277"
+    },
+    {
+      "file": "lint.json",
+      "bytes": 3270,
+      "sha256": "dc9101affd8867b517f3855c71665d1426e0bbbb4c82fa03e106a1f96030c4fd",
+      "originalSha256": "6545b8d8e974d24714d57a85aa4c389f4383a45399742ce20a6603e7babfd6f9"
+    },
+    {
+      "file": "regression.json",
+      "bytes": 1332,
+      "sha256": "0ad880bd411ef2221d07dc107d4a1642c05e37cc1ed663d046c79e092cbe0c4a",
+      "originalSha256": "a03f2dade6cf42e2ab59f226c98104a4a47288dcf379f9a2ed1da275405f326f"
+    },
+    {
+      "file": "raid-errors.txt",
+      "bytes": 6667,
+      "sha256": "63d93d9ef0cb8eee1a8bc74a85067aaa2714b50700fb2ec793dcb493f3cbbdd9",
+      "originalSha256": "63d93d9ef0cb8eee1a8bc74a85067aaa2714b50700fb2ec793dcb493f3cbbdd9"
+    },
+    {
+      "file": "raid-browser.txt",
+      "bytes": 3313,
+      "sha256": "954af83ef698fe94fe4efadbc0765123ff85a8f57348a5f856dfab2e4bb7c3ea",
+      "originalSha256": "954af83ef698fe94fe4efadbc0765123ff85a8f57348a5f856dfab2e4bb7c3ea"
+    },
+    {
+      "file": "raid-replay.txt",
+      "bytes": 32437,
+      "sha256": "a49beea0253ce94feeafb0e29ed48c58c97ae3431a42e224cf21700f4ad74ca0",
+      "originalSha256": "a49beea0253ce94feeafb0e29ed48c58c97ae3431a42e224cf21700f4ad74ca0"
+    },
+    {
+      "file": "equipment-projection.txt",
+      "bytes": 809,
+      "sha256": "b19f05e14e4f1ccfb26b766acf77756854f19c6ec5d70fabe357e52f9678fa88",
+      "originalSha256": "b19f05e14e4f1ccfb26b766acf77756854f19c6ec5d70fabe357e52f9678fa88"
+    },
+    {
+      "file": "equipment-sql.txt",
+      "bytes": 47,
+      "sha256": "9b273a1624a23a6c8496637373c84fac52dd4b81feebc2e7814b10b355f864d0",
+      "originalSha256": "9b273a1624a23a6c8496637373c84fac52dd4b81feebc2e7814b10b355f864d0"
+    },
+    {
+      "file": "equipment-vertical.txt",
+      "bytes": 58,
+      "sha256": "0068c7c04093e25723008824b00dac974f0c1d06fd669a12a9f6d53c52ef345e",
+      "originalSha256": "0068c7c04093e25723008824b00dac974f0c1d06fd669a12a9f6d53c52ef345e"
+    },
+    {
+      "file": "create-power-390.png",
+      "bytes": 154725,
+      "sha256": "c5bc76bb02ff8d4f25f2188a61f64801cc18f892453a3743f7af9e0f049b40f3",
+      "originalSha256": "c5bc76bb02ff8d4f25f2188a61f64801cc18f892453a3743f7af9e0f049b40f3"
+    },
+    {
+      "file": "a-visual.json",
+      "bytes": 236,
+      "sha256": "c027d99aff28cb7131b8f5996e65ee25190d17311e74936cd25dd300a63e9a51",
+      "originalSha256": "87c8b75cb8adf6ef6fe61d4d43e9e05fe2f1d730f0066264e3bd00b74c4b0afc"
+    },
+    {
+      "file": "natural-expiry-read.json",
+      "bytes": 2628,
+      "sha256": "01fea4358e9dca4becf7ca2e7d3f2d698253fe7afb4096786d6e43df1e0c9420",
+      "originalSha256": "01fea4358e9dca4becf7ca2e7d3f2d698253fe7afb4096786d6e43df1e0c9420"
+    },
+    {
+      "file": "initializer-preview-read.json",
+      "bytes": 1649,
+      "sha256": "e6e941cff202be4f95bbdc5a786a8cf9ffa9b9a488ed028d14465db70292c862",
+      "originalSha256": "e6e941cff202be4f95bbdc5a786a8cf9ffa9b9a488ed028d14465db70292c862"
+    },
+    {
+      "file": "saved-replay-metadata.json",
+      "bytes": 905,
+      "sha256": "54a26faf00b22d314bac0b1abe4480095231763e1a0ec88a601fd74057f62da4",
+      "originalSha256": "54a26faf00b22d314bac0b1abe4480095231763e1a0ec88a601fd74057f62da4"
+    },
+    {
+      "file": "b-replay-normal-390x600.png",
+      "bytes": 227856,
+      "sha256": "525b124caf8189ec3fa3ecd77265bf36862be695d4638809fc343bcb7a0020c8",
+      "originalSha256": "525b124caf8189ec3fa3ecd77265bf36862be695d4638809fc343bcb7a0020c8"
+    },
+    {
+      "file": "b-replay-reload-390x600.png",
+      "bytes": 227325,
+      "sha256": "d5767dab9fa40b801389cec166c9641fda597981c7ceda01c25a37293419f1c8",
+      "originalSha256": "d5767dab9fa40b801389cec166c9641fda597981c7ceda01c25a37293419f1c8"
+    },
+    {
+      "file": "b-replay-unknown-390x600.png",
+      "bytes": 43955,
+      "sha256": "ebe94b3a810fe0f1be4bf6b832452030d58e2d7e8effc1fca732a38ee42662fa",
+      "originalSha256": "ebe94b3a810fe0f1be4bf6b832452030d58e2d7e8effc1fca732a38ee42662fa"
+    },
+    {
+      "file": "b-background-visual.json",
+      "bytes": 1013,
+      "sha256": "42f13fbfe71a05972d1da558e807087a62fc6da1dafb23a57c553ad8f0f02b36",
+      "originalSha256": "2620ab1494695cc345aea0556475df5edf42037fc3c4ced1c3b40bb576160174"
+    }
+  ]
+}

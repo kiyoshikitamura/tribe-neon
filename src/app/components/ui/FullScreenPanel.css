@@ -8,7 +8,7 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-.fullscreen-close-btn {
+.outlaw-fullscreen-panel .fullscreen-close-btn {
   display: flex;
   min-height: 46px;
   max-width: 320px;

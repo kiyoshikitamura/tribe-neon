@@ -1,0 +1,17 @@
+{
+  "characterContractGroups": 9,
+  "setupGachaE2E": 17,
+  "setupAfterTypewriterFix": 6,
+  "characterHomeE2E": 8,
+  "postLoadoutE2E": {
+    "reason": "Legacy raid_bosses seed does not satisfy Room activity projection",
+    "pass": 1,
+    "fail": 1
+  },
+  "raidRegression": 227,
+  "sharedContractTests": 5,
+  "humanVisualAcceptance": "PENDING",
+  "isolatedPgGroups": 14,
+  "httpAuth": "NOT_RUN",
+  "freshJourney": "PASS with canonical initial masters and explicit empty recovery fixture"
+}

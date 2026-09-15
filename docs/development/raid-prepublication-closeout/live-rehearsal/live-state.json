@@ -1,0 +1,1042 @@
+{
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "candidateSha": "8c0fa6b2131faaed7b63e172ac12424d3fe8f6be",
+  "calls": [
+    {
+      "at": "2026-09-09T15:09:04.776Z",
+      "role": "host",
+      "rpc": "create_raid_room_v1",
+      "args": {
+        "p_difficulty_id": "beginner",
+        "p_raid_variant_id": "RAID_SHINJUKU_V1",
+        "p_request_id": "45388d2a-2484-4501-ad92-2e816a1130de"
+      },
+      "data": null,
+      "error": {
+        "code": "22023",
+        "message": "raid variant outside daily targets"
+      }
+    },
+    {
+      "at": "2026-09-09T15:09:39.130Z",
+      "role": "host",
+      "rpc": "get_raid_top_v1",
+      "args": {},
+      "data": {
+        "dailyTargets": {
+          "data": {
+            "dateJst": "2026-09-10",
+            "targets": [
+              {
+                "variantId": "RAID_ROPPONGI_V1"
+              },
+              {
+                "variantId": "RAID_YOKOHAMA_V1"
+              }
+            ]
+          },
+          "status": "ready"
+        }
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:39.323Z",
+      "role": "host",
+      "rpc": "create_raid_room_v1",
+      "args": {
+        "p_difficulty_id": "beginner",
+        "p_raid_variant_id": "RAID_ROPPONGI_V1",
+        "p_request_id": "1e029739-27b9-4d96-ac80-5c5f633bdf74"
+      },
+      "data": {
+        "hp": {
+          "value": {
+            "max": 34000000,
+            "current": 34000000
+          },
+          "status": "available"
+        },
+        "owner": {
+          "value": {
+            "name": "R0908H01",
+            "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+            "leaderIconUrl": {
+              "status": "unknown"
+            }
+          },
+          "status": "available"
+        },
+        "state": {
+          "value": "active",
+          "status": "available"
+        },
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "endedAt": {
+          "value": null,
+          "status": "available"
+        },
+        "createdAt": {
+          "value": "2026-09-09T15:09:39.235867+00:00",
+          "status": "available"
+        },
+        "expiresAt": {
+          "value": "2026-09-10T15:09:39.235867+00:00",
+          "status": "available"
+        },
+        "difficultyId": "beginner",
+        "participantCount": {
+          "value": 1,
+          "status": "available"
+        },
+        "serverEligibility": {
+          "status": "unknown"
+        }
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:39.492Z",
+      "role": "normal",
+      "rpc": "register_raid_room_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "membershipStatus": "joined"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:39.638Z",
+      "role": "host",
+      "rpc": "request_raid_room_rescue_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_request_id": "8424ee57-7f16-41bd-8cc9-23939873310b"
+      },
+      "data": {
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "requestId": "8424ee57-7f16-41bd-8cc9-23939873310b",
+        "guildCount": 1,
+        "publications": [
+          {
+            "channel": "ACTIVITY",
+            "guildId": null,
+            "rescueId": "e42443bd-c0b9-49a4-a3d2-f95ae26421ad"
+          },
+          {
+            "channel": "GUILD",
+            "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "rescueId": "936bd67d-402b-41aa-b4ee-da1eabdb5a51"
+          }
+        ],
+        "activityCount": 1,
+        "maxPerChannel": 3
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:39.824Z",
+      "role": "rescue",
+      "rpc": "join_raid_room_rescue_v1",
+      "args": {
+        "p_rescue_id": "936bd67d-402b-41aa-b4ee-da1eabdb5a51"
+      },
+      "data": {
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "viaRescue": true,
+        "membershipStatus": "joined"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:40.922Z",
+      "role": "host",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_karen_01",
+          "char_gou_01",
+          "char_naoto_01",
+          "char_reina_01",
+          "char_rin_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "836ffa09-4f9a-4ec9-b528-43118bb80619"
+      },
+      "data": {
+        "replay_session_id": "0b611182-6a08-419f-b1dc-5050b38c63c1",
+        "cost": 1,
+        "responseSha256": "929882e64629ae831ed8ce36c91623d75a6e40e4d391eec5ace8e09193b347fd"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:42.621Z",
+      "role": "host",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "836ffa09-4f9a-4ec9-b528-43118bb80619"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "836ffa09-4f9a-4ec9-b528-43118bb80619"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:45.265Z",
+      "role": "normal",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_kengo_01",
+          "char_daimon_01",
+          "char_masato_01",
+          "char_naoto_01",
+          "char_ren_male_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "5f6b88aa-1f26-4dea-911a-361fecf9cdbe"
+      },
+      "data": {
+        "replay_session_id": "2058b319-68a2-4084-a876-8487208f6723",
+        "cost": 1,
+        "responseSha256": "2571b21c4a630fcefb2c275173175642531bdf05277206d560aadea6a28d4b84"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:09:46.937Z",
+      "role": "normal",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "5f6b88aa-1f26-4dea-911a-361fecf9cdbe"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "5f6b88aa-1f26-4dea-911a-361fecf9cdbe"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:10.074Z",
+      "role": "rescue",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "9c3aabb1-2692-4083-8473-fe07c3de0ec0"
+      },
+      "data": {
+        "replay_session_id": "9b774558-db8c-4491-a5d2-f3346a49a1f7",
+        "cost": 1,
+        "responseSha256": "cb57f066b259bc54ea8076a6edd64e03fc7aa5ca0a5d86059d4bc64a556deae4"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:11.105Z",
+      "role": "rescue",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "9c3aabb1-2692-4083-8473-fe07c3de0ec0"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "9c3aabb1-2692-4083-8473-fe07c3de0ec0"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:27.440Z",
+      "role": "rescue",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "87d8174f-fcb7-46b3-a652-5e6cbde590af"
+      },
+      "data": {
+        "replay_session_id": "79cbc34e-ea6e-43e5-9887-9e046171a3d0",
+        "cost": 1,
+        "responseSha256": "3a0e4978d11b258f0005263e9dec1279fa692d435d101f31ef433f62e563692c"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:28.564Z",
+      "role": "rescue",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "87d8174f-fcb7-46b3-a652-5e6cbde590af"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "87d8174f-fcb7-46b3-a652-5e6cbde590af"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:29.610Z",
+      "role": "rescue",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "9bfe826a-ed36-40ff-a76a-1ab97df49df0"
+      },
+      "data": {
+        "replay_session_id": "90d5341d-0d3a-46f4-ae44-b2b4c2c98569",
+        "cost": 1,
+        "responseSha256": "2e0761e3f7618371f0f4d2716e097894c8328aca8c1abeae1b528333846e7cdf"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:30.655Z",
+      "role": "rescue",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "9bfe826a-ed36-40ff-a76a-1ab97df49df0"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "9bfe826a-ed36-40ff-a76a-1ab97df49df0"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:31.951Z",
+      "role": "rescue",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "915de597-b66a-44ab-a498-053c92153248"
+      },
+      "data": {
+        "replay_session_id": "cee03f3f-487d-4ebd-8c59-58dc532a08f1",
+        "cost": 1,
+        "responseSha256": "588e6d7b475be0f75641ff9e39cbf925d30323ca74b2aac8831441100b7ba443"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:34.018Z",
+      "role": "rescue",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "915de597-b66a-44ab-a498-053c92153248"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "915de597-b66a-44ab-a498-053c92153248"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:10:47.450Z",
+      "role": "rescue",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "e405e294-a0f7-41a7-bbdb-2a3ba4923a55"
+      },
+      "data": null,
+      "error": {
+        "code": "23514",
+        "message": "insufficient Raid points"
+      }
+    },
+    {
+      "at": "2026-09-09T15:12:34.087Z",
+      "role": "rescue",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_koharu_01",
+          "char_mark_01",
+          "char_masato_01",
+          "char_minami_01",
+          "char_momoko_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "e1e2bc9b-5ef5-4ba7-9f97-fdc207fe8ac5"
+      },
+      "data": {
+        "replay_session_id": "ec8abe3a-8099-4198-a2ce-e527cf292f47",
+        "cost": 1,
+        "responseSha256": "ce939aa62d7c79edfae0d3b4d57a460bdf01fb350208386a47483fb3eb43d185"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:12:36.012Z",
+      "role": "rescue",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "e1e2bc9b-5ef5-4ba7-9f97-fdc207fe8ac5"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "e1e2bc9b-5ef5-4ba7-9f97-fdc207fe8ac5"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:16.343Z",
+      "role": "host",
+      "rpc": "start_raid_room_battle_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "p_character_ids": [
+          "char_karen_01",
+          "char_gou_01",
+          "char_naoto_01",
+          "char_reina_01",
+          "char_rin_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "aacde1c2-0d02-4690-8a31-10c0c124cb5c"
+      },
+      "data": {
+        "replay_session_id": "e52898f1-d7cc-4804-a477-ffb661b2d718",
+        "cost": 1,
+        "responseSha256": "b9933f8e0deb2627f35beb20b354362af938aa45816a4e4bfe12868e86a87ff8"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:17.884Z",
+      "role": "host",
+      "rpc": "acknowledge_raid_room_battle_recovery_v1",
+      "args": {
+        "p_request_id": "aacde1c2-0d02-4690-8a31-10c0c124cb5c"
+      },
+      "data": {
+        "status": "acknowledged",
+        "requestId": "aacde1c2-0d02-4690-8a31-10c0c124cb5c"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:19.241Z",
+      "role": "host",
+      "rpc": "get_raid_room_clear_reward_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T15:13:17.438675+00:00",
+            "presentId": "710a77d0-151a-4c49-a0ea-80d0ce009d71",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "status": "issued",
+        "issuedAt": "2026-09-09T15:13:17.438675+00:00",
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 5133,
+          "minimumContributionDamage": 0
+        },
+        "expiresAt": "2026-10-09T15:13:17.438675+00:00"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:19.488Z",
+      "role": "host",
+      "rpc": "get_raid_room_rescue_reward_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "items": [],
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "status": "not_eligible",
+        "issuedAt": null,
+        "expiresAt": null,
+        "rescueGate": {
+          "reason": "conditions_not_met",
+          "status": "not_succeeded",
+          "ruleVersion": 1,
+          "minimumBattles": 2,
+          "minimumContributionDamage": 16000
+        }
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:20.080Z",
+      "role": "normal",
+      "rpc": "get_raid_room_clear_reward_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T15:13:17.432366+00:00",
+            "presentId": "6b0b74e1-63ee-4d17-8cda-8c2a94ce7deb",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "status": "issued",
+        "issuedAt": "2026-09-09T15:13:17.432366+00:00",
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 4766,
+          "minimumContributionDamage": 0
+        },
+        "expiresAt": "2026-10-09T15:13:17.432366+00:00"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:20.312Z",
+      "role": "normal",
+      "rpc": "get_raid_room_rescue_reward_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "items": [],
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "status": "not_eligible",
+        "issuedAt": null,
+        "expiresAt": null,
+        "rescueGate": {
+          "reason": "conditions_not_met",
+          "status": "not_succeeded",
+          "ruleVersion": 1,
+          "minimumBattles": 2,
+          "minimumContributionDamage": 16000
+        }
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:20.555Z",
+      "role": "rescue",
+      "rpc": "get_raid_room_clear_reward_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 1,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T15:13:17.436866+00:00",
+            "presentId": "2c427752-2321-4703-98cd-1b0fdc87058a",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "status": "issued",
+        "issuedAt": "2026-09-09T15:13:17.436866+00:00",
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 18337,
+          "minimumContributionDamage": 0
+        },
+        "expiresAt": "2026-10-09T15:13:17.436866+00:00"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:20.783Z",
+      "role": "rescue",
+      "rpc": "get_raid_room_rescue_reward_v1",
+      "args": {
+        "p_room_id": "ee8b0e8a-1e25-43f1-bf09-30e37081d774"
+      },
+      "data": {
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 1,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T15:13:17.444565+00:00",
+            "presentId": "865a0702-91c8-4406-8b01-18aa9f5de078",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+        "status": "issued",
+        "issuedAt": "2026-09-09T15:13:17.444565+00:00",
+        "expiresAt": "2026-10-09T15:13:17.444565+00:00",
+        "rescueGate": {
+          "reason": "conditions_met",
+          "status": "succeeded",
+          "ruleVersion": 1,
+          "minimumBattles": 2,
+          "minimumContributionDamage": 16000
+        }
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:42.951Z",
+      "role": "host",
+      "rpc": "claim_present",
+      "args": {
+        "p_present_id": "710a77d0-151a-4c49-a0ea-80d0ce009d71"
+      },
+      "data": {
+        "status": "success",
+        "present_id": "710a77d0-151a-4c49-a0ea-80d0ce009d71"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:43.959Z",
+      "role": "normal",
+      "rpc": "claim_present",
+      "args": {
+        "p_present_id": "6b0b74e1-63ee-4d17-8cda-8c2a94ce7deb"
+      },
+      "data": {
+        "status": "success",
+        "present_id": "6b0b74e1-63ee-4d17-8cda-8c2a94ce7deb"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:45.240Z",
+      "role": "rescue",
+      "rpc": "claim_present",
+      "args": {
+        "p_present_id": "2c427752-2321-4703-98cd-1b0fdc87058a"
+      },
+      "data": {
+        "status": "success",
+        "present_id": "2c427752-2321-4703-98cd-1b0fdc87058a"
+      },
+      "error": null
+    },
+    {
+      "at": "2026-09-09T15:13:46.490Z",
+      "role": "rescue",
+      "rpc": "claim_present",
+      "args": {
+        "p_present_id": "865a0702-91c8-4406-8b01-18aa9f5de078"
+      },
+      "data": {
+        "status": "success",
+        "present_id": "865a0702-91c8-4406-8b01-18aa9f5de078"
+      },
+      "error": null
+    }
+  ],
+  "attempts": [
+    {
+      "role": "host",
+      "request": "836ffa09-4f9a-4ec9-b528-43118bb80619",
+      "at": "2026-09-09T15:09:40.706Z",
+      "replayId": "0b611182-6a08-419f-b1dc-5050b38c63c1",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 2,
+          "winner": "ENEMY",
+          "rawDamage": 2503,
+          "roomOutcome": null,
+          "appliedDamage": 2503,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33997497,
+          "lateFinalization": false,
+          "personalContribution": 2503,
+          "participationProgress": {
+            "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+            "updated_at": "2026-09-09T15:09:42.33064+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 1,
+            "raid_points_consumed": 1,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "cebadcd39cdcf7fbe454d6916197106e767a0aee68224050aa9c203df1b7ec0b"
+        }
+      }
+    },
+    {
+      "role": "normal",
+      "request": "5f6b88aa-1f26-4dea-911a-361fecf9cdbe",
+      "at": "2026-09-09T15:09:44.627Z",
+      "replayId": "2058b319-68a2-4084-a876-8487208f6723",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 2,
+          "winner": "ENEMY",
+          "rawDamage": 4766,
+          "roomOutcome": null,
+          "appliedDamage": 4766,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33992731,
+          "lateFinalization": false,
+          "personalContribution": 4766,
+          "participationProgress": {
+            "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+            "updated_at": "2026-09-09T15:09:46.55767+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 1,
+            "raid_points_consumed": 1,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "902e8754f5a8f5f795ecbd1b0fddd4d9e0e7d9a6cdd49f746924c9c0616df88c"
+        }
+      }
+    },
+    {
+      "role": "rescue",
+      "request": "9c3aabb1-2692-4083-8473-fe07c3de0ec0",
+      "at": "2026-09-09T15:10:09.864Z",
+      "replayId": "9b774558-db8c-4491-a5d2-f3346a49a1f7",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 3,
+          "winner": "ENEMY",
+          "rawDamage": 3769,
+          "roomOutcome": null,
+          "appliedDamage": 3769,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33988962,
+          "lateFinalization": false,
+          "personalContribution": 3769,
+          "participationProgress": {
+            "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+            "updated_at": "2026-09-09T15:10:10.827016+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 1,
+            "raid_points_consumed": 1,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "0dffdf93a00697107143675ac4ec66cef5a7ccabe97ac67feb6ca8b382e8d9d2"
+        }
+      }
+    },
+    {
+      "role": "rescue",
+      "request": "87d8174f-fcb7-46b3-a652-5e6cbde590af",
+      "at": "2026-09-09T15:10:27.158Z",
+      "replayId": "79cbc34e-ea6e-43e5-9887-9e046171a3d0",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 3,
+          "winner": "ENEMY",
+          "rawDamage": 3829,
+          "roomOutcome": null,
+          "appliedDamage": 3829,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33985133,
+          "lateFinalization": false,
+          "personalContribution": 7598,
+          "participationProgress": {
+            "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+            "updated_at": "2026-09-09T15:10:28.21926+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 2,
+            "raid_points_consumed": 2,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "f4f48a0ac3ebbaedbecc40b7f71e14b2ade059aacacbc2fb41f5c9790ba89b95"
+        }
+      }
+    },
+    {
+      "role": "rescue",
+      "request": "9bfe826a-ed36-40ff-a76a-1ab97df49df0",
+      "at": "2026-09-09T15:10:29.422Z",
+      "replayId": "90d5341d-0d3a-46f4-ae44-b2b4c2c98569",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 3,
+          "winner": "ENEMY",
+          "rawDamage": 3826,
+          "roomOutcome": null,
+          "appliedDamage": 3826,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33981307,
+          "lateFinalization": false,
+          "personalContribution": 11424,
+          "participationProgress": {
+            "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+            "updated_at": "2026-09-09T15:10:30.408008+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 3,
+            "raid_points_consumed": 3,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "b059cc69aa4a7216ec6e5f6d4405018844871088519673cf32dcb6023375f873"
+        }
+      }
+    },
+    {
+      "role": "rescue",
+      "request": "915de597-b66a-44ab-a498-053c92153248",
+      "at": "2026-09-09T15:10:31.688Z",
+      "replayId": "cee03f3f-487d-4ebd-8c59-58dc532a08f1",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 3,
+          "winner": "ENEMY",
+          "rawDamage": 3099,
+          "roomOutcome": null,
+          "appliedDamage": 3099,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33978208,
+          "lateFinalization": false,
+          "personalContribution": 14523,
+          "participationProgress": {
+            "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+            "updated_at": "2026-09-09T15:10:33.641118+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 4,
+            "raid_points_consumed": 4,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "24e0ebc357e4d45853a4061dbd8cd331f66122dc12014c1e2b519c0b64be2006"
+        }
+      }
+    },
+    {
+      "role": "rescue",
+      "request": "e405e294-a0f7-41a7-bbdb-2a3ba4923a55",
+      "at": "2026-09-09T15:10:47.260Z"
+    },
+    {
+      "role": "rescue",
+      "request": "e1e2bc9b-5ef5-4ba7-9f97-fdc207fe8ac5",
+      "at": "2026-09-09T15:12:33.806Z",
+      "replayId": "ec8abe3a-8099-4198-a2ce-e527cf292f47",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 3,
+          "winner": "ENEMY",
+          "rawDamage": 3814,
+          "roomOutcome": null,
+          "appliedDamage": 3814,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 33974394,
+          "lateFinalization": false,
+          "personalContribution": 18337,
+          "participationProgress": {
+            "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+            "updated_at": "2026-09-09T15:12:35.608131+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 5,
+            "raid_points_consumed": 5,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "69025f02d9c48ad469d589d5e25f69085e48006deb5d1e68e70aa0ec5bc5ce72"
+        }
+      }
+    },
+    {
+      "role": "host",
+      "request": "aacde1c2-0d02-4690-8a31-10c0c124cb5c",
+      "at": "2026-09-09T15:13:16.057Z",
+      "replayId": "e52898f1-d7cc-4804-a477-ffb661b2d718",
+      "cost": 1,
+      "edge": {
+        "data": {
+          "mode": "RAID",
+          "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+          "rounds": 2,
+          "winner": "ENEMY",
+          "rawDamage": 2630,
+          "roomOutcome": "DEFEAT_SUCCESS",
+          "appliedDamage": 1000,
+          "raidInstanceId": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+          "remainingBossHp": 0,
+          "lateFinalization": false,
+          "personalContribution": 5133,
+          "participationProgress": {
+            "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+            "updated_at": "2026-09-09T15:13:17.413307+00:00",
+            "last_guild_id": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+            "finalized_battles": 2,
+            "raid_points_consumed": 2,
+            "raid_boss_instance_id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71"
+          },
+          "responseSha256": "8da5fd6bc00cb1858b894a34939b498e634d8fb62a6f03fdbe3a37c92c459acc"
+        }
+      }
+    }
+  ],
+  "createRequest": "1e029739-27b9-4d96-ac80-5c5f633bdf74",
+  "variantId": "RAID_ROPPONGI_V1",
+  "room": {
+    "hp": {
+      "value": {
+        "max": 34000000,
+        "current": 34000000
+      },
+      "status": "available"
+    },
+    "owner": {
+      "value": {
+        "name": "R0908H01",
+        "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "leaderIconUrl": {
+          "status": "unknown"
+        }
+      },
+      "status": "available"
+    },
+    "state": {
+      "value": "active",
+      "status": "available"
+    },
+    "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+    "endedAt": {
+      "value": null,
+      "status": "available"
+    },
+    "createdAt": {
+      "value": "2026-09-09T15:09:39.235867+00:00",
+      "status": "available"
+    },
+    "expiresAt": {
+      "value": "2026-09-10T15:09:39.235867+00:00",
+      "status": "available"
+    },
+    "difficultyId": "beginner",
+    "participantCount": {
+      "value": 1,
+      "status": "available"
+    },
+    "serverEligibility": {
+      "status": "unknown"
+    }
+  },
+  "rescueRequest": "8424ee57-7f16-41bd-8cc9-23939873310b",
+  "rescue": {
+    "roomId": "ee8b0e8a-1e25-43f1-bf09-30e37081d774",
+    "requestId": "8424ee57-7f16-41bd-8cc9-23939873310b",
+    "guildCount": 1,
+    "publications": [
+      {
+        "channel": "ACTIVITY",
+        "guildId": null,
+        "rescueId": "e42443bd-c0b9-49a4-a3d2-f95ae26421ad"
+      },
+      {
+        "channel": "GUILD",
+        "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "rescueId": "936bd67d-402b-41aa-b4ee-da1eabdb5a51"
+      }
+    ],
+    "activityCount": 1,
+    "maxPerChannel": 3
+  },
+  "duplicates": [
+    {
+      "role": "host",
+      "presentId": "710a77d0-151a-4c49-a0ea-80d0ce009d71",
+      "code": "P0001",
+      "message": "Present is not claimable"
+    },
+    {
+      "role": "normal",
+      "presentId": "6b0b74e1-63ee-4d17-8cda-8c2a94ce7deb",
+      "code": "P0001",
+      "message": "Present is not claimable"
+    },
+    {
+      "role": "rescue",
+      "presentId": "2c427752-2321-4703-98cd-1b0fdc87058a",
+      "code": "P0001",
+      "message": "Present is not claimable"
+    },
+    {
+      "role": "rescue",
+      "presentId": "865a0702-91c8-4406-8b01-18aa9f5de078",
+      "code": "P0001",
+      "message": "Present is not claimable"
+    },
+    {
+      "replayId": "e52898f1-d7cc-4804-a477-ffb661b2d718",
+      "status": "EDGE_RESEND_PASS"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+✔ close while loading ignores late success (22.6475ms)
+✔ A close B; late A cannot overwrite B (4.7819ms)
+✔ direct A to B switch and same-user retry discard old results (3.1378ms)
+✔ pending profile discarded on scope viewer:home (3.2168ms)
+✔ pending profile discarded on scope other:raid (2.7558ms)
+✔ pending profile discarded on scope signed-out:raid (6.0946ms)
+✔ explicit auth reset invalidates before React rerender (1.7019ms)
+✔ late error cannot reopen dismissed profile (1.0302ms)
+✔ DM close keeps closed; subsequent open works (1.7044ms)
+✔ unmount invalidates the pending request (1.0717ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1230.1461

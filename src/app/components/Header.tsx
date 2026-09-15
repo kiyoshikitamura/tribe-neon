@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useGame } from "../context/GameContext";
-import { VITALITY_MAX } from "@/utils/game_constants";
+import { VITALITY_MAX, RAID_POINT_MAX } from "@/utils/game_constants";
 import { CANONICAL_USER_LEVEL_PROGRESSION } from "@/domain/gameplay/canonical/action_resources";
 import UserIdentityRow from "./profile/UserIdentityRow";
 import "./Header.css";
@@ -15,6 +15,7 @@ export default function Header() {
     cash,
     diamonds,
     vitality,
+    raidPoints,
     vitalityNextRecoveryAt,
     userGuild,
     userTitle,
@@ -25,8 +26,10 @@ export default function Header() {
     totalPower,
     totalPowerLoading,
     unclaimedPresentsCount,
+    unreadNewsCount = 0,
     setShowSettingsPanel,
     setShowInboxPanel,
+    setShowLoginBonusModal,
     setInboxPanelTab,
     navigateTab,
     playCyberSe,
@@ -59,7 +62,7 @@ export default function Header() {
           <UserIdentityRow
             variant="compact"
             userName={username || "プレイヤー名"}
-            guildName={userGuild?.name}
+            guildName={userGuild?.name} guildId={userGuild?.id}
             title={visibleTitle}
             leaderCharacterId={identityLeaderCharacterId || null}
             identityReady={identityLeaderAuthorityReady}
@@ -78,11 +81,11 @@ export default function Header() {
           onClick={() => { setMenuOpen(true); playCyberSe("click"); }}
         >
           <span>MENU</span><i aria-hidden="true">☰</i>
-          {unclaimedPresentsCount > 0 && <b className="header-mobile-menu-badge" aria-label={`${unclaimedPresentsCount}件の未受取`}>{unclaimedPresentsCount}</b>}
+          {(unclaimedPresentsCount > 0 || unreadNewsCount > 0) && <b className="header-mobile-menu-badge" aria-label={`未受取${unclaimedPresentsCount || 0}件、未読お知らせ${unreadNewsCount}件`}>{(unclaimedPresentsCount || 0) + unreadNewsCount}</b>}
         </button>
       </div>
 
-      {/* 2行目: 所持キャッシュ + 所持ダイヤ + Vitality */}
+      {/* Shared resource balances */}
       <div className="header-mobile-row2">
         {/* 所持キャッシュ */}
         <div className="header-mobile-stat">
@@ -110,6 +113,10 @@ export default function Header() {
             <span className="header-mobile-stat-recovery">+1 {Math.floor(recoverySeconds / 60)}:{String(recoverySeconds % 60).padStart(2, "0")}</span>
           )}
         </div>
+        <div className="header-mobile-stat header-mobile-stat-raid" aria-label={`レイドポイント ${raidPoints}/${RAID_POINT_MAX}`} title="レイドポイント">
+          <span className="header-mobile-stat-label">RP</span>
+          <span className="header-mobile-stat-val">{raidPoints}/{RAID_POINT_MAX}</span>
+        </div>
       </div>
 
       {menuOpen && <div className="header-utility-overlay" role="presentation" onMouseDown={(event) => {
@@ -119,8 +126,9 @@ export default function Header() {
           <header><strong>MENU</strong><button type="button" aria-label="メニューを閉じる" onClick={() => setMenuOpen(false)}>×</button></header>
           <nav aria-label="ユーティリティ">
             <button type="button" onClick={() => runMenuAction(() => setShowSettingsPanel(true))}><img src="/ui/icon_settings.png" alt="" /><span>設定</span></button>
-            <button type="button" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("news"); })}><img src="/ui/icon_news.png" alt="" /><span>お知らせ</span></button>
-            <button type="button" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("presents"); })}><img src="/ui/icon_present.png" alt="" /><span>プレゼント</span>{unclaimedPresentsCount > 0 && <b>{unclaimedPresentsCount}</b>}</button>
+            <button type="button" className="header-news-button" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("news"); })}><img src="/ui/icon_news.png" alt="" /><span>お知らせ</span>{unreadNewsCount > 0 && <b className="header-mobile-menu-badge" aria-label={`未読お知らせ${unreadNewsCount}件`}>{unreadNewsCount}</b>}</button>
+            <button type="button" aria-label="プレゼント" onClick={() => runMenuAction(() => { setShowInboxPanel(true); setInboxPanelTab("presents"); })}><img src="/ui/icon_present.png" alt="" /><span>プレゼント</span>{unclaimedPresentsCount > 0 && <b aria-hidden="true">{unclaimedPresentsCount}</b>}</button>
+            <button type="button" onClick={() => runMenuAction(() => setShowLoginBonusModal(true))}><img src="/ui/icon_present.png" alt="" /><span>ログインボーナス</span></button>
             <button type="button" onClick={() => runMenuAction(() => navigateTab("bag"))}><img src="/ui/icon_bag.png" alt="" /><span>バッグ</span></button>
           </nav>
         </section>

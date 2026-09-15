@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
-import { sanitizeOperationsTab } from "@/domain/operations/operations";
+import { sanitizeOperationsTab, type OperationsStateMap } from "@/domain/operations/operations";
+import { hasPendingLegalSettingsReturn } from "@/utils/legalSettingsReturn";
 
-export function useNavigation(playCyberSe: (type: string) => void, handleFirstUserInteraction: () => void) {
+export function useNavigation(playCyberSe: (type: string) => void, handleFirstUserInteraction: () => void, featureOperatingStates: OperationsStateMap) {
   const [activeTab, setActiveTabState] = useState<string>("home");
   const [showInboxPanel, setShowInboxPanel] = useState<boolean>(false);
   const [showMissionPanel, setShowMissionPanel] = useState<boolean>(false);
@@ -13,15 +14,24 @@ export function useNavigation(playCyberSe: (type: string) => void, handleFirstUs
   const [showTribeChatPanel, setShowTribeChatPanel] = useState<boolean>(false);
   const [showMoveBaseModal, setShowMoveBaseModal] = useState<boolean>(false);
   const [showLegalPage, setShowLegalPage] = useState<string | null>(null);
-  const [showTitleView, setShowTitleView] = useState<boolean>(true);
+  const [showTitleView, setShowTitleView] = useState<boolean>(() => !hasPendingLegalSettingsReturn());
   const [inboxPanelTab, setInboxPanelTab] = useState<"presents" | "news">("presents");
   const [rankingActiveTab, setRankingActiveTab] = useState<string>("power");
-  const [confirmDialogConfig, setConfirmDialogConfig] = useState<ConfirmDialogConfig | null>(null);
+  const [characterEntryView, setCharacterEntryView] = useState<"party" | null>(null);
+  const [confirmDialogConfig, setConfirmDialogState] = useState<ConfirmDialogConfig | null>(null);
+  const dialogSequence = useRef(0);
+  const setConfirmDialogConfig = useCallback((next: React.SetStateAction<ConfirmDialogConfig | null>) => {
+    setConfirmDialogState(previous => {
+      const value = typeof next === "function" ? next(previous) : next;
+      if (value === previous) return previous;
+      return value ? { ...value, dialogId: ++dialogSequence.current } : null;
+    });
+  }, []);
   const [globalInteractionBlocking, setGlobalInteractionBlocking] = useState<boolean>(false);
 
   const setActiveTab = useCallback((tabName: string) => {
-    setActiveTabState(sanitizeOperationsTab(tabName));
-  }, []);
+    setActiveTabState(sanitizeOperationsTab(tabName, featureOperatingStates));
+  }, [featureOperatingStates]);
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
@@ -39,6 +49,7 @@ export function useNavigation(playCyberSe: (type: string) => void, handleFirstUs
     handleFirstUserInteraction();
     playCyberSe("click");
     setActiveTab(tabName);
+    setCharacterEntryView(tabName === "character" && subTab === "party" ? "party" : null);
     
     // パネル系を全て閉じる
     setShowInboxPanel(false);
@@ -77,6 +88,8 @@ export function useNavigation(playCyberSe: (type: string) => void, handleFirstUs
     setInboxPanelTab,
     rankingActiveTab,
     setRankingActiveTab,
+    characterEntryView,
+    setCharacterEntryView,
     confirmDialogConfig,
     setConfirmDialogConfig,
     globalInteractionBlocking,

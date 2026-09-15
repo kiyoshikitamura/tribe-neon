@@ -1,0 +1,24 @@
+begin read only;
+do $postflight$ begin
+if md5(pg_get_functiondef(to_regprocedure('public.claim_all_presents()'))) is distinct from '4d25888ddccc3571bea583a0b4a4e188' then raise exception 'SHARED_FUNCTION_DRIFT: claim_all_presents()'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.claim_all_presents(uuid)'))) is distinct from 'b627add278fa3f93e72f7c9574aa9e95' then raise exception 'SHARED_FUNCTION_DRIFT: claim_all_presents(uuid)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.claim_present(uuid)'))) is distinct from '087cc231b3713064f63d6d82b4579738' then raise exception 'SHARED_FUNCTION_DRIFT: claim_present(uuid)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.claim_present(uuid,uuid)'))) is distinct from 'd5b68be10a35dc997b988ac0c7ab3b7d' then raise exception 'SHARED_FUNCTION_DRIFT: claim_present(uuid,uuid)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_grant_order(uuid,text,integer,text)'))) is distinct from '0952ece6f383a9ec4c31100d64743523' then raise exception 'BILLING_FUNCTION_DIFF: billing_grant_order(uuid,text,integer,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_dia_balance_trigger()'))) is distinct from '47ac0f998c384df5cdfb24c61ef71cca' then raise exception 'BILLING_FUNCTION_DIFF: billing_dia_balance_trigger()'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_buy_dia_product(uuid,uuid,text)'))) is distinct from '15f8017189afbd663fa88b4a75a41bd3' then raise exception 'BILLING_FUNCTION_DIFF: billing_buy_dia_product(uuid,uuid,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_mark_lot_claimed()'))) is distinct from '4c31bdbb97350ca3063960c635ff3468' then raise exception 'BILLING_FUNCTION_DIFF: billing_mark_lot_claimed()'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_asset_balance_trigger()'))) is distinct from '88a372f96687301ae3161a6582502aa3' then raise exception 'BILLING_FUNCTION_DIFF: billing_asset_balance_trigger()'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_reserve_order(uuid,uuid,text,text)'))) is distinct from '1de7d894719b76a50d9b53983a472968' then raise exception 'BILLING_FUNCTION_DIFF: billing_reserve_order(uuid,uuid,text,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_session_matches(uuid,text)'))) is distinct from '23a222013c55091b2829c3c2ab0b8b21' then raise exception 'BILLING_FUNCTION_DIFF: billing_session_matches(uuid,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_reserve_order(uuid,uuid,text)'))) is distinct from 'ad671c4383edff65b6605b49eeba7783' then raise exception 'BILLING_FUNCTION_DIFF: billing_reserve_order(uuid,uuid,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_attach_session(uuid,text)'))) is distinct from '98183a65444a3fb0c5697af1dee472d0' then raise exception 'BILLING_FUNCTION_DIFF: billing_attach_session(uuid,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_expire_order(uuid,text)'))) is distinct from '70369c681e8db265fa09ff12425e981f' then raise exception 'BILLING_FUNCTION_DIFF: billing_expire_order(uuid,text)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_apply_lot_delta(uuid,text,bigint,bigint)'))) is distinct from '2f1b8adecf1727e7ff1c3b6260760d6e' then raise exception 'BILLING_FUNCTION_DIFF: billing_apply_lot_delta(uuid,text,bigint,bigint)'; end if;
+if md5(pg_get_functiondef(to_regprocedure('public.billing_refresh_paid_assets()'))) is distinct from 'a11c703f0d5a71a455d1c1e07aecd56b' then raise exception 'BILLING_FUNCTION_DIFF: billing_refresh_paid_assets()'; end if;
+ if (select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relname like 'billing%' and c.relkind='r' and c.relrowsecurity)<>5 then raise exception 'BILLING_RLS_MISSING'; end if;
+ if exists(select 1 from public.billing_orders) or exists(select 1 from public.billing_grants) or exists(select 1 from public.billing_shop_receipts) or exists(select 1 from public.billing_asset_lots) then raise exception 'UNEXPECTED_BILLING_DATA'; end if;
+end $postflight$;
+select count(*) as products from public.billing_products;
+select * from public.feature_operating_states where feature_key='MAINTENANCE';
+rollback;

@@ -1,0 +1,92 @@
+[
+  {
+    "item_id": "AWAKENING_BOOK",
+    "display_name": "覚醒の書",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "CHAR_EXP_L",
+    "display_name": "強化ドリンク・大",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "CHAR_EXP_M",
+    "display_name": "強化ドリンク・中",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "CHAR_EXP_S",
+    "display_name": "強化ドリンク・小",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "ENERGY_DRINK",
+    "display_name": "エナジードリンク",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "EQUIP_EXP_L",
+    "display_name": "カスタムオイル・大",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "EQUIP_EXP_M",
+    "display_name": "カスタムオイル・中",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "EQUIP_EXP_S",
+    "display_name": "カスタムオイル・小",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "EQUIP_LB_PART",
+    "display_name": "改造パーツ",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "NORMAL_GACHA_TICKET_CHARACTER",
+    "display_name": "キャラクターガチャチケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "NORMAL_GACHA_TICKET_EQUIPMENT",
+    "display_name": "装備ガチャチケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "NORMAL_GACHA_TICKET_SKILL",
+    "display_name": "スキルガチャチケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "PVP_POINT_TICKET",
+    "display_name": "ファイトチケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "RAID_POINT_TICKET",
+    "display_name": "レイドチケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "SKILL_MANUAL",
+    "display_name": "スキル指南書",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "SPECIAL_TICKET_CHARACTER",
+    "display_name": "SPキャラクターチケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "SPECIAL_TICKET_EQUIPMENT",
+    "display_name": "SP装備チケット",
+    "is_production_enabled": true
+  },
+  {
+    "item_id": "SPECIAL_TICKET_SKILL",
+    "display_name": "SPスキルチケット",
+    "is_production_enabled": true
+  }
+]

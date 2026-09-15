@@ -1,0 +1,146 @@
+[
+  {
+    "name": "real PG list: 20 entries and cursor; RPC arguments are exact",
+    "status": "PASS"
+  },
+  {
+    "name": "empty success is a valid page",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor -1",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor 0",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor 19",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor 21",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor 20.5",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor 20",
+    "status": "PASS"
+  },
+  {
+    "name": "invalid response cursor undefined",
+    "status": "PASS"
+  },
+  {
+    "name": "21 entries exceed page bound",
+    "status": "PASS"
+  },
+  {
+    "name": "short page cannot advertise another page",
+    "status": "PASS"
+  },
+  {
+    "name": "difficulty mismatch",
+    "status": "PASS"
+  },
+  {
+    "name": "duplicate room id",
+    "status": "PASS"
+  },
+  {
+    "name": "real PG enemy resolves canonical roster and skills",
+    "status": "PASS"
+  },
+  {
+    "name": "variant identity mismatch",
+    "status": "PASS"
+  },
+  {
+    "name": "five-member identity mismatch",
+    "status": "PASS"
+  },
+  {
+    "name": "five-member order mismatch",
+    "status": "PASS"
+  },
+  {
+    "name": "missing roster member",
+    "status": "PASS"
+  },
+  {
+    "name": "skills field missing for a member",
+    "status": "PASS"
+  },
+  {
+    "name": "empty skill identity",
+    "status": "PASS"
+  },
+  {
+    "name": "explicit empty skill loadout remains valid",
+    "status": "PASS"
+  },
+  {
+    "name": "configured reward plan retains planned items",
+    "status": "PASS"
+  },
+  {
+    "name": "planned reward cannot contain issued Present id",
+    "status": "PASS"
+  },
+  {
+    "name": "unconfigured plan cannot contain items",
+    "status": "PASS"
+  },
+  {
+    "name": "configured plan cannot be empty",
+    "status": "PASS"
+  },
+  {
+    "name": "real PG rescue preserves identity and unknown participants",
+    "status": "PASS"
+  },
+  {
+    "name": "known ACTIVITY and GUILD publication scopes preserved",
+    "status": "PASS"
+  },
+  {
+    "name": "legacy unknown publication scope stays absent",
+    "status": "PASS"
+  },
+  {
+    "name": "unknown rescue identity cannot become actionable",
+    "status": "PASS"
+  },
+  {
+    "name": "unrequested rescue identity",
+    "status": "PASS"
+  },
+  {
+    "name": "publication source/scope mismatch",
+    "status": "PASS"
+  },
+  {
+    "name": "same room can have distinct publication identities",
+    "status": "PASS"
+  },
+  {
+    "name": "duplicate rescue identity rejected",
+    "status": "PASS"
+  },
+  {
+    "name": "over 50 rescue ids rejected before RPC",
+    "status": "PASS"
+  },
+  {
+    "name": "RPC errors reject instead of becoming empty success",
+    "status": "PASS"
+  },
+  {
+    "name": "transport rejection stays an error",
+    "status": "PASS"
+  }
+]

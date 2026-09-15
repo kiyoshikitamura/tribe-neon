@@ -1,0 +1,34 @@
+{
+  "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+  "role": "host",
+  "attempts": [
+    {
+      "payload": {
+        "p_room_id": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "p_character_ids": [
+          "char_karen_01",
+          "char_gou_01",
+          "char_naoto_01",
+          "char_reina_01",
+          "char_rin_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY",
+        "p_request_id": "5c3eb0ac-e89a-4ccd-94b8-f823c600a8e9"
+      },
+      "startStatus": 200,
+      "startCode": null,
+      "replayId": "631c34da-2b38-48b3-bef4-e689f8b91978",
+      "resolveStatus": 200,
+      "resolveCode": null,
+      "rawDamage": 2791,
+      "appliedDamage": 2791,
+      "remainingBossHp": 27992104,
+      "winner": "ENEMY",
+      "resolved": true,
+      "sameReplay": true,
+      "ackStatus": 200,
+      "acknowledged": true
+    }
+  ],
+  "goalReached": true
+}

@@ -1,0 +1,1221 @@
+{
+  "before": {
+    "userId": "c4bc5e91-e999-4c77-8b9d-5e71ac5f494c",
+    "bp": 5,
+    "rate": 1000
+  },
+  "after": {
+    "userId": "c4bc5e91-e999-4c77-8b9d-5e71ac5f494c",
+    "bp": 4,
+    "rate": 992
+  },
+  "rpcEvidence": [
+    {
+      "rpc": "get_pvp_opponents_page",
+      "status": 200,
+      "request": {
+        "p_user_id": "c4bc5e91-e999-4c77-8b9d-5e71ac5f494c",
+        "p_my_points": 1000,
+        "p_offset": 0
+      },
+      "response": {
+        "items": [
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": 32,
+            "opponent_class": "WEAKER",
+            "opponent_power": 83766,
+            "opponent_points": 992,
+            "opponent_user_id": "d6017896-03c3-4880-ab7a-4dabc2f4bc64",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "よろすく",
+            "rating_difference": -8,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "R",
+                "display_name": "ミヤビ",
+                "asset_identifier": "/characters/miyabi_transparent_asset.png",
+                "character_master_id": "char_miyabi_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "ノア",
+                "asset_identifier": "/characters/noa_transparent_asset.png",
+                "character_master_id": "char_noa_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ジョー",
+                "asset_identifier": "/characters/joe_transparent_asset.png",
+                "character_master_id": "char_joe_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "レン",
+                "asset_identifier": "/characters/ren_male_transparent_asset.png",
+                "character_master_id": "char_ren_male_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ゴウ",
+                "asset_identifier": "/characters/gou_transparent_asset.png",
+                "character_master_id": "char_gou_01"
+              }
+            ],
+            "defense_character_ids": [
+              "6ee05488-2a93-4546-84fd-0bbc1da788e2",
+              "622cc49e-7ff5-49f5-8c4a-2095dcd6ce97",
+              "66a52424-b868-4617-b40a-748e621b09e6",
+              "f8dc431c-17c2-426e-9136-99a2d9c8830a",
+              "0bd98624-5e6a-42ac-87ad-dc4a5ab35d9d"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": null,
+            "opponent_class": "WEAKER",
+            "opponent_power": 83590,
+            "opponent_points": 1000,
+            "opponent_user_id": "c59d7161-6e31-4c86-bf40-2df6767d4585",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "ゼルエル",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SR",
+                "display_name": "ミオ",
+                "asset_identifier": "/characters/mio_transparent_asset.png",
+                "character_master_id": "char_mio_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "シン",
+                "asset_identifier": "/characters/shin_transparent_asset.png",
+                "character_master_id": "char_shin_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "レン",
+                "asset_identifier": "/characters/ren_transparent_asset.png",
+                "character_master_id": "char_ren_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ゴウ",
+                "asset_identifier": "/characters/gou_transparent_asset.png",
+                "character_master_id": "char_gou_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "ケンジ",
+                "asset_identifier": "/characters/kenji_transparent_asset.png",
+                "character_master_id": "char_kenji_01"
+              }
+            ],
+            "defense_character_ids": [
+              "4dc3cbd1-8b47-4ccc-99bf-3f2fab46430d",
+              "ca2bfe0f-9f43-4038-8383-c887837ee13c",
+              "67d92131-c89e-4bb4-855b-465afe70d66f",
+              "7f754f23-d94a-4c13-9ee4-4ce79b56b36b",
+              "09aab0f5-c217-4d49-9add-1091ddcdfbbe"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": null,
+            "opponent_class": "WEAKER",
+            "opponent_power": 83425,
+            "opponent_points": 1000,
+            "opponent_user_id": "0a47e533-80d7-485b-a2cd-f1ce678e408c",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "けん",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SR",
+                "display_name": "ミオ",
+                "asset_identifier": "/characters/mio_transparent_asset.png",
+                "character_master_id": "char_mio_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "ミナミ",
+                "asset_identifier": "/characters/minami_transparent_asset.png",
+                "character_master_id": "char_minami_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "レン",
+                "asset_identifier": "/characters/ren_transparent_asset.png",
+                "character_master_id": "char_ren_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "モモコ",
+                "asset_identifier": "/characters/momoko_transparent_asset.png",
+                "character_master_id": "char_momoko_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "シオン",
+                "asset_identifier": "/characters/shion_transparent_asset.png",
+                "character_master_id": "char_shion_01"
+              }
+            ],
+            "defense_character_ids": [
+              "ab4d4252-a290-4519-bb65-3b74c05b92b8",
+              "ceb9c6a4-6204-4392-ba15-b0560b710034",
+              "351ec869-8ba1-4c97-af83-6562c75599fa",
+              "0ca4ee37-24f9-4f62-ae68-50ad5faaf2d9",
+              "60af6372-f5b9-4a21-9ddf-4033e572a0e5"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": null,
+            "opponent_class": "WEAKER",
+            "opponent_power": 83285,
+            "opponent_points": 1000,
+            "opponent_user_id": "9614064f-c4fa-47a7-83a1-fa773b08181e",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "サクラ",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SR",
+                "display_name": "ミオ",
+                "asset_identifier": "/characters/mio_transparent_asset.png",
+                "character_master_id": "char_mio_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "テツ",
+                "asset_identifier": "/characters/tetsu_transparent_asset.png",
+                "character_master_id": "char_tetsu_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "ルーカス",
+                "asset_identifier": "/characters/lucas_transparent_asset.png",
+                "character_master_id": "char_lucas_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "レイナ",
+                "asset_identifier": "/characters/reina_transparent_asset.png",
+                "character_master_id": "char_reina_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ダイモン",
+                "asset_identifier": "/characters/daimon_transparent_asset.png",
+                "character_master_id": "char_daimon_01"
+              }
+            ],
+            "defense_character_ids": [
+              "51d4b487-39ef-4f1a-8d94-326c64dceafc",
+              "6e63b07d-7835-4792-9ce7-dde4df0f8f79",
+              "d37cf79a-a7b9-43ab-81a7-439e9f9b72ce",
+              "05c7b613-af06-4ad3-86f9-b5cff50cb4d2",
+              "2938efee-ddd2-4941-8b1f-a20fe3d9f8a9"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": null,
+            "opponent_class": "WEAKER",
+            "opponent_power": 83105,
+            "opponent_points": 1000,
+            "opponent_user_id": "da4695a2-f448-40a6-9303-e09dfcce2602",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "ユーカリ",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SR",
+                "display_name": "ミオ",
+                "asset_identifier": "/characters/mio_transparent_asset.png",
+                "character_master_id": "char_mio_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "マーク",
+                "asset_identifier": "/characters/mark_transparent_asset.png",
+                "character_master_id": "char_mark_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "ユウジ",
+                "asset_identifier": "/characters/yuuji_transparent_asset.png",
+                "character_master_id": "char_yuji_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "メイ",
+                "asset_identifier": "/characters/mei_transparent_asset.png",
+                "character_master_id": "char_mei_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "マコト",
+                "asset_identifier": "/characters/makoto_transparent_asset.png",
+                "character_master_id": "char_makoto_01"
+              }
+            ],
+            "defense_character_ids": [
+              "c8f8c9fc-ff57-4500-83a8-8dcbcb7591d9",
+              "c30b7372-d758-4167-bfb8-eb9717f15cbd",
+              "d33a3f81-588c-4868-8c59-e9cce8692b0a",
+              "f05bde30-938c-4da7-94f2-8bea36bf054f",
+              "05f9169a-4480-477e-9222-4b61608657a6"
+            ]
+          }
+        ],
+        "offset": 0,
+        "next_offset": 5,
+        "total_count": 128
+      }
+    },
+    {
+      "rpc": "start_pvp_battle",
+      "status": 200,
+      "request": {
+        "p_opponent_user_id": "c59d7161-6e31-4c86-bf40-2df6767d4585",
+        "p_character_ids": [
+          "char_kaede_01",
+          "char_mei_01",
+          "char_ren_01",
+          "char_makoto_01",
+          "char_shun_01"
+        ],
+        "p_tactic": "ATTACK_PRIORITY"
+      },
+      "response": {
+        "opponent_name": "ゼルエル",
+        "enemy_snapshot": [
+          {
+            "id": "enemy_4dc3cbd1-8b47-4ccc-99bf-3f2fab46430d",
+            "name": "ミオ",
+            "team": "ENEMY",
+            "stats": {
+              "hp": 29096,
+              "atk": 2904,
+              "def": 2785,
+              "luk": 17,
+              "spd": 165
+            },
+            "skills": [
+              {
+                "id": "SKILL_001",
+                "name": "ストリートパンチ",
+                "target": "ENEMY_SINGLE",
+                "effects": [
+                  {
+                    "raw": "DAMAGE 90% ATK",
+                    "type": "RAW"
+                  }
+                ],
+                "skillId": "SKILL_001",
+                "cooldown": 3,
+                "plusValue": 0,
+                "slotIndex": 0,
+                "activationType": "ACTIVE",
+                "availableFromRound": 1,
+                "exclusiveCharacterId": null
+              }
+            ],
+            "alignment": "ORDER",
+            "equipment": [],
+            "characterId": "char_mio_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": [
+              {
+                "id": "SKILL_001",
+                "name": "ストリートパンチ",
+                "target": "ENEMY_SINGLE",
+                "effects": [
+                  {
+                    "raw": "DAMAGE 90% ATK",
+                    "type": "RAW"
+                  }
+                ],
+                "skillId": "SKILL_001",
+                "cooldown": 3,
+                "plusValue": 0,
+                "slotIndex": 0,
+                "activationType": "ACTIVE",
+                "availableFromRound": 1,
+                "exclusiveCharacterId": null
+              }
+            ]
+          },
+          {
+            "id": "enemy_ca2bfe0f-9f43-4038-8383-c887837ee13c",
+            "name": "シン",
+            "team": "ENEMY",
+            "stats": {
+              "hp": 13600,
+              "atk": 770,
+              "def": 1230,
+              "luk": 5,
+              "spd": 68
+            },
+            "skills": [],
+            "alignment": "ORDER",
+            "equipment": [],
+            "characterId": "char_shin_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          },
+          {
+            "id": "enemy_67d92131-c89e-4bb4-855b-465afe70d66f",
+            "name": "レン",
+            "team": "ENEMY",
+            "stats": {
+              "hp": 9800,
+              "atk": 890,
+              "def": 880,
+              "luk": 14,
+              "spd": 100
+            },
+            "skills": [],
+            "alignment": "CHAOS",
+            "equipment": [],
+            "characterId": "char_ren_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          },
+          {
+            "id": "enemy_7f754f23-d94a-4c13-9ee4-4ce79b56b36b",
+            "name": "ダイスケ",
+            "team": "ENEMY",
+            "stats": {
+              "hp": 9180,
+              "atk": 1166,
+              "def": 669,
+              "luk": 7,
+              "spd": 96
+            },
+            "skills": [],
+            "alignment": "EVIL",
+            "equipment": [],
+            "characterId": "char_gou_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          },
+          {
+            "id": "enemy_09aab0f5-c217-4d49-9add-1091ddcdfbbe",
+            "name": "ケンジ",
+            "team": "ENEMY",
+            "stats": {
+              "hp": 8900,
+              "atk": 1040,
+              "def": 680,
+              "luk": 7,
+              "spd": 90
+            },
+            "skills": [],
+            "alignment": "JUSTICE",
+            "equipment": [],
+            "characterId": "char_kenji_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          }
+        ],
+        "player_snapshot": [
+          {
+            "id": "player_c1f6725b-1720-4e00-9219-36e80db6b11a",
+            "name": "カエデ",
+            "team": "PLAYER",
+            "stats": {
+              "hp": 27927,
+              "atk": 3061,
+              "def": 2628,
+              "luk": 15,
+              "spd": 173
+            },
+            "skills": [
+              {
+                "id": "SKILL_001",
+                "name": "ストリートパンチ",
+                "target": "ENEMY_SINGLE",
+                "effects": [
+                  {
+                    "raw": "DAMAGE 90% ATK",
+                    "type": "RAW"
+                  }
+                ],
+                "skillId": "SKILL_001",
+                "cooldown": 3,
+                "plusValue": 0,
+                "slotIndex": 0,
+                "activationType": "ACTIVE",
+                "availableFromRound": 1,
+                "exclusiveCharacterId": null
+              }
+            ],
+            "alignment": "ORDER",
+            "equipment": [],
+            "characterId": "char_kaede_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": [
+              {
+                "id": "SKILL_001",
+                "name": "ストリートパンチ",
+                "target": "ENEMY_SINGLE",
+                "effects": [
+                  {
+                    "raw": "DAMAGE 90% ATK",
+                    "type": "RAW"
+                  }
+                ],
+                "skillId": "SKILL_001",
+                "cooldown": 3,
+                "plusValue": 0,
+                "slotIndex": 0,
+                "activationType": "ACTIVE",
+                "availableFromRound": 1,
+                "exclusiveCharacterId": null
+              }
+            ]
+          },
+          {
+            "id": "player_7eba136c-a492-42ad-a218-970334a309b9",
+            "name": "メイ",
+            "team": "PLAYER",
+            "stats": {
+              "hp": 10100,
+              "atk": 920,
+              "def": 830,
+              "luk": 15,
+              "spd": 104
+            },
+            "skills": [],
+            "alignment": "CHAOS",
+            "equipment": [],
+            "characterId": "char_mei_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          },
+          {
+            "id": "player_7c32b917-a0a7-459f-a8b3-918cc6a9ff29",
+            "name": "レン",
+            "team": "PLAYER",
+            "stats": {
+              "hp": 9800,
+              "atk": 890,
+              "def": 880,
+              "luk": 14,
+              "spd": 100
+            },
+            "skills": [],
+            "alignment": "CHAOS",
+            "equipment": [],
+            "characterId": "char_ren_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          },
+          {
+            "id": "player_6f9e37ec-cb79-43c4-95aa-6cfa2ad5ba26",
+            "name": "マコト",
+            "team": "PLAYER",
+            "stats": {
+              "hp": 11100,
+              "atk": 1020,
+              "def": 970,
+              "luk": 8,
+              "spd": 88
+            },
+            "skills": [],
+            "alignment": "ORDER",
+            "equipment": [],
+            "characterId": "char_makoto_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          },
+          {
+            "id": "player_9a0ac91b-b700-4456-bd90-16929ada1503",
+            "name": "シュン",
+            "team": "PLAYER",
+            "stats": {
+              "hp": 12000,
+              "atk": 700,
+              "def": 1020,
+              "luk": 5,
+              "spd": 62
+            },
+            "skills": [],
+            "alignment": "JUSTICE",
+            "equipment": [],
+            "characterId": "char_shun_01",
+            "combatModifiers": {
+              "criticalDamageBp": 0,
+              "damageReductionBp": 0,
+              "damageDealtNegativeBp": 0,
+              "damageDealtPositiveBp": 0,
+              "criticalRateNegativeBp": 0,
+              "criticalRatePositiveBp": 0
+            },
+            "statusModifiers": {
+              "statusChanceGenericBp": 0,
+              "statusChanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              },
+              "statusResistanceGenericBp": 0,
+              "statusResistanceIndividualBp": {
+                "STUN": 0,
+                "BLEED": 0,
+                "BLIND": 0,
+                "TAUNT": 0,
+                "POISON": 0,
+                "SILENCE": 0
+              }
+            },
+            "equipmentEffects": [],
+            "equippedSkillRefs": []
+          }
+        ],
+        "opponent_guild_id": null,
+        "replay_session_id": "a51e14b7-4f41-4d28-aecf-4c85b5e664f4",
+        "opponent_guild_name": null,
+        "opponent_rank_points": 1000,
+        "remaining_pvp_points": 4
+      }
+    },
+    {
+      "rpc": "get_pvp_opponents_page",
+      "status": 200,
+      "request": {
+        "p_user_id": "c4bc5e91-e999-4c77-8b9d-5e71ac5f494c",
+        "p_my_points": 992,
+        "p_offset": 0
+      },
+      "response": {
+        "items": [
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": 6,
+            "opponent_class": "STRONGER",
+            "opponent_power": 103385,
+            "opponent_points": 992,
+            "opponent_user_id": "146cf13e-18d3-4ec4-be03-01bf82894cea",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "ぴなーん",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "シン",
+                "asset_identifier": "/characters/shin_transparent_asset.png",
+                "character_master_id": "char_shin_01"
+              },
+              {
+                "slot": 3,
+                "level": 2,
+                "rarity": "R",
+                "display_name": "レン",
+                "asset_identifier": "/characters/ren_male_transparent_asset.png",
+                "character_master_id": "char_ren_male_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "トモヤ",
+                "asset_identifier": "/characters/tomoya_transparent_asset.png",
+                "character_master_id": "char_tomoya_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "セリカ",
+                "asset_identifier": "/characters/serika_transparent_asset.png",
+                "character_master_id": "char_serika_01"
+              }
+            ],
+            "defense_character_ids": [
+              "857fe433-e7ed-42b2-a471-b7b52ae9839b",
+              "cb22dadc-2b9f-4625-b202-bc6ff6ac1546",
+              "f47b8e61-dde1-4aa1-a525-b68f38d19e61",
+              "6b89af2c-0fff-4baa-9de6-7691f2ac9252",
+              "c5ca7ef0-b536-46e9-afbb-4920b79dfec2"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": 11,
+            "opponent_class": "STRONGER",
+            "opponent_power": 116811,
+            "opponent_points": 992,
+            "opponent_user_id": "2c5f3fd2-92ef-4043-afc3-7722d2fba90a",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "あやこ",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SR",
+                "display_name": "カレン",
+                "asset_identifier": "/characters/karen_transparent_asset.png",
+                "character_master_id": "char_karen_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "シュン",
+                "asset_identifier": "/characters/shun_transparent_asset.png",
+                "character_master_id": "char_shun_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "タツヤ",
+                "asset_identifier": "/characters/tatsuya_transparent_asset.png",
+                "character_master_id": "char_tatsuya_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "カゲヤマ",
+                "asset_identifier": "/characters/kageyama_transparent_asset.png",
+                "character_master_id": "char_kageyama_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "タケシ",
+                "asset_identifier": "/characters/takeshi_transparent_asset.png",
+                "character_master_id": "char_takeshi_01"
+              }
+            ],
+            "defense_character_ids": [
+              "a8c7ff97-3a09-4555-8890-04d1fdcf262a",
+              "dab8e143-9fbf-4f9f-afcc-6327f0b07dca",
+              "c36f9a6a-8e2a-4f5c-8272-556dac9994da",
+              "73ecdede-c053-4ea9-86da-630c7df4aa4e",
+              "4866462c-39da-4ac9-8428-ba9b05126a4e"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": 13,
+            "opponent_class": "STRONGER",
+            "opponent_power": 97351,
+            "opponent_points": 992,
+            "opponent_user_id": "48b112ed-dd18-431e-997e-a5dcf3d50bd0",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "テスト",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SSR",
+                "display_name": "コハル",
+                "asset_identifier": "/characters/koharu_transparent_asset.png",
+                "character_master_id": "char_koharu_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "リキ",
+                "asset_identifier": "/characters/riki_transparent_asset.png",
+                "character_master_id": "char_riki_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "マコト",
+                "asset_identifier": "/characters/makoto_transparent_asset.png",
+                "character_master_id": "char_makoto_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "シュン",
+                "asset_identifier": "/characters/shun_transparent_asset.png",
+                "character_master_id": "char_shun_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ナオト",
+                "asset_identifier": "/characters/naoto_transparent_asset.png",
+                "character_master_id": "char_naoto_01"
+              }
+            ],
+            "defense_character_ids": [
+              "a93bbe4e-c290-4d24-b1a2-5f61ba685d32",
+              "ba42246e-38e3-4463-a6e2-cdf02a95a7fb",
+              "411e2f2b-8916-43fc-92ce-0cfbd2bbd3bd",
+              "c3459113-e2a8-4b78-94fe-82830c873089",
+              "0e533124-5c03-468b-bc7c-4e4d9e048684"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": 27,
+            "opponent_class": "STRONGER",
+            "opponent_power": 100648,
+            "opponent_points": 992,
+            "opponent_user_id": "a69d5d6f-630d-4dba-af66-2f62057ff0a7",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "タイガ",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "SR",
+                "display_name": "レオ",
+                "asset_identifier": "/characters/leo_transparent_asset.png",
+                "character_master_id": "char_leo_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "タツヤ",
+                "asset_identifier": "/characters/tatsuya_transparent_asset.png",
+                "character_master_id": "char_tatsuya_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "シュン",
+                "asset_identifier": "/characters/shun_transparent_asset.png",
+                "character_master_id": "char_shun_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "マコト",
+                "asset_identifier": "/characters/makoto_transparent_asset.png",
+                "character_master_id": "char_makoto_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "N",
+                "display_name": "ソウタ",
+                "asset_identifier": "/characters/souta_transparent_asset.png",
+                "character_master_id": "char_souta_01"
+              }
+            ],
+            "defense_character_ids": [
+              "0903c402-5ea5-45c2-80fb-2334cbd79b04",
+              "042d77ba-d770-4812-aedf-545e1dac9f05",
+              "77b26469-b496-4c33-9340-d2fdf16e77fb",
+              "084bc3c5-54bf-4762-a4dd-98a857bcf64a",
+              "babce44b-130b-4948-bb3e-ba9c088b52b0"
+            ]
+          },
+          {
+            "tactic": "BALANCED",
+            "match_tier": 1,
+            "opponent_rank": 33,
+            "opponent_class": "WEAKER",
+            "opponent_power": 83766,
+            "opponent_points": 992,
+            "opponent_user_id": "d6017896-03c3-4880-ab7a-4dabc2f4bc64",
+            "win_rating_delta": 16,
+            "loss_rating_delta": -8,
+            "opponent_username": "よろすく",
+            "rating_difference": 0,
+            "defense_characters": [
+              {
+                "slot": 1,
+                "level": 7,
+                "rarity": "R",
+                "display_name": "ミヤビ",
+                "asset_identifier": "/characters/miyabi_transparent_asset.png",
+                "character_master_id": "char_miyabi_01"
+              },
+              {
+                "slot": 2,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "ノア",
+                "asset_identifier": "/characters/noa_transparent_asset.png",
+                "character_master_id": "char_noa_01"
+              },
+              {
+                "slot": 3,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ジョー",
+                "asset_identifier": "/characters/joe_transparent_asset.png",
+                "character_master_id": "char_joe_01"
+              },
+              {
+                "slot": 4,
+                "level": 1,
+                "rarity": "R",
+                "display_name": "レン",
+                "asset_identifier": "/characters/ren_male_transparent_asset.png",
+                "character_master_id": "char_ren_male_01"
+              },
+              {
+                "slot": 5,
+                "level": 1,
+                "rarity": "SR",
+                "display_name": "ゴウ",
+                "asset_identifier": "/characters/gou_transparent_asset.png",
+                "character_master_id": "char_gou_01"
+              }
+            ],
+            "defense_character_ids": [
+              "6ee05488-2a93-4546-84fd-0bbc1da788e2",
+              "622cc49e-7ff5-49f5-8c4a-2095dcd6ce97",
+              "66a52424-b868-4617-b40a-748e621b09e6",
+              "f8dc431c-17c2-426e-9136-99a2d9c8830a",
+              "0bd98624-5e6a-42ac-87ad-dc4a5ab35d9d"
+            ]
+          }
+        ],
+        "offset": 0,
+        "next_offset": 5,
+        "total_count": 128
+      }
+    }
+  ]
+}

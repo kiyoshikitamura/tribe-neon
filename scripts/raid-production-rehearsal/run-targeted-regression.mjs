@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const files=['tests/db/raid-room-integrated.test.mjs','tests/db/raid-room-recovery-controls.test.mjs'];
+if(!process.env.RAID_TEST_RUNTIME)throw Error('RAID_TEST_RUNTIME must contain @electric-sql/pglite 0.5.8');
+const out='docs/development/raid-production-preparation/rehearsal';
+const run=spawnSync(process.execPath,['--test',...files],{encoding:'utf8',env:process.env});
+fs.mkdirSync(out,{recursive:true});fs.writeFileSync(out+'/targeted-regression.log',run.stdout+run.stderr);
+fs.writeFileSync(out+'/targeted-regression.json',JSON.stringify({executedAt:new Date().toISOString(),exitCode:run.status,files:files.map(file=>({file,sha256:createHash('sha256').update(fs.readFileSync(file)).digest('hex')})),scope:'PGlite minimal fixture with actual Raid migrations. Synthetic users, battle snapshots/results and rewards. Not the Production catalog or Supabase HTTP flow. Covers normal/rescue lifecycle, duplicate reward/claim, expiry, legacy cutover and recovery controls.'},null,2)+'\n');
+process.stdout.write(run.stdout);process.stderr.write(run.stderr);process.exitCode=run.status??1;

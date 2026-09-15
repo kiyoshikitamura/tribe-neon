@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = fileURLToPath(new URL('../../', import.meta.url));
+const runtime = process.env.RAID_TEST_RUNTIME_DIR;
+assert.ok(runtime, 'RAID_TEST_RUNTIME_DIR is required');
+const require = createRequire(resolve(runtime, 'package.json'));
+const { build } = require('esbuild');
+const out = resolve(root, 'outputs/raid-step4');
+await mkdir(out, { recursive: true });
+const bundle = resolve(out, 'pages-client.cjs');
+await build({ entryPoints: [resolve(root, 'src/domain/raidPages.ts')], outfile: bundle, bundle: true, platform: 'node', format: 'cjs', logLevel: 'silent', tsconfig: resolve(root, 'tsconfig.json') });
+const { loadRaidListPage, loadRaidEnemyInfo, loadRaidRescueCards } = require(bundle);
+// These fixtures are real JSON captured by verify-pg.mjs from an isolated database.
+const read = async name => JSON.parse(await readFile(resolve(out, `actual-${name}.json`), 'utf8'));
+const list = await read('list'), enemy = await read('enemy'), rescue = await read('rescue');
+const copy = value => structuredClone(value);
+const client = data => ({ rpc: async () => ({ data, error: null }) });
+const listCall = (data, offset = 0) => loadRaidListPage(client(data), 'beginner', offset);
+const enemyCall = data => loadRaidEnemyInfo(client(data), enemy.variantId, 'beginner');
+const rescueId = rescue.entries[0].rescue.value.rescueId;
+const rescueCall = (data, ids = [rescueId]) => loadRaidRescueCards(client(data), ids);
+const results = [];
+async function check(name, fn) { try { await fn(); results.push({ name, status: 'PASS' }); console.log('PASS', name); } catch (error) { results.push({ name, status: 'FAIL', error: error.message }); console.error('FAIL', name, error.message); } }
+const rejects = (name, source, edit, call) => check(name, async () => { const data = copy(source); edit(data); await assert.rejects(() => call(data)); });
+
+await check('real PG list: 20 entries and cursor; RPC arguments are exact', async () => {
+  const calls = []; const parsed = await loadRaidListPage({ rpc: async (...args) => { calls.push(args); return { data: list, error: null }; } }, 'beginner', 0);
+  assert.equal(parsed.entries.length, 20); assert.equal(parsed.nextOffset, 20);
+  assert.deepEqual(calls, [['list_raid_room_cards_v1', { p_difficulty_id: 'beginner', p_offset: 0 }]]);
+});
+await check('empty success is a valid page', async () => assert.deepEqual(await listCall({ entries: [], nextOffset: null }), { entries: [], nextOffset: null }));
+for (const cursor of [-1, 0, 19, 21, 20.5, '20', undefined]) await rejects(`invalid response cursor ${String(cursor)}`, list, d => { d.nextOffset = cursor; }, listCall);
+await rejects('21 entries exceed page bound', list, d => { const extra = copy(d.entries[0]); extra.room.roomId += '-extra'; d.entries.push(extra); d.nextOffset = null; }, listCall);
+await rejects('short page cannot advertise another page', list, d => { d.entries.pop(); }, listCall);
+await rejects('difficulty mismatch', list, d => { d.entries[0].room.difficultyId = 'expert'; }, listCall);
+await rejects('duplicate room id', list, d => { d.entries[1].room.roomId = d.entries[0].room.roomId; }, listCall);
+await check('real PG enemy resolves canonical roster and skills', async () => { const parsed = await enemyCall(enemy); assert.equal(Object.keys(parsed.skillsByCharacterId).length, 5); assert.deepEqual(parsed.skillsByCharacterId, enemy.skillsByCharacterId); });
+await rejects('variant identity mismatch', enemy, d => { d.variantId = 'OTHER'; }, enemyCall);
+await rejects('five-member identity mismatch', enemy, d => { d.memberCharacterIds[0] = 'unknown-character'; }, enemyCall);
+await rejects('five-member order mismatch', enemy, d => { d.memberCharacterIds.reverse(); }, enemyCall);
+await rejects('missing roster member', enemy, d => { d.memberCharacterIds.pop(); }, enemyCall);
+await rejects('skills field missing for a member', enemy, d => { delete d.skillsByCharacterId[d.memberCharacterIds[0]]; }, enemyCall);
+await rejects('empty skill identity', enemy, d => { d.skillsByCharacterId[d.memberCharacterIds[0]] = [{ id: '', name: 'x' }]; }, enemyCall);
+await check('explicit empty skill loadout remains valid', async () => { const d = copy(enemy); d.skillsByCharacterId[d.memberCharacterIds[0]] = []; assert.deepEqual((await enemyCall(d)).skillsByCharacterId[d.memberCharacterIds[0]], []); });
+await check('configured reward plan retains planned items', async () => { const d = copy(enemy); d.clearPlan = { status: 'configured', items: [{ itemId: 'item_cash', quantity: 3 }] }; assert.deepEqual((await enemyCall(d)).clearPlan, d.clearPlan); });
+await rejects('planned reward cannot contain issued Present id', enemy, d => { d.clearPlan = { status: 'configured', items: [{ itemId: 'item_cash', quantity: 1, presentId: 'issued-id' }] }; }, enemyCall);
+await rejects('unconfigured plan cannot contain items', enemy, d => { d.rescuePlan.items = [{ itemId: 'item_cash', quantity: 1 }]; }, enemyCall);
+await rejects('configured plan cannot be empty', enemy, d => { d.clearPlan.status = 'configured'; }, enemyCall);
+await check('real PG rescue preserves identity and unknown participants', async () => { const [parsed] = await rescueCall(rescue); assert.equal(parsed.rescue.value.rescueId, rescueId); assert.equal(parsed.participants.status, 'unknown'); });
+await check('known ACTIVITY and GUILD publication scopes preserved', async () => { for (const [source, scope, guildId] of [['activity', 'ACTIVITY', null], ['guild_chat', 'GUILD', 'guild-a']]) { const d = copy(rescue); d.entries[0].rescue.value = { rescueId, source, scope, guildId }; assert.deepEqual((await rescueCall(d))[0].rescue.value, d.entries[0].rescue.value); } });
+await check('legacy unknown publication scope stays absent', async () => { const d = copy(rescue); d.entries[0].rescue.value = { rescueId, source: 'activity' }; const parsed = (await rescueCall(d))[0]; assert.equal('scope' in parsed.rescue.value, false); });
+await rejects('unknown rescue identity cannot become actionable', rescue, d => { d.entries[0].rescue = { status: 'unknown' }; }, rescueCall);
+await rejects('unrequested rescue identity', rescue, d => { d.entries[0].rescue.value.rescueId = 'other-id'; }, rescueCall);
+await rejects('publication source/scope mismatch', rescue, d => { d.entries[0].rescue.value = { rescueId, source: 'activity', scope: 'GUILD', guildId: 'g' }; }, rescueCall);
+await check('same room can have distinct publication identities', async () => { const d = copy(rescue); const second = copy(d.entries[0]); second.rescue.value.rescueId = 'second'; d.entries.push(second); assert.equal((await rescueCall(d, [rescueId, 'second'])).length, 2); });
+await check('duplicate rescue identity rejected', async () => { const d = copy(rescue); d.entries.push(copy(d.entries[0])); await assert.rejects(() => rescueCall(d, [rescueId, 'second'])); });
+await check('over 50 rescue ids rejected before RPC', async () => { let called = false; await assert.rejects(() => loadRaidRescueCards({ rpc: async () => { called = true; return { data: {}, error: null }; } }, Array.from({ length: 51 }, (_, n) => String(n)))); assert.equal(called, false); });
+await check('RPC errors reject instead of becoming empty success', async () => { const broken = { rpc: async () => ({ data: null, error: { message: 'fixture error' } }) }; for (const call of [() => loadRaidListPage(broken, 'beginner', 0), () => loadRaidEnemyInfo(broken, enemy.variantId, 'beginner'), () => loadRaidRescueCards(broken, [rescueId])]) await assert.rejects(call, /request failed/); });
+await check('transport rejection stays an error', async () => { await assert.rejects(() => loadRaidListPage({ rpc: async () => { throw Error('offline'); } }, 'beginner', 0), /offline/); });
+await writeFile(resolve(out, 'pages-client-results.json'), JSON.stringify(results, null, 2));
+console.log(`${results.filter(r => r.status === 'PASS').length}/${results.length} PASS`);
+if (results.some(r => r.status === 'FAIL')) process.exitCode = 1;

@@ -46,8 +46,22 @@ export default function TutorialWorldIntro() {
       <div className="tutorial-world-content">
         <div className="tutorial-world-shade" />
         <div className="tutorial-world-ageha" aria-hidden="true"><CharacterPresentation src="/characters/ageha_transparent_asset.png" alt="" variant="dialogue-bust" /></div>
-        <div className="tutorial-world-dialogue"><strong>アゲハ</strong><TypewriterText text={`${username || setupUsername}ね。覚えた。よろしく。\n\nじゃあまず、一緒に動く仲間を探そっか。\nこの街、一人でどうにかするのは大変だから。`} speedMs={34} /></div>
-        <button className="semantic-cta semantic-cta--primary" onClick={() => void continueTutorial()} disabled={advancing} aria-busy={advancing}>
+        <div className="tutorial-world-dialogue"><strong>アゲハ</strong><TypewriterText text={`よろしく、${username || setupUsername}！\nこの街、一人でやってくのは結構大変なんだ。\nまずは仲間を集めよっか。`} speedMs={34} /></div>
+        <button
+          className="semantic-cta semantic-cta--primary tutorial-world-next-cta"
+          data-cta-state={advancing ? "busy" : "ready"}
+          style={advancing ? undefined : {
+            opacity: 1,
+            color: "#031014",
+            borderColor: "#8effff",
+            background: "linear-gradient(135deg, #19dce9, #69f3ff)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,.58), 0 0 20px rgba(25,220,233,.48)",
+            filter: "none",
+          }}
+          onClick={() => void continueTutorial()}
+          disabled={advancing}
+          aria-busy={advancing}
+        >
           次へ
         </button>
       </div>

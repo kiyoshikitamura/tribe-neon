@@ -1,0 +1,50 @@
+{
+  "role": "normal",
+  "requests": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"0ee0873c-3c8b-4068-b93b-24010771fba4\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "body": "{\"p_request_id\":\"30bed3be-cd64-4569-8807-d815103e95ae\"}"
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/claim_present",
+      "body": "{\"p_present_id\":\"9fb78226-c94c-4c45-b976-b9c7d2545918\"}"
+    }
+  ],
+  "responses": [
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "status": 200,
+      "body": {
+        "status": "acknowledged",
+        "requestId": "0ee0873c-3c8b-4068-b93b-24010771fba4"
+      }
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/acknowledge_raid_room_battle_recovery_v1",
+      "status": 200,
+      "body": {
+        "status": "acknowledged",
+        "requestId": "30bed3be-cd64-4569-8807-d815103e95ae"
+      }
+    },
+    {
+      "url": "https://sufvuqdnqohpfzkwxohq.supabase.co/rest/v1/rpc/claim_present",
+      "status": 200,
+      "body": {
+        "status": "success",
+        "present_id": "9fb78226-c94c-4c45-b976-b9c7d2545918"
+      }
+    }
+  ],
+  "recovered": [
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n4,677\n共有HPへの反映\n4,677\n累計貢献ダメージ\n9,362\nボス残りHP\n1,261\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る",
+    "VS 対戦相手\nキングス・クラウン\n敵リーダー　レイジ\nLOSE\n今回の個人ダメージ\n4,370\n共有HPへの反映\n1,261\n累計貢献ダメージ\n13,732\nボス残りHP\n0\n討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\nレイドへ戻る"
+  ],
+  "errors": [],
+  "before": "未受取: 11件\n一括受け取り\nレイド討伐報酬\nカスタムオイル・小 × 1\n期限: あと30日\n受け取る\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る",
+  "after": "未受取: 11件\n一括受け取り\nログインボーナス\n強化ドリンク・中 × 2\n期限: あと30日\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\nカスタムオイル・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nクエストドロップ\n強化ドリンク・小 × 1\n期限: あと23時間\n受け取る\nSWR同期追加: アンケート協力のお礼\nダイヤ × 50\n期限: あと23時間\n受け取る"
+}

@@ -1,0 +1,8 @@
+{
+  "payloadSha256": "c675c4cdea6507bbf0a4b0530063ce8d09b5f76e375b0f5ef13c1d29f0ee3526",
+  "sqlSha256": "7045bc8b4239e33e21d81f6abce3cdd14543cfc64867d2717b15597783c535be",
+  "beforeCurrentHp": 31988539,
+  "afterCurrentHp": 25000,
+  "maxHp": 32000000,
+  "expiryRoomUntouched": "3972a461-b45f-4b02-8142-75f294461ae3"
+}

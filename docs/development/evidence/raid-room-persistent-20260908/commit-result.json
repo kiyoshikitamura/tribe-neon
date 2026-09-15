@@ -1,0 +1,21 @@
+[
+  {
+    "project_ref": "sufvuqdnqohpfzkwxohq",
+    "change_id": "raid-room-preview-375a0ad-delta-v1",
+    "payload_sha256": "adc3bccfc6345f5fd36dfcdd1d42bbba01531882437f61f50036365ed1d77ffb",
+    "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+    "validation_commit": "391e39766e13e4e9b4c23398e345ae5240c9aeb2",
+    "execution_id": "731ff89a-5832-4c6b-9267-4fd1317fa902",
+    "operator_identity": "Codex / user-authorized Preview execution",
+    "approval_reference": "User approval 2026-09-08: rollback then persist only if all checks match",
+    "baseline_sha256": "e693e496d2e7c4ba1f7083615564ae31c04042383948853041e7de62b00ae3f9",
+    "postflight": {
+      "checks": "04-postflight.sql",
+      "status": "PASS",
+      "postflight_sha256": "f847a7829caa99cddd6c8798fc3045d699d514e8e53cbab0796310164303ffae"
+    },
+    "database_role": "postgres",
+    "transaction_id": "47165",
+    "recorded_at": "2026-09-08 09:51:30.887865+00"
+  }
+]

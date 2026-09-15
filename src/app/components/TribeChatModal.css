@@ -4,6 +4,19 @@
   height: 100%;
 }
 
+.tribe-community-secondary-nav {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  margin: -4px 0 8px;
+}
+
+.tribe-bbs-link.outlaw-button {
+  min-height: 34px;
+  padding: 5px 12px;
+  font-size: 10px;
+}
+
 /* Chat can be opened after horizontally scrollable tabs/details. Anchor the
    modal to the viewport instead of inheriting a shifted containing block. */
 .modal-shell.tribe-chat-panel {
@@ -17,31 +30,100 @@
   animation: none;
 }
 
-.tribe-dm-recipient-selector {
+.tribe-dm-thread-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 12px;
+  padding: 8px 4px 10px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
 }
 
-.tribe-dm-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--neon-gold);
+.tribe-dm-thread-header strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ui-text-primary);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.tribe-dm-recipient-input {
-  flex: 1;
-  background: rgba(20, 26, 40, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  padding: 4px 8px;
+.tribe-dm-back.outlaw-button {
+  min-height: 36px;
+  padding: 6px 14px;
   font-size: 11px;
-  color: #ffffff;
-  outline: none;
+}
+
+.tribe-dm-conversation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.tribe-dm-conversation {
+  display: flex;
+  width: 100%;
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(160, 160, 170, 0.26);
+  border-radius: var(--ui-radius-sm);
+  background: linear-gradient(180deg, rgba(35, 40, 51, 0.94), rgba(17, 19, 28, 0.96));
+  color: var(--ui-text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.tribe-dm-conversation-main {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tribe-dm-conversation-main strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tribe-dm-conversation-main > span {
+  overflow: hidden;
+  color: var(--ui-text-secondary);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tribe-dm-conversation-meta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tribe-dm-conversation-meta time {
+  color: var(--ui-text-secondary);
+  font-size: 9px;
+}
+
+.tribe-dm-conversation-meta b {
+  display: inline-flex;
+  min-width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--ui-combat);
+  color: #fff;
+  font-size: 10px;
 }
 
 /* メッセージログ表示領域 */
@@ -141,6 +223,22 @@
   gap: 8px;
   padding: 10px 0 0 0;
   flex-shrink: 0;
+  margin-top: auto;
+}
+
+.tribe-modal-composer-row {
+  display: flex;
+  gap: 8px;
+}
+
+.tribe-modal-input {
+  min-width: 0;
+  flex: 1;
+}
+
+.tribe-modal-send.outlaw-button {
+  width: 80px;
+  padding-inline: 12px;
 }
 
 @media (max-width: 412px) {

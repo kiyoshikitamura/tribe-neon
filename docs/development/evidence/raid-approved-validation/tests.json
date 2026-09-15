@@ -1,0 +1,41 @@
+{
+  "mode": "local Mock and saved isolated-PG response fixtures, not live HTTP/DB",
+  "checks": [
+    {
+      "group": "top",
+      "pass": 17,
+      "fail": 0
+    },
+    {
+      "group": "detail",
+      "pass": 19,
+      "fail": 0
+    },
+    {
+      "group": "daily",
+      "pass": 6,
+      "fail": 0
+    },
+    {
+      "group": "replay",
+      "pass": 27,
+      "fail": 0
+    },
+    {
+      "group": "browser",
+      "pass": 32,
+      "fail": 0
+    },
+    {
+      "group": "authority",
+      "pass": 31,
+      "fail": 0
+    },
+    {
+      "group": "rescue",
+      "pass": 8,
+      "fail": 0
+    }
+  ],
+  "total": 140
+}

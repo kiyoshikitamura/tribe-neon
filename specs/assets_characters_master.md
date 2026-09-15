@@ -1,6 +1,6 @@
 # 【TRIBE NEON】全60キャラクターCreative管理資料
 
-> **Production Status（2026-08-17）**: 60体RosterはCONFIRMEDです。SSR10/SR20/R20/N10は総数構成候補、個別RarityはPROVISIONALです。本書のCreative分類や見出しを個別RarityのProduction確定根拠に使用しません。Primary Culture / Culture Tags / Archetype / Culture Anchor / Hero Anchor / KV CastをRarityと分離した新規Character Production Master MDが別途必要です。
+> **Production Status（2026-08-21のFreezeを優先）**: 60体Roster、個別Rarity、Production PNGは60/60 CLOSEです。正本は`src/domain/gameplay/canonical/data/characters_20260821.json`、画像は`public/characters/*_transparent_asset.png`、Alpha QAは`specs/production/gameplay_foundation/character_alpha_release_audit_20260821.md`です。本書の旧Creative見出しや旧暫定記述をProduction判定へ使用しません。`src/constants/open_beta_provisional_characters.ts`というファイル名と旧export名は後方互換名であり、画像が暫定であることを意味しません。
 
 本ドキュメントは、実物アセット画像（`reiji_transparent_asset.png`, `rui_transparent_asset.png`）を絶対的基準とし、過去の古いテキスト残骸を完全に削除・一元化した公式キャラクター仕様書です。
 

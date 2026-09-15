@@ -1,0 +1,30 @@
+{
+  "changed": [
+    {
+      "name": "kpi_daily_engagement_v1",
+      "args": "p_from date, p_to date",
+      "new": "e5da97325d85412cccc4d894e57140be",
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres"
+    },
+    {
+      "name": "refresh_kpi_overview_saved_results",
+      "args": "p_today date",
+      "old": "7e86ab7e3b15594247190eb49035d63c",
+      "new": "103e6b634a4db1da6ca6e7d870dd63c6",
+      "acl": [
+        "postgres=X/postgres"
+      ],
+      "owner": "postgres"
+    }
+  ],
+  "removed": [],
+  "newMigrations": [
+    {
+      "name": "kpi_social_active_raid_point_daily",
+      "version": "20260909151723"
+    }
+  ]
+}

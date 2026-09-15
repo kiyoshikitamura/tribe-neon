@@ -75,15 +75,21 @@ export function battlePresentationTier(isSkill: boolean, actorRarity: unknown): 
   return rarity === "SSR" ? "SSR" : rarity === "SR" ? "SR" : "STANDARD";
 }
 
-export function battlePresentationBudget(tier: BattlePresentationTier, speed: number): number {
+export function battlePresentationBudget(tier: BattlePresentationTier, speed: number, street = false): number {
+  if (street) return battlePresentationImpactAt(speed, tier, true) + Math.max(900, 1150 / Math.max(1, speed));
   // 2x now tracks the former 1x recognition budget. 1x deliberately has
   // roughly twice that room so a human can read the whole fixed field.
   if (speed > 1) return tier === "NORMAL" ? 720 : tier === "STANDARD" ? 950 : 1200;
   return tier === "NORMAL" ? 1440 : tier === "STANDARD" ? 1900 : 2400;
 }
 
-export function battlePresentationImpactAt(speed: number): number {
-  return speed > 1 ? 82 : 120;
+export function battlePresentationImpactAt(speed: number, tier: BattlePresentationTier = "NORMAL", street = false): number {
+  if (street) return tier === "NORMAL" ? Math.max(160, 320 / Math.max(1, speed)) : Math.max(tier === "SSR" ? 1200 : 800, (tier === "SSR" ? 1500 : tier === "SR" ? 1000 : 850) / Math.max(1, speed));
+  // Preserve a readable Actor/Cut-in beat before Impact. The former shared
+  // 120ms boundary made skills resolve almost immediately, leaving only a
+  // long post-impact hold and breaking the accepted battle rhythm.
+  if (speed > 1) return tier === "NORMAL" ? 260 : tier === "STANDARD" ? 400 : 520;
+  return tier === "NORMAL" ? 520 : tier === "STANDARD" ? 820 : tier === "SR" ? 1040 : 1160;
 }
 
 export function isActiveEffectSync(event: BattlePresentationReplayEvent): boolean {
@@ -160,6 +166,81 @@ export type BattleActionHpParityTrace = {
   sampledAt: number;
   units: BattleHpParityUnit[];
 };
+
+export type BattleHpParityBoundary = "ACTION" | "RESULT" | "SKIP";
+
+export type BattleHpParityLivenessTrace = {
+  kind: "HP_PARITY_LIVENESS_TIMEOUT";
+  boundary: BattleHpParityBoundary;
+  replayId: string | null;
+  round: number | null;
+  actorId: string | null;
+  replayCursor: number | null;
+  attempts: number;
+  sampledAt: number;
+  units: BattleHpParityUnit[];
+};
+
+export type BattleHpParityGateResult = {
+  status: "parity" | "timed_out" | "cancelled";
+  attempts: number;
+};
+
+/**
+ * DOM/CSS一致は表示診断であり、バトル結果のAuthorityではない。
+ * 欠落行や古い描画が確定済みReplayを永久停止させないよう再試行を有限にする。
+ */
+export const BATTLE_HP_PARITY_MAX_ATTEMPTS = 2;
+export const BATTLE_HP_PARITY_RETRY_DELAY_MS = 120;
+
+export async function waitForBattleHpParityGate(
+  sample: () => Promise<BattleActionHpParityTrace | BattleHpParityTrace | null>,
+  context: {
+    boundary: BattleHpParityBoundary;
+    replayId?: string | null;
+    round?: number | null;
+    actorId?: string | null;
+    replayCursor?: number | null;
+  },
+  options: {
+    maxAttempts?: number;
+    retryDelayMs?: number;
+    isActive?: () => boolean;
+  } = {},
+): Promise<BattleHpParityGateResult> {
+  const maxAttempts = Math.max(1, Math.floor(options.maxAttempts ?? BATTLE_HP_PARITY_MAX_ATTEMPTS));
+  const retryDelayMs = Math.max(0, options.retryDelayMs ?? BATTLE_HP_PARITY_RETRY_DELAY_MS);
+  let lastTrace: BattleActionHpParityTrace | BattleHpParityTrace | null = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    if (options.isActive && !options.isActive()) return { status: "cancelled", attempts: attempt - 1 };
+    lastTrace = await sample();
+    if (options.isActive && !options.isActive()) return { status: "cancelled", attempts: attempt };
+    if (!lastTrace || lastTrace.parity) return { status: "parity", attempts: attempt };
+    if (attempt < maxAttempts) {
+      await new Promise<void>((resolve) => setTimeout(resolve, retryDelayMs));
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    const timeoutTrace: BattleHpParityLivenessTrace = {
+      kind: "HP_PARITY_LIVENESS_TIMEOUT",
+      boundary: context.boundary,
+      replayId: context.replayId ?? null,
+      round: context.round ?? null,
+      actorId: context.actorId ?? null,
+      replayCursor: context.replayCursor ?? null,
+      attempts: maxAttempts,
+      sampledAt: performance.now(),
+      units: lastTrace?.units ?? [],
+    };
+    const battleWindow = window as typeof window & { __TRIBE_BATTLE_HP_TRACE__?: unknown[] };
+    (battleWindow.__TRIBE_BATTLE_HP_TRACE__ ||= []).push(timeoutTrace);
+    document.documentElement.dataset.battleHpLivenessTimeout = context.boundary.toLowerCase();
+    document.documentElement.dataset.battleHpLivenessAttempts = String(maxAttempts);
+  }
+  return { status: "timed_out", attempts: maxAttempts };
+}
 
 /** Records replay-derived HP projection only; it never derives battle results. */
 export function recordBattleHpProjection(trace: Omit<BattleHpProjectionTrace, "kind" | "projectedAt">): void {

@@ -2369,9 +2369,3 @@ button:disabled {
   0%, 100% { opacity: 0.5; transform: scale(0.96); }
   50% { opacity: 1; transform: scale(1.04); filter: drop-shadow(0 0 10px #ff0055); }
 }
-/* Production equipment frame source N has a smaller transparent perimeter.
-   Keep one visual geometry without resampling or stretching the raster asset. */
-img[src$="/ui/rarity/equipment-frame-n.png"] {
-  transform: translateY(-1.5%) scale(1.319);
-  transform-origin: center;
-}

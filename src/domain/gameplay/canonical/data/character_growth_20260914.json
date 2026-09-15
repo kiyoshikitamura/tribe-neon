@@ -1,0 +1,48 @@
+{
+  "version": "2026-09-14",
+  "authority": "specs/exp_growth_implementation_candidate_20260914.md; server master seed must be generated from these exponents",
+  "exponents": {
+    "ATTACKER": {
+      "hp": 1.05,
+      "atk": 0.9,
+      "def": 1.1,
+      "spd": 0.95,
+      "luk": 1
+    },
+    "BALANCED": {
+      "hp": 1,
+      "atk": 1,
+      "def": 1,
+      "spd": 1,
+      "luk": 1
+    },
+    "DEFENDER": {
+      "hp": 0.95,
+      "atk": 1.1,
+      "def": 0.9,
+      "spd": 1.1,
+      "luk": 1
+    },
+    "HP_TANK": {
+      "hp": 0.85,
+      "atk": 1.1,
+      "def": 0.95,
+      "spd": 1.15,
+      "luk": 1.05
+    },
+    "LUCKY_STAR": {
+      "hp": 1.05,
+      "atk": 1.05,
+      "def": 1.05,
+      "spd": 0.95,
+      "luk": 0.85
+    },
+    "SPEEDSTER": {
+      "hp": 1.1,
+      "atk": 1,
+      "def": 1.1,
+      "spd": 0.85,
+      "luk": 0.95
+    }
+  }
+}

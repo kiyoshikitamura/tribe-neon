@@ -10,16 +10,21 @@ test.beforeEach(async ({ page }) => {
     const now = new Date().toISOString();
     localStorage.setItem("tribe_demo_uuid", me);
     localStorage.setItem("mock_auth_mode", "EMAIL");
+    localStorage.setItem("mock_db_tutorial_progress", JSON.stringify([{ user_id: me, step_id: "AUTHENTICATION" }]));
+    localStorage.setItem("mock_db_user_account_auth_methods", JSON.stringify([{ user_id: me, auth_method: "EMAIL" }]));
+    const cycleDate = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Tokyo" });
+    localStorage.setItem("mock_db_user_login_bonuses", JSON.stringify([{ user_id: me, current_day: 1, total_logins: 1, last_claimed_date: cycleDate }]));
     localStorage.setItem("mock_db_users", JSON.stringify([
-      { id: me, username: "V0確認", current_base_id: "shinjuku", favorite_character_id: "char_reiji_01", level: 10, cash: 50000, pvp_points: 5 },
-      { id: rivals[0], username: "街の強敵A", level: 12, total_power: 23500 },
-      { id: rivals[1], username: "街の強敵B", level: 11, total_power: 21000 },
+      { id: me, username: "V0確認", current_base_id: "shinjuku", favorite_character_id: "char_reiji_01", level: 10, cash: 50000, pvp_points: 5, total_power: 19000 },
+      { id: rivals[0], username: "街の強敵A", level: 12, total_power: 15000, favorite_character_id: "char_reiji_01" },
+      { id: rivals[1], username: "街の強敵B", level: 11, total_power: 17000, favorite_character_id: "char_rui_01" },
     ]));
     localStorage.setItem("mock_db_user_characters", JSON.stringify([
       { id: "10000000-0000-4000-8000-000000000001", user_id: me, character_id: "char_reiji_01", level: 12, awakening_level: 2, created_at: now },
       { id: "10000000-0000-4000-8000-000000000002", user_id: me, character_id: "char_rui_01", level: 10, awakening_level: 1, created_at: now },
       { id: "10000000-0000-4000-8000-000000000003", user_id: me, character_id: "char_chang_01", level: 9, awakening_level: 0, created_at: now },
       { id: "10000000-0000-4000-8000-000000000102", user_id: rivals[0], character_id: "char_reiji_01", name: "レイジ", rarity: "SSR", level: 12, awakening_level: 1, created_at: now },
+      { id: "10000000-0000-4000-8000-000000000103", user_id: rivals[1], character_id: "char_rui_01", name: "ルイ", rarity: "SSR", level: 11, awakening_level: 1, created_at: now },
     ]));
     localStorage.setItem("mock_db_user_skills", JSON.stringify([
       { id: "skill-owned-1", user_id: me, skill_card_id: "SKILL_001", plus_val: 3, equipped_character_id: "10000000-0000-4000-8000-000000000001", slot_index: 0 },
@@ -42,18 +47,19 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem("mock_db_pvp_ranks", JSON.stringify(location.search.includes("freshPvp=1") ? pvpRanks.filter((entry) => entry.user_id !== me) : pvpRanks));
     localStorage.setItem("mock_db_pvp_defense_decks", JSON.stringify([
       { user_id: rivals[0], character_1_id: "10000000-0000-4000-8000-000000000102", tactic: "BALANCED" },
-      { user_id: rivals[1], character_1_id: "10000000-0000-4000-8000-000000000102", tactic: "BALANCED" },
+      { user_id: rivals[1], character_1_id: "10000000-0000-4000-8000-000000000103", tactic: "BALANCED" },
     ]));
     localStorage.setItem("mock_db_user_main_formations", JSON.stringify([
       { user_id: me, slot: 1, user_character_id: "10000000-0000-4000-8000-000000000001" },
       { user_id: me, slot: 2, user_character_id: "10000000-0000-4000-8000-000000000002" },
       { user_id: me, slot: 3, user_character_id: "10000000-0000-4000-8000-000000000003" },
       { user_id: rivals[0], slot: 1, user_character_id: "10000000-0000-4000-8000-000000000102" },
+      { user_id: rivals[1], slot: 1, user_character_id: "10000000-0000-4000-8000-000000000103" },
     ]));
     localStorage.setItem("mock_db_user_power_rankings", JSON.stringify([
-      { user_id: rivals[0], total_power: 23500, updated_at: now }, { user_id: rivals[1], total_power: 21000, updated_at: now }, { user_id: me, total_power: 19000, updated_at: now },
+      { user_id: rivals[0], total_power: 15000, updated_at: now }, { user_id: rivals[1], total_power: 17000, updated_at: now }, { user_id: me, total_power: 19000, updated_at: now },
     ]));
-    localStorage.setItem("mock_db_raid_bosses", JSON.stringify([{ id: "20000000-0000-4000-8000-000000000001", boss_master_id: "BOSS_001", boss_name: "極道連合組長", level: 99, current_hp: 7500000, max_hp: 10000000, base_id: "shinjuku", status: "ACTIVE", expires_at: new Date(Date.now() + 86400000).toISOString() }]));
+    localStorage.setItem("mock_db_raid_bosses", JSON.stringify([{ id: "20000000-0000-4000-8000-000000000001", boss_master_id: "RAID_SHINJUKU_V1", boss_name: "キングス・クラウン", level: 30, current_hp: 24000000, max_hp: 32000000, base_id: "shinjuku", status: "ACTIVE", expires_at: new Date(Date.now() + 86400000).toISOString() }]));
     localStorage.setItem("mock_db_guilds", JSON.stringify([
       { id: "30000000-0000-4000-8000-000000000001", name: "NEON WOLVES", level: 8, member_count: 6, member_limit: 10, approval_required: false, description: "毎日活動中" },
       { id: "30000000-0000-4000-8000-000000000002", name: "夜街連合", level: 6, member_count: 5, member_limit: 10, approval_required: true, description: "レイド重視" },
@@ -62,7 +68,6 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem("mock_db_guild_members", JSON.stringify([]));
     const mission = { id: "ob_daily_patrol_01", title: "本日のシノギ", description: "クエスト派遣を1回完了する", category: "DAILY", trigger_type: "PATROL_CLEAR", target_value: 1, reward_item_id: "CASH", reward_quantity: 1000, condition_params: { cta_tab: "patrol", cta_label: "クエストへ" }, display_order: 20, is_enabled: true, is_provisional: false };
     localStorage.setItem("mock_db_missions", JSON.stringify([mission]));
-    const cycleDate = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Tokyo" });
     localStorage.setItem("mock_db_user_missions", JSON.stringify([{ id: "user-ob-daily-patrol", user_id: me, mission_id: mission.id, cycle_date: cycleDate, current_progress: 1, status: "CLEAR", claimed_at: null, missions: mission }]));
   });
 });
@@ -70,6 +75,7 @@ test.beforeEach(async ({ page }) => {
 async function enterGame(page: import("@playwright/test").Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "TAP TO START" }).click();
+  await page.getByRole("button", { name: "続きから" }).click();
   await expect(page.locator(".header-mobile")).toBeVisible();
 }
 
@@ -85,16 +91,25 @@ async function mobileFramePass(page: import("@playwright/test").Page, selector: 
 test("M9-V0 main cycle presents growth, mission, PvP, ranking, raid and guild discovery", async ({ page }) => {
   await enterGame(page);
 
-  await page.getByRole("button", { name: /キャラ/ }).click();
-  await expect(page.locator(".char-identity-summary")).toContainText("RARITY");
-  await expect(page.locator(".char-layer-character .character-presentation-portrait")).toBeVisible();
-  await page.getByRole("button", { name: "強化", exact: true }).click();
-  await page.getByRole("button", { name: "スキル", exact: true }).click();
-  await expect(page.locator(".char-skill-spec").first()).toContainText("再使用 3T");
-  await page.getByRole("button", { name: "装備", exact: true }).click();
-  await expect(page.getByText("装備強化・限界突破")).toBeVisible();
-  await mobileFramePass(page, ".char-tab-container", "character-skill-equipment");
-  await page.getByRole("button", { name: /閉じる/ }).click();
+  await page.getByRole("button", { name: "キャラ", exact: true }).click();
+  await expect(page.locator(".character-v2-character-grid .character-v2-card")).toHaveCount(3);
+  await page.locator(".character-v2-character-grid .character-v2-card").first().click();
+  await expect(page.locator(".character-v2-stage-meta")).toContainText("SSR");
+  await expect(page.locator(".character-v2-status-block")).toContainText("総合力");
+  await page.locator(".character-v2-primary-actions").getByRole("button", { name: "強化", exact: true }).click();
+  await expect(page.locator(".character-v2-growth")).toBeVisible();
+  await expect(page.locator(".character-v2-current-after").first()).toContainText("After");
+  await page.locator(".character-v2-main-nav").getByRole("button", { name: "スキル", exact: true }).click();
+  await expect(page.locator(".character-v2-asset-grid .character-v2-asset-card")).toHaveCount(2);
+  await page.locator(".character-v2-asset-grid .character-v2-asset-card").first().click();
+  await expect(page.getByRole("dialog", { name: "スキル詳細" })).toContainText("Target");
+  await page.getByRole("dialog", { name: "スキル詳細" }).getByRole("button", { name: "閉じる" }).click();
+  await page.locator(".character-v2-main-nav").getByRole("button", { name: "装備", exact: true }).click();
+  await expect(page.locator(".character-v2-asset-grid .character-v2-asset-card")).toHaveCount(2);
+  await page.locator(".character-v2-asset-grid .character-v2-asset-card").first().click();
+  await expect(page.getByRole("dialog", { name: "装備詳細" })).toContainText("Slot");
+  await page.getByRole("dialog", { name: "装備詳細" }).getByRole("button", { name: "閉じる" }).click();
+  await mobileFramePass(page, ".character-v2-shell", "character-skill-equipment");
 
   await page.getByRole("button", { name: /マイページ/ }).click();
   await page.getByRole("button", { name: /ミッション/ }).click();
@@ -106,7 +121,7 @@ test("M9-V0 main cycle presents growth, mission, PvP, ranking, raid and guild di
   await page.locator(".circle-menu-btn.fight").click();
   await expect(page.locator(".pvp-hero")).toBeVisible();
   await expect(page.locator(".pvp-self-summary > div").first().locator("strong")).not.toHaveText("—");
-  const pvpTopRank = (await page.locator(".pvp-self-summary > div").first().locator("strong").textContent())?.replace("#", "");
+  const pvpTopRank = (await page.locator(".pvp-self-summary > div").first().locator("strong").textContent())?.replace(/\D/g, "");
   await expect(page.locator(".pvp-self-summary")).toContainText("順位");
   await expect(page.locator(".pvp-self-summary")).toContainText("RATE");
   await expect(page.locator(".pvp-self-summary")).toContainText("BP");
@@ -114,33 +129,40 @@ test("M9-V0 main cycle presents growth, mission, PvP, ranking, raid and guild di
   await expect(page.locator(".pvp-my-deck")).toContainText("総合力");
   await expect(page.locator(".pvp-opponent-card").first()).toContainText("総合力");
   await expect(page.locator(".pvp-opponent-card").first()).toContainText("順位 1位");
-  await expect(page.locator(".pvp-opponent-card").first()).toContainText("LEADER");
+  await expect(page.locator(".pvp-opponent-card").first().locator(".user-identity-row .character-presentation-character")).toBeVisible();
   await expect(page.locator(".pvp-opponent-card").first()).toContainText("総合力差");
   await expect(page.locator(".pvp-opponent-card").first().getByRole("button", { name: "対戦する" })).toBeVisible();
   await expect(page.locator(".pvp-opponent-deck .character-presentation-thumbnail").first()).toBeVisible();
   expect(await page.locator(".pvp-opponent-card").first().evaluate((node) => node.getBoundingClientRect().top < window.innerHeight)).toBe(true);
   await mobileFramePass(page, ".pvp-view", "pvp");
   await page.getByRole("button", { name: "ランキング", exact: true }).click();
-  await expect(page.locator(".ranking-hero-copy")).toContainText("あなたの現在地");
-  await expect(page.locator(".ranking-hero-copy strong")).toHaveText(`${pvpTopRank}位`);
-  await expect(page.getByRole("button", { name: "PvPへ戻る" })).toBeVisible();
-  await page.locator(".ranking-tab-view .clickable-item").first().click();
-  await expect(page.locator(".modal-card").getByText("街の強敵A", { exact: true })).toBeVisible();
-  await expect(page.getByText("総合力", { exact: false }).last()).toBeVisible();
-  await page.getByRole("button", { name: "閉じる" }).click();
+  const currentRanking = page.locator(".ranking-current");
+  await expect(currentRanking).toBeVisible();
+  await expect(currentRanking).toHaveAccessibleName("あなたの現在地");
+  await expect(currentRanking).toContainText(`${pvpTopRank}位`);
+  await expect(page.getByRole("button", { name: "バトルへ戻る" })).toBeVisible();
+  await page.locator(".ranking-user-row .user-identity-row").first().click();
+  const profileDialog = page.getByRole("dialog", { name: "街の強敵Aの公開プロフィール" });
+  await expect(profileDialog.getByRole("heading", { name: "街の強敵A" })).toBeVisible();
+  await expect(profileDialog.getByText("総合力", { exact: true })).toBeVisible();
+  await profileDialog.getByRole("button", { name: "閉じる" }).click();
   await mobileFramePass(page, ".ranking-tab-view", "ranking");
 
   await page.getByRole("button", { name: /マイページ/ }).click();
-  await page.getByRole("button", { name: "⚠ レイド開催中", exact: true }).click();
-  await expect(page.locator(".raid-boss-stage")).toContainText("極道連合組長");
+  await page.locator('.mypage-sub-icons-left button:has(img[src="/menu/home_nav_raid.png"])').click();
+  await expect(page.locator(".raid-party-heading")).toContainText("キングス・クラウン");
+  const raidRoster = page.locator('.raid-enemy-roster[data-raid-variant-id="RAID_SHINJUKU_V1"]');
+  await expect(raidRoster).toHaveAttribute("data-roster-ready", "true");
+  await expect(raidRoster.locator(".pvp-deck-member")).toHaveCount(5);
   await expect(page.locator(".raid-status-grid")).toContainText("CONTRIBUTION");
   await mobileFramePass(page, ".raid-view", "raid");
 
-  await page.getByRole("button", { name: /ギルド/ }).click();
+  await page.getByRole("button", { name: "マイページ", exact: true }).click();
+  await page.getByRole("button", { name: "ギルド", exact: true }).click();
   await expect(page.locator(".guild-activity-line").first()).toContainText("レイド貢献");
   await page.locator(".guild-detail-trigger").first().click();
   await expect(page.locator(".guild-public-status-grid")).toContainText("空き枠");
-  await expect(page.getByRole("button", { name: /このTRIBEに加入する|加入申請する/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /このギルドに加入する|加入申請する/ })).toBeVisible();
   await mobileFramePass(page, ".guild-lobby-view", "guild-detail");
 });
 
@@ -162,6 +184,7 @@ test("Fresh player outside public top 100 receives opponents on first PvP view",
   test.setTimeout(35_000);
   await page.goto("/?freshPvp=1");
   await page.getByRole("button", { name: "TAP TO START" }).click();
+  await page.getByRole("button", { name: "続きから" }).click();
   await page.locator(".circle-menu-btn.fight").click();
   await expect(page.locator(".pvp-opponent-card")).toHaveCount(2);
   await expect(page.getByText("対戦相手が見つかりません")).toHaveCount(0);

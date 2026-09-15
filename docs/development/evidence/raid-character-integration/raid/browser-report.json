@@ -1,0 +1,196 @@
+{
+  "report": [
+    {
+      "name": "owner",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "member",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "rescue",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "not_joined",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "cleared",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "expired",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "loading",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "error",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "unknown",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "many",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "long-name",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "no-guild",
+      "dimensions": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "reward-unconfigured",
+      "height": 844,
+      "size": {
+        "client": 565,
+        "scroll": 565,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-planned",
+      "height": 844,
+      "size": {
+        "client": 677,
+        "scroll": 2863,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-issued",
+      "height": 844,
+      "size": {
+        "client": 677,
+        "scroll": 7258,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-error",
+      "height": 844,
+      "size": {
+        "client": 677,
+        "scroll": 2691,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-unconfigured",
+      "height": 600,
+      "size": {
+        "client": 433,
+        "scroll": 565,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-planned",
+      "height": 600,
+      "size": {
+        "client": 433,
+        "scroll": 2863,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-issued",
+      "height": 600,
+      "size": {
+        "client": 433,
+        "scroll": 7258,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "name": "reward-error",
+      "height": 600,
+      "size": {
+        "client": 433,
+        "scroll": 2691,
+        "width": 364,
+        "scrollWidth": 364
+      }
+    },
+    {
+      "width": 375,
+      "m": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "width": 390,
+      "m": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 430,
+      "m": {
+        "client": 430,
+        "scroll": 430
+      }
+    }
+  ],
+  "errors": [],
+  "profileRoundtrip": "PASS",
+  "integratedBrowser": "PASS",
+  "modalCount": "PASS",
+  "closeHit": "PASS",
+  "headerClose44": "PASS",
+  "presentRoute": "PASS"
+}

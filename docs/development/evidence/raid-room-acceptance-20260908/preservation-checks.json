@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "existingCronUnchanged": 6,
+  "expiryRoomFullRowUnchanged": true,
+  "originalUsers": {
+    "md5": "b868375386785c9dfdad599129f9005f",
+    "count": 19
+  },
+  "migrations": 275,
+  "recoveryFixPreserved": "251dc03 useBattle differs only by one reward-copy line",
+  "recoveryDiff": "diff --git a/src/hooks/useBattle.ts b/src/hooks/useBattle.ts\nindex 50a1586..f60eb97 100644\n--- a/src/hooks/useBattle.ts\n+++ b/src/hooks/useBattle.ts\n@@ -3241,7 +3241,7 @@ export function useBattle(options: UseBattleOptions) {\n             { label: \"累計貢献ダメージ\", value: Number(raidResultTemp.personalContribution || 0).toLocaleString() },\n             { label: \"ボス残りHP\", value: Number(raidResultTemp.remainingBossHp || 0).toLocaleString() },\n           ],\n-          reward: raidResultTemp.roomId ? \"報酬情報は現在未提供です\" : raidResultTemp.rewardProjectionUnavailable\n+          reward: raidResultTemp.roomId ? \"討伐・救援報酬はRoomの「報酬」で確認できます。条件達成時はプレゼントBOXへ届きます。\" : raidResultTemp.rewardProjectionUnavailable\n             ? \"報酬はサーバーで確定済み\"\n             : Array.isArray(raidResultTemp.grantedRewards) && raidResultTemp.grantedRewards.length > 0\n               ? \"獲得報酬\"\n",
+  "sqlFiles": [
+    {
+      "name": "environment-audit.sql",
+      "sha256": "77afb832ef3cf9938d2552ed2395f0e0e8c5fe25f54e3872e0bbf5ec84e70a9d",
+      "utf8": true,
+      "lf": true
+    },
+    {
+      "name": "qa-hp-apply.sql",
+      "sha256": "7045bc8b4239e33e21d81f6abce3cdd14543cfc64867d2717b15597783c535be",
+      "utf8": true,
+      "lf": true
+    }
+  ]
+}

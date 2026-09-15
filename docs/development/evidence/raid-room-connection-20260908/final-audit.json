@@ -1,0 +1,211 @@
+{
+  "ledgerAndRules": {
+    "checked_jst": "2026-09-08 20:02:52.076758",
+    "migrations": 275,
+    "ledger": [
+      {
+        "change_id": "raid-room-preview-375a0ad-delta-v1",
+        "postflight": {
+          "checks": "04-postflight.sql",
+          "status": "PASS",
+          "postflight_sha256": "f847a7829caa99cddd6c8798fc3045d699d514e8e53cbab0796310164303ffae"
+        },
+        "project_ref": "sufvuqdnqohpfzkwxohq",
+        "recorded_at": "2026-09-08T09:51:30.887865+00:00",
+        "execution_id": "731ff89a-5832-4c6b-9267-4fd1317fa902",
+        "database_role": "postgres",
+        "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+        "payload_sha256": "adc3bccfc6345f5fd36dfcdd1d42bbba01531882437f61f50036365ed1d77ffb",
+        "transaction_id": "47165",
+        "baseline_sha256": "e693e496d2e7c4ba1f7083615564ae31c04042383948853041e7de62b00ae3f9",
+        "operator_identity": "Codex / user-authorized Preview execution",
+        "validation_commit": "391e39766e13e4e9b4c23398e345ae5240c9aeb2",
+        "approval_reference": "User approval 2026-09-08: rollback then persist only if all checks match"
+      },
+      {
+        "change_id": "raid-preview-smoke-settings-v1",
+        "postflight": {
+          "scope": "raid-preview-smoke-settings-v1",
+          "status": "PASS"
+        },
+        "project_ref": "sufvuqdnqohpfzkwxohq",
+        "recorded_at": "2026-09-08T10:33:16.868034+00:00",
+        "execution_id": "91f73695-73cb-4ccc-8932-95a9189e9ff8",
+        "database_role": "postgres",
+        "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+        "payload_sha256": "385bbeee117ff7848ef9764fca53b4fb77b12b11eb717387c8d9df825bc1c18c",
+        "transaction_id": "47535",
+        "baseline_sha256": "909753e77a5d5916a61542a0d7e2afc2f098b096dfd9e5eec323d70e3860fee1",
+        "operator_identity": "Codex",
+        "validation_commit": "99c534bb63a2659b5569d339b3ff51c49d398339",
+        "approval_reference": "User authorized Preview connection and smoke test 2026-09-08"
+      },
+      {
+        "change_id": "raid-preview-expiry-cron-v1",
+        "postflight": {
+          "scope": "raid-preview-expiry-cron-v1",
+          "status": "PASS"
+        },
+        "project_ref": "sufvuqdnqohpfzkwxohq",
+        "recorded_at": "2026-09-08T10:33:52.189937+00:00",
+        "execution_id": "19b15129-2ef1-410e-b59c-d31f2ca3ce7b",
+        "database_role": "postgres",
+        "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+        "payload_sha256": "376ac1b2cd0a9c86671a435837ca530a6ad8974712cc717ddc43bdd615a499a2",
+        "transaction_id": "47547",
+        "baseline_sha256": "3d8f05264bbf390e002158923445438a733aeb27ac9ec8b654c725a9ff461b20",
+        "operator_identity": "Codex",
+        "validation_commit": "99c534bb63a2659b5569d339b3ff51c49d398339",
+        "approval_reference": "User authorized Preview connection and smoke test 2026-09-08"
+      },
+      {
+        "change_id": "raid-preview-legacy-stop-v1",
+        "postflight": {
+          "scope": "raid-preview-legacy-stop-v1",
+          "status": "PASS"
+        },
+        "project_ref": "sufvuqdnqohpfzkwxohq",
+        "recorded_at": "2026-09-08T10:35:24.346201+00:00",
+        "execution_id": "10ee99de-d7a6-461c-a19e-31d3dcc7074c",
+        "database_role": "postgres",
+        "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+        "payload_sha256": "872961981727fd2ceb9151069b82691054a72bb76582d86141a995badd77c8d8",
+        "transaction_id": "47603",
+        "baseline_sha256": "a4adfefa3aaa2a1a952036441c1af1d3fb784871e7fb4270332489c1596f4860",
+        "operator_identity": "Codex",
+        "validation_commit": "99c534bb63a2659b5569d339b3ff51c49d398339",
+        "approval_reference": "User authorized Preview connection and smoke test 2026-09-08"
+      },
+      {
+        "change_id": "raid-preview-room-enable-v1",
+        "postflight": {
+          "scope": "raid-preview-room-enable-v1",
+          "status": "PASS"
+        },
+        "project_ref": "sufvuqdnqohpfzkwxohq",
+        "recorded_at": "2026-09-08T10:35:29.77091+00:00",
+        "execution_id": "e0bfac1f-3258-4554-a976-2f46d4dcba9a",
+        "database_role": "postgres",
+        "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+        "payload_sha256": "d292c2b1d9736959e89cd7f320912e2bb5f15578e31eff1d75941a62cd7900fd",
+        "transaction_id": "47604",
+        "baseline_sha256": "8cff488a10738d354240ff7ed958d303dbd15da907b29edee233aa7b9183bca5",
+        "operator_identity": "Codex",
+        "validation_commit": "99c534bb63a2659b5569d339b3ff51c49d398339",
+        "approval_reference": "User authorized Preview connection and smoke test 2026-09-08"
+      }
+    ],
+    "clear_rules": [
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      }
+    ],
+    "rescue_rules": [
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "reward_version": 1
+      }
+    ],
+    "difficulty_rules": [
+      {
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_power": null,
+        "rescue_min_battles": 2,
+        "rescue_min_contribution_damage": 16000
+      },
+      {
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_power": 160000,
+        "rescue_min_battles": 2,
+        "rescue_min_contribution_damage": 68000
+      },
+      {
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_power": 200000,
+        "rescue_min_battles": 3,
+        "rescue_min_contribution_damage": 205000
+      },
+      {
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_power": 240000,
+        "rescue_min_battles": 4,
+        "rescue_min_contribution_damage": 290000
+      }
+    ],
+    "clear_grants": 0,
+    "rescue_grants": 0,
+    "pending_room_replays": 0
+  },
+  "originalUsers": {
+    "original_user_count": 19,
+    "original_users_md5": "b868375386785c9dfdad599129f9005f"
+  },
+  "recoveryAcknowledgements": [
+    {
+      "user_id": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+      "request_id": "1ccdd52d-158e-46f4-87d7-449aa0c4045b",
+      "replay_session_id": "9977a359-e9fc-422b-a847-65a557f45786",
+      "recovery_acknowledged_at": "2026-09-08 10:56:16.235317+00"
+    },
+    {
+      "user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "request_id": "07976ff0-079b-45b7-a1ed-021a8f013fdf",
+      "replay_session_id": "7ebf0e01-c341-4bf7-8f56-97bfa5797545",
+      "recovery_acknowledged_at": null
+    },
+    {
+      "user_id": "25975265-f042-4dd1-8ffc-a12f8414a035",
+      "request_id": "0f70ce40-31e3-46c9-af91-d58cee9eda1d",
+      "replay_session_id": "ad371e82-e1ff-4af0-b9fd-03393c0f520a",
+      "recovery_acknowledged_at": null
+    }
+  ],
+  "coordination": {
+    "windowJst": "2026-09-08 19:17:02–20:17:02",
+    "gachaOwnQaPermittedAtJst": "2026-09-08 20:02頃",
+    "gachaQaUser": "ae28676d-bdca-4f8d-b574-183da188104c",
+    "gachaQaStartedAtJst": "2026-09-08 20:03頃",
+    "scope": "新規QA自身のみ。環境変更は禁止を維持。"
+  }
+}

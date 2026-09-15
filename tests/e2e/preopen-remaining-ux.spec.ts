@@ -27,7 +27,7 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem("mock_db_user_equipments", JSON.stringify([{ id: "equipment-sweep", user_id: userId, equipment_id: "WEAPON_001", equipped_character_id: "10000000-0000-4000-8000-000000000829", slot_index: 0, level: 1, plus_val: 0, created_at: now }]));
     localStorage.setItem("mock_db_user_items", JSON.stringify([{ id: "item-sweep", user_id: userId, item_id: "CHAR_EXP_S", quantity: 3 }]));
     localStorage.setItem("mock_db_quests", JSON.stringify([{
-      id: "q_shinjuku_1", name: "歌舞伎町 夜間見回り", town_id: "shinjuku", level_type: "EASY", duration_seconds: 60, cost_vitality: 5,
+      id: "QUEST_SHINJUKU_EASY", name: "歌舞伎町一番街", town_id: "shinjuku", level_type: "EASY", duration_seconds: 300, cost_vitality: 3,
       cash_reward: 300, exp_reward: 100, recommended_level: 1, recommended_power: 1000, enemy_member_count: 1,
       enemy_members: [{ characterId: "char_takeshi_01", skillLoadout: ["SKILL_001"] }], enemy_attributes: ["EVIL"], enemy_tactic: "BALANCED",
       reward_items: [{ item_id: "CHAR_EXP_S", quantity: 1, probability_bp: 10000 }], first_clear_items: [], first_clear_user_exp: 100,
@@ -36,7 +36,7 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem("mock_db_bbs_threads", JSON.stringify([{ id: "bbs-sweep", category: "RECRUIT", title: "仲間募集", content: "一緒に遊びましょう", user_id: otherId, author_name: "旧表示名", created_at: now, updated_at: now }]));
     localStorage.setItem("mock_db_bbs_posts", "[]");
     const cycleDate = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Tokyo" });
-    const mission = { id: "ob_daily_patrol_01", title: "街の見回り", description: "クエストを1回完了", category: "DAILY", trigger_type: "PATROL_CLEAR", target_value: 1, reward_item_id: "CHAR_EXP_M", reward_quantity: 2, condition_params: { cta_tab: "patrol", cta_label: "クエストへ" }, display_order: 20, is_enabled: true, is_provisional: false };
+    const mission = { id: "MIS_D_003", title: "キャラクターを強化しよう", description: "キャラクターを1回強化", category: "DAILY", trigger_type: "CHARACTER_LEVEL_UP", target_value: 1, reward_item_id: "CHAR_EXP_M", reward_quantity: 1, condition_params: { cta_tab: "character", cta_label: "キャラへ" }, display_order: 30, is_enabled: true, is_provisional: false };
     localStorage.setItem("mock_db_missions", JSON.stringify([mission]));
     localStorage.setItem("mock_db_user_missions", JSON.stringify([{ id: "mission-sweep", user_id: userId, mission_id: mission.id, cycle_date: cycleDate, current_progress: 1, status: "CLEAR", claimed_at: null, missions: mission }]));
     localStorage.setItem("mock_db_presents", JSON.stringify([{ id: "present-sweep", user_id: userId, item_id: "EQUIP_EXP_M", quantity: 2, message: "Sweep検証プレゼント", status: "UNCLAIMED", created_at: now }]));
@@ -45,10 +45,23 @@ test.beforeEach(async ({ page }) => {
 
 async function enterGame(page: Page) {
   await page.goto("/");
+  const titleAction = page.getByRole("button", { name: "TAP TO START" });
   const continueButton = page.getByRole("button", { name: "続きから" });
+  await expect(titleAction.or(continueButton)).toBeVisible();
+  if (await titleAction.isVisible()) await titleAction.click();
   await expect(continueButton).toBeVisible();
   await continueButton.click();
   await expect(page.locator(".header-mobile")).toBeVisible();
+  const loginBonus = page.getByRole("dialog", { name: "ログインボーナス" });
+  await expect(loginBonus).toBeVisible();
+  await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
+}
+
+async function openUtility(page: Page, label: "設定" | "プレゼント") {
+  await page.getByRole("button", { name: /^MENU(?:\s|$)/ }).click();
+  const menu = page.getByRole("dialog", { name: "ホームメニュー" });
+  await expect(menu).toBeVisible();
+  await menu.getByRole("button", { name: label, exact: true }).click();
 }
 
 async function expectNoOverflow(page: Page, selector: string) {
@@ -70,11 +83,10 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
     await page.setViewportSize(viewport);
     await enterGame(page);
 
-    const community = page.locator(".mypage-sub-icons-left .sub-icon-unit").filter({ hasText: "コミュニティ" });
-    const ranking = page.locator(".mypage-sub-icons-left .sub-icon-unit").filter({ hasText: "ランキング" });
+    const community = page.locator(".footer-mobile").getByRole("button", { name: "コミュニティ", exact: true });
+    const ranking = page.locator(".mypage-sub-icons-left").getByRole("button", { name: /ランキング/ });
     await expect(community).toBeVisible();
     await expect(ranking).toBeVisible();
-    expect((await ranking.boundingBox())!.y).toBeGreaterThan((await community.boundingBox())!.y);
     await ranking.click();
     await expect(page.locator(".ranking-tab-view")).toBeVisible();
 
@@ -91,12 +103,12 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
     await expect(moveDialog.getByText("ジャンクバザール")).toHaveCount(0);
     await moveDialog.getByRole("button", { name: "閉じる" }).click();
 
-    await page.locator(".mypage-sub-icons-right .sub-icon-unit").filter({ hasText: "設定" }).click();
+    await openUtility(page, "設定");
     await expect(page.getByText("設定 / プロフィール", { exact: true })).toBeVisible();
     await expect(page.locator(".settings-panel-container-inner select")).toHaveCount(0);
     await page.locator(".editable-setting-section").first().getByRole("button", { name: "編集" }).click();
     await expect(page.getByLabel("プレイヤー名")).toBeVisible();
-    await expect(page.getByRole("radiogroup", { name: "称号" })).toBeVisible();
+    await expect(page.getByRole("radiogroup", { name: "称号" })).toHaveCount(0);
     await page.getByLabel("自己紹介").fill(`保存確認${viewport.width}`);
     await page.locator(".editable-setting-section").first().getByRole("button", { name: "保存", exact: true }).click();
     const saved = page.getByRole("dialog", { name: "保存完了" });
@@ -112,38 +124,36 @@ test("Quest, Character and BBS consume canonical presentation contracts", async 
   await enterGame(page);
 
   await page.locator(".circle-menu-btn.conquest").click();
-  await expect(page.locator(".course-name", { hasText: "歌舞伎町 夜間見回り" })).toBeVisible();
-  await expect(page.locator(".quest-canonical-context")).toContainText("クエスト選択");
-  await expect(page.locator(".quest-canonical-brief")).toContainText("出現する敵");
-  await expect(page.locator(".quest-canonical-brief")).toContainText("所要時間");
+  const easyCourse = page.locator(".quest-v2-courses").getByRole("button", { name: /初級/ });
+  await expect(easyCourse).toBeVisible();
+  await easyCourse.click();
+  await expect(page.locator(".quest-v2-brief")).toContainText("歌舞伎町一番街");
+  await expect(page.locator(".quest-v2-brief")).toContainText("出現する敵");
+  await expect(page.locator(".quest-v2-brief")).toContainText("所要時間");
   await expect(page.locator(".quest-v0-summary")).toHaveCount(0);
-  await page.locator(".patrol-char-item:not(.locked)").first().click();
+  await page.locator(".quest-v2-character-grid").getByRole("button", { name: /レイジ Lv\.10/ }).click();
   const dispatch = page.getByRole("button", { name: "新宿へ派遣する" });
   await expect(dispatch).toBeEnabled();
   await expect(page.locator(".patrol-container")).not.toContainText("CHAR_EXP_S");
   await expect(page.locator(".patrol-container")).toContainText("強化ドリンク・小");
   await expectNoOverflow(page, ".patrol-container");
 
-  await page.getByRole("button", { name: /キャラ/ }).click();
-  await expect(page.locator(".char-tab-container")).not.toContainText("WEAPON_001");
-  await expect(page.locator(".char-slider-item .character-frame")).toHaveCount(0);
-  await expect(page.locator(".char-slider-item .character-attribute-badge")).toHaveCount(0);
-  await expect(page.locator(".char-main-actions").getByRole("button", { name: "強化" })).toBeVisible();
-  await expect(page.locator(".char-main-actions").getByRole("button", { name: "スキル" })).toBeVisible();
-  await expect(page.locator(".char-main-actions").getByRole("button", { name: "装備" })).toBeVisible();
-  await expect(page.locator(".char-firstview-skill.is-locked")).toHaveCount(2);
-  await expect(page.locator(".char-firstview-skills")).not.toContainText("LOCK");
-  await expect(page.locator(".char-firstview-skill .shared-skill-icon").first()).toBeVisible();
-  await page.locator(".char-main-actions").getByRole("button", { name: "強化" }).click();
-  await expect(page.locator(".char-growth-contract")).toContainText("現在");
-  await expect(page.locator(".char-growth-contract")).toContainText("強化後");
-  await expect(page.locator(".char-growth-contract")).not.toContainText("CHAR_EXP_S");
-  await page.getByRole("button", { name: "閉じる" }).click();
-  await page.locator(".char-main-stage").evaluate((node) => Promise.all(node.getAnimations().map((animation) => animation.finished)));
-  await expectNoOverflow(page, ".char-tab-container");
+  await page.getByRole("button", { name: "キャラ", exact: true }).click();
+  await expect(page.locator(".character-v2-character-grid .character-v2-card")).toHaveCount(1);
+  await page.locator(".character-v2-character-grid .character-v2-card").click();
+  await expect(page.locator(".character-v2-stage-meta")).toContainText("レイジ");
+  await expect(page.locator(".character-v2-status-block")).toContainText("総合力");
+  await expect(page.locator(".character-v2-primary-actions").getByRole("button", { name: "強化" })).toBeVisible();
+  await expect(page.locator(".character-v2-primary-actions").getByRole("button", { name: "スキル・装備" })).toBeVisible();
+  await page.locator(".character-v2-primary-actions").getByRole("button", { name: "強化" }).click();
+  await expect(page.locator(".character-v2-growth")).toContainText("Current");
+  await expect(page.locator(".character-v2-growth")).toContainText("After");
+  await expect(page.locator(".character-v2-growth")).not.toContainText("CHAR_EXP_S");
+  await expectNoOverflow(page, ".character-v2-shell");
 
   await page.getByRole("button", { name: /マイページ/ }).click();
-  await page.locator(".mypage-sub-icons-left .sub-icon-unit").filter({ hasText: "コミュニティ" }).click();
+  await page.locator(".footer-mobile").getByRole("button", { name: "コミュニティ", exact: true }).click();
+  await page.getByRole("button", { name: "BBSを開く" }).click();
   const thread = page.locator(".bbs-thread-card").filter({ hasText: "仲間募集" });
   await expect(thread).toBeVisible();
   await expect(thread.locator(".user-identity-row")).toContainText("掲示板ユーザー");
@@ -172,7 +182,7 @@ test("Mission and Present mutations retain canonical item receipts", async ({ pa
   await expectNoOverflow(page, ".mission-panel-container-inner");
   await page.getByRole("button", { name: "閉じる" }).click();
 
-  await page.locator(".mypage-sub-icons-right .sub-icon-unit").filter({ hasText: "プレゼント" }).click();
+  await openUtility(page, "プレゼント");
   const present = page.locator(".inbox-present-item").filter({ hasText: "Sweep検証プレゼント" });
   await expect(present).toContainText("カスタムオイル・中");
   await expect(present).not.toContainText("EQUIP_EXP_M");
@@ -187,18 +197,41 @@ test("Mission and Present mutations retain canonical item receipts", async ({ pa
 test("Present bulk claim locks its surface through the canonical receipt", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await enterGame(page);
-  await page.locator(".mypage-sub-icons-right .sub-icon-unit").filter({ hasText: "プレゼント" }).click();
+  await openUtility(page, "プレゼント");
   const reward = page.locator(".inbox-present-reward").first();
   await expect(reward.locator(".inbox-present-reward-icon")).toBeVisible();
   await expect(reward).toContainText("× 2");
   await expect(reward).not.toContainText("EQUIP_EXP_M");
+  await page.evaluate(() => localStorage.setItem("mock_rpc_delay_ms:claim_all_presents", "800"));
   const bulkClaim = page.getByRole("button", { name: "一括受け取り", exact: true });
   await bulkClaim.click();
+  const pendingPanel = page.locator(".inbox-panel-pending");
+  await expect(pendingPanel).toBeVisible();
+  // OutlawButton swaps its accessible label while loading, so the original
+  // exact-name locator correctly disappears after the tap.
+  await expect(page.getByRole("button", { name: "一括受取中…", exact: true })).toBeDisabled();
+
+  // Exercise real pointer hit-testing while the RPC is pending. The pending
+  // surface must own both tab and close coordinates instead of passing the
+  // taps through to the panel or the Home screen behind it.
+  for (const target of [
+    page.getByRole("button", { name: "お知らせ", exact: true }),
+    page.getByRole("button", { name: "閉じる", exact: true }).last(),
+  ]) {
+    const box = await target.boundingBox();
+    expect(box).not.toBeNull();
+    const point = { x: box!.x + box!.width / 2, y: box!.y + box!.height / 2 };
+    expect(await page.evaluate(({ x, y }) => Boolean(document.elementFromPoint(x, y)?.closest(".inbox-panel-pending")), point)).toBe(true);
+    await page.mouse.click(point.x, point.y);
+    await expect(pendingPanel).toBeVisible();
+    await expect(reward).toBeVisible();
+  }
   const receipt = page.getByRole("dialog", { name: "報酬獲得" });
   await expect(receipt).toBeVisible();
-  await expect(page.locator(".inbox-panel-pending")).toHaveCount(1);
+  await expect(pendingPanel).toHaveCount(1);
   await expect(receipt).toContainText("カスタムオイル・中");
   await expect(receipt.locator(".reward-receipt-mark")).toBeVisible();
   await receipt.locator(".canonical-dialog-actions").getByRole("button", { name: "閉じる", exact: true }).click();
-  await expect(page.locator(".inbox-panel-pending")).toHaveCount(0);
+  await expect(pendingPanel).toHaveCount(0);
+  await page.evaluate(() => localStorage.removeItem("mock_rpc_delay_ms:claim_all_presents"));
 });

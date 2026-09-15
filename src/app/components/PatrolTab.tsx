@@ -5,7 +5,6 @@ import { useGame } from "../context/GameContext";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
-import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import OutlawCard from "./ui/OutlawCard";
 import OutlawButton from "./ui/OutlawButton";
 import SubTabNav from "./ui/SubTabNav";
@@ -20,6 +19,15 @@ import { SCREEN_ASSET_MANIFESTS } from "../lib/screenManifests";
 import "./PatrolTab.css";
 import { traceTutorialJourney } from "@/utils/tutorialJourneyTrace";
 import QuestPresentationV2 from "./quest/QuestPresentationV2";
+import CanonicalItemIcon from "./ui/CanonicalItemIcon";
+
+function QuestRewardIcon({ itemId, quantity }: { itemId: string; quantity: number }) {
+  return <span className="tutorial-wire-reward-item">
+    {itemId === "PLAYER_XP" ? <b className="tutorial-wire-reward-xp">XP</b> : <CanonicalItemIcon itemId={itemId} alt="" className="tutorial-wire-reward-icon" />}
+    <small>{itemId === "PLAYER_XP" ? "PLAYER XP" : canonicalItemName(itemId)}</small>
+    <strong>× {Number(quantity).toLocaleString()}</strong>
+  </span>;
+}
 
 export default function PatrolTab() {
   const {
@@ -83,15 +91,16 @@ export default function PatrolTab() {
   const tutorialEncounterPatrolStatus = tutorialEncounterPatrol?.status ?? null;
   const tutorialEncounterQuestId = tutorialEncounterPatrol?.courseId ?? null;
 
-  // コースが未選択のときに初期選択を設定
+  // 通常探索の級は本人が選ぶ。初期補完はチュートリアル専用。
   React.useEffect(() => {
+    if (!isTutorialQuestStep) return;
     if (patrolCourses.length > 0 && (!selectedCourse || selectedCourse === "e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1")) {
       const firstCourse = patrolCourses.find((c: any) => c.town_id === selectedTown && c.is_unlocked !== false);
       if (firstCourse) {
         setSelectedCourse(firstCourse.id);
       }
     }
-  }, [patrolCourses, selectedTown, selectedCourse, setSelectedCourse]);
+  }, [isTutorialQuestStep, patrolCourses, selectedTown, selectedCourse, setSelectedCourse]);
 
   // The first quest uses the canonical tutorial formation leader. Never fall
   // back to the initialization starter or whichever owned row happens to be
@@ -204,6 +213,7 @@ export default function PatrolTab() {
   }, [activePatrols, patrolNpcs, tutorialStep, userCharactersDbList]);
 
   const activeCourse = patrolCourses.find((c: any) => c.id === selectedCourse);
+  const guaranteedRewardItems = (items: any[] = []) => items.filter((item) => Number(item.probability_bp ?? 10000) >= 10000);
   const formatRewardItems = (items: any[] = []) => items
     .map((item) => `${canonicalItemName(String(item.item_id || ""))} ×${item.quantity}${Number(item.probability_bp) < 10000 ? ` (${Number(item.probability_bp) / 100}%)` : ""}`)
     .join(" / ");
@@ -264,21 +274,28 @@ export default function PatrolTab() {
     }
   };
 
-  const handleClaim = async (pId: string) => {
+  const handleClaim = React.useCallback(async (pId: string, options?: { battleOwnsResult?: boolean }) => {
     if (questActionRef.current) return false;
     questActionRef.current = true;
     setGlobalInteractionBlocking(true);
     try {
-      return await handleClaimRewards(pId, { isTutorialReward: tutorialStep === "TUTORIAL_BATTLE" || tutorialBattleActive });
+      return await handleClaimRewards(pId, {
+        isTutorialReward: tutorialStep === "TUTORIAL_BATTLE" || tutorialBattleActive,
+        suppressResultModal: options?.battleOwnsResult === true,
+      });
     } finally {
       questActionRef.current = false;
       setGlobalInteractionBlocking(false);
     }
-  };
+  }, [handleClaimRewards, setGlobalInteractionBlocking, tutorialBattleActive, tutorialStep]);
 
   const handleBattleStart = async (patrol: any, battleNpc: any) => {
     if (!battleNpc || battleStartRef.current || battleEncounterLocked || patrol.id === settledPatrolEncounterId) return;
     battleStartRef.current = true;
+    // Rewards belong to the completed encounter that produced them. Clear the
+    // old projection before another battle can mount its result surface.
+    setLastPatrolRewards(null);
+    setShowPatrolRewardModal(false);
     setBattleStartingId(patrol.id);
     setGlobalInteractionBlocking(true);
     try {
@@ -347,19 +364,18 @@ export default function PatrolTab() {
     setLastPatrolRewards(null);
   }, [lastPatrolRewards, setLastPatrolRewards, setShowPatrolRewardModal, tutorialBattleActive, tutorialStep]);
 
-  // The battle result is the single tutorial result surface. Resolve the
-  // authoritative patrol reward while it remains mounted so WIN, rewards and
-  // the one Next CTA can be presented together.
+  // Settle both wins and defeats once: the server grants rewards only for a
+  // victory and releases a defeated dispatch without a reward modal. Resolution
+  // already committed battle_resolved before replay starts, so do not wait on
+  // the eventually-refreshed activePatrols projection here.
   React.useEffect(() => {
-    if (!tutorialBattleActive || battleState !== "RESULT" || showPatrolRewardModal || lastPatrolRewards) return;
+    if (battleState !== "RESULT" || showPatrolRewardModal || lastPatrolRewards) return;
     if (!settledPatrolEncounterId || autoRewardClaimRef.current === settledPatrolEncounterId) return;
-    const resolved = activePatrols.find((patrol: any) => patrol.id === settledPatrolEncounterId && patrol.battle_resolved);
-    if (!resolved) return;
     autoRewardClaimRef.current = settledPatrolEncounterId;
-    void handleClaim(settledPatrolEncounterId).then((claimed) => {
+    void handleClaim(settledPatrolEncounterId, { battleOwnsResult: true }).then((claimed) => {
       if (!claimed) autoRewardClaimRef.current = null;
     });
-  }, [activePatrols, battleState, lastPatrolRewards, settledPatrolEncounterId, showPatrolRewardModal, tutorialBattleActive]);
+  }, [battleState, handleClaim, lastPatrolRewards, settledPatrolEncounterId, showPatrolRewardModal]);
 
   const canRenderRewardResult = showPatrolRewardModal
     && lastPatrolRewards
@@ -408,7 +424,10 @@ export default function PatrolTab() {
         <section className={`tutorial-quest-wire state-${acceptanceState.toLowerCase()}`} data-acceptance-state={acceptanceState} style={{ backgroundImage: `linear-gradient(180deg,rgba(2,3,12,.16),rgba(2,2,10,.92)),url(${bgImage})` }}>
           {acceptanceState === "Q1" && <>
             <header className="tutorial-wire-heading"><span>新宿</span><strong>初級</strong><small>所要時間 {formatClock(tutorialCourse?.duration_seconds)}</small></header>
-            <div className="tutorial-wire-rewards" aria-label="獲得可能報酬"><span>PLAYER XP<br />+{Number(tutorialCourse?.reward_xp || 0).toLocaleString()}</span><span>キャラEXP<br />+{Number(tutorialCourse?.reward_xp || 0).toLocaleString()}</span><span>CASH<br />+{Number(tutorialCourse?.reward_cash || 0).toLocaleString()}</span><span>アイテム<br />抽選</span></div>
+            <div className="tutorial-wire-rewards" aria-label="確定報酬">
+              {Number(tutorialCourse?.reward_xp || 0) > 0 && <QuestRewardIcon itemId="PLAYER_XP" quantity={Number(tutorialCourse.reward_xp)} />}
+              {guaranteedRewardItems(tutorialCourse?.reward_items).map((item: any) => <QuestRewardIcon key={item.item_id} itemId={String(item.item_id)} quantity={Number(item.quantity || 0)} />)}
+            </div>
             <div className="tutorial-wire-member" data-character-id={tutorialCharacter?.id} data-user-character-id={tutorialOwnedCharacter?.id}>
               <CharacterPresentation src={characterImage(tutorialCharacter?.img) || undefined} alt={tutorialCharacter?.jpName || "派遣メンバー"} variant="quest" rarity={tutorialCharacter?.rarity} attribute={tutorialCharacter?.alignment} backgroundSrc={getCharacterLocationBackground(tutorialCharacter?.homeTown)} frameKind="character" rarityBadge attributeBadge />
               <div><small>派遣メンバー</small><b>{tutorialCharacter?.jpName || "メンバー"}</b><span>{tutorialCharacter?.rarity || "SSR"}</span></div>
@@ -431,7 +450,10 @@ export default function PatrolTab() {
             <header className="tutorial-wire-complete"><h2>クエスト完了</h2><small>QUEST COMPLETE</small></header>
             <div className="tutorial-wire-return-character" data-character-id={tutorialCharacter?.id} data-user-character-id={tutorialOwnedCharacter?.id}><CharacterPresentation src={characterImage(tutorialCharacter?.img) || undefined} alt={tutorialCharacter?.jpName || "帰還メンバー"} variant="quest" rarity={tutorialCharacter?.rarity} attribute={tutorialCharacter?.alignment} backgroundSrc={getCharacterLocationBackground(tutorialCharacter?.homeTown)} frameKind="character" rarityBadge attributeBadge /></div>
             <strong className="tutorial-wire-course">新宿・初級</strong>
-            <div className="tutorial-wire-rewards is-return" aria-label="獲得報酬"><span>PLAYER XP<br />+{Number(tutorialCourse?.reward_xp || 0).toLocaleString()}</span><span>キャラEXP<br />+{Number(tutorialCourse?.reward_xp || 0).toLocaleString()}</span><span>CASH<br />+{Number(tutorialCourse?.reward_cash || 0).toLocaleString()}</span><span>アイテム<br />抽選</span></div>
+            <div className="tutorial-wire-rewards is-return" aria-label="確定報酬">
+              {Number(tutorialCourse?.reward_xp || 0) > 0 && <QuestRewardIcon itemId="PLAYER_XP" quantity={Number(tutorialCourse.reward_xp)} />}
+              {guaranteedRewardItems(tutorialCourse?.reward_items).map((item: any) => <QuestRewardIcon key={item.item_id} itemId={String(item.item_id)} quantity={Number(item.quantity || 0)} />)}
+            </div>
             <OutlawButton onClick={() => {
               if (!tutorialEncounterProjectionReady) return;
               traceTutorialJourney("quest_return_confirmed", {
@@ -555,6 +577,7 @@ export default function PatrolTab() {
               {!activeCourse.is_first_cleared && <p className="quest-first-clear">初回クリア：プレイヤーEXP +{Number(activeCourse.first_clear_user_exp || 0).toLocaleString()} / {formatRewardItems(activeCourse.first_clear_items) || "追加報酬なし"}</p>}
             </section>
             <div className="quest-v0-section-label">派遣する仲間 <b>1名</b></div>
+            <p>地元一致：CASH +10% / ドロップ率 +2%ポイント</p>
             <div className="patrol-char-grid mb-3">
               {CHARACTERS_MASTER.filter((character: any) => !isTutorialQuestStep || character.id === selectedPatrolMember).map((c: any) => {
                 const isUnlocked = userCharactersDbList.some((uc: any) => uc.character_id === c.id);
@@ -563,7 +586,6 @@ export default function PatrolTab() {
                 
                 const isAlreadyDeployed = activePatrols.some((p: any) => p.characterId === c.id && p.status !== "COMPLETED");
 
-                const baseLuk = getCharacterBaseStats(c.id, 1, 0).luk;
                 
                 return (
                   <div 
@@ -592,7 +614,7 @@ export default function PatrolTab() {
                         attributeBadge
                       />
                     </div>
-                    {isHome && <div className="char-bonus-badge">地元一致(LUK{baseLuk})</div>}
+                    {isHome && <div className="char-bonus-badge">地元一致</div>}
                     {isAlreadyDeployed && <div className="char-deployed-badge">出撃中</div>}
                   </div>
                 );
@@ -741,41 +763,26 @@ export default function PatrolTab() {
             </header>
 
             <div className="reward-section patrol-result-rewards flex-col-gap-2">
-              <div className="patrol-result-primary-reward">
-                <span>獲得報酬</span>
-                <strong>+{lastPatrolRewards.totalCash.toLocaleString()} CASH</strong>
-                <small>プレゼントBOXへ送付</small>
-              </div>
-              <div className="flex-between patrol-result-row">
-                <span>基本報酬</span>
-                <strong>+{lastPatrolRewards.baseCash.toLocaleString()} CASH</strong>
-              </div>
+              <div className="patrol-result-primary-reward"><span>獲得報酬</span></div>
               
-              {lastPatrolRewards.matchBonusApplied && (
+              {lastPatrolRewards.matchBonusApplied && Number(lastPatrolRewards.matchBonusCash || 0) > 0 && (
                 <div className="flex-between font-size-7 pl-2">
                   <span className="text-color-yellow">└ 地元一致ボーナス:</span>
                   <span className="text-color-yellow">+{lastPatrolRewards.matchBonusCash} CASH</span>
                 </div>
               )}
 
-              {lastPatrolRewards.levelBonusPercent > 0 && (
+              {lastPatrolRewards.levelBonusPercent > 0 && Number(lastPatrolRewards.levelBonusCash || 0) > 0 && (
                 <div className="flex-between font-size-7 pl-2">
                   <span className="text-color-cyan">└ Lvボーナス ({lastPatrolRewards.levelBonusPercent}%):</span>
                   <span className="text-color-cyan">+{lastPatrolRewards.levelBonusCash} CASH</span>
                 </div>
               )}
 
-              <div className="flex-between border-top pt-2 mt-1 patrol-result-row">
-                <span>獲得経験値</span>
-                <strong className="text-color-cyan">+{lastPatrolRewards.totalXp.toLocaleString()} XP</strong>
+              <div className="tutorial-wire-rewards patrol-result-item-rewards" aria-label="獲得アイテム">
+                {Number(lastPatrolRewards.totalXp || 0) > 0 && <QuestRewardIcon itemId="PLAYER_XP" quantity={Number(lastPatrolRewards.totalXp)} />}
+                {lastPatrolRewards.dropItemName && Number(lastPatrolRewards.dropItemQty || 0) > 0 && <QuestRewardIcon itemId={String(lastPatrolRewards.dropItemName)} quantity={Number(lastPatrolRewards.dropItemQty)} />}
               </div>
-
-              {lastPatrolRewards.dropItemName && (
-                <div className="flex-between">
-                  <span className="text-color-gray">獲得ドロップ品:</span>
-                  <span className="text-color-yellow font-bold">{lastPatrolRewards.dropItemName} x{lastPatrolRewards.dropItemQty}</span>
-                </div>
-              )}
 
               {lastPatrolRewards.gearDropped && (
                 <div className="flex-between mt-1 p-2" style={{ background: 'rgba(255, 0, 255, 0.1)', border: '1px solid rgba(255, 0, 255, 0.3)' }}>
@@ -789,15 +796,16 @@ export default function PatrolTab() {
                   <div className={`font-size-8 font-bold mb-1 ${lastPatrolRewards.battleVictory ? 'text-color-green' : 'text-color-red'}`}>
                     NPC遭遇バトル: {lastPatrolRewards.battleVictory ? '勝利' : '敗北'}
                   </div>
-                  {lastPatrolRewards.battleVictory ? (
+                  {lastPatrolRewards.battleVictory && (Number(lastPatrolRewards.battleCashBonus || 0) > 0 || Number(lastPatrolRewards.battleXpBonus || 0) > 0 || Boolean(lastPatrolRewards.battleRewardItemName)) && (
                     <div className="pl-2 flex-col-gap-1 font-size-7 text-color-green">
-                      <div className="flex-between"><span>追加キャッシュ:</span><span>+{lastPatrolRewards.battleCashBonus} CASH</span></div>
-                      <div className="flex-between"><span>追加経験値:</span><span>+{lastPatrolRewards.battleXpBonus} XP</span></div>
+                      {Number(lastPatrolRewards.battleCashBonus || 0) > 0 && <div className="flex-between"><span>追加キャッシュ:</span><span>+{lastPatrolRewards.battleCashBonus} CASH</span></div>}
+                      {Number(lastPatrolRewards.battleXpBonus || 0) > 0 && <div className="flex-between"><span>追加経験値:</span><span>+{lastPatrolRewards.battleXpBonus} XP</span></div>}
                       {lastPatrolRewards.battleRewardItemName && (
                         <div className="flex-between"><span>追加アイテム:</span><span>{lastPatrolRewards.battleRewardItemName} x{lastPatrolRewards.battleRewardItemQty}</span></div>
                       )}
                     </div>
-                  ) : (
+                  )}
+                  {!lastPatrolRewards.battleVictory && (
                     <div className="font-size-7 text-color-gray pl-2 mt-1">
                       <div>敗北したため、追加報酬はありません。</div>
                       {activeCourse?.level_type === "HARD" && <div className="flex-row-gap-2 mt-2 quest-hard-recovery-actions">

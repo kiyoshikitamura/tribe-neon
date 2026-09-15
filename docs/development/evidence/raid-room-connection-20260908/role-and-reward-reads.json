@@ -1,0 +1,317 @@
+[
+  {
+    "role": "host",
+    "name": "get_raid_room_v1",
+    "data": {
+      "hp": {
+        "value": {
+          "max": 32000000,
+          "current": 31996883
+        },
+        "status": "available"
+      },
+      "owner": {
+        "value": {
+          "name": "R0908H01",
+          "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "leaderIconUrl": {
+            "status": "unknown"
+          }
+        },
+        "status": "available"
+      },
+      "state": {
+        "value": "active",
+        "status": "available"
+      },
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "endedAt": {
+        "value": null,
+        "status": "available"
+      },
+      "createdAt": {
+        "value": "2026-09-08T10:35:48.611071+00:00",
+        "status": "available"
+      },
+      "expiresAt": {
+        "value": "2026-09-09T10:35:48.611071+00:00",
+        "status": "available"
+      },
+      "difficultyId": "beginner",
+      "participantCount": {
+        "value": 3,
+        "status": "available"
+      },
+      "serverEligibility": {
+        "status": "unknown"
+      }
+    }
+  },
+  {
+    "role": "host",
+    "name": "get_raid_room_briefing_v1",
+    "data": {
+      "baseId": "shinjuku",
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "bossName": "キングス・クラウン",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "joinEligibility": {
+        "reason": "no_power_restriction",
+        "status": "passed",
+        "actualPower": 74466,
+        "minimumPower": null
+      },
+      "membershipStatus": "joined",
+      "battleStartEnabled": true,
+      "raidBossInstanceId": "c127f1da-9a60-4919-b351-6a99412574d7"
+    }
+  },
+  {
+    "role": "host",
+    "name": "get_raid_room_rescue_reward_v1",
+    "data": {
+      "items": [],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "status": "not_eligible",
+      "issuedAt": null,
+      "expiresAt": null,
+      "rescueGate": {
+        "reason": "conditions_not_met",
+        "status": "not_succeeded",
+        "ruleVersion": 1,
+        "minimumBattles": 2,
+        "minimumContributionDamage": 16000
+      }
+    }
+  },
+  {
+    "role": "host",
+    "name": "get_raid_room_clear_reward_v1",
+    "data": {
+      "items": [],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "status": "not_eligible",
+      "issuedAt": null,
+      "clearGate": {
+        "status": "not_succeeded",
+        "cleared": false,
+        "ruleVersion": 1,
+        "contributionDamage": 0,
+        "minimumContributionDamage": 0
+      },
+      "expiresAt": null
+    }
+  },
+  {
+    "role": "normal",
+    "name": "get_raid_room_v1",
+    "data": {
+      "hp": {
+        "value": {
+          "max": 32000000,
+          "current": 31996883
+        },
+        "status": "available"
+      },
+      "owner": {
+        "value": {
+          "name": "R0908H01",
+          "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "leaderIconUrl": {
+            "status": "unknown"
+          }
+        },
+        "status": "available"
+      },
+      "state": {
+        "value": "active",
+        "status": "available"
+      },
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "endedAt": {
+        "value": null,
+        "status": "available"
+      },
+      "createdAt": {
+        "value": "2026-09-08T10:35:48.611071+00:00",
+        "status": "available"
+      },
+      "expiresAt": {
+        "value": "2026-09-09T10:35:48.611071+00:00",
+        "status": "available"
+      },
+      "difficultyId": "beginner",
+      "participantCount": {
+        "value": 3,
+        "status": "available"
+      },
+      "serverEligibility": {
+        "status": "unknown"
+      }
+    }
+  },
+  {
+    "role": "normal",
+    "name": "get_raid_room_briefing_v1",
+    "data": {
+      "baseId": "shinjuku",
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "bossName": "キングス・クラウン",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "joinEligibility": {
+        "reason": "no_power_restriction",
+        "status": "passed",
+        "actualPower": 78228,
+        "minimumPower": null
+      },
+      "membershipStatus": "joined",
+      "battleStartEnabled": true,
+      "raidBossInstanceId": "c127f1da-9a60-4919-b351-6a99412574d7"
+    }
+  },
+  {
+    "role": "normal",
+    "name": "get_raid_room_rescue_reward_v1",
+    "data": {
+      "items": [],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "status": "not_eligible",
+      "issuedAt": null,
+      "expiresAt": null,
+      "rescueGate": {
+        "reason": "conditions_not_met",
+        "status": "not_succeeded",
+        "ruleVersion": 1,
+        "minimumBattles": 2,
+        "minimumContributionDamage": 16000
+      }
+    }
+  },
+  {
+    "role": "normal",
+    "name": "get_raid_room_clear_reward_v1",
+    "data": {
+      "items": [],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "status": "not_eligible",
+      "issuedAt": null,
+      "clearGate": {
+        "status": "not_succeeded",
+        "cleared": false,
+        "ruleVersion": 1,
+        "contributionDamage": 0,
+        "minimumContributionDamage": 0
+      },
+      "expiresAt": null
+    }
+  },
+  {
+    "role": "rescue",
+    "name": "get_raid_room_v1",
+    "data": {
+      "hp": {
+        "value": {
+          "max": 32000000,
+          "current": 31996883
+        },
+        "status": "available"
+      },
+      "owner": {
+        "value": {
+          "name": "R0908H01",
+          "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+          "leaderIconUrl": {
+            "status": "unknown"
+          }
+        },
+        "status": "available"
+      },
+      "state": {
+        "value": "active",
+        "status": "available"
+      },
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "endedAt": {
+        "value": null,
+        "status": "available"
+      },
+      "createdAt": {
+        "value": "2026-09-08T10:35:48.611071+00:00",
+        "status": "available"
+      },
+      "expiresAt": {
+        "value": "2026-09-09T10:35:48.611071+00:00",
+        "status": "available"
+      },
+      "difficultyId": "beginner",
+      "participantCount": {
+        "value": 3,
+        "status": "available"
+      },
+      "serverEligibility": {
+        "status": "unknown"
+      }
+    }
+  },
+  {
+    "role": "rescue",
+    "name": "get_raid_room_briefing_v1",
+    "data": {
+      "baseId": "shinjuku",
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "bossName": "キングス・クラウン",
+      "raidVariantId": "RAID_SHINJUKU_V1",
+      "joinEligibility": {
+        "reason": "no_power_restriction",
+        "status": "passed",
+        "actualPower": 90884,
+        "minimumPower": null
+      },
+      "membershipStatus": "joined",
+      "battleStartEnabled": true,
+      "raidBossInstanceId": "c127f1da-9a60-4919-b351-6a99412574d7"
+    }
+  },
+  {
+    "role": "rescue",
+    "name": "get_raid_room_rescue_reward_v1",
+    "data": {
+      "items": [],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "status": "not_eligible",
+      "issuedAt": null,
+      "expiresAt": null,
+      "rescueGate": {
+        "reason": "conditions_not_met",
+        "status": "not_succeeded",
+        "ruleVersion": 1,
+        "minimumBattles": 2,
+        "minimumContributionDamage": 16000
+      }
+    }
+  },
+  {
+    "role": "rescue",
+    "name": "get_raid_room_clear_reward_v1",
+    "data": {
+      "items": [],
+      "roomId": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+      "status": "not_eligible",
+      "issuedAt": null,
+      "clearGate": {
+        "status": "not_succeeded",
+        "cleared": false,
+        "ruleVersion": 1,
+        "contributionDamage": 3117,
+        "minimumContributionDamage": 0
+      },
+      "expiresAt": null
+    }
+  },
+  {
+    "name": "other-user-replay",
+    "data": null,
+    "error": "Edge Function returned a non-2xx status code",
+    "status": 404
+  }
+]

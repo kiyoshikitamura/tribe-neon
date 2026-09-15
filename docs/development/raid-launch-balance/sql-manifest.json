@@ -1,0 +1,11 @@
+{
+  "baseline": "f8b104a",
+  "profileCount": 28,
+  "sha256": "09a168716cb3a6ddd65aaed1016c2ba7f01ef670f48d54087cf5c64d2e413aa4",
+  "changedFunctions": [
+    "create",
+    "start",
+    "info"
+  ],
+  "scope": "local candidate only; original bundle and common masters unchanged"
+}

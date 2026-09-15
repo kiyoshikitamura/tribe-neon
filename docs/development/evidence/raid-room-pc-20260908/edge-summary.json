@@ -1,0 +1,33 @@
+{
+  "id": "2f650da1-98fc-49ba-80e9-e1c925876c45",
+  "slug": "resolve-battle",
+  "name": "resolve-battle",
+  "status": "ACTIVE",
+  "version": 6,
+  "created_at": 1786555551003,
+  "updated_at": 1787642480324,
+  "verify_jwt": true,
+  "import_map": false,
+  "entrypoint_path": "/tmp/user_fn_sufvuqdnqohpfzkwxohq_2f650da1-98fc-49ba-80e9-e1c925876c45_6/source/supabase/functions/resolve-battle/index.ts",
+  "ezbr_sha256": "63c6c7d4a5e7fefc0b06aef943c4fd75b5446ec594f8d5db69480634b524d8c1",
+  "room_route_present": false,
+  "room_finalizer_present": false,
+  "files": [
+    {
+      "name": "supabase/functions/resolve-battle/index.ts",
+      "characters": 8543
+    },
+    {
+      "name": "supabase/functions/resolve-battle/engine.ts",
+      "characters": 511
+    },
+    {
+      "name": "src/domain/battle/canonical_runtime.ts",
+      "characters": 33109
+    },
+    {
+      "name": "src/domain/battle/canonical_effects.ts",
+      "characters": 5657
+    }
+  ]
+}

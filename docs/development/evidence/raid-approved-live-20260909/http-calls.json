@@ -1,0 +1,1432 @@
+[
+  {
+    "role": "normal",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_onboarding_state",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "record_kpi_acquisition_landing_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_direct_message_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "unlock_eligible_user_cosmetics",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_bbs_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_direct_message_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_legacy_user_cosmetics",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_current_missions",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_onboarding_state",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "record_kpi_acquisition_observation_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "record_current_guild_login",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_pending_ranking_reward_notification",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_recent_social_activity_feed",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_pending_mission_event_dialog",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "process_login_bonus",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_leader_characters",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "bind_kpi_acquisition_subject_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_canonical_quest_progression",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "issue_kpi_mypage_ready_context_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_raid_attempt_state",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "acknowledge_kpi_first_mypage_access_v1",
+    "status": 409
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_top_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_pvp_opponents_page",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_guild_base_controls",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_gvg_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "list_raid_rooms_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_main_formation",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "ensure_initial_equipment_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_guild_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_current_missions",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "record_current_guild_login",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_leader_characters",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_canonical_quest_progression",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_raid_attempt_state",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_pvp_opponents_page",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_guild_base_controls",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_gvg_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "list_raid_rooms_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_main_formation",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "ensure_initial_equipment_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_guild_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "list_raid_room_battle_recoveries_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_participants_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_player_detail",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_battle_roster",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_direct_message_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_direct_message_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_rescue_reward_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_clear_reward_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_top_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_enemy_info_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "list_raid_room_boss_choices_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "create_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_participants_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_bbs_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "record_kpi_acquisition_landing_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_direct_message_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "record_kpi_acquisition_observation_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_direct_message_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "unlock_eligible_user_cosmetics",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_current_onboarding_state",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_legacy_user_cosmetics",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_current_missions",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "bind_kpi_acquisition_subject_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_current_onboarding_state",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "record_current_guild_login",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_pending_mission_event_dialog",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_recent_social_activity_feed",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_my_pending_ranking_reward_notification",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "process_login_bonus",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "bind_kpi_acquisition_subject_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_leader_characters",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "issue_kpi_mypage_ready_context_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_canonical_quest_progression",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_current_raid_attempt_state",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "acknowledge_kpi_first_mypage_access_v1",
+    "status": 409
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_guild_base_controls",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_top_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_gvg_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "list_raid_rooms_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_current_main_formation",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "ensure_initial_equipment_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_guild_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_current_missions",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "record_current_guild_login",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_chat_unread_counts",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_canonical_quest_progression",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_leader_characters",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_current_raid_attempt_state",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_guild_base_controls",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_gvg_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "list_raid_rooms_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_current_main_formation",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "ensure_initial_equipment_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_my_power_snapshot",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_guild_power_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "list_raid_room_battle_recoveries_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "join_raid_room_rescue_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_participants_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_top_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "list_raid_room_cards_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "register_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_participants_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_battle_roster",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_player_detail",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_briefing_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_display_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_participants_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_room_rescue_status_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_battle_roster",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_player_detail",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_battle_roster",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_public_player_detail",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_skill_display",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_recent_social_activity_feed",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_active_mission_events",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "bind_kpi_acquisition_subject_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_pending_mission_event_dialog",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_my_pending_ranking_reward_notification",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_raid_top_v1",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "acknowledge_kpi_first_mypage_access_v1",
+    "status": 409
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_skill_display",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "get_current_main_formation",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_and_recover_vitality_and_pvp_points",
+    "status": 200
+  },
+  {
+    "role": "normal",
+    "rpc": "sync_active_users",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_battle_roster",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_player_detail",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_profiles",
+    "status": 200
+  },
+  {
+    "role": "rescue",
+    "rpc": "get_public_pvp_rankings",
+    "status": 200
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "time": "2026-09-09T05:20:23.975Z",
+  "subjectUserId": "4392795b-e528-48ec-b323-900820209506",
+  "path": "/rest/v1/user_equipments?select=*",
+  "method": "POST",
+  "attemptCount": 1,
+  "status": 403,
+  "code": "42501",
+  "beforeEquipmentCount": 0,
+  "afterEquipmentCount": 0,
+  "reproduced403": true,
+  "scope": "One dedicated QA starter row; no remaining four inserts; not full Fresh acceptance",
+  "credentialsWritten": false
+}

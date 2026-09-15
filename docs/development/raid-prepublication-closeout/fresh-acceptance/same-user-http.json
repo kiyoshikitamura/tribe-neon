@@ -1,0 +1,62 @@
+{
+  "at": "2026-09-09T15:03:48.278Z",
+  "project": "sufvuqdnqohpfzkwxohq",
+  "userId": "216907d1-92e3-4ba8-bafd-953bbd51faec",
+  "sourceSha": "8c0fa6b2131faaed7b63e172ac12424d3fe8f6be",
+  "scope": "HTTP Auth/RPC/DB only; not browser UI; prior same-user Fresh progression reused",
+  "checks": [
+    {
+      "name": "existing same Fresh UID equipment baseline",
+      "status": "PASS",
+      "ids": [
+        "21d843c5-a064-4eb3-b62f-b15129c63183",
+        "92416b38-bf5c-4f56-a5c8-8e680c0cf436",
+        "ae6ee052-3f55-4a3d-a756-41f624893237",
+        "ba5bcb6c-1a95-47b1-8d2c-6c2ae2f382bd",
+        "e740ca81-c7c2-40ae-94b3-159f27bfcea9"
+      ],
+      "anonymous": true,
+      "hasEmail": false,
+      "confirmed": false
+    },
+    {
+      "name": "same QA Admin credential setup",
+      "status": "PASS",
+      "emailConfirmedByAdmin": true,
+      "mailboxAcceptance": false,
+      "newUserCreated": false
+    },
+    {
+      "name": "password signin first",
+      "status": "PASS",
+      "userId": "216907d1-92e3-4ba8-bafd-953bbd51faec",
+      "onboarding": {
+        "user_id": "216907d1-92e3-4ba8-bafd-953bbd51faec",
+        "auth_method": "EMAIL",
+        "has_profile": true,
+        "is_anonymous": false,
+        "tutorial_step": "COMPLETE",
+        "gameplay_authorized": false,
+        "authentication_pending": true,
+        "is_legacy_authenticated": false,
+        "identity_integrity_valid": true
+      }
+    },
+    {
+      "name": "logout then normal password signin and repeated ensure",
+      "status": "PASS",
+      "sameUuid": true,
+      "equipmentIds": [
+        "21d843c5-a064-4eb3-b62f-b15129c63183",
+        "92416b38-bf5c-4f56-a5c8-8e680c0cf436",
+        "ae6ee052-3f55-4a3d-a756-41f624893237",
+        "ba5bcb6c-1a95-47b1-8d2c-6c2ae2f382bd",
+        "e740ca81-c7c2-40ae-94b3-159f27bfcea9"
+      ],
+      "additionalEquipment": 0
+    }
+  ],
+  "productionWrites": false,
+  "emailSent": false,
+  "status": "HTTP_RELOGIN_PASS_UI_UNVERIFIED"
+}

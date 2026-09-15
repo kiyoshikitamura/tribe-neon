@@ -38,3 +38,88 @@
 .quest-v2-battle-ready .tutorial-wire-encounter>.semantic-cta{grid-column:1/3;width:100%;min-height:44px;margin:0;align-self:auto}
 .quest-v2-battle-ready .tutorial-wire-encounter>.quest-v2-selection-return{margin-top:-2px}
 @media(max-width:390px){.quest-v2-battle-ready{min-height:min(556px,calc(100dvh - 176px));padding:10px}.quest-v2-battle-ready .tutorial-wire-encounter{padding:12px}.quest-v2-battle-enemies article{grid-template-columns:40px minmax(0,1fr)}.quest-v2-battle-enemies .character-presentation{width:40px;height:40px}}
+
+/* Compact overview keeps all five dispatches reachable above the detail. */
+.quest-v2-dispatch-list{display:grid;gap:6px}.quest-v2-dispatch-list>strong{font-size:13px}.quest-v2-dispatch-list>button{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;min-height:44px;padding:8px 10px;background:#101722;color:#eaf2f6;border:1px solid #354653;border-radius:5px;text-align:left}.quest-v2-dispatch-list>button[aria-pressed=true]{border-color:#00dce9}.quest-v2-dispatch-list>button>span{overflow-wrap:anywhere}.quest-v2-dispatch-list>button>strong{font-size:12px;color:#73e7ee}.quest-v2-dispatch-list>button>small{grid-column:1/-1;color:#d5b96b}.quest-v2-flow-note{font-size:12px;line-height:1.6;color:#c1d1df}.quest-v2-speed-actions{flex-wrap:wrap}.quest-v2-speed-actions button{white-space:normal;min-height:44px}.quest-v2-result .quest-v2-reward-item small{white-space:normal;overflow-wrap:anywhere;font-size:11px}.quest-v2-result .quest-v2-reward-item strong{font-size:12px}
+
+/* Approved daily overview: one dispatch owner, destination and action per row. */
+.quest-v2-overview{display:grid;gap:10px}
+.quest-v2-overview-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.quest-v2-overview-heading h2{margin:0;font-size:22px}
+.quest-v2-overview-heading>span{color:#b6b4ad;font-size:12px}
+.quest-v2-dispatch-card{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:104px;padding:10px;border:1px solid #393c40;border-left:3px solid #72777a;border-radius:5px;background:linear-gradient(120deg,#202326,#11151a);text-align:left;color:#eee9e1}
+.quest-v2-dispatch-card>.character-presentation{width:64px;height:82px}
+.quest-v2-dispatch-description{display:grid;gap:6px;min-width:0}
+.quest-v2-dispatch-description>strong{font-size:15px}
+.quest-v2-dispatch-description>span{font-size:11px;color:#b9b9b4;overflow-wrap:anywhere}
+.quest-v2-dispatch-description>b{font-size:11px;color:#c1c6cb}
+.quest-v2-dispatch-card[data-state="REWARD"]{border-left-color:#d2b369}
+.quest-v2-dispatch-card[data-state="REWARD"] .quest-v2-dispatch-description>b{color:#ecd18d}
+.quest-v2-dispatch-card[data-state="BATTLE"]{border-left-color:#b76767}
+.quest-v2-dispatch-card[data-state="BATTLE"] .quest-v2-dispatch-description>b{color:#e0a4a4}
+.quest-v2-dispatch-open{font-size:11px;padding:9px 6px;border:1px solid #53565a;border-radius:3px;background:#292d31;white-space:nowrap}
+.quest-v2-empty-slot{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:64px;padding:12px;border:1px dashed #555b62;border-radius:5px;background:#10151bbf;text-align:left;color:#d2d0ca}
+.quest-v2-empty-slot strong{font-size:13px}.quest-v2-empty-slot span{font-size:10px;color:#a8acb0}
+.quest-v2-back{align-self:flex-start;min-height:40px;padding:6px 10px;border:1px solid #494d51;border-radius:4px;background:#15191e;color:#ddd;font-size:12px}
+.quest-v2-content button:active:not(:disabled){transform:scale(.97)}
+.quest-v2-content button:focus-visible{outline:2px solid #d2b369;outline-offset:2px}
+.quest-v2-character-grid strong{font-size:11px}.quest-v2-character-grid span{font-size:10px}.quest-v2-character-grid em{font-size:10px}
+.quest-v2-metrics{grid-template-columns:repeat(auto-fit,minmax(80px,1fr))}
+.quest-v2-metrics small{font-size:10px}.quest-v2-metrics strong{font-size:13px}
+.quest-v2-identity{border-color:#494c50}.quest-v2-identity>div{border-left-color:#b6a779}
+.quest-v2-courses button{color:#eaf2f6}
+.quest-v2-courses button:not(:disabled){opacity:1}
+.quest-v2-courses button.active{border-color:#c8b680;background:linear-gradient(145deg,#53482e,#28271f);color:#fff3d4;box-shadow:inset 0 0 0 1px #c8b680}
+.quest-v2-courses button:not(:disabled) small{color:#c8d2db}
+.quest-v2-courses button.active small{color:#f0dcab}
+.quest-v2-courses button.locked{cursor:default}
+.quest-v2-town-tabs button.active{border-color:#c8b680}.quest-v2-character-grid button.selected{border-color:#c8b680;background:#c8b68014}
+
+.quest-v2-drops{font-size:11px;color:#c2c2bd}.quest-v2-drops summary{min-height:32px;cursor:pointer}.quest-v2-dispatch-reason{margin:0;color:#e1b2a7;font-size:12px}
+
+/* Dispatch-first journey: overview, destination, encounter/reward, owner. */
+.quest-v2-overview-heading{padding:8px 0 10px;border-bottom:1px solid #675838}
+.quest-v2-overview-heading h2{font-size:24px;letter-spacing:.06em}
+.quest-v2-dispatch-card{position:relative;overflow:hidden;background:linear-gradient(115deg,rgba(48,43,34,.95),rgba(13,19,28,.97));box-shadow:inset 0 1px 0 #ffffff0b}
+.quest-v2-dispatch-card[data-state="WAITING"]{border-left-color:#c8b680}
+.quest-v2-bonus{width:fit-content;padding:3px 6px;border:1px solid #9c885144;border-radius:3px;background:#8f753b19;color:#e7d393;font-size:10px;font-style:normal}
+.quest-v2-empty-slot{display:grid;grid-template-columns:36px minmax(0,1fr) 28px;min-height:84px;padding:12px;border:1px solid #554d3e;background:linear-gradient(115deg,#28261f99,#101720);box-shadow:inset 3px 0 #85734f55}
+.quest-v2-empty-slot .quest-v2-slot-number{color:#bda878;font-family:var(--font-display);font-size:24px;opacity:.8}
+.quest-v2-empty-slot strong{display:grid;gap:4px;color:#d8d3c8;font-size:14px}
+.quest-v2-empty-slot strong small{font-size:10px;font-weight:400;color:#b5b5af}
+.quest-v2-empty-slot .quest-v2-slot-plus{display:grid;place-items:center;width:28px;height:28px;border:1px solid #8d7e5e70;border-radius:50%;color:#d8c798;font-size:20px}
+.quest-v2-brief>header{gap:8px;align-items:flex-start}
+.quest-v2-brief>header>strong{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.quest-v2-brief>header>.quest-v2-back{flex-shrink:0}
+.quest-v2-enemy-preview{display:grid;gap:8px;min-width:0}
+.quest-v2-enemy-preview>p{margin:0;color:#a4acb5;font-size:10px}
+.quest-v2-enemy-preview>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.quest-v2-enemy-preview article{display:grid;gap:4px;min-width:0}
+.quest-v2-enemy-preview .character-presentation{width:100%;height:auto;aspect-ratio:1}
+.quest-v2-enemy-preview article>strong{font-size:11px;overflow-wrap:anywhere;text-align:center}
+.quest-v2-brief .quest-v2-reward-item small{font-size:11px;white-space:normal;line-height:1.35}
+.quest-v2-brief .quest-v2-reward-item strong{font-size:11px}
+.quest-v2-brief .quest-v2-first-clear{font-size:11px}
+.quest-v2-hometown-note{position:relative;z-index:1;width:fit-content;margin:8px auto}
+@media(max-width:360px){.quest-v2-dispatch-card{grid-template-columns:52px minmax(0,1fr) auto;gap:7px;padding:8px}.quest-v2-dispatch-card>.character-presentation{width:52px;height:72px}.quest-v2-dispatch-description>strong{font-size:13px}.quest-v2-dispatch-description>span,.quest-v2-dispatch-description>b{font-size:10px}.quest-v2-enemy-preview>div{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Exploration: choose a street first, then its difficulty and inline rewards. */
+@font-face{font-family:TNStreetBattle;src:url('/effects/battle-live/tetsubin.woff2') format('woff2');font-display:swap}
+.quest-v2-page-hero{display:grid;gap:10px;margin:0}
+.quest-v2-page-hero>img{display:block;width:100%;height:auto;border-radius:5px}
+.quest-v2-page-hero>p{margin:0;text-align:center;color:#e8dcc3;font-family:TNStreetBattle,'Hiragino Sans',sans-serif;font-size:15px;line-height:1.5}
+.quest-v2-overview-heading{justify-content:flex-end}
+.quest-v2-town-list{display:grid;gap:10px}
+.quest-v2-town-list>button{position:relative;display:grid;grid-template-columns:90px minmax(0,1fr) 24px;align-items:center;gap:14px;min-height:88px;overflow:hidden;border:1px solid #75664c;border-radius:5px;background:linear-gradient(100deg,#232628,#10151d);color:#f3e9d6;text-align:left;padding:0 14px 0 0}
+.quest-v2-town-list>button>img{width:90px;height:88px;object-fit:cover}
+.quest-v2-town-copy>strong{font-family:TNStreetBattle,'Hiragino Sans',sans-serif;font-size:23px;font-weight:400}
+.quest-v2-town-arrow{font-size:24px;color:#c8b680}
+.quest-v2-shell .tutorial-wire-progress-title>span,.quest-v2-shell .tutorial-wire-speedup>h2{font-family:TNStreetBattle,'Hiragino Sans',sans-serif;font-size:clamp(22px,6vw,28px);line-height:1.4;font-weight:400}
+.quest-v2-character-grid em{white-space:nowrap;overflow:visible;text-overflow:clip;font-size:11px;line-height:1.5}
+.quest-v2-speed-actions .outlaw-button{font-size:12px}
+
+.quest-v2-town-copy{display:flex;flex-direction:column;gap:5px;padding:12px 0;min-width:0}
+.quest-v2-town-copy>small{font-size:12px;color:#ddd3c1;line-height:1.4}
+.quest-v2-town-rewards{display:flex;flex-wrap:wrap;align-items:center;gap:4px}.quest-v2-town-reward{position:relative;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}.quest-v2-town-reward>img{width:28px;height:28px;object-fit:contain}.quest-v2-town-reward.is-random{width:42px}.quest-v2-town-reward.is-random>img+img{margin-left:-21px}
+.quest-v2-town-list>button>img{height:100%;min-height:110px}
+.quest-v2-area-enemy{margin:6px 0 0;font-size:12px;color:#e4d5bb}

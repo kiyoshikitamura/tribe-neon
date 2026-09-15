@@ -1,0 +1,19 @@
+{
+  "collisions": [
+    {
+      "version": "20260901000216",
+      "status": "BLOCKED_DO_NOT_RENAME",
+      "reason": "Previewで登録済みversionのname/statements対応を実DB監査するまで、履歴を推測してrenameしない。",
+      "files": [
+        {
+          "path": "supabase/migrations/20260901000216_pvp_main_formation_matchmaking.sql",
+          "sha256": "724c04e9fd7622f9f14bec6fde293ffe4b5cd25ca229f424506ed39cfae75d10"
+        },
+        {
+          "path": "supabase/migrations/20260901000216_tutorial_battle_acceptance_pacing.sql",
+          "sha256": "749eb40a5aa0221b7443e77979d8c7a1381d7ea34be6682bb03f252fed807aa4"
+        }
+      ]
+    }
+  ]
+}

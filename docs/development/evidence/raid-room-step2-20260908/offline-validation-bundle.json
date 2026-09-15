@@ -1,0 +1,45 @@
+{
+  "engine": "PGlite 0.5.8 / in-memory only",
+  "limitations": [
+    "空データから列・制約・関数・triggerを再構成。実ユーザーはコピーしない。",
+    "AuthはGUC参照stub。Cronは実行しない。複数接続・Edge・UI受入ではない。"
+  ],
+  "steps": [
+    {
+      "name": "catalog reconstruction",
+      "status": "PASS",
+      "tables": 200,
+      "functions": 157
+    },
+    {
+      "name": "snapshot additive prerequisite",
+      "status": "PASS"
+    },
+    {
+      "name": "generated atomic SQL bundle",
+      "status": "PASS"
+    },
+    {
+      "name": "protected function bodies and ACL unchanged",
+      "status": "PASS",
+      "count": 133
+    },
+    {
+      "name": "Room flags false, legacy true, Room RLS enabled",
+      "status": "PASS"
+    },
+    {
+      "name": "Guild system post executes existing triggers without KPI/activity/human-response increments",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot preserves every existing field and SPD/LUK correction; adds 4 metadata fields",
+      "status": "PASS",
+      "fixture": "base snapshot / equipment helper are stubs"
+    },
+    {
+      "name": "3 new synthetic users QA-classified from Game Start; duplicate classification rejected",
+      "status": "PASS"
+    }
+  ]
+}

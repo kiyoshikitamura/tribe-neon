@@ -1,0 +1,13 @@
+{
+  "reservedWindowJst": "2026-09-08 20:15頃–21:15頃",
+  "confirmed": "KPI側は現在と向こう60分のPreview変更予定なし。演出PC側はPreview検証完了・migration/Edge/設定/共有alias変更なしと回答。演出親側にも連絡。",
+  "release": {
+    "sentAt": "2026-09-08T11:41:29.396Z",
+    "prompt": "Raid Previewの今回の変更・疎通を完了し、共有Preview sufvuqdnqohpfzkwxohq の変更枠を解放します。QA専用Room af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3 のcurrent_hpだけ31,988,539→25,000へ調整後、正規戦闘で討伐。救援・討伐Present計4件を通常UIで受取、救援の両Present再受取拒否・数量不変、最終Replay再送時の追加反映なしを確認しました。配信 feeca750e4c07e66c7607cfbb0290c3370a1aae8、専用URL https://tribe-neon-ptcsb3j03-kiyoshi-kitamura.vercel.app 。Edge resolve-battle v7を保持、共有KPI/演出alias変更なし。次のバトルUI統合では251dc03のRoom復帰修正とfeeca750の文言修正を保持し、演出側59be3c7の変更も照合してください。24時間失効Room 3972a461-b45f-4b02-8142-75f294461ae3 は明日19:40:55 JSTまで変更・参加せず保持をお願いします。追加作業の依頼ではなく完了・解放連絡です。"
+  },
+  "threads": [
+    "01a07f0f-3729-7db0-9851-642099bc7264",
+    "6a9f5a51-6144-83e9-9051-37fd12bd587a",
+    "01a0808c-9a87-7392-8d09-ffe16d1d5b23"
+  ]
+}

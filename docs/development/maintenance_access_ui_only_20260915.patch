@@ -1,0 +1,63 @@
+diff --git a/src/app/context/GameContext.tsx b/src/app/context/GameContext.tsx
+index f9e237a..ba80ab2 100644
+--- a/src/app/context/GameContext.tsx
++++ b/src/app/context/GameContext.tsx
+@@ -1,5 +1,6 @@
+ "use client";
+ import { useQuestRaidEncounter } from "./hooks/useQuestRaidEncounter";
++import { useMaintenanceTestAccess } from "./hooks/useMaintenanceTestAccess";
+ import { useBeginnerJourney } from "@/hooks/useBeginnerJourney";
+ import { canClaimMission } from "@/domain/mission/availability";
+ import { useMissionClock } from "@/hooks/useMissionClock";
+@@ -500,6 +501,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
+     scoutPresentationCategory, setScoutPresentationCategory
+   } = gacha;
+ 
++  const maintenanceTestAccess = useMaintenanceTestAccess(session?.user?.id, isMaintenanceEnabled(featureOperatingStates));
++
+   const shop = useShop();
+ 
+   const {
+@@ -4319,7 +4322,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
+     pvpNextRecoveryAt,
+     pvpPoints, setPvpPoints,
+     activeTab, setActiveTab,
+-    maintenanceEnabled: isMaintenanceEnabled(featureOperatingStates),
++    maintenanceEnabled: isMaintenanceEnabled(featureOperatingStates) && !maintenanceTestAccess,
+     showInboxPanel, setShowInboxPanel,
+     showMissionPanel, setShowMissionPanel,
+     showFriendPanel, setShowFriendPanel,
+diff --git a/src/app/context/hooks/useMaintenanceTestAccess.ts b/src/app/context/hooks/useMaintenanceTestAccess.ts
+new file mode 100644
+index 0000000..1e72ceb
+--- /dev/null
++++ b/src/app/context/hooks/useMaintenanceTestAccess.ts
+@@ -0,0 +1,28 @@
++"use client";
++import { useEffect, useState } from "react";
++import { supabase } from "@/utils/supabase";
++
++/** UIの許可は表示用。DB/APIはリクエストごとに期限と本人を再検証する。 */
++export function useMaintenanceTestAccess(userId: string | undefined, maintenance: boolean) {
++  const [permission, setPermission] = useState<{ userId: string; allowed: boolean } | null>(null);
++  useEffect(() => {
++    setPermission(null);
++    if (!userId || !maintenance) return;
++    let disposed = false;
++    let pending = false;
++    const refresh = async () => {
++      if (pending) return;
++      pending = true;
++      try {
++        const { data, error } = await supabase.rpc("is_operations_maintenance_tester");
++        if (!disposed) setPermission({ userId, allowed: !error && data === true });
++      } catch {
++        if (!disposed) setPermission({ userId, allowed: false });
++      } finally { pending = false; }
++    };
++    void refresh();
++    const timer = window.setInterval(() => void refresh(), 15000);
++    return () => { disposed = true; window.clearInterval(timer); };
++  }, [userId, maintenance]);
++  return Boolean(maintenance && userId && permission?.userId === userId && permission.allowed);
++}

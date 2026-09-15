@@ -1,0 +1,32 @@
+{
+  "version": 7,
+  "bundle": "b762e7c25826f9a417c87cf550388e291f2c75d0e278599e6a1d3dcd70fd8b21",
+  "verifyJwt": true,
+  "files": [
+    {
+      "path": "supabase/functions/resolve-battle/index.ts",
+      "liveSha256": "b7274ff2c4587fd768e2ed4b390b848a05cbd8cb819260e5f109f7e0e0b86795",
+      "matches": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/engine.ts",
+      "liveSha256": "5c947b859393d00b6ac347ccc76ff0ab54996787acd247eecd78da194b127abe",
+      "matches": true
+    },
+    {
+      "path": "src/domain/battle/canonical_runtime.ts",
+      "liveSha256": "2685fde85b390242ac5e7a676e0a281e00055d31fadd8b85c6a5a373378b9c04",
+      "matches": true
+    },
+    {
+      "path": "src/domain/battle/canonical_effects.ts",
+      "liveSha256": "7eea585ef12b384d306f89b12d986ec49116df2e437f0f9a0d54551aea386e20",
+      "matches": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/raid-room-route.ts",
+      "liveSha256": "e4ff29fb5e82ae6b461c982a82d8e63a7aaceaeab315d9ee478d4d18913c7872",
+      "matches": true
+    }
+  ]
+}

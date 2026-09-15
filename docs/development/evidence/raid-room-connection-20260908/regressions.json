@@ -1,0 +1,76 @@
+[
+  {
+    "name": "room-contracts",
+    "exit": 0,
+    "passed": [
+      107
+    ]
+  },
+  {
+    "name": "verify_canonical_battle_runtime",
+    "exit": 0,
+    "passed": []
+  },
+  {
+    "name": "verify_battle_full_skill_load_fixture",
+    "exit": 0,
+    "passed": []
+  },
+  {
+    "name": "audit_battle_ai_full_skill_load",
+    "exit": 0,
+    "passed": []
+  },
+  {
+    "name": "verify_battle_presentation_contract",
+    "exit": 0,
+    "passed": []
+  },
+  {
+    "name": "verify_battle_mvp_result",
+    "exit": 0,
+    "passed": []
+  },
+  {
+    "name": "run-activity-sync-tests.mjs",
+    "exit": 0,
+    "passed": [
+      14
+    ]
+  },
+  {
+    "name": "run-browser-tests.mjs",
+    "exit": 0,
+    "passed": [
+      28
+    ]
+  },
+  {
+    "name": "run-clear-reward-tests.mjs",
+    "exit": 0,
+    "passed": [
+      4
+    ]
+  },
+  {
+    "name": "run-ranking-retirement-tests.mjs",
+    "exit": 0,
+    "passed": [
+      5
+    ]
+  },
+  {
+    "name": "run-ui-cutover-tests.mjs",
+    "exit": 0,
+    "passed": [
+      3
+    ]
+  },
+  {
+    "name": "run-use-battle-room-tests.mjs",
+    "exit": 0,
+    "passed": [
+      17
+    ]
+  }
+]

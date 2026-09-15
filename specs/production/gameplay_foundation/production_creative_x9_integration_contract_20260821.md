@@ -19,21 +19,21 @@ No image was generated, inferred, copied, renamed, or adopted. Existing `public/
 | Normal Character / `CHAR_NORMAL` | `/promotion/gacha_normal_character.png` | 1280x640 | 2:1 | Delivered (RGBA) |
 | Normal Skill / `SKILL_NORMAL` | `/promotion/gacha_normal_skill.jpg` | 1280x640 | 2:1 | Delivered |
 | Normal Equipment / `EQUIP_NORMAL` | `/promotion/gacha_normal_equipment.jpg` | 1280x640 | 2:1 | Delivered |
-| My Page 01 | `/promotion/mypage_banner_01.png` | 1200x200 | 6:1 | Pending |
-| My Page 02 | `/promotion/mypage_banner_02.png` | 1200x200 | 6:1 | Pending |
-| My Page 03 | `/promotion/mypage_banner_03.png` | 1200x200 | 6:1 | Pending |
+| My Page 01 | `/promotion/mypage_banner_01.png` | 1200x200 | 6:1 | Delivered |
+| My Page 02 | `/promotion/mypage_banner_02.png` | 1200x200 | 6:1 | Delivered |
+| My Page 03 | `/promotion/mypage_banner_03.png` | 1200x200 | 6:1 | Delivered |
 
 Gacha replacement files preserve their delivered 1280x640 canvas. Character banners use PNG/RGBA so the supplied white canvas bands can be transparent without cutting the figures; Skill and Equipment retain the supplied JPEG bytes. Runtime rendering uses intrinsic dimensions with `width: 100%`, `height: auto`, and `object-fit: contain`.
 
 ## Availability and fallback
 
-Availability is explicit in the static manifest. Pending entries use `available: false`; Runtime does not render their paths and therefore performs no failing image request.
+Availability is explicit in the static manifest. All nine current entries use `enabled: true` and `available: true`. A future pending entry must use `available: false`; Runtime must not request its path.
 
 - SP unavailable: retain the current text-only card.
 - Normal unavailable: retain the current `/gacha/bg_gacha_normal.png` Presentation and free-ten-pull visual.
-- My Page unavailable or partially delivered: retain the existing two-banner fallback/master behavior.
+- My Page unavailable or partially delivered in a future rollout: retain the existing two-banner fallback/master behavior.
 - My Page switches only when all three entries are available in order 01, 02, 03.
-- My Page destinations remain `null` until supplied by Creative Authority. A null destination performs no navigation.
+- My Page destinations are `guild`, `raid`, and `null` in order 01–03. A null destination performs no navigation.
 
 ## Runtime connection
 
@@ -53,8 +53,7 @@ My Page retains the existing carousel, 4-second interval, arrows, cover renderin
 
 The following pending Presentation and device-polish items are consolidated into the Final Device Acceptance Gate. They do not block Preview migration replay preparation:
 
-- Gacha Promotion Creative x6; canonical paths remain frozen with `available: false`
-- My Page Banner x3 while undelivered; canonical paths remain frozen with `available: false`
+- Gacha Promotion Creative x6 and My Page Banner x3 are delivered and connected; final device rendering acceptance remains required
 - BGM and SE, including volume, playback, missing-file/404, and mobile-device playback checks
 - Mission mobile layout
 - Mission claim processing feedback
@@ -63,6 +62,6 @@ The following pending Presentation and device-polish items are consolidated into
 
 No placeholder, generated Creative, social-promotion reuse, or inferred destination is permitted during the deferral.
 
-## Asset delivery acceptance
+## Final device acceptance
 
-After delivery, verify 9/9 files, exact paths and dimensions, Normal/SP and category mapping, no stretching/broken image/unintended crop, readable safe-area content, correct My Page 01-02-03 rotation at four seconds, destination behavior, 390x844, 412x915, desktop-shell rendering, Gacha contract consistency, and no Tutorial/M9-X regression.
+Verify 9/9 files, exact paths and dimensions, Normal/SP and category mapping, no stretching/broken image/unintended crop, readable safe-area content, correct My Page 01-02-03 rotation at four seconds, destination behavior, 390x844, 412x915, desktop-shell rendering, Gacha contract consistency, and no Tutorial/M9-X regression.

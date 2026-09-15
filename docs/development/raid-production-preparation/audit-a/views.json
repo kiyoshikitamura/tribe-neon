@@ -1,0 +1,56 @@
+[
+  {
+    "name": "kpi_canonical_tutorial_completions_v1",
+    "owner": "postgres",
+    "options": [
+      "security_invoker=true"
+    ],
+    "definition": " SELECT subject_id,\n    occurred_at AS completed_at,\n    tutorial_version,\n    context_id,\n    source\n   FROM kpi_tutorial_journey_facts\n  WHERE fact_type = 'FIRST_MYPAGE_ACCESS_CONFIRMED'::text;"
+  },
+  {
+    "name": "kpi_guild_daily_chat_activity_v1",
+    "owner": "postgres",
+    "options": [
+      "security_invoker=true"
+    ],
+    "definition": " SELECT guild_id,\n    (occurred_at AT TIME ZONE 'Asia/Tokyo'::text)::date AS activity_date_jst,\n    count(DISTINCT subject_id) AS chat_active_uu,\n    count(*) AS message_count\n   FROM kpi_guild_chat_message_facts f\n  WHERE NOT kpi_is_subject_excluded(subject_id, occurred_at)\n  GROUP BY guild_id, ((occurred_at AT TIME ZONE 'Asia/Tokyo'::text)::date);"
+  },
+  {
+    "name": "kpi_effective_active_guild_daily_v1",
+    "owner": "postgres",
+    "options": [
+      "security_invoker=true"
+    ],
+    "definition": " WITH game_activity AS (\n         SELECT m.guild_id,\n            a.activity_date,\n            count(DISTINCT a.subject_id) AS game_active_members\n           FROM kpi_daily_user_activity a\n             JOIN kpi_guild_membership_periods m ON m.subject_id = a.subject_id AND m.joined_at < kpi_jst_day_start(a.activity_date + 1) AND (m.left_at IS NULL OR m.left_at >= kpi_jst_day_start(a.activity_date + 1))\n          WHERE NOT kpi_is_subject_excluded(a.subject_id, a.last_active_at)\n          GROUP BY m.guild_id, a.activity_date\n        ), chat_activity AS (\n         SELECT kpi_guild_daily_chat_activity_v1.guild_id,\n            kpi_guild_daily_chat_activity_v1.activity_date_jst AS activity_date,\n            kpi_guild_daily_chat_activity_v1.chat_active_uu\n           FROM kpi_guild_daily_chat_activity_v1\n        )\n SELECT g.guild_id,\n    g.activity_date,\n    g.game_active_members,\n    COALESCE(c.chat_active_uu, 0::bigint) AS guild_chat_active_members,\n    g.game_active_members >= 3 AS is_active_guild,\n    g.game_active_members >= 3 AND COALESCE(c.chat_active_uu, 0::bigint) >= 2 AS is_effective_active_guild\n   FROM game_activity g\n     LEFT JOIN chat_activity c USING (guild_id, activity_date);"
+  },
+  {
+    "name": "kpi_marketing_latest_revisions_v1",
+    "owner": "postgres",
+    "options": [
+      "security_invoker=true"
+    ],
+    "definition": " WITH latest AS (\n         SELECT DISTINCT ON (r.scope_id, r.external_key) r.id,\n            r.scope_id,\n            r.platform,\n            r.report_date_jst,\n            r.source_timezone,\n            r.account_key,\n            r.campaign_key,\n            r.campaign_name,\n            r.line_item_key,\n            r.line_item_name,\n            r.creative_key,\n            r.creative_name,\n            r.reporting_grain,\n            r.spend,\n            r.currency,\n            r.impressions,\n            r.clicks,\n            r.external_key,\n            r.revision,\n            r.batch_id,\n            r.imported_at,\n            r.idempotency_key,\n            r.payload_hash,\n            r.metadata\n           FROM kpi_marketing_daily_fact_revisions r\n          ORDER BY r.scope_id, r.external_key, r.revision DESC\n        )\n SELECT l.id,\n    l.scope_id,\n    l.platform,\n    l.report_date_jst,\n    l.source_timezone,\n    l.account_key,\n    l.campaign_key,\n    l.campaign_name,\n    l.line_item_key,\n    l.line_item_name,\n    l.creative_key,\n    l.creative_name,\n    l.reporting_grain,\n    l.spend,\n    l.currency,\n    l.impressions,\n    l.clicks,\n    l.external_key,\n    l.revision,\n    l.batch_id,\n    l.imported_at,\n    l.idempotency_key,\n    l.payload_hash,\n    l.metadata,\n    l.clicks::numeric / NULLIF(l.impressions, 0)::numeric AS ctr,\n    l.spend / NULLIF(l.clicks, 0)::numeric AS cpc,\n    l.spend * 1000::numeric / NULLIF(l.impressions, 0)::numeric AS cpm,\n        CASE\n            WHEN l.impressions = 0 THEN 'zero_denominator'::text\n            ELSE NULL::text\n        END AS ctr_null_reason,\n        CASE\n            WHEN l.clicks = 0 THEN 'zero_denominator'::text\n            ELSE NULL::text\n        END AS cpc_null_reason,\n        CASE\n            WHEN l.impressions = 0 THEN 'zero_denominator'::text\n            ELSE NULL::text\n        END AS cpm_null_reason,\n    l.currency = 'JPY'::text AS jpy_gate_eligible\n   FROM latest l\n     JOIN kpi_marketing_import_batches b ON b.id = l.batch_id\n  WHERE NOT COALESCE((b.metadata ->> 'qa'::text)::boolean, false);"
+  },
+  {
+    "name": "kpi_acquisition_valid_journeys_v1",
+    "owner": "postgres",
+    "options": [
+      "security_invoker=true"
+    ],
+    "definition": " SELECT journey_id,\n    journey_token_hash,\n    started_at,\n    source,\n    schema_version,\n    created_at,\n    first_arrived_at,\n    metadata\n   FROM kpi_acquisition_journeys j\n  WHERE source <> 'qa_v1'::text AND metadata <> '{}'::jsonb AND kpi_v250_landing_metadata_valid(metadata) AND isfinite(first_arrived_at) AND first_arrived_at <= statement_timestamp() AND (EXISTS ( SELECT 1\n           FROM kpi_acquisition_journey_facts f\n          WHERE f.journey_id = j.journey_id AND f.event_type = 'TITLE_ARRIVED'::text AND f.source <> 'qa_v1'::text));"
+  },
+  {
+    "name": "kpi_subject_first_touch_v1",
+    "owner": "postgres",
+    "options": [
+      "security_invoker=true"
+    ],
+    "definition": " SELECT b.subject_id,\n    b.journey_id,\n    b.first_touch_source AS first_source,\n    b.first_touch_fixed_at,\n    b.first_touch_rule_version,\n    j.first_arrived_at,\n    j.metadata ->> 'utm_campaign'::text AS campaign,\n    j.metadata ->> 'utm_content'::text AS creative,\n    j.metadata AS landing_params\n   FROM kpi_acquisition_subject_bindings b\n     JOIN kpi_acquisition_journeys j USING (journey_id)\n  WHERE b.first_touch_source IS NOT NULL;"
+  },
+  {
+    "name": "missions_master",
+    "owner": "postgres",
+    "options": null,
+    "definition": " SELECT id,\n    category\n   FROM missions;"
+  }
+]

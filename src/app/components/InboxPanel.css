@@ -3,10 +3,9 @@
   flex-direction: column;
   height: 100%;
 }
-.inbox-panel-pending{pointer-events:none}
-.inbox-panel-pending .inbox-presents-area{position:relative}
-.inbox-panel-pending .inbox-presents-area::after{position:fixed;z-index:8;inset:0;content:"";background:rgba(1,4,9,.24)}
-.inbox-panel-pending .inbox-presents-actions{position:relative;z-index:9}
+.inbox-panel-pending{pointer-events:auto;cursor:wait}
+.inbox-panel-pending::after{position:absolute;z-index:10;inset:0;content:"";background:rgba(1,4,9,.24);pointer-events:auto;touch-action:none}
+.inbox-panel-pending .modal-shell-content,.inbox-panel-pending .modal-shell-footer{pointer-events:none;user-select:none}
 
 .inbox-empty {
   text-align: center;
@@ -187,4 +186,17 @@
   line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* Keep news actions visible when the full announcement needs vertical scrolling. */
+.canonical-dialog:has(.inbox-news-modal-text) {
+  display: flex;
+  flex-direction: column;
+}
+.canonical-dialog:has(.inbox-news-modal-text) .canonical-dialog-header,
+.canonical-dialog:has(.inbox-news-modal-text) .canonical-dialog-actions {
+  flex-shrink: 0;
+}
+.canonical-dialog:has(.inbox-news-modal-text) .canonical-dialog-body {
+  flex: 1 1 auto;
 }

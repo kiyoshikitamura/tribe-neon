@@ -27,15 +27,15 @@ export default function TypewriterText({ text, className = "", speedMs = 34, hig
     }
 
     setVisibleLength(0);
+    let currentLength = 0;
     const timer = window.setInterval(() => {
-      setVisibleLength((current) => {
-        if (current >= text.length) {
-          window.clearInterval(timer);
-          onCompleteRef.current?.();
-          return current;
-        }
-        return current + 1;
-      });
+      if (currentLength >= text.length) {
+        window.clearInterval(timer);
+        onCompleteRef.current?.();
+        return;
+      }
+      currentLength += 1;
+      setVisibleLength(currentLength);
     }, speedMs);
     return () => window.clearInterval(timer);
   }, [speedMs, text]);

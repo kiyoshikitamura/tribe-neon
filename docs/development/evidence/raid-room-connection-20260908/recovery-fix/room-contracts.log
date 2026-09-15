@@ -1,0 +1,174 @@
+(node:11960) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomActivity.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Room切替後のbootstrapはRoom全ページを読み開催中の最大期限を返す (4.2584ms)
+✔ 撃破・期限切れ・HP0・情報不明Roomは開催通知に含めない (1.4095ms)
+✔ Room取得失敗・不正応答時に旧一覧へフォールバックしない (1.5622ms)
+✔ Room flag falseは旧一覧応答とerrorを保持しRoom RPCを呼ばない (0.7172ms)
+(node:40168) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomBattleAttempt.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 準備だけなら開始RPCも消費もない (1.7472ms)
+✔ 応答不明後は同requestと同編成で再送する (1.6392ms)
+✔ 開始receipt後の再試行は同Replayを返し開始RPCを呼ばない (0.374ms)
+✔ 同時タップは開始リクエスト1件 (0.3129ms)
+✔ 他Roomまたは不完全な開始応答を受理しない (0.4874ms)
+✔ サーバーの確定拒否は準備キャンセル可能 (0.3738ms)
+✔ 保存receiptは当時のSnapshotを返し現編成を参照しない (1.6851ms)
+(node:40588) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomBattlePending.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ pending保存はuser別・固定入力のみ、別userから見えない (3.118ms)
+✔ 既存pendingを別request/別編成で上書きせず同入力のみ再保存 (0.8668ms)
+✔ clearは同user同requestだけ削除する (0.4887ms)
+✔ 破損・異なるuser・重複編成pendingを拒否する (0.4296ms)
+✔ 保存write拒否またはreadback不一致ならstart RPCゼロ (9.3699ms)
+✔ 復帰は本人receiptを先に読んで保存Replay使用、開始RPCゼロ (0.5646ms)
+✔ receipt未存在だけ元payloadを再送し現在編成に置き換えない (0.3953ms)
+✔ receipt参照エラー・壊れた応答では開始再送しない (0.4195ms)
+(node:41740) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomClearReward.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 討伐報酬adapterは本人参照RPCだけを呼び確定値を返す (4.4531ms)
+✔ 討伐報酬adapterは未設定と通信エラーを区別 (1.2307ms)
+✔ 討伐報酬adapterは他Room・欠損・不正数量・不正閾値を拒否 (1.1214ms)
+(node:42536) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomClient.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Room切替後の古い成功応答は新Roomと参加者を書き換えない (12.3485ms)
+✔ 古い失敗応答も切替先の成功を壊さない (1.5611ms)
+✔ 更新の順序逆転でも最新応答を保持する (2.565ms)
+✔ 取得中・未取得・参加不可を参加許可へ変換しない (5.2843ms)
+✔ 参加連打は一要求・救援ID保持、失敗後再試行できる (1.6525ms)
+✔ 一覧取得の失敗から再取得できる (0.967ms)
+✔ 取得失敗・dispose後に古い参加許可を利用しない (2.7405ms)
+✔ disposeは購読通知と進行中応答の反映を停止する (0.8777ms)
+✔ 参加登録は連打を抑止し詳細を更新、既存combinedjoinを呼ばない (1.1429ms)
+✔ 参加失敗後は資格を破棄し再取得、古い登録応答で選択を戻さない (0.7873ms)
+✔ 救援帰属未接続では登録RPCへ救援IDを黙って捨てて送らない (0.5719ms)
+✔ 作成した主催Roomもbriefingと参加者を取得する (6.7352ms)
+✔ 公開Room未参加では参加者APIを呼ばず、登録後にだけ取得する (0.5481ms)
+✔ 救援リンク選択からの参加は通常登録を使わず救援IDを保持 (4.4125ms)
+(node:33888) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/supabase/functions/resolve-battle/raid-room-route.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Edge Room route uses server lookup with the saved replay ID (2.571ms)
+✔ Edge legacy route preserves legacy finalizer (0.3511ms)
+✔ Edge invalid routes reject without legacy fallback (1.1948ms)
+✔ Edge server authority errors and network failures reject without fallback (0.5302ms)
+(node:26708) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/utils/mock/mockRpc.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Mock DB RPC] Calling get_my_raid_contribution_v1 with: { p_instance_id: 'room-a', p_user_id: 'other' }
+[Mock DB RPC] Calling get_my_raid_contribution_v1 with: { p_instance_id: 'legacy-a' }
+[Mock DB RPC] Calling get_my_raid_contribution_v1 with: { p_instance_id: 'null-day' }
+[Mock DB RPC] Calling get_my_raid_contribution_v1 with: { p_instance_id: 'room-a' }
+[Mock DB RPC] Calling get_my_raid_contribution_v1 with: { p_instance_id: 'missing' }
+[Mock DB RPC] Calling get_my_raid_contribution_v1 with: { p_instance_id: 'room-a', p_user_id: 'self' }
+✔ Room contribution is own Instance raw, including applied-zero, without rankings or writes (16.0748ms)
+✔ legacy contribution aggregates own same-day Instances and excludes other days/users (0.5542ms)
+✔ SQL null day equality does not match other null day values (0.3553ms)
+✔ authenticated caller with no logs gets zero (0.4162ms)
+✔ missing Instance returns SQL261 P0002 (0.4832ms)
+✔ unauthenticated request cannot use supplied user to read contribution (0.3164ms)
+(node:33840) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoom.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 4難度の参加下限と推奨値を別々に保持する (11.3174ms)
+✔ intermediate: 総合力159999の境界 (1.0231ms)
+✔ intermediate: 総合力160000の境界 (0.3049ms)
+✔ intermediate: 総合力160001の境界 (0.3539ms)
+✔ intermediate: 未取得値を0や参加可と扱わない (4.2967ms)
+✔ intermediate: 不正値を暗黙変換しない (0.6075ms)
+✔ advanced: 総合力199999の境界 (0.1945ms)
+✔ advanced: 総合力200000の境界 (0.1469ms)
+✔ advanced: 総合力200001の境界 (0.1765ms)
+✔ advanced: 未取得値を0や参加可と扱わない (0.2767ms)
+✔ advanced: 不正値を暗黙変換しない (0.3454ms)
+✔ expert: 総合力239999の境界 (0.178ms)
+✔ expert: 総合力240000の境界 (0.0922ms)
+✔ expert: 総合力240001の境界 (0.1138ms)
+✔ expert: 未取得値を0や参加可と扱わない (0.1197ms)
+✔ expert: 不正値を暗黙変換しない (0.1556ms)
+✔ 初級は総合力ゲートのみ無制限で、Room参加全体の許可を返さない (0.3459ms)
+✔ 未知難度を初級へフォールバックしない (0.3948ms)
+(node:11516) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomPresentation.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 初級: 参加下限と推奨値を分離表示 (1.6684ms)
+✔ 中級: 参加下限と推奨値を分離表示 (33.7989ms)
+✔ 上級: 参加下限と推奨値を分離表示 (0.2327ms)
+✔ 超級: 参加下限と推奨値を分離表示 (0.5094ms)
+✔ 未知難度に既存難度の表示値を流用しない (0.5494ms)
+✔ サーバーの有効な参加可判定だけを参加可表示にする (3.8614ms)
+✔ サーバーの有効な参加不可判定を未取得と区別する (0.4804ms)
+✔ 未取得・未知・不正・矛盾判定は参加可にならない (0.9354ms)
+✔ 4難度の入力から決定的なSQLを生成し、入力オブジェクトを変更しない (4.7305ms)
+✔ 生成SQLはtransactionとROLLBACKで閉じ、COMMITを含まない (0.9066ms)
+✔ 本番project・preview以外のenvironment・不正projectRefを拒否する (0.7067ms)
+✔ null・欠落・配列でない設定と未知・不足・重複難度を拒否する (0.5991ms)
+✔ version・戦数・数量は正整数のみを受理する (0.9866ms)
+✔ 貢献値は0を受理し、null・負・小数・文字列・安全整数範囲外を拒否する (1.8475ms)
+✔ 各報酬の空明細・空ID・重複品目を拒否する (0.7588ms)
+✔ 引用符を含む品目IDはSQL文字列内に保持する (0.2787ms)
+✔ 設定生成は運用有効化もPresent発行も行わない (0.6299ms)
+✔ バックスラッシュと引用符の組合せをescapeし制御文字を拒否する (0.5447ms)
+✔ 入力値を救援・討伐の対応列へ分離し、全報酬規則を無効のまま生成する (0.4193ms)
+(node:39052) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomRescuePending.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 救援未確認要求は保存後の再読込でも同じ要求を返す (1.9269ms)
+✔ 救援未確認要求はuserとRoomで隔離する (0.4062ms)
+✔ 成功確認した要求だけ削除し古い応答で新しい要求を消さない (0.8281ms)
+✔ 保存失敗・読戻し不一致を成功扱いにしない (0.3249ms)
+(node:40560) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomRescueReward.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 救援報酬adapterは参照RPCのみを呼び送付記録を保持 (2.9368ms)
+✔ 救援報酬adapterは未設定と通信エラーを区別 (0.9226ms)
+✔ 救援報酬adapterは別Room/不完全発行/数量不正を拒否 (0.6028ms)
+(node:41168) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomRescue.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ 救援adapterはサーバーstatusを返し上限/Room不一致を拒否 (3.5566ms)
+✔ 救援依頼は指定requestを送り両公開先の応答を受け取る (0.9115ms)
+✔ 救援リンクと参加はrescueIDでRPCへ照会、エラーは成功にしない (0.6689ms)
+✔ Activity救援リンクは専用種別とpayloadがある場合のみ抽出 (0.3088ms)
+(node:41812) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/raidRoomRpcTransport.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ list RPC は全ページを取り込み、呼出し名と offset を維持する (3.3048ms)
+✔ detail は RPC 応答を受理し serverEligibility unknown を保持する (0.4023ms)
+✔ 参加者 RPC は raw/applied と現在所属/戦闘所属を別々に保持する (0.3402ms)
+✔ 不正 DTO・別 Room 応答を拒否する (0.8481ms)
+✔ RPC error・不正ページ・循環ページを空成功に変換しない (0.4537ms)
+✔ 参加・報酬の未接続は明示失敗し RPC を呼ばない (0.3738ms)
+✔ 注入された参加・報酬 authority を利用し rescueId と確定 Replay を保持する (0.3569ms)
+✔ 注入 authority の別 Room・空 Replay・負報酬を拒否する (0.4677ms)
+✔ ineligible空reasonsを保持し、eligibleへ矛盾理由を混入した応答を拒否 (0.4747ms)
+✔ 生成は明示opt-in、契約キーを送り未接続参加を成功にしない (0.741ms)
+✔ 生成の停止エラー・不正DTO・候補重複は成功にしない (0.2778ms)
+✔ 参加登録とbriefingはopt-in、正規RPC引数とreceiptを保持する (0.3511ms)
+✔ 参加receipt別Roomや不正briefingを拒否し資格を捏造しない (0.1916ms)
+ℹ tests 107
+ℹ suites 0
+ℹ pass 107
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 481.191
+

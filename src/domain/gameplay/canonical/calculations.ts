@@ -1,4 +1,5 @@
-import type { CanonicalStats } from "./types";
+import growthSource from "./data/character_growth_20260914.json" with { type: "json" };
+import type { CanonicalGrowthPattern, CanonicalStats } from "./types";
 import equipmentProgressionSource from "./data/equipment_progression_20260821.json" with { type: "json" };
 
 const mainStatAwakeningBp = [10000, 10800, 11500, 13200, 15000, 17500] as const;
@@ -11,22 +12,25 @@ export const CANONICAL_AWAKENING_SPEED_LUCK_BP = speedLuckAwakeningBp;
 export const CANONICAL_SKILL_SLOTS = skillSlots;
 export const CANONICAL_EQUIPMENT_LEVEL_CAPS = equipmentLevelCaps;
 
-export function canonicalLevelBaseStat(lv1: number, lv100: number, level: number): number {
+export function canonicalLevelBaseStat(lv1: number, lv100: number, level: number, exponent = 1): number {
   if (!Number.isInteger(level) || level < 1 || level > 100) throw new RangeError("level must be an integer from 1 through 100");
-  return lv1 + Math.floor((lv100 - lv1) * (level - 1) / 99);
+  if (!Number.isFinite(exponent) || exponent <= 0) throw new RangeError("growth exponent must be positive");
+  return Math.round(lv1 + (lv100 - lv1) * Math.pow((level - 1) / 99, exponent));
 }
 
-export function canonicalCharacterStats(lv1: CanonicalStats, lv100: CanonicalStats, level: number, awakening: number): CanonicalStats {
+export function canonicalCharacterStats(lv1: CanonicalStats, lv100: CanonicalStats, level: number, awakening: number, growthPattern: CanonicalGrowthPattern): CanonicalStats {
   if (!Number.isInteger(awakening) || awakening < 0 || awakening > 5) throw new RangeError("awakening must be an integer from 0 through 5");
+  const exponents = growthSource.exponents[growthPattern];
+  if (!exponents) throw new RangeError("unknown character growth pattern");
   const mainBp = mainStatAwakeningBp[awakening];
   const utilityBp = speedLuckAwakeningBp[awakening];
   const apply = (value: number, bp: number) => Math.floor(value * bp / 10000);
   return {
-    hp: apply(canonicalLevelBaseStat(lv1.hp, lv100.hp, level), mainBp),
-    atk: apply(canonicalLevelBaseStat(lv1.atk, lv100.atk, level), mainBp),
-    def: apply(canonicalLevelBaseStat(lv1.def, lv100.def, level), mainBp),
-    spd: apply(canonicalLevelBaseStat(lv1.spd, lv100.spd, level), utilityBp),
-    luk: apply(canonicalLevelBaseStat(lv1.luk, lv100.luk, level), utilityBp),
+    hp: apply(canonicalLevelBaseStat(lv1.hp, lv100.hp, level, exponents.hp), mainBp),
+    atk: apply(canonicalLevelBaseStat(lv1.atk, lv100.atk, level, exponents.atk), mainBp),
+    def: apply(canonicalLevelBaseStat(lv1.def, lv100.def, level, exponents.def), mainBp),
+    spd: apply(canonicalLevelBaseStat(lv1.spd, lv100.spd, level, exponents.spd), utilityBp),
+    luk: apply(canonicalLevelBaseStat(lv1.luk, lv100.luk, level, exponents.luk), utilityBp),
   };
 }
 

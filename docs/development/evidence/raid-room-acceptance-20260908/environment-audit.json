@@ -1,0 +1,230 @@
+{
+  "cron": [
+    {
+      "jobid": 2,
+      "active": true,
+      "command": "select public.cleanup_expired_anonymous_onboarding();",
+      "jobname": "anonymous-onboarding-cleanup-daily",
+      "database": "postgres",
+      "schedule": "0 18 * * *",
+      "username": "postgres"
+    },
+    {
+      "jobid": 3,
+      "active": true,
+      "command": "select public.advance_ranking_season('PVP',clock_timestamp());",
+      "jobname": "ranking-pvp-monthly-jst",
+      "database": "postgres",
+      "schedule": "0 15 * * *",
+      "username": "postgres"
+    },
+    {
+      "jobid": 4,
+      "active": true,
+      "command": "select public.advance_ranking_season('RAID',clock_timestamp());",
+      "jobname": "ranking-raid-weekly-jst",
+      "database": "postgres",
+      "schedule": "0 15 * * 0",
+      "username": "postgres"
+    },
+    {
+      "jobid": 5,
+      "active": true,
+      "command": "select public.finalize_daily_ranking_rewards();",
+      "jobname": "daily-ranking-reward-finalize-jst-midnight",
+      "database": "postgres",
+      "schedule": "0 15 * * *",
+      "username": "postgres"
+    },
+    {
+      "jobid": 7,
+      "active": true,
+      "command": "select public.finalize_preopen_guild_power_season();",
+      "jobname": "preopen-guild-power-finalize-20260909-jst",
+      "database": "postgres",
+      "schedule": "* 15 8 9 *",
+      "username": "postgres"
+    },
+    {
+      "jobid": 12,
+      "active": true,
+      "command": "set statement_timeout='120s'; select public.refresh_kpi_overview_saved_results();",
+      "jobname": "kpi-overview-saved-results-half-hourly",
+      "database": "postgres",
+      "schedule": "7,37 * * * *",
+      "username": "postgres"
+    },
+    {
+      "jobid": 13,
+      "active": true,
+      "command": "select public.finalize_expired_raid_rooms_v1(100);",
+      "jobname": "raid-room-expiry-minute",
+      "database": "postgres",
+      "schedule": "* * * * *",
+      "username": "postgres"
+    }
+  ],
+  "flags": {
+    "battle": [
+      {
+        "enabled": true,
+        "singleton": true
+      }
+    ],
+    "legacy": [
+      {
+        "enabled": false,
+        "singleton": true
+      }
+    ],
+    "rescue": [
+      {
+        "enabled": true,
+        "singleton": true
+      }
+    ],
+    "creation": [
+      {
+        "enabled": true,
+        "singleton": true
+      }
+    ]
+  },
+  "rooms": [
+    {
+      "boss": {
+        "id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+        "max_hp": 32000000,
+        "status": "ACTIVE",
+        "base_id": "shinjuku",
+        "boss_id": "RAID_SHINJUKU_V1",
+        "outcome": null,
+        "cycle_id": "acad6e7c-2706-412d-bb48-2dda1be3a003",
+        "cleared_at": null,
+        "created_at": "2026-09-08T10:40:55.018596+00:00",
+        "current_hp": 32000000,
+        "expires_at": "2026-09-09T10:40:55.031663+00:00",
+        "spawned_at": "2026-09-08T10:40:55.031663+00:00",
+        "raid_day_key": "ROOM:56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+        "respawn_after": null,
+        "rotation_date": "2026-09-08",
+        "boss_master_id": "RAID_SHINJUKU_V1",
+        "raid_variant_id": "RAID_SHINJUKU_V1",
+        "outcome_finalized_at": null
+      },
+      "room": {
+        "id": "3972a461-b45f-4b02-8142-75f294461ae3",
+        "created_at": "2026-09-08T10:40:55.031663+00:00",
+        "difficulty_id": "beginner",
+        "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "raid_boss_instance_id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d"
+      }
+    },
+    {
+      "boss": {
+        "id": "c127f1da-9a60-4919-b351-6a99412574d7",
+        "max_hp": 32000000,
+        "status": "CLEARED",
+        "base_id": "shinjuku",
+        "boss_id": "RAID_SHINJUKU_V1",
+        "outcome": "DEFEAT_SUCCESS",
+        "cycle_id": "2ba03349-e1bd-4c23-b2d0-e62a07412c06",
+        "cleared_at": "2026-09-08T11:17:58.643622+00:00",
+        "created_at": "2026-09-08T10:35:48.596767+00:00",
+        "current_hp": 0,
+        "expires_at": "2026-09-09T10:35:48.611071+00:00",
+        "spawned_at": "2026-09-08T10:35:48.611071+00:00",
+        "raid_day_key": "ROOM:c127f1da-9a60-4919-b351-6a99412574d7",
+        "respawn_after": null,
+        "rotation_date": "2026-09-08",
+        "boss_master_id": "RAID_SHINJUKU_V1",
+        "raid_variant_id": "RAID_SHINJUKU_V1",
+        "outcome_finalized_at": "2026-09-08T11:17:58.643622+00:00"
+      },
+      "room": {
+        "id": "af908a71-b5c3-4a73-9ef8-e1ab2b9b62e3",
+        "created_at": "2026-09-08T10:35:48.611071+00:00",
+        "difficulty_id": "beginner",
+        "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "raid_boss_instance_id": "c127f1da-9a60-4919-b351-6a99412574d7"
+      }
+    }
+  ],
+  "rules": {
+    "clear": [
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "rule_version": 1,
+        "minimum_contribution_damage": 0
+      }
+    ],
+    "rescue": [
+      {
+        "enabled": true,
+        "difficulty": "advanced",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "beginner",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "expert",
+        "reward_version": 1
+      },
+      {
+        "enabled": true,
+        "difficulty": "intermediate",
+        "reward_version": 1
+      }
+    ]
+  },
+  "hp_ledger": {
+    "change_id": "raid-preview-qa-hp-acceptance-v1",
+    "postflight": {
+      "reason": "Allow rescue damage 16000 before legitimate QA clear",
+      "status": "PASS",
+      "afterHp": 25000,
+      "beforeHp": 31988539,
+      "maxHpUnchanged": 32000000
+    },
+    "project_ref": "sufvuqdnqohpfzkwxohq",
+    "recorded_at": "2026-09-08T11:16:35.919497+00:00",
+    "execution_id": "838bc48f-5950-40e3-8aff-964e402ebd05",
+    "database_role": "postgres",
+    "source_commit": "375a0ad642a81e9db10a9379f03e5e5f77fb4562",
+    "payload_sha256": "c675c4cdea6507bbf0a4b0530063ce8d09b5f76e375b0f5ef13c1d29f0ee3526",
+    "transaction_id": "48453",
+    "baseline_sha256": "e31890d6fbe1ba5fb40583e31684500cd31d86937c639100786b28688a08ed21",
+    "operator_identity": "Codex",
+    "validation_commit": "251dc03fcd9a1dcf9c9f871ff09223613788cadf",
+    "approval_reference": "User approved dedicated QA Room HP adjustment and legitimate clear 2026-09-08"
+  },
+  "checked_at": "2026-09-08T11:35:06.724827+00:00",
+  "migrations": 275,
+  "original_users": {
+    "md5": "b868375386785c9dfdad599129f9005f",
+    "count": 19
+  }
+}

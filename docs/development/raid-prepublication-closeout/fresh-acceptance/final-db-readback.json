@@ -1,0 +1,36 @@
+{
+  "projectRef": "sufvuqdnqohpfzkwxohq",
+  "readOnly": true,
+  "auth": {
+    "id": "216907d1-92e3-4ba8-bafd-953bbd51faec",
+    "anonymous": false,
+    "confirmed": true
+  },
+  "receipt": {
+    "state": "GRANTED",
+    "user_id": "216907d1-92e3-4ba8-bafd-953bbd51faec",
+    "created_at": "2026-09-09T09:08:16.332383+00:00",
+    "completed_at": "2026-09-09T09:10:54.53377+00:00",
+    "equipment_ids": [
+      "21d843c5-a064-4eb3-b62f-b15129c63183",
+      "92416b38-bf5c-4f56-a5c8-8e680c0cf436",
+      "ae6ee052-3f55-4a3d-a756-41f624893237",
+      "ba5bcb6c-1a95-47b1-8d2c-6c2ae2f382bd",
+      "e740ca81-c7c2-40ae-94b3-159f27bfcea9"
+    ]
+  },
+  "equipment": [
+    "21d843c5-a064-4eb3-b62f-b15129c63183",
+    "92416b38-bf5c-4f56-a5c8-8e680c0cf436",
+    "ae6ee052-3f55-4a3d-a756-41f624893237",
+    "ba5bcb6c-1a95-47b1-8d2c-6c2ae2f382bd",
+    "e740ca81-c7c2-40ae-94b3-159f27bfcea9"
+  ],
+  "observedAt": "2026-09-09T15:04:50.840248+00:00",
+  "classification": [
+    {
+      "valid_to": null,
+      "classification": "qa"
+    }
+  ]
+}

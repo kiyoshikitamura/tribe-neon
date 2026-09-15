@@ -1,5 +1,7 @@
 # バトル基本ルール仕様
 
+> **2026-09-12更新：** 課金・ショップ・スペシャルガチャ・専用演出・購入分の期限については、[課金公開・統合設計書](monetization_release_20260912.md)を現行仕様とする。本書の該当する旧記述は履歴であり、新規実装の根拠にしない。対象外の仕様は本更新で変更しない。
+
 ## M9-X Presentation境界
 
 PvPはRank Point変化を表示し、RateはGvG専用とする。NPC PvP模擬戦は明示された練習画面であり、既存Battle Viewerの編成確認・Timeline・Action表示を再利用するが、公式Replay作成、Player match finalize、戦績、Ranking、Reward、PvP Point、Economyを変更しない。Battle Engine / Replay authorityは変更しない。

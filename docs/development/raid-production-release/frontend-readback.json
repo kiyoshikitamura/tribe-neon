@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "at": "2026-09-09T17:56:20.869Z",
+  "id": "dpl_D6u4GxSvENg9HxG7V9G1S2tXwuRw",
+  "source": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "http": 200,
+  "scriptCount": 30,
+  "productionApi": true,
+  "productionAnonKey": true,
+  "noPreviewKey": true,
+  "changes": [
+    {
+      "alias": "tribe-neon.com",
+      "deploymentId": "dpl_D6u4GxSvENg9HxG7V9G1S2tXwuRw"
+    },
+    {
+      "alias": "www.tribe-neon.com",
+      "deploymentId": "dpl_D6u4GxSvENg9HxG7V9G1S2tXwuRw"
+    }
+  ]
+}

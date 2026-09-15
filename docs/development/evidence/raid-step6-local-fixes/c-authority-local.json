@@ -1,0 +1,22 @@
+{
+  "engine": "PGlite in memory",
+  "results": [
+    "unauthenticated denied",
+    "missing current user fails closed",
+    "anonymous API role cannot execute",
+    "existing empty user never retro-enrolled",
+    "new initialization zero roster remains pending",
+    "direct authenticated insert remains forbidden",
+    "fixed five canonical persisted rows and slots",
+    "eight queued retries stable receipt (single PGlite connection)",
+    "sale/reset does not recreate spent equipment",
+    "nonempty inventory seals skipped receipt without additions",
+    "mid-insert failure rolls back all rows and receipt; retry succeeds",
+    "caller isolation and private receipt unreadable",
+    "missing canonical master fails closed with no grants",
+    "profile-preserving reset retains one-time receipt",
+    "account deletion cascades pending/granted/skipped receipts and cannot grant without profile"
+  ],
+  "externalExecuted": false,
+  "multiConnectionConcurrencyTested": false
+}

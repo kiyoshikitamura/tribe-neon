@@ -2,7 +2,7 @@ export type MissionServerStatus = "PROGRESS" | "CLEAR" | "CLAIMED";
 
 export type MissionMasterRow = {
   id: string;
-  category: "DAILY" | "NORMAL";
+  category: "DAILY" | "NORMAL" | "SPECIAL";
   trigger_type: string;
   target_value: number;
   prerequisite_mission_id: string | null;
@@ -103,11 +103,13 @@ export function evaluateCanonicalMissionProgress(
     SKILL_LIMIT_BREAK: ["SKILL_ENHANCE_COUNT", "SKILL_AWAKENING_AT_LEAST"],
     PATROL_CLEAR: ["QUEST_COMPLETE_COUNT"],
     PVP_FINALIZED: ["PVP_FINALIZED_BATTLE_COUNT"],
+    PVP_BATTLE_COUNT: ["PVP_FINALIZED_BATTLE_COUNT"],
     PVP_WIN: ["PVP_WIN_COUNT"],
     RAID_FINALIZED: ["RAID_FINALIZED_BATTLE_COUNT"],
     RAID_CLEAR_ELIGIBLE: ["RAID_CLEAR_ELIGIBLE_COUNT"],
     GUILD_JOIN: ["GUILD_JOIN_COUNT"],
     GUILD_ACTIVITY: ["GUILD_ACTIVITY_COUNT"],
+    GUILD_CHAT: ["GUILD_ACTIVITY_COUNT"],
     GVG_FINALIZED: ["GVG_FINALIZED_BATTLE_COUNT"],
     GVG_WIN: ["GVG_WIN_COUNT"],
   };
@@ -118,6 +120,38 @@ export function evaluateCanonicalMissionProgress(
     if (!row || row.status !== "PROGRESS") continue;
     row.current_progress = Math.min(mission.target_value, row.current_progress + Math.max(0, increment));
     if (row.current_progress >= mission.target_value) row.status = "CLEAR";
+  }
+  return refreshDailyMissionCompletionAggregates(master, rows, userId);
+}
+
+export function refreshDailyMissionCompletionAggregates(
+  master: MissionMasterRow[],
+  rows: UserMissionRow[],
+  userId: string,
+  cycleDate = jstCycleDate(),
+): UserMissionRow[] {
+  const completedCount = rows.filter((row) => {
+    if (row.user_id !== userId || row.cycle_date !== cycleDate) return false;
+    if (row.status !== "CLEAR" && row.status !== "CLAIMED") return false;
+    const mission = master.find((entry) => entry.id === row.mission_id);
+    return mission?.is_enabled === true
+      && mission.category === "DAILY"
+      && mission.trigger_type !== "DAILY_MISSION_COMPLETED_COUNT";
+  }).length;
+
+  for (const mission of master.filter((entry) => (
+    entry.is_enabled
+    && entry.category === "DAILY"
+    && entry.trigger_type === "DAILY_MISSION_COMPLETED_COUNT"
+  ))) {
+    const row = rows.find((entry) => (
+      entry.user_id === userId
+      && entry.mission_id === mission.id
+      && entry.cycle_date === cycleDate
+    ));
+    if (!row || row.status === "CLAIMED") continue;
+    row.current_progress = Math.min(mission.target_value, completedCount);
+    row.status = completedCount >= mission.target_value ? "CLEAR" : "PROGRESS";
   }
   return rows;
 }

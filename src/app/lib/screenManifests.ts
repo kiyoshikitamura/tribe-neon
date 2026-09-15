@@ -33,6 +33,8 @@ const HOME_ASSETS = [
   "/gacha/bg_gacha_ssr.jpg", "/gacha/bg_gacha_sr.jpg", "/gacha/bg_gacha_normal.jpg",
   "/ui/icon_bag.png", "/ui/icon_community.png", "/ui/icon_map.png", "/ui/icon_mission.png",
   "/ui/icon_news.png", "/ui/icon_present.png", "/ui/icon_raid.png", "/ui/icon_ranking.png", "/ui/icon_settings.png",
+  "/promotion/mypage_banner_quest.webp", "/promotion/mypage_banner_battle.webp",
+  "/promotion/mypage_banner_ranking.webp", "/promotion/mypage_banner_community.webp",
 ];
 
 function optionalAssets(paths: string[]): AssetRequest[] {
@@ -43,7 +45,7 @@ export const SCREEN_ASSET_MANIFESTS = {
   commonShell: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]),
   home: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS, ...HOME_ASSETS]),
   quest: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]),
-  pvp: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]),
+  pvp: [...optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]), { src: "/promotion/battle_page_header.webp", required: true }],
   gvg: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]),
   raid: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]),
   ranking: optionalAssets([...FRAME_ASSETS, ...COMMON_SHELL_ASSETS]),
@@ -94,5 +96,35 @@ export const TUTORIAL_CRITICAL_ASSETS: AssetRequest[] = optionalAssets([
   "/branding/power.png",
   "/branding/tribe.png",
 ]);
+
+const requiredAssets = (paths: string[]): AssetRequest[] => paths.map((src) => ({ src, required: true }));
+
+// Block only on assets used by the current tutorial screen, then reveal the
+// complete screen atomically.
+export const TUTORIAL_STEP_ASSET_MANIFESTS: Record<string, AssetRequest[]> = {
+  WORLD_INTRO: requiredAssets([
+    "/branding/tutorial/tutorial_world_street_bg.png",
+    "/characters/reiji_transparent_asset.png", "/characters/ageha_transparent_asset.png",
+    "/characters/go_transparent_asset.png", "/characters/karen_transparent_asset.png",
+    "/characters/kaede_transparent_asset.png", "/branding/tribe-neon-logo.png",
+  ]),
+  FREE_GACHA: requiredAssets([
+    ...FRAME_ASSETS,
+    "/gacha/bg_gacha_normal.jpg", "/gacha/bg_gacha_sr.jpg", "/gacha/bg_gacha_ssr.jpg",
+  ]),
+  AUTO_FORMATION: requiredAssets(FRAME_ASSETS),
+  DISPATCH: requiredAssets(["/bg/bg_street_shinjuku.jpg", "/characters/ageha_transparent_asset.png"]),
+  FREE_INSTANT: requiredAssets(["/bg/bg_street_shinjuku.jpg", "/characters/ageha_transparent_asset.png"]),
+  TUTORIAL_BATTLE: requiredAssets([
+    "/bg/bg_street_shinjuku.jpg", "/effects/fx_screen_darken.png", "/effects/fx_speed_lines.png",
+    "/effects/fx_heavy_impact.png", "/effects/fx_heavy_slash.png", "/effects/fx_muzzle_flash.png",
+    "/effects/cutin_bg_sr.png", "/effects/cutin_bg_ssr.png",
+  ]),
+  RULE_GUIDE: requiredAssets([
+    "/characters/ageha_transparent_asset.png",
+    "/branding/tutorial/tutorial_world_street_bg.png",
+    "/branding/tutorial/tutorial_final_guide_bg.png",
+  ]),
+};
 
 export const DEFERRED_ASSETS: AssetRequest[] = SCREEN_ASSET_MANIFESTS.home;

@@ -1,0 +1,38 @@
+{
+  "database": "raid_top_test_1788922130593_27408",
+  "results": [
+    {
+      "name": "empty then 21 active rooms produce bounded 20+1 pages without duplicate ids",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated roles, owner leader and current Guild project without inferred membership",
+      "status": "PASS"
+    },
+    {
+      "name": "Guild publication is scoped to current membership; ACTIVITY remains accessible",
+      "status": "PASS"
+    },
+    {
+      "name": "expired and cleared raids leave active list while existing published links remain readable",
+      "status": "PASS"
+    },
+    {
+      "name": "seven official rosters each resolve five enemies and exact HARD override skill names",
+      "status": "PASS"
+    },
+    {
+      "name": "empty override, exclusive fallback, regular fallback and missing skill fail distinctly",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid inputs and anonymous/nonexistent users denied; internal helper and tables inaccessible",
+      "status": "PASS"
+    },
+    {
+      "name": "configured reward plans are read-only and no lifecycle, Present, membership or battle mutation occurs",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Isolated localhost PG17; real migrations and canonical JSON masters over minimal surrounding schema. No PostgREST/Auth HTTP or Preview verification."
+}

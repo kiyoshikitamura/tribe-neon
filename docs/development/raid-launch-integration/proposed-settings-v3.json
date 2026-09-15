@@ -1,0 +1,201 @@
+{
+  "sourceCandidate": "6c6b4febe11437bacd528b5765867632513e84b5",
+  "status": "PROPOSED_NOT_APPROVED_NOT_APPLIED",
+  "measurementHash": "e80fd327957d1bcf0d74559f03d0284f45ddb32d75649c464a0cb11a8b246246",
+  "measurementReuse": true,
+  "newSimulationBattles": 0,
+  "difficulties": [
+    {
+      "id": "beginner",
+      "label": "初級",
+      "representativePower": 58740,
+      "representativeDamage": 43931,
+      "areaAverageRange": [
+        40235,
+        46551
+      ],
+      "observedMinimumDamage": 39111,
+      "totalBattlesRange": [
+        5,
+        5
+      ],
+      "clear": {
+        "minimumContributionDamage": 10000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 3
+          }
+        ],
+        "status": "REVISED_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 2,
+        "minimumContributionDamage": 60000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 2
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false,
+        "status": "REVISED_PROPOSAL"
+      },
+      "oldClearDamage": 1000,
+      "oldRescueDamage": 16000,
+      "clearFractionOfObservedMinimum": 0.2556825445526834,
+      "rescueFractionOfRequiredBattlesObservedMinimum": 0.7670476336580502
+    },
+    {
+      "id": "intermediate",
+      "label": "中級",
+      "representativePower": 200786,
+      "representativeDamage": 388525,
+      "areaAverageRange": [
+        235788,
+        486472
+      ],
+      "observedMinimumDamage": 210142,
+      "totalBattlesRange": [
+        9,
+        9
+      ],
+      "clear": {
+        "minimumContributionDamage": 50000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 5
+          }
+        ],
+        "status": "REVISED_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 2,
+        "minimumContributionDamage": 300000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 3
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false,
+        "status": "REVISED_PROPOSAL"
+      },
+      "oldClearDamage": 10000,
+      "oldRescueDamage": 68000,
+      "clearFractionOfObservedMinimum": 0.23793434915438133,
+      "rescueFractionOfRequiredBattlesObservedMinimum": 0.7138030474631439
+    },
+    {
+      "id": "advanced",
+      "label": "上級",
+      "representativePower": 240562,
+      "representativeDamage": 544064,
+      "areaAverageRange": [
+        318054,
+        750052
+      ],
+      "observedMinimumDamage": 251355,
+      "totalBattlesRange": [
+        18,
+        22
+      ],
+      "clear": {
+        "minimumContributionDamage": 60000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 8
+          }
+        ],
+        "status": "REVISED_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 3,
+        "minimumContributionDamage": 500000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 5
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false,
+        "status": "REVISED_PROPOSAL"
+      },
+      "oldClearDamage": 30000,
+      "oldRescueDamage": 205000,
+      "clearFractionOfObservedMinimum": 0.23870621232917585,
+      "rescueFractionOfRequiredBattlesObservedMinimum": 0.6630728120254885
+    },
+    {
+      "id": "expert",
+      "label": "超級",
+      "representativePower": 279587,
+      "representativeDamage": 600274,
+      "areaAverageRange": [
+        301433,
+        814808
+      ],
+      "observedMinimumDamage": 294198,
+      "totalBattlesRange": [
+        48,
+        52
+      ],
+      "clear": {
+        "minimumContributionDamage": 75000,
+        "comparison": ">",
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 12
+          }
+        ],
+        "status": "REVISED_PROPOSAL",
+        "source": "settings/README.md rationale",
+        "enabled": false
+      },
+      "rescue": {
+        "minimumBattles": 4,
+        "minimumContributionDamage": 750000,
+        "comparison": ">=",
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 8
+          }
+        ],
+        "thresholdStatus": "EXISTING_PROVISIONAL_PROPOSED_FOR_INITIAL_PUBLIC_SETTING",
+        "thresholdSource": "specs/raid_room_rescue_v1.md:43",
+        "rewardStatus": "NEW_PROPOSAL",
+        "enabled": false,
+        "status": "REVISED_PROPOSAL"
+      },
+      "oldClearDamage": 50000,
+      "oldRescueDamage": 290000,
+      "clearFractionOfObservedMinimum": 0.25493035302755285,
+      "rescueFractionOfRequiredBattlesObservedMinimum": 0.6373258825688822
+    }
+  ]
+}

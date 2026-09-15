@@ -1,0 +1,52 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+import {build} from './build-persistent-driver.mjs';
+import {assertStandardRouteAllowed} from './standard-route-guard.mjs';
+const {PGlite}=await import(pathToFileURL(process.env.RAID_PGLITE_MODULE).href);
+const checks=[];
+const payload='create table public.atomic_probe(id integer); insert into public.atomic_probe values(1);\n';
+const sql=build({payload,baseline:'select 1;',postflight:"do $$ begin if (select count(*) from public.atomic_probe) <> 1 then raise exception 'POSTFLIGHT_FAILED'; end if; end $$;"});
+async function database(){const db=new PGlite();await db.exec("create role anon; create role authenticated; create role service_role; set raid.operator='offline-test'; set raid.approval='offline-only'; set raid.execution_id='00000000-0000-0000-0000-000000000001';");return db;}
+async function rejected(db,text,pattern){await assert.rejects(db.exec(text),pattern);await db.exec('rollback;');}
+let db=await database();
+await db.exec(sql);
+assert.equal((await db.query("select to_regclass('public.atomic_probe') v")).rows[0].v,null);
+assert.equal((await db.query("select to_regnamespace('deployment_audit_raid_v1') v")).rows[0].v,null);
+checks.push('ROLLBACK removes payload and ledger together');
+await rejected(db,sql.replace('values(1)','values(2)'),/PAYLOAD_HASH_MISMATCH/);
+checks.push('payload byte tampering rejected before DDL');
+await rejected(db,build({payload,baseline:'select 1;',postflight:"do $$ begin raise exception 'POSTFLIGHT_FAILED'; end $$;"}),/POSTFLIGHT_FAILED/);
+assert.equal((await db.query("select to_regclass('public.atomic_probe') v")).rows[0].v,null);
+checks.push('postflight error rolls back DDL and ledger');
+await db.exec(sql.replace(/rollback;\s*$/,'commit;'));
+const row=(await db.query('select * from deployment_audit_raid_v1.applied_changes')).rows[0];
+assert.equal(row.change_id,'raid-room-preview-375a0ad-delta-v1');
+assert.equal(row.operator_identity,'offline-test');
+assert.equal(row.postflight.status,'PASS');
+assert.match(row.payload_sha256,/^[0-9a-f]{64}$/);
+checks.push('isolated COMMIT retains payload and complete ledger');
+await rejected(db,sql,/ALREADY_APPLIED/);
+await rejected(db,build({payload:payload+'-- changed\n',baseline:'select 1;',postflight:'select 1;'}),/CHECKSUM_CONFLICT/);
+checks.push('duplicate ID and changed hash both rejected');
+await assert.rejects(db.exec('insert into deployment_audit_raid_v1.applied_changes select * from deployment_audit_raid_v1.applied_changes'),/duplicate key/);
+checks.push('primary key rejects duplicate record');
+await db.close();
+db=await database();
+await db.exec('create schema deployment_audit_raid_v1;');
+await rejected(db,sql,/AUDIT_SCHEMA_EXISTS_WITHOUT_EXPECTED_RECORD/);
+checks.push('unknown preexisting audit schema rejected');
+await db.close();
+for(const args of [['db','push'],['db','reset'],['migration','up'],['migration','repair']]){
+ assert.throws(()=>assertStandardRouteAllowed({environment:'preview',args}),/BLOCKED/);
+ assert.throws(()=>assertStandardRouteAllowed({environment:'development',projectRef:'sufvuqdnqohpfzkwxohq',args}),/BLOCKED/);
+}
+assert.throws(()=>assertStandardRouteAllowed({environment:'preview',file:true}),/BLOCKED/);
+checks.push('Preview standard migration routes rejected by environment and resolved project ref');
+const bytes=fs.readFileSync('docs/development/raid-room-persistent/persistent-apply.sql');
+assert.equal(bytes.includes(13),false);assert.notEqual(bytes.subarray(0,3).toString('hex'),'efbbbf');
+new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+checks.push('generated driver is valid UTF-8 without BOM and LF only');
+const result={status:'PASS',engine:'PGlite; isolated databases only',checks,limitations:['Harness uses synthetic payload/baseline/postflight; real Raid bundle checked separately by verify-step2-offline --bundle.','Multiple concurrent connections/advisory lock contention not supported by this harness.','Repository wrappers are guarded; direct CLI/API/admin connections and external CI settings cannot be proven blocked locally.']};
+fs.writeFileSync('docs/development/raid-room-persistent/validation.json',JSON.stringify(result,null,2)+'\n');
+console.log(JSON.stringify(result,null,2));

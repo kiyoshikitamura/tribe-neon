@@ -1,0 +1,396 @@
+{
+  "at": "2026-09-09T16:51:13.274Z",
+  "candidate": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "project": "sufvuqdnqohpfzkwxohq",
+  "scope": "Dedicated QA only. Proposed v3 temporarily applied then restored. New measured QA parties only, no existing Party/master edits.",
+  "users": [
+    {
+      "id": "d2ef395b-fdab-4a4d-bd3b-42277935f14d",
+      "party": "beginner",
+      "role": "representative",
+      "expectedPower": 58740,
+      "actualPower": 58740,
+      "characterIds": [
+        "493b17cb-51a5-46b7-8837-738bc0dc7a38",
+        "33d1dab7-2852-47c6-ade9-4cd9a0791e95",
+        "62fd708b-d977-4d47-abda-852c29cfcaf3",
+        "d8dd9423-5810-41dc-9e09-7bab0553525b",
+        "7bc01ceb-d463-441a-ae78-1b1b581f986b"
+      ]
+    },
+    {
+      "id": "67518b81-ef7b-435b-9c38-e293112f2afc",
+      "party": "intermediate",
+      "role": "representative",
+      "expectedPower": 200786,
+      "actualPower": 200786,
+      "characterIds": [
+        "73670320-4bc2-428d-8eb8-347c622757ed",
+        "635ff617-26b8-4a1c-a4e1-5e8f2779936d",
+        "e4c2ad20-c95c-4120-8541-faefca289489",
+        "bb1e9f72-c438-4275-95a7-9634afe7b837",
+        "fdc090a9-2461-4946-ab94-211cb8226bd2"
+      ]
+    },
+    {
+      "id": "09b195e4-6bd0-470a-b94e-9a990be08e43",
+      "party": "advanced",
+      "role": "representative",
+      "expectedPower": 240562,
+      "actualPower": 240562,
+      "characterIds": [
+        "c07ab35d-7d16-41d1-b8f2-2aa4f31005d8",
+        "fea78679-4c83-4bd8-af44-1be6956ebdbd",
+        "0b8c926b-f044-41ba-9c96-3546d2f7c6d7",
+        "325535f8-058b-45ee-b3c4-c479f025d55a",
+        "bcb5a77e-9480-487d-b154-78be65c4af42"
+      ]
+    },
+    {
+      "id": "cdf10817-dbfd-4aa3-be17-b32fb38cf56b",
+      "party": "expert",
+      "role": "representative",
+      "expectedPower": 279587,
+      "actualPower": 279587,
+      "characterIds": [
+        "660af7d2-0e5f-4b47-9c85-337989e1110e",
+        "51850a5d-82fe-40d1-8441-c3b1442ac052",
+        "d84a06ce-676c-4ad4-8d4f-ebcd3585de35",
+        "9ecc4a24-6695-4b14-8c58-0635f1a621e5",
+        "09982854-95e5-485b-a41d-4debd42bba23"
+      ]
+    },
+    {
+      "id": "74f4715d-5b05-4e05-a2c2-a5d5b8a3a465",
+      "party": "beginner",
+      "role": "rescue",
+      "expectedPower": 58740,
+      "actualPower": 58740,
+      "characterIds": [
+        "7a66222c-f5e1-414d-afe9-0374200dbdff",
+        "abc943c4-7d6e-479a-bf65-121f8586d49e",
+        "57bdc61b-b5a7-4154-9a54-8a6d6795ee86",
+        "8fb2c288-7b50-4d3c-b888-7607a8f9964c",
+        "e7408037-b21e-4db5-bb3a-80f8c7ccdf52"
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+      "difficulty": "beginner",
+      "variant": "RAID_ROPPONGI_V1",
+      "profileAndFiveMembersMatch": true,
+      "maxHp": 190000,
+      "enemySnapshotHash": "fff49d2e837b79cc3091a3db8baf24878f898f6c23949c7b4101e774e48967c2"
+    },
+    {
+      "roomId": "fd0622a0-8fca-45b8-aff1-a0e0c8fb3c90",
+      "difficulty": "intermediate",
+      "variant": "RAID_ROPPONGI_V1",
+      "profileAndFiveMembersMatch": true,
+      "maxHp": 2100000,
+      "enemySnapshotHash": "05f07404592f7a357f89deea0976be355a18acdc453032edc042f77e1a7a14cd"
+    },
+    {
+      "roomId": "62ba1fd1-e61c-4742-a61c-5214e3c05d58",
+      "difficulty": "advanced",
+      "variant": "RAID_ROPPONGI_V1",
+      "profileAndFiveMembersMatch": true,
+      "maxHp": 13500000,
+      "enemySnapshotHash": "fd647691e5687bdfaf5c5e1f8aab2cad890d39093c269ff952807f9023bb8ee2"
+    },
+    {
+      "roomId": "c8ef82c4-0bb2-4ec4-9c2e-27457e396435",
+      "difficulty": "expert",
+      "variant": "RAID_ROPPONGI_V1",
+      "profileAndFiveMembersMatch": true,
+      "maxHp": 41800000,
+      "enemySnapshotHash": "242d8cce034599d46171e97903ad219f63468e1c5f5eed048ac8b45eaef2bdda"
+    }
+  ],
+  "battles": [
+    {
+      "actor": 1,
+      "room": 1,
+      "request": "169e2015-0a37-44be-9b95-b823efe878e1",
+      "replayId": "2e433951-8f44-46b2-b491-0c6a906f1b42",
+      "cost": 0,
+      "startResendSameReplay": true,
+      "rawDamage": 234361,
+      "appliedDamage": 234361,
+      "remainingBossHp": 1865639,
+      "roomOutcome": null,
+      "personalContribution": 234361,
+      "responseHash": "87b3612c0837d13335c6d3e4644bbea4865f54ca60396cbf78fdb6f07ca980fb"
+    },
+    {
+      "actor": 2,
+      "room": 2,
+      "request": "cf87cbc9-c5b0-488d-aacc-08fe8bfe245c",
+      "replayId": "34d3f57f-9bb9-456e-a937-e293c9b01005",
+      "cost": 0,
+      "startResendSameReplay": true,
+      "rawDamage": 686443,
+      "appliedDamage": 686443,
+      "remainingBossHp": 12813557,
+      "roomOutcome": null,
+      "personalContribution": 686443,
+      "responseHash": "4da12c1d98e71c44fd1f6a85f15cb187afb53fe87be6da51554f0632cc220b8c"
+    },
+    {
+      "actor": 3,
+      "room": 3,
+      "request": "4dd6dadd-33a2-413a-8571-f031fb242a14",
+      "replayId": "111b5f29-bf55-48eb-97c2-8952c8d1a4aa",
+      "cost": 0,
+      "startResendSameReplay": true,
+      "rawDamage": 887456,
+      "appliedDamage": 887456,
+      "remainingBossHp": 40912544,
+      "roomOutcome": null,
+      "personalContribution": 887456,
+      "responseHash": "e6845331cc511ec570c89312e43bd27053a9569aa91786a47cc630ad798fe023"
+    },
+    {
+      "actor": 4,
+      "room": 0,
+      "request": "26387992-a05d-41b0-96f6-c65ce8d96d12",
+      "replayId": "bd191297-21ab-4ef4-a2f5-fc5f0d31eea7",
+      "cost": 0,
+      "startResendSameReplay": true,
+      "rawDamage": 61990,
+      "appliedDamage": 61990,
+      "remainingBossHp": 128010,
+      "roomOutcome": null,
+      "personalContribution": 61990,
+      "responseHash": "d64564275a7993093dc9f97021c9fc82c2d9c735cdfe3095743ce5b14b2f32d3"
+    },
+    {
+      "actor": 4,
+      "room": 0,
+      "request": "15cfc3fa-51c9-4ee5-9c25-57f6a3f104f1",
+      "replayId": "9e016347-c710-45e2-9316-90df4a6bf60e",
+      "cost": 1,
+      "startResendSameReplay": true,
+      "rawDamage": 61673,
+      "appliedDamage": 61673,
+      "remainingBossHp": 66337,
+      "roomOutcome": null,
+      "personalContribution": 123663,
+      "responseHash": "1eb0e634c08f436fd2fa2abc2dc8010f8916c33a31be5278a8399cad5a321a8c"
+    },
+    {
+      "actor": 1,
+      "room": 0,
+      "request": "6a5f35cb-baac-4af1-9ac7-e9b190e32c21",
+      "replayId": "eb6ea50c-d6ea-4fdb-9633-8d6aa4e8586c",
+      "cost": 1,
+      "startResendSameReplay": true,
+      "rawDamage": 38000,
+      "appliedDamage": 38000,
+      "remainingBossHp": 28337,
+      "roomOutcome": null,
+      "personalContribution": 38000,
+      "responseHash": "0fabb2fe8aa11738acf6b620f4859e5593a7ec125ff343c3773096f11bdcdff5"
+    },
+    {
+      "actor": 0,
+      "room": 0,
+      "request": "e87f0728-c624-4ce5-9ba6-15cb52a7d6c7",
+      "replayId": "15499c46-d243-4d38-ba34-94628c1ae81f",
+      "cost": 0,
+      "startResendSameReplay": true,
+      "rawDamage": 42909,
+      "appliedDamage": 28337,
+      "remainingBossHp": 0,
+      "roomOutcome": "DEFEAT_SUCCESS",
+      "personalContribution": 42909,
+      "responseHash": "2c513558f0afaf3c403407aa4549a3d2eff2c50f2cda2a317f6e655a277cb3b0"
+    }
+  ],
+  "claims": [
+    {
+      "actor": 0,
+      "rpc": "get_raid_room_clear_reward_v1",
+      "result": {
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 3,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T16:51:55.328827+00:00",
+            "presentId": "6e7b6253-bd3d-4740-a5f8-59a810b8a10f",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+        "status": "issued",
+        "issuedAt": "2026-09-09T16:51:55.328827+00:00",
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 42909,
+          "minimumContributionDamage": 10000
+        },
+        "expiresAt": "2026-10-09T16:51:55.328827+00:00"
+      }
+    },
+    {
+      "actor": 0,
+      "rpc": "get_raid_room_rescue_reward_v1",
+      "result": {
+        "items": [],
+        "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+        "status": "not_eligible",
+        "issuedAt": null,
+        "expiresAt": null,
+        "rescueGate": {
+          "reason": "conditions_not_met",
+          "status": "not_succeeded",
+          "ruleVersion": 1,
+          "minimumBattles": 2,
+          "minimumContributionDamage": 60000
+        }
+      }
+    },
+    {
+      "actor": 1,
+      "rpc": "get_raid_room_clear_reward_v1",
+      "result": {
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 3,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T16:51:55.325091+00:00",
+            "presentId": "5ae5f9c5-611f-4242-94fc-e52cca4a1f5d",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+        "status": "issued",
+        "issuedAt": "2026-09-09T16:51:55.325091+00:00",
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 38000,
+          "minimumContributionDamage": 10000
+        },
+        "expiresAt": "2026-10-09T16:51:55.325091+00:00"
+      }
+    },
+    {
+      "actor": 1,
+      "rpc": "get_raid_room_rescue_reward_v1",
+      "result": {
+        "items": [],
+        "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+        "status": "not_eligible",
+        "issuedAt": null,
+        "expiresAt": null,
+        "rescueGate": {
+          "reason": "conditions_not_met",
+          "status": "not_succeeded",
+          "ruleVersion": 1,
+          "minimumBattles": 2,
+          "minimumContributionDamage": 60000
+        }
+      }
+    },
+    {
+      "actor": 4,
+      "rpc": "get_raid_room_clear_reward_v1",
+      "result": {
+        "items": [
+          {
+            "itemId": "EQUIP_EXP_S",
+            "quantity": 3,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T16:51:55.327604+00:00",
+            "presentId": "498da467-b7b8-4411-a17c-2bfd0aa7fdca",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+        "status": "issued",
+        "issuedAt": "2026-09-09T16:51:55.327604+00:00",
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 123663,
+          "minimumContributionDamage": 10000
+        },
+        "expiresAt": "2026-10-09T16:51:55.327604+00:00"
+      }
+    },
+    {
+      "actor": 4,
+      "rpc": "get_raid_room_rescue_reward_v1",
+      "result": {
+        "items": [
+          {
+            "itemId": "CHAR_EXP_S",
+            "quantity": 2,
+            "claimedAt": null,
+            "expiresAt": "2026-10-09T16:51:55.332502+00:00",
+            "presentId": "093b8941-affb-41cc-b35c-b5ef7ed3450d",
+            "presentStatus": "UNCLAIMED"
+          }
+        ],
+        "roomId": "c0835804-56e4-4203-8d42-a1112bb957b4",
+        "status": "issued",
+        "issuedAt": "2026-09-09T16:51:55.332502+00:00",
+        "expiresAt": "2026-10-09T16:51:55.332502+00:00",
+        "rescueGate": {
+          "reason": "conditions_met",
+          "status": "succeeded",
+          "ruleVersion": 1,
+          "minimumBattles": 2,
+          "minimumContributionDamage": 60000
+        }
+      }
+    }
+  ],
+  "checks": [
+    {
+      "present": "6e7b6253-bd3d-4740-a5f8-59a810b8a10f",
+      "claim": "PASS",
+      "duplicate": "REJECTED"
+    },
+    {
+      "present": "5ae5f9c5-611f-4242-94fc-e52cca4a1f5d",
+      "claim": "PASS",
+      "duplicate": "REJECTED"
+    },
+    {
+      "present": "498da467-b7b8-4411-a17c-2bfd0aa7fdca",
+      "claim": "PASS",
+      "duplicate": "REJECTED"
+    },
+    {
+      "present": "093b8941-affb-41cc-b35c-b5ef7ed3450d",
+      "claim": "PASS",
+      "duplicate": "REJECTED"
+    }
+  ],
+  "before": {
+    "enemy": "6cf97614a730e2535fd9ebd559a4ce91",
+    "rooms": "cc9ee8f2aeb211fc1c8ff80daad2771e",
+    "bosses": "fc68fd98795e122ed3d6629f84e279ac"
+  },
+  "settingsAppliedAt": "2026-09-09T16:51:38.713Z",
+  "status": "PASS",
+  "settingsRestoredAt": "2026-09-09T16:52:02.064Z",
+  "after": {
+    "enemy": "6cf97614a730e2535fd9ebd559a4ce91",
+    "rooms": "cc9ee8f2aeb211fc1c8ff80daad2771e",
+    "bosses": "fc68fd98795e122ed3d6629f84e279ac"
+  },
+  "oldRowsPreserved": true,
+  "settingsRestored": true,
+  "oldBackfills": 0
+}

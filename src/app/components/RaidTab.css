@@ -1,21 +1,20 @@
 .raid-view .ui-hub-page-content { gap: 10px; padding-top: 4px; }
+.raid-view > .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .raid-target-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
 .raid-target-tabs button { min-height: 38px; border: 1px solid rgba(110, 139, 169, .32); background: rgba(5, 10, 18, .82); color: var(--ui-text-secondary); font-size: 10px; font-weight: 800; }
 .raid-target-tabs button.is-active { border-color: rgba(255, 44, 105, .72); background: rgba(255, 44, 105, .14); color: #fff; box-shadow: inset 0 -2px var(--ui-danger); }
 .raid-boss-hero { min-height: 0; padding: 12px; border-color: rgba(255, 51, 102, .42); background-image: radial-gradient(circle at 84% 14%, rgba(255, 0, 92, .2), transparent 36%), linear-gradient(155deg, #211019, #080b12 72%); }
-.raid-boss-stage { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 9px; min-height: 66px; }
-.raid-boss-visual { position: relative; display: grid; width: 62px; height: 72px; place-items: end center; overflow: hidden; border: 1px solid rgba(255, 48, 111, .42); border-radius: 5px; background: radial-gradient(circle at 50% 30%, rgba(255, 0, 88, .25), transparent 46%), linear-gradient(180deg, rgba(30, 12, 22, .98), rgba(6, 9, 15, .98)); box-shadow: 0 0 20px rgba(255, 0, 88, .16); }
-.raid-boss-visual span { width: 42px; height: 58px; border-radius: 50% 50% 12% 12%; background: linear-gradient(180deg, rgba(177, 190, 207, .28), rgba(57, 68, 82, .16)); clip-path: polygon(30% 0,70% 0,82% 22%,75% 38%,100% 58%,90% 100%,10% 100%,0 58%,25% 38%,18% 22%); }
-.raid-boss-stage > div:nth-child(2) { display: grid; gap: 2px; min-width: 0; }
-.raid-boss-stage > div:nth-child(2) span { color: var(--ui-danger); font-size: 8px; font-weight: 900; letter-spacing: .14em; }
-.raid-boss-stage > div:nth-child(2) strong { overflow: hidden; color: #fff; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.raid-boss-stage > div:nth-child(2) small { color: var(--ui-text-secondary); font-size: 9px; }
+.raid-party-heading { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 9px; margin-bottom: 8px; }
+.raid-party-heading > div { display: grid; min-width: 0; gap: 2px; }
+.raid-party-heading > div span { color: var(--ui-danger); font-size: 8px; font-weight: 900; letter-spacing: .08em; }
+.raid-party-heading > div strong { overflow: hidden; color: #fff; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.raid-party-heading > div small { color: var(--ui-text-secondary); font-size: 9px; }
 .raid-hp-heading { display: flex; justify-content: space-between; margin: 10px 0 4px; color: #fff; font-size: 9px; font-weight: 900; }
 .raid-hp-heading strong { color: var(--ui-danger); }
 .raid-hp-bar-container { position: relative; display: flex; width: 100%; height: 20px; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 3px; background: rgba(2, 4, 8, .86); }
 .raid-hp-bar-fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #a60035, #ff225e); transition: width .3s ease; }
 .raid-hp-text { position: relative; z-index: 1; color: #fff; font-size: 9px; font-weight: 900; text-shadow: 0 1px 2px #000; }
-.raid-status-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 9px 0; }
+.raid-status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 9px 0; }
 .raid-status-grid .status-metric { min-width: 0; padding: 6px 7px; border: 1px solid rgba(91, 122, 153, .25); background: rgba(3, 7, 13, .68); }
 .raid-status-grid .status-metric small { font-size: 7px; }
 .raid-status-grid .status-metric strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; }
@@ -37,6 +36,4 @@
 
 @media (min-width: 410px) {
   .raid-boss-hero { padding: 14px; }
-  .raid-boss-stage { grid-template-columns: 70px minmax(0, 1fr) auto; }
-  .raid-boss-visual { width: 68px; height: 78px; }
 }

@@ -1,0 +1,10 @@
+{
+  "review_commit": "06b7c90e42c790133077d48d998bd6b2a0dcaf20",
+  "rollback_driver_sha256": "08896f83bff86e677626c23060fec5ebc576d134dabc123021f80907b3267d1c",
+  "commit_driver_sha256": "40300848ad76eea4e92c8eade09c3fc337197ff2cefaeb43bc6513d62c188fad",
+  "rollback_request_sha256": "3303540da8fc6e0164f62f2ad6376fcc12c1333c070da0318c5e1e0f1937ef59",
+  "commit_request_sha256": "e85221b723b24ecfe19c98f2fa5dc766bccca43915411e4d85007da520e9d0f2",
+  "terminal_only_change": true,
+  "encoding": "UTF-8 LF",
+  "transport": "Supabase execute_sql single request; metadata preamble then exact driver"
+}

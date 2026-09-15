@@ -1,0 +1,66 @@
+{
+  "at": "2026-09-09T15:14:43.14203+00:00",
+  "checks": {
+    "boss": true,
+    "damageCount": true,
+    "damageHash": true,
+    "presents": true,
+    "inventoryHash": true
+  },
+  "after": {
+    "at": "2026-09-09T15:14:43.14203+00:00",
+    "boss": {
+      "id": "1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+      "max_hp": 34000000,
+      "status": "CLEARED",
+      "base_id": "roppongi",
+      "boss_id": "RAID_ROPPONGI_V1",
+      "outcome": "DEFEAT_SUCCESS",
+      "cycle_id": "ea7e4fa2-b564-430c-b0ea-3ca8e492fc45",
+      "cleared_at": "2026-09-09T15:13:17.409133+00:00",
+      "created_at": "2026-09-09T15:09:39.226643+00:00",
+      "current_hp": 0,
+      "expires_at": "2026-09-10T15:09:39.235867+00:00",
+      "spawned_at": "2026-09-09T15:09:39.235867+00:00",
+      "raid_day_key": "ROOM:1023c0f0-6025-4d53-af36-ef7cfa4f4e71",
+      "respawn_after": null,
+      "rotation_date": "2026-09-10",
+      "boss_master_id": "RAID_ROPPONGI_V1",
+      "raid_variant_id": "RAID_ROPPONGI_V1",
+      "outcome_finalized_at": "2026-09-09T15:13:17.409133+00:00"
+    },
+    "presents": [
+      {
+        "id": "2c427752-2321-4703-98cd-1b0fdc87058a",
+        "itemId": "EQUIP_EXP_S",
+        "status": "CLAIMED",
+        "quantity": 1,
+        "claimedAt": "2026-09-09T15:13:45.094133+00:00"
+      },
+      {
+        "id": "6b0b74e1-63ee-4d17-8cda-8c2a94ce7deb",
+        "itemId": "EQUIP_EXP_S",
+        "status": "CLAIMED",
+        "quantity": 1,
+        "claimedAt": "2026-09-09T15:13:43.880169+00:00"
+      },
+      {
+        "id": "710a77d0-151a-4c49-a0ea-80d0ce009d71",
+        "itemId": "EQUIP_EXP_S",
+        "status": "CLAIMED",
+        "quantity": 1,
+        "claimedAt": "2026-09-09T15:13:42.805868+00:00"
+      },
+      {
+        "id": "865a0702-91c8-4406-8b01-18aa9f5de078",
+        "itemId": "CHAR_EXP_S",
+        "status": "CLAIMED",
+        "quantity": 1,
+        "claimedAt": "2026-09-09T15:13:46.348961+00:00"
+      }
+    ],
+    "damageHash": "aa89b0f106829010b5b689efbd298265",
+    "damageCount": 8,
+    "inventoryHash": "35531c7918b01a5605912bf68287fca4"
+  }
+}

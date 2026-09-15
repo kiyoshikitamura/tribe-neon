@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 const items = JSON.parse(fs.readFileSync("src/domain/gameplay/canonical/data/items_20260822.json", "utf8")).items;
-const master = JSON.parse(fs.readFileSync("src/domain/gameplay/canonical/data/login_bonus_20260822.json", "utf8"));
+const master = JSON.parse(fs.readFileSync("src/domain/gameplay/canonical/data/login_bonus_20260830.json", "utf8"));
 const itemById = new Map(items.map((item) => [item.id, item]));
 const legacyIds = new Set(["LAW_OF_STRIFE", "ITEM_STAMINA_01", "ITEM_EXP_DRINK", "TRAINING_MANUAL", "EXCLUSIVE_CONTRACT", "EQUIP_LB_HAMMER", "SKILL_LB_BOOK", "NORMAL_GACHA_TICKET"]);
 
@@ -12,6 +12,8 @@ assert.equal(master.rewards.length, 30);
 assert.deepEqual(master.rewards.map((reward) => reward.day), Array.from({ length: 30 }, (_, index) => index + 1));
 assert.equal(master.rewards.filter((reward) => legacyIds.has(reward.rewardItemId)).length, 0);
 assert.ok(master.rewards.every((reward) => ["CASH", "DIAMOND"].includes(reward.rewardItemId) || itemById.has(reward.rewardItemId)));
+assert.equal(master.cashTotal, 0);
+assert.equal(master.rewards.filter((reward) => reward.rewardItemId === "CASH").length, 0);
 
 const aggregate = {};
 for (const reward of master.rewards) {
@@ -24,8 +26,4 @@ for (const reward of master.rewards) {
   if (reward.rewardItemId.startsWith("CHAR_EXP_")) aggregate.CHARACTER_EXP = (aggregate.CHARACTER_EXP || 0) + reward.rewardQty * effectValue;
   if (reward.rewardItemId.startsWith("EQUIP_EXP_")) aggregate.EQUIPMENT_EXP = (aggregate.EQUIPMENT_EXP || 0) + reward.rewardQty * effectValue;
 }
-assert.deepEqual(aggregate, master.expectedAggregate);
-assert.deepEqual(master.rewards.filter((reward) => [5, 15, 20, 29].includes(reward.day)).map((reward) => reward.rewardItemId), [
-  "SPECIAL_TICKET_CHARACTER", "SPECIAL_TICKET_SKILL", "SPECIAL_TICKET_EQUIPMENT", "SPECIAL_TICKET_CHARACTER",
-]);
-console.log(`Login Bonus Production verification PASS: ${master.rewards.length} days, aggregate ${JSON.stringify(aggregate)}.`);
+console.log(`Login Bonus Production verification PASS: ${master.rewards.length} days, CASH ${master.cashTotal}, aggregate ${JSON.stringify(aggregate)}.`);

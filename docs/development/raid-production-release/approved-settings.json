@@ -1,0 +1,83 @@
+{
+  "candidate": "c844534f5ce160fb3e713a58aed8377190aaa209",
+  "status": "USER_APPROVED",
+  "humanAcceptance": "User replied 問題ありません to fixed Preview integrated acceptance request",
+  "difficulties": [
+    {
+      "id": "beginner",
+      "clearDamageExclusive": 10000,
+      "rescueMinimumBattles": 2,
+      "rescueDamageInclusive": 60000,
+      "clearItems": [
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 3
+        }
+      ],
+      "rescueItems": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "intermediate",
+      "clearDamageExclusive": 50000,
+      "rescueMinimumBattles": 2,
+      "rescueDamageInclusive": 300000,
+      "clearItems": [
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 5
+        }
+      ],
+      "rescueItems": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "clearDamageExclusive": 60000,
+      "rescueMinimumBattles": 3,
+      "rescueDamageInclusive": 500000,
+      "clearItems": [
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 8
+        }
+      ],
+      "rescueItems": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "id": "expert",
+      "clearDamageExclusive": 75000,
+      "rescueMinimumBattles": 4,
+      "rescueDamageInclusive": 750000,
+      "clearItems": [
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 12
+        }
+      ],
+      "rescueItems": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 8
+        }
+      ]
+    }
+  ],
+  "bothRequireDefeat": true,
+  "preserveEligibilityWindowAndIdempotency": true,
+  "attributeTimes2": false,
+  "guildTimes2": false
+}

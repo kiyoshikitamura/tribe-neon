@@ -1,0 +1,13 @@
+{
+  "status": "APPLIED_VERIFIED",
+  "commit_started": {
+    "current_time": "2026-09-08 09:51:25 UTC"
+  },
+  "verified_at": "2026-09-08T09:51:50.370946+00:00",
+  "rows_unchanged": 13,
+  "cron_unchanged": 6,
+  "ledger_rows": 1,
+  "transaction_id": "47165",
+  "rollback_transaction_id": "47161",
+  "review_commit": "06b7c90e42c790133077d48d998bd6b2a0dcaf20"
+}

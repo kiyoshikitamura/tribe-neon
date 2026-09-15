@@ -1,0 +1,22 @@
+{
+  "edge": {
+    "id": "2f650da1-98fc-49ba-80e9-e1c925876c45",
+    "slug": "resolve-battle",
+    "name": "resolve-battle",
+    "status": "ACTIVE",
+    "version": 7,
+    "created_at": 1786555551003,
+    "updated_at": 1788862798489,
+    "verify_jwt": true,
+    "import_map": false,
+    "entrypoint_path": "/tmp/user_fn_sufvuqdnqohpfzkwxohq_2f650da1-98fc-49ba-80e9-e1c925876c45_7/source/supabase/functions/resolve-battle/index.ts",
+    "ezbr_sha256": "b762e7c25826f9a417c87cf550388e291f2c75d0e278599e6a1d3dcd70fd8b21"
+  },
+  "protectedFunctions": [
+    {
+      "protected_count": 378,
+      "mismatches": 0
+    }
+  ],
+  "checkedAt": "2026-09-08T11:38:25.815Z"
+}

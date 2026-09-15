@@ -1,0 +1,6 @@
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='10s';
+SET LOCAL lock_timeout='2s';
+SELECT jsonb_build_object('columns',(SELECT jsonb_agg(jsonb_build_object('table',table_name,'column',column_name,'type',data_type) ORDER BY table_name,ordinal_position) FROM information_schema.columns WHERE table_schema='public' AND table_name IN ('raid_bosses','battle_replay_sessions','presents','canonical_item_master','raid_damage_logs','users','guilds','guild_members','canonical_raid_variants')),'counts',jsonb_build_object('items',(SELECT count(*) FROM public.canonical_item_master),'replays',(SELECT count(*) FROM public.battle_replay_sessions),'presents',(SELECT count(*) FROM public.presents),'users',(SELECT count(*) FROM public.users),'guilds',(SELECT count(*) FROM public.guilds)),'cron_commands',(SELECT jsonb_agg(jsonb_build_object('jobid',jobid,'command',CASE WHEN command ~* '(https?://|secret|token|password|authorization|apikey)' THEN '[REDACTED;
+inspect securely]' ELSE command END)) FROM cron.job),'definitions',(SELECT jsonb_agg(jsonb_build_object('name',proname,'definition',pg_get_functiondef(oid))) FROM pg_proc WHERE pronamespace='public'::regnamespace AND proname IN ('get_active_raids','start_raid_battle','finalize_raid_battle','claim_present','rotate_daily_raids','respawn_cleared_raid_slot'))) AS audit;
+ROLLBACK;

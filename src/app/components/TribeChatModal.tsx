@@ -1,9 +1,13 @@
+import RaidRescueLink from './raid/RaidRescueLink';
+import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import React, { useState, useRef, useEffect } from "react";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
 import SubTabNav from "./ui/SubTabNav";
 import OutlawButton from "./ui/OutlawButton";
 import UserIdentityRow from "./profile/UserIdentityRow";
+import { supabase } from "@/utils/supabase";
+import { buildDirectMessageConversations } from "../context/hooks/directMessageConversations";
 import "./TribeChatModal.css";
 
 export default function TribeChatModal() {
@@ -17,6 +21,9 @@ export default function TribeChatModal() {
     setChatChannel,
     chatUnreadCounts,
     guildChats,
+    chatHasMore,
+    chatLoadingOlder,
+    loadOlderChatMessages,
     chatInput,
     setChatInput,
     chatReplyTo,
@@ -30,29 +37,73 @@ export default function TribeChatModal() {
     dmUnreadConversations,
     dmUnreadTotal,
     handleSendDirectMessage,
-    fetchPlayerDetail
+    fetchPlayerDetail,
+    navigateTab,
   } = useGame();
 
   const [localDmText, setLocalDmText] = useState("");
   const chatBodyRef = useRef<HTMLDivElement>(null);
-  const hasProfileSelectedRecipient = Boolean(
-    dmRecipientId
-      && !guildMembersList?.some((member: any) => member.user_id === dmRecipientId)
+  const safeDirectMessages = directMessages || [];
+  const safeGuildChats = guildChats || [];
+  const [chatProfiles, setChatProfiles] = useState<Record<string, any>>({});
+  const preserveChatScrollRef = useRef(false);
+  const chatActorKey = showTribeChatPanel && chatChannel === "GLOBAL"
+    ? [...new Set(safeGuildChats.map((msg: any) => msg.user_id || msg.author_id).filter(Boolean))].sort().join("|") : "";
+  useEffect(() => {
+    let active = true;
+    setChatProfiles({});
+    if (chatActorKey && session?.user?.id) void (async () => {
+      const ids = chatActorKey.split("|");
+      const profiles: Record<string, any> = {};
+      for (let offset = 0; offset < ids.length; offset += 100) {
+        const { data, error } = await supabase.rpc("get_public_profiles", { p_user_ids: ids.slice(offset, offset + 100) });
+        if (!active) return;
+        if (!error) for (const profile of data || []) profiles[profile.user_id || profile.id] = profile;
+      }
+      if (active) setChatProfiles(profiles);
+    })();
+    return () => { active = false; };
+  }, [chatActorKey, session?.user?.id]);
+  const rescueCards = useRaidRescueCards(safeGuildChats.map((msg: { raid_rescue_id?: string }) => msg.raid_rescue_id), showTribeChatPanel && chatChannel !== "DM");
+  const dmConversations = buildDirectMessageConversations(
+    safeDirectMessages,
+    session?.user?.id || "",
+    dmUnreadConversations || []
   );
-  const unreadOnlyRecipients = (dmUnreadConversations || []).filter((conversation: any) => (
-    conversation.sender_id !== session?.user?.id
-      && !guildMembersList?.some((member: any) => member.user_id === conversation.sender_id)
-      && conversation.sender_id !== dmRecipientId
+  const activeDmConversation = dmConversations.find((conversation) => conversation.userId === dmRecipientId);
+  const activeDmName = activeDmConversation?.userName
+    || dmUnreadConversations?.find((conversation: any) => conversation.sender_id === dmRecipientId)?.sender_name
+    || guildMembersList?.find((member: any) => member.user_id === dmRecipientId)?.users?.username
+    || "ユーザー";
+  const activeDirectMessages = safeDirectMessages.filter((message: any) => (
+    dmRecipientId && (
+      (message.sender_id === session?.user?.id && message.recipient_id === dmRecipientId)
+      || (message.sender_id === dmRecipientId && message.recipient_id === session?.user?.id)
+    )
   ));
-  const getDmUnreadCount = (userId: string) => Number(
-    dmUnreadConversations?.find((conversation: any) => conversation.sender_id === userId)?.unread_count || 0
-  );
 
   useEffect(() => {
     if (showTribeChatPanel && chatBodyRef.current) {
+      if (preserveChatScrollRef.current) {
+        preserveChatScrollRef.current = false;
+        return;
+      }
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
-  }, [guildChats, directMessages, showTribeChatPanel, chatChannel]);
+  }, [guildChats, directMessages, dmRecipientId, showTribeChatPanel, chatChannel]);
+
+  const handleChatScroll = async () => {
+    const body = chatBodyRef.current;
+    if (!body || body.scrollTop > 40 || chatLoadingOlder || !chatHasMore) return;
+    const previousHeight = body.scrollHeight;
+    preserveChatScrollRef.current = true;
+    await loadOlderChatMessages();
+    requestAnimationFrame(() => {
+      if (chatBodyRef.current) {
+        chatBodyRef.current.scrollTop += chatBodyRef.current.scrollHeight - previousHeight;
+      }
+    });
+  };
 
   if (!showTribeChatPanel) return null;
 
@@ -84,16 +135,17 @@ export default function TribeChatModal() {
     }
   };
 
-  const safeDirectMessages = directMessages || [];
-  const safeGuildChats = guildChats || [];
-
   const handleClose = () => {
+    if (chatChannel === "DM") {
+      setDmRecipientId(null);
+      setLocalDmText("");
+    }
     setShowTribeChatPanel(false);
   };
 
   return (
     <FullScreenPanel title={chatChannel === "GUILD" ? `${userGuild?.name || "ギルド"} チャット` : "チャット"} onClose={handleClose} className="tribe-chat-panel">
-      <div className="tribe-modal-container-inner flex-col" style={{ height: '100%' }}>
+      <div className="tribe-modal-container-inner flex-col">
         {/* チャンネルタブ (全体 / ギルド / DM) */}
         <SubTabNav
           tabs={[
@@ -102,71 +154,88 @@ export default function TribeChatModal() {
             { id: "DM", label: `個人(DM)${dmUnreadTotal ? ` (${dmUnreadTotal})` : ""}` }
           ]}
           activeTabId={chatChannel}
-          onSelect={(id) => setChatChannel(id as any)}
+          onSelect={(id) => {
+            if (id === "DM") {
+              setDmRecipientId(null);
+              setLocalDmText("");
+            }
+            setChatChannel(id as any);
+          }}
           className="mb-3"
         />
+        <div className="tribe-community-secondary-nav">
+          <OutlawButton
+            variant="ghost"
+            className="tribe-bbs-link"
+            onClick={() => {
+              setDmRecipientId(null);
+              setLocalDmText("");
+              setShowTribeChatPanel(false);
+              navigateTab("bbs");
+            }}
+          >
+            BBSを開く
+          </OutlawButton>
+        </div>
 
-        {/* DM相手選択ドロップダウン (DM時のみ) */}
-        {chatChannel === "DM" && (
-          <div className="tribe-dm-recipient-selector mb-3">
-            <label className="tribe-dm-label font-size-8 text-secondary mb-1 block">送信相手:</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <input
-                type="hidden"
-                placeholder="ユーザーIDを入力..."
-                value={dmRecipientId || ""}
-                onChange={(e) => setDmRecipientId(e.target.value)}
-                className="tribe-dm-recipient-input form-input"
-                style={{ flex: 1 }}
-              />
-              {(
-                <select
-                  value={dmRecipientId || ""}
-                  onChange={(e) => setDmRecipientId(e.target.value)}
-                  className="tribe-dm-recipient-select form-input"
-                  style={{ flex: 1 }}
-                >
-                  {hasProfileSelectedRecipient && (
-                    <option value={dmRecipientId}>
-                      プロフィールから選択したユーザー{getDmUnreadCount(dmRecipientId || "") ? `（未読${getDmUnreadCount(dmRecipientId || "")}）` : ""}
-                    </option>
-                  )}
-                  <option value="">送信相手を選択</option>
-                  {unreadOnlyRecipients.length > 0 && (
-                    <optgroup label="未読DM">
-                      {unreadOnlyRecipients.map((conversation: any) => (
-                        <option key={conversation.sender_id} value={conversation.sender_id}>
-                          {conversation.sender_name}（未読{conversation.unread_count}）
-                        </option>
-                      ))}
-                    </optgroup>
-                  )}
-                  {guildMembersList?.map((m: any) => (
-                    m.user_id !== session?.user?.id && (
-                      <option key={m.user_id} value={m.user_id}>
-                        {m.users?.username || "プレイヤー名"} (Lv.{m.userLevel || 1}){getDmUnreadCount(m.user_id) ? `（未読${getDmUnreadCount(m.user_id)}）` : ""}
-                      </option>
-                    )
-                  ))}
-                </select>
-              )}
-            </div>
+        {chatChannel === "DM" && dmRecipientId && (
+          <div className="tribe-dm-thread-header">
+            <OutlawButton variant="ghost" className="tribe-dm-back" onClick={() => {
+              setDmRecipientId(null);
+              setLocalDmText("");
+            }} aria-label="DM一覧に戻る">
+              一覧
+            </OutlawButton>
+            <strong>{activeDmName}</strong>
           </div>
         )}
 
         {/* チャットメッセージログ表示領域 */}
-        <div className="tribe-modal-body custom-scrollbar flex-1 mb-3" ref={chatBodyRef}>
+        <div className="tribe-modal-body custom-scrollbar flex-1 mb-3" ref={chatBodyRef} onScroll={handleChatScroll}>
           {chatChannel === "DM" ? (
-            safeDirectMessages.length === 0 ? (
-              <div className="tribe-modal-empty">ダイレクトメッセージのログはありません</div>
+            !dmRecipientId ? (
+              dmConversations.length === 0 ? (
+                <div className="tribe-modal-empty">DMのやり取りはありません</div>
+              ) : (
+                <div className="tribe-dm-conversation-list" aria-label="DM一覧">
+                  {dmConversations.map((conversation) => {
+                    const latestTime = conversation.latestAt
+                      ? new Date(conversation.latestAt).toLocaleString([], { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })
+                      : "";
+                    return (
+                      <button
+                        type="button"
+                        key={conversation.userId}
+                        className="tribe-dm-conversation active-scale-effect"
+                        onClick={() => {
+                          setDmRecipientId(conversation.userId);
+                          setLocalDmText("");
+                        }}
+                        aria-label={`${conversation.userName}との会話を開く`}
+                      >
+                        <span className="tribe-dm-conversation-main">
+                          <strong>{conversation.userName}</strong>
+                          <span>{conversation.latestMessage}</span>
+                        </span>
+                        <span className="tribe-dm-conversation-meta">
+                          {latestTime && <time>{latestTime}</time>}
+                          {conversation.unreadCount > 0 && <b aria-label={`未読${conversation.unreadCount}件`}>{conversation.unreadCount}</b>}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )
+            ) : activeDirectMessages.length === 0 ? (
+              <div className="tribe-modal-empty">このユーザーとのDMはありません</div>
             ) : (
-              safeDirectMessages.map((msg: any, idx: number) => {
+              activeDirectMessages.map((msg: any) => {
                 const isSelf = msg.sender_id === session?.user?.id;
                 const timeStr = msg?.created_at
                   ? new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                   : "";
                 return (
-                  <div key={idx} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
+                  <div key={msg.id} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
                     <div className="tribe-msg-header">
                       <button
                         type="button"
@@ -176,7 +245,7 @@ export default function TribeChatModal() {
                           if (profileUserId) fetchPlayerDetail(profileUserId);
                         }}
                       >
-                        {msg.sender_name || "ユーザー"}
+                        {isSelf ? "自分" : activeDmName}
                       </button>
                       {timeStr && <span className="tribe-msg-time">{timeStr}</span>}
                     </div>
@@ -189,19 +258,21 @@ export default function TribeChatModal() {
             safeGuildChats.length === 0 ? (
               <div className="tribe-modal-empty">メッセージログはありません</div>
             ) : (
-              safeGuildChats.map((msg: any, idx: number) => {
+              safeGuildChats.map((msg: any) => {
                 const isSelf = msg.user_id === session?.user?.id;
-                const member = guildMembersList?.find((entry: any) => entry.user_id === msg.user_id);
-                const leaderCharacterId = member?.users?.favorite_character_id || null;
+                const member = guildMembersList?.find((entry: any) => entry.user_id === (msg.user_id || msg.author_id));
+                const identity = chatChannel === "GLOBAL" ? chatProfiles[msg.user_id || msg.author_id] : member?.users;
+                const leaderCharacterId = identity?.favorite_character_id || null;
                 const timeStr = msg?.created_at
                   ? new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                   : "";
                 return (
-                  <div key={idx} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
+                  <div key={msg.id} className={`tribe-msg-row ${isSelf ? "self" : "other"}`}>
                     <div className="tribe-msg-header">
                       <div className="tribe-msg-identity"><UserIdentityRow
-                        userName={member?.users?.username || msg.author_name || "ユーザー"}
-                        guildName={userGuild?.name || null}
+                        userName={identity?.username || msg.author_name || "ユーザー"}
+                        guildName={chatChannel === "GLOBAL" ? identity?.guild_name || null : userGuild?.name || null}
+                        guildId={chatChannel === "GLOBAL" ? identity?.guild_id : userGuild?.id}
                         leaderCharacterId={leaderCharacterId}
                         onOpen={msg.user_id ? () => fetchPlayerDetail(msg.user_id) : undefined}
                         variant="compact"
@@ -211,7 +282,7 @@ export default function TribeChatModal() {
                     {msg.reply_to_message_id && (
                       <div className="tribe-msg-reply-source">返信先のメッセージ</div>
                     )}
-                    <div className="tribe-msg-bubble">{msg.content || ""}</div>
+                    <div className="tribe-msg-bubble">{msg.content || ""}<RaidRescueLink rescueId={msg.raid_rescue_id} entry={rescueCards.byId.get(msg.raid_rescue_id)} status={rescueCards.statusFor(msg.raid_rescue_id)} source={chatChannel === "GUILD" ? "guild_chat" : "activity"} /></div>
                     {!msg.is_system && (
                       <button type="button" className="tribe-msg-reply" onClick={() => setChatReplyTo(msg)}>返信</button>
                     )}
@@ -223,14 +294,14 @@ export default function TribeChatModal() {
         </div>
 
         {/* メッセージ入力エリア */}
-        <div className="tribe-modal-footer" style={{ marginTop: 'auto' }}>
+        {(chatChannel !== "DM" || dmRecipientId) && <div className="tribe-modal-footer">
           {chatChannel !== "DM" && chatReplyTo && (
             <div className="tribe-reply-composer">
               <div><b>{chatReplyTo.author_name}</b><span>{chatReplyTo.content}</span></div>
               <button type="button" onClick={() => setChatReplyTo(null)} aria-label="返信を解除">×</button>
             </div>
           )}
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="tribe-modal-composer-row">
             <input
               type="text"
               placeholder={
@@ -253,7 +324,6 @@ export default function TribeChatModal() {
               disabled={chatCooldown > 0 || chatSending}
               aria-describedby="tribe-chat-action-status"
               className="tribe-modal-input form-input"
-              style={{ flex: 1 }}
             />
             <OutlawButton
               variant="primary"
@@ -265,7 +335,7 @@ export default function TribeChatModal() {
                 chatCooldown > 0 ||
                 (chatChannel === "DM" ? !localDmText.trim() || !dmRecipientId : !chatInput.trim())
               }
-              style={{ width: '80px' }}
+              className="tribe-modal-send"
             >
               送信
             </OutlawButton>
@@ -273,7 +343,7 @@ export default function TribeChatModal() {
           <span id="tribe-chat-action-status" className="tribe-chat-action-status" role="status" aria-live="polite">
             {chatSending ? "メッセージを送信しています" : chatCooldown > 0 ? `次の送信まで${chatCooldown}秒` : ""}
           </span>
-        </div>
+        </div>}
       </div>
     </FullScreenPanel>
   );

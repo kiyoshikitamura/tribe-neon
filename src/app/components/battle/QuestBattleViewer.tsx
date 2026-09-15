@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
 import BattleUnitPortrait, { BattleDamagePopup, BattleParticipantView } from "./BattleUnitPortrait";
 import {
+  BattleImpactEffect,
   BattleSkillCutIn,
+  BattleSkillResolutionVfx,
   resolveBattleSkillPresentation,
+  type BattleImpactKind,
 } from "./BattleEffectPresentation";
 import "./QuestBattleViewer.css";
+import StreetBattleViewer from "./StreetBattleViewer";
+import { ExclusiveEquipmentIntro } from "./ExclusiveBattlePresentation";
 import { useAudio } from "@/audio/AudioProvider";
 import type { BattlePresentationPhase } from "@/hooks/useBattle";
 import { isInternalBattleLabel } from "@/domain/presentation/battleSkillLabels";
@@ -20,8 +25,9 @@ type Participant = BattleParticipantView & {
 
 type TimelineNode = { id: string; name: string; isEnemy?: boolean };
 
-type Props = {
+export type QuestBattleViewerProps = {
   battleMode: string;
+  street?: boolean;
   opponentName: string;
   playerParty: Participant[];
   enemyParty: Participant[];
@@ -32,7 +38,7 @@ type Props = {
   actionPresentation?: BattleActionPresentation | null;
   round: number;
   roundLimit?: number;
-  skillCutIn: { charName: string; skillName: string } | null;
+  skillCutIn: { charName: string; skillName: string; actorId?: string; skillId?: string; actionKey?: number } | null;
   targetLine: { fromId: string; toId: string } | null;
   shakingId: string | null;
   damagePopup: (BattleDamagePopup & { charId: string }) | null;
@@ -66,15 +72,15 @@ const tacticLabel: Record<string, string> = {
   BALANCED: "バランス",
 };
 
-export default function QuestBattleViewer(props: Props) {
+export default function QuestBattleViewer(props: QuestBattleViewerProps) {
   const { playSe } = useAudio();
   const allParticipants = [...props.playerParty, ...props.enemyParty];
   const activeTimelineNode = props.actionPresentation
     ? { id: props.actionPresentation.unit.actorId, name: "" }
-    : props.authoritativeTimeline?.[0] || props.timeline[props.timelineIndex] || props.timeline[0];
+    : props.skillCutIn ? { id: props.skillCutIn.actorId, name: "" } : props.authoritativeTimeline?.[0] || props.timeline[props.timelineIndex] || props.timeline[0];
   const explicitActiveParticipant = allParticipants.find((entry) => entry.id === activeTimelineNode?.id);
   const activeParticipant = explicitActiveParticipant
-    || (props.presentationPhase === "IDLE" ? props.playerParty[0] || props.enemyParty[0] : undefined);
+    || (!props.skillCutIn && props.presentationPhase === "IDLE" ? props.playerParty[0] || props.enemyParty[0] : undefined);
   const targetId = props.actionPresentation?.unit.targets[0]?.targetId || props.damagePopup?.charId || props.targetLine?.toId;
   const targetParticipant = targetId ? allParticipants.find((entry) => entry.id === targetId) : undefined;
 
@@ -89,10 +95,6 @@ export default function QuestBattleViewer(props: Props) {
     };
   };
   const popupFor = (participant: Participant) => !props.actionPresentation && props.damagePopup?.charId === participant.id ? props.damagePopup : null;
-  // Battle V2's grouped action presentation owns impact visuals. The legacy
-  // popup path was reachable only in Journey battles and duplicated the
-  // approved target-local reaction used by the QA fixture.
-  const impactFor = () => null;
   const hasAdvantage = (target?: Participant) => Boolean(
     activeParticipant?.alignment
       && target?.alignment
@@ -107,6 +109,12 @@ export default function QuestBattleViewer(props: Props) {
   const isSkillAction = Boolean(props.skillCutIn && !/通常攻撃|ATTACK/i.test(skillName));
   const safeCutIn = props.skillCutIn ? { ...props.skillCutIn, skillName } : null;
   const skillPresentation = resolveBattleSkillPresentation(safeCutIn, activeParticipant ? { ...activeParticipant, rarity: activeVisual.rarity } : undefined);
+  const impactFor = (participant: Participant) => !props.actionPresentation && props.damagePopup?.charId === participant.id ? (
+    <div className={`battle-unit-impact-vfx is-${props.damagePopup.type}`} aria-hidden="true">
+      {props.damagePopup.type === "dmg" && <BattleImpactEffect kind={(skillPresentation?.impact || "impact") as BattleImpactKind} speed={props.speed} />}
+      <div className={`battle-impact-burst is-${props.damagePopup.type}`}><i /><i /><i /></div>
+    </div>
+  ) : null;
   const actorMoving = props.actionPresentation
     ? props.actionPresentation.beat !== "RETURN"
     : props.presentationPhase !== "IDLE" && props.presentationPhase !== "ACTION_HOLD";
@@ -122,21 +130,6 @@ export default function QuestBattleViewer(props: Props) {
   const lastResolutionAudioKeyRef = useRef<string>("");
   const lastLegacySkillCueRef = useRef<unknown>(null);
   const lastLegacyDamageCueRef = useRef<unknown>(null);
-  const tutorialPaceRef = useRef({ normalSeen: false, skillSeen: false, advanced: false });
-  const [showSpeedGuidance, setShowSpeedGuidance] = useState(false);
-  useEffect(() => {
-    if (!props.tutorial || props.presentationPhase !== "ACTION_HOLD") return;
-    if (isSkillAction) tutorialPaceRef.current.skillSeen = true;
-    else tutorialPaceRef.current.normalSeen = true;
-    const pace = tutorialPaceRef.current;
-    if (!pace.advanced && pace.normalSeen && pace.skillSeen) {
-      pace.advanced = true;
-      props.onSpeedChange(2);
-      setShowSpeedGuidance(true);
-      const timer = window.setTimeout(() => setShowSpeedGuidance(false), 1800);
-      return () => window.clearTimeout(timer);
-    }
-  }, [isSkillAction, props.onSpeedChange, props.presentationPhase, props.tutorial]);
   useEffect(() => {
     const action = props.actionPresentation;
     if (!action || action.beat !== "ACTOR") return;
@@ -189,10 +182,12 @@ export default function QuestBattleViewer(props: Props) {
   const roundLimit = props.roundLimit
     ?? (props.battleMode === "RAID" ? 30 : props.battleMode === "PVP" || props.battleMode === "PVP_PRACTICE" || props.battleMode === "GVG" ? 20 : 15);
 
+  if (props.street || props.battleMode !== "RAID") return <StreetBattleViewer {...props} />;
+
   return (
-    <div className={`playing-container quest-battle-viewer ${props.tutorial ? "is-tutorial" : ""}`} style={props.backgroundPath ? { "--battle-background-image": `url(${props.backgroundPath})` } as React.CSSProperties : undefined} data-battle-speed={props.speed} data-acceptance-state={props.tutorial ? acceptanceState : undefined} data-action-phase={actionPhase} data-action-kind={isSkillAction ? "skill" : "normal"} data-action-actor-id={activeParticipant?.id || ""} data-action-target-id={targetParticipant?.id || ""}>
+    <div className={`playing-container quest-battle-viewer ${props.tutorial ? "is-tutorial is-stress-parity" : ""}`} style={props.backgroundPath ? { "--battle-background-image": `url(${props.backgroundPath})` } as React.CSSProperties : undefined} data-battle-speed={props.speed} data-acceptance-state={props.tutorial ? acceptanceState : undefined} data-action-phase={actionPhase} data-action-kind={isSkillAction ? "skill" : "normal"} data-action-actor-id={activeParticipant?.id || ""} data-action-target-id={targetParticipant?.id || ""}>
       <header className="battle-viewer-header">
-        <span>{props.battleMode === "PATROL" ? "QUEST BATTLE" : props.battleMode}</span>
+        <span>{props.battleMode}</span>
         <strong data-displayed-round={props.round} data-configured-round-limit={roundLimit}>ROUND {props.round}<small> / {roundLimit}</small></strong>
         <i>AUTO</i>
       </header>
@@ -200,20 +195,20 @@ export default function QuestBattleViewer(props: Props) {
       <main className="battle-roster-stage">
         <PartyZone side="player" label="YOUR TEAM" party={props.playerParty} activeId={actorMoving ? activeParticipant?.id : undefined} targetId={targetParticipant?.id} shakingId={props.shakingId} visualOf={visualOf} popupFor={popupFor} impactFor={impactFor} hasAdvantage={hasAdvantage} tutorial={props.tutorial} reactions={reactionById} skillCue={standardSkillCue} />
         <PartyZone side="enemy" label="ENEMY" party={props.enemyParty} activeId={actorMoving ? activeParticipant?.id : undefined} targetId={targetParticipant?.id} shakingId={props.shakingId} visualOf={visualOf} popupFor={popupFor} impactFor={impactFor} hasAdvantage={hasAdvantage} tutorial={props.tutorial} reactions={reactionById} skillCue={standardSkillCue} />
+        {isSkillAction && props.actionPresentation && (props.actionPresentation.beat === "ACTOR" || props.actionPresentation.beat === "IMPACT") && <BattleSkillResolutionVfx key={`${props.actionPresentation.unit.replayStartCursor}:${props.actionPresentation.beat}`} presentation={skillPresentation} phase={props.actionPresentation.beat === "ACTOR" ? "TARGET_FOCUS" : "ATTACK_MOTION"} actorSide={activeSide} />}
       </main>
 
-      <section className="battle-cutin-slot" aria-hidden={!skillPresentation || skillPresentation.tier === "STANDARD"}>
-        <BattleSkillCutIn presentation={skillPresentation} participant={activeParticipant ? { ...activeParticipant, rarity: activeVisual.rarity } : undefined} imageSrc={activeVisual.src} speed={props.speed} />
+      <ExclusiveEquipmentIntro members={props.playerParty} paused={props.paused} />
+      <section className="battle-cutin-slot" aria-hidden={!skillPresentation?.tier}>
+        <BattleSkillCutIn paused={props.paused} actionKey={props.actionPresentation?.unit.replayStartCursor} presentation={skillPresentation} participant={activeParticipant ? { ...activeParticipant, rarity: activeVisual.rarity } : undefined} imageSrc={activeVisual.src} speed={props.speed} />
       </section>
       {isFinalHit && <div className="battle-final-hit-overlay" role="status"><strong>FINAL HIT</strong><i /></div>}
-      {showSpeedGuidance && <div className="battle-speed-guidance" role="status">ここからは2倍速で進むよ</div>}
-
       <footer className="battle-viewer-controls">
         <span className="battle-tactic-label">{tacticLabel[props.tactic] || tacticLabel.BALANCED}</span>
         <button
           className={`speed-toggle-btn active-scale-effect ${props.speed > 1 ? "active" : ""}`}
           onClick={() => {
-            const nextSpeed = props.speed === 1 ? 2 : props.speed === 2 && props.monthlyPassActive ? 3 : 1;
+            const nextSpeed = props.speed === 2 ? 1 : props.speed === 1 && props.monthlyPassActive ? 3 : 2;
             props.onSpeedChange(nextSpeed);
             props.onSound();
           }}

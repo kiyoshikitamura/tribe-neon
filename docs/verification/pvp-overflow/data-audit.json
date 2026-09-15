@@ -1,0 +1,40 @@
+{
+  "production": [
+    {
+      "data_audit": {
+        "rate": {
+          "max": 1298,
+          "min": 992,
+          "max_daily_wins": 22,
+          "max_season_wins": 22
+        },
+        "daily": 14,
+        "power": {
+          "max": 224561,
+          "min": 0,
+          "rows": 148,
+          "scaled_overflows": 1
+        }
+      }
+    }
+  ],
+  "preview": [
+    {
+      "data_audit": {
+        "rate": {
+          "max": 1016,
+          "min": 992,
+          "max_daily_wins": 1,
+          "max_season_wins": 1
+        },
+        "daily": 1,
+        "power": {
+          "max": 173702,
+          "min": 0,
+          "rows": 20,
+          "scaled_overflows": 0
+        }
+      }
+    }
+  ]
+}

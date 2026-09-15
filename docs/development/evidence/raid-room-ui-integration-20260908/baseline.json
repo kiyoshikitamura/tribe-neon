@@ -1,0 +1,88 @@
+{
+  "at": "2026-09-08T11:59:07.828242+00:00",
+  "cron": [
+    {
+      "jobid": 2,
+      "active": true,
+      "command": "select public.cleanup_expired_anonymous_onboarding();",
+      "jobname": "anonymous-onboarding-cleanup-daily",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "jobid": 3,
+      "active": true,
+      "command": "select public.advance_ranking_season('PVP',clock_timestamp());",
+      "jobname": "ranking-pvp-monthly-jst",
+      "schedule": "0 15 * * *"
+    },
+    {
+      "jobid": 4,
+      "active": true,
+      "command": "select public.advance_ranking_season('RAID',clock_timestamp());",
+      "jobname": "ranking-raid-weekly-jst",
+      "schedule": "0 15 * * 0"
+    },
+    {
+      "jobid": 5,
+      "active": true,
+      "command": "select public.finalize_daily_ranking_rewards();",
+      "jobname": "daily-ranking-reward-finalize-jst-midnight",
+      "schedule": "0 15 * * *"
+    },
+    {
+      "jobid": 7,
+      "active": true,
+      "command": "select public.finalize_preopen_guild_power_season();",
+      "jobname": "preopen-guild-power-finalize-20260909-jst",
+      "schedule": "* 15 8 9 *"
+    },
+    {
+      "jobid": 12,
+      "active": true,
+      "command": "set statement_timeout='120s'; select public.refresh_kpi_overview_saved_results();",
+      "jobname": "kpi-overview-saved-results-half-hourly",
+      "schedule": "7,37 * * * *"
+    },
+    {
+      "jobid": 13,
+      "active": true,
+      "command": "select public.finalize_expired_raid_rooms_v1(100);",
+      "jobname": "raid-room-expiry-minute",
+      "schedule": "* * * * *"
+    }
+  ],
+  "expiry": {
+    "boss": {
+      "id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+      "max_hp": 32000000,
+      "status": "ACTIVE",
+      "base_id": "shinjuku",
+      "boss_id": "RAID_SHINJUKU_V1",
+      "outcome": null,
+      "cycle_id": "acad6e7c-2706-412d-bb48-2dda1be3a003",
+      "cleared_at": null,
+      "created_at": "2026-09-08T10:40:55.018596+00:00",
+      "current_hp": 32000000,
+      "expires_at": "2026-09-09T10:40:55.031663+00:00",
+      "spawned_at": "2026-09-08T10:40:55.031663+00:00",
+      "raid_day_key": "ROOM:56d721b3-8f38-4ac4-939f-9d9ea3760c5d",
+      "respawn_after": null,
+      "rotation_date": "2026-09-08",
+      "boss_master_id": "RAID_SHINJUKU_V1",
+      "raid_variant_id": "RAID_SHINJUKU_V1",
+      "outcome_finalized_at": null
+    },
+    "room": {
+      "id": "3972a461-b45f-4b02-8142-75f294461ae3",
+      "created_at": "2026-09-08T10:40:55.031663+00:00",
+      "difficulty_id": "beginner",
+      "owner_user_id": "fadc944c-0b15-472c-be4d-305c26d8163f",
+      "raid_boss_instance_id": "56d721b3-8f38-4ac4-939f-9d9ea3760c5d"
+    }
+  },
+  "migrations": 275,
+  "originalUsers": {
+    "md5": "b868375386785c9dfdad599129f9005f",
+    "count": 19
+  }
+}

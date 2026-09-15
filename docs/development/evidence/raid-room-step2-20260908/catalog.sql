@@ -1,0 +1,13 @@
+BEGIN READ ONLY; SET LOCAL statement_timeout='20s'; SET LOCAL lock_timeout='2s';
+SELECT jsonb_build_object(
+'observed_at',clock_timestamp(),'read_only',current_setting('transaction_read_only'),
+'columns',(SELECT jsonb_agg(jsonb_build_object('table',c.relname,'column',a.attname,'type',format_type(a.atttypid,a.atttypmod),'not_null',a.attnotnull,'default',pg_get_expr(d.adbin,d.adrelid),'identity',a.attidentity,'generated',a.attgenerated) ORDER BY c.relname,a.attnum) FROM pg_class c JOIN pg_attribute a ON a.attrelid=c.oid LEFT JOIN pg_attrdef d ON d.adrelid=c.oid AND d.adnum=a.attnum WHERE c.relnamespace='public'::regnamespace AND c.relkind IN ('r','p','v','m') AND a.attnum>0 AND NOT a.attisdropped),
+'constraints',(SELECT jsonb_agg(jsonb_build_object('table',c.conrelid::regclass::text,'name',c.conname,'definition',pg_get_constraintdef(c.oid),'validated',c.convalidated) ORDER BY c.conrelid::regclass::text,c.conname) FROM pg_constraint c WHERE c.connamespace='public'::regnamespace),
+'indexes',(SELECT jsonb_agg(t ORDER BY tablename,indexname) FROM (SELECT tablename,indexname,indexdef FROM pg_indexes WHERE schemaname='public')t),
+'functions',(SELECT jsonb_agg(jsonb_build_object('name',p.proname,'args',pg_get_function_identity_arguments(p.oid),'result',pg_get_function_result(p.oid),'definition',pg_get_functiondef(p.oid),'md5',md5(pg_get_functiondef(p.oid)),'owner',pg_get_userbyid(p.proowner),'acl',p.proacl,'security_definer',p.prosecdef,'config',p.proconfig) ORDER BY p.proname,pg_get_function_identity_arguments(p.oid)) FROM pg_proc p WHERE p.pronamespace='public'::regnamespace AND p.prokind='f'),
+'triggers',(SELECT jsonb_agg(jsonb_build_object('table',t.tgrelid::regclass::text,'name',t.tgname,'definition',pg_get_triggerdef(t.oid),'enabled',t.tgenabled,'function',t.tgfoid::regprocedure::text) ORDER BY t.tgrelid::regclass::text,t.tgname) FROM pg_trigger t WHERE NOT t.tgisinternal AND t.tgrelid IN (SELECT oid FROM pg_class WHERE relnamespace IN ('public'::regnamespace,'auth'::regnamespace))),
+'policies',(SELECT jsonb_agg(t) FROM (SELECT * FROM pg_policies WHERE schemaname='public')t),
+'relations',(SELECT jsonb_agg(jsonb_build_object('name',relname,'kind',relkind,'rls',relrowsecurity,'force_rls',relforcerowsecurity,'acl',relacl)) FROM pg_class WHERE relnamespace='public'::regnamespace AND relkind IN ('r','p','v','m')),
+'migrations',(SELECT jsonb_agg(t ORDER BY version) FROM (SELECT version,name FROM supabase_migrations.schema_migrations)t),
+'cron',(SELECT jsonb_agg(t ORDER BY jobid) FROM (SELECT jobid,jobname,schedule,command,active,database,username FROM cron.job)t)
+) AS audit; ROLLBACK;

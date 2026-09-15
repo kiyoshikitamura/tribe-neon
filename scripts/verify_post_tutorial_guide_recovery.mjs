@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { resolveHomeInitialCta } from '../src/domain/presentation/homeInitialGuide.ts';
+const start = ['first_free_skill_ten_pull','first_free_equipment_ten_pull','first_main_loadout','post_tutorial_quest','first_pvp'];
+const cta = (milestones, raidAvailability='inactive') => resolveHomeInitialCta({ready:true, tutorialStep:'COMPLETE', gameplayAuthorized:true, milestones:new Set(milestones),raidAvailability});
+assert.equal(cta([]).key,'first_free_asset_gacha');
+assert.equal(cta(start.slice(0,2)).key,'first_main_loadout');
+assert.equal(cta(start.slice(0,3)).key,'post_tutorial_quest');
+assert.equal(cta(start).key,'post_tutorial_guild_view');
+assert.equal(cta([...start,'post_tutorial_guild_view']).key,'activation_mission_handoff');
+assert.equal(cta(start,'active').key,'first_raid');
+assert.equal(cta([...start,'first_raid'],'active').key,'post_tutorial_guild_view');
+assert.equal(cta([...start,'first_raid','post_tutorial_guild_view'],'active').key,'activation_mission_handoff');
+assert.equal(cta([...start,'activation_mission_handoff']),null);
+assert.equal(cta([...start,'activation_mission_handoff'],'active').key,'first_raid');
+assert.equal(cta([...start,'guild_detail_view']).key,'activation_mission_handoff');
+console.log('PASS: free → setup → Quest → PvP → Raid/Guild → Mission; inactive bypass and later Raid reoffer preserve actual participation');

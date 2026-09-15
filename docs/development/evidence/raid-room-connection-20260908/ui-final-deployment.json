@@ -1,0 +1,22 @@
+{
+  "id": "dpl_83M7uSNXNFfTKbEFaHq3X48YDXWA",
+  "url": "tribe-neon-ib4x838ie-kiyoshi-kitamura.vercel.app",
+  "target": null,
+  "readyState": "READY",
+  "createdAt": 1788864859389,
+  "meta": {
+    "gitCommitAuthorName": "Codex",
+    "gitCommitAuthorEmail": "codex@openai.com",
+    "gitCommitMessage": "fix(raid): play recovered Room results and acknowledge without legacy sessions",
+    "gitCommitRef": "codex/raid-room-pc-step2-20260908",
+    "gitCommitSha": "251dc03fcd9a1dcf9c9f871ff09223613788cadf",
+    "gitDirty": "1",
+    "gitRootDirectory": "",
+    "raidSourceSha": "251dc03fcd9a1dcf9c9f871ff09223613788cadf",
+    "githubCommitRef": "codex/raid-room-pc-step2-20260908",
+    "actor": "codex",
+    "lambdaRuntimeStats": "{\"nodejs\":3}",
+    "bundler": "turbopack"
+  },
+  "alias": []
+}

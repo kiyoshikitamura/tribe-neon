@@ -6,8 +6,10 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     const userId = "00000000-0000-4000-8000-000000000829";
     const now = new Date().toISOString();
+    const cycleDate = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Tokyo" });
     localStorage.setItem("tribe_demo_uuid", userId);
     localStorage.setItem("mock_auth_mode", "EMAIL");
+    localStorage.setItem("mock_db_user_login_bonuses", JSON.stringify([{ user_id: userId, current_day: 1, total_logins: 1, last_claimed_date: cycleDate }]));
     if (!localStorage.getItem("mock_db_users")) {
       localStorage.setItem("mock_db_users", JSON.stringify([{ id: userId, username: "Presentation QA", current_base_id: "shinjuku", favorite_character_id: "char_reiji_01", level: 10, cash: 50000, vitality: 100 }]));
     }
@@ -39,6 +41,9 @@ test.beforeEach(async ({ page }) => {
       { id: "item-char-l", user_id: userId, item_id: "CHAR_EXP_L", quantity: 2 },
       { id: "item-awaken", user_id: userId, item_id: "AWAKENING_BOOK", quantity: 1 },
       { id: "item-equip-s", user_id: userId, item_id: "EQUIP_EXP_S", quantity: 5 },
+      { id: "item-equip-m", user_id: userId, item_id: "EQUIP_EXP_M", quantity: 4 },
+      { id: "item-equip-l", user_id: userId, item_id: "EQUIP_EXP_L", quantity: 2 },
+      { id: "item-skill-manual", user_id: userId, item_id: "SKILL_MANUAL", quantity: 1 },
     ]));
     localStorage.setItem("mock_db_quests", JSON.stringify([
       { id: "QUEST_SHINJUKU_EASY", name: "歌舞伎町一番街", town_id: "shinjuku", level_type: "EASY", duration_seconds: 300, cost_vitality: 3, cash_reward: 0, exp_reward: 100 },
@@ -54,8 +59,24 @@ test.beforeEach(async ({ page }) => {
 
 async function enterGame(page: import("@playwright/test").Page) {
   await page.goto("/");
-  await page.getByRole("button", { name: /TAP TO START|続きから/ }).click();
+  await page.getByRole("button", { name: "TAP TO START" }).click();
+  await page.getByRole("button", { name: "続きから" }).click();
   await expect(page.locator(".header-mobile")).toBeVisible();
+  const loginBonus = page.getByRole("dialog", { name: "ログインボーナス" });
+  await loginBonus.waitFor({ state: "visible", timeout: 3_000 }).catch(() => undefined);
+  if (await loginBonus.isVisible()) {
+    await loginBonus.getByRole("button", { name: "閉じる", exact: true }).click();
+  }
+}
+
+async function continueAfterReload(page: import("@playwright/test").Page) {
+  const tapToStart = page.getByRole("button", { name: "TAP TO START" });
+  const continueAction = page.getByRole("button", { name: "続きから" });
+  await expect(tapToStart.or(continueAction)).toBeVisible();
+  if (await tapToStart.isVisible()) {
+    await tapToStart.click();
+  }
+  await continueAction.click();
 }
 
 async function expectMobileGeometry(page: import("@playwright/test").Page, selector: string) {
@@ -71,58 +92,16 @@ async function expectMobileGeometry(page: import("@playwright/test").Page, selec
   expect(geometry.right).toBeLessThanOrEqual(geometry.viewport + 1);
 }
 
-test("Character, Party, Growth, Skill and Equipment follow the fixed mobile hierarchy", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await enterGame(page);
-  await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await expect(page.locator(".character-v2-shell")).toBeVisible();
-  await expect(page.locator(".character-v2-character-grid .character-v2-card")).toHaveCount(3);
-  await expectMobileGeometry(page, ".character-v2-shell");
-  await page.screenshot({ path: test.info().outputPath("character-list-390.png") });
-
-  await page.locator(".character-v2-character-grid .character-v2-card").first().click();
-  for (const label of ["HP", "ATK", "DEF", "SPD", "LUK"]) await expect(page.locator(".character-v2-stats")).toContainText(label);
-  await expect(page.getByText("装備中Skill", { exact: true })).toBeVisible();
-  await expect(page.getByText("装備中アイテム", { exact: true })).toBeVisible();
-  await expect(page.getByText(/^(正義|悪|秩序|混沌)$/)).toBeVisible();
-  await page.screenshot({ path: test.info().outputPath("character-detail-390.png"), fullPage: true });
-  await page.getByRole("button", { name: "強化", exact: true }).click();
-  await expect(page.getByText("強化ドリンク・小", { exact: true })).toBeVisible();
-  await expect(page.getByText("強化ドリンク・中", { exact: true })).toBeVisible();
-  await expect(page.getByText("強化ドリンク・大", { exact: true })).toBeVisible();
-  await expect(page.getByText("覚醒の書", { exact: true })).toBeVisible();
-  await expect(page.getByText("同一Character Duplicate取得時は自動覚醒します。", { exact: true })).toHaveCount(0);
-  await page.locator(".character-v2-material").first().locator("button").last().click();
-  await expect(page.locator(".character-v2-current-after").first()).toContainText("Lv.13");
-  await expect(page.locator(".character-v2-preview-stats")).toBeVisible();
-
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "パーティ", exact: true }).click();
-  await expect(page.locator(".character-v2-party-slots > *")).toHaveCount(5);
-  await expect(page.getByRole("button", { name: "おまかせ編成", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "おまかせ装備", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "パーティ保存", exact: true })).toBeVisible();
-
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "スキル", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-grid .character-v2-asset-card")).toHaveCount(2);
-  await page.locator(".character-v2-asset-grid .character-v2-asset-card").first().click();
-  await expect(page.locator(".character-v2-mini-detail")).toBeVisible();
-  await expect(page.locator(".canonical-dialog-close")).toHaveCount(0);
-  await page.getByRole("button", { name: "強化", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-growth")).toBeVisible();
-  await expect(page.locator(".character-v2-current-after")).toContainText("After");
-  await page.getByRole("button", { name: "戻る", exact: true }).click();
-
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "装備", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-grid .character-v2-asset-card")).toHaveCount(2);
-  await page.locator(".character-v2-asset-grid .character-v2-asset-card").first().click();
-  await page.getByRole("button", { name: "強化", exact: true }).click();
-  await expect(page.locator(".character-v2-asset-growth")).toBeVisible();
-  await expect(page.locator(".character-v2-current-after").first()).toContainText("After");
-  await expectMobileGeometry(page, ".character-v2-shell");
-
-  await page.setViewportSize({ width: 412, height: 915 });
-  await expectMobileGeometry(page, ".character-v2-shell");
-  await page.screenshot({ path: test.info().outputPath("character-system-412.png"), fullPage: true });
+test("Character, Party, Growth, Skill and Equipment follow the fixed mobile hierarchy", async ({page})=>{
+ await page.setViewportSize({width:390,height:844});await enterGame(page);
+ await page.locator('.footer-item[aria-label="キャラ"]').click();await expect(page.locator('.character-home')).toBeVisible();
+ await page.getByRole('button',{name:'育成する',exact:true}).click();
+ await page.locator('.character-v2-material').first().locator('button').last().click();await expect(page.locator('.character-v2-current-after').first()).toContainText('Lv.13');await expect(page.locator('.character-v2-preview-stats')).toBeVisible();
+ await page.getByRole('navigation',{name:'育成内容'}).getByRole('button',{name:'スキル',exact:true}).click();await page.getByRole('button',{name:'スキル枠1',exact:true}).click();await page.getByRole('button',{name:'強化する',exact:true}).click();
+ await expect(page.locator('.character-v2-asset-growth')).toBeVisible();await expect(page.locator('.character-v2-current-after')).toContainText('強化後');
+ await page.getByRole('button',{name:'戻る',exact:true}).click();await page.getByRole('button',{name:'戻る',exact:true}).click();await page.locator('.character-home').getByRole('button',{name:/装備/}).click();
+ await page.getByRole('button',{name:'武器1',exact:true}).click();await page.getByRole('button',{name:'強化する',exact:true}).click();await expect(page.locator('.character-v2-asset-growth')).toBeVisible();await expect(page.locator('.character-v2-current-after').first()).toContainText('強化後');
+ await expectMobileGeometry(page,'.character-v2-shell');
 });
 
 test("canonical Leader changes update Home and Header immediately and persist across navigation and reload", async ({ page }) => {
@@ -132,8 +111,10 @@ test("canonical Leader changes update Home and Header immediately and persist ac
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /reiji_transparent_asset/);
 
   await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "パーティ", exact: true }).click();
-  await page.getByRole("button", { name: "リーダー変更", exact: true }).first().click();
+
+  await page.getByRole('button', { name: /パーティ/ }).click();
+  await page.getByRole("button", { name: "リーダー変更", exact: true }).click();
+  await page.locator(".character-party-leader-candidates").getByRole("button", { name: "ルイ", exact: true }).click();
   await expect.poll(async () => page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_users") || "[]")[0]?.favorite_character_id)).toBe("char_rui_01");
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /rui_transparent_asset/);
 
@@ -146,14 +127,15 @@ test("canonical Leader changes update Home and Header immediately and persist ac
   await page.setViewportSize({ width: 412, height: 915 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
   await page.reload();
-  const titleAction = page.getByRole("button", { name: /TAP TO START|続きから/ });
-  if (await titleAction.isVisible()) await titleAction.click();
+  await continueAfterReload(page);
   await expect(page.locator('.mypage-leader-layer[data-character-authority="char_rui_01"]')).toBeVisible();
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /rui_transparent_asset/);
 
   await page.locator('.footer-item[aria-label="キャラ"]').click();
-  await page.locator(".character-v2-main-nav").getByRole("button", { name: "パーティ", exact: true }).click();
-  await page.getByRole("button", { name: "リーダー変更", exact: true }).last().click();
+
+  await page.getByRole('button', { name: /パーティ/ }).click();
+  await page.getByRole("button", { name: "リーダー変更", exact: true }).click();
+  await page.locator(".character-party-leader-candidates").getByRole("button", { name: "チャン", exact: true }).click();
   await page.locator('.footer-item[aria-label="マイページ"]').click();
   await expect(page.locator('.mypage-leader-layer[data-character-authority="char_chang_01"]')).toBeVisible();
   await expect(page.locator('.header-mobile img[alt="Presentation QAのリーダー"]')).toHaveAttribute("src", /chang_transparent_asset/);
@@ -164,13 +146,12 @@ test("canonical Leader changes update Home and Header immediately and persist ac
     localStorage.setItem("mock_db_users", JSON.stringify(users));
   });
   await page.reload();
-  const restartAction = page.getByRole("button", { name: /TAP TO START|続きから/ });
-  if (await restartAction.isVisible()) await restartAction.click();
+  await continueAfterReload(page);
   await expect(page.locator('.mypage-leader-layer[data-character-authority="placeholder"]')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 });
 
-test("Normal Quest uses the tutorial-passed identity, enemy, reward and progress grammar", async ({ page }) => {
+test("Normal Quest uses the tutorial-passed identity, reward and progress grammar", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await enterGame(page);
   await page.locator(".circle-menu-btn.conquest").click();
@@ -179,8 +160,9 @@ test("Normal Quest uses the tutorial-passed identity, enemy, reward and progress
   await expect(page.locator(".quest-v2-identity")).toContainText("クエスト選択");
   await expect(page.locator(".quest-v2-metrics")).toContainText("所要時間");
   await expect(page.locator(".quest-v2-enemies")).toContainText("出現する敵");
-  await expect(page.locator(".quest-v2-enemies article > span").first()).toContainText(/^Lv /);
-  await expect(page.locator(".quest-v2-enemies article > span").first()).not.toContainText(/^(N|R|SR|SSR)$/);
+  // Production generates the exact enemy party for each dispatch. The Quest
+  // progression projection must not invent a static party before dispatch.
+  await expect(page.locator(".quest-v2-enemies article")).toHaveCount(0);
   await expect(page.locator(".quest-v2-rewards").first()).toBeVisible();
   await expect(page.getByRole("button", { name: "新宿へ派遣する", exact: true })).toBeVisible();
   await expect(page.locator("[data-quest-state]" )).toHaveCount(0);

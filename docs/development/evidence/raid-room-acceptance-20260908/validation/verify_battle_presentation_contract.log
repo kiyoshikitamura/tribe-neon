@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "replayDeterministic": true,
+  "activeEffectProjection": true,
+  "variableRoster": "1-5 per side",
+  "tutorialSkip": false,
+  "resultReplayRetention": true,
+  "typographyTokens": true,
+  "worldIntroMotion": true,
+  "actionPresentationAuthorityImpact": 0,
+  "actionBudgets": {
+    "normal1x": 1440,
+    "normal2x": 720,
+    "ssr1x": 2400,
+    "ssr2x": 1200
+  },
+  "resultHpParityGate": true,
+  "targetEffectScope": "character-icon"
+}
+
+(node:32268) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/Kiyoshi%20Kitamura/Documents/Codex/2026-09-08/2-375a0ad-21-raid-migration-14/src/domain/battle/canonical_runtime.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\C:\Users\Kiyoshi Kitamura\Documents\Codex\2026-09-08\2-375a0ad-21-raid-migration-14\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)

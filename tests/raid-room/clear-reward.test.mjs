@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createRaidRoomClearRewardClient} from '../../src/domain/raidRoomClearReward.ts';
+const empty={roomId:'room',status:'unconfigured',clearGate:{status:'unknown',ruleVersion:1,contributionDamage:0,minimumContributionDamage:null,cleared:false},issuedAt:null,expiresAt:null,items:[]};
+const issued={...empty,status:'issued',clearGate:{...empty.clearGate,status:'succeeded',contributionDamage:101,minimumContributionDamage:100,cleared:true},issuedAt:'2026-09-08T00:00:00Z',expiresAt:'2026-10-08T00:00:00Z',items:[{itemId:'CASH',quantity:19,presentId:'present',presentStatus:'UNCLAIMED',claimedAt:null,expiresAt:'2026-10-08T00:00:00Z'}]};
+test('討伐報酬adapterは本人参照RPCだけを呼び確定値を返す',async()=>{let call;const c=createRaidRoomClearRewardClient({rpc:async(name,args)=>{call={name,args};return{data:issued,error:null};}});assert.deepEqual(await c.getReward('room'),issued);assert.deepEqual(call,{name:'get_raid_room_clear_reward_v1',args:{p_room_id:'room'}});});
+test('討伐報酬adapterは未設定と通信エラーを区別',async()=>{let error=null;const c=createRaidRoomClearRewardClient({rpc:async()=>({data:empty,error})});assert.deepEqual(await c.getReward('room'),empty);error={message:'denied'};await assert.rejects(()=>c.getReward('room'));});
+test('討伐報酬adapterは他Room・欠損・不正数量・不正閾値を拒否',async()=>{for(const data of [{...empty,roomId:'other'},{...empty,status:'issued'},{...issued,items:[{...issued.items[0],quantity:0}]},{...empty,clearGate:{...empty.clearGate,minimumContributionDamage:-1}},{...empty,clearGate:{...empty.clearGate,cleared:'true'}}]){const c=createRaidRoomClearRewardClient({rpc:async()=>({data,error:null})});await assert.rejects(()=>c.getReward('room'));}});

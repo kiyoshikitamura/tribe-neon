@@ -1,0 +1,26 @@
+\set ON_ERROR_STOP on
+\if :{?raid_commit}
+\else
+\set raid_commit false
+\endif
+-- 実行していないレビュー用。接続先を管理APIとDB hostで照合してから使用する。
+-- GUCは誤操作防止だけで接続先検証の代わりではない。既定ではROLLBACK。
+\set ON_ERROR_STOP on
+begin;
+set local statement_timeout='60s';
+set local lock_timeout='2s';
+set local search_path=public,pg_catalog;
+\ir 00-baseline-guard.sql
+\ir 01-snapshot-dependency.sql
+\ir 02-raid-delta.sql
+\ir 04-postflight.sql
+notify pgrst,'reload schema';
+\if :raid_commit
+commit;
+\else
+rollback;
+\endif
+-- 保存は明示的 -v raid_commit=true。ファイル本文は編集しない。
+-- 8本の履歴repairも19本の履歴偽装も行わない。独立した適用記録を残す。
+
+

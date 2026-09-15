@@ -1,12 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { supabase, usingMockSupabase } from "@/utils/supabase";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { supabase } from "@/utils/supabase";
 import { VITALITY_OVERFLOW_MAX } from "@/utils/game_constants";
 import { canUseEnergyDrink } from "@/domain/gameplay/canonical/action_resources";
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { canonicalMissionRewardName } from "@/domain/gameplay/canonical/missions";
+import { canClaimMission, reconcileMissionClaim } from "@/domain/mission/availability";
+import { beginActionPerformance } from "@/utils/actionPerformance";
+import { buildInventoryQuantityProjection } from "@/domain/gameplay/inventoryProjection";
+
+const aggregateMissionRewards = (rows: Array<{ item_id?: string; quantity?: number }>) => {
+  const rewardByItem = new Map<string, number>();
+  rows.forEach((reward) => {
+    const itemId = String(reward.item_id || "");
+    const quantity = Number(reward.quantity || 0);
+    if (!itemId || quantity <= 0) return;
+    rewardByItem.set(itemId, (rewardByItem.get(itemId) || 0) + quantity);
+  });
+  return Array.from(rewardByItem, ([id, quantity]) => ({
+    id,
+    name: canonicalMissionRewardName(id),
+    quantity,
+  }));
+};
 
 export function useInventory(
   session: any,
@@ -18,9 +36,16 @@ export function useInventory(
   setVitality: React.Dispatch<React.SetStateAction<number>>,
   playCyberSe: (type: string) => void,
   syncBootstrapData: (userId: string) => Promise<void>,
-  setConfirmDialogConfig: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>
+  setConfirmDialogConfig: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>,
+  onMissionPlayerProgress?: (level: number, xp: number) => void,
+  onPresentEquipmentProjection?: (rows: any[], owner: string) => void
 ) {
   const [userItems, setUserItems] = useState<any[]>([]);
+  const [inventoryProjectionOwnerUserId, setInventoryProjectionOwnerUserId] = useState("");
+  const activeInventoryUserIdRef = useRef(session?.user?.id || "");
+  const inventoryProjectionGenerationRef = useRef(0);
+  const inventoryIdentityGenerationRef = useRef(0);
+  const activeSessionUserId = session?.user?.id || "";
 
   // 消耗品ステート
   const [energyDrinks, setEnergyDrinks] = useState<number>(0);
@@ -41,9 +66,66 @@ export function useInventory(
   const trainingManuals = charExpS + charExpM + charExpL;
   const polishingStones = equipExpS + equipExpM + equipExpL;
 
+  const beginUserItemsProjectionRequest = (ownerUserId: string) => {
+    if (!ownerUserId || activeInventoryUserIdRef.current !== ownerUserId) return null;
+    inventoryProjectionGenerationRef.current += 1;
+    return inventoryProjectionGenerationRef.current;
+  };
+
+  const projectUserItems = useCallback((rows: any[], ownerUserId: string, requestGeneration?: number | null) => {
+    if (ownerUserId && activeInventoryUserIdRef.current !== ownerUserId) return false;
+    if (requestGeneration != null && requestGeneration !== inventoryProjectionGenerationRef.current) return false;
+    const items = Array.isArray(rows) ? rows : [];
+    const quantities = buildInventoryQuantityProjection(items);
+
+    // Keep the canonical row projection and the compatibility counters in one
+    // synchronous React update boundary. Bag and Growth must never observe
+    // different ownership values for the same user_items rows.
+    setUserItems(items);
+    setEnergyDrinks(quantities.ENERGY_DRINK);
+    setCharExpS(quantities.CHAR_EXP_S);
+    setCharExpM(quantities.CHAR_EXP_M);
+    setCharExpL(quantities.CHAR_EXP_L);
+    setEquipExpS(quantities.EQUIP_EXP_S);
+    setEquipExpM(quantities.EQUIP_EXP_M);
+    setEquipExpL(quantities.EQUIP_EXP_L);
+    setAwakeningBooks(quantities.AWAKENING_BOOK);
+    setSkillManuals(quantities.SKILL_MANUAL);
+    setEquipLbParts(quantities.EQUIP_LB_PART);
+    setInventoryProjectionOwnerUserId(ownerUserId);
+    return true;
+  }, []);
+
+  const resetUserItemsProjection = useCallback((nextActiveUserId = "") => {
+    activeInventoryUserIdRef.current = nextActiveUserId;
+    inventoryIdentityGenerationRef.current += 1;
+    inventoryProjectionGenerationRef.current += 1;
+    projectUserItems([], "");
+  }, [projectUserItems]);
+
+  useLayoutEffect(() => {
+    if (activeInventoryUserIdRef.current === activeSessionUserId) return;
+    // Some local/demo auth paths replace session directly without a Supabase
+    // auth observer event. They still need the same owner swap and full clear.
+    resetUserItemsProjection(activeSessionUserId);
+  }, [activeSessionUserId, resetUserItemsProjection]);
+
+  const refreshUserItemsProjection = async (userId: string) => {
+    const requestGeneration = beginUserItemsProjectionRequest(userId);
+    if (requestGeneration == null) return [];
+    const { data, error } = await supabase
+      .from("user_items")
+      .select("*")
+      .eq("user_id", userId);
+    if (error) throw error;
+    projectUserItems(data || [], userId, requestGeneration);
+    return data || [];
+  };
+
   // ミッション ＆ プレゼント
   const [missions, setMissions] = useState<any[]>([]);
-  const [missionTab, setMissionTab] = useState<"DAILY" | "NORMAL">("DAILY");
+  const [missionEventsError, setMissionEventsError] = useState(false);
+  const [missionTab, setMissionTab] = useState<"DAILY" | "NORMAL" | "SPECIAL">("DAILY");
   const [presents, setPresents] = useState<any[]>([]);
   const [presentsPrefetched, setPresentsPrefetched] = useState<boolean>(false);
   const [presentsSyncing, setPresentsSyncing] = useState<boolean>(false);
@@ -63,6 +145,12 @@ export function useInventory(
     beginAction: beginItemUse,
     endAction: endItemUse
   } = useImmediateActionLock();
+  const presentLockOwnerRef = useRef(activeSessionUserId);
+  useLayoutEffect(() => {
+    if (presentLockOwnerRef.current === activeSessionUserId) return;
+    presentLockOwnerRef.current = activeSessionUserId;
+    endPresentClaim();
+  }, [activeSessionUserId, endPresentClaim]);
   const setPresentClaimLoading = (loading: boolean) => {
     if (loading) beginPresentClaim();
     else endPresentClaim();
@@ -73,7 +161,11 @@ export function useInventory(
   };
 
   const showActionError = (title: string, error: unknown) => {
-    const detail = error instanceof Error ? error.message : String(error || "");
+    const detail = error && typeof error === "object" && "message" in error ? String(error.message) : String(error || "");
+    if (/action resource is already at maximum|energy drink would exceed vitality hard cap/.test(detail)) {
+      setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: "最大値なので回復できません。", confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      return;
+    }
     const message = /network|fetch|timeout/i.test(detail)
       ? "通信を確認して、もう一度お試しください。"
       : /already|claimed/i.test(detail)
@@ -88,7 +180,7 @@ export function useInventory(
     
     if (itemId === "ENERGY_DRINK") {
       if (!canUseEnergyDrink(vitality)) {
-        setConfirmDialogConfig({ isOpen: true, title: "使用不可", message: "使用後のスタミナが上限500を超えるため使用できません。", confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+        setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: "最大値なので回復できません。", confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
         return;
       }
       
@@ -112,15 +204,24 @@ export function useInventory(
         showActionError("アイテムを使用できませんでした", err);
       }
     } else if (itemId === "PVP_POINT_TICKET" || itemId === "RAID_POINT_TICKET") {
+      const ownerUserId = session.user.id;
+      const isCurrentOwner = () => activeInventoryUserIdRef.current === ownerUserId;
       try {
         const res = await supabase.rpc("use_action_resource_ticket", { p_item_id: itemId });
+        if (!isCurrentOwner()) return;
         if (res.error) throw res.error;
         if (res.data?.error) throw new Error(res.data.error);
-        await syncBootstrapData(session.user.id);
-        const resourceName = itemId === "PVP_POINT_TICKET" ? "PvPポイント" : "レイドポイント";
-        setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: `${resourceName}が1回復しました。`, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+        if (res.data?.status !== "success") throw new Error("回復結果を確認できませんでした。");
+        // A confirmed ticket use has already consumed the item. A later
+        // projection failure must not invite another use as a retry.
+        let projectionFailed = false;
+        try { await syncBootstrapData(ownerUserId); }
+        catch { projectionFailed = true; }
+        if (!isCurrentOwner()) return;
+        const resourceName = itemId === "PVP_POINT_TICKET" ? "BP" : "レイドポイント";
+        setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: `${resourceName}が1回復しました。${projectionFailed ? "画面の更新に失敗したため、再読み込みして所持数を確認してください。" : ""}`, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
       } catch (err: any) {
-        showActionError("アイテムを使用できませんでした", err);
+        if (isCurrentOwner()) showActionError("アイテムを使用できませんでした", err);
       }
     } else {
       setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: "このアイテムは強化・限界突破画面で使用してください。", confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
@@ -130,162 +231,236 @@ export function useInventory(
     }
   };
 
-  const handleClaimPresent = async (id: string) => {
-    if (!session) return;
-    if (!beginPresentClaim()) return;
-    setPresents(prev => prev.map(p => p.id === id ? { ...p, loading: true } : p));
-    playCyberSe("click");
-
-    try {
-      const targetPresent = presents.find(p => p.id === id);
-      if (usingMockSupabase && id === "p_swr") {
-        setDiamonds(d => d + 50);
-        const res = await supabase.rpc("add_test_diamonds", { p_user_id: session.user.id });
-        if (res.error || res.data?.error) console.warn(res.error || res.data?.error);
-        setPresents(prev => prev.filter(p => p.id !== id));
-        return;
-      }
-
-      const res = await supabase.rpc("claim_present", {
-        p_present_id: id
-      });
-      if (res.error) throw res.error;
-      if (res.data?.error) throw new Error(res.data.error);
-
-      setPresents(prev => prev.filter(p => p.id !== id));
-      await syncBootstrapData(session.user.id);
-      if (targetPresent) {
-        setConfirmDialogConfig({
-          isOpen: true,
-          title: "報酬獲得",
-          message: "プレゼントを受け取りました。",
-          kind: "reward",
-          rewards: [{ id: targetPresent.itemId || targetPresent.item_id, name: canonicalItemName(String(targetPresent.itemId || targetPresent.item_id || "")), quantity: Number(targetPresent.qty || targetPresent.quantity || 0) }],
-          confirmText: "閉じる",
-          cancelText: "",
-          presentation: "canonical",
-          onConfirm: () => setConfirmDialogConfig(null),
-          onCancel: () => setConfirmDialogConfig(null),
-        });
-      }
-    } catch (err: any) {
-      console.warn(err.message);
-      setPresents(prev => prev.map(p => p.id === id ? { ...p, loading: false } : p));
-      showActionError("受け取りに失敗しました", err);
-    } finally {
-      endPresentClaim();
-    }
+  // Present claims only change the wallet, inventory and inbox. Do not put the
+  // whole social / battle / mission bootstrap on this interaction's critical path.
+  const refreshPresentClaimState = async (owner: string, isCurrent: () => boolean) => {
+    const generation = beginUserItemsProjectionRequest(owner);
+    const [wallet, items, inbox, equipment] = await Promise.all([
+      supabase.from("users").select("cash,neon_diamonds").eq("id", owner).single(),
+      supabase.from("user_items").select("*").eq("user_id", owner),
+      supabase.from("presents").select("*").eq("user_id", owner).order("sent_at", { ascending: false }),
+      supabase.from("user_equipments").select("*").eq("user_id", owner).order("created_at", { ascending: false }),
+    ]);
+    if (!isCurrent()) return [];
+    if (wallet.error) throw wallet.error;
+    if (items.error) throw items.error;
+    if (inbox.error) throw inbox.error;
+    if (equipment.error) throw equipment.error;
+    if (!wallet.data) throw new Error("Present wallet projection unavailable");
+    setCash(Number(wallet.data.cash));
+    setDiamonds(Number(wallet.data.neon_diamonds));
+    projectUserItems(items.data || [], owner, generation);
+    onPresentEquipmentProjection?.(equipment.data || [], owner);
+    const rows = inbox.data || [];
+    setPresents(rows.map(p => {
+      const hours = Math.ceil((new Date(p.expire_at).getTime() - Date.now()) / 3600000);
+      return { ...p, id: String(p.id), itemId: p.item_id, qty: p.quantity,
+        title: p.message?.split(":")[0] || "配布アイテム", loading: false,
+        expireText: p.expire_at == null ? "期限なし" : hours <= 0 ? "期限切れ" : hours > 24 ? `期限: あと${Math.ceil(hours / 24)}日` : `期限: あと${hours}時間` };
+    }));
+    return rows;
   };
 
-  const handleClaimAllPresents = async () => {
+  const claimPresents = async (id?: string) => {
     if (!session) return;
-    const unclaimed = presents.filter(p => p.status === "UNCLAIMED");
-    if (unclaimed.length === 0) return;
-
-    if (!beginPresentClaim()) return;
+    const targets = presents.filter(p => p.status === "UNCLAIMED" && (!id || p.id === id));
+    if (!targets.length || !beginPresentClaim()) return;
+    const owner = session.user.id;
+    const identityGeneration = inventoryIdentityGenerationRef.current;
+    const isCurrent = () => activeInventoryUserIdRef.current === owner && inventoryIdentityGenerationRef.current === identityGeneration;
+    const timing = beginActionPerformance("present_claim");
+    let committed = false;
     let receiptOwnsLock = false;
-    setPresents(prev => prev.map(p => p.status === "UNCLAIMED" ? { ...p, loading: true } : p));
-    playCyberSe("gacha");
-
+    const targetIds = new Set(targets.map(p => p.id));
+    setPresents(prev => prev.map(p => targetIds.has(p.id) ? { ...p, loading: true } : p));
+    playCyberSe(id ? "click" : "gacha");
     try {
-      let hasSwr = false;
-      unclaimed.forEach(p => {
-        if (p.id === "p_swr") hasSwr = true;
-      });
-
-      if (usingMockSupabase && hasSwr) {
-        const resSwr = await supabase.rpc("add_test_diamonds", { p_user_id: session.user.id });
-        if (resSwr.error || resSwr.data?.error) console.warn(resSwr.error || resSwr.data?.error);
-      }
-
-      const res = await supabase.rpc("claim_all_presents");
+      timing.mark("request_start");
+      const res = id ? await supabase.rpc("claim_present", { p_present_id: id }) : await supabase.rpc("claim_all_presents");
+      timing.mark("response");
+      if (!isCurrent()) return;
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
-
-      setPresents(prev => prev.filter(p => p.status !== "UNCLAIMED"));
-      await syncBootstrapData(session.user.id);
+      if (res.data?.status !== "success") throw new Error("Present receipt not confirmed");
+      committed = true;
+      // The server is the only grant authority. Read the rows back rather than
+      // clearing every visible row (expired / newly arrived presents can differ).
+      const rows = await refreshPresentClaimState(owner, isCurrent);
+      if (!isCurrent()) return;
+      timing.mark("state_update");
+      timing.markVisualReady();
+      const received = rows.filter(p => targetIds.has(String(p.id)) && p.status === "CLAIMED");
+      const count = id ? 1 : Number(res.data.claimed_count || 0);
       const rewardByItem = new Map<string, number>();
-      unclaimed.forEach((present) => {
-        const itemId = String(present.itemId || present.item_id || "");
-        rewardByItem.set(itemId, (rewardByItem.get(itemId) || 0) + Number(present.qty || present.quantity || 0));
+      // Bulk RPC can claim a new arrival that was not in the visible list.
+      // In that case show the confirmed count, never an invented reward list.
+      if (received.length === count) received.forEach(p => {
+        const itemId = String(p.item_id);
+        rewardByItem.set(itemId, (rewardByItem.get(itemId) || 0) + Number(p.quantity));
       });
       const closeReceipt = () => {
+        if (!isCurrent()) return;
         setConfirmDialogConfig(null);
         endPresentClaim();
       };
       receiptOwnsLock = true;
-      setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: "プレゼントを一括で受け取りました。", kind: "reward", rewards: Array.from(rewardByItem, ([id, quantity]) => ({ id, name: canonicalItemName(id), quantity })), confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: closeReceipt });
-    } catch (err: any) {
-      console.warn(err.message);
+      setConfirmDialogConfig({ isOpen: true, title: count ? "報酬獲得" : "プレゼント",
+        message: count ? (id ? "プレゼントを受け取りました。" : `プレゼントを${count}件受け取りました。`) : "受け取れるプレゼントはありませんでした。",
+        kind: rewardByItem.size ? "reward" : undefined,
+        rewards: Array.from(rewardByItem, ([itemId, quantity]) => ({ id: itemId, name: canonicalItemName(itemId), quantity })),
+        confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: closeReceipt });
+    } catch (err) {
+      if (!isCurrent()) return;
+      // A failed response may still have committed. Refresh without replaying
+      // the mutation; if reads fail, keep rows pending for an explicit retry.
+      try { await refreshPresentClaimState(owner, isCurrent); } catch { /* retain existing rows */ }
+      if (!isCurrent()) return;
       setPresents(prev => prev.map(p => ({ ...p, loading: false })));
-      showActionError("一括受け取りに失敗しました", err);
+      if (committed) {
+        setConfirmDialogConfig({ isOpen: true, title: "プレゼント受取済み",
+          message: "受け取りは完了しました。所持数の表示を更新できなかったため、ページを再読み込みしてください。",
+          confirmText: "閉じる", cancelText: "", presentation: "canonical",
+          onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      } else showActionError("受取状況を確認してください", err);
     } finally {
-      if (!receiptOwnsLock) endPresentClaim();
+      if (!receiptOwnsLock && isCurrent()) endPresentClaim();
     }
   };
 
-  const handleClaimMission = async (id: string) => {
+  const handleClaimPresent = (id: string) => claimPresents(id);
+  const handleClaimAllPresents = () => claimPresents();
+
+  const refreshMissionClaimState = async (owner: string, isCurrent: () => boolean, committedProjection?: any) => {
+    if (!isCurrent()) return;
+    // 成功時は同じトランザクションの投影を使用。応答消失時だけ所有者の状態を再取得。
+    let projection = committedProjection;
+    if (!projection) {
+      const { data, error } = await supabase.rpc("get_current_mission_reward_state");
+      if (error) throw error;
+      projection = data;
+    }
+    if (!isCurrent()) return;
+    if (projection?.owner !== owner || !Array.isArray(projection?.missions) || !Array.isArray(projection?.items)) {
+      throw new Error("報酬の最新状態を確認できませんでした。");
+    }
+    const rows = new Map<string, any>(projection.missions.map((row: any) => [row.mission_id, row]));
+    setMissions(prev => prev.map(m => {
+      const row = rows.get(m.id);
+      return row ? { ...m, status: row.status === "PROGRESS" ? "IN_PROGRESS" : row.status,
+        current_progress: row.current_progress, expires_at: row.expires_at, loading: false } : m;
+    }));
+    const generation = beginUserItemsProjectionRequest(owner);
+    projectUserItems(projection.items, owner, generation);
+    setCash(Number(projection.cash));
+    setDiamonds(Number(projection.diamonds));
+    onMissionPlayerProgress?.(Number(projection.level), Number(projection.xp));
+    return rows;
+  };
+
+  const handleClaimMission = async (id: string, onReceiptConfirmed?: () => void) => {
     if (!session) return;
+    if (!canClaimMission(missions.find(m => m.id === id) || {})) return;
     if (!beginMissionClaim()) return;
+    const owner = session.user.id;
+    const isCurrent = () => activeInventoryUserIdRef.current === owner;
     setMissions(prev => prev.map(m => m.id === id ? { ...m, loading: true } : m));
     playCyberSe("click");
 
+    let refreshedRows: Map<string, any> | undefined;
+    let claimProjection: any;
+    const timing = beginActionPerformance("mission_claim");
+    timing.mark("request_start");
+    const closeReceipt = () => {
+      if (!isCurrent()) return;
+      setConfirmDialogConfig(null);
+      onReceiptConfirmed?.();
+    };
     try {
       const targetMission = missions.find(m => m.id === id);
       if (!targetMission) return;
 
-      const res = await supabase.rpc("claim_mission_reward", {
-        p_mission_id: id
-      });
-      if (res.error) throw res.error;
-      if (res.data?.error) throw new Error(res.data.error);
+      const res = await reconcileMissionClaim(async () => {
+        const response = await supabase.rpc("claim_mission_reward", { p_mission_id: id });
+        if (response.error) throw response.error;
+        if (response.data?.error) throw new Error(response.data.error);
+        claimProjection = response.data?.mission_state;
+        timing.mark("response");
+        return response;
+      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent, claimProjection); }, isCurrent);
+      timing.mark("state_update");
+      timing.markVisualReady();
+      if (!isCurrent()) return;
 
-      setMissions(prev => prev.filter(m => m.id !== id));
+      const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
+      if (!rewards.length) {
+        if (onReceiptConfirmed && refreshedRows?.get(id)?.status === "CLAIMED") {
+          setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "報酬は受取済みです。", confirmText: "マイページへ", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+        }
+        return;
+      }
       playCyberSe("MISSION_REWARD");
-      await syncBootstrapData(session.user.id);
-      const rewards = [{ id: targetMission.reward_item || targetMission.rewardItemId, name: canonicalMissionRewardName(String(targetMission.reward_item || targetMission.rewardItemId || "")), quantity: Number(targetMission.reward_amount || targetMission.rewardQty || 0) }];
-      if (Number(targetMission.cashReward || 0) > 0) rewards.push({ id: "CASH", name: "キャッシュ", quantity: Number(targetMission.cashReward) });
-      setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: "報酬はプレゼントへ送られました。", kind: "reward", delivery: "PRESENT", rewards, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: targetMission.isCompletion ? "ギルドバトル開幕の準備完了！\n正式オープンに備えよう！" : "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: onReceiptConfirmed ? "マイページへ" : "OK", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
     } catch (err) {
       console.warn(err);
+      if (!isCurrent()) return;
       setMissions(prev => prev.map(m => m.id === id ? { ...m, loading: false } : m));
-      showActionError("報酬を受け取れませんでした", err);
+      // 応答消失でも、再取得で受取済みを確認できた場合だけ帰還可能にする。
+      if (onReceiptConfirmed && refreshedRows?.get(id)?.status === "CLAIMED") {
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "報酬の受取済みを確認しました。", confirmText: "マイページへ", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+      } else showActionError("報酬を受け取れませんでした", err);
     } finally {
       endMissionClaimAfterPaint();
     }
   };
 
-  const handleClaimAllMissions = async () => {
+  const handleClaimAllMissions = async (eventId?: string | null, onReceiptConfirmed?: () => void, receiptMissionIds?: string[]) => {
     if (!session) return;
-    const clearMissions = missions.filter(m => m.status === "CLEAR" && m.category === missionTab);
+    const clearMissions = missions.filter(m => canClaimMission(m) && m.category === missionTab && (eventId === undefined || (m.eventId || "unassigned") === eventId));
     if (clearMissions.length === 0) return;
 
     if (!beginMissionClaim()) return;
-    setMissions(prev => prev.map(m => m.status === "CLEAR" && m.category === missionTab ? { ...m, loading: true } : m));
+    const owner = session.user.id;
+    const isCurrent = () => activeInventoryUserIdRef.current === owner;
+    setMissions(prev => prev.map(m => clearMissions.some(target => target.id === m.id) ? { ...m, loading: true } : m));
     playCyberSe("gacha");
 
+    let refreshedRows: Map<string, any> | undefined;
+    let claimProjection: any;
+    const timing = beginActionPerformance("mission_claim");
+    timing.mark("request_start");
+    const closeReceipt = () => {
+      if (!isCurrent()) return;
+      setConfirmDialogConfig(null);
+      if (clearMissions.some(m => (!receiptMissionIds || receiptMissionIds.includes(m.id)) && refreshedRows?.get(m.id)?.status === "CLAIMED")) onReceiptConfirmed?.();
+    };
     try {
       const missionIds = clearMissions.map(m => m.id);
-      const res = await supabase.rpc("claim_all_mission_rewards", {
-        p_mission_ids: missionIds
-      });
-      if (res.error) throw res.error;
-      if (res.data?.error) throw new Error(res.data.error);
+      const res = await reconcileMissionClaim(async () => {
+        const response = await supabase.rpc("claim_all_mission_rewards", { p_mission_ids: missionIds });
+        if (response.error) throw response.error;
+        if (response.data?.error) throw new Error(response.data.error);
+        claimProjection = response.data?.mission_state;
+        timing.mark("response");
+        return response;
+      }, async () => { refreshedRows = await refreshMissionClaimState(owner, isCurrent, claimProjection); }, isCurrent);
+      timing.mark("state_update");
+      timing.markVisualReady();
+      if (!isCurrent()) return;
 
-      setMissions(prev => prev.filter(m => !(m.status === "CLEAR" && m.category === missionTab)));
+      const rewards = aggregateMissionRewards(Array.isArray(res.data?.rewards) ? res.data.rewards : []);
+      if (!rewards.length) {
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "受取状態を更新しました。", confirmText: "閉じる", cancelText: "", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+        return;
+      }
       playCyberSe("MISSION_REWARD");
-      await syncBootstrapData(session.user.id);
-      const rewardByItem = new Map<string, number>();
-      clearMissions.forEach((mission) => {
-        const itemId = String(mission.reward_item || mission.rewardItemId || "");
-        rewardByItem.set(itemId, (rewardByItem.get(itemId) || 0) + Number(mission.reward_amount || mission.rewardQty || 0));
-        if (Number(mission.cashReward || 0) > 0) rewardByItem.set("CASH", (rewardByItem.get("CASH") || 0) + Number(mission.cashReward));
-      });
-      setConfirmDialogConfig({ isOpen: true, title: "クリア報酬", message: "すべての報酬はプレゼントへ送られました。", kind: "reward", delivery: "PRESENT", rewards: Array.from(rewardByItem, ([id, quantity]) => ({ id, name: canonicalMissionRewardName(id), quantity })), confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      setConfirmDialogConfig({ isOpen: true, title: "クリア報酬", message: "報酬を獲得しました。", kind: "reward", delivery: "INVENTORY", rewards, confirmText: onReceiptConfirmed ? "マイページへ" : "閉じる", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
     } catch (err: any) {
       console.warn(err.message);
+      if (!isCurrent()) return;
       setMissions(prev => prev.map(m => ({ ...m, loading: false })));
-      showActionError("一括受け取りに失敗しました", err);
+      if (onReceiptConfirmed && clearMissions.some(m => (!receiptMissionIds || receiptMissionIds.includes(m.id)) && refreshedRows?.get(m.id)?.status === "CLAIMED")) {
+        setConfirmDialogConfig({ isOpen: true, title: "ミッション", message: "報酬の受取済みを確認しました。", confirmText: "マイページへ", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: () => setConfirmDialogConfig(null) });
+      } else showActionError("一括受け取りに失敗しました", err);
     } finally {
       endMissionClaimAfterPaint();
     }
@@ -293,6 +468,11 @@ export function useInventory(
 
   return {
     userItems, setUserItems,
+    inventoryProjectionOwnerUserId,
+    beginUserItemsProjectionRequest,
+    projectUserItems,
+    resetUserItemsProjection,
+    refreshUserItemsProjection,
     energyDrinks, setEnergyDrinks,
     charExpS, setCharExpS,
     charExpM, setCharExpM,
@@ -308,7 +488,7 @@ export function useInventory(
     pvpVipPasses,
     trainingManuals,
     polishingStones,
-    missions, setMissions,
+    missions, setMissions, missionEventsError, setMissionEventsError,
     missionTab, setMissionTab,
     presents, setPresents,
     presentsPrefetched, setPresentsPrefetched,

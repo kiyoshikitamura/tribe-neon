@@ -2,6 +2,8 @@
 .reward-receipt-list { display: grid; gap: 8px; }
 .reward-receipt-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 46px; padding: 9px 11px; border: 1px solid rgba(247, 196, 72, .36); border-radius: var(--ui-radius-sm); background: linear-gradient(135deg, rgba(247, 196, 72, .10), rgba(0, 240, 255, .045)); }
 .reward-receipt-mark { width: 30px; height: 30px; object-fit: contain; color: var(--neon-gold); filter: drop-shadow(0 0 5px rgba(247, 196, 72, .42)); }
+.reward-receipt-item.is-cosmetic { grid-template-columns: 40px minmax(0, 1fr); }
+.reward-receipt-cosmetic-mark { display: grid; place-items: center; width: 40px; height: 24px; border: 1px solid rgba(247, 196, 72, .44); border-radius: 4px; background: rgba(247, 196, 72, .1); color: var(--neon-gold); font-size: 9px; font-weight: 800; }
 .reward-receipt-name { min-width: 0; overflow-wrap: anywhere; color: var(--ui-text-primary); font-weight: 800; }
 .reward-receipt-quantity { color: var(--neon-gold); white-space: nowrap; }
-.reward-receipt-note { margin: 0; color: var(--ui-text-secondary); font-size: 11px; line-height: 1.6; text-align: center; }
+.reward-receipt-note { margin: 0; color: var(--ui-text-secondary); font-size: 11px; line-height: 1.6; text-align: center; white-space: pre-line; }

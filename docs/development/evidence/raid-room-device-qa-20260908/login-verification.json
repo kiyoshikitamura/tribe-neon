@@ -1,0 +1,35 @@
+[
+  {
+    "role": "host",
+    "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+    "engine": "chromium",
+    "errors": [],
+    "authenticated": true,
+    "emailLinkFinalized": true,
+    "raidList": true,
+    "persistedAfterReload": true,
+    "status": "PASS"
+  },
+  {
+    "role": "normal",
+    "userId": "25975265-f042-4dd1-8ffc-a12f8414a035",
+    "engine": "webkit",
+    "errors": [],
+    "authenticated": true,
+    "emailLinkFinalized": true,
+    "raidList": true,
+    "persistedAfterReload": true,
+    "status": "PASS"
+  },
+  {
+    "role": "rescue",
+    "userId": "5c53fd8d-245b-49da-8ca6-b7afd6b7e6f0",
+    "engine": "chromium",
+    "errors": [],
+    "authenticated": true,
+    "emailLinkFinalized": true,
+    "raidList": true,
+    "persistedAfterReload": true,
+    "status": "PASS"
+  }
+]

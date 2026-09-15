@@ -55,8 +55,11 @@
 .tutorial-wire-heading span,.tutorial-wire-progress-title span { font-size: clamp(28px, 8vw, 38px); font-weight: 950; }
 .tutorial-wire-heading strong { font-size: var(--ui-font-screen-title); }
 .tutorial-wire-heading small,.tutorial-wire-progress-title small,.tutorial-wire-complete small,.tutorial-wire-encounter small { color: #c78dff; font-size: var(--ui-font-caption); font-weight: 900; letter-spacing: .14em; }
-.tutorial-wire-rewards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 10px; border: 1px solid rgba(255,255,255,.12); border-radius: var(--ui-radius-md); background: rgba(3,5,13,.82); }
+.tutorial-wire-rewards { display: grid; grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); gap: 6px; padding: 10px; border: 1px solid rgba(255,255,255,.12); border-radius: var(--ui-radius-md); background: rgba(3,5,13,.82); }
 .tutorial-wire-rewards span { display: grid; min-height: 48px; place-items: center; color: #e9e1ff; font-size: 9px; font-weight: 800; text-align: center; }
+.tutorial-wire-reward-item{gap:3px;padding:6px;border:1px solid rgba(255,255,255,.08);border-radius:5px;background:rgba(0,0,0,.28)}
+.tutorial-wire-reward-icon{width:34px;height:34px;object-fit:contain}.tutorial-wire-reward-xp{display:grid;width:34px;height:34px;place-items:center;border-radius:50%;color:#061319;background:var(--ui-accent);font-size:11px}
+.tutorial-wire-reward-item small{color:var(--ui-text-secondary);font-size:7px}.tutorial-wire-reward-item strong{color:#fff1af;font-size:10px}
 .tutorial-wire-member { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 14px; padding: 12px; border: 1px solid rgba(209, 104, 255, .5); border-radius: var(--ui-radius-lg); background: linear-gradient(135deg,rgba(18,8,32,.94),rgba(5,6,15,.9)); }
 .tutorial-wire-member > div:last-child { display: grid; gap: 6px; }
 .tutorial-wire-member small { color: var(--ui-text-muted); }

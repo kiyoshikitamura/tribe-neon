@@ -1,0 +1,22 @@
+docs/development/raid-room-persistent/*.sql text eol=lf
+docs/development/evidence/raid-room-persistent-20260908/*.sql text eol=lf
+scripts/raid-room/*.mjs text eol=lf
+docs/development/evidence/raid-room-connection-20260908/*.sql text eol=lf
+docs/development/evidence/raid-room-acceptance-20260908/*.sql text eol=lf
+
+# Fixed release evidence and SQL bundles must survive checkout byte-for-byte.
+docs/development/raid-production-preparation/** -text
+scripts/raid-production-rehearsal/*.mjs text eol=lf
+
+# Preserve prepublication evidence hashes.
+docs/development/raid-prepublication-closeout/** -text
+scripts/raid-prepublication-*/*.mjs text eol=lf
+
+# Launch SQL guards and manifests require canonical checkout bytes.
+config/raid-room/launch-balance.* -text
+docs/development/raid-launch-balance/** -text
+docs/development/raid-launch-integration/** -text
+docs/development/raid-c844-preview/** -text
+docs/development/raid-production-release/** -text
+scripts/raid-production-release/*.mjs text eol=lf
+scripts/raid-c844-preview-*/*.mjs text eol=lf

@@ -1,0 +1,14 @@
+{
+  "database": "raid_top_test_1788964886472_44980",
+  "results": [
+    {
+      "name": "two simultaneous authenticated Room create requests return same Room",
+      "status": "PASS"
+    },
+    {
+      "name": "conflicting access stops with lock_timeout and succeeds after rollback releases locks",
+      "status": "PASS"
+    }
+  ],
+  "scope": "PG17 native two connections, real Raid SQL on minimal fixture. Separate from Production catalog bundle rehearsal. No HTTP Auth/Edge/Cron."
+}

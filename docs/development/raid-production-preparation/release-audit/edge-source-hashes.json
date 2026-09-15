@@ -1,0 +1,39 @@
+{
+  "capturedAt": "2026-09-09T14:38:07.212Z",
+  "productionVersion": 1,
+  "productionVerifyJwt": true,
+  "productionBundleSha256": "360175d0269a7f7307827fd0a71cd481d90870e28e0e8c24157e3e6fe6540dd3",
+  "hashConvention": "exact UTF-8 bytes; normalizedEqual permits CRLF/LF only",
+  "files": [
+    {
+      "path": "supabase/functions/resolve-battle/index.ts",
+      "productionSha256": "4d1da5e48a0cac3611bda88793c4d73b52044d46249e268fe0de0b844f587093",
+      "candidateSha256": "b7274ff2c4587fd768e2ed4b390b848a05cbd8cb819260e5f109f7e0e0b86795",
+      "normalizedEqual": false
+    },
+    {
+      "path": "supabase/functions/resolve-battle/engine.ts",
+      "productionSha256": "5c947b859393d00b6ac347ccc76ff0ab54996787acd247eecd78da194b127abe",
+      "candidateSha256": "5c947b859393d00b6ac347ccc76ff0ab54996787acd247eecd78da194b127abe",
+      "normalizedEqual": true
+    },
+    {
+      "path": "src/domain/battle/canonical_runtime.ts",
+      "productionSha256": "2685fde85b390242ac5e7a676e0a281e00055d31fadd8b85c6a5a373378b9c04",
+      "candidateSha256": "2685fde85b390242ac5e7a676e0a281e00055d31fadd8b85c6a5a373378b9c04",
+      "normalizedEqual": true
+    },
+    {
+      "path": "src/domain/battle/canonical_effects.ts",
+      "productionSha256": "7eea585ef12b384d306f89b12d986ec49116df2e437f0f9a0d54551aea386e20",
+      "candidateSha256": "7eea585ef12b384d306f89b12d986ec49116df2e437f0f9a0d54551aea386e20",
+      "normalizedEqual": true
+    },
+    {
+      "path": "supabase/functions/resolve-battle/raid-room-route.ts",
+      "productionSha256": null,
+      "candidateSha256": "e4ff29fb5e82ae6b461c982a82d8e63a7aaceaeab315d9ee478d4d18913c7872",
+      "normalizedEqual": false
+    }
+  ]
+}

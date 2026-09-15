@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { beginActionPerformance } from "@/utils/actionPerformance";
 import { traceTutorialJourney } from "@/utils/tutorialJourneyTrace";
@@ -21,6 +21,9 @@ export function usePatrol(
   invalidatePatrolBootstrap: () => void
 ) {
   const [selectedCourse, setSelectedCourse] = useState<string>("e1e1e1e1-e1e1-e1e1-e1e1-e1e1e1e1e1e1");
+  const [questSelectionRequest, setQuestSelectionRequest] = useState<{ courseId: string; revision: number } | null>(null);
+  useEffect(() => { setQuestSelectionRequest(null); }, [session?.user?.id]);
+  const requestQuestSelection = (courseId: string | null) => setQuestSelectionRequest(previous => courseId ? ({ courseId, revision: (previous?.revision || 0) + 1 }) : null);
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [selectedPatrolMember, setSelectedPatrolMember] = useState<string | null>(null);
   const [dailyCashSkips, setDailyCashSkips] = useState<number>(0);
@@ -37,6 +40,9 @@ export function usePatrol(
     battle_resolved?: boolean;
     battle_result?: "VICTORY" | "DEFEAT" | null;
     rewards_accrued?: any;
+    encounterSnapshot?: any;
+    hometownBonusSnapshot?: any;
+    baseCashSnapshot?: number;
     started_at?: string;
     expires_at?: string;
   }>>([]);
@@ -68,6 +74,20 @@ export function usePatrol(
     setDispatchLoading(false);
   };
 
+  const fetchPatrolEncounterSnapshot = async (patrolId: string) => {
+    const { data, error } = await supabase
+      .from("user_patrols")
+      .select("encounter_snapshot")
+      .eq("id", patrolId)
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+    if (error) {
+      console.warn("Quest encounter projection refresh failed:", error.message);
+      return null;
+    }
+    return data?.encounter_snapshot ?? null;
+  };
+
   const recoverCommittedTutorialDispatch = async (courseId: string, characterId: string, ownedCharacterId: string | null) => {
     const { data: resumedStep, error: resumeError } = await supabase.rpc("advance_tutorial_progress", {
       p_expected_step: "DISPATCH",
@@ -91,22 +111,22 @@ export function usePatrol(
   };
 
   const handleStartPatrol = async () => {
-    if (!session || !selectedCourse) return;
+    if (!session || !selectedCourse) return false;
     const course = patrolCourses.find(c => c.id === selectedCourse);
-    if (!course) return;
+    if (!course) return false;
 
     if (vitality < course.cost_vitality) {
       setErrorMessage("スタミナが不足しています。");
-      return;
+      return false;
     }
     if (!selectedPatrolMember) {
-      setErrorMessage("派遣するメンバーを選択してください。");
-      return;
+      setErrorMessage("探索するメンバーを選択してください。");
+      return false;
     }
 
     if (activePatrols.length >= 5) {
       setErrorMessage("出撃枠が上限（5枠）に達しています。");
-      return;
+      return false;
     }
 
     const selectedOwnedCharacterId = getUserCharactersDbList().find(
@@ -163,6 +183,11 @@ export function usePatrol(
       if (res.data?.error) throw new Error(res.data.error);
       actionPerformance.mark("response");
 
+      // The server creates the per-dispatch Canonical enemy party in the
+      // user_patrols insert trigger. Read that owner projection narrowly so a
+      // subsequent speed-up does not wait for the broad application bootstrap.
+      const encounterSnapshot = await fetchPatrolEncounterSnapshot(res.data.patrol_id);
+
       const remainingVitality = Number(res.data?.remaining_vitality);
       if (Number.isFinite(remainingVitality)) setVitality(remainingVitality);
       else setVitality(prev => prev - course.cost_vitality);
@@ -177,6 +202,9 @@ export function usePatrol(
         has_battle_event: res.data.has_battle,
         battle_resolved: false,
         battle_result: null,
+        encounterSnapshot,
+        hometownBonusSnapshot: res.data.hometown_bonus_snapshot,
+        baseCashSnapshot: res.data.base_cash_snapshot,
         started_at: startedAt.toISOString(),
         expires_at: expiresAt.toISOString()
       };
@@ -207,16 +235,22 @@ export function usePatrol(
       });
       actionPerformance.mark("state_update");
       actionPerformance.markVisualReady();
+      return String(res.data.patrol_id);
     } catch (err: any) {
       traceTutorialJourney("dispatch_rejected", { reason: err?.message || String(err) });
       console.warn(err.message);
       setErrorMessage(`クエストを開始できませんでした。${err.message ? `（${err.message}）` : ""}`);
+      return false;
     } finally {
       endMutation();
     }
   };
 
-  const transitionTutorialQuestToBattle = async (patrolId: string, authoritativeStep?: string | null) => {
+  const transitionTutorialQuestToBattle = async (
+    patrolId: string,
+    authoritativeStep?: string | null,
+    encounterSnapshot?: unknown,
+  ) => {
     if (!session) return false;
     const existingOwner = tutorialCompletionOwnerRef.current;
     if (existingOwner?.patrolId === patrolId) {
@@ -245,16 +279,18 @@ export function usePatrol(
         if (nextTutorialStep !== "TUTORIAL_BATTLE") {
           throw new Error(`Unexpected tutorial quest completion state: ${String(nextTutorialStep)}`);
         }
-        // The speed-up operation owns the surface until the authoritative
-        // patrol projection is ready. Releasing here used to expose the stale
-        // dispatch surface for one interaction window on mobile Safari.
+        // The instant-completion RPC has already committed both the patrol and
+        // tutorial step. Project that authoritative result immediately; a
+        // broad bootstrap refresh must not keep the speed-up CTA locked.
         invalidatePatrolBootstrap();
-        await syncBootstrapData(session.user.id);
         setActivePatrols((current) => current.map((entry) => entry.id === patrolId
-          ? { ...entry, status: "CLAIMABLE", secondsLeft: 0, expires_at: new Date().toISOString() }
+          ? { ...entry, encounterSnapshot, status: "CLAIMABLE", secondsLeft: 0, expires_at: new Date().toISOString() }
           : entry));
         setTutorialStep("TUTORIAL_BATTLE");
         owner.status = "SUCCESS";
+        void syncBootstrapData(session.user.id).catch((bootstrapError) => {
+          console.warn("Tutorial quest completion refresh failed:", bootstrapError);
+        });
         return true;
       } catch (error: any) {
         owner.status = "FAILED";
@@ -316,14 +352,20 @@ export function usePatrol(
         if (Number.isFinite(Number(data.free_skips_remaining))) setDailyCashSkips(5 - Number(data.free_skips_remaining));
         if (Number.isFinite(Number(data.paid_skips_remaining))) setDailyPaidSkips(10 - Number(data.paid_skips_remaining));
         let nextTutorialStep = data.tutorial_step;
+        const encounterSnapshot = targetPatrol.encounterSnapshot
+          ?? await fetchPatrolEncounterSnapshot(patrolId);
         if (currency === "FREE_TUTORIAL") {
-          const transitioned = await transitionTutorialQuestToBattle(patrolId, nextTutorialStep);
+          const transitioned = await transitionTutorialQuestToBattle(
+            patrolId,
+            nextTutorialStep,
+            encounterSnapshot,
+          );
           if (!transitioned) return false;
           nextTutorialStep = "TUTORIAL_BATTLE";
         } else {
           invalidatePatrolBootstrap();
           setActivePatrols((current) => current.map((entry) => entry.id === patrolId
-            ? { ...entry, status: "CLAIMABLE", secondsLeft: 0, expires_at: new Date().toISOString() }
+            ? { ...entry, encounterSnapshot, status: "CLAIMABLE", secondsLeft: 0, expires_at: new Date().toISOString() }
             : entry));
           void syncBootstrapData(session.user.id).catch((bootstrapError) => {
             console.warn("Patrol bootstrap refresh failed:", bootstrapError);
@@ -351,17 +393,31 @@ export function usePatrol(
     return false;
   };
 
-  const handleClaimRewards = async (patrolId: string, options?: { isTutorialReward?: boolean }) => {
+  const handleClaimRewards = async (patrolId: string, options?: { isTutorialReward?: boolean; suppressResultModal?: boolean }) => {
     const targetPatrol = activePatrols.find(p => p.id === patrolId);
     if (!session || !targetPatrol) return false;
 
     if (!beginMutation()) return false;
-    playCyberSe("gacha");
     try {
       const res = await supabase.rpc("claim_patrol_rewards", { p_patrol_id: patrolId });
 
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
+      // A defeat still needs server settlement to release the dispatched
+      // character, but it is not a clear and must not become a reward surface.
+      // Use the RPC outcome rather than the potentially stale patrol projection.
+      if (res.data?.outcome === "DEFEAT") {
+        invalidatePatrolBootstrap();
+        setActivePatrols((current) => current.filter((entry) => entry.id !== patrolId));
+        setHasActivePatrolBattle((current) => targetPatrol.has_battle_event ? false : current);
+        setLastPatrolRewards(null);
+        setShowPatrolRewardModal(false);
+        await syncBootstrapData(session.user.id).catch((refreshError) => {
+          console.warn("Patrol post-defeat refresh failed:", refreshError);
+        });
+        return true;
+      }
+      playCyberSe("gacha");
       const awardedItems = Array.isArray(res.data?.items) ? res.data.items : [];
       const nextLevel = Number(res.data?.level);
       const nextXp = Number(res.data?.current_xp);
@@ -375,9 +431,11 @@ export function usePatrol(
 
       const rewardSummary = {
         patrolId,
+        courseId: targetPatrol.courseId,
+        awardedItems,
         isTutorialReward: options?.isTutorialReward === true,
         courseName: res.data?.course_name || "クエスト",
-        baseCash: Number(res.data?.cash || 0),
+        baseCash: Number(res.data?.base_cash ?? res.data?.cash ?? 0),
         baseXp: Number(res.data?.xp || 0),
         levelBonusPercent: 0,
         levelBonusCash: 0,
@@ -387,7 +445,7 @@ export function usePatrol(
         dropItemQty: Number(awardedItems[0]?.quantity || 0),
         gearDropped: false,
         hasBattle: Boolean(targetPatrol.has_battle_event),
-        battleVictory: targetPatrol.battle_result === "VICTORY",
+        battleVictory: res.data?.outcome === "VICTORY" || (res.data?.outcome == null && targetPatrol.battle_result === "VICTORY"),
         battleCashBonus: 0,
         battleXpBonus: 0,
         battleRewardItemName: "",
@@ -398,8 +456,17 @@ export function usePatrol(
       };
 
       setLastPatrolRewards(rewardSummary);
-      setShowPatrolRewardModal(true);
-      void Promise.allSettled([
+
+      // The claim is authoritative at this point. Remove the completed quest
+      // from the local projection before the battle result releases its screen;
+      // otherwise the Quest tab can briefly render the same patrol as
+      // CLAIMABLE and expose a second "報酬獲得" action until bootstrap catches
+      // up. Non-battle claims still keep their reward modal above the list.
+      invalidatePatrolBootstrap();
+      setActivePatrols((current) => current.filter((entry) => entry.id !== patrolId));
+      setHasActivePatrolBattle((current) => targetPatrol.has_battle_event ? false : current);
+
+      await Promise.allSettled([
         syncBootstrapData(session.user.id),
         addGuildXpAndContributionByAction("QUEST", patrolId),
       ]).then((results) => {
@@ -407,6 +474,7 @@ export function usePatrol(
           if (result.status === "rejected") console.warn("Patrol post-claim refresh failed:", result.reason);
         });
       });
+      if (!options?.suppressResultModal) setShowPatrolRewardModal(true);
       return true;
     } catch (err: any) {
       traceTutorialJourney("speed_up_exception", { patrolId, reason: err?.message || String(err) });
@@ -429,6 +497,7 @@ export function usePatrol(
     selectedPatrolMember, setSelectedPatrolMember,
     dailyCashSkips, setDailyCashSkips, dailyPaidSkips, setDailyPaidSkips,
     dailyCashSkipsResetDate, setDailyCashSkipsResetDate,
+    questSelectionRequest, requestQuestSelection,
     activePatrols, setActivePatrols,
     patrolLogs, setPatrolLogs,
     patrolCourses, setPatrolCourses,

@@ -1,0 +1,83 @@
+{
+  "at": "2026-09-09T12:00:52.797Z",
+  "value": {
+    "screen": "R0908R01\nTRIBE R0908Guild01\nLv.5 · EXP 0/300\n総合力\n90,884\nMENU\n☰\n9\n2,000\n170\n⚡\n100/100\nレイド\nトップへ\n更新\n初級\n渋谷\nハイスピード・スターズ\n挑戦者\nR0908N01\nR0908Guild01\nあなた\n救援参加\n残HP\n100%\n開催中\n27,989,136 / 28,000,000\n残り 19時間5分\n期限 9/10 16:05 JST\n3人\n登録参加者\n敵情報\n参加者\n報酬\nあなたの貢献\n貢献ダメージ\n未確認\n戦闘回数\n0戦\n\n参加済み\n\n出撃時に編成を確認します。\n\n出撃準備\n救援状況\n\n救援参加：0戦 ・ 貢献ダメージ 0\n\n救援情報を更新\nマイページ\nコミュニティ\n2\nキャラ\nガチャ\nFREE\nショップ\n準備中",
+    "calls": [
+      {
+        "role": "rescue",
+        "rpc": "list_raid_room_battle_recoveries_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "sync_active_users",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_briefing_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_display_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_rescue_status_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "join_raid_room_rescue_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_briefing_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_participants_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_display_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "get_raid_room_rescue_status_v1",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "sync_and_recover_vitality_and_pvp_points",
+        "status": 200
+      },
+      {
+        "role": "rescue",
+        "rpc": "sync_active_users",
+        "status": 200
+      }
+    ]
+  }
+}

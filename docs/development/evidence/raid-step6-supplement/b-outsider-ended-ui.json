@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-09T07:33:34.422Z",
+  "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+  "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda",
+  "text": "初級\n渋谷\nハイスピード・スターズ\n主催者\nR0908H01\nR0908Guild01\nあなた\n未参加\n残HP\n0%\n討伐済み\n0 / 28,000,000\n討伐済み\n期限 9/10 14:15 JST\n3人\n登録参加者\n敵情報\n参加者\n報酬\n\n参加者の詳細は参戦後に確認できます。\n\n参加する\n\n参加条件を満たしているか確認してください。\n\n救援状況\n\n救援依頼は主催者が送信します。\n\n救援情報を更新",
+  "buttons": [
+    {
+      "text": "敵情報",
+      "disabled": false
+    },
+    {
+      "text": "参加者",
+      "disabled": true
+    },
+    {
+      "text": "報酬",
+      "disabled": false
+    },
+    {
+      "text": "参加する",
+      "disabled": true
+    },
+    {
+      "text": "救援情報を更新",
+      "disabled": false
+    }
+  ]
+}

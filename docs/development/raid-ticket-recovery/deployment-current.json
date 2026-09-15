@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-09T18:28:41.269Z",
+  "id": "dpl_9imw6iSPPMz1jk25tu6oCRUygm5K",
+  "url": "tribe-neon-qtzy171dr-kiyoshi-kitamura.vercel.app",
+  "readyState": "READY",
+  "source": "e4edeadefac27371a532740b42189cc166703a5e",
+  "target": "production",
+  "alias": [],
+  "automaticAliases": [
+    "tribe-neon-kiyoshi-kitamura.vercel.app"
+  ],
+  "changes": [
+    {
+      "alias": "tribe-neon.com",
+      "deploymentId": "dpl_9imw6iSPPMz1jk25tu6oCRUygm5K"
+    },
+    {
+      "alias": "www.tribe-neon.com",
+      "deploymentId": "dpl_9imw6iSPPMz1jk25tu6oCRUygm5K"
+    }
+  ],
+  "removed": []
+}

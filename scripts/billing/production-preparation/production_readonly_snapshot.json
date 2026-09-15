@@ -1,0 +1,685 @@
+{
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_all_presents()\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_user_id uuid := auth.uid();\n  v_present public.presents%ROWTYPE;\n  v_count integer := 0;\nBEGIN\n  IF v_user_id IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;\n  FOR v_present IN\n    SELECT * FROM public.presents\n    WHERE user_id = v_user_id\n      AND status = 'UNCLAIMED'\n      AND (expire_at IS NULL OR expire_at > clock_timestamp())\n    ORDER BY id\n    FOR UPDATE\n  LOOP\n    PERFORM public.grant_present_payload(v_user_id, v_present.item_id, v_present.quantity);\n    UPDATE public.presents\n    SET status = 'CLAIMED', claimed_at = clock_timestamp()\n    WHERE id = v_present.id;\n    v_count := v_count + 1;\n  END LOOP;\n  RETURN jsonb_build_object('status', 'success', 'claimed_count', v_count);\nEND;\n$function$\n",
+      "md5": "4d25888ddccc3571bea583a0b4a4e188",
+      "signature": "claim_all_presents()"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_all_presents(p_user_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE v_present public.presents%ROWTYPE; v_count INTEGER := 0;\nBEGIN\n  IF auth.uid() IS NULL OR auth.uid() <> p_user_id THEN RAISE EXCEPTION 'not authorized'; END IF;\n  FOR v_present IN SELECT * FROM public.presents WHERE user_id = p_user_id AND status = 'UNCLAIMED' FOR UPDATE LOOP\n    IF v_present.item_id = 'CASH' THEN\n      UPDATE public.users SET cash = cash + v_present.quantity WHERE id = p_user_id;\n    ELSIF v_present.item_id IN ('DIA', 'DIAMOND') THEN\n      UPDATE public.users SET neon_diamonds = neon_diamonds + v_present.quantity WHERE id = p_user_id;\n    ELSIF v_present.item_id LIKE 'EQUIP_%' THEN\n      INSERT INTO public.user_equipments (user_id, equipment_id, equipment_master_id, level, plus_val)\n      VALUES (p_user_id, v_present.item_id, v_present.item_id, 1, 0);\n    ELSE\n      INSERT INTO public.user_items (user_id, item_id, quantity) VALUES (p_user_id, v_present.item_id, v_present.quantity)\n      ON CONFLICT (user_id, item_id) DO UPDATE SET quantity = public.user_items.quantity + EXCLUDED.quantity;\n    END IF;\n    UPDATE public.presents SET status = 'CLAIMED', claimed_at = now() WHERE id = v_present.id;\n    v_count := v_count + 1;\n  END LOOP;\n  RETURN jsonb_build_object('status', 'success', 'claimed_count', v_count);\nEND;\n$function$\n",
+      "md5": "b627add278fa3f93e72f7c9574aa9e95",
+      "signature": "claim_all_presents(uuid)"
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_present(p_present_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_user_id uuid := auth.uid();\n  v_present public.presents%ROWTYPE;\nBEGIN\n  IF v_user_id IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;\n  SELECT * INTO v_present\n  FROM public.presents\n  WHERE id = p_present_id\n    AND user_id = v_user_id\n    AND status = 'UNCLAIMED'\n    AND (expire_at IS NULL OR expire_at > clock_timestamp())\n  FOR UPDATE;\n  IF NOT FOUND THEN RAISE EXCEPTION 'Present is not claimable'; END IF;\n\n  PERFORM public.grant_present_payload(v_user_id, v_present.item_id, v_present.quantity);\n  UPDATE public.presents\n  SET status = 'CLAIMED', claimed_at = clock_timestamp()\n  WHERE id = v_present.id;\n  RETURN jsonb_build_object('status', 'success', 'present_id', v_present.id);\nEND;\n$function$\n",
+      "md5": "087cc231b3713064f63d6d82b4579738",
+      "signature": "claim_present(uuid)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_present(p_user_id uuid, p_present_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE v_present public.presents%ROWTYPE;\nBEGIN\n  IF auth.uid() IS NULL OR auth.uid() <> p_user_id THEN RAISE EXCEPTION 'not authorized'; END IF;\n  SELECT * INTO v_present FROM public.presents WHERE id = p_present_id AND user_id = p_user_id AND status = 'UNCLAIMED' FOR UPDATE;\n  IF NOT FOUND THEN RETURN jsonb_build_object('error', 'present not found or already claimed'); END IF;\n  IF v_present.item_id = 'CASH' THEN\n    UPDATE public.users SET cash = cash + v_present.quantity WHERE id = p_user_id;\n  ELSIF v_present.item_id IN ('DIA', 'DIAMOND') THEN\n    UPDATE public.users SET neon_diamonds = neon_diamonds + v_present.quantity WHERE id = p_user_id;\n  ELSIF v_present.item_id LIKE 'EQUIP_%' THEN\n    INSERT INTO public.user_equipments (user_id, equipment_id, equipment_master_id, level, plus_val)\n    VALUES (p_user_id, v_present.item_id, v_present.item_id, 1, 0);\n  ELSE\n    INSERT INTO public.user_items (user_id, item_id, quantity) VALUES (p_user_id, v_present.item_id, v_present.quantity)\n    ON CONFLICT (user_id, item_id) DO UPDATE SET quantity = public.user_items.quantity + EXCLUDED.quantity;\n  END IF;\n  UPDATE public.presents SET status = 'CLAIMED', claimed_at = now() WHERE id = p_present_id;\n  RETURN jsonb_build_object('status', 'success');\nEND;\n$function$\n",
+      "md5": "d5b68be10a35dc997b988ac0c7ab3b7d",
+      "signature": "claim_present(uuid,uuid)"
+    }
+  ],
+  "migrations": null,
+  "products": null,
+  "triggers": null,
+  "schema": {
+    "tables": null,
+    "columns": [
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "payment_transactions",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "payment_transactions",
+        "column_name": "user_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "payment_transactions",
+        "column_name": "product_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "payment_transactions",
+        "column_name": "amount",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "payment_transactions",
+        "column_name": "currency",
+        "is_nullable": "YES",
+        "column_default": "'JPY'::text",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "payment_transactions",
+        "column_name": "status",
+        "is_nullable": "YES",
+        "column_default": "'COMPLETED'::text",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "payment_transactions",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "presents",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "presents",
+        "column_name": "user_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "item_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "presents",
+        "column_name": "quantity",
+        "is_nullable": "YES",
+        "column_default": "1",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "message",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "status",
+        "is_nullable": "YES",
+        "column_default": "'UNCLAIMED'::text",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "expire_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 8
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "sent_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 9
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "claimed_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 10
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "source_kind",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 11
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "source_key",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 12
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "presents",
+        "column_name": "source_metadata",
+        "is_nullable": "NO",
+        "column_default": "'{}'::jsonb",
+        "ordinal_position": 13
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_items",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_items",
+        "column_name": "user_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "user_items",
+        "column_name": "item_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "user_items",
+        "column_name": "quantity",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "user_items",
+        "column_name": "updated_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_shop_purchases",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_shop_purchases",
+        "column_name": "user_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "user_shop_purchases",
+        "column_name": "product_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "user_shop_purchases",
+        "column_name": "purchase_count",
+        "is_nullable": "NO",
+        "column_default": "1",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "user_shop_purchases",
+        "column_name": "last_purchased_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "user_shop_purchases",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "users",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": "'半グレの首領'::text",
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "bio",
+        "is_nullable": "YES",
+        "column_default": "''::text",
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "avatar_url",
+        "is_nullable": "YES",
+        "column_default": "'/reiji_transparent_asset.png'::text",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "current_base_id",
+        "is_nullable": "YES",
+        "column_default": "'shinjuku'::text",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "level",
+        "is_nullable": "YES",
+        "column_default": "1",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "xp",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "int8",
+        "data_type": "bigint",
+        "table_name": "users",
+        "column_name": "cash",
+        "is_nullable": "YES",
+        "column_default": "2600",
+        "ordinal_position": 8
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "neon_diamonds",
+        "is_nullable": "YES",
+        "column_default": "200",
+        "ordinal_position": 9
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "vitality",
+        "is_nullable": "YES",
+        "column_default": "100",
+        "ordinal_position": 10
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "pvp_points",
+        "is_nullable": "NO",
+        "column_default": "5",
+        "ordinal_position": 11
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "pvp_points_last_recovered_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 12
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "favorite_character_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 13
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "title_equipped",
+        "is_nullable": "YES",
+        "column_default": "'半グレの首領'::text",
+        "ordinal_position": 14
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "equipped_background",
+        "is_nullable": "YES",
+        "column_default": "'/bg/bg_base_neontower.png'::text",
+        "ordinal_position": 15
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "equipped_front_effect",
+        "is_nullable": "YES",
+        "column_default": "'none'::text",
+        "ordinal_position": 16
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "selected_bg_mode",
+        "is_nullable": "YES",
+        "column_default": "'NEON_TOWER'::text",
+        "ordinal_position": 17
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "interior_item",
+        "is_nullable": "YES",
+        "column_default": "'none'::text",
+        "ordinal_position": 18
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "last_guild_left_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 19
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "gift_code",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 20
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "daily_cash_skips_count",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 21
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "users",
+        "column_name": "sound_settings",
+        "is_nullable": "YES",
+        "column_default": "'{\"se\": true, \"bgm\": true}'::jsonb",
+        "ordinal_position": 22
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 23
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "raid_attempts_today",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 24
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "raid_attempts_reset_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 25
+      },
+      {
+        "udt_name": "bool",
+        "data_type": "boolean",
+        "table_name": "users",
+        "column_name": "has_shown_guild_dialog",
+        "is_nullable": "YES",
+        "column_default": "false",
+        "ordinal_position": 26
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "last_active_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 27
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "last_username_changed_on",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 28
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "last_bio_changed_on",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 29
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "users",
+        "column_name": "guild_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 30
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "diamonds",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 31
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "vitality_last_recovered_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 32
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "last_login_date",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 33
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "updated_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 34
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "daily_cash_skips_reset_date",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 35
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "raid_points",
+        "is_nullable": "NO",
+        "column_default": "5",
+        "ordinal_position": 36
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "raid_points_last_recovered_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 37
+      },
+      {
+        "udt_name": "bool",
+        "data_type": "boolean",
+        "table_name": "users",
+        "column_name": "raid_free_entry_consumed",
+        "is_nullable": "NO",
+        "column_default": "false",
+        "ordinal_position": 38
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "quest_free_skips_count",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 39
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "quest_paid_skips_count",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 40
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "quest_skips_reset_date",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 41
+      }
+    ],
+    "constraints": null
+  }
+}

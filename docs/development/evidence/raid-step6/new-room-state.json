@@ -1,0 +1,136 @@
+{
+  "createRequest": "15da97de-6b42-42f2-98e8-13b4b507d12e",
+  "rescueRequest": "6c98c412-8cf0-4924-8aad-d017cb8e919c",
+  "variant": "RAID_SHIBUYA_V1",
+  "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+  "ownerId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+  "room": {
+    "hp": {
+      "value": {
+        "max": 28000000,
+        "current": 28000000
+      },
+      "status": "available"
+    },
+    "owner": {
+      "value": {
+        "name": "R0908H01",
+        "userId": "fadc944c-0b15-472c-be4d-305c26d8163f",
+        "leaderIconUrl": {
+          "status": "unknown"
+        }
+      },
+      "status": "available"
+    },
+    "state": {
+      "value": "active",
+      "status": "available"
+    },
+    "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "endedAt": {
+      "value": null,
+      "status": "available"
+    },
+    "createdAt": {
+      "value": "2026-09-09T05:15:50.362999+00:00",
+      "status": "available"
+    },
+    "expiresAt": {
+      "value": "2026-09-10T05:15:50.362999+00:00",
+      "status": "available"
+    },
+    "difficultyId": "beginner",
+    "participantCount": {
+      "value": 1,
+      "status": "available"
+    },
+    "serverEligibility": {
+      "status": "unknown"
+    }
+  },
+  "normalMembership": {
+    "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "membershipStatus": "joined"
+  },
+  "publication": {
+    "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "requestId": "6c98c412-8cf0-4924-8aad-d017cb8e919c",
+    "guildCount": 1,
+    "publications": [
+      {
+        "channel": "ACTIVITY",
+        "guildId": null,
+        "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda"
+      },
+      {
+        "channel": "GUILD",
+        "guildId": "d42ae136-03b9-4591-b5c4-ede0ab9c2e50",
+        "rescueId": "86d00b65-f50e-44b3-9f79-40f6606e9075"
+      }
+    ],
+    "activityCount": 1,
+    "maxPerChannel": 3
+  },
+  "rescueId": "4f939109-80c9-412d-a45d-4f577c64ccda",
+  "rescueMembership": {
+    "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+    "viaRescue": true,
+    "membershipStatus": "joined"
+  },
+  "displays": {
+    "host": {
+      "membership": "owner",
+      "briefing": {
+        "baseId": "shibuya",
+        "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "bossName": "ハイスピード・スターズ",
+        "raidVariantId": "RAID_SHIBUYA_V1",
+        "joinEligibility": {
+          "reason": "no_power_restriction",
+          "status": "passed",
+          "actualPower": 74466,
+          "minimumPower": null
+        },
+        "membershipStatus": "joined",
+        "battleStartEnabled": true,
+        "raidBossInstanceId": "2aec4aba-e56b-4e71-bbdf-f08071ec3fa4"
+      }
+    },
+    "normal": {
+      "membership": "member",
+      "briefing": {
+        "baseId": "shibuya",
+        "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "bossName": "ハイスピード・スターズ",
+        "raidVariantId": "RAID_SHIBUYA_V1",
+        "joinEligibility": {
+          "reason": "no_power_restriction",
+          "status": "passed",
+          "actualPower": 78228,
+          "minimumPower": null
+        },
+        "membershipStatus": "joined",
+        "battleStartEnabled": true,
+        "raidBossInstanceId": "2aec4aba-e56b-4e71-bbdf-f08071ec3fa4"
+      }
+    },
+    "rescue": {
+      "membership": "rescue",
+      "briefing": {
+        "baseId": "shibuya",
+        "roomId": "a6940cc4-12eb-4c64-ba80-af3430134e96",
+        "bossName": "ハイスピード・スターズ",
+        "raidVariantId": "RAID_SHIBUYA_V1",
+        "joinEligibility": {
+          "reason": "no_power_restriction",
+          "status": "passed",
+          "actualPower": 90884,
+          "minimumPower": null
+        },
+        "membershipStatus": "joined",
+        "battleStartEnabled": true,
+        "raidBossInstanceId": "2aec4aba-e56b-4e71-bbdf-f08071ec3fa4"
+      }
+    }
+  }
+}

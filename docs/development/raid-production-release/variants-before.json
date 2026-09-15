@@ -1,0 +1,132 @@
+[
+  {
+    "variants": [
+      {
+        "atk": 8400,
+        "def": 6500,
+        "spd": 430,
+        "max_hp": 30000000,
+        "area_id": "AKIHABARA",
+        "version": "2026-08-30",
+        "raid_name": "グリッチ・コード",
+        "raid_variant_id": "RAID_AKIHABARA_V1",
+        "member_character_ids": [
+          "char_karen_01",
+          "char_miyabi_01",
+          "char_alice_01",
+          "char_rui_01",
+          "char_maya_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8200,
+        "def": 8200,
+        "spd": 340,
+        "max_hp": 36000000,
+        "area_id": "IKEBUKURO",
+        "version": "2026-08-30",
+        "raid_name": "アイアンウォール",
+        "raid_variant_id": "RAID_IKEBUKURO_V1",
+        "member_character_ids": [
+          "char_koharu_01",
+          "char_takeshi_01",
+          "char_momoko_01",
+          "char_riki_01",
+          "char_sakura_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 10500,
+        "def": 6000,
+        "spd": 350,
+        "max_hp": 38000000,
+        "area_id": "KAWASAKI",
+        "version": "2026-08-30",
+        "raid_name": "ブレイクダウン",
+        "raid_variant_id": "RAID_KAWASAKI_V1",
+        "member_character_ids": [
+          "char_go_01",
+          "char_kengo_01",
+          "char_tetsu_01",
+          "char_lucas_01",
+          "char_riki_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8700,
+        "def": 7700,
+        "spd": 390,
+        "max_hp": 34000000,
+        "area_id": "ROPPONGI",
+        "version": "2026-08-30",
+        "raid_name": "ロイヤル・フラッシュ",
+        "raid_variant_id": "RAID_ROPPONGI_V1",
+        "member_character_ids": [
+          "char_kaede_01",
+          "char_taiga_01",
+          "char_maya_01",
+          "char_seiya_01",
+          "char_cecile_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8800,
+        "def": 5500,
+        "spd": 470,
+        "max_hp": 28000000,
+        "area_id": "SHIBUYA",
+        "version": "2026-08-30",
+        "raid_name": "ハイスピード・スターズ",
+        "raid_variant_id": "RAID_SHIBUYA_V1",
+        "member_character_ids": [
+          "char_ageha_01",
+          "char_leo_01",
+          "char_sora_01",
+          "char_reina_01",
+          "char_noa_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 9500,
+        "def": 6200,
+        "spd": 390,
+        "max_hp": 32000000,
+        "area_id": "SHINJUKU",
+        "version": "2026-08-30",
+        "raid_name": "キングス・クラウン",
+        "raid_variant_id": "RAID_SHINJUKU_V1",
+        "member_character_ids": [
+          "char_reiji_01",
+          "char_mio_01",
+          "char_takuro_01",
+          "char_leon_01",
+          "char_kageyama_01"
+        ],
+        "is_production_enabled": true
+      },
+      {
+        "atk": 8900,
+        "def": 7200,
+        "spd": 390,
+        "max_hp": 35000000,
+        "area_id": "YOKOHAMA",
+        "version": "2026-08-30",
+        "raid_name": "ブルー・レクイエム",
+        "raid_variant_id": "RAID_YOKOHAMA_V1",
+        "member_character_ids": [
+          "char_genji_01",
+          "char_long_01",
+          "char_sakura_01",
+          "char_cecile_01",
+          "char_taiga_01"
+        ],
+        "is_production_enabled": true
+      }
+    ]
+  }
+]

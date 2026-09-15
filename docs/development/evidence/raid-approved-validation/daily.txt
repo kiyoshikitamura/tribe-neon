@@ -1,0 +1,14 @@
+✔ 隔離PG実get_raid_top_v1出力→1RPC loader→実parser→実RaidTopの縦結合 (100.8027ms)
+✔ RPC例外/不正データを0件にしない (0.737ms)
+✔ Guild scope整合、顔6件、21件pageを拒否し未取得人物を固定値にしない (1.1997ms)
+✔ 既定hookは一括1RPCで取得し本人変更の旧応答を破棄、失敗とemptyを区別 (194.2703ms)
+✔ JST0時+100msを次回取得時刻とし独自抽選なし (0.3315ms)
+✔ 非表示からの復帰で再取得、ログアウト後は通信停止 (68.4214ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1076.9298

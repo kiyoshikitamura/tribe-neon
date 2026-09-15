@@ -1,0 +1,19 @@
+{
+  "commit": "e646751e2e846adacb72068d9815b48583a2d48f",
+  "driver": "docs/development/raid-room-step2/review-apply.psql",
+  "driver_sha256": "33f4853b53e2b4969953208b73fa4cbd8f2150d13ed264f7d57cc42d29891dea",
+  "expanded_sha256": "37c3921409108d200cb62ddb85301cce4ba1533d969df05c8484db25193d08b3",
+  "includes": [
+    "00-baseline-guard.sql",
+    "01-snapshot-dependency.sql",
+    "02-raid-delta.sql",
+    "04-postflight.sql"
+  ],
+  "transport": "Supabase execute_sql; psql unavailable; includes expanded without changing SQL order; one diagnostic SELECT appended before NOTIFY/ROLLBACK",
+  "terminal_statement": "ROLLBACK",
+  "excluded": [
+    "03-expiry-cron.sql",
+    "05-stop-new-operations.sql",
+    "06-test-account-classification.psql"
+  ]
+}

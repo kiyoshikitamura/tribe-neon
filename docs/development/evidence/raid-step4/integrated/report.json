@@ -1,0 +1,41 @@
+{
+  "report": [
+    {
+      "width": 375,
+      "height": 844,
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 430,
+      "height": 844,
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "width": 390,
+      "height": 600,
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    }
+  ],
+  "errors": [],
+  "paging": "PASS",
+  "selectDoesNotCreate": "PASS",
+  "explicitCreate": "PASS",
+  "canonicalSkills": "PASS"
+}

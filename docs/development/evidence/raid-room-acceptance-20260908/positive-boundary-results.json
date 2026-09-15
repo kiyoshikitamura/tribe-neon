@@ -1,0 +1,76 @@
+{
+  "engine": "PGlite 0.5.8 / local only",
+  "source": "Actual QA finalized battle rows, live function hashes matched",
+  "liveChanges": false,
+  "results": [
+    {
+      "name": "below",
+      "damage": 18515,
+      "threshold": 18516,
+      "gate": {
+        "clearGate": {
+          "status": "not_succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 18515,
+          "minimumContributionDamage": 18516
+        },
+        "finalizedBattles": 6,
+        "contributionDamage": 18515
+      },
+      "issue": 0,
+      "retry": 0,
+      "counts": {
+        "presents": 0,
+        "grants": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "equal",
+      "damage": 18515,
+      "threshold": 18515,
+      "gate": {
+        "clearGate": {
+          "status": "not_succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 18515,
+          "minimumContributionDamage": 18515
+        },
+        "finalizedBattles": 6,
+        "contributionDamage": 18515
+      },
+      "issue": 0,
+      "retry": 0,
+      "counts": {
+        "presents": 0,
+        "grants": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "above",
+      "damage": 18515,
+      "threshold": 18514,
+      "gate": {
+        "clearGate": {
+          "status": "succeeded",
+          "cleared": true,
+          "ruleVersion": 1,
+          "contributionDamage": 18515,
+          "minimumContributionDamage": 18514
+        },
+        "finalizedBattles": 6,
+        "contributionDamage": 18515
+      },
+      "issue": 1,
+      "retry": 0,
+      "counts": {
+        "presents": 1,
+        "grants": 1
+      },
+      "status": "PASS"
+    }
+  ]
+}

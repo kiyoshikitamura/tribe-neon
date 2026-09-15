@@ -1,42 +1,75 @@
 "use client";
+import GuildIdentity from "./profile/GuildIdentity";
 
 import React from "react";
+import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { supabase } from "@/utils/supabase";
-import { BASE_MAP_MASTER, getCanonicalBattleBackground } from "@/utils/game_constants";
+import { getCanonicalBattleAreaName, getCanonicalBattleBackground } from "@/utils/game_constants";
+import { preloadAsset } from "../lib/screenAssets";
 import { useGame } from "../context/GameContext";
 import { useScreenReadiness } from "../hooks/useScreenReadiness";
 import { SCREEN_ASSET_MANIFESTS } from "../lib/screenManifests";
 import Badge from "./ui/Badge";
 import CanonicalDialog from "./ui/CanonicalDialog";
+import GlobalInteractionBlocker from "./ui/GlobalInteractionBlocker";
 import HubPage from "./ui/HubPage";
 import OutlawButton from "./ui/OutlawButton";
 import OutlawCard from "./ui/OutlawCard";
-import RankPresentation from "./presentation/RankPresentation";
 import StatusMetric from "./presentation/StatusMetric";
+import RaidRoomConnectedBrowser from "./raid/RaidRoomConnectedBrowser";
+import type { RaidRoomBriefing } from "../../domain/raidRoomClient";
+import RaidEnemyRoster from "./raid/RaidEnemyRoster";
 import "./RaidTab.css";
 
-type RaidDialog = "shortage" | "recovery" | "recovery-error" | null;
+type RaidDialog = "shortage" | "recovery" | "recovery-error" | "battle-background-error" | null;
 
 export default function RaidTab() {
   const {
-    startCardBattle, playCyberSe, navigateTab, userLevel, raidPoints, raidFirstEntryFree,
+    activePlayerDetail, activeGuildDetail, showTribeChatPanel, fetchPlayerDetail, startCardBattle, prepareRaidRoomBattle, setGlobalInteractionBlocking, playCyberSe, userLevel, raidPoints, raidFirstEntryFree,
     setRaidPoints, setRaidFirstEntryFree, userGuildMember, fetchGuildDetail, session, syncBootstrapData,
-    raidTopRefreshRevision,
+    raidTopRefreshRevision, raidRoomReturnTarget, raidRoomActivityTracker, raidRescueTarget, setShowInboxPanel, setInboxPanelTab, setPresents, setPresentsPrefetched,
   } = useGame();
+  const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
+  const presentOwnerRef = React.useRef(session?.user?.id);
+  React.useLayoutEffect(() => { presentOwnerRef.current = session?.user?.id; }, [session?.user?.id]);
+  const openRescuePresents = async () => {
+    const userId = session?.user?.id;
+    if (!userId) throw new Error("ログインを確認してください。");
+    setGlobalInteractionBlocking(true);
+    try {
+      const { data, error } = await supabase.from("presents").select("*").eq("user_id", userId).order("sent_at", { ascending: false });
+      if (error || !Array.isArray(data)) throw new Error("プレゼントを取得できませんでした。");
+      if (presentOwnerRef.current !== userId) throw new Error("ログインが変更されました。");
+      setPresents(data.map(present => ({
+        id: String(present.id), title: present.message ? present.message.split(":")[0] : "配布アイテム",
+        desc: present.message ? present.message.split(":")[1] || present.message : "",
+        reward: `${canonicalItemName(present.item_id)} +${present.quantity}`, itemId: present.item_id, qty: present.quantity,
+        expireText: present.expire_at == null ? "期限なし" : Date.parse(present.expire_at) <= Date.now() ? "期限切れ" : `期限: ${new Date(present.expire_at).toLocaleString("ja-JP")}`,
+        status: present.status, loading: false,
+      })));
+      setPresentsPrefetched(true);
+      setInboxPanelTab("presents"); setShowInboxPanel(true);
+    } finally { setGlobalInteractionBlocking(false); }
+  };
   const readiness = useScreenReadiness({ assets: SCREEN_ASSET_MANIFESTS.raid });
   const [activeRaids, setActiveRaids] = React.useState<any[]>([]);
   const [selectedRaidId, setSelectedRaidId] = React.useState<string | null>(null);
-  const [selfRank, setSelfRank] = React.useState<any | null>(null);
+  const [selfContribution, setSelfContribution] = React.useState<number | null>(null);
   const [recommendedGuilds, setRecommendedGuilds] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [dialog, setDialog] = React.useState<RaidDialog>(null);
   const [recoveryLoading, setRecoveryLoading] = React.useState(false);
+  const recoveryInFlightRef = React.useRef(false);
+  const [recoveryRevision, setRecoveryRevision] = React.useState(0);
   const [raidTicketQuantity, setRaidTicketQuantity] = React.useState(0);
+  const [battleBackgroundLoading, setBattleBackgroundLoading] = React.useState(false);
   const [projectionRevision, setProjectionRevision] = React.useState(0);
   const [now, setNow] = React.useState(() => Date.now());
+  const battleEntryInFlightRef = React.useRef(false);
 
   const loadRaidTop = React.useCallback(async () => {
+    if (roomUiEnabled) return;
     setLoading(true);
     setErrorMessage("");
     const [{ data: raids, error: raidsError }, { data: attempt, error: attemptError }, { data: ticket }] = await Promise.all([
@@ -56,29 +89,31 @@ export default function RaidTab() {
     setRaidTicketQuantity(Number(ticket?.quantity || 0));
     setProjectionRevision((revision) => revision + 1);
     setLoading(false);
-  }, [session?.user?.id, setRaidFirstEntryFree, setRaidPoints]);
+  }, [roomUiEnabled, session?.user?.id, setRaidFirstEntryFree, setRaidPoints]);
 
   React.useEffect(() => { void loadRaidTop(); }, [loadRaidTop, raidTopRefreshRevision]);
   React.useEffect(() => { const timer = window.setInterval(() => setNow(Date.now()), 1000); return () => window.clearInterval(timer); }, []);
   React.useEffect(() => {
-    if (!selectedRaidId) { setSelfRank(null); return; }
+    setSelfContribution(null);
+    if (roomUiEnabled || !selectedRaidId || !session?.user?.id) return;
     let current = true;
-    void supabase.rpc("get_raid_rankings", { p_instance_id: selectedRaidId, p_limit: 100, p_offset: 0 }).then(({ data, error }) => {
-      if (current) setSelfRank(error ? null : data?.selfRank ?? null);
+    void supabase.rpc("get_my_raid_contribution_v1", { p_instance_id: selectedRaidId }).then(({ data, error }) => {
+      const contribution = Number(data?.contribution);
+      if (current) setSelfContribution(!error && data?.contribution != null && Number.isFinite(contribution) && contribution >= 0 ? contribution : null);
     });
     return () => { current = false; };
-  }, [projectionRevision, selectedRaidId]);
+  }, [roomUiEnabled, projectionRevision, selectedRaidId, session?.user?.id]);
   React.useEffect(() => {
-    if (userGuildMember) return;
+    if (roomUiEnabled || userGuildMember) return;
     void supabase.rpc("get_recommended_guilds", { p_limit: 3 }).then(({ data }) => { if (Array.isArray(data)) setRecommendedGuilds(data); });
-  }, [userGuildMember]);
+  }, [roomUiEnabled, userGuildMember]);
 
   const selectedRaid = activeRaids.find((raid) => raid.id === selectedRaidId) ?? activeRaids[0];
   const displayHp = Number(selectedRaid?.currentHp || 0);
   const displayMaxHp = Number(selectedRaid?.maxHp || 0);
   const displaySeconds = selectedRaid?.expiresAt ? Math.max(0, Math.floor((new Date(selectedRaid.expiresAt).getTime() - now) / 1000)) : 0;
   const hpPercent = displayMaxHp > 0 ? Math.max(0, Math.min(100, displayHp / displayMaxHp * 100)) : 0;
-  const baseName = BASE_MAP_MASTER.find((base) => base.id === selectedRaid?.baseId)?.name || selectedRaid?.baseId || "夜の街";
+  const baseName = getCanonicalBattleAreaName(selectedRaid?.baseId) || selectedRaid?.baseId || "夜の街";
   const isDefeated = Boolean(selectedRaid) && (displayHp <= 0 || selectedRaid.status === "DEFEATED");
   const isExpired = Boolean(selectedRaid) && displaySeconds <= 0;
   const canOpenBriefing = Boolean(selectedRaid?.id) && !isDefeated && !isExpired && userLevel >= 5;
@@ -89,52 +124,117 @@ export default function RaidTab() {
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const openBriefing = () => {
+  const openBriefing = async () => {
     playCyberSe("click");
     if (!raidFirstEntryFree && raidPoints <= 0) { setDialog("shortage"); return; }
-    if (!canOpenBriefing) return;
-    void startCardBattle("RAID", selectedRaid.bossName, selectedRaid.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, {
-      opponentLabel: selectedRaid.bossName,
-      opponentProfile: selectedRaid.profileType || "BOSS",
-      backgroundLabel: baseName,
-      backgroundPath: getCanonicalBattleBackground(selectedRaid.baseId),
-      opponentSkills: Array.isArray(selectedRaid.skillLoadout) ? selectedRaid.skillLoadout : [],
-    });
+    if (!canOpenBriefing || battleEntryInFlightRef.current) return;
+    battleEntryInFlightRef.current = true;
+    setBattleBackgroundLoading(true);
+    try {
+      const requestedBackground = getCanonicalBattleBackground(selectedRaid.baseId);
+      const background = requestedBackground
+        ? await preloadAsset({ src: requestedBackground, fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true })
+        : null;
+      if (!background?.resolvedSrc) {
+        setDialog("battle-background-error");
+        return;
+      }
+      await startCardBattle("RAID", selectedRaid.bossName, selectedRaid.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, {
+        opponentLabel: selectedRaid.bossName,
+        opponentProfile: selectedRaid.profileType || "BOSS",
+        backgroundLabel: baseName,
+        backgroundPath: background.resolvedSrc,
+        opponentSkills: Array.isArray(selectedRaid.skillLoadout) ? selectedRaid.skillLoadout : [],
+      });
+    } finally {
+      battleEntryInFlightRef.current = false;
+      setBattleBackgroundLoading(false);
+    }
   };
 
   const recoverRaidPoint = async () => {
-    if (recoveryLoading || !session?.user?.id) return;
+    const userId = session?.user?.id;
+    if (recoveryInFlightRef.current || !userId || raidTicketQuantity <= 0) return;
+    recoveryInFlightRef.current = true;
     setRecoveryLoading(true);
-    const { error } = await supabase.rpc("use_action_resource_ticket", { p_item_id: "RAID_POINT_TICKET" });
-    if (error) {
+    let recovered = false;
+    try {
+      const { data, error } = await supabase.rpc("use_action_resource_ticket", { p_item_id: "RAID_POINT_TICKET" });
+      if (presentOwnerRef.current !== userId) return;
+      if (error || data?.status !== "success") throw new Error("recovery failed");
+      recovered = true;
+      setRaidPoints(Number(data.points));
+      setRaidTicketQuantity(Number(data.quantity));
+      setDialog(null);
+      setRecoveryRevision(value => value + 1);
+      await syncBootstrapData(userId);
+      if (presentOwnerRef.current === userId) await loadRaidTop();
+    } catch {
+      if (!recovered && presentOwnerRef.current === userId) setDialog("recovery-error");
+    } finally {
+      recoveryInFlightRef.current = false;
       setRecoveryLoading(false);
-      setDialog("recovery-error");
-      return;
     }
-    await syncBootstrapData(session.user.id);
-    await loadRaidTop();
-    setRecoveryLoading(false);
-    setDialog(null);
+  };
+
+  const checkRoomEntryResource = async (): Promise<boolean> => {
+    const userId = session?.user?.id;
+    if (!userId) return false;
+    const { data: attempt, error: attemptError } = await supabase.rpc("get_current_raid_attempt_state");
+    if (presentOwnerRef.current !== userId) return false;
+    if (attemptError || !attempt || !Number.isFinite(Number(attempt.raidPoints))) throw new Error("RPを確認できませんでした。");
+    setRaidPoints(Number(attempt.raidPoints));
+    setRaidFirstEntryFree(Boolean(attempt.firstEntryFree));
+    if (!attempt.firstEntryFree && Number(attempt.raidPoints) <= 0) {
+      const { data: ticket, error: ticketError } = await supabase.from("user_items").select("quantity").eq("user_id", userId).eq("item_id", "RAID_POINT_TICKET").maybeSingle();
+      if (presentOwnerRef.current !== userId) return false;
+      if (ticketError) throw new Error("チケットを確認できませんでした。");
+      setRaidTicketQuantity(Number(ticket?.quantity || 0));
+      setDialog("recovery");
+      return false;
+    }
+    return true;
+  };
+
+  const openRoomBriefing = async (briefing: RaidRoomBriefing) => {
+    const background = await preloadAsset({ src: getCanonicalBattleBackground(briefing.baseId || "") || "/bg/bg_street_shinjuku.jpg", fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true });
+    if (!background.resolvedSrc) throw new Error("戦場の背景を取得できませんでした。");
+    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" }, checkRoomEntryResource);
   };
 
   return <>
     <HubPage className="raid-view" title="レイド" hideVisualHeader status={readiness.status} onRetry={readiness.retry}>
-      {loading ? <div className="raid-loading" role="status">レイド情報を取得中…</div> : errorMessage ? <OutlawCard className="raid-error"><p>{errorMessage}</p><OutlawButton variant="primary" onClick={() => void loadRaidTop()}>再読み込み</OutlawButton></OutlawCard> : activeRaids.length === 0 ? <OutlawCard className="raid-empty"><strong>現在開催中のレイドはありません</strong><p>次の開催情報が確定すると、ここに表示されます。</p></OutlawCard> : <>
-        <div className="raid-target-tabs" role="tablist" aria-label="レイド対象">{activeRaids.map((raid) => <button key={raid.id} role="tab" aria-selected={raid.id === selectedRaid?.id} className={raid.id === selectedRaid?.id ? "is-active" : ""} onClick={() => setSelectedRaidId(raid.id)}>{BASE_MAP_MASTER.find((base) => base.id === raid.baseId)?.name || raid.baseId}</button>)}</div>
+      {roomUiEnabled && <RaidRoomConnectedBrowser
+        key={`${session?.user?.id}:${raidRescueTarget?.revision ?? 0}`} rescueId={raidRescueTarget?.rescueId} userId={session?.user?.id}
+        rpcClient={supabase} onDirectReward={async () => { if (session?.user?.id) await syncBootstrapData(session.user.id); }} authorities={{ enableParticipation: true, enableCreation: true, enableRescue: true }}
+        activityTracker={raidRoomActivityTracker} refreshRevision={raidTopRefreshRevision + recoveryRevision}
+        returnRoomId={raidRoomReturnTarget?.userId === session?.user?.id ? raidRoomReturnTarget?.roomId : undefined}
+        onOpenPresents={openRescuePresents}
+        onOpenProfile={fetchPlayerDetail} profileOpen={!!(activePlayerDetail || activeGuildDetail || showTribeChatPanel)}
+        setInteractionBlocking={setGlobalInteractionBlocking} onBriefingReady={openRoomBriefing}
+        onBattleReady={() => { throw new Error("出撃準備から開始してください。"); }} />}
+      {!roomUiEnabled && (loading ? <div className="raid-loading" role="status" aria-label="レイド情報を取得中"><span className="spinner" aria-hidden="true" /></div> : errorMessage ? <OutlawCard className="raid-error"><p>{errorMessage}</p><OutlawButton variant="primary" onClick={() => void loadRaidTop()}>再読み込み</OutlawButton></OutlawCard> : activeRaids.length === 0 ? <OutlawCard className="raid-empty"><strong>現在開催中のレイドはありません</strong><p>次の開催情報が確定すると、ここに表示されます。</p></OutlawCard> : <>
+        <div className="raid-target-tabs" role="tablist" aria-label="レイド対象">{activeRaids.map((raid) => <button key={raid.id} role="tab" aria-selected={raid.id === selectedRaid?.id} className={raid.id === selectedRaid?.id ? "is-active" : ""} onClick={() => setSelectedRaidId(raid.id)}>{getCanonicalBattleAreaName(raid.baseId) || raid.baseId}</button>)}</div>
         <OutlawCard className={`raid-boss-hero ${isDefeated || isExpired ? "raid-boss-ended" : ""}`}>
-          <div className="raid-boss-stage"><div className="raid-boss-visual" role="img" aria-label={`${selectedRaid?.bossName || "レイドボス"} 画像準備中`}><span aria-hidden="true" /></div><div><span>RAID BOSS</span><strong>{selectedRaid?.bossName}</strong><small>Lv.{selectedRaid?.level || 1} ・ {baseName}</small></div><Badge tone={isDefeated || isExpired ? "neutral" : "danger"}>{isDefeated ? "討伐済み" : formatTime(displaySeconds)}</Badge></div>
-          <div className="raid-hp-heading"><span>BOSS HP</span><strong>{hpPercent.toFixed(1)}%</strong></div>
-          <div className="raid-hp-bar-container" role="meter" aria-label="ボス残りHP" aria-valuemin={0} aria-valuemax={displayMaxHp} aria-valuenow={displayHp}><div className="raid-hp-bar-fill" style={{ width: `${hpPercent}%` }} /><span className="raid-hp-text">{displayHp.toLocaleString()} / {displayMaxHp.toLocaleString()}</span></div>
-          <div className="raid-status-grid"><StatusMetric label="RAID POINT" value={raidFirstEntryFree ? "初回無料" : `${raidPoints} / 5`} /><StatusMetric label="CONTRIBUTION" value={Number(selfRank?.contribution || 0).toLocaleString()} /><StatusMetric label="RANK" value={<RankPresentation rank={selfRank?.rank_position} />} /></div>
-          <OutlawButton variant="primary" fullWidth onClick={openBriefing} disabled={!canOpenBriefing}>{userLevel < 5 ? "プレイヤーLv5以上で解放" : isDefeated ? "討伐済み" : isExpired ? "開催終了" : "挑戦する"}</OutlawButton>
+          <div className="raid-party-heading"><div><span>エネミーパーティ</span><strong>{selectedRaid?.bossName}</strong><small>Lv.{selectedRaid?.level || 1} ・ {baseName}</small></div><Badge tone={isDefeated || isExpired ? "neutral" : "danger"}>{isDefeated ? "討伐済み" : formatTime(displaySeconds)}</Badge></div>
+          <RaidEnemyRoster bossMasterId={selectedRaid?.bossMasterId} raidName={selectedRaid?.bossName} />
+          <div className="raid-hp-heading"><span>レイドHP</span><strong>{hpPercent.toFixed(1)}%</strong></div>
+          <div className="raid-hp-bar-container" role="meter" aria-label="レイド残りHP" aria-valuemin={0} aria-valuemax={displayMaxHp} aria-valuenow={displayHp}><div className="raid-hp-bar-fill" style={{ width: `${hpPercent}%` }} /><span className="raid-hp-text">{displayHp.toLocaleString()} / {displayMaxHp.toLocaleString()}</span></div>
+          <div className="raid-status-grid"><StatusMetric label="RAID POINT" value={raidFirstEntryFree ? "初回無料" : `${raidPoints} / 5`} /><StatusMetric label="CONTRIBUTION" value={selfContribution === null ? "—" : selfContribution.toLocaleString()} /></div>
+          <OutlawButton variant="primary" fullWidth onClick={() => void openBriefing()} disabled={!canOpenBriefing || battleBackgroundLoading} isLoading={battleBackgroundLoading} loadingLabel="">{userLevel < 5 ? "プレイヤーLv5以上で解放" : isDefeated ? "討伐済み" : isExpired ? "開催終了" : "挑戦する"}</OutlawButton>
           {!raidFirstEntryFree && <small className="raid-cost-copy">討伐開始時にRPを1消費 ・ 2時間ごとに1回復</small>}
         </OutlawCard>
-        <div className="raid-secondary-actions"><OutlawButton variant="secondary" onClick={() => { navigateTab("ranking", "raid"); playCyberSe("click"); }}>レイドランキング</OutlawButton><OutlawButton variant="secondary" onClick={() => void loadRaidTop()}>最新状態へ更新</OutlawButton></div>
-        {!userGuildMember && recommendedGuilds.length > 0 && <OutlawCard className="raid-guild-suggestion"><div className="upgrade-card-title">おすすめTRIBE</div><p>加入するとGuild Contributionへ参加できます。</p>{recommendedGuilds.map((guild) => <button key={guild.guild_id} className="sub-btn active-scale-effect" onClick={() => void fetchGuildDetail(guild.guild_id)}>{guild.name}<span>{guild.member_count}/{guild.member_limit}人</span></button>)}</OutlawCard>}
-      </>}
+        <div className="raid-secondary-actions"><OutlawButton variant="secondary" onClick={() => void loadRaidTop()}>最新状態へ更新</OutlawButton></div>
+        {!userGuildMember && recommendedGuilds.length > 0 && <OutlawCard className="raid-guild-suggestion"><div className="upgrade-card-title">おすすめTRIBE</div><p>ギルドで仲間とレイドに挑戦できます。</p>{recommendedGuilds.map((guild) => <button key={guild.guild_id} className="sub-btn active-scale-effect" onClick={() => void fetchGuildDetail(guild.guild_id)}><GuildIdentity guildId={guild.guild_id} name={guild.name} /><span>{guild.member_count}/{guild.member_limit}人</span></button>)}</OutlawCard>}
+      </>)}
     </HubPage>
     {dialog === "shortage" && <CanonicalDialog title="RPが不足しています" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }, { label: "回復する", semantic: "primary", onClick: () => setDialog("recovery") }]}>挑戦にはRPが1必要です。{`\n`}レイドチケットで1回復できます。</CanonicalDialog>}
-    {dialog === "recovery" && <CanonicalDialog title="RP回復" onClose={() => !recoveryLoading && setDialog(null)} actions={raidTicketQuantity > 0 ? [{ label: "キャンセル", semantic: "secondary", onClick: () => setDialog(null), disabled: recoveryLoading }, { label: recoveryLoading ? "使用中…" : "1枚使用", semantic: "primary", onClick: () => void recoverRaidPoint(), disabled: recoveryLoading }] : [{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
-    {dialog === "recovery-error" && <CanonicalDialog title="RPを回復できませんでした" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>時間をおいて、もう一度お試しください。</CanonicalDialog>}
+    {dialog === "recovery" && <CanonicalDialog title="レイドチケットで回復しますか？" onClose={() => !recoveryInFlightRef.current && setDialog(null)} actions={[
+      { label: "閉じる", semantic: "secondary", onClick: () => setDialog(null), disabled: recoveryLoading },
+      { label: recoveryLoading ? "回復中…" : "回復する", semantic: "primary", onClick: () => recoverRaidPoint(), disabled: recoveryLoading || raidTicketQuantity <= 0 },
+    ]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>1枚使用してRPを1回復します。</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
+    {dialog === "recovery-error" && <CanonicalDialog title="RPの回復結果を確認してください" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>回復結果を確認できませんでした。RPと所持枚数を確認するため、閉じて出撃準備を押し直してください。</CanonicalDialog>}
+    {dialog === "battle-background-error" && <CanonicalDialog title="戦場を準備できませんでした" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>通信状態を確認して、もう一度お試しください。</CanonicalDialog>}
+    <GlobalInteractionBlocker isBlocking={battleBackgroundLoading} />
   </>;
 }

@@ -1,5 +1,6 @@
 export { RAID_BOSS_ID, TEST_SKILL_ID, ENEMIES_MASTER } from "@/constants/enemies";
 import { CANONICAL_CHARACTERS } from "@/domain/gameplay/canonical/masters";
+import { CANONICAL_ACTION_RESOURCES } from "@/domain/gameplay/canonical/action_resources";
 import { CANONICAL_QUESTS } from "@/domain/gameplay/canonical/quests";
 
 export const CHARACTERS_MASTER = CANONICAL_CHARACTERS.map((character) => ({
@@ -22,7 +23,7 @@ export const CHARACTER_AWAKENING_MASTER = [
   { awakening_level: 5, required_cash: 50000, dupe_required: 1 },
 ] as const;
 
-export const VITALITY_MAX = 100;
+export const VITALITY_MAX = CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax;
 export const VITALITY_OVERFLOW_MAX = 500;
 export const VITALITY_RECOVERY_INTERVAL_SEC = 360; // 6分 = 360秒
 export const VITALITY_RECOVERY_AMOUNT = 1;
@@ -58,9 +59,26 @@ export const BASE_MAP_MASTER = [
   { id: "akihabara",  name: "秋葉原", rank: "B", rewardMultiplier: 1.0, dailyRankPt: 10, description: "ジャンク電子パーツとコンカフェ情報網の闇市。" }
 ];
 
+const CANONICAL_BATTLE_AREA_PRESENTATION = {
+  shinjuku: { name: "新宿", backgroundPath: "/bg/bg_street_shinjuku.jpg" },
+  shibuya: { name: "渋谷", backgroundPath: "/bg/bg_street_shibuya.jpg" },
+  ikebukuro: { name: "池袋", backgroundPath: "/bg/bg_street_ikebukuro.jpg" },
+  roppongi: { name: "六本木", backgroundPath: "/bg/bg_street_roppongi.jpg" },
+  akihabara: { name: "秋葉原", backgroundPath: "/bg/bg_street_akihabara.jpg" },
+  kawasaki: { name: "川崎", backgroundPath: "/bg/bg_street_kawasaki.jpg" },
+  yokohama: { name: "横浜", backgroundPath: "/bg/bg_street_yokohama.jpg" },
+} as const;
+
+function canonicalBattleAreaId(areaId: string | null | undefined) {
+  return String(areaId || "").trim().toLowerCase() as keyof typeof CANONICAL_BATTLE_AREA_PRESENTATION;
+}
+
+export function getCanonicalBattleAreaName(areaId: string | null | undefined): string | undefined {
+  return CANONICAL_BATTLE_AREA_PRESENTATION[canonicalBattleAreaId(areaId)]?.name;
+}
+
 export function getCanonicalBattleBackground(areaId: string | null | undefined): string | undefined {
-  const canonicalArea = BASE_MAP_MASTER.find((area) => area.id === areaId);
-  return canonicalArea ? `/bg/bg_street_${canonicalArea.id}.jpg` : undefined;
+  return CANONICAL_BATTLE_AREA_PRESENTATION[canonicalBattleAreaId(areaId)]?.backgroundPath;
 }
 
 export const GEAR_SLOTS_MASTER = [
@@ -79,9 +97,9 @@ export const STORY_EPISODES_MASTER: { [key: string]: {
   outro: Array<{ speaker: string; img: string; expression: string; text: string }>;
 } } = {
   stage_tutorial_01: {
-    title: "PvP模擬戦: 新宿南部連合との接触",
+    title: "模擬戦: 新宿南部連合との接触",
     intro: [
-      { speaker: "レイジ", img: "/characters/reiji_transparent_asset.png", expression: "通常", text: "キョウジ、PvP模擬戦の準備はいいか？俺たちの連携力を見せてやろう。" },
+      { speaker: "レイジ", img: "/characters/reiji_transparent_asset.png", expression: "通常", text: "キョウジ、模擬戦の準備はいいか？俺たちの連携力を見せてやろう。" },
       { speaker: "ルイ", img: "/characters/rui_transparent_asset.png", expression: "笑顔", text: "対戦相手のシミュレーションデータをグリッドに同期したよ！勝率は99.8%！" },
       { speaker: "チャン", img: "/characters/chang_transparent_asset.png", expression: "真剣", text: "ふん、油断するな。敵も新宿南部連合の精鋭だ。牙を剥いてくるぞ。" }
     ],
@@ -117,7 +135,7 @@ export const PROFILE_BACKGROUNDS = [
 
 export const PROFILE_FRONT_EFFECTS = [
   { id: "effect_none", name: "エフェクトなし", desc: "初期解放" },
-  { id: "effect_lightning", name: "紫電一閃 (稲妻)", desc: "PvP 1,050点以上で解放" },
+  { id: "effect_lightning", name: "紫電一閃 (稲妻)", desc: "バトルRATE 1,050以上で解放" },
   { id: "effect_sparks", name: "百花繚乱 (火の粉)", desc: "Lv.10以上で解放" },
   { id: "effect_smoke", name: "硝煙黙示録 (煙)", desc: "3名以上のキャラ解放で解放" }
 ];

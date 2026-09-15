@@ -3,7 +3,7 @@ import skillSource from "./data/skills_20260821.json" with { type: "json" };
 import equipmentSource from "./data/equipment_20260821.json" with { type: "json" };
 import equipmentLimitBreakSource from "./data/equipment_limit_break_20260821.json" with { type: "json" };
 import equipmentProgressionSource from "./data/equipment_progression_20260821.json" with { type: "json" };
-import missionSource from "./data/missions_20260830.json" with { type: "json" };
+import missionSource from "./data/missions_20260910.json" with { type: "json" };
 export * from "./combat_production.ts";
 export * from "./guild_production.ts";
 import type { CanonicalCharacter, CanonicalEquipment, CanonicalMission } from "./types";
@@ -14,6 +14,7 @@ export const CANONICAL_CHARACTERS: readonly CanonicalCharacter[] = characterSour
   rarity: character.rarity as CanonicalCharacter["rarity"],
   attribute: character.attribute as CanonicalCharacter["attribute"],
   hometown: character.hometown,
+  growth_pattern: character.growth_pattern as CanonicalCharacter["growth_pattern"],
   lv1: { hp: character.lv1_hp, atk: character.lv1_atk, def: character.lv1_def, spd: character.lv1_spd, luk: character.lv1_luk },
   lv100: { hp: character.lv100_hp, atk: character.lv100_atk, def: character.lv100_def, spd: character.lv100_spd, luk: character.lv100_luk },
 }));

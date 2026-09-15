@@ -1,0 +1,152 @@
+{
+  "report": [
+    {
+      "width": 375,
+      "height": 844,
+      "scenario": "owner",
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "width": 375,
+      "height": 844,
+      "scenario": "member",
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "width": 375,
+      "height": 844,
+      "scenario": "cleared",
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "width": 375,
+      "height": 844,
+      "scenario": "expired",
+      "size": {
+        "client": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scenario": "owner",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scenario": "member",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scenario": "cleared",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scenario": "expired",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 430,
+      "height": 844,
+      "scenario": "owner",
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "width": 430,
+      "height": 844,
+      "scenario": "member",
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "width": 430,
+      "height": 844,
+      "scenario": "cleared",
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "width": 430,
+      "height": 844,
+      "scenario": "expired",
+      "size": {
+        "client": 430,
+        "scroll": 430
+      }
+    },
+    {
+      "width": 390,
+      "height": 600,
+      "scenario": "owner",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 390,
+      "height": 600,
+      "scenario": "member",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 390,
+      "height": 600,
+      "scenario": "cleared",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "width": 390,
+      "height": 600,
+      "scenario": "expired",
+      "size": {
+        "client": 390,
+        "scroll": 390
+      }
+    }
+  ],
+  "errors": [],
+  "mvp": "PASS",
+  "continueControl": "PASS",
+  "scope": "real BattleResultSummary + Mock receipt; actual ack RPC is covered by existing regressions"
+}

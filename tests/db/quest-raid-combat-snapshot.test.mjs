@@ -1,0 +1,142 @@
+process.on('uncaughtException',e=>{console.error(e.message, e.code || '', e.where || '');process.exit(1);});
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+const runtime=process.env.PGLITE_RUNTIME;
+if(!runtime)throw new Error('Set PGLITE_RUNTIME to the isolated @electric-sql/pglite dist/index.js');
+const {PGlite}=await import(pathToFileURL(runtime));
+const db=new PGlite();
+// Contract fixture: existing Raid registration/power/daily services are explicit doubles.
+// This tests new SQL execution and idempotency, not live Raid authority integration.
+await db.exec(`
+create role anon;create role authenticated;create role service_role;create schema auth;create schema private;
+create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('test.uid',true),'')::uuid$$;
+create table users(id uuid primary key,level int,power bigint);
+create table tutorial_progress(user_id uuid,step_id text);
+create table user_patrols(id uuid primary key,user_id uuid,status text,battle_result text,battle_resolved boolean,has_battle_event boolean,course_id text,quest_id text);
+create table canonical_quest_master(version text,quest_id text,town_id text,is_production_enabled boolean);
+create table canonical_raid_variants(raid_variant_id text primary key,area_id text,raid_name text,max_hp bigint,member_character_ids jsonb,is_production_enabled boolean);
+create table raid_room_creation_settings(singleton boolean,enabled boolean);
+create table raid_room_lifecycle_rules(difficulty text,max_active_rooms int,duration_hours int);
+create table raid_bosses(id uuid primary key,boss_id text,boss_master_id text,current_hp bigint,max_hp bigint,base_id text,status text,spawned_at timestamptz,expires_at timestamptz,cycle_id uuid,rotation_date date,raid_variant_id text,raid_day_key text,outcome_finalized_at timestamptz);
+create table raid_rooms(id uuid primary key,raid_boss_instance_id uuid,owner_user_id uuid,difficulty_id text);
+create table raid_room_clear_rewards(room_id uuid,user_id uuid);
+create table raid_room_rescue_rewards(room_id uuid,user_id uuid);
+create table presents(user_id uuid,item_id text,quantity int,message text,status text,created_at timestamptz,expire_at timestamptz,source_kind text,source_key text,source_metadata jsonb);
+create function quest_town_key(v text) returns text language sql immutable as $$select lower(v)$$;
+create function calculate_user_total_power(u uuid) returns bigint language sql stable as $$select power from public.users where id=u$$;
+create function _raid_room_power_gate_v1(d text,p bigint) returns jsonb language sql stable as $$select jsonb_build_object('status',case when d='beginner' or p>=200000 then 'passed' else 'failed' end)$$;
+create function private.raid_daily_targets_v1() returns jsonb language sql stable as $$select '{"targets":[{"variantId":"SHIBUYA"}]}'::jsonb$$;
+create function _raid_room_register_v1(i uuid,u uuid,d text) returns jsonb language plpgsql as $$declare r uuid:=gen_random_uuid();begin insert into public.raid_rooms values(r,i,u,d);return jsonb_build_object('roomId',r);end$$;
+insert into users values('00000000-0000-0000-0000-000000000001',5,300000),('00000000-0000-0000-0000-000000000002',5,300000);
+insert into tutorial_progress select id,'COMPLETE' from users;
+insert into canonical_quest_master values('2026-08-30','Q_EASY','shibuya',true);
+insert into canonical_raid_variants values('SHIBUYA','SHIBUYA','強敵',1000,'["char_ageha_01"]',true);
+insert into raid_room_creation_settings values(true,true);
+insert into raid_room_lifecycle_rules values('beginner',10,24),('intermediate',10,24),('advanced',10,24);
+select set_config('test.uid','00000000-0000-0000-0000-000000000001',false);
+`);
+await db.exec(fs.readFileSync('supabase/migrations/20260913105642_quest_raid_encounter.sql','utf8'));
+const scalar=async sql=>(await db.query(sql)).rows[0].v;
+async function quest(n,user=1,result='VICTORY'){
+ const id=`00000000-0000-0000-0001-${String(n).padStart(12,'0')}`;
+ await db.query(`insert into user_patrols values($1,$2,'CLAIMABLE',$3,true,true,'Q_EASY',null)`,[id,`00000000-0000-0000-0000-${String(user).padStart(12,'0')}`,result]);
+ await db.query(`update user_patrols set status='COMPLETED' where id=$1`,[id]);return id;
+}
+const resolve=async id=>(await db.query('select resolve_quest_raid_encounter_v1($1) v',[id])).rows[0].v;
+await db.exec(`
+alter table raid_bosses add column outcome text;
+alter table presents add column id uuid default gen_random_uuid() unique;
+create table raid_room_members(room_id uuid,user_id uuid);
+create table raid_room_rescue_members(room_id uuid,user_id uuid);
+create table raid_room_difficulty_rules(difficulty text);
+create table raid_room_clear_reward_rules(difficulty text,enabled boolean,minimum_contribution_damage bigint,rule_version bigint);
+create table raid_room_rescue_reward_rules(difficulty text,enabled boolean,rule_version bigint,reward_version bigint);
+create table raid_room_clear_reward_items(difficulty text,item_id text,quantity int);
+create table raid_room_rescue_reward_items(difficulty text,item_id text,quantity int);
+alter table raid_room_clear_rewards add column rule_version bigint,add column finalized_battles bigint,add column contribution_damage bigint,add column clear_gate jsonb,add column issued_at timestamptz,add column expires_at timestamptz,add unique(room_id,user_id);
+alter table raid_room_rescue_rewards add column rule_version bigint,add column reward_version bigint,add column finalized_battles bigint,add column contribution_damage bigint,add column rescue_gate jsonb,add column issued_at timestamptz,add column expires_at timestamptz,add unique(room_id,user_id);
+create table raid_room_clear_reward_grants(room_id uuid,user_id uuid,item_id text,quantity int,present_id uuid,primary key(room_id,user_id,item_id));
+create table raid_room_rescue_reward_grants(like raid_room_clear_reward_grants including all);
+create function _raid_room_clear_reward_progress_v1(r uuid,u uuid) returns jsonb language sql as $$select '{"finalizedBattles":1,"contributionDamage":100,"clearGate":{"status":"succeeded","ruleVersion":1}}'::jsonb$$;
+create function _raid_room_rescue_reward_progress_v1(r uuid,u uuid) returns jsonb language sql as $$select '{"finalizedBattles":1,"contributionDamage":100,"rescueGate":{"status":"succeeded","ruleVersion":1}}'::jsonb$$;
+insert into raid_room_clear_reward_rules values('advanced',true,1,1);
+insert into raid_room_rescue_reward_rules values('advanced',true,1,1);
+insert into raid_room_clear_reward_items values('advanced','CASH',300),('advanced','CHAR_EXP_L',2);
+insert into raid_room_rescue_reward_items values('advanced','CASH',100),('advanced','EQUIP_EXP_L',3);
+`);
+await db.exec(fs.readFileSync('supabase/migrations/20260913120930_quest_raid_approved_occurrence_and_double_rewards.sql','utf8'));
+
+// Execute the real launch enemy builder; only canonical master rows are minimal fixtures.
+await db.exec(`
+create table canonical_character_master(version text,character_id text,display_name text,attribute text);
+create table canonical_equipment_master(version text,equipment_id text,display_name text,category text,base_stats jsonb,exclusive_character_id text);
+create table canonical_skill_master(version text,skill_id text,display_name text,activation_type text,cooldown integer,available_from_round integer,target text,effects jsonb,exclusive_character_id text);
+create function canonical_equipment_flat_stat(a integer,b integer,c integer) returns integer language sql as $$select a$$;
+create table raid_room_combat_profiles(raid_variant_id text,difficulty_id text,profile jsonb,primary key(raid_variant_id,difficulty_id));
+create table raid_room_combat_snapshots(room_id uuid primary key,profile jsonb not null,enemy_snapshot jsonb not null);
+insert into canonical_character_master select '2026-08-21','char_'||n,'Character '||n,'CHAOS' from generate_series(1,5) n;
+insert into canonical_skill_master values('2026-08-21','SKILL_001','Skill','ACTIVE',1,1,'SINGLE','[]',null);
+`);
+const launchSource=fs.readFileSync('config/raid-room/launch-balance.sql','utf8');
+const start=launchSource.indexOf('create function public._raid_room_launch_enemy_snapshot_v1');
+const end=launchSource.indexOf('end $$;',start)+'end $$;'.length;
+assert.ok(start>=0&&end>start);
+await db.exec(launchSource.slice(start,end));
+const members=Array.from({length:5},(_,i)=>({slot:i+1,characterId:`char_${i+1}`,level:5,awakeningLevel:0,baseStats:{hp:1,atk:100,def:10,spd:20,luk:0},equipment:[],skills:[{skillId:'SKILL_001',plus:0}]}));
+for(const [difficulty,hp] of [['beginner',220000],['intermediate',3500000],['advanced',15200000]]) {
+ await db.query('insert into raid_room_combat_profiles values($1,$2,$3)', ['SHIBUYA',difficulty,{maxHp:hp,members}]);
+}
+await db.exec(fs.readFileSync('supabase/migrations/20260913142410_quest_raid_combat_snapshot.sql','utf8'));
+assert.equal(await scalar('select probability_bp v from quest_raid_encounter_settings'),1000);
+assert.equal(await scalar('select guaranteed_after v from quest_raid_encounter_settings'),11);
+await db.exec('update quest_raid_encounter_settings set enabled=true,probability_bp=10000,personal_active_limit=10,beginner_weight=1,intermediate_weight=0,advanced_weight=0');
+const one=await resolve(await quest(101));
+assert.equal(one.status,'CREATED');assert.equal(one.rewardMultiplier,2);
+assert.equal(await scalar('select max_hp v from raid_bosses limit 1'),220000,'difficulty profile HP, not legacy variant HP=1000');
+const firstSnapshot=(await db.query('select * from raid_room_combat_snapshots where room_id=$1',[one.roomId])).rows[0];
+assert.equal(firstSnapshot.enemy_snapshot.length,5);
+assert.equal(firstSnapshot.enemy_snapshot[0].stats.hp,44000);
+assert.equal(firstSnapshot.enemy_snapshot[0].skills[0].id,'SKILL_001');
+assert.equal(firstSnapshot.enemy_snapshot[0].id.startsWith('raid_'),true);
+await db.exec(`update raid_room_combat_profiles set profile=jsonb_set(profile,'{maxHp}','999999') where difficulty_id='beginner'`);
+assert.equal((await resolve(one.patrolId)).roomId,one.roomId);
+assert.deepEqual((await db.query('select * from raid_room_combat_snapshots where room_id=$1',[one.roomId])).rows[0],firstSnapshot,'same-request replay never rewrites frozen snapshot');
+await db.exec(`delete from raid_room_combat_profiles where difficulty_id='beginner'`);
+const missing=await quest(102);assert.equal((await resolve(missing)).reason,'CREATE_FAILED');
+assert.equal(await scalar('select count(*)::int v from raid_bosses'),1);
+assert.equal(await scalar('select count(*)::int v from raid_rooms'),1);
+assert.equal(await scalar('select count(*)::int v from raid_room_combat_snapshots'),1);
+assert.equal(await scalar(`select status v from quest_raid_encounters where patrol_id='${missing}'`),'DRAWN');
+await db.query('insert into raid_room_combat_profiles values($1,$2,$3)',['SHIBUYA','beginner',{maxHp:220000,members:members.slice(0,4)}]);
+assert.equal((await resolve(missing)).reason,'CREATE_FAILED','invalid builder profile rolls registration back');
+assert.equal(await scalar('select count(*)::int v from raid_rooms'),1);
+assert.equal(await scalar('select count(*)::int v from raid_bosses'),1);
+await db.query('update raid_room_combat_profiles set profile=$1 where difficulty_id=$2',[{maxHp:220000,members},'beginner']);
+await db.exec('update quest_raid_encounter_settings set beginner_weight=0,advanced_weight=1');
+const retry=await resolve(missing);assert.equal(retry.status,'CREATED');assert.equal(retry.difficulty,'beginner','retry retains previous draw despite weight changes');
+const advanced=await resolve(await quest(103));assert.equal(advanced.difficulty,'advanced');
+assert.equal((await db.query('select b.max_hp from raid_rooms r join raid_bosses b on b.id=r.raid_boss_instance_id where r.id=$1',[advanced.roomId])).rows[0].max_hp,15200000);
+assert.equal(await scalar('select count(*)::int v from raid_room_combat_snapshots'),3);
+assert.equal(await scalar(`select has_function_privilege('anon','resolve_quest_raid_encounter_v1(uuid)','EXECUTE') v`),false);
+
+// Dry-run repair uses explicit IDs; exercise its SQL against untouched, used and healthy Rooms.
+await db.exec(`create table raid_room_battle_start_requests(room_id uuid);
+create table raid_damage_logs(raid_boss_instance_id uuid);
+create table raid_instance_user_progress(raid_boss_instance_id uuid);
+create table battle_replay_sessions(battle_mode text,source_reference_id text,official_context jsonb);`);
+const repairSource=fs.readFileSync('supabase/operations/repair_quest_raid_combat_snapshot.sql','utf8');
+const repairFor=(roomId)=>repairSource.replace("-- insert into encounter_snapshot_repair_targets values ('<reviewed-room-uuid>');",`insert into encounter_snapshot_repair_targets values ('${roomId}');`).replace(/rollback;\s*$/,'commit;');
+await db.query('delete from raid_room_combat_snapshots where room_id=$1',[retry.roomId]);
+await db.query('update raid_bosses set max_hp=1000,current_hp=1000 where id=(select raid_boss_instance_id from raid_rooms where id=$1)',[retry.roomId]);
+await db.exec(repairFor(retry.roomId));
+assert.equal((await db.query('select b.max_hp from raid_rooms r join raid_bosses b on b.id=r.raid_boss_instance_id where r.id=$1',[retry.roomId])).rows[0].max_hp,220000);
+await db.exec(repairFor(retry.roomId));
+assert.equal(await scalar('select count(*)::int v from raid_room_combat_snapshots'),3,'healthy snapshot preserved on repair replay');
+await db.query('delete from raid_room_combat_snapshots where room_id=$1',[advanced.roomId]);
+await db.query('insert into raid_room_battle_start_requests values($1)',[advanced.roomId]);
+await assert.rejects(db.exec(repairFor(advanced.roomId)),/already used or ended/);
+await db.exec('rollback');
+assert.equal(await scalar('select count(*)::int v from raid_room_combat_snapshots'),2,'battle request blocks repair');
+await db.close();
+console.log('PASS: real enemy builder, profile difficulty HP, 5 enemies and skills, idempotent frozen snapshot, missing/invalid profile atomic rollback, same draw retry, x2 and occurrence settings preserved. Existing registration/power services are contract doubles; not live Battle acceptance.');

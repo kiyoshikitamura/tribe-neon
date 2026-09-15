@@ -1,0 +1,98 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+const runtime = process.env.PGLITE_MODULE;
+if (!runtime) throw new Error('PGLITE_MODULE に隔離インストールしたPGliteのentry pathを指定してください');
+const { PGlite } = await import(pathToFileURL(runtime).href);
+const db = new PGlite();
+await db.exec(`create role anon; create role authenticated; create role service_role;
+create schema auth; create function auth.uid() returns uuid language sql as $$select '11111111-1111-4111-8111-111111111111'::uuid$$;
+create table public.users(id uuid primary key,cash bigint default 0,neon_diamonds bigint default 0);
+create table public.equipment_battle_master(equipment_id text);
+create table public.user_equipments(user_id uuid,equipment_id text,equipment_master_id text,level integer,plus_val integer);
+create table public.user_items(user_id uuid,item_id text,quantity integer,primary key(user_id,item_id));
+create table public.presents(id uuid primary key default gen_random_uuid(),user_id uuid,item_id text,quantity integer,message text,status text,expire_at timestamptz,claimed_at timestamptz);
+create table public.payment_transactions(id uuid default gen_random_uuid(),user_id uuid,product_id text,amount integer,currency text,status text);
+create table public.user_shop_purchases(user_id uuid,product_id text,purchase_count integer,last_purchased_at timestamptz,primary key(user_id,product_id));
+insert into public.users(id,cash) values('11111111-1111-4111-8111-111111111111',500);
+`);
+await db.exec(await readFile(new URL('./preview_schema.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913105839_billing_paid_pack_lots.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913111028_billing_checkout_mode_contract.sql',import.meta.url),'utf8'));
+await db.exec(await readFile(new URL('../../supabase/migrations/20260913120945_billing_dia_approved_contract.sql',import.meta.url),'utf8'));
+const claimSource=await readFile(new URL('../../supabase/migrations/20260812000135_provisional_open_beta_missions.sql',import.meta.url),'utf8');
+await db.exec(claimSource.slice(claimSource.indexOf('CREATE OR REPLACE FUNCTION public.grant_present_payload('),claimSource.indexOf('REVOKE ALL ON FUNCTION public.claim_present(uuid, uuid)')));
+const uid='11111111-1111-4111-8111-111111111111';
+const rows=async(sql,args=[]) => (await db.query(sql,args)).rows;
+const reserve=async(product,request) => (await rows('select billing_reserve_order($1,$2,$3) o',[uid,request,product]))[0].o;
+const grant=async(order,session) => (await rows("select billing_grant_order($1,$2,$3,'jpy') r",[order.id,session,order.amount_jpy]))[0].r;
+const first=await reserve('beginner_pack_01','22222222-2222-4222-8222-222222222222');
+assert.equal(first.product_snapshot.validity_days,120);
+assert.equal((await grant(first,'cs_test_first')).duplicate,false);
+assert.equal((await grant(first,'cs_test_first')).duplicate,true);
+assert.equal((await rows('select count(*)::int n from billing_asset_lots'))[0].n,5);
+assert.equal((await rows('select count(*)::int n from payment_transactions'))[0].n,1);
+assert.equal((await rows("select count(*)::int n from billing_asset_lots where expires_at-issued_at=interval '120 days'"))[0].n,5);
+await assert.rejects(()=>reserve('beginner_pack_01','33333333-3333-4333-8333-333333333333'),/PURCHASE_LIMIT/);
+// 現行claim_present本体を実行する。
+const cashPresent=(await rows("select id from presents where item_id='CASH'"))[0].id;
+await rows('select claim_present($1)',[cashPresent]);
+await assert.rejects(()=>rows('select claim_present($1)',[cashPresent]),/not claimable/);
+const cashlot=(await rows("select * from billing_asset_lots where item_id='CASH'"))[0];
+assert.ok(cashlot.claimed_at);
+assert.equal(new Date(cashlot.expires_at)-new Date(cashlot.issued_at),120*86400000);
+await db.exec(`update users set cash=cash-600 where id='${uid}'`);
+assert.equal((await rows("select remaining_quantity from billing_asset_lots where item_id='CASH'"))[0].remaining_quantity,400);
+assert.equal((await rows('select cash from users'))[0].cash,900);
+// 期限切れを含む残高で消費できず、失敗はロット更新もROLLBACK。
+await db.exec("update billing_asset_lots set issued_at=now()-interval '121 days',expires_at=now()-interval '1 day' where item_id='CASH'");
+await assert.rejects(()=>db.exec(`update users set cash=cash-600 where id='${uid}'`),/EXPIRED_ASSET_BALANCE/);
+assert.equal((await rows("select remaining_quantity from billing_asset_lots where item_id='CASH'"))[0].remaining_quantity,400);
+await db.exec('select billing_refresh_paid_assets()');
+assert.equal((await rows('select cash from users'))[0].cash,500);
+assert.equal((await rows("select expired_quantity from billing_asset_lots where item_id='CASH'"))[0].expired_quantity,400);
+// 無料分は期限なし。アイテムも共通消費経路で購入分を先に使う。
+await db.exec(`insert into user_items values('${uid}','SPECIAL_TICKET_CHARACTER',2);
+select claim_present(id) from presents where item_id='SPECIAL_TICKET_CHARACTER';
+update user_items set quantity=quantity-1 where user_id='${uid}' and item_id='SPECIAL_TICKET_CHARACTER';`);
+assert.equal((await rows("select remaining_quantity from billing_asset_lots where item_id='SPECIAL_TICKET_CHARACTER'"))[0].remaining_quantity,0);
+assert.equal((await rows("select quantity from user_items where item_id='SPECIAL_TICKET_CHARACTER'"))[0].quantity,2);
+// 4パックの上限は3回。価格/配送不一致も不可。
+const ticket=await reserve('ticket_pack_01','44444444-4444-4444-8444-444444444444');
+await assert.rejects(()=>rows("select billing_grant_order($1,'cs_test_wrong',1,'jpy')",[ticket.id]),/PAYMENT_MISMATCH/);
+await reserve('ticket_pack_01','55555555-5555-4555-8555-555555555555');
+await reserve('ticket_pack_01','66666666-6666-4666-8666-666666666666');
+await assert.rejects(()=>reserve('ticket_pack_01','77777777-7777-4777-8777-777777777777'),/PURCHASE_LIMIT/);
+// 未受取でも120日を超えたPresentは受取不可。
+const unclaimed=(await rows("select present_id from billing_asset_lots where item_id='RAID_POINT_TICKET'"))[0].present_id;
+await rows("update presents set expire_at=now()-interval '1 second' where id=$1",[unclaimed]);
+await assert.rejects(()=>rows('select claim_present($1)',[unclaimed]),/not claimable/);
+// 一括受取も同じlot claimトリガーを経由する。
+await rows('select claim_all_presents()');
+assert.equal((await rows("select count(*)::int n from billing_asset_lots l join presents p on p.id=l.present_id where p.status='CLAIMED' and l.claimed_at is null"))[0].n,0);
+const growth=await reserve('growth_pack_01','88888888-8888-4888-8888-888888888888');
+await grant(growth,'cs_test_growth');
+const awakening=await reserve('awakening_pack_01','99999999-9999-4999-8999-999999999999');
+await grant(awakening,'cs_test_awakening');
+await rows('select claim_all_presents()');
+// 後から買ったlotでも期限が早ければ先に消費。
+await rows("update billing_asset_lots set expires_at=now()+interval '1 day' where order_id=$1 and item_id='CASH'",[awakening.id]);
+await db.exec(`update users set cash=cash-1100 where id='${uid}'`);
+assert.equal((await rows("select remaining_quantity from billing_asset_lots where order_id=$1 and item_id='CASH'",[awakening.id]))[0].remaining_quantity,18900);
+assert.equal((await rows("select remaining_quantity from billing_asset_lots where order_id=$1 and item_id='CASH'",[growth.id]))[0].remaining_quantity,10000);
+assert.equal((await rows("select has_function_privilege('authenticated','billing_apply_lot_delta(uuid,text,bigint,bigint)','execute') allowed"))[0].allowed,false);
+// test/liveの注文・sessionが一致しない限りDBでもattach/付与/期限変更できない。
+const liveReq='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const liveOrder=(await rows("select billing_reserve_order($1,$2,'growth_pack_01','live') o",[uid,liveReq]))[0].o;
+assert.equal(liveOrder.billing_mode,'live');
+await assert.rejects(()=>rows("select billing_reserve_order($1,$2,'growth_pack_01','sandbox')",[uid,liveReq]),/BILLING_MODE_CONFLICT/);
+await assert.rejects(()=>rows("select billing_attach_session($1,'cs_test_livewrong')",[liveOrder.id]),/BILLING_MODE_CONFLICT/);
+await assert.rejects(()=>grant(liveOrder,'cs_test_livewrong'),/PAYMENT_MISMATCH/);
+await assert.rejects(()=>rows("select billing_expire_order($1,'cs_test_livewrong')",[liveOrder.id]),/SESSION_CONFLICT/);
+await rows("select billing_attach_session($1,'cs_live_first')",[liveOrder.id]);
+assert.equal((await grant(liveOrder,'cs_live_first')).duplicate,false);
+assert.equal((await grant(liveOrder,'cs_live_first')).duplicate,true);
+await assert.rejects(()=>grant(first,'cs_live_wrong'),/PAYMENT_MISMATCH/);
+assert.equal((await rows("select has_function_privilege('authenticated','billing_reserve_order(uuid,uuid,text,text)','execute') allowed"))[0].allowed,false);
+console.log('PASS: 4パックsnapshot・冪等配送・120日起算・受取後期限維持・有料優先消費・失効・無料保持・上限・金額不一致・内部権限');
+await db.close();

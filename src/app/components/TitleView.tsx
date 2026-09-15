@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useGame } from "../context/GameContext";
 import "./TitleView.css";
 import { markTitleAssetReady } from "../lib/screenAssets";
+import ConfirmDialog from "./ui/ConfirmDialog";
+import TitleLegalFooter from "./TitleLegalFooter";
+import { recordAcquisitionObservation } from "@/utils/kpiInstrumentation";
 
 export default function TitleView() {
-  const { showTitleView, setShowTitleView, authLoading, setupLoading, resumeLoading, resumeCurrentSession, session, errorMessage, playCyberSe, handleFirstUserInteraction, handleStartNewGame } = useGame();
+  const { showTitleView, setShowTitleView, authLoading, setupLoading, resumeLoading, resumeCurrentSession, session, onboardingState, errorMessage, playBgm, playCyberSe, handleFirstUserInteraction, handleStartNewGame, handleLogout, confirmDialogConfig } = useGame();
+  const [entryActivated, setEntryActivated] = useState(false);
   const [isGameStartTransition, setIsGameStartTransition] = useState(false);
   const gameStartRef = useRef(false);
   const entryReady = !authLoading;
@@ -13,12 +16,40 @@ export default function TitleView() {
   // anonymous player who has not entered a name yet; it must resume instead of
   // creating a second anonymous lifecycle.
   const canStartNewGame = entryReady && !session;
+  const isAnonymousSession = Boolean(session?.user?.is_anonymous);
+  const requiresEmailCompletion = Boolean(session
+    && !isAnonymousSession
+    && !onboardingState?.gameplay_authorized
+    && onboardingState?.tutorial_step === "COMPLETE"
+    && onboardingState?.auth_method === "EMAIL");
+  const continueLabel = session
+    ? requiresEmailCompletion
+      ? "メール認証を完了"
+      : isAnonymousSession && !onboardingState?.gameplay_authorized
+      ? "チュートリアルを続ける"
+      : "続きから"
+    : "データをお持ちの方";
 
   useEffect(() => {
-    if (showTitleView) markTitleAssetReady();
+    if (showTitleView) {
+      markTitleAssetReady();
+      void recordAcquisitionObservation("TITLE_ARRIVED");
+      setEntryActivated(false);
+      setIsGameStartTransition(false);
+      gameStartRef.current = false;
+    }
   }, [showTitleView]);
 
   if (!showTitleView) return null;
+
+  const activateEntry = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    handleFirstUserInteraction();
+    playBgm("TITLE");
+    playCyberSe("click");
+    void recordAcquisitionObservation("TAP_TO_START");
+    setEntryActivated(true);
+  };
 
   const openContinue = async (event: React.MouseEvent) => {
     event?.stopPropagation();
@@ -60,26 +91,20 @@ export default function TitleView() {
           </div>
         ) : <div className="title-view-content">
           <div className="title-tap-area">
-            <div className="title-entry-actions">
+            {!entryActivated ? (
+              <button type="button" className="title-tap-text blink-animation" onClick={activateEntry}>TAP TO START</button>
+            ) : <div className="title-entry-actions">
               {canStartNewGame && <button className="semantic-cta semantic-cta--primary title-entry-primary" onClick={(event) => void beginNewGame(event)} disabled={setupLoading} aria-busy={setupLoading}>はじめから</button>}
-              {entryReady && <button className="semantic-cta semantic-cta--secondary title-entry-secondary" onClick={(event) => void openContinue(event)} disabled={resumeLoading}>続きから</button>}
+              {entryReady && <button className={`semantic-cta ${session ? "semantic-cta--primary title-entry-primary" : "semantic-cta--secondary title-entry-secondary"}`} onClick={(event) => void openContinue(event)} disabled={resumeLoading}>{continueLabel}</button>}
+              {entryReady && session && !isAnonymousSession && <button className="semantic-cta semantic-cta--secondary title-entry-secondary" onClick={(event) => { event.stopPropagation(); void handleLogout(); }}>ログアウト／別アカウント</button>}
               {!entryReady && <small className="title-entry-status" role="status">セッション確認中</small>}
               {errorMessage && <div className="title-entry-error" role="alert">{errorMessage}</div>}
-            </div>
+            </div>}
           </div>
         </div>}
 
-        <div className="title-footer">
-          <div className="title-legal-links" onClick={(event) => event.stopPropagation()}>
-            <Link href="/legal/terms">利用規約</Link>
-            <Link href="/legal/privacy">プライバシーポリシー</Link>
-            <Link href="/legal/commercial">特定商取引法に基づく表記</Link>
-          </div>
-          <div className="title-copyright">
-            <span>v0.1.0</span>
-            <span>© 2026 TRIBE NEON</span>
-          </div>
-        </div>
+        <TitleLegalFooter />
+        <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
       </div>
     </div>
   );

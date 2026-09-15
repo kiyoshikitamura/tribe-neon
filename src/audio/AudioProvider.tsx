@@ -74,6 +74,10 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const lastSeAtRef = useRef(new Map<SeEvent, number>());
   const recentPriorityRef = useRef<{ priority: number; at: number; event: SeEvent | null }>({ priority: -1, at: 0, event: null });
   const transitionRef = useRef(0);
+  const unlockedRef = useRef(false);
+  const needsBgmRecoveryRef = useRef(false);
+  const recoveryPendingRef = useRef(false);
+  const contextStateHandlerRef = useRef<(() => void) | null>(null);
 
   useEffect(() => { settingsRef.current = settings; }, [settings]);
 
@@ -98,11 +102,22 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, [settings]);
 
   const getContext = useCallback(() => {
+    if (contextRef.current?.state === "closed") {
+      contextRef.current = null;
+      bgmSourceRef.current = null;
+      bgmGainRef.current = null;
+      bgmPathRef.current = null;
+      transitionRef.current += 1;
+      bufferCacheRef.current.clear();
+      pendingBufferRef.current.clear();
+    }
     if (contextRef.current) return contextRef.current;
     try {
       const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       if (!AudioContextClass) return null;
-      contextRef.current = new AudioContextClass();
+      const context = new AudioContextClass();
+      context.addEventListener?.("statechange", () => contextStateHandlerRef.current?.());
+      contextRef.current = context;
       return contextRef.current;
     } catch {
       return null;
@@ -186,22 +201,54 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     recordAudioTrace({ type: "BGM_STARTED", scene, path, contextState: context.state });
   }, [getContext, loadBuffer, stopActiveBgm]);
 
+  const finishAudioRecovery = useCallback(async (context: AudioContext, reason: string) => {
+    if (context !== contextRef.current || context.state !== "running" || document.hidden) return false;
+    unlockedRef.current = true;
+    recoveryPendingRef.current = false;
+    setUnlocked(true);
+    document.documentElement.dataset.audioUnlocked = "true";
+    document.documentElement.dataset.audioContextState = context.state;
+    if (needsBgmRecoveryRef.current) {
+      needsBgmRecoveryRef.current = false;
+      transitionRef.current += 1;
+      stopActiveBgm(false);
+    }
+    recordAudioTrace({ type: "AUDIO_RECOVERED", reason, contextState: context.state });
+    await startDesiredBgm();
+    return true;
+  }, [startDesiredBgm, stopActiveBgm]);
+
+  const recoverAudio = useCallback(async (reason: string) => {
+    if (!unlockedRef.current || document.hidden) return false;
+    const context = getContext();
+    if (!context) return false;
+    try {
+      if (context.state !== "running") await context.resume();
+      if (context.state === "running") return finishAudioRecovery(context, reason);
+    } catch {
+      // iOS may require the next foreground user gesture to resume Web Audio.
+    }
+    recoveryPendingRef.current = true;
+    document.documentElement.dataset.audioContextState = context.state;
+    recordAudioTrace({ type: "AUDIO_RECOVERY_DEFERRED", reason, contextState: context.state });
+    return false;
+  }, [finishAudioRecovery, getContext]);
+
   const unlockAudio = useCallback(async () => {
     const context = getContext();
     if (!context) return;
     try {
       if (context.state !== "running") await context.resume();
       if (context.state === "running") {
-        setUnlocked(true);
-        document.documentElement.dataset.audioUnlocked = "true";
-        document.documentElement.dataset.audioContextState = context.state;
+        unlockedRef.current = true;
         recordAudioTrace({ type: "AUDIO_UNLOCKED", contextState: context.state });
-        void startDesiredBgm();
+        await finishAudioRecovery(context, "user-gesture");
       }
     } catch {
       // Browser policy failures never block gameplay; the next gesture can retry.
+      recoveryPendingRef.current = true;
     }
-  }, [getContext, startDesiredBgm]);
+  }, [finishAudioRecovery, getContext]);
 
   const playBgm = useCallback((scene: BgmScene) => {
     const previousPath = desiredSceneRef.current ? BGM_ASSETS[desiredSceneRef.current] : null;
@@ -262,18 +309,55 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, [loadBuffer]);
 
   useEffect(() => {
+    const suspendForBackground = (reason: string) => {
+      const context = contextRef.current;
+      if (!context || context.state === "closed") return;
+      needsBgmRecoveryRef.current = true;
+      recoveryPendingRef.current = true;
+      recordAudioTrace({ type: "AUDIO_BACKGROUND", reason, contextState: context.state });
+      if (context.state === "running") void context.suspend().catch(() => undefined);
+    };
     const onVisibilityChange = () => {
+      if (document.hidden) suspendForBackground("visibilitychange");
+      else void recoverAudio("visibilitychange");
+    };
+    const onPageHide = () => suspendForBackground("pagehide");
+    const onPageShow = () => { if (!document.hidden) void recoverAudio("pageshow"); };
+    const onFocus = () => { if (!document.hidden) void recoverAudio("focus"); };
+    const onForegroundGesture = () => {
+      const context = contextRef.current;
+      if (!unlockedRef.current || (!recoveryPendingRef.current && context?.state === "running")) return;
+      void recoverAudio("foreground-gesture");
+    };
+    contextStateHandlerRef.current = () => {
       const context = contextRef.current;
       if (!context) return;
-      if (document.hidden) {
-        void context.suspend().catch(() => undefined);
-      } else if (unlocked) {
-        void context.resume().then(() => startDesiredBgm()).catch(() => undefined);
+      document.documentElement.dataset.audioContextState = context.state;
+      recordAudioTrace({ type: "AUDIO_CONTEXT_STATE", contextState: context.state });
+      if (!document.hidden && context.state === "running" && unlockedRef.current) {
+        void finishAudioRecovery(context, "statechange");
+      } else if (!document.hidden && context.state !== "closed" && unlockedRef.current) {
+        recoveryPendingRef.current = true;
       }
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
-    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
-  }, [startDesiredBgm, unlocked]);
+    window.addEventListener("pagehide", onPageHide);
+    window.addEventListener("pageshow", onPageShow);
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("pointerdown", onForegroundGesture, true);
+    window.addEventListener("touchend", onForegroundGesture, true);
+    window.addEventListener("keydown", onForegroundGesture, true);
+    return () => {
+      contextStateHandlerRef.current = null;
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("pageshow", onPageShow);
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("pointerdown", onForegroundGesture, true);
+      window.removeEventListener("touchend", onForegroundGesture, true);
+      window.removeEventListener("keydown", onForegroundGesture, true);
+    };
+  }, [finishAudioRecovery, recoverAudio]);
 
   useEffect(() => {
     if (!settings.bgmEnabled) {

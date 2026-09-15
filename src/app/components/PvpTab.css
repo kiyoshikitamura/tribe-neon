@@ -10,13 +10,8 @@
 .pvp-view .ui-hub-page-content { gap: 8px; padding-top: 8px; }
 .pvp-view > .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-.pvp-hero { position:relative; height:104px; overflow:hidden; border:1px solid rgba(255,67,105,.45); border-radius:6px; background-image:linear-gradient(90deg,rgba(1,4,10,.34),rgba(1,4,10,.04),rgba(1,4,10,.38)),var(--pvp-hero-bg,linear-gradient(135deg,#07131c,#25101a)); background-position:center; background-size:cover; isolation:isolate; }
-.pvp-hero-shade { position:absolute; z-index:1; inset:0; background:linear-gradient(180deg,rgba(2,4,9,.08),rgba(2,4,9,.78)),linear-gradient(90deg,rgba(0,230,255,.16),transparent 38% 62%,rgba(255,48,94,.18)); }
-.pvp-hero-fighter { position:absolute; z-index:2; top:-18px; bottom:-34px; width:42%; height:auto; border:0; background:transparent; }
-.pvp-hero-fighter .character-presentation-art { height:100%; }
-.pvp-hero-fighter img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 5px 11px #000); }
-.pvp-hero-fighter.is-player { left:-2%; }
-.pvp-hero-fighter.is-opponent { right:-2%; transform:scaleX(-1); }
+.pvp-hero { position:relative; aspect-ratio:4/1; overflow:hidden; border:0; border-radius:6px; background:#02060c; }
+.pvp-hero > img { display:block; width:100%; height:100%; object-fit:cover; }
 
 .pvp-self-summary {
   display: grid;
@@ -112,7 +107,7 @@
 .pvp-defense-empty { grid-column: 1 / -1; padding: 16px; color: var(--text-secondary); font-size: 10px; text-align: center; }
 
 @media (max-width: 390px) {
-  .pvp-hero { height:94px; }
+  .pvp-hero { height:auto; }
   .pvp-defense-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .pvp-opponent-card .outlaw-button { width: 100%; min-height: 44px; }
 }
@@ -147,3 +142,12 @@
   padding: 0;
   border: 0;
 }
+
+.pvp-deck-details { color: #aeb8c4; font-size: 11px; }
+.pvp-deck-details > summary { padding: 12px 2px; cursor: pointer; }
+
+ .pvp-battle-rewards{margin:8px 0;padding:8px 12px;border:1px solid #665536;border-radius:6px;background:#191714;color:#f9f2df;font-size:12px}
+.pvp-battle-rewards p{display:flex;align-items:baseline;gap:10px;margin:0;line-height:1.5}
+.pvp-battle-rewards p+p{margin-top:3px}
+.pvp-battle-rewards p b{flex:none;color:#e3c58c}
+.pvp-battle-rewards p span{min-width:0;overflow-wrap:anywhere}

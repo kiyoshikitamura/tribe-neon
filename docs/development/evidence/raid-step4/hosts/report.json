@@ -1,0 +1,182 @@
+{
+  "scope": "Mock host DOM with actual HomeTab/TribeChatModal CSS; not actual modal integration",
+  "report": [
+    {
+      "host": "host-activity",
+      "width": 375,
+      "height": 844,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "className": "mypage-activity-log-row",
+          "client": 325,
+          "scroll": 325
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 323,
+          "scroll": 323
+        }
+      ]
+    },
+    {
+      "host": "host-chat",
+      "width": 375,
+      "height": 844,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "className": "tribe-msg-bubble",
+          "client": 234,
+          "scroll": 234
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 208,
+          "scroll": 208
+        }
+      ]
+    },
+    {
+      "host": "host-activity",
+      "width": 390,
+      "height": 844,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 390,
+          "scroll": 390
+        },
+        {
+          "className": "mypage-activity-log-row",
+          "client": 332,
+          "scroll": 332
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 330,
+          "scroll": 330
+        }
+      ]
+    },
+    {
+      "host": "host-chat",
+      "width": 390,
+      "height": 844,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 390,
+          "scroll": 390
+        },
+        {
+          "className": "tribe-msg-bubble",
+          "client": 234,
+          "scroll": 234
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 208,
+          "scroll": 208
+        }
+      ]
+    },
+    {
+      "host": "host-activity",
+      "width": 430,
+      "height": 844,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 430,
+          "scroll": 430
+        },
+        {
+          "className": "mypage-activity-log-row",
+          "client": 366,
+          "scroll": 366
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 364,
+          "scroll": 364
+        }
+      ]
+    },
+    {
+      "host": "host-chat",
+      "width": 430,
+      "height": 844,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 430,
+          "scroll": 430
+        },
+        {
+          "className": "tribe-msg-bubble",
+          "client": 234,
+          "scroll": 234
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 208,
+          "scroll": 208
+        }
+      ]
+    },
+    {
+      "host": "host-activity",
+      "width": 390,
+      "height": 600,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 390,
+          "scroll": 390
+        },
+        {
+          "className": "mypage-activity-log-row",
+          "client": 332,
+          "scroll": 332
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 330,
+          "scroll": 330
+        }
+      ]
+    },
+    {
+      "host": "host-chat",
+      "width": 390,
+      "height": 600,
+      "sizes": [
+        {
+          "className": "ui-hub-page-content",
+          "client": 390,
+          "scroll": 390
+        },
+        {
+          "className": "tribe-msg-bubble",
+          "client": 234,
+          "scroll": 234
+        },
+        {
+          "className": "raid-rescue-link",
+          "client": 208,
+          "scroll": 208
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

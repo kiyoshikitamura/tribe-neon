@@ -1,0 +1,18 @@
+.raid-reward-items{margin:14px 0;padding:12px 0;border-top:1px solid var(--ui-border);min-width:0}
+.raid-reward-items h4{margin:0 0 8px;color:var(--ui-text-primary);font-weight:800;font-size:13px}
+.raid-reward-items ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.raid-reward-items li{min-width:0;padding:8px;border:1px solid var(--ui-border);border-radius:var(--ui-radius-sm,8px);background:var(--ui-bg-raised)}
+.raid-reward-items__item{display:inline-flex;align-items:center;gap:6px;min-width:0;white-space:nowrap}
+.raid-reward-items__item strong{font-size:13px;overflow-wrap:anywhere;line-height:1.5}
+.raid-reward-items__icon{display:block;width:36px;height:36px;object-fit:contain;flex:0 0 36px}
+.raid-reward-items p{font-size:12px;margin:6px 0;overflow-wrap:anywhere}
+.raid-reward-items .raid-reward-items__note{font-size:11px;color:var(--ui-text-secondary)}
+
+.raid-reward-items__random{position:relative;display:inline-block;width:46px;height:36px;flex:0 0 46px}
+.raid-reward-items__random .raid-reward-items__icon{position:absolute;left:0;top:0;width:30px;height:30px}
+.raid-reward-items__random .raid-reward-items__icon:nth-child(2){left:7px;top:3px}
+.raid-reward-items__random .raid-reward-items__icon:nth-child(3){left:14px;top:6px}
+.raid-reward-items__random small{position:absolute;right:0;bottom:0;border-radius:50%;background:var(--ui-bg-raised);color:var(--ui-text-primary);font-size:11px;line-height:14px;width:14px;text-align:center}
+
+.raid-reward-items ul.raid-reward-items__plan{display:flex;flex-wrap:wrap;gap:8px}
+.raid-reward-items__plan li{padding:4px 6px}

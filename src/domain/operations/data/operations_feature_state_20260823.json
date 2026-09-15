@@ -17,7 +17,7 @@
     { "featureKey": "MISSION", "state": "OPEN", "visibility": true, "mutationAllowed": true, "navigationAllowed": true, "deepLinkAllowed": true, "reasonCode": "PREOPEN_OPEN" },
     { "featureKey": "GUILD", "state": "OPEN", "visibility": true, "mutationAllowed": true, "navigationAllowed": true, "deepLinkAllowed": true, "reasonCode": "PREOPEN_OPEN" },
     { "featureKey": "GUILD_CHAT", "state": "OPEN", "visibility": true, "mutationAllowed": true, "navigationAllowed": true, "deepLinkAllowed": true, "reasonCode": "PREOPEN_OPEN" },
-    { "featureKey": "INVITE", "state": "OPEN", "visibility": true, "mutationAllowed": true, "navigationAllowed": true, "deepLinkAllowed": true, "reasonCode": "PREOPEN_OPEN" },
+    { "featureKey": "INVITE", "state": "CLOSED", "visibility": false, "mutationAllowed": false, "navigationAllowed": false, "deepLinkAllowed": false, "reasonCode": "PREOPEN_OMIT" },
     { "featureKey": "PRESENT", "state": "OPEN", "visibility": true, "mutationAllowed": true, "navigationAllowed": true, "deepLinkAllowed": true, "reasonCode": "PREOPEN_OPEN" },
     { "featureKey": "NORMAL_GACHA", "state": "OPEN", "visibility": true, "mutationAllowed": true, "navigationAllowed": true, "deepLinkAllowed": true, "reasonCode": "PREOPEN_OPEN" },
     { "featureKey": "FRIEND", "state": "CLOSED", "visibility": false, "mutationAllowed": false, "navigationAllowed": false, "deepLinkAllowed": false, "reasonCode": "PREOPEN_OMIT" },
