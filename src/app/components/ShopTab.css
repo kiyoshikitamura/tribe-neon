@@ -7,11 +7,12 @@
 .shop-tax-note { font-size:10px; font-weight:400; color:#aeb7c5; }
 .shop-account-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:6px; padding:4px 0 8px; }
 .shop-account-button.outlaw-button { min-height:32px; padding:5px 10px; font-size:11px; letter-spacing:0; }
-.shop-sub-tabs { margin-bottom:10px; grid-template-columns:minmax(0,1fr); }
+.shop-tab-container .shop-sub-tabs { margin-bottom:10px; grid-template-columns:minmax(0,1fr); }
+.shop-sub-tabs .outlaw-sub-tab-nav { position:relative; width:100%; }
 .shop-sub-tabs .sub-tab-scroll-button { display:none; }
 .shop-sub-tabs .sub-tab-item { min-width:0; padding:10px 4px; font-size:12px; letter-spacing:0; }
 .shop-product-card { padding:10px; }
-.shop-product-card .outlaw-card-inner { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:8px; }
+.shop-product-card .outlaw-card-inner { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:8px; padding:0; }
 .shop-product-info { min-width:0; }
 .shop-card-heading { display:flex; align-items:center; justify-content:space-between; gap:6px; }
 .shop-card-title { min-width:0; font-size:13px; font-weight:700; color:#f1f5f9; line-height:1.45; }

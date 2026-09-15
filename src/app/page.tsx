@@ -58,6 +58,7 @@ import { initializeAcquisitionAttribution } from "@/utils/acquisitionAttribution
 function AppContent() {
   const { session, authLoading, authenticatedProjectionReady, authenticatedProjectionError, retryAuthenticatedProjection, isSetupRequired, onboardingState, activeTab, showTitleView, battleState,
     handleLogout,
+    syncBootstrapData,
     confirmDialogConfig,
     globalInteractionBlocking,
     maintenanceEnabled,
@@ -77,6 +78,12 @@ function AppContent() {
     setInboxPanelTab,
     navigateTab,
   } = useGame();
+  const billingOwnerRef = React.useRef(session?.user.id);
+  React.useLayoutEffect(() => { billingOwnerRef.current = session?.user.id; }, [session?.user.id]);
+  const refreshGrantedPurchase = React.useCallback((owner: string) => {
+    if (!session?.user.id || owner !== session.user.id || owner !== billingOwnerRef.current) return;
+    return syncBootstrapData(owner);
+  }, [session?.user.id, syncBootstrapData]);
   const [billingOrderId, setBillingOrderId] = React.useState<string | null>(null);
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -331,7 +338,9 @@ function AppContent() {
             <PrepMissionEventDialogController />
             <RankingRewardNotificationController />
             {billingOrderId !== null && onboardingState?.gameplay_authorized && <BillingStatusDialog
+              key={`${session.user.id}:${billingOrderId}`}
               orderId={billingOrderId}
+              onGranted={refreshGrantedPurchase}
               onClose={closeBillingStatus}
             />}
             <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />

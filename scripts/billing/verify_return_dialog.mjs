@@ -20,7 +20,7 @@ await assert.rejects(route({ searchParams: Promise.resolve({ order: 'order&evil=
 await assert.rejects(route({ searchParams: Promise.resolve({}) }), { message: '/?billing_order=' });
 
 async function dialog({ status = 'PENDING', session = true, historyFailure = false, restoreFailure = false } = {}) {
-  const states = [], refs = [], effects = [], calls = [], cleared = [];
+  const states = [], refs = [], effects = [], calls = [], cleared = [], granted = [];
   let stateIndex = 0, refIndex = 0, closed = false;
   const hooks = {
     useState: initial => { const i = stateIndex++; if (!(i in states)) states[i] = initial; return [states[i], value => { states[i] = value; }]; },
@@ -43,13 +43,13 @@ async function dialog({ status = 'PENDING', session = true, historyFailure = fal
     },
     './ui/CanonicalDialog': { __esModule: true, default: 'Dialog' },
   });
-  const render = () => { stateIndex = 0; refIndex = 0; return component({ orderId: 'order', onClose: () => { closed = true; } }); };
-  let tree = render(); effects[0]();
+  const render = () => { stateIndex = 0; refIndex = 0; return component({ orderId: 'order', onClose: () => { closed = true; }, onGranted: (...args) => { granted.push(args); return new Promise(() => {}); } }); };
+  let tree = render(); effects.forEach(effect => effect());
   // Duplicate auto/manual checks during the same request do not dispatch twice.
   void tree.props.actions[0].onClick();
   await new Promise(resolve => setImmediate(resolve));
   tree = render();
-  return { states, calls, cleared, tree, close: () => { tree.props.onClose(); return closed; } };
+  return { states, calls, cleared, granted, tree, close: () => { tree.props.onClose(); return closed; } };
 }
 let result = await dialog();
 assert.match(result.states[1], /まだ確定していません/);
@@ -61,6 +61,10 @@ assert.deepEqual(result.calls, []);
 result = await dialog({ status: 'GRANTED' });
 assert.match(result.states[1], /購入が完了/);
 assert.deepEqual(result.cleared, [['u', 'pack', 'checkout']]);
+assert.deepEqual(result.granted, [['u', 'order']]);
+assert.ok(result.close(), 'closing must not wait for bootstrap');
+await result.tree.props.actions[0].onClick();
+assert.equal(result.granted.length, 1, 'repeat status check must not refresh twice');
 result = await dialog({ status: 'GRANTED', historyFailure: true });
 assert.match(result.states[1], /購入が完了/);
 result = await dialog({ status: 'EXPIRED' });

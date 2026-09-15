@@ -5,13 +5,17 @@ import { supabase } from "@/utils/supabase";
 import { billingFetch, clearBillingRequest } from "@/utils/billing_client";
 import CanonicalDialog from "./ui/CanonicalDialog";
 
-export default function BillingStatusDialog({ orderId, onClose }: {
+export default function BillingStatusDialog({ orderId, onClose, onGranted }: {
   orderId: string;
   onClose: () => void;
+  onGranted?: (userId: string, orderId: string) => void | Promise<void>;
 }) {
   const [busy, setBusy] = useState(true);
   const [message, setMessage] = useState("購入状況を確認しています。");
   const checking = useRef(false);
+  const notifiedGrants = useRef(new Set<string>());
+  const onGrantedRef = useRef(onGranted);
+  useEffect(() => { onGrantedRef.current = onGranted; }, [onGranted]);
   const mounted = useRef(false);
   const check = useCallback(async () => {
     if (checking.current) return;
@@ -30,6 +34,13 @@ export default function BillingStatusDialog({ orderId, onClose }: {
         : result.status === "EXPIRED"
           ? "お支払い期限が終了しました。ショップから商品を選び直してください。"
           : "お支払いはまだ確定していません。中断した場合は、ショップで同じ商品を選ぶと再開できます。");
+      const grantKey = `${data.session.user.id}:${orderId}`;
+      if (result.status === "GRANTED" && !notifiedGrants.current.has(grantKey)) {
+        notifiedGrants.current.add(grantKey);
+        // Refresh inventory/counts independently; closing the dialog never waits
+        // for bootstrap, and a refresh error cannot invalidate a paid order.
+        void Promise.resolve().then(() => onGrantedRef.current?.(data.session!.user.id, orderId)).catch(() => {});
+      }
       if (["GRANTED", "EXPIRED"].includes(result.status)) {
         // Failure to refresh history must not turn confirmed delivery into an
         // apparent payment failure. A retry retains the server's idempotency.
