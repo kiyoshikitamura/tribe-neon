@@ -133,9 +133,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // ==========================================
   // 0. ナビゲーション ＆ UI状態管理
   // ==========================================
+  const gacha = useGacha();
   const nav = useNavigation(
     playCyberSe,
-    handleFirstUserInteraction
+    handleFirstUserInteraction,
+    gacha.featureOperatingStates
   );
 
   const {
@@ -478,8 +480,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setRaidTopRefreshRevision(value => value + 1);
     setActiveTab("raid");
   };
-
-  const gacha = useGacha();
 
   const {
     featureOperatingStates, setFeatureOperatingStates,

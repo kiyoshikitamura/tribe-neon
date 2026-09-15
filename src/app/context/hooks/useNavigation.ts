@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useState, useRef } from "react";
 import { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
-import { sanitizeOperationsTab } from "@/domain/operations/operations";
+import { sanitizeOperationsTab, type OperationsStateMap } from "@/domain/operations/operations";
 import { hasPendingLegalSettingsReturn } from "@/utils/legalSettingsReturn";
 
-export function useNavigation(playCyberSe: (type: string) => void, handleFirstUserInteraction: () => void) {
+export function useNavigation(playCyberSe: (type: string) => void, handleFirstUserInteraction: () => void, featureOperatingStates: OperationsStateMap) {
   const [activeTab, setActiveTabState] = useState<string>("home");
   const [showInboxPanel, setShowInboxPanel] = useState<boolean>(false);
   const [showMissionPanel, setShowMissionPanel] = useState<boolean>(false);
@@ -30,8 +30,8 @@ export function useNavigation(playCyberSe: (type: string) => void, handleFirstUs
   const [globalInteractionBlocking, setGlobalInteractionBlocking] = useState<boolean>(false);
 
   const setActiveTab = useCallback((tabName: string) => {
-    setActiveTabState(sanitizeOperationsTab(tabName));
-  }, []);
+    setActiveTabState(sanitizeOperationsTab(tabName, featureOperatingStates));
+  }, [featureOperatingStates]);
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
