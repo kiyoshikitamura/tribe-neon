@@ -5,10 +5,12 @@ import { loadBillingReadiness } from "@/utils/billing_config_client";
 import { useGame } from "../context/GameContext";
 import { isFeatureOpen } from "@/domain/operations/operations";
 import "./Footer.css";
+import { useDailyShopBadge } from "./useDailyShopBadge";
 
 export default function Footer() {
   const {
     activeTab,
+    session,
     navigateTab,
     playCyberSe,
     dailyFreeGachaFlags,
@@ -23,6 +25,7 @@ export default function Footer() {
   const hasFreeGacha = dailyFreeGachaReady && Object.values(dailyFreeGachaFlags).some(Boolean);
   const communityUnreadCount = Number(chatUnreadCounts?.GUILD || 0) + Number(dmUnreadTotal || 0);
   const shopOpen = isFeatureOpen("SHOP", featureOperatingStates);
+  const hasDailyShopNotice = useDailyShopBadge(session?.user?.id, shopOpen, activeTab);
   const warmShop = () => {
     if (!shopOpen) return;
     void import("./ShopTab").catch(() => undefined);
@@ -79,6 +82,7 @@ export default function Footer() {
               </span>
             )}
             {item.id === "gacha" && hasFreeGacha && <span className="footer-notification-badge" aria-label="無料ガチャあり">FREE</span>}
+            {item.id === "shop" && hasDailyShopNotice && <span className="footer-unread-badge" aria-label="本日のショップ未確認">!</span>}
             {item.upcoming && <span className="footer-upcoming-badge" aria-hidden="true">準備中</span>}
           </button>
         );
