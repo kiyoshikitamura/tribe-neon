@@ -5,7 +5,8 @@ export const PRODUCTION_PROJECT_REF = "ktpolnkyyfkowxdmijww";
 export const PREVIEW_PROJECT_REF = "sufvuqdnqohpfzkwxohq";
 export class BillingError extends Error {
   status: number;
-  constructor(message: string, status = 400) { super(message); this.status = status; }
+  code: string;
+  constructor(message: string, status = 400, code = "BILLING_ERROR") { super(message); this.status = status; this.code = code; }
 }
 export type CheckoutSession = {
   id: string; url?: string | null; livemode: boolean; status: string;

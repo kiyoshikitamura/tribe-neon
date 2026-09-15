@@ -40,7 +40,8 @@ export default function ShopTab() {
   const {
     shopSubTab, setShopSubTab, userShopPurchases, boughtResultModal,
     setBoughtResultModal, handleBuyNormalProduct, handleBuyStripeProduct,
-    profileLoading, upgradeLoading, setConfirmDialogConfig
+    profileLoading, upgradeLoading, setConfirmDialogConfig, session,
+    onboardingState, handleGoogleLogin
   } = useGame();
   const busy = profileLoading || upgradeLoading;
   const disabled = busy || availability !== "available";
@@ -48,6 +49,35 @@ export default function ShopTab() {
   const packs = SHOP_PRODUCTS_MASTER.filter(p => p.shopType === "LIMITED" && p.category !== "DIAMOND").sort((a,b) => packOrder.indexOf(a.id)-packOrder.indexOf(b.id));
   const diamonds = SHOP_PRODUCTS_MASTER.filter(p => p.category === "DIAMOND").sort((a,b) => a.sortOrder-b.sortOrder);
   const normal = SHOP_PRODUCTS_MASTER.filter(p => p.shopType === "NORMAL").sort((a,b) => a.sortOrder-b.sortOrder);
+  const purchaseAuthReady = Boolean(session?.user?.id
+    && session.user.is_anonymous !== true
+    && onboardingState?.user_id === session.user.id
+    && onboardingState.has_profile
+    && onboardingState.identity_integrity_valid
+    && onboardingState.gameplay_authorized);
+
+  const showPurchaseAuthGate = () => {
+    window.localStorage.setItem("tribe_purchase_auth_return", "shop");
+    setConfirmDialogConfig({
+      isOpen: true,
+      title: "購入前にアカウント連携をお願いします",
+      message: <div>
+        <p>購入したアイテムやプレイデータを安全に引き継ぐため、課金商品の購入にはアカウント連携が必要です。</p>
+        <p>アカウント連携後も、現在のゲームデータはそのまま利用できます。</p>
+      </div>,
+      confirmText: "アカウント連携する",
+      cancelText: "あとで",
+      presentation: "canonical",
+      onConfirm: async () => {
+        setConfirmDialogConfig({ isOpen: false });
+        await handleGoogleLogin();
+      },
+      onCancel: () => {
+        window.localStorage.removeItem("tribe_purchase_auth_return");
+        setConfirmDialogConfig({ isOpen: false });
+      },
+    });
+  };
 
   useEffect(() => {
     if (!boughtResultModal) return;
@@ -67,6 +97,10 @@ export default function ShopTab() {
   const confirmPurchase = (product: ShopProduct) => {
     if (disabled || disabledProductIds.includes(product.id) || remainingShopPurchases(product, userShopPurchases[product.id] || 0) === 0) return;
     const paid = product.shopType === "LIMITED";
+    if (paid && !purchaseAuthReady) {
+      showPurchaseAuthGate();
+      return;
+    }
     const isPack = paid && product.category !== "DIAMOND";
     const remaining = remainingShopPurchases(product, userShopPurchases[product.id] || 0);
     setConfirmDialogConfig({

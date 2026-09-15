@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     const billing = billingService();
     validateCheckoutOrigin(request, billing.config.origin);
-    const userId = await billing.authenticatedUser(request);
+    const userId = await billing.authenticatedPurchaseUser(request);
     const input = await request.json();
     const requestId = uuid(input.requestId);
     if (typeof input.productId !== "string" || input.productId.length > 80) throw new BillingError("商品が不正です。");
