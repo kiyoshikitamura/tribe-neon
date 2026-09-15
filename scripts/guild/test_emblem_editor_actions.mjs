@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import ts from 'typescript';
+import vm from 'node:vm';
+const cells=[]; let index=0, writes=0, changed=0, closed=0;
+const element=(type,props)=>({type,props:props||{}});
+const react={useState(value){const n=index++;if(!(n in cells))cells[n]=value;return[cells[n],v=>{cells[n]=typeof v==='function'?v(cells[n]):v;}];},useRef(v){const n=index++;return cells[n]||=( {current:v});},useEffect(){},useCallback(fn){return fn;}};
+const module={exports:{}};
+const loader=name=>name==='react'?react:name==='react/jsx-runtime'?{jsx:element,jsxs:element}:name==='react-dom'?{createPortal:(child,host)=>({portal:true,child,host})}:name==='@/utils/supabase'?{supabase:{rpc:async(name,args)=>{assert.equal(name,'set_guild_emblem');assert.equal(args.p_emblem_id,'qa');writes++;return{error:null};}}}:{default:name};
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/app/components/guild/GuildEmblemEditor.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,{module,exports:module.exports,require:loader,document:{body:{id:'body'}}});
+const render=()=>{index=0;return module.exports.default({guildId:'fixture',onChanged:()=>changed++,onClose:()=>closed++});};
+assert.equal(render(),null);
+cells[0]=true;cells[1]=[{id:'qa',display_name:'検証用',asset_path:'/qa.png'}];cells[3]=false;
+let tree=render();assert.equal(tree.portal,true);assert.equal(tree.host.id,'body');
+let dialog=tree.child.props.children;assert.equal(dialog.props.actions.length,2);assert.equal(dialog.props.actions[1].disabled,true);
+function find(node){if(!node)return null;if(Array.isArray(node))return node.map(find).find(Boolean);if(node.props?.className?.startsWith('guild-emblem-editor-option'))return node;return find(node.props?.children);}
+find(dialog.props.children).props.onClick();tree=render();dialog=tree.child.props.children;assert.equal(dialog.props.actions[1].disabled,false);
+await dialog.props.actions[1].onClick();assert.equal(writes,1);assert.equal(changed,1);assert.equal(closed,1);
+await dialog.props.actions[1].onClick();assert.equal(writes,1);
+console.log('PASS: body portal, persistent disabled confirmation, selection enables confirmation, one mocked save and close, no duplicate save');

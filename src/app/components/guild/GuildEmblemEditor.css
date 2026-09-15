@@ -1,5 +1,8 @@
-.guild-emblem-editor { outline: none; }
-.guild-emblem-editor .canonical-dialog-actions { grid-auto-flow: row; }
+.guild-emblem-editor { position: fixed; inset: 0; z-index: 12500; outline: none; font-family: var(--font-ui); }
+.guild-emblem-editor .canonical-dialog-overlay { position: absolute; box-sizing: border-box; padding: calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px)); }
+.guild-emblem-editor .canonical-dialog { box-sizing: border-box; min-height: 0; max-height: calc(100dvh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)); grid-template-rows: auto minmax(0,1fr) auto; }
+.guild-emblem-editor .canonical-dialog-body { min-height: 0; overflow-y: auto; overflow-x: hidden; white-space: normal; overscroll-behavior: contain; }
+.guild-emblem-editor .canonical-dialog-actions { grid-auto-flow: row; position: relative; z-index: 1; }
 .guild-emblem-editor .canonical-dialog-actions button { white-space: nowrap; font-size: 14px; }
 .guild-emblem-editor-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
 .guild-emblem-editor-option { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; padding: 10px 3px; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; background: #0c1420; color: var(--ui-text-primary); cursor: pointer; }

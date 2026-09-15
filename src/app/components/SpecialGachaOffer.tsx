@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { supabase } from "@/utils/supabase";
 import { SPECIAL_GACHA_COPY, exchangeItems, parseSpecialGachaCatalog, specialTicketId, type SpecialGacha, type SpecialGachaCatalog, type SpecialGachaId, type SpecialGachaItem } from "@/domain/gacha/specialGacha";
 import CanonicalDialog from "./ui/CanonicalDialog";
@@ -70,9 +71,9 @@ export default function SpecialGachaOffer({ category, diamonds, userItems, pendi
         <p className="special-gacha-balance">所持 {(diamonds || 0).toLocaleString()}ダイヤ / チケット{ticketCount(selected)}枚</p>
       </>}
     </CanonicalDialog>}
-    {rates && <CanonicalDialog title={`${SPECIAL_GACHA_COPY[rates.id].title} 提供割合`} onClose={() => setRates(null)} actions={[{ label: "閉じる", onClick: () => setRates(null) }]}>
-      <div className="special-gacha-rates">{rates.items.map(item => <div key={item.item_id}><span>{item.rarity} {item.name}{item.is_exclusive ? "（専用）" : ""}</span><strong>{item.probability.toFixed(4)}%</strong></div>)}</div>
-    </CanonicalDialog>}
+    {rates && createPortal(<div className="special-gacha-rates-dialog"><CanonicalDialog title={`${SPECIAL_GACHA_COPY[rates.id].title} 提供割合`} onClose={() => setRates(null)} actions={[{ label: "閉じる", onClick: () => setRates(null) }]}>
+      <div className="special-gacha-rates" tabIndex={0} role="region" aria-label="提供割合一覧">{rates.items.map(item => <div key={item.item_id}><span>{item.rarity} {item.name}{item.is_exclusive ? "（専用）" : ""}</span><strong>{item.probability.toFixed(4)}%</strong></div>)}</div>
+    </CanonicalDialog></div>, document.body)}
     {exchangeOpen && <CanonicalDialog title={`${SPECIAL_GACHA_COPY[exchangeOpen.id].title} SSR交換`} onClose={pending ? undefined : () => { setExchangeOpen(null); setReward(null); }} actions={reward ? [{ label: "100Ptで交換", semantic: "primary", disabled: pending || Number(exchangeOpen.pity_points) < catalog.pity_cost, onClick: exchange }] : []}>
       <p>{exchangeOpen.pity_points}Pt / 交換に必要：{catalog.pity_cost}Pt</p>
       <div className="special-gacha-exchange">{exchangeItems([exchangeOpen]).map(item => <button key={`${item.item_type}:${item.item_id}`} aria-pressed={reward?.item_id === item.item_id && reward.item_type === item.item_type} disabled={pending} onClick={() => setReward(item)}>{item.name}{item.is_exclusive ? "（専用）" : ""}</button>)}</div>

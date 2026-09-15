@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { supabase } from "@/utils/supabase";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import OutlawButton from "../ui/OutlawButton";
@@ -23,6 +24,8 @@ export default function GuildEmblemEditor({ guildId, onChanged, onClose }: {
   onChanged: () => void;
   onClose: () => void;
 }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [emblems, setEmblems] = useState<Emblem[]>([]);
   const [selected, setSelected] = useState<Emblem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,6 +63,7 @@ export default function GuildEmblemEditor({ guildId, onChanged, onClose }: {
   }, [guildId, reloadKey]);
 
   useEffect(() => {
+    if (!mounted) return;
     const previousFocus = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -73,7 +77,7 @@ export default function GuildEmblemEditor({ guildId, onChanged, onClose }: {
       document.body.style.overflow = previousOverflow;
       previousFocus?.focus();
     };
-  }, []);
+  }, [mounted]);
 
   const save = async () => {
     if (!selected || busy.current) return;
@@ -98,7 +102,8 @@ export default function GuildEmblemEditor({ guildId, onChanged, onClose }: {
     }
   };
 
-  return <div ref={root} tabIndex={-1} className="guild-emblem-editor" onKeyDown={(event) => {
+  if (!mounted) return null;
+  return createPortal(<div ref={root} tabIndex={-1} className="guild-emblem-editor" onKeyDown={(event) => {
     if (event.key === "Escape") { event.preventDefault(); safeClose(); }
     if (event.key === "Tab") {
       const focusable = Array.from(root.current?.querySelectorAll<HTMLElement>("button:not(:disabled), [tabindex='0']") || []);
@@ -111,7 +116,7 @@ export default function GuildEmblemEditor({ guildId, onChanged, onClose }: {
   }}>
     <CanonicalDialog title="エンブレム変更" onClose={saving ? undefined : safeClose} actions={[
       { label: "キャンセル", onClick: safeClose, disabled: saving },
-      ...(selected ? [{ label: saved ? "表示を更新" : "このエンブレムに変更", semantic: "primary" as const, onClick: save, disabled: saving }] : []),
+      { label: saved ? "表示を更新" : "このエンブレムに変更", semantic: "primary" as const, onClick: save, disabled: !selected || loading || saving },
     ]}>
       <div aria-busy={loading || saving}>
         {loading ? <div className="guild-emblem-editor-status" role="status"><span className="spinner" aria-hidden="true" />読み込み中…</div>
@@ -135,5 +140,5 @@ export default function GuildEmblemEditor({ guildId, onChanged, onClose }: {
         {saving && <div className="guild-emblem-editor-status" role="status"><span className="spinner" aria-hidden="true" />変更中…</div>}
       </div>
     </CanonicalDialog>
-  </div>;
+  </div>, document.body);
 }
