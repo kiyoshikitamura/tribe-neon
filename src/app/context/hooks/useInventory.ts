@@ -37,12 +37,14 @@ export function useInventory(
   playCyberSe: (type: string) => void,
   syncBootstrapData: (userId: string) => Promise<void>,
   setConfirmDialogConfig: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>,
-  onMissionPlayerProgress?: (level: number, xp: number) => void
+  onMissionPlayerProgress?: (level: number, xp: number) => void,
+  onPresentEquipmentProjection?: (rows: any[], owner: string) => void
 ) {
   const [userItems, setUserItems] = useState<any[]>([]);
   const [inventoryProjectionOwnerUserId, setInventoryProjectionOwnerUserId] = useState("");
   const activeInventoryUserIdRef = useRef(session?.user?.id || "");
   const inventoryProjectionGenerationRef = useRef(0);
+  const inventoryIdentityGenerationRef = useRef(0);
   const activeSessionUserId = session?.user?.id || "";
 
   // 消耗品ステート
@@ -96,6 +98,7 @@ export function useInventory(
 
   const resetUserItemsProjection = useCallback((nextActiveUserId = "") => {
     activeInventoryUserIdRef.current = nextActiveUserId;
+    inventoryIdentityGenerationRef.current += 1;
     inventoryProjectionGenerationRef.current += 1;
     projectUserItems([], "");
   }, [projectUserItems]);
@@ -142,6 +145,12 @@ export function useInventory(
     beginAction: beginItemUse,
     endAction: endItemUse
   } = useImmediateActionLock();
+  const presentLockOwnerRef = useRef(activeSessionUserId);
+  useLayoutEffect(() => {
+    if (presentLockOwnerRef.current === activeSessionUserId) return;
+    presentLockOwnerRef.current = activeSessionUserId;
+    endPresentClaim();
+  }, [activeSessionUserId, endPresentClaim]);
   const setPresentClaimLoading = (loading: boolean) => {
     if (loading) beginPresentClaim();
     else endPresentClaim();
@@ -222,87 +231,104 @@ export function useInventory(
     }
   };
 
-  const handleClaimPresent = async (id: string) => {
-    if (!session) return;
-    if (!beginPresentClaim()) return;
-    setPresents(prev => prev.map(p => p.id === id ? { ...p, loading: true } : p));
-    playCyberSe("click");
-
-    try {
-      const targetPresent = presents.find(p => p.id === id);
-      const res = await supabase.rpc("claim_present", {
-        p_present_id: id
-      });
-      if (res.error) throw res.error;
-      if (res.data?.error) throw new Error(res.data.error);
-
-      setPresents(prev => prev.filter(p => p.id !== id));
-      await Promise.all([
-        refreshUserItemsProjection(session.user.id),
-        syncBootstrapData(session.user.id),
-      ]);
-      if (targetPresent) {
-        setConfirmDialogConfig({
-          isOpen: true,
-          title: "報酬獲得",
-          message: "プレゼントを受け取りました。",
-          kind: "reward",
-          rewards: [{ id: targetPresent.itemId || targetPresent.item_id, name: canonicalItemName(String(targetPresent.itemId || targetPresent.item_id || "")), quantity: Number(targetPresent.qty || targetPresent.quantity || 0) }],
-          confirmText: "閉じる",
-          cancelText: "",
-          presentation: "canonical",
-          onConfirm: () => setConfirmDialogConfig(null),
-          onCancel: () => setConfirmDialogConfig(null),
-        });
-      }
-    } catch (err: any) {
-      console.warn(err.message);
-      setPresents(prev => prev.map(p => p.id === id ? { ...p, loading: false } : p));
-      showActionError("受け取りに失敗しました", err);
-    } finally {
-      endPresentClaim();
-    }
+  // Present claims only change the wallet, inventory and inbox. Do not put the
+  // whole social / battle / mission bootstrap on this interaction's critical path.
+  const refreshPresentClaimState = async (owner: string, isCurrent: () => boolean) => {
+    const generation = beginUserItemsProjectionRequest(owner);
+    const [wallet, items, inbox, equipment] = await Promise.all([
+      supabase.from("users").select("cash,neon_diamonds").eq("id", owner).single(),
+      supabase.from("user_items").select("*").eq("user_id", owner),
+      supabase.from("presents").select("*").eq("user_id", owner).order("sent_at", { ascending: false }),
+      supabase.from("user_equipments").select("*").eq("user_id", owner).order("created_at", { ascending: false }),
+    ]);
+    if (!isCurrent()) return [];
+    if (wallet.error) throw wallet.error;
+    if (items.error) throw items.error;
+    if (inbox.error) throw inbox.error;
+    if (equipment.error) throw equipment.error;
+    if (!wallet.data) throw new Error("Present wallet projection unavailable");
+    setCash(Number(wallet.data.cash));
+    setDiamonds(Number(wallet.data.neon_diamonds));
+    projectUserItems(items.data || [], owner, generation);
+    onPresentEquipmentProjection?.(equipment.data || [], owner);
+    const rows = inbox.data || [];
+    setPresents(rows.map(p => {
+      const hours = Math.ceil((new Date(p.expire_at).getTime() - Date.now()) / 3600000);
+      return { ...p, id: String(p.id), itemId: p.item_id, qty: p.quantity,
+        title: p.message?.split(":")[0] || "配布アイテム", loading: false,
+        expireText: p.expire_at == null ? "期限なし" : hours <= 0 ? "期限切れ" : hours > 24 ? `期限: あと${Math.ceil(hours / 24)}日` : `期限: あと${hours}時間` };
+    }));
+    return rows;
   };
 
-  const handleClaimAllPresents = async () => {
+  const claimPresents = async (id?: string) => {
     if (!session) return;
-    const unclaimed = presents.filter(p => p.status === "UNCLAIMED");
-    if (unclaimed.length === 0) return;
-
-    if (!beginPresentClaim()) return;
+    const targets = presents.filter(p => p.status === "UNCLAIMED" && (!id || p.id === id));
+    if (!targets.length || !beginPresentClaim()) return;
+    const owner = session.user.id;
+    const identityGeneration = inventoryIdentityGenerationRef.current;
+    const isCurrent = () => activeInventoryUserIdRef.current === owner && inventoryIdentityGenerationRef.current === identityGeneration;
+    const timing = beginActionPerformance("present_claim");
+    let committed = false;
     let receiptOwnsLock = false;
-    setPresents(prev => prev.map(p => p.status === "UNCLAIMED" ? { ...p, loading: true } : p));
-    playCyberSe("gacha");
-
+    const targetIds = new Set(targets.map(p => p.id));
+    setPresents(prev => prev.map(p => targetIds.has(p.id) ? { ...p, loading: true } : p));
+    playCyberSe(id ? "click" : "gacha");
     try {
-      const res = await supabase.rpc("claim_all_presents");
+      timing.mark("request_start");
+      const res = id ? await supabase.rpc("claim_present", { p_present_id: id }) : await supabase.rpc("claim_all_presents");
+      timing.mark("response");
+      if (!isCurrent()) return;
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
-
-      setPresents(prev => prev.filter(p => p.status !== "UNCLAIMED"));
-      await Promise.all([
-        refreshUserItemsProjection(session.user.id),
-        syncBootstrapData(session.user.id),
-      ]);
+      if (res.data?.status !== "success") throw new Error("Present receipt not confirmed");
+      committed = true;
+      // The server is the only grant authority. Read the rows back rather than
+      // clearing every visible row (expired / newly arrived presents can differ).
+      const rows = await refreshPresentClaimState(owner, isCurrent);
+      if (!isCurrent()) return;
+      timing.mark("state_update");
+      timing.markVisualReady();
+      const received = rows.filter(p => targetIds.has(String(p.id)) && p.status === "CLAIMED");
+      const count = id ? 1 : Number(res.data.claimed_count || 0);
       const rewardByItem = new Map<string, number>();
-      unclaimed.forEach((present) => {
-        const itemId = String(present.itemId || present.item_id || "");
-        rewardByItem.set(itemId, (rewardByItem.get(itemId) || 0) + Number(present.qty || present.quantity || 0));
+      // Bulk RPC can claim a new arrival that was not in the visible list.
+      // In that case show the confirmed count, never an invented reward list.
+      if (received.length === count) received.forEach(p => {
+        const itemId = String(p.item_id);
+        rewardByItem.set(itemId, (rewardByItem.get(itemId) || 0) + Number(p.quantity));
       });
       const closeReceipt = () => {
+        if (!isCurrent()) return;
         setConfirmDialogConfig(null);
         endPresentClaim();
       };
       receiptOwnsLock = true;
-      setConfirmDialogConfig({ isOpen: true, title: "報酬獲得", message: "プレゼントを一括で受け取りました。", kind: "reward", rewards: Array.from(rewardByItem, ([id, quantity]) => ({ id, name: canonicalItemName(id), quantity })), confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: closeReceipt });
-    } catch (err: any) {
-      console.warn(err.message);
+      setConfirmDialogConfig({ isOpen: true, title: count ? "報酬獲得" : "プレゼント",
+        message: count ? (id ? "プレゼントを受け取りました。" : `プレゼントを${count}件受け取りました。`) : "受け取れるプレゼントはありませんでした。",
+        kind: rewardByItem.size ? "reward" : undefined,
+        rewards: Array.from(rewardByItem, ([itemId, quantity]) => ({ id: itemId, name: canonicalItemName(itemId), quantity })),
+        confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: closeReceipt, onCancel: closeReceipt });
+    } catch (err) {
+      if (!isCurrent()) return;
+      // A failed response may still have committed. Refresh without replaying
+      // the mutation; if reads fail, keep rows pending for an explicit retry.
+      try { await refreshPresentClaimState(owner, isCurrent); } catch { /* retain existing rows */ }
+      if (!isCurrent()) return;
       setPresents(prev => prev.map(p => ({ ...p, loading: false })));
-      showActionError("一括受け取りに失敗しました", err);
+      if (committed) {
+        setConfirmDialogConfig({ isOpen: true, title: "プレゼント受取済み",
+          message: "受け取りは完了しました。所持数の表示を更新できなかったため、ページを再読み込みしてください。",
+          confirmText: "閉じる", cancelText: "", presentation: "canonical",
+          onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      } else showActionError("受取状況を確認してください", err);
     } finally {
-      if (!receiptOwnsLock) endPresentClaim();
+      if (!receiptOwnsLock && isCurrent()) endPresentClaim();
     }
   };
+
+  const handleClaimPresent = (id: string) => claimPresents(id);
+  const handleClaimAllPresents = () => claimPresents();
 
   const refreshMissionClaimState = async (owner: string, isCurrent: () => boolean, committedProjection?: any) => {
     if (!isCurrent()) return;

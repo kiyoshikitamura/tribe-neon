@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { loadBillingReadiness } from "@/utils/billing_config_client";
 import { useGame } from "../context/GameContext";
 import { isFeatureOpen } from "@/domain/operations/operations";
 import "./Footer.css";
@@ -22,6 +23,19 @@ export default function Footer() {
   const hasFreeGacha = dailyFreeGachaReady && Object.values(dailyFreeGachaFlags).some(Boolean);
   const communityUnreadCount = Number(chatUnreadCounts?.GUILD || 0) + Number(dmUnreadTotal || 0);
   const shopOpen = isFeatureOpen("SHOP", featureOperatingStates);
+  const warmShop = () => {
+    if (!shopOpen) return;
+    void import("./ShopTab").catch(() => undefined);
+    void loadBillingReadiness().catch(() => undefined);
+  };
+  useEffect(() => {
+    if (!shopOpen) return;
+    const timer = window.setTimeout(() => {
+      void import("./ShopTab").catch(() => undefined);
+      void loadBillingReadiness().catch(() => undefined);
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, [shopOpen]);
 
   const navItems = [
     { id: "home", label: "マイページ", icon: "/ui/icon_footer_mypage.png" },
@@ -41,6 +55,9 @@ export default function Footer() {
             className={`footer-item active-scale-effect ${isActive ? "active" : ""} ${item.upcoming ? "upcoming" : ""}`}
             disabled={item.upcoming}
             aria-label={item.upcoming ? "ショップは準備中です" : item.label}
+            onPointerEnter={item.id === "shop" ? warmShop : undefined}
+            onFocus={item.id === "shop" ? warmShop : undefined}
+            onPointerDown={item.id === "shop" ? warmShop : undefined}
             onClick={() => {
               if (item.upcoming) return;
               if (item.id === "bbs") {

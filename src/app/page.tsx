@@ -48,6 +48,7 @@ import AuthenticationReminderModal from "./components/AuthenticationReminderModa
 import BrandedLoading from "./components/ui/BrandedLoading";
 import CanonicalDialog from "./components/ui/CanonicalDialog";
 import HomeResumeShell from "./components/HomeResumeShell";
+import BillingStatusDialog from "./components/BillingStatusDialog";
 import { LoginBonusModal } from "./components/LoginBonusModal";
 import RankingRewardNotificationController from "./components/ranking/RankingRewardNotificationController";
 import PrepMissionEventDialogController from "./components/mission/PrepMissionEventDialogController";
@@ -76,6 +77,28 @@ function AppContent() {
     setInboxPanelTab,
     navigateTab,
   } = useGame();
+  const [billingOrderId, setBillingOrderId] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("billing_order")) setBillingOrderId(params.get("billing_order") || "");
+  }, []);
+  const resumedBillingOrder = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    // Operating states hydrate after onboarding. The initial safe-tab guard
+    // may select Home until SHOP is known to be open; resume once after that.
+    const resumeKey = `${session?.user.id}:${billingOrderId}`;
+    if (billingOrderId === null || !onboardingState?.gameplay_authorized
+      || !isFeatureOpen("SHOP", featureOperatingStates) || resumedBillingOrder.current === resumeKey) return;
+    resumedBillingOrder.current = resumeKey;
+    navigateTab("shop");
+  }, [billingOrderId, session?.user.id, onboardingState?.gameplay_authorized, featureOperatingStates, navigateTab]);
+  const closeBillingStatus = () => {
+    setBillingOrderId(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("billing_order");
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    navigateTab("shop");
+  };
   const [homeResumeSnapshot, setHomeResumeSnapshot] = React.useState<ReturnType<typeof readHomeResumeSnapshot>>(null);
   React.useEffect(() => {
     void initializeAcquisitionAttribution();
@@ -173,6 +196,14 @@ function AppContent() {
         </div>
       </div>
     );
+  }
+
+  // A Checkout return must wait for session validation instead of flashing
+  // the title behind an in-progress payment status check.
+  if (billingOrderId !== null && authLoading) {
+    return <div className="app-container"><div className="app-loading-screen app-loading-screen--boot">
+      <BrandedLoading label="ショップに戻っています" />
+    </div></div>;
   }
 
   // 1. タイトル画面 (一番最初に表示)
@@ -299,6 +330,10 @@ function AppContent() {
             {/* Layer 6: 最上位の共通ダイアログとブロッカー */}
             <PrepMissionEventDialogController />
             <RankingRewardNotificationController />
+            {billingOrderId !== null && onboardingState?.gameplay_authorized && <BillingStatusDialog
+              orderId={billingOrderId}
+              onClose={closeBillingStatus}
+            />}
             <ConfirmDialog key={confirmDialogConfig?.dialogId} {...confirmDialogConfig} />
             {homeEntryPending && <CanonicalDialog title="ログイン情報を確認中" loading>
               <BrandedLoading label="ログイン情報を確認中" />

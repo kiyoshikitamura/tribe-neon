@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { ITEMS_MASTER_DATA } from "@/utils/items_master_data";
+import CanonicalDialog from "./ui/CanonicalDialog";
 import OutlawButton from "./ui/OutlawButton";
 
 type PaidAssetLot = {
@@ -13,11 +14,12 @@ type PaidAssetLot = {
 };
 
 const itemName = (id: string) => id === "CASH" ? "CASH"
-  : id === "DIAMOND" ? "ダイア"
+  : id === "DIAMOND" ? "ダイヤ"
   : ITEMS_MASTER_DATA.find(item => item.id === id)?.name ?? id;
 
 /** 販売catalogの接続確認後のみShopから表示する。期限の判定・失効はRPC側。 */
 export default function PaidAssetExpiry() {
+  const [open, setOpen] = useState(false);
   const [lots, setLots] = useState<PaidAssetLot[] | null>(null);
   const [dia, setDia] = useState<{paid:number;free:number} | null>(null);
   const [busy, setBusy] = useState(false);
@@ -48,12 +50,13 @@ export default function PaidAssetExpiry() {
     }
   };
 
-  return <section className="shop-paid-expiry" aria-label="購入分の有効期限">
-    <OutlawButton variant="secondary" disabled={busy} onClick={() => void load()}>
-      {busy ? <span className="shop-btn-spinner" aria-label="確認中" /> : "購入分の有効期限"}
-    </OutlawButton>
+  return <>
+    <OutlawButton variant="secondary" className="shop-account-button" onClick={() => {setOpen(true); void load();}}>購入分の有効期限</OutlawButton>
+    {open && <CanonicalDialog title="購入分の有効期限" onClose={()=>setOpen(false)} actions={[{label:"閉じる",onClick:()=>setOpen(false)}]}>
+    <OutlawButton variant="secondary" className="shop-account-button" disabled={busy} onClick={() => void load()}>更新</OutlawButton>
+    {busy && <span className="shop-btn-spinner" aria-label="確認中" />}
     {error && <p className="shop-expiry-notice" role="alert">{error}</p>}
-    {dia && <p className="shop-expiry-notice">ダイア 有償{dia.paid.toLocaleString("ja-JP")} / 無償{dia.free.toLocaleString("ja-JP")}</p>}
+    {dia && <p className="shop-expiry-notice">ダイヤ 有償{dia.paid.toLocaleString("ja-JP")} / 無償{dia.free.toLocaleString("ja-JP")}</p>}
     {lots?.length === 0 && <p className="shop-expiry-notice">期限のある未使用の購入分はありません。</p>}
     {lots && lots.length > 0 && <>
       <p className="shop-expiry-notice">未使用の購入分のみ表示しています。日時は日本時間です。</p>
@@ -70,5 +73,6 @@ export default function PaidAssetExpiry() {
         </li>)}
       </ul>
     </>}
-  </section>;
+    </CanonicalDialog>}
+  </>;
 }

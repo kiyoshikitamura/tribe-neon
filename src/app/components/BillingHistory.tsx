@@ -4,10 +4,12 @@ import { supabase } from "@/utils/supabase";
 import { billingFetch, clearBillingRequest } from "@/utils/billing_client";
 import { SHOP_PRODUCTS_MASTER } from "@/utils/shop_master_data";
 import OutlawButton from "./ui/OutlawButton";
+import CanonicalDialog from "./ui/CanonicalDialog";
 import OutlawCard from "./ui/OutlawCard";
 
 type Order = { id:string; product_id:string; amount_jpy:number; status:string; created_at:string };
 export default function BillingHistory() {
+  const [open, setOpen] = useState(false);
   const [orders,setOrders] = useState<Order[] | null>(null);
   const [busy,setBusy] = useState(false);
   const [message,setMessage] = useState("");
@@ -28,17 +30,20 @@ export default function BillingHistory() {
     } catch(error) { setMessage(error instanceof Error ? error.message : "購入履歴を確認できませんでした。"); }
     finally { inFlight.current = false; setBusy(false); }
   };
-  return <section aria-label="購入履歴">
-    <OutlawButton variant="secondary" onClick={()=>void load()} disabled={busy}>購入履歴</OutlawButton>
+  return <>
+    <OutlawButton variant="secondary" className="shop-account-button" onClick={()=>{setOpen(true); void load();}}>購入履歴</OutlawButton>
+    {open && <CanonicalDialog title="購入履歴" onClose={()=>setOpen(false)} actions={[{label:"閉じる",onClick:()=>setOpen(false)}]}>
+    <OutlawButton variant="secondary" className="shop-account-button" onClick={()=>void load()} disabled={busy}>更新</OutlawButton>
     {busy && <span className="shop-btn-spinner" aria-label="処理中" />}
     {message && <p role="status">{message}</p>}
     {orders?.length === 0 && <p>購入履歴はありません。</p>}
     {orders && orders.length > 0 && <div className="shop-history-list" role="region" aria-label="注文一覧" tabIndex={0}>
     {orders.map(order=><OutlawCard key={order.id}>
-      <p>{SHOP_PRODUCTS_MASTER.find(p=>p.id===order.product_id)?.title ?? order.product_id} / {order.amount_jpy.toLocaleString("ja-JP")}円</p>
+      <p>{SHOP_PRODUCTS_MASTER.find(p=>p.id===order.product_id)?.title.replaceAll("ダイア", "ダイヤ") ?? order.product_id} / {order.amount_jpy.toLocaleString("ja-JP")}円</p>
       <p>{new Date(order.created_at).toLocaleString("ja-JP",{timeZone:"Asia/Tokyo"})} / {order.status==="GRANTED"?"配送済み":order.status==="EXPIRED"?"期限終了":"お支払い待ち"}</p>
       {order.status==="PENDING" && <OutlawButton variant="secondary" disabled={busy} onClick={()=>void load(order)}>購入状況を再確認</OutlawButton>}
     </OutlawCard>)}
     </div>}
-  </section>;
+    </CanonicalDialog>}
+  </>;
 }

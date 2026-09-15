@@ -241,7 +241,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     (type: string) => playCyberSe(type as any),
     (userId: string) => syncBootstrapData(userId),
     setConfirmDialogConfig,
-    (level: number, xp: number) => { setUserLevel(level); setUserXp(xp); }
+    (level: number, xp: number) => { setUserLevel(level); setUserXp(xp); },
+    (rows: any[], owner: string) => {
+      if (currentAuthUserIdRef.current !== owner) return;
+      setUserEquipmentsList(rows);
+    }
   );
 
   const {
@@ -950,6 +954,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       }
       setOnboardingState(nextState);
       setIsSetupRequired(nextState.is_anonymous && !nextState.has_profile);
+      // Checkout return resumes only a server-authorized game session.
+      // The query selects presentation; it never authorizes or grants an order.
+      if (nextState.gameplay_authorized && new URLSearchParams(window.location.search).has("billing_order")) {
+        setActiveTab("shop");
+        setShowTitleView(false);
+      }
       const legalSettingsReturnRequested = isLegalSettingsReturnRequested();
       if (nextState.gameplay_authorized && hasPendingLegalSettingsReturn(userId)) {
         setShowTitleView(false);
