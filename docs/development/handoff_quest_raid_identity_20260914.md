@@ -165,3 +165,11 @@ Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の�
 課金診断APIのPreview限定追加、Season runner実DB rollback試験、独立DB競合用script、旧9/16開始文言の修正を統合。親側でPreview月次cronをinactive登録済み。実Season切替・報酬配布・Production反映なし。
 
 追加適用済み: Repository20260915000741_monthly_power_rollover_definition.sql → Preview実version20260915000930。定義のみ、再適用禁止。旧月終了→次月2カテゴリ開始の実装・rollback試験完了。既存月次jobは新advance関数へ接続しinactive維持。実Season・Production変更なし。
+
+## 最新運用方針：GitHub連携を主経路（2026-09-15ユーザー指示）
+
+- 実装・Preview配信はGitHub→Vercelの既存Git連携を主経路とする。対象branchはcodex/formal-open-integration-preview-20260914。
+- リモート保存後、対象CommitのVercel – tribe-neon statusを確認。別Project chat-fix-previewの結果と混同しない。
+- Vercelプラグインは補助確認のみ。403解消は並行課題とし、実装・Preview配信を止めない。再接続を毎回の再開条件にしない。
+- 固定URL・実配信DB・実機受入は独立の確認項目。Git連携成功だけでこれらをPASSにはしない。確認できない項目だけ残件へ記録し、進められる作業を継続する。
+- Production反映は引き続き別承認。適用済みMigration再適用禁止・既存受入成果保持も継続。

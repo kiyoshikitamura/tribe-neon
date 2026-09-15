@@ -36,3 +36,11 @@
 Vercel管理の正式呼出しは403。独立したローカル表示確認も正規BrowserのgotoがERR_BLOCKED_BY_CLIENTで阻害された。制限を迂回しておらず、アプリの画面不具合とは判定しない。
 
 追加Migration: Repository20260915000741_monthly_power_rollover_definition.sql → Preview実version20260915000930。再適用禁止。型/build最終PASS。新buildの一度目は生成一時dirのENOTEMPTYで失敗し、当該一時dirを削除して再実行PASS。
+
+## 最新運用方針：GitHub連携を主経路（2026-09-15ユーザー指示）
+
+- 実装・Preview配信はGitHub→Vercelの既存Git連携を主経路とする。対象branchはcodex/formal-open-integration-preview-20260914。
+- リモート保存後、対象CommitのVercel – tribe-neon statusを確認。別Project chat-fix-previewの結果と混同しない。
+- Vercelプラグインは補助確認のみ。403解消は並行課題とし、実装・Preview配信を止めない。再接続を毎回の再開条件にしない。
+- 固定URL・実配信DB・実機受入は独立の確認項目。Git連携成功だけでこれらをPASSにはしない。確認できない項目だけ残件へ記録し、進められる作業を継続する。
+- Production反映は引き続き別承認。適用済みMigration再適用禁止・既存受入成果保持も継続。
