@@ -7,13 +7,14 @@ import { getRaidParticipationRequirement } from "@/domain/raidRoomPresentation";
 import SectionHeader from "../ui/SectionHeader";
 import OutlawButton from "../ui/OutlawButton";
 import SubTabNav from "../ui/SubTabNav";
-import CanonicalItemIcon, { canonicalItemAssetPath } from "../ui/CanonicalItemIcon";
+import { canonicalItemAssetPath } from "../ui/CanonicalItemIcon";
 import { RAID_BACKGROUND_FALLBACK,RAID_PERSON_FALLBACK,useRaidPageAssets,RaidPageSpinner } from "./raidPagePresentation";
 import "./RaidEnemySelection.css";
 import RaidStrategySummary from "./RaidStrategySummary";
 import RaidRewardComparison from "./RaidRewardComparison";
+import { RaidRewardItem } from "./RaidRewardItems";
 export interface RaidEnemySelectionProps {choices:RaidRoomResource<readonly RaidBossChoice[]>;selectedVariantId:string;memberCharacterIds?:readonly string[]|null;difficultyId:RaidDifficultyId;onSelectVariant:(id:string)=>void;onSelectDifficulty:(id:RaidDifficultyId)=>void;onConfirm:()=>void;onCancel:()=>void;onRetry:()=>void;busy:boolean;canConfirm?:boolean;error?:string|null;rewardPlan?:RaidRoomResource<RaidRewardPlan>;resolveRewardName?:(id:string)=>string|null|undefined;onEnemyInfo?:(variantId:string)=>void;skillsByCharacterId?:RaidObserved<Readonly<Record<string,readonly {id:string;name:string}[]>>>;}
-export default function RaidEnemySelection({choices,selectedVariantId,memberCharacterIds,difficultyId,onSelectVariant,onSelectDifficulty,onConfirm,onCancel,onRetry,busy,canConfirm=true,error,rewardPlan,resolveRewardName,onEnemyInfo,skillsByCharacterId}:RaidEnemySelectionProps){
+export default function RaidEnemySelection({choices,selectedVariantId,memberCharacterIds,difficultyId,onSelectVariant,onSelectDifficulty,onConfirm,onCancel,onRetry,busy,canConfirm=true,error,rewardPlan,onEnemyInfo,skillsByCharacterId}:RaidEnemySelectionProps){
  const candidates=choices.status==='success'?choices.data??[]:[];
  const entries=candidates.map(choice=>{const rosterKnown=memberCharacterIds===undefined||(choice.raidVariantId===selectedVariantId&&memberCharacterIds!==null);return {choice,rosterKnown,enemy:resolveRaidTopEnemy(choice.raidVariantId,rosterKnown&&choice.raidVariantId===selectedVariantId?memberCharacterIds:undefined)};});
  const selectedEntry=entries.find(({choice})=>choice.raidVariantId===selectedVariantId);
@@ -28,7 +29,7 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
  {onEnemyInfo&&candidates.some(choice=>choice.raidVariantId===selectedVariantId)&&<OutlawButton loadingLabel="" disabled={busy} onClick={()=>onEnemyInfo(selectedVariantId)}>敵情報を見る</OutlawButton>}
  <h3>難易度</h3><SubTabNav tabs={RAID_DIFFICULTIES.map(entry=>({id:entry.id,label:entry.label,disabled:busy}))} activeTabId={difficultyId} onSelect={id=>onSelectDifficulty(id as RaidDifficultyId)}/><p className="raid-enemy-selection__requirement">{getRaidParticipationRequirement(difficultyId)}</p>
  <RaidRewardComparison selected={difficultyId} />
- <div className="raid-enemy-selection__reward"><h3>討伐報酬の予定</h3>{rewardPlan?.status==='loading'?<RaidPageSpinner/>:rewardPlan?.status==='error'?<p role="alert">報酬予定を取得できませんでした。</p>:rewardPlan?.status==='success'&&rewardPlan.data?.status==='configured'?<ul>{rewardPlan.data.items.map(item=><li key={item.itemId}>{canonicalItemAssetPath(item.itemId) && assets.resolve(canonicalItemAssetPath(item.itemId)!)===canonicalItemAssetPath(item.itemId) ? <CanonicalItemIcon itemId={item.itemId} alt="" fallback={null}/> : <span aria-label="アイコン未取得"/>}<span>{resolveRewardName?.(item.itemId)??'報酬アイテム'} × {item.quantity.toLocaleString('ja-JP')}</span></li>)}</ul>:<p>{rewardPlan?.status==='success'?'報酬予定は未設定です。':'報酬予定は未取得です。'}</p>}<p className="raid-enemy-selection__muted">獲得には参加・貢献などの条件があります。</p></div>
+ <div className="raid-enemy-selection__reward"><h3>討伐報酬の予定</h3>{rewardPlan?.status==='loading'?<RaidPageSpinner/>:rewardPlan?.status==='error'?<p role="alert">報酬予定を取得できませんでした。</p>:rewardPlan?.status==='success'&&rewardPlan.data?.status==='configured'?<ul>{rewardPlan.data.items.map(item=><li key={item.itemId}><RaidRewardItem {...item} /></li>)}</ul>:<p>{rewardPlan?.status==='success'?'報酬予定は未設定です。':'報酬予定は未取得です。'}</p>}<p className="raid-enemy-selection__muted">獲得には参加・貢献などの条件があります。</p></div>
  <OutlawButton loadingLabel="" fullWidth variant="primary" disabled={busy||!canConfirm||!candidates.some(choice=>choice.raidVariantId===selectedVariantId)} onClick={onConfirm}>この敵に挑む</OutlawButton></>}
  {error&&<p role="alert">{error.replaceAll('Room','レイド')}</p>}<OutlawButton loadingLabel="" fullWidth disabled={busy} onClick={onCancel}>選択を閉じる</OutlawButton></section>;
 }

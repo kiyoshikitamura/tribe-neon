@@ -1,2 +1,7 @@
-.raid-strategy-summary{display:grid;gap:5px;font-size:12px;line-height:1.6;min-width:0;margin:0 0 12px;overflow-wrap:anywhere}.raid-strategy-summary strong{font-size:13px}.raid-strategy-summary__counter{color:var(--ui-accent)}
+.raid-strategy-summary{display:grid;gap:5px;font-size:12px;line-height:1.6;min-width:0;margin:0 0 12px;overflow-wrap:anywhere}.raid-strategy-summary strong{font-size:13px}
 .raid-reward-comparison{display:grid;gap:8px;margin:12px 0;min-width:0}.raid-reward-comparison__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.raid-reward-comparison__tier{padding:10px;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-bg-surface);font-size:11px;line-height:1.6;overflow-wrap:anywhere}.raid-reward-comparison__tier[data-selected=true]{border-color:var(--ui-accent)}.raid-reward-comparison__tier h4{margin:0 0 6px;font-size:14px}.raid-reward-comparison__tier p{margin:4px 0}.raid-reward-comparison__daily{color:var(--ui-accent);font-weight:700}.raid-reward-comparison__status{color:var(--ui-text-secondary)}.raid-reward-comparison>p{font-size:11px;line-height:1.6}
+
+.raid-reward-comparison__rewards{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}
+.raid-reward-comparison__rewards>span:first-child:not(.raid-reward-items__item){flex-basis:100%;font-size:11px}
+.raid-reward-comparison__rewards .raid-reward-items__icon{width:30px;height:30px;flex-basis:30px}
+.raid-reward-comparison__rewards .raid-reward-items__item{gap:3px}

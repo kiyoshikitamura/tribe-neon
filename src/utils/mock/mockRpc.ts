@@ -19,6 +19,38 @@ import {
   type UserMissionRow,
 } from "../../domain/gameplay/canonical/mission_runtime.ts";
 
+
+function applyMockMainSkills(client: any, userId: string, party: any[]) {
+    const partyIds = new Set(party.map((entry: any) => entry.id));
+    const skills = client.getStorage("user_skills") || [];
+    skills.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
+    let skillCount = 0;
+    for (let slot = 0; slot < 6; slot += 1) {
+      for (const character of party) {
+        if (slot >= canonicalSkillSlotCount(Number(character.awakening_level || 0))) continue;
+        const alreadyHasExclusive = skills.some((entry: any) => entry.user_id === userId && entry.equipped_character_id === character.id
+          && CANONICAL_SKILLS.find((master) => master.skill_id === entry.skill_card_id)?.exclusive_character_id);
+        const candidates = skills.filter((entry: any) => {
+          if (entry.user_id !== userId || entry.equipped_character_id) return false;
+          const master = CANONICAL_SKILLS.find((item) => item.skill_id === entry.skill_card_id);
+          return master && (!master.exclusive_character_id || (master.exclusive_character_id === character.character_id && !alreadyHasExclusive));
+        }).sort((left: any, right: any) => {
+          const leftMaster = CANONICAL_SKILLS.find((entry) => entry.skill_id === left.skill_card_id)!;
+          const rightMaster = CANONICAL_SKILLS.find((entry) => entry.skill_id === right.skill_card_id)!;
+          return Number(rightMaster.exclusive_character_id === character.character_id) - Number(leftMaster.exclusive_character_id === character.character_id)
+            || Number(right.plus_val || 0) - Number(left.plus_val || 0)
+            || rarityScore(rightMaster.rarity) - rarityScore(leftMaster.rarity)
+            || leftMaster.skill_id.localeCompare(rightMaster.skill_id)
+            || String(left.id).localeCompare(String(right.id));
+        });
+        if (candidates[0]) { candidates[0].equipped_character_id = character.id; candidates[0].slot_index = slot; skillCount += 1; }
+      }
+    }
+
+    client.setStorage("user_skills", skills);
+    return skillCount;
+}
+
 const canonicalMissionRows = (): MissionMasterRow[] => CANONICAL_MISSIONS.map((mission) => ({
   id: mission.id,
   category: mission.category,
@@ -760,28 +792,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     skills.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
     equipments.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
 
-    let skillCount = 0;
-    for (let slot = 0; slot < 6; slot += 1) {
-      for (const character of party) {
-        if (slot >= canonicalSkillSlotCount(Number(character.awakening_level || 0))) continue;
-        const alreadyHasExclusive = skills.some((entry: any) => entry.user_id === userId && entry.equipped_character_id === character.id
-          && CANONICAL_SKILLS.find((master) => master.skill_id === entry.skill_card_id)?.exclusive_character_id);
-        const candidates = skills.filter((entry: any) => {
-          if (entry.user_id !== userId || entry.equipped_character_id) return false;
-          const master = CANONICAL_SKILLS.find((item) => item.skill_id === entry.skill_card_id);
-          return master && (!master.exclusive_character_id || (master.exclusive_character_id === character.character_id && !alreadyHasExclusive));
-        }).sort((left: any, right: any) => {
-          const leftMaster = CANONICAL_SKILLS.find((entry) => entry.skill_id === left.skill_card_id)!;
-          const rightMaster = CANONICAL_SKILLS.find((entry) => entry.skill_id === right.skill_card_id)!;
-          return Number(rightMaster.exclusive_character_id === character.character_id) - Number(leftMaster.exclusive_character_id === character.character_id)
-            || Number(right.plus_val || 0) - Number(left.plus_val || 0)
-            || rarityScore(rightMaster.rarity) - rarityScore(leftMaster.rarity)
-            || leftMaster.skill_id.localeCompare(rightMaster.skill_id)
-            || String(left.id).localeCompare(String(right.id));
-        });
-        if (candidates[0]) { candidates[0].equipped_character_id = character.id; candidates[0].slot_index = slot; skillCount += 1; }
-      }
-    }
+    const skillCount = applyMockMainSkills(client, userId, party);
 
     const slotCategories = ["WEAPON", "WEAPON", "HEAD", "BODY", "LEGS", "ACCESSORY", "ACCESSORY"];
     let equipmentCount = 0;
@@ -845,6 +856,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const before = Number((client.getStorage("user_power_rankings") || []).find((row: any) => row.user_id === userId)?.total_power || 0);
     let partyCount = 0;
     let equipmentCount = 0;
+    let skillCount = 0;
     if (action === "AUTO_SETUP") {
       const formationResult = await executeMockRpc(client, "save_recommended_main_formation", {});
       if (formationResult.error) return formationResult;
@@ -852,6 +864,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId).sort((a: any, b: any) => a.slot - b.slot);
       const party = formation.map((row: any) => allCharacters.find((entry: any) => entry.user_id === userId && entry.id === row.user_character_id)).filter(Boolean);
       partyCount = party.length;
+      skillCount = applyMockMainSkills(client, userId, party);
       const partyIds = new Set(party.map((entry: any) => entry.id));
       const equipments = client.getStorage("user_equipments") || [];
       equipments.filter((entry: any) => entry.user_id === userId && partyIds.has(entry.equipped_character_id)).forEach((entry: any) => { entry.equipped_character_id = null; entry.slot_index = null; });
@@ -874,7 +887,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
         }
       }
       client.setStorage("user_equipments", equipments);
-      recordMockLifetimeMilestone(client, userId, "first_main_loadout", { source: "character_setup_dialog", equipmentCount });
+      recordMockLifetimeMilestone(client, userId, "first_main_loadout", { source: "character_setup_dialog", equipmentCount, skillCount });
     } else if (action !== "LATER") {
       return { data: null, error: { message: "invalid dialog action", code: "22023" } };
     }
@@ -882,8 +895,8 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const equipments = client.getStorage("user_equipments") || [];
     const formation = (client.getStorage("user_main_formations") || []).filter((row: any) => row.user_id === userId);
     const after = formation.reduce((sum: number, row: any) => sum + mockCharacterPower(characters.find((character: any) => character.id === row.user_character_id) || {}, equipments), 0);
-    recordMockLifetimeMilestone(client, userId, "character_setup_dialog_consumed", { action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount });
-    return { data: { status: "success", action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount }, error: null };
+    recordMockLifetimeMilestone(client, userId, "character_setup_dialog_consumed", { action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount, skillCount });
+    return { data: { status: "success", action: action.toLowerCase(), powerBefore: before, powerAfter: after, partyCount, equipmentCount, skillCount }, error: null };
   }
 
   if (funcName === "get_current_main_formation") {

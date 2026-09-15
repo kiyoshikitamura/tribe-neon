@@ -1,5 +1,6 @@
 "use client";
 
+import { exclusiveAssetLabel } from "@/utils/exclusiveAssetLabels";
 import React from "react";
 import { CANONICAL_SKILL_VIEW, type SkillCardMaster } from "@/utils/skills_master_data";
 import { getCanonicalSkillIcon } from "@/utils/skillVisualAssets";
@@ -39,6 +40,7 @@ export function SkillDetailDialog({ skill, onClose }: { skill: string | SkillCar
   return <CanonicalDialog title="スキル詳細" ariaLabel={`${canonical.name}の詳細`} onClose={onClose} actions={[{ label: "閉じる", semantic: "secondary", onClick: onClose }]}>
     <div className="shared-skill-dialog shared-skill-dialog-card">
       <div className="shared-skill-dialog-hero"><SkillIcon skill={canonical} size="regular" /><div><strong>{canonical.name}</strong><small>{TYPE_LABEL[canonical.effect_type] || "特殊"}スキル</small></div></div>
+      {canonical.exclusive_character_id && <p className="exclusive-asset-detail">{exclusiveAssetLabel(canonical.exclusive_character_id)}</p>}
       <dl>
         <div><dt>タイプ</dt><dd>{TYPE_LABEL[canonical.effect_type] || "特殊"}</dd></div>
         <div><dt>対象</dt><dd>{TARGET_LABEL[canonical.target] || "特殊"}</dd></div>

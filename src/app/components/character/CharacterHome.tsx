@@ -86,7 +86,7 @@ export default function CharacterHome({ setupResult, character, master, power, e
     </div>
     <div className="character-home-information">
       {setupResult && <div className="character-home-setup-result" role="status" data-acceptance-state="CHARACTER_SETUP_COMPLETE">
-        <strong>編成・装備を整えました</strong>
+        <strong>編成・スキル・装備を整えました</strong>
         <span>総合力 {Number(setupResult.powerBefore || 0).toLocaleString()} → {Number(setupResult.powerAfter || 0).toLocaleString()}</span>
       </div>}
       {canReceive && <OutlawButton variant="primary" fullWidth isLoading={rewardPending} disabled={rewardPending} onClick={async () => {

@@ -152,7 +152,11 @@ export function useInventory(
   };
 
   const showActionError = (title: string, error: unknown) => {
-    const detail = error instanceof Error ? error.message : String(error || "");
+    const detail = error && typeof error === "object" && "message" in error ? String(error.message) : String(error || "");
+    if (/action resource is already at maximum|energy drink would exceed vitality hard cap/.test(detail)) {
+      setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: "最大値なので回復できません。", confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+      return;
+    }
     const message = /network|fetch|timeout/i.test(detail)
       ? "通信を確認して、もう一度お試しください。"
       : /already|claimed/i.test(detail)
@@ -167,7 +171,7 @@ export function useInventory(
     
     if (itemId === "ENERGY_DRINK") {
       if (!canUseEnergyDrink(vitality)) {
-        setConfirmDialogConfig({ isOpen: true, title: "使用不可", message: "使用後のスタミナが上限500を超えるため使用できません。", confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+        setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: "最大値なので回復できません。", confirmText: "閉じる", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
         return;
       }
       

@@ -1,5 +1,9 @@
 # GAME03 / TRIBE NEON 本流引継ぎ — Quest / Raid攻略性改修
 
+最新の実機指摘18件・Preview追加DB修正は `preview_device_feedback_20260915.md` を参照。
+`20260915053404_canonical_exclusive_loadout_and_guide_skills` はPreview適用済み・再適用禁止。
+Production反映は引き続き未実行・別承認。正式リリースのお知らせはPreviewに追加のみ。
+
 STATUS: 作業途中の保存。ユーザーが会話長制限により次スレッドへ移行。公開・受入完了ではない。
 
 ## 最初に読む情報

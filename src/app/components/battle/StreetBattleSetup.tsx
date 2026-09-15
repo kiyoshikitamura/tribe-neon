@@ -7,6 +7,9 @@ import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { SkillDetailDialog, SkillIconGrid } from "../skill/SkillPresentation";
 import type { QuestBattleViewerProps } from "./QuestBattleViewer";
 import "./StreetFlow.css";
+import { preloadBattleImage } from "./battleAssetPreload";
+import { exclusiveEquipmentForBattleMember } from "@/domain/presentation/exclusiveContent";
+import { EXCLUSIVE_EYE_CUTINS } from "@/domain/presentation/approvedAssets20260914";
 
 type Member = QuestBattleViewerProps["playerParty"][number];
 const master = (m?:Pick<Member,"characterId">)=>CHARACTERS_MASTER.find(c=>c.id===m?.characterId || c.name===m?.characterId);
@@ -21,11 +24,11 @@ export default function StreetBattleSetup({playerParty,playerLeader,enemyParty,p
   const dialog=useRef<HTMLDialogElement>(null);
   const visiblePlayerLeader = playerLeader === undefined ? playerParty[0] : playerLeader;
   const visibleEnemyLeader = enemyLeader || enemyParty[0];
-  const sources = JSON.stringify([...playerParty,...enemyParty,...(playerLeader?[playerLeader]:[]),...(enemyLeader?[enemyLeader]:[])].flatMap(m=>{const c=master(m);return c?[getCharacterTransparentImg(c.name),getRarityBadgeAsset(c.rarity),getAttributeBadgeAsset(c.alignment)!]:[]}).concat([background || "/bg/bg_street_shinjuku.jpg","/effects/battle-v3/street-impact.webp","/effects/battle-v3/street-support.webp"]));
+  const sources = JSON.stringify([...new Set([...playerParty,...enemyParty,...(playerLeader?[playerLeader]:[]),...(enemyLeader?[enemyLeader]:[])].flatMap(m=>{const c=master(m);return c?[getCharacterTransparentImg(c.name),getRarityBadgeAsset(c.rarity),getAttributeBadgeAsset(c.alignment)!]:[]}).concat([background || "/bg/bg_street_shinjuku.jpg","/effects/battle-v3/street-impact.webp","/effects/battle-v3/street-support.webp", ...playerParty.flatMap(member => exclusiveEquipmentForBattleMember(member.characterId ?? "", member.equipmentMasterIds ?? []).flatMap(equipment => [equipment.imageSrc, EXCLUSIVE_EYE_CUTINS[member.characterId ?? ""]].filter((src): src is string => Boolean(src))))]).filter(Boolean))]);
   const ready = readySources === sources;
   useEffect(()=>{
     let cancelled=false;const timer=window.setTimeout(()=>{if(!cancelled)setFailed(true);},15000);
-    Promise.all((JSON.parse(sources) as string[]).map(src=>new Promise<void>((resolve,reject)=>{const image=new Image();image.onload=()=>image.decode().then(()=>resolve(),reject);image.onerror=reject;image.src=src;}))).then(()=>Promise.all([document.fonts.load('20px TNStreetFlow','出撃準備'),document.fonts.load('20px TNStreetBattle','スキル')])).then(()=>{if(!cancelled){setReadySources(sources);setFailed(false);window.clearTimeout(timer);}}).catch(()=>{if(!cancelled)setFailed(true);});
+    Promise.all((JSON.parse(sources) as string[]).map(preloadBattleImage)).then(()=>Promise.all([document.fonts.load('20px TNStreetFlow','出撃準備'),document.fonts.load('20px TNStreetBattle','スキル')])).then(()=>{if(!cancelled){setReadySources(sources);setFailed(false);window.clearTimeout(timer);}}).catch(()=>{if(!cancelled)setFailed(true);});
     return()=>{cancelled=true;window.clearTimeout(timer);};
   },[sources,retry]);
   useEffect(()=>{if(selected)dialog.current?.showModal();},[selected]);

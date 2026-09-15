@@ -39,7 +39,7 @@ const toParticipant = (entry: any, isEnemy: boolean): BattleResultParticipant =>
   isEnemy,
 });
 
-export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, onRaid, continueControl }: Props) {
+export default function BattleResultSummary({ victory, tutorial = false, rewards, replayEvents = [], playerParticipants = [], enemyParticipants = [], presentationContext, modeResult, displayedRound, onContinue, continueControl }: Props) {
   const { playSe } = useAudio();
   const announcedRef = useRef(false);
   const analysis = useMemo(() => analyzeBattleResult(
@@ -174,7 +174,7 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
         </section>
       )}
 </> : <>
-        <header className={`sf-heading sf-outcome ${roomHeadline || victory ? "" : "loss"}`}><small>{opponentLabel}</small><h1>{roomHeadline ?? (victory ? "VICTORY" : "DEFEAT")}</h1><p>{roomHeadline ? "共有レイドの確定結果" : localizedResultLabel || (victory ? "バトル勝利" : "バトル敗北")}</p></header>
+        <header className={`sf-heading sf-outcome ${roomHeadline || victory ? "" : "loss"}`}><small>{opponentLabel}</small><h1>{roomHeadline === "戦闘終了" ? "RESULT" : roomHeadline ?? (victory ? "VICTORY" : "DEFEAT")}</h1><p>{roomHeadline ? (roomHeadline === "戦闘終了" ? "バトル結果" : "共有レイドの確定結果") : localizedResultLabel || (victory ? "バトル勝利" : "バトル敗北")}</p></header>
         {roundLimitResult && <p className="battle-result-reason" data-result-reason="ROUND_LIMIT" role="status">制限ラウンド終了による判定結果です</p>}
         {mvp && <><section className="sf-mvp" aria-label={`MVP ${mvp.participant.name} ${mvp.score.total}ポイント`}>{mvpImage && <img src={mvpImage} alt={mvp.participant.name}/>}<div className="sf-mvp-copy"><small>MVP</small><h2>{mvp.participant.name}</h2><strong>{displayedTotal}<span> PT</span></strong><p>{mvpMaster && resolveCharacterGachaQuote(mvpMaster.id)}</p></div></section>
         <div className="sf-highlights"><div><small>与ダメージ</small><b>{mvp.raw.damage.toLocaleString()}</b></div><div><small>撃破</small><b>{mvp.raw.kills}<span>体</span></b></div><div><small>回復</small><b>{mvp.raw.heal.toLocaleString()}</b></div></div></>}
@@ -203,9 +203,9 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
           </div>
         ) : <div className="battle-result-settling" role="status"><span>報酬データを準備中</span><i aria-hidden="true" /></div>
       ) : isRaidResult && presentationContext?.raidRoomId ? null : (
-        <div className="battle-result-mode-reward">
+        <div className={`battle-result-mode-reward ${presentationContext?.mode === "PVP" ? "is-pvp-compact" : ""}`}>
           <strong>{modeResult?.reward || (victory ? "勝利" : "敗北")}</strong>
-          {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`} className={presentationContext?.mode === "PVP" && reward.id === "RAID_POINT_TICKET" ? "battle-result-raid-ticket" : undefined}>
+          {modeResult?.rewards?.length ? <div className="battle-result-canonical-rewards" aria-label="獲得報酬">{modeResult.rewards.map((reward) => <span key={`${reward.id}-${reward.quantity}`} >
             <CanonicalItemIcon itemId={reward.id} alt={reward.name} />
             <b>{reward.name}</b>
             <em>×{reward.quantity.toLocaleString()}</em>
@@ -214,7 +214,6 @@ export default function BattleResultSummary({ victory, tutorial = false, rewards
         </div>
       )}
       {!tutorial && presentationContext?.mode === "PATROL" && rewards && <p className="battle-result-delivery-note">CASH・プレイヤー経験値・アイテムを獲得しました。アイテムはMy Bagで確認できます。</p>}
-      {victory && presentationContext?.mode === "PVP" && onRaid && modeResult?.rewards?.some(item => item.id === "RAID_POINT_TICKET" && item.quantity > 0) && <OutlawButton variant="primary" onClick={onRaid}>レイドに挑戦</OutlawButton>}
       {continueControl ?? <OutlawButton variant={victory ? "primary" : "secondary"} onClick={onContinue} className="battle-result-continue" disabled={victory && (tutorial || presentationContext?.mode === "PATROL") && !rewards}>
         {victory && (tutorial || presentationContext?.mode === "PATROL") ? (rewards ? "次へ" : "報酬確定中…") : modeResult?.continueLabel || "次へ"}
       </OutlawButton>}

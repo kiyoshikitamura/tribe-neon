@@ -1,6 +1,7 @@
 "use client";
 import { CANONICAL_EQUIPMENT_LIMIT_BREAK } from "@/domain/gameplay/canonical/masters";
 
+import { exclusiveAssetLabel } from "@/utils/exclusiveAssetLabels";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { useGame } from "../context/GameContext";
@@ -355,7 +356,7 @@ export default function CharacterTab() {
         { label: "あとで", semantic: "secondary", disabled: characterSetupPending, onClick: () => completeCharacterSetupDialog("LATER") },
       ]}
     >
-      今のキャラクターから、おすすめの編成と装備を自動で設定します。
+      今のキャラクターから、おすすめの編成・スキル・装備を自動で設定します。
       {Number(totalPower || 0) > 0 && <small className="character-setup-current-power">現在の総合力 {Number(totalPower).toLocaleString()}</small>}
     </CanonicalDialog>}
 
@@ -1088,6 +1089,7 @@ export default function CharacterTab() {
               <img className="production-equipment-art" src={equipmentDetail.master.assetPath} alt="" />
             </div>
             <div><strong>{equipmentDetail.master.name}</strong><small>Lv.{Number(equipmentDetail.record.level || 1)} / 限界突破 +{Number(equipmentDetail.record.plus_val || 0)}</small></div>
+            {equipmentDetail.master.exclusive_character_id && <p>{exclusiveAssetLabel(equipmentDetail.master.exclusive_character_id)}</p>}
             <dl><div><dt>装備箇所</dt><dd>{GEAR_SLOTS_MASTER.find((slot: any) => slot.type === equipmentDetail.master.slot_type)?.label || "装備"}</dd></div><div><dt>パラメータ</dt><dd>{equipmentParameter(equipmentDetail.master)}</dd></div></dl>
           </div>
         </CanonicalDialog>

@@ -1,5 +1,6 @@
 "use client";
 
+import { exclusiveAssetLabel } from "@/utils/exclusiveAssetLabels";
 import React, { useEffect, useState } from "react";
 import { useGame } from "@/app/context/GameContext";
 import { CHARACTERS_MASTER, GEAR_SLOTS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
@@ -197,7 +198,7 @@ export default function CharacterSystemV2({ initialCharacterMasterId, setupResul
     const cardStats = getCharacterTotalStats(record, game.userEquipmentsList || []);
     return <button type="button" key={record.id || record.character_id} className="character-v2-card active-scale-effect" onClick={() => selectCharacter(record)}>
       <span className={rarityClass(master.rarity)}><CharacterPresentation src={getCharacterTransparentImg(master.name)} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /></span>
-      <span className="character-v2-card-badges">{record.is_new && <b>新着</b>}{record.character_id === leaderMasterId && <b>リーダー</b>}{partyIndex === 0 && <b>先頭</b>}{partyIndex > 0 && <b>編成中</b>}</span>
+      {!compact && <span className="character-v2-card-badges">{record.is_new && <b>新着</b>}{record.character_id === leaderMasterId && <b>リーダー</b>}{partyIndex === 0 && <b>先頭</b>}{partyIndex > 0 && <b>編成中</b>}</span>}
       <CharacterStatusBadges rarity={master.rarity} awakeningLevel={Number(record.awakening_level || 0)} /><span className="character-v2-card-level">Lv.{Number(record.level || 1)}</span>
       {!compact && <><strong>{master.jpName}</strong><span className="character-v2-card-power">総合力 {(cardStats.hp + cardStats.atk + cardStats.def).toLocaleString()}</span></>}
     </button>;
@@ -298,6 +299,7 @@ export default function CharacterSystemV2({ initialCharacterMasterId, setupResul
 
     {assetDetail && <CanonicalDialog title={assetDetail.kind === "skill" ? "スキル詳細" : "装備詳細"} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setAssetDetail(null) }]}>
       <div className="character-v2-mini-detail"><div className="character-v2-mini-hero">{assetDetail.kind === "skill" ? <SkillArt master={assetDetail.master} /> : <EquipmentArt master={assetDetail.master} />}<div><strong>{assetDetail.master.name}</strong><RarityBadge rarity={assetDetail.master.rarity} /><span>{assetDetail.kind === "equipment" && <>Lv.{Number(assetDetail.record.level || 1)} / </>}限界突破 +{Number(assetDetail.record.plus_val || 0)}</span></div></div>
+        {assetDetail.master.exclusive_character_id && <p className="exclusive-asset-detail">{exclusiveAssetLabel(assetDetail.master.exclusive_character_id)}</p>}
         {assetDetail.kind === "skill" ? <dl><div><dt>対象</dt><dd>{TARGET_LABEL[assetDetail.master.target] || "特殊"}</dd></div><div><dt>効果</dt><dd>{assetDetail.master.description || "効果情報なし"}</dd></div></dl> : <dl><div><dt>枠</dt><dd>{GEAR_SLOTS_MASTER.find((entry: any) => entry.type === assetDetail.master.slot_type)?.label || "装備"}</dd></div>{(["hp", "atk", "def", "spd", "luk"] as const).map((key) => <div key={key}><dt>{key.toUpperCase()}</dt><dd>{canonicalEquipmentFlatStat(Number(assetDetail.master[key] || 0), Number(assetDetail.record.level || 1), Number(assetDetail.record.plus_val || 0)).toLocaleString()}</dd></div>)}</dl>}
         {assetDetail.kind === "equipment" && <p>固定効果：{assetDetail.master.effect_description || "なし"}</p>}
         {assetDetail.record.equipped_character_id === selectedCharacter.id && <OutlawButton fullWidth onClick={() => { setAssetDetail(null); }}>付け替える</OutlawButton>}

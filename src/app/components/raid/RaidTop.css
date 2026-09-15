@@ -158,3 +158,8 @@
 .raid-top__target-visual { height: 150px; }
 .raid-top__target-visual .raid-top__leader { height: 140%; top: 0; }
 .raid-top__target-body { padding-top: 0; }
+
+/* Stretch both target bodies so challenge buttons share the same baseline. */
+.raid-top__target > .outlaw-card-inner { display: flex; flex-direction: column; height: 100%; }
+.raid-top__target-body { flex: 1; align-items: stretch; }
+.raid-top__target-body > .outlaw-button { margin-top: auto; flex: 0 0 auto; }

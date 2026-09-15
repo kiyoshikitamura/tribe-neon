@@ -1,3 +1,4 @@
+import { exclusiveAssetName } from "./exclusiveAssetLabels";
 import { CANONICAL_EQUIPMENTS } from "@/domain/gameplay/canonical/masters";
 
 /** UI compatibility view generated exclusively from Equipment170 Canonical Master. */
@@ -19,7 +20,7 @@ export function canonicalEquipmentAssetPath(equipmentId: string, slotType?: Equi
 }
 
 export const CANONICAL_EQUIPMENT_VIEW: EquipmentMaster[] = CANONICAL_EQUIPMENTS.map((equipment) => ({
-  id: equipment.equipment_id, name: equipment.display_name, rarity: equipment.rarity,
+  id: equipment.equipment_id, name: exclusiveAssetName(equipment.display_name, equipment.exclusive_character_id), rarity: equipment.rarity,
   slot_type: equipment.category, ...equipment.base_stats,
   is_exclusive: equipment.exclusive_character_id !== null,
   exclusive_character_id: equipment.exclusive_character_id,

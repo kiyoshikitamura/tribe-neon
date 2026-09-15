@@ -1,3 +1,4 @@
+import { exclusiveAssetName } from "./exclusiveAssetLabels";
 import { CANONICAL_SKILLS } from "@/domain/gameplay/canonical/masters";
 import { parseCanonicalEffects } from "@/domain/battle/canonical_effects";
 
@@ -17,7 +18,7 @@ export const CANONICAL_SKILL_VIEW: SkillCardMaster[] = CANONICAL_SKILLS.map((ski
   const effectType = damage ? "ATTACK" : effects.some((effect) => effect.type === "HEAL" || effect.type === "REGEN") ? "HEAL"
     : effects.some((effect) => effect.type === "DEBUFF" || ["BLIND", "SILENCE", "STUN", "POISON", "BLEED", "TAUNT"].includes(effect.type)) ? "DEBUFF" : "BUFF";
   return {
-    id: skill.skill_id, name: skill.name, rarity: skill.rarity, alignment: "NONE",
+    id: skill.skill_id, name: exclusiveAssetName(skill.name, skill.exclusive_character_id), rarity: skill.rarity, alignment: "NONE",
     power: Number(damage?.powerBp ?? 0) / 100, effect_type: effectType,
     is_exclusive: skill.kind === "EXCLUSIVE", exclusive_character_id: skill.exclusive_character_id,
     description: skill.effects.join(" / "), is_obtainable: true,

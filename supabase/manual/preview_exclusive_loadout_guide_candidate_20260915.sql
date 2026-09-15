@@ -1,0 +1,3 @@
+-- 適用済み候補の参照先。ここから再適用しない。
+-- 正本: ../migrations/20260915053404_canonical_exclusive_loadout_and_guide_skills.sql
+-- Preview適用済みversion: 20260915053404。Production未適用。

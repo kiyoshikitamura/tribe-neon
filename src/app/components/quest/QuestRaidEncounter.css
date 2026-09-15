@@ -3,7 +3,7 @@
 .quest-encounter-scene{position:relative;min-height:340px;background-size:cover;background-position:center;overflow:hidden}
 .quest-encounter-area{display:inline-block;margin:16px;padding:5px 10px;background:#0b1019da;border-left:3px solid #46cbd5;font-size:13px}
 .quest-encounter-scene h1{position:relative;z-index:1;text-align:center;color:#e4c891;font-family:TNEncounter,sans-serif;font-size:clamp(28px,8vw,42px);margin:4px 0;text-shadow:0 2px 12px #000}
-.quest-encounter-scene img{display:block;height:300px;max-width:100%;object-fit:contain;margin:-24px auto -45px}
+.quest-encounter-scene img{display:block;height:300px;max-width:100%;object-fit:contain;margin:12px auto 0}
 .quest-encounter-actions{padding:18px;text-align:center;background:#0b1019}
 .quest-encounter-actions h2{font-size:clamp(16px,4.5vw,22px);margin:8px 0}
 .quest-encounter-actions p{margin:4px 0 10px}

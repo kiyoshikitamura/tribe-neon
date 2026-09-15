@@ -11,8 +11,7 @@ export function pvpRewardLabel(reward?: PvpMatchReward): string {
 
 export default function PvpBattleRewards({ rewards }: { rewards: PvpMatchRewards | null }) {
   return <section className="pvp-battle-rewards" aria-label="対戦報酬">
-    <strong>勝利してレイドに挑もう</strong>
-    <p><b>勝利報酬</b> {pvpRewardLabel(rewards?.VICTORY)}</p>
-    <p><b>敗北時</b> {pvpRewardLabel(rewards?.DEFEAT)}</p>
+    <p><b>勝利</b><span>{pvpRewardLabel(rewards?.VICTORY)}</span></p>
+    <p><b>敗北</b><span>{pvpRewardLabel(rewards?.DEFEAT)}</span></p>
   </section>;
 }

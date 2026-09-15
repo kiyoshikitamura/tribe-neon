@@ -34,11 +34,11 @@ const {default:Result}=load('src/app/components/battle/BattleResultSummary.tsx',
 const props={presentationContext:{mode:'PVP'},onContinue:nil,onRaid:nil};
 const rewards=[{id:'RAID_POINT_TICKET',name:'レイドチケット',quantity:1},{id:'CASH',name:'CASH',quantity:200}];
 const win=renderToStaticMarkup(React.createElement(Result,{...props,victory:true,modeResult:{reward:'レイドチケット GET',rewards}}));
-assert.match(win,/battle-result-raid-ticket/);assert.match(win,/レイドに挑戦/);assert.match(win,/×200/);
+assert.doesNotMatch(win,/battle-result-raid-ticket|レイドに挑戦/);assert.match(win,/data-item="RAID_POINT_TICKET"/);assert.match(win,/×200/);
 const loss=renderToStaticMarkup(React.createElement(Result,{...props,victory:false,modeResult:{reward:'50 CASH獲得',rewards:[{id:'CASH',name:'CASH',quantity:50}]}}));
 assert.match(loss,/50 CASH獲得/);assert.doesNotMatch(loss,/レイドに挑戦|battle-result-raid-ticket/);
 const old=renderToStaticMarkup(React.createElement(Result,{...props,victory:true,modeResult:{rewards:[{id:'CHAR_EXP_S',name:'キャラEXP素材',quantity:1}]}}));
 assert.doesNotMatch(old,/レイドに挑戦|battle-result-raid-ticket/);
 const top=fs.readFileSync('src/app/components/PvpTab.tsx','utf8');
 assert.ok(top.indexOf('<PvpBattleRewards')<top.indexOf('<RivalSelector'));
-console.log('PASS: actual TOP/Result SSR, 200/50/ticket, loading no fabricated reward, ticket emphasis, opt-in Raid CTA, loss and historical receipts. Child visuals/audio mocked; not browser E2E.');
+console.log('PASS: actual TOP/Result SSR, 200/50/ticket, loading no fabricated reward, compact ticket receipt, no Raid CTA, loss and historical receipts. Child visuals/audio mocked; not browser E2E.');

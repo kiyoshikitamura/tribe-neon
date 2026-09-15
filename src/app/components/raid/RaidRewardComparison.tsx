@@ -1,16 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase';
-import { ITEMS_MASTER_DATA } from '@/utils/items_master_data';
+import { RaidRewardItem } from './RaidRewardItems';
 import { RAID_DIFFICULTIES, type RaidDifficultyId } from '@/domain/raidRoom';
 import { parseRaidRewardPolicies, type RaidRewardPolicy } from '@/domain/raidStrategy';
 import { useGame } from '../../context/GameContext';
 import './RaidStrategySummary.css';
 
-function itemLabel(item: { itemId: string; quantity: number }) {
-  const name = ITEMS_MASTER_DATA.find(row => row.id === item.itemId)?.name ?? '報酬アイテム';
-  return `${name} ×${item.quantity}`;
-}
 export default function RaidRewardComparison({ selected }: { selected?: RaidDifficultyId }) {
   const { session } = useGame();
   const userId = session?.user?.id;
@@ -35,11 +31,11 @@ export default function RaidRewardComparison({ selected }: { selected?: RaidDiff
         <h4>{difficulty.label}</h4>
         {difficulty.id === 'expert' && <p>推奨総合力 260,000以上</p>}
         {!policy.enabled && <p className="raid-reward-comparison__status">新報酬：付与条件調整中</p>}
-        {policy.enabled && policy.eligibility && <p>{policy.eligibility.minimumContributionBp > 0 ? `撃破前に参加し、最大HPの${policy.eligibility.minimumContributionBp / 100}%以上の累積貢献で獲得` : '撃破前に1戦以上参加すると獲得'}</p>}
-        <p>撃破ごと：{policy.instanceItems.map(itemLabel).join(' / ')}</p>
-        <p className="raid-reward-comparison__daily">1日1回：{policy.daily.items.map(itemLabel).join(' / ')}{policy.daily.chanceBp < 10000 ? `（${policy.daily.chanceBp / 100}%）` : ' 確定'}</p>
+        {policy.enabled && policy.eligibility && <p>{policy.eligibility.minimumContributionBp > 0 ? `最大HPの${policy.eligibility.minimumContributionBp / 100}%以上の累積貢献で獲得` : '1戦以上参加で獲得'}</p>}
+        <div className="raid-reward-comparison__rewards"><span>撃破</span>{policy.instanceItems.map(item => <RaidRewardItem key={item.itemId} {...item} />)}</div>
+        <div className="raid-reward-comparison__rewards raid-reward-comparison__daily"><span>{policy.daily.chanceBp / 100}%で</span>{policy.daily.items.map(item => <RaidRewardItem key={item.itemId} {...item} />)}</div>
       </article>;
     })}</div>
-    <p>同じ難易度の1日1回ボーナスは、同日に複数撃破しても追加されません。撃破ごとの報酬は、対象レイドの参加・貢献条件を満たすと獲得できます。</p>
+    <p>追加報酬の抽選は各難易度1日1回。? のチケットはいずれか1種です。</p>
   </section>;
 }

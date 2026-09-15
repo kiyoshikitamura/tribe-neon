@@ -14,6 +14,7 @@ import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { parseCanonicalEffects } from "@/domain/battle/canonical_effects";
 import PvpDeckPresentation from "./pvp/PvpDeckPresentation";
 import RaidEnemyRoster from "./raid/RaidEnemyRoster";
+import { findCanonicalRaidVariant } from "@/domain/presentation/raidRosterPresentation";
 import { SkillDetailDialog, SkillIconGrid } from "./skill/SkillPresentation";
 import "./CardBattleView.css";
 
@@ -76,7 +77,14 @@ export default function CardBattleView() {
     ? identityMaster ? { characterId: identityMaster.id, name: identityMaster.jpName } : null
     : playerPartyStates[0];
   const isRoomBattle = Boolean(battlePresentationContext?.raidRoomId);
-  const roomMemberIds = isRoomBattle ? enemyPartyStates.map((enemy: any) => enemy.characterId) : undefined;
+  // Before commit the legacy setup contains a synthetic BOSS, not a character.
+  // Use the variant artwork while preparing; resolved snapshot IDs always win.
+  const snapshotMemberIds: string[] = enemyPartyStates.map((enemy: any) => enemy.characterId);
+  const roomVariant = isRoomBattle ? findCanonicalRaidVariant(undefined, battleOpponentName) : undefined;
+  const roomMemberIds = isRoomBattle
+    ? (snapshotMemberIds.length === 1 && snapshotMemberIds[0] === "BOSS"
+      ? roomVariant?.memberCharacterIds : snapshotMemberIds)
+    : undefined;
   const roomLeaderId = roomMemberIds?.[0];
   const roomLeader = CHARACTERS_MASTER.find(character => character.id === roomLeaderId);
   const isTutorialBattle = battleMode === "PATROL" && tutorialBattleActive;
@@ -171,7 +179,7 @@ export default function CardBattleView() {
         ) : battleState === "OUTCOME" ? (
           <div className={`battle-outcome-mark ${raidHeadline ? (raidHeadline === '討伐成功' ? 'is-victory' : 'is-raid-neutral') : victory ? "is-victory" : "is-defeat"}`} role="status">
             <span>バトル結果</span>
-            <strong>{raidHeadline ?? (victory ? "WIN" : "LOSE")}</strong>
+            <strong>{raidHeadline === "戦闘終了" ? "RESULT" : raidHeadline ?? (victory ? "WIN" : "LOSE")}</strong>
           </div>
         ) : (
           <BattleResultSummary
@@ -189,7 +197,6 @@ export default function CardBattleView() {
               await completeBattleResult();
             } : undefined}
             onContinue={isTutorialBattle ? completeTutorialBattleResult : completeBattleResult}
-            onRaid={() => completeBattleResult("raid")}
           />
         )}
       </div>
