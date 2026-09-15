@@ -494,7 +494,7 @@ function ProductionHomeFixture({ scenario, activityOverride, activityNowOverride
     userGuild: guildJoined && ctaAuthorityReady ? { name: "NEON CREW" } : null,
     pendingGuildJoinRequests: scenario === "first-home-guild-pending" && ctaAuthorityReady ? [{ id: "qa-pending-request" }] : [],
     guildMembershipAuthorityReady: ctaAuthorityReady,
-    featureOperatingStates: [],
+    featureOperatingStates: { SHOP: "OPEN" },
     username: "NEON-R",
     userLevel: 2,
     userXp: 120,
