@@ -8,7 +8,7 @@ import { useMissionClock } from "@/hooks/useMissionClock";
 import React, { createContext, useContext, useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { flushSync } from "react-dom";
 import { supabase, usingMockSupabase } from "@/utils/supabase";
-import { billingFetch, billingRequestId, clearBillingRequest } from "@/utils/billing_client";
+import { billingFetch, billingRequestId, clearBillingRequest, BillingClientError } from "@/utils/billing_client";
 import { loadRaidActivity } from "@/domain/raidRoomActivity";
 import { createRaidRoomRpcTransport } from "@/domain/raidRoomRpcTransport";
 import { useRaidRoomActivity } from "./hooks/useRaidRoomActivity";
@@ -970,6 +970,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setShowTitleView(false);
       }
       const legalSettingsReturnRequested = isLegalSettingsReturnRequested();
+      if (nextState.gameplay_authorized && window.localStorage.getItem("tribe_purchase_auth_return") === "shop") {
+        window.localStorage.removeItem("tribe_purchase_auth_return");
+        setActiveTab("shop");
+        setShowTitleView(false);
+      }
       if (nextState.gameplay_authorized && hasPendingLegalSettingsReturn(userId)) {
         setShowTitleView(false);
         setShowSettingsPanel(true);
@@ -3874,6 +3879,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       await syncBootstrapData(session.user.id);
       return true;
     } catch (error) {
+      if (error instanceof BillingClientError && error.code === "PURCHASE_AUTH_REQUIRED") {
+        window.localStorage.setItem("tribe_purchase_auth_return", "shop");
+        setConfirmDialogConfig({
+          isOpen: true,
+          title: "購入前にアカウント連携をお願いします",
+          message: <div>
+            <p>購入したアイテムやプレイデータを安全に引き継ぐため、課金商品の購入にはアカウント連携が必要です。</p>
+            <p>アカウント連携後も、現在のゲームデータはそのまま利用できます。</p>
+          </div>,
+          confirmText: "アカウント連携する", cancelText: "あとで", presentation: "canonical",
+          onConfirm: async () => { setConfirmDialogConfig(null); await handleGoogleLogin(); },
+          onCancel: () => { window.localStorage.removeItem("tribe_purchase_auth_return"); setConfirmDialogConfig(null); },
+        });
+        return false;
+      }
       setErrorMessage(error instanceof Error ? error.message : "購入を確認できませんでした。");
       return false;
     } finally {

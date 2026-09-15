@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const billing = billingService();
-    const userId = await billing.authenticatedUser(request);
+    const userId = await billing.authenticatedPurchaseUser(request);
     const input = await request.json();
     const order = await billing.order(uuid(input.orderId), userId);
     const terminal = terminalOrderResult(order);

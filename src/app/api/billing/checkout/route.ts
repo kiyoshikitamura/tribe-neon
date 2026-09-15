@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     const billing = billingService();
     validateCheckoutOrigin(request, billing.config.origin);
-    const userId = await billing.authenticatedUser(request);
+    const userId = await billing.authenticatedPurchaseUser(request);
     await billing.assertPurchasingAllowed("PAYMENT", userId);
     const input = await request.json();
     const requestId = uuid(input.requestId);
