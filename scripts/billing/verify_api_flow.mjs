@@ -42,6 +42,7 @@ function fixture() {
   const calls = [];
   const service = {
     config: { origin, mode: 'sandbox', webhookSecret: 'whsec_fixture' },
+    assertPurchasingAllowed: async () => {},
     authenticatedUser: async request => {
       if (request.headers.get('authorization') !== 'Bearer fixture') throw new contracts.BillingError('login', 401);
       return userId;
@@ -71,6 +72,29 @@ const req = (body, base = origin, token = 'fixture') => new Request(`${base}/api
   method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${token}`, origin: base }, body: JSON.stringify(body),
 });
 const input = { requestId, productId: 'beginner_pack_01' };
+
+for (const name of ['checkout', 'shop']) {
+  const f = fixture();
+  f.service.assertPurchasingAllowed = async (feature, owner) => {
+    assert.equal(owner, userId, 'Only server-authenticated owner is checked');
+    assert.equal(feature, name === 'checkout' ? 'PAYMENT' : 'SHOP');
+    throw new contracts.BillingError('maintenance', 503);
+  };
+  assert.equal((await route(name, f.service)(req(input))).status, 503);
+  assert.deepEqual(f.calls, [], 'Closed operations must not reserve, charge or create Stripe sessions');
+}
+for (const feature of ['PAYMENT', 'SHOP']) {
+  const open = [{ feature_key: 'MAINTENANCE', state: 'CLOSED', mutation_allowed: false }, { feature_key: feature, state: 'OPEN', mutation_allowed: true }];
+  contracts.assertPurchaseOperatingStates(open, feature);
+  contracts.assertPurchaseOperatingStates([{ ...open[0], state: 'MAINTENANCE' }, open[1]], feature, true);
+  assert.throws(() => contracts.assertPurchaseOperatingStates([{ ...open[0], state: 'MAINTENANCE' }, { ...open[1], state: 'CLOSED' }], feature, true));
+  for (const rows of [null, [], open.slice(1), open.slice(0, 1),
+    [{ ...open[0], state: 'MAINTENANCE' }, open[1]],
+    [open[0], { ...open[1], state: 'CLOSED' }],
+    [open[0], { ...open[1], mutation_allowed: false }]]) {
+    assert.throws(() => contracts.assertPurchaseOperatingStates(rows, feature), error => error.status === 503);
+  }
+}
 
 // Client price/quantity are not authoritative; retry only retrieves attached session.
 {

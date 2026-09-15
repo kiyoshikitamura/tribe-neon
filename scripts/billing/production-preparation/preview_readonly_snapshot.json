@@ -1,0 +1,1728 @@
+{
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_grant_order(p_order_id uuid, p_session_id text, p_amount_jpy integer, p_currency text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\ndeclare v_order public.billing_orders; v_item jsonb; v_id text; v_qty integer;\n v_present uuid; v_issued timestamptz:=clock_timestamp(); v_days integer; v_expiry timestamptz;\nbegin\n select * into v_order from public.billing_orders where id=p_order_id for update;\n if not found then raise exception 'ORDER_NOT_FOUND'; end if;\n if not public.billing_session_matches(p_order_id,p_session_id) or p_amount_jpy is distinct from v_order.amount_jpy\n or p_currency is distinct from 'jpy' or (v_order.stripe_session_id is not null and v_order.stripe_session_id<>p_session_id)\n then raise exception 'PAYMENT_MISMATCH'; end if;\n if v_order.status='GRANTED' then return jsonb_build_object('status','GRANTED','duplicate',true,'order_id',p_order_id); end if;\n if v_order.status='EXPIRED' then raise exception 'ORDER_EXPIRED'; end if;\n v_days:=(v_order.product_snapshot->>'validity_days')::integer;\n -- 120日期限のない旧snapshotを新規付与しない。\n if v_days is distinct from 120 then raise exception 'PAID_ASSET_CONTRACT_REQUIRED'; end if;\n perform 1 from public.users where id=v_order.user_id for update;\n if not found then raise exception 'USER_NOT_FOUND'; end if;\n insert into public.billing_grants(order_id,stripe_session_id,user_id,items,created_at)\n values(p_order_id,p_session_id,v_order.user_id,v_order.product_snapshot->'items',v_issued);\n for v_item in select value from jsonb_array_elements(v_order.product_snapshot->'items') loop\n  v_id:=v_item->>'itemId'; v_qty:=(v_item->>'quantity')::integer;\n  if v_qty is null or v_qty<=0 or v_id='DIA' then raise exception 'INVALID_PAID_ASSET'; end if;\n  v_expiry:=v_issued+interval '120 days';\n  if v_id='DIAMOND' then\n   if not (v_item ? 'validity_days') or ((v_item->>'validity_days')::integer is not null and (v_item->>'validity_days')::integer<>120) then raise exception 'DIA_CONTRACT_REQUIRED'; end if;\n   if v_item->>'validity_days' is null then v_expiry:=null; end if;\n  end if;\n  insert into public.presents(user_id,item_id,quantity,message,status,expire_at)\n  values(v_order.user_id,v_id,v_qty,'購入特典: '||(v_order.product_snapshot->>'title'),'UNCLAIMED',v_expiry) returning id into v_present;\n  if v_expiry is not null then\n  insert into public.billing_asset_lots(order_id,user_id,present_id,item_id,issued_quantity,remaining_quantity,issued_at,expires_at)\n  values(p_order_id,v_order.user_id,v_present,v_id,v_qty,v_qty,v_issued,v_expiry);\n  end if;\n end loop;\n insert into public.payment_transactions(user_id,product_id,amount,currency,status)\n values(v_order.user_id,v_order.product_id,v_order.amount_jpy,'JPY','COMPLETED');\n insert into public.user_shop_purchases(user_id,product_id,purchase_count,last_purchased_at)\n values(v_order.user_id,v_order.product_id,1,v_issued) on conflict(user_id,product_id)\n do update set purchase_count=public.user_shop_purchases.purchase_count+1,last_purchased_at=excluded.last_purchased_at;\n update public.billing_orders set status='GRANTED',granted_at=v_issued,stripe_session_id=p_session_id where id=p_order_id;\n return jsonb_build_object('status','GRANTED','duplicate',false,'order_id',p_order_id);\nend $function$\n",
+      "md5": "0952ece6f383a9ec4c31100d64743523",
+      "signature": "billing_grant_order(uuid,text,integer,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_dia_balance_trigger()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nbegin\n new.neon_diamonds:=public.billing_apply_lot_delta(old.id,'DIAMOND',old.neon_diamonds,new.neon_diamonds);\n return new;\nend $function$\n",
+      "md5": "47ac0f998c384df5cdfb24c61ef71cca",
+      "signature": "billing_dia_balance_trigger()"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_buy_dia_product(p_user_id uuid, p_request_id uuid, p_product_id text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\ndeclare v_product public.billing_products; v_receipt public.billing_shop_receipts; v_item jsonb;\n v_qty integer; v_id text; v_paid jsonb:='[]'; v_lot public.billing_asset_lots; v_remaining integer;\n v_take integer; v_segment jsonb; v_alloc integer; v_cumulative bigint; v_previous integer;\n v_present uuid;\nbegin\n perform 1 from public.users where id=p_user_id for update;\n if not found then raise exception 'USER_NOT_FOUND'; end if;\n select * into v_receipt from public.billing_shop_receipts where user_id=p_user_id and request_id=p_request_id;\n if found then\n  if v_receipt.product_id<>p_product_id then raise exception 'REQUEST_CONFLICT'; end if;\n  return jsonb_build_object('success',true,'duplicate',true,'receipt_id',v_receipt.id);\n end if;\n select * into v_product from public.billing_products where id=p_product_id and price_dia>0;\n if not found then raise exception 'INVALID_PRODUCT'; end if;\n update public.users set neon_diamonds=neon_diamonds where id=p_user_id;\n v_remaining:=v_product.price_dia;\n for v_lot in select * from public.billing_asset_lots where user_id=p_user_id and item_id='DIAMOND'\n and claimed_at is not null and remaining_quantity>0 and expires_at>statement_timestamp() order by expires_at,id for update loop\n  exit when v_remaining=0;\n  v_take:=least(v_remaining,v_lot.remaining_quantity);\n  v_paid:=v_paid||jsonb_build_array(jsonb_build_object('id',v_lot.id,'order',v_lot.order_id,'quantity',v_take,'issued',v_lot.issued_at,'expiry',v_lot.expires_at));\n  v_remaining:=v_remaining-v_take;\n end loop;\n update public.users set neon_diamonds=neon_diamonds-v_product.price_dia where id=p_user_id and neon_diamonds>=v_product.price_dia;\n if not found then raise exception 'INSUFFICIENT_DIA'; end if;\n for v_item in select value from jsonb_array_elements(v_product.items) loop\n  v_id:=v_item->>'itemId'; v_qty:=(v_item->>'quantity')::integer;\n  if v_qty is null or v_qty<=0 then raise exception 'INVALID_QUANTITY'; end if;\n  v_cumulative:=0; v_previous:=0;\n  for v_segment in select value from jsonb_array_elements(v_paid) loop\n   v_cumulative:=v_cumulative+(v_segment->>'quantity')::bigint;\n   v_alloc:=ceil(v_qty::numeric*v_cumulative/v_product.price_dia)::integer-v_previous;\n   v_previous:=v_previous+v_alloc;\n   if v_alloc>0 then\n    insert into public.presents(user_id,item_id,quantity,message,status,expire_at)\n    values(p_user_id,v_id,v_alloc,'ショップ購入: '||v_product.title,'UNCLAIMED',(v_segment->>'expiry')::timestamptz) returning id into v_present;\n    insert into public.billing_asset_lots(order_id,user_id,present_id,item_id,issued_quantity,remaining_quantity,issued_at,expires_at,source_lot_id)\n    values((v_segment->>'order')::uuid,p_user_id,v_present,v_id,v_alloc,v_alloc,(v_segment->>'issued')::timestamptz,(v_segment->>'expiry')::timestamptz,(v_segment->>'id')::uuid);\n   end if;\n  end loop;\n  if v_qty>v_previous then\n   insert into public.presents(user_id,item_id,quantity,message,status,expire_at)\n   values(p_user_id,v_id,v_qty-v_previous,'ショップ購入: '||v_product.title,'UNCLAIMED',null);\n  end if;\n end loop;\n insert into public.billing_shop_receipts(user_id,request_id,product_id,price_dia,items)\n values(p_user_id,p_request_id,p_product_id,v_product.price_dia,v_product.items) returning * into v_receipt;\n return jsonb_build_object('success',true,'duplicate',false,'receipt_id',v_receipt.id);\nend $function$\n",
+      "md5": "15f8017189afbd663fa88b4a75a41bd3",
+      "signature": "billing_buy_dia_product(uuid,uuid,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_all_presents()\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_user_id uuid := auth.uid();\n  v_present public.presents%ROWTYPE;\n  v_count integer := 0;\nBEGIN\n  IF v_user_id IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;\n  FOR v_present IN\n    SELECT * FROM public.presents\n    WHERE user_id = v_user_id\n      AND status = 'UNCLAIMED'\n      AND (expire_at IS NULL OR expire_at > clock_timestamp())\n    ORDER BY id\n    FOR UPDATE\n  LOOP\n    PERFORM public.grant_present_payload(v_user_id, v_present.item_id, v_present.quantity);\n    UPDATE public.presents\n    SET status = 'CLAIMED', claimed_at = clock_timestamp()\n    WHERE id = v_present.id;\n    v_count := v_count + 1;\n  END LOOP;\n  RETURN jsonb_build_object('status', 'success', 'claimed_count', v_count);\nEND;\n$function$\n",
+      "md5": "4d25888ddccc3571bea583a0b4a4e188",
+      "signature": "claim_all_presents()"
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_present(p_present_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE\n  v_user_id uuid := auth.uid();\n  v_present public.presents%ROWTYPE;\nBEGIN\n  IF v_user_id IS NULL THEN RAISE EXCEPTION 'Authentication required'; END IF;\n  SELECT * INTO v_present\n  FROM public.presents\n  WHERE id = p_present_id\n    AND user_id = v_user_id\n    AND status = 'UNCLAIMED'\n    AND (expire_at IS NULL OR expire_at > clock_timestamp())\n  FOR UPDATE;\n  IF NOT FOUND THEN RAISE EXCEPTION 'Present is not claimable'; END IF;\n\n  PERFORM public.grant_present_payload(v_user_id, v_present.item_id, v_present.quantity);\n  UPDATE public.presents\n  SET status = 'CLAIMED', claimed_at = clock_timestamp()\n  WHERE id = v_present.id;\n  RETURN jsonb_build_object('status', 'success', 'present_id', v_present.id);\nEND;\n$function$\n",
+      "md5": "087cc231b3713064f63d6d82b4579738",
+      "signature": "claim_present(uuid)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_present(p_user_id uuid, p_present_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE v_present public.presents%ROWTYPE;\nBEGIN\n  IF auth.uid() IS NULL OR auth.uid() <> p_user_id THEN RAISE EXCEPTION 'not authorized'; END IF;\n  SELECT * INTO v_present FROM public.presents WHERE id = p_present_id AND user_id = p_user_id AND status = 'UNCLAIMED' FOR UPDATE;\n  IF NOT FOUND THEN RETURN jsonb_build_object('error', 'present not found or already claimed'); END IF;\n  IF v_present.item_id = 'CASH' THEN\n    UPDATE public.users SET cash = cash + v_present.quantity WHERE id = p_user_id;\n  ELSIF v_present.item_id IN ('DIA', 'DIAMOND') THEN\n    UPDATE public.users SET neon_diamonds = neon_diamonds + v_present.quantity WHERE id = p_user_id;\n  ELSIF v_present.item_id LIKE 'EQUIP_%' THEN\n    INSERT INTO public.user_equipments (user_id, equipment_id, equipment_master_id, level, plus_val)\n    VALUES (p_user_id, v_present.item_id, v_present.item_id, 1, 0);\n  ELSE\n    INSERT INTO public.user_items (user_id, item_id, quantity) VALUES (p_user_id, v_present.item_id, v_present.quantity)\n    ON CONFLICT (user_id, item_id) DO UPDATE SET quantity = public.user_items.quantity + EXCLUDED.quantity;\n  END IF;\n  UPDATE public.presents SET status = 'CLAIMED', claimed_at = now() WHERE id = p_present_id;\n  RETURN jsonb_build_object('status', 'success');\nEND;\n$function$\n",
+      "md5": "d5b68be10a35dc997b988ac0c7ab3b7d",
+      "signature": "claim_present(uuid,uuid)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.claim_all_presents(p_user_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public'\nAS $function$\nDECLARE v_present public.presents%ROWTYPE; v_count INTEGER := 0;\nBEGIN\n  IF auth.uid() IS NULL OR auth.uid() <> p_user_id THEN RAISE EXCEPTION 'not authorized'; END IF;\n  FOR v_present IN SELECT * FROM public.presents WHERE user_id = p_user_id AND status = 'UNCLAIMED' FOR UPDATE LOOP\n    IF v_present.item_id = 'CASH' THEN\n      UPDATE public.users SET cash = cash + v_present.quantity WHERE id = p_user_id;\n    ELSIF v_present.item_id IN ('DIA', 'DIAMOND') THEN\n      UPDATE public.users SET neon_diamonds = neon_diamonds + v_present.quantity WHERE id = p_user_id;\n    ELSIF v_present.item_id LIKE 'EQUIP_%' THEN\n      INSERT INTO public.user_equipments (user_id, equipment_id, equipment_master_id, level, plus_val)\n      VALUES (p_user_id, v_present.item_id, v_present.item_id, 1, 0);\n    ELSE\n      INSERT INTO public.user_items (user_id, item_id, quantity) VALUES (p_user_id, v_present.item_id, v_present.quantity)\n      ON CONFLICT (user_id, item_id) DO UPDATE SET quantity = public.user_items.quantity + EXCLUDED.quantity;\n    END IF;\n    UPDATE public.presents SET status = 'CLAIMED', claimed_at = now() WHERE id = v_present.id;\n    v_count := v_count + 1;\n  END LOOP;\n  RETURN jsonb_build_object('status', 'success', 'claimed_count', v_count);\nEND;\n$function$\n",
+      "md5": "b627add278fa3f93e72f7c9574aa9e95",
+      "signature": "claim_all_presents(uuid)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_mark_lot_claimed()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nbegin\n if old.status='UNCLAIMED' and new.status='CLAIMED' then\n  update public.billing_asset_lots set claimed_at=new.claimed_at where present_id=new.id and claimed_at is null;\n end if;\n return new;\nend $function$\n",
+      "md5": "4c31bdbb97350ca3063960c635ff3468",
+      "signature": "billing_mark_lot_claimed()"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_asset_balance_trigger()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nbegin\n if tg_table_name='users' then\n  new.cash:=public.billing_apply_lot_delta(old.id,'CASH',old.cash,new.cash);\n else\n  new.quantity:=public.billing_apply_lot_delta(old.user_id,old.item_id,old.quantity,new.quantity);\n end if;\n return new;\nend $function$\n",
+      "md5": "88a372f96687301ae3161a6582502aa3",
+      "signature": "billing_asset_balance_trigger()"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_reserve_order(p_user_id uuid, p_request_id uuid, p_product_id text, p_mode text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\ndeclare v_existing public.billing_orders; v_result jsonb;\nbegin\n if p_mode is null or p_mode not in ('sandbox','live') then raise exception 'BILLING_MODE_INVALID'; end if;\n perform 1 from public.users where id=p_user_id for update;\n if not found then raise exception 'USER_NOT_FOUND'; end if;\n select * into v_existing from public.billing_orders where user_id=p_user_id and request_id=p_request_id;\n if found and v_existing.billing_mode<>p_mode then raise exception 'BILLING_MODE_CONFLICT'; end if;\n v_result:=public.billing_reserve_order(p_user_id,p_request_id,p_product_id);\n if v_existing.id is null then\n  update public.billing_orders set billing_mode=p_mode where id=(v_result->>'id')::uuid;\n end if;\n return v_result||jsonb_build_object('billing_mode',p_mode);\nend $function$\n",
+      "md5": "1de7d894719b76a50d9b53983a472968",
+      "signature": "billing_reserve_order(uuid,uuid,text,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_session_matches(p_order_id uuid, p_session_id text)\n RETURNS boolean\n LANGUAGE sql\n STABLE\n SET search_path TO ''\nAS $function$\n select coalesce((select case billing_mode when 'live' then p_session_id ~ '^cs_live_[a-zA-Z0-9]+$'\n else p_session_id ~ '^cs_test_[a-zA-Z0-9]+$' end from public.billing_orders where id=p_order_id),false)\n$function$\n",
+      "md5": "23a222013c55091b2829c3c2ab0b8b21",
+      "signature": "billing_session_matches(uuid,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_validate_special_payment()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\nbegin\n  -- 抽選履歴の作成をDBの境界とし、Clientを介さない呼出しにも同じ制限を適用。\n  -- 例外時は既存RPCの消費・抽選・付与も同一トランザクションでROLLBACK。\n  if new.gacha_id in ('CHAR_SPECIAL','SKILL_SPECIAL','EQUIP_SPECIAL')\n    and (new.payment_source is null or new.payment_source not in ('diamonds','ticket')) then\n    raise exception 'SPECIAL_REQUIRES_DIA_OR_TICKET' using errcode='23514';\n  end if;\n  return new;\nend $function$\n",
+      "md5": "256d59c491db716944e98f5332d56f01",
+      "signature": "billing_validate_special_payment()"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_reserve_order(p_user_id uuid, p_request_id uuid, p_product_id text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\ndeclare v_product public.billing_products; v_order public.billing_orders;\nbegin\n  perform 1 from public.users where id=p_user_id for update;\n  if not found then raise exception 'USER_NOT_FOUND'; end if;\n  select * into v_order from public.billing_orders where user_id=p_user_id and request_id=p_request_id;\n  if found then\n    if v_order.product_id<>p_product_id then raise exception 'REQUEST_CONFLICT'; end if;\n    return to_jsonb(v_order);\n  end if;\n  select * into v_product from public.billing_products where id=p_product_id and amount_jpy>0;\n  if not found then raise exception 'INVALID_PRODUCT'; end if;\n  if v_product.purchase_limit>0 and (\n    (select count(*) from public.billing_orders where user_id=p_user_id and product_id=p_product_id and status<>'EXPIRED')>=v_product.purchase_limit\n    or coalesce((select purchase_count from public.user_shop_purchases where user_id=p_user_id and product_id=p_product_id),0)>=v_product.purchase_limit\n  ) then raise exception 'PURCHASE_LIMIT'; end if;\n  insert into public.billing_orders(user_id,request_id,product_id,amount_jpy,product_snapshot)\n  values(p_user_id,p_request_id,p_product_id,v_product.amount_jpy,to_jsonb(v_product)) returning * into v_order;\n  return to_jsonb(v_order);\nend $function$\n",
+      "md5": "ad671c4383edff65b6605b49eeba7783",
+      "signature": "billing_reserve_order(uuid,uuid,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_attach_session(p_order_id uuid, p_session_id text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\ndeclare v_order public.billing_orders;\nbegin\n select * into v_order from public.billing_orders where id=p_order_id for update;\n if not found then raise exception 'ORDER_NOT_FOUND'; end if;\n if not public.billing_session_matches(p_order_id,p_session_id) then raise exception 'BILLING_MODE_CONFLICT'; end if;\n if v_order.stripe_session_id is not null and v_order.stripe_session_id<>p_session_id then raise exception 'SESSION_CONFLICT'; end if;\n update public.billing_orders set stripe_session_id=p_session_id where id=p_order_id;\n return jsonb_build_object('order_id',p_order_id,'status',v_order.status);\nend $function$\n",
+      "md5": "98183a65444a3fb0c5697af1dee472d0",
+      "signature": "billing_attach_session(uuid,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_expire_order(p_order_id uuid, p_session_id text)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO ''\nAS $function$\ndeclare v_order public.billing_orders;\nbegin\n  select * into v_order from public.billing_orders where id=p_order_id for update;\n  if not found then raise exception 'ORDER_NOT_FOUND'; end if;\n  if not public.billing_session_matches(p_order_id,p_session_id) or (v_order.stripe_session_id is not null and v_order.stripe_session_id<>p_session_id)\n    then raise exception 'SESSION_CONFLICT'; end if;\n  if v_order.status='PENDING' then update public.billing_orders set status='EXPIRED',stripe_session_id=p_session_id where id=p_order_id; end if;\n  return jsonb_build_object('order_id',p_order_id);\nend $function$\n",
+      "md5": "70369c681e8db265fa09ff12425e981f",
+      "signature": "billing_expire_order(uuid,text)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_apply_lot_delta(p_user uuid, p_item text, p_old bigint, p_new bigint)\n RETURNS bigint\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\ndeclare v_lot public.billing_asset_lots; v_expired bigint:=0; v_spend bigint:=greatest(p_old-p_new,0); v_take bigint;\nbegin\n for v_lot in select * from public.billing_asset_lots where user_id=p_user and item_id=p_item\n and claimed_at is not null and remaining_quantity>0 order by expires_at,id for update loop\n  if v_lot.expires_at<=statement_timestamp() then\n   v_expired:=v_expired+v_lot.remaining_quantity;\n   update public.billing_asset_lots set expired_quantity=expired_quantity+remaining_quantity,remaining_quantity=0 where id=v_lot.id;\n  end if;\n end loop;\n if p_old-v_expired<v_spend then raise exception 'EXPIRED_ASSET_BALANCE'; end if;\n for v_lot in select * from public.billing_asset_lots where user_id=p_user and item_id=p_item\n and claimed_at is not null and remaining_quantity>0 order by expires_at,id for update loop\n  exit when v_spend=0;\n  v_take:=least(v_spend,v_lot.remaining_quantity);\n  update public.billing_asset_lots set remaining_quantity=remaining_quantity-v_take where id=v_lot.id;\n  v_spend:=v_spend-v_take;\n end loop;\n return p_new-v_expired;\nend $function$\n",
+      "md5": "2f1b8adecf1727e7ff1c3b6260760d6e",
+      "signature": "billing_apply_lot_delta(uuid,text,bigint,bigint)"
+    },
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.billing_refresh_paid_assets()\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\ndeclare v_uid uuid:=auth.uid(); v_result jsonb;\nbegin\n if v_uid is null then raise exception 'AUTH_REQUIRED'; end if;\n update public.users set cash=cash,neon_diamonds=neon_diamonds where id=v_uid;\n update public.user_items set quantity=quantity where user_id=v_uid and item_id in\n (select item_id from public.billing_asset_lots where user_id=v_uid and claimed_at is not null and remaining_quantity>0);\n select coalesce(jsonb_agg(jsonb_build_object('item_id',item_id,'quantity',remaining_quantity,'expires_at',expires_at,'claimed',claimed_at is not null) order by expires_at),'[]')\n into v_result from public.billing_asset_lots where user_id=v_uid and remaining_quantity>0 and expires_at>statement_timestamp();\n return jsonb_build_object('lots',v_result,'dia_paid',coalesce((select sum(remaining_quantity) from public.billing_asset_lots where user_id=v_uid and item_id='DIAMOND' and claimed_at is not null and expires_at>statement_timestamp()),0),'dia_total',(select neon_diamonds from public.users where id=v_uid));\nend $function$\n",
+      "md5": "a11c703f0d5a71a455d1c1e07aecd56b",
+      "signature": "billing_refresh_paid_assets()"
+    }
+  ],
+  "migrations": [
+    {
+      "name": "owner_rls_payments_presents",
+      "version": "20260805000024"
+    },
+    {
+      "name": "fix_uuid_present_claim",
+      "version": "20260806000078"
+    },
+    {
+      "name": "fix_claim_all_presents",
+      "version": "20260806000079"
+    },
+    {
+      "name": "billing_sandbox_foundation",
+      "version": "20260911132848"
+    },
+    {
+      "name": "billing_special_payment_boundary",
+      "version": "20260911133203"
+    },
+    {
+      "name": "20260913120945_billing_dia_approved_contract",
+      "version": "20260913123800"
+    },
+    {
+      "name": "20260913105839_billing_paid_pack_lots",
+      "version": "20260913114209"
+    },
+    {
+      "name": "20260913111028_billing_checkout_mode_contract",
+      "version": "20260913114321"
+    }
+  ],
+  "products": [
+    {
+      "amount_jpy": 1000,
+      "id": "awakening_pack_01",
+      "items": [
+        {
+          "itemId": "AWAKENING_BOOK",
+          "quantity": 3
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 3
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 3
+        },
+        {
+          "itemId": "CASH",
+          "quantity": 20000
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 3,
+      "title": "覚醒応援パック",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": 100,
+      "id": "beginner_pack_01",
+      "items": [
+        {
+          "itemId": "CASH",
+          "quantity": 1000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1
+        },
+        {
+          "itemId": "RAID_POINT_TICKET",
+          "quantity": 3
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 1,
+      "title": "ビギナーパック",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": null,
+      "id": "bp_1",
+      "items": [
+        {
+          "itemId": "PVP_POINT_TICKET",
+          "quantity": 1
+        }
+      ],
+      "price_dia": 50,
+      "purchase_limit": 0,
+      "title": "ファイトチケット ×1",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "bp_11",
+      "items": [
+        {
+          "itemId": "PVP_POINT_TICKET",
+          "quantity": 11
+        }
+      ],
+      "price_dia": 500,
+      "purchase_limit": 0,
+      "title": "ファイトチケット ×11",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "cash_10500",
+      "items": [
+        {
+          "itemId": "CASH",
+          "quantity": 10500
+        }
+      ],
+      "price_dia": 1000,
+      "purchase_limit": 0,
+      "title": "CASH 10,500",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "cash_3000",
+      "items": [
+        {
+          "itemId": "CASH",
+          "quantity": 3000
+        }
+      ],
+      "price_dia": 300,
+      "purchase_limit": 0,
+      "title": "CASH 3,000",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "cash_32000",
+      "items": [
+        {
+          "itemId": "CASH",
+          "quantity": 32000
+        }
+      ],
+      "price_dia": 3000,
+      "purchase_limit": 0,
+      "title": "CASH 32,000",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "cash_5200",
+      "items": [
+        {
+          "itemId": "CASH",
+          "quantity": 5200
+        }
+      ],
+      "price_dia": 500,
+      "purchase_limit": 0,
+      "title": "CASH 5,200",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": 1000,
+      "id": "diamond_1030",
+      "items": [
+        {
+          "itemId": "DIAMOND",
+          "quantity": 1000,
+          "validity_days": 120
+        },
+        {
+          "itemId": "DIAMOND",
+          "quantity": 30,
+          "validity_days": null
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 0,
+      "title": "DIA 1,030個",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": 10000,
+      "id": "diamond_10680",
+      "items": [
+        {
+          "itemId": "DIAMOND",
+          "quantity": 10000,
+          "validity_days": 120
+        },
+        {
+          "itemId": "DIAMOND",
+          "quantity": 680,
+          "validity_days": null
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 0,
+      "title": "DIA 10,680個",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": 2000,
+      "id": "diamond_2080",
+      "items": [
+        {
+          "itemId": "DIAMOND",
+          "quantity": 2000,
+          "validity_days": 120
+        },
+        {
+          "itemId": "DIAMOND",
+          "quantity": 80,
+          "validity_days": null
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 0,
+      "title": "DIA 2,080個",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": 300,
+      "id": "diamond_300",
+      "items": [
+        {
+          "itemId": "DIAMOND",
+          "quantity": 300,
+          "validity_days": 120
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 0,
+      "title": "DIA 300個",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": 500,
+      "id": "diamond_500",
+      "items": [
+        {
+          "itemId": "DIAMOND",
+          "quantity": 500,
+          "validity_days": 120
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 0,
+      "title": "DIA 500個",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": 5000,
+      "id": "diamond_5240",
+      "items": [
+        {
+          "itemId": "DIAMOND",
+          "quantity": 5000,
+          "validity_days": 120
+        },
+        {
+          "itemId": "DIAMOND",
+          "quantity": 240,
+          "validity_days": null
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 0,
+      "title": "DIA 5,240個",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": null,
+      "id": "energy_1",
+      "items": [
+        {
+          "itemId": "ENERGY_DRINK",
+          "quantity": 1
+        }
+      ],
+      "price_dia": 50,
+      "purchase_limit": 0,
+      "title": "エナジードリンク ×1",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "energy_11",
+      "items": [
+        {
+          "itemId": "ENERGY_DRINK",
+          "quantity": 11
+        }
+      ],
+      "price_dia": 500,
+      "purchase_limit": 0,
+      "title": "エナジードリンク ×11",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": 500,
+      "id": "growth_pack_01",
+      "items": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 30
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 20
+        },
+        {
+          "itemId": "CASH",
+          "quantity": 10000
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 3,
+      "title": "育成応援パック",
+      "validity_days": 120
+    },
+    {
+      "amount_jpy": null,
+      "id": "rp_1",
+      "items": [
+        {
+          "itemId": "RAID_POINT_TICKET",
+          "quantity": 1
+        }
+      ],
+      "price_dia": 50,
+      "purchase_limit": 0,
+      "title": "レイドチケット ×1",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": null,
+      "id": "rp_11",
+      "items": [
+        {
+          "itemId": "RAID_POINT_TICKET",
+          "quantity": 11
+        }
+      ],
+      "price_dia": 500,
+      "purchase_limit": 0,
+      "title": "レイドチケット ×11",
+      "validity_days": null
+    },
+    {
+      "amount_jpy": 1500,
+      "id": "ticket_pack_01",
+      "items": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 5
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 5
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 5
+        }
+      ],
+      "price_dia": null,
+      "purchase_limit": 3,
+      "title": "チケットパック",
+      "validity_days": 120
+    }
+  ],
+  "triggers": [
+    {
+      "definition": "CREATE TRIGGER billing_cash_lots BEFORE UPDATE OF cash ON public.users FOR EACH ROW EXECUTE FUNCTION billing_asset_balance_trigger()",
+      "name": "billing_cash_lots",
+      "table": "users"
+    },
+    {
+      "definition": "CREATE TRIGGER billing_dia_lots BEFORE UPDATE OF neon_diamonds ON public.users FOR EACH ROW EXECUTE FUNCTION billing_dia_balance_trigger()",
+      "name": "billing_dia_lots",
+      "table": "users"
+    },
+    {
+      "definition": "CREATE TRIGGER billing_item_lots BEFORE UPDATE OF quantity ON public.user_items FOR EACH ROW EXECUTE FUNCTION billing_asset_balance_trigger()",
+      "name": "billing_item_lots",
+      "table": "user_items"
+    },
+    {
+      "definition": "CREATE TRIGGER billing_present_claimed AFTER UPDATE OF status ON public.presents FOR EACH ROW EXECUTE FUNCTION billing_mark_lot_claimed()",
+      "name": "billing_present_claimed",
+      "table": "presents"
+    },
+    {
+      "definition": "CREATE TRIGGER billing_special_payment_guard BEFORE INSERT OR UPDATE OF gacha_id, payment_source ON public.gacha_execution_history FOR EACH ROW EXECUTE FUNCTION billing_validate_special_payment()",
+      "name": "billing_special_payment_guard",
+      "table": "gacha_execution_history"
+    }
+  ],
+  "schema": {
+    "tables": [
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "billing_asset_lots"
+      },
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+        "rls": true,
+        "name": "billing_grants"
+      },
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "billing_orders"
+      },
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+        "rls": true,
+        "name": "billing_products"
+      },
+      {
+        "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres,authenticated=r/postgres}",
+        "rls": true,
+        "name": "billing_shop_receipts"
+      }
+    ],
+    "columns": [
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_asset_lots",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_asset_lots",
+        "column_name": "order_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_asset_lots",
+        "column_name": "user_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_asset_lots",
+        "column_name": "present_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_asset_lots",
+        "column_name": "item_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_asset_lots",
+        "column_name": "issued_quantity",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_asset_lots",
+        "column_name": "remaining_quantity",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_asset_lots",
+        "column_name": "issued_at",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 8
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_asset_lots",
+        "column_name": "expires_at",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 9
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_asset_lots",
+        "column_name": "claimed_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 10
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_asset_lots",
+        "column_name": "expired_quantity",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 11
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_asset_lots",
+        "column_name": "source_lot_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 12
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_grants",
+        "column_name": "order_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_grants",
+        "column_name": "stripe_session_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_grants",
+        "column_name": "user_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "billing_grants",
+        "column_name": "items",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_grants",
+        "column_name": "created_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_orders",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_orders",
+        "column_name": "user_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_orders",
+        "column_name": "request_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_orders",
+        "column_name": "product_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_orders",
+        "column_name": "amount_jpy",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "billing_orders",
+        "column_name": "product_snapshot",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_orders",
+        "column_name": "stripe_session_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_orders",
+        "column_name": "status",
+        "is_nullable": "NO",
+        "column_default": "'PENDING'::text",
+        "ordinal_position": 8
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_orders",
+        "column_name": "created_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 9
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_orders",
+        "column_name": "granted_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 10
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_orders",
+        "column_name": "billing_mode",
+        "is_nullable": "NO",
+        "column_default": "'sandbox'::text",
+        "ordinal_position": 11
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_products",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_products",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_products",
+        "column_name": "amount_jpy",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_products",
+        "column_name": "price_dia",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "billing_products",
+        "column_name": "items",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_products",
+        "column_name": "purchase_limit",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_products",
+        "column_name": "validity_days",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_shop_receipts",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_shop_receipts",
+        "column_name": "user_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "billing_shop_receipts",
+        "column_name": "request_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "billing_shop_receipts",
+        "column_name": "product_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "billing_shop_receipts",
+        "column_name": "price_dia",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "billing_shop_receipts",
+        "column_name": "items",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "billing_shop_receipts",
+        "column_name": "created_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "payment_transactions",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "payment_transactions",
+        "column_name": "user_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "payment_transactions",
+        "column_name": "product_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "payment_transactions",
+        "column_name": "amount",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "payment_transactions",
+        "column_name": "currency",
+        "is_nullable": "YES",
+        "column_default": "'JPY'::text",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "payment_transactions",
+        "column_name": "status",
+        "is_nullable": "YES",
+        "column_default": "'COMPLETED'::text",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "payment_transactions",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "presents",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "presents",
+        "column_name": "user_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "item_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "presents",
+        "column_name": "quantity",
+        "is_nullable": "YES",
+        "column_default": "1",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "message",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "status",
+        "is_nullable": "YES",
+        "column_default": "'UNCLAIMED'::text",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "expire_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 8
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "sent_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 9
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "presents",
+        "column_name": "claimed_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 10
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "source_kind",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 11
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "presents",
+        "column_name": "source_key",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 12
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "presents",
+        "column_name": "source_metadata",
+        "is_nullable": "NO",
+        "column_default": "'{}'::jsonb",
+        "ordinal_position": 13
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_items",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_items",
+        "column_name": "user_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "user_items",
+        "column_name": "item_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "user_items",
+        "column_name": "quantity",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "user_items",
+        "column_name": "updated_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_shop_purchases",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "user_shop_purchases",
+        "column_name": "user_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "user_shop_purchases",
+        "column_name": "product_id",
+        "is_nullable": "NO",
+        "column_default": null,
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "user_shop_purchases",
+        "column_name": "purchase_count",
+        "is_nullable": "NO",
+        "column_default": "1",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "user_shop_purchases",
+        "column_name": "last_purchased_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "user_shop_purchases",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "users",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "gen_random_uuid()",
+        "ordinal_position": 1
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": "'半グレの首領'::text",
+        "ordinal_position": 2
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "bio",
+        "is_nullable": "YES",
+        "column_default": "''::text",
+        "ordinal_position": 3
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "avatar_url",
+        "is_nullable": "YES",
+        "column_default": "'/reiji_transparent_asset.png'::text",
+        "ordinal_position": 4
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "current_base_id",
+        "is_nullable": "YES",
+        "column_default": "'shinjuku'::text",
+        "ordinal_position": 5
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "level",
+        "is_nullable": "YES",
+        "column_default": "1",
+        "ordinal_position": 6
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "xp",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 7
+      },
+      {
+        "udt_name": "int8",
+        "data_type": "bigint",
+        "table_name": "users",
+        "column_name": "cash",
+        "is_nullable": "YES",
+        "column_default": "2600",
+        "ordinal_position": 8
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "neon_diamonds",
+        "is_nullable": "YES",
+        "column_default": "200",
+        "ordinal_position": 9
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "vitality",
+        "is_nullable": "YES",
+        "column_default": "50",
+        "ordinal_position": 10
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "pvp_points",
+        "is_nullable": "NO",
+        "column_default": "5",
+        "ordinal_position": 11
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "pvp_points_last_recovered_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 12
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "favorite_character_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 13
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "title_equipped",
+        "is_nullable": "YES",
+        "column_default": "'半グレの首領'::text",
+        "ordinal_position": 14
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "equipped_background",
+        "is_nullable": "YES",
+        "column_default": "'/bg/bg_base_neontower.png'::text",
+        "ordinal_position": 15
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "equipped_front_effect",
+        "is_nullable": "YES",
+        "column_default": "'none'::text",
+        "ordinal_position": 16
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "selected_bg_mode",
+        "is_nullable": "YES",
+        "column_default": "'NEON_TOWER'::text",
+        "ordinal_position": 17
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "interior_item",
+        "is_nullable": "YES",
+        "column_default": "'none'::text",
+        "ordinal_position": 18
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "last_guild_left_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 19
+      },
+      {
+        "udt_name": "text",
+        "data_type": "text",
+        "table_name": "users",
+        "column_name": "gift_code",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 20
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "daily_cash_skips_count",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 21
+      },
+      {
+        "udt_name": "jsonb",
+        "data_type": "jsonb",
+        "table_name": "users",
+        "column_name": "sound_settings",
+        "is_nullable": "YES",
+        "column_default": "'{\"se\": true, \"bgm\": true}'::jsonb",
+        "ordinal_position": 22
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "created_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 23
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "raid_attempts_today",
+        "is_nullable": "YES",
+        "column_default": "0",
+        "ordinal_position": 24
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "raid_attempts_reset_at",
+        "is_nullable": "YES",
+        "column_default": "now()",
+        "ordinal_position": 25
+      },
+      {
+        "udt_name": "bool",
+        "data_type": "boolean",
+        "table_name": "users",
+        "column_name": "has_shown_guild_dialog",
+        "is_nullable": "YES",
+        "column_default": "false",
+        "ordinal_position": 26
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "last_active_at",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 27
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "last_username_changed_on",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 28
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "last_bio_changed_on",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 29
+      },
+      {
+        "udt_name": "uuid",
+        "data_type": "uuid",
+        "table_name": "users",
+        "column_name": "guild_id",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 30
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "diamonds",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 31
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "vitality_last_recovered_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 32
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "last_login_date",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 33
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "updated_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 34
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "daily_cash_skips_reset_date",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 35
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "raid_points",
+        "is_nullable": "NO",
+        "column_default": "5",
+        "ordinal_position": 36
+      },
+      {
+        "udt_name": "timestamptz",
+        "data_type": "timestamp with time zone",
+        "table_name": "users",
+        "column_name": "raid_points_last_recovered_at",
+        "is_nullable": "NO",
+        "column_default": "now()",
+        "ordinal_position": 37
+      },
+      {
+        "udt_name": "bool",
+        "data_type": "boolean",
+        "table_name": "users",
+        "column_name": "raid_free_entry_consumed",
+        "is_nullable": "NO",
+        "column_default": "false",
+        "ordinal_position": 38
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "quest_free_skips_count",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 39
+      },
+      {
+        "udt_name": "int4",
+        "data_type": "integer",
+        "table_name": "users",
+        "column_name": "quest_paid_skips_count",
+        "is_nullable": "NO",
+        "column_default": "0",
+        "ordinal_position": 40
+      },
+      {
+        "udt_name": "date",
+        "data_type": "date",
+        "table_name": "users",
+        "column_name": "quest_skips_reset_date",
+        "is_nullable": "YES",
+        "column_default": null,
+        "ordinal_position": 41
+      }
+    ],
+    "constraints": [
+      {
+        "name": "billing_asset_lots_check",
+        "table": "billing_asset_lots",
+        "definition": "CHECK (((remaining_quantity + expired_quantity) <= issued_quantity))"
+      },
+      {
+        "name": "billing_asset_lots_check1",
+        "table": "billing_asset_lots",
+        "definition": "CHECK ((expires_at > issued_at))"
+      },
+      {
+        "name": "billing_asset_lots_expired_quantity_check",
+        "table": "billing_asset_lots",
+        "definition": "CHECK ((expired_quantity >= 0))"
+      },
+      {
+        "name": "billing_asset_lots_issued_quantity_check",
+        "table": "billing_asset_lots",
+        "definition": "CHECK ((issued_quantity > 0))"
+      },
+      {
+        "name": "billing_asset_lots_order_id_fkey",
+        "table": "billing_asset_lots",
+        "definition": "FOREIGN KEY (order_id) REFERENCES billing_orders(id)"
+      },
+      {
+        "name": "billing_asset_lots_pkey",
+        "table": "billing_asset_lots",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "name": "billing_asset_lots_present_id_fkey",
+        "table": "billing_asset_lots",
+        "definition": "FOREIGN KEY (present_id) REFERENCES presents(id)"
+      },
+      {
+        "name": "billing_asset_lots_present_id_key",
+        "table": "billing_asset_lots",
+        "definition": "UNIQUE (present_id)"
+      },
+      {
+        "name": "billing_asset_lots_remaining_quantity_check",
+        "table": "billing_asset_lots",
+        "definition": "CHECK ((remaining_quantity >= 0))"
+      },
+      {
+        "name": "billing_asset_lots_source_lot_id_fkey",
+        "table": "billing_asset_lots",
+        "definition": "FOREIGN KEY (source_lot_id) REFERENCES billing_asset_lots(id)"
+      },
+      {
+        "name": "billing_asset_lots_user_id_fkey",
+        "table": "billing_asset_lots",
+        "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+      },
+      {
+        "name": "billing_grants_order_id_fkey",
+        "table": "billing_grants",
+        "definition": "FOREIGN KEY (order_id) REFERENCES billing_orders(id)"
+      },
+      {
+        "name": "billing_grants_pkey",
+        "table": "billing_grants",
+        "definition": "PRIMARY KEY (order_id)"
+      },
+      {
+        "name": "billing_grants_stripe_session_id_key",
+        "table": "billing_grants",
+        "definition": "UNIQUE (stripe_session_id)"
+      },
+      {
+        "name": "billing_grants_user_id_fkey",
+        "table": "billing_grants",
+        "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+      },
+      {
+        "name": "billing_orders_billing_mode_check",
+        "table": "billing_orders",
+        "definition": "CHECK ((billing_mode = ANY (ARRAY['sandbox'::text, 'live'::text])))"
+      },
+      {
+        "name": "billing_orders_pkey",
+        "table": "billing_orders",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "name": "billing_orders_product_id_fkey",
+        "table": "billing_orders",
+        "definition": "FOREIGN KEY (product_id) REFERENCES billing_products(id)"
+      },
+      {
+        "name": "billing_orders_status_check",
+        "table": "billing_orders",
+        "definition": "CHECK ((status = ANY (ARRAY['PENDING'::text, 'GRANTED'::text, 'EXPIRED'::text])))"
+      },
+      {
+        "name": "billing_orders_stripe_session_id_key",
+        "table": "billing_orders",
+        "definition": "UNIQUE (stripe_session_id)"
+      },
+      {
+        "name": "billing_orders_user_id_fkey",
+        "table": "billing_orders",
+        "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+      },
+      {
+        "name": "billing_orders_user_id_request_id_key",
+        "table": "billing_orders",
+        "definition": "UNIQUE (user_id, request_id)"
+      },
+      {
+        "name": "billing_products_check",
+        "table": "billing_products",
+        "definition": "CHECK ((((amount_jpy > 0) AND (price_dia IS NULL)) OR ((price_dia > 0) AND (amount_jpy IS NULL))))"
+      },
+      {
+        "name": "billing_products_items_check",
+        "table": "billing_products",
+        "definition": "CHECK ((jsonb_typeof(items) = 'array'::text))"
+      },
+      {
+        "name": "billing_products_pkey",
+        "table": "billing_products",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "name": "billing_products_validity_days_check",
+        "table": "billing_products",
+        "definition": "CHECK ((validity_days > 0))"
+      },
+      {
+        "name": "billing_shop_receipts_pkey",
+        "table": "billing_shop_receipts",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "name": "billing_shop_receipts_product_id_fkey",
+        "table": "billing_shop_receipts",
+        "definition": "FOREIGN KEY (product_id) REFERENCES billing_products(id)"
+      },
+      {
+        "name": "billing_shop_receipts_user_id_fkey",
+        "table": "billing_shop_receipts",
+        "definition": "FOREIGN KEY (user_id) REFERENCES users(id)"
+      },
+      {
+        "name": "billing_shop_receipts_user_id_request_id_key",
+        "table": "billing_shop_receipts",
+        "definition": "UNIQUE (user_id, request_id)"
+      }
+    ]
+  }
+}

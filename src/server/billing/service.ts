@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { BillingError, billingConfig, validateSession } from "./contracts";
+import { BillingError, billingConfig, validateSession, assertPurchaseOperatingStates } from "./contracts";
 import type { BillingOrder, CheckoutSession } from "./contracts";
 import { reconcileCheckout } from "./reconciliation";
 
@@ -14,6 +14,18 @@ export function billingService() {
     const { data, error } = await db.auth.getUser(match[1]);
     if (error || !data.user) throw new BillingError("ログインし直してください。", 401);
     return data.user.id;
+  }
+  async function assertPurchasingAllowed(feature: "PAYMENT" | "SHOP", userId: string) {
+    const { data, error } = await db.from("feature_operating_states")
+      .select("feature_key,state,mutation_allowed").in("feature_key", ["MAINTENANCE", feature]);
+    if (error) throw new BillingError("購入受付状況を確認できません。時間をおいて再度お試しください。", 503);
+    let tester = false;
+    if (data?.some(row => row.feature_key === "MAINTENANCE" && row.state === "MAINTENANCE")) {
+      const access = await db.from("operations_maintenance_testers").select("user_id")
+        .eq("user_id", userId).gt("expires_at", new Date().toISOString()).maybeSingle();
+      tester = !access.error && access.data?.user_id === userId;
+    }
+    assertPurchaseOperatingStates(data, feature, tester);
   }
   async function rpc(name: string, args: Record<string, unknown>) {
     const { data, error } = await db.rpc(name, args);
@@ -47,7 +59,7 @@ export function billingService() {
   async function reconcile(session: CheckoutSession, existing?: BillingOrder) {
     return reconcileCheckout(session, { order, rpc, validate: (value, item) => validateSession(value, item, config.mode) }, existing);
   }
-  return { config, db, authenticatedUser, rpc, stripe, order, reconcile };
+  return { config, db, authenticatedUser, assertPurchasingAllowed, rpc, stripe, order, reconcile };
 }
 
 export function billingResponse(data: unknown, status = 200) {

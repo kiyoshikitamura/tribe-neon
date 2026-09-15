@@ -5,6 +5,7 @@ export async function POST(request: Request) {
   try {
     const billing = billingService();
     const userId = await billing.authenticatedUser(request);
+    await billing.assertPurchasingAllowed("SHOP", userId);
     const input = await request.json();
     if (typeof input.productId !== "string" || input.productId.length > 80) throw new BillingError("商品が不正です。");
     return billingResponse(await billing.rpc("billing_buy_dia_product", {

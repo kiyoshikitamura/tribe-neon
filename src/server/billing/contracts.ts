@@ -7,6 +7,14 @@ export class BillingError extends Error {
   status: number;
   constructor(message: string, status = 400) { super(message); this.status = status; }
 }
+
+export function assertPurchaseOperatingStates(rows: { feature_key: string; state: string; mutation_allowed: boolean }[] | null, feature: "PAYMENT" | "SHOP", maintenanceTester = false) {
+  const maintenance = rows?.find(row => row.feature_key === "MAINTENANCE");
+  const target = rows?.find(row => row.feature_key === feature);
+  if (maintenance?.state === "MAINTENANCE" && !maintenanceTester) throw new BillingError("現在メンテナンス中です。", 503);
+  if (!(maintenance?.state === "CLOSED" || (maintenance?.state === "MAINTENANCE" && maintenanceTester)) || target?.state !== "OPEN" || target.mutation_allowed !== true)
+    throw new BillingError("現在、購入を受け付けていません。", 503);
+}
 export type CheckoutSession = {
   id: string; url?: string | null; livemode: boolean; status: string;
   payment_status: string; amount_total: number; currency: string;

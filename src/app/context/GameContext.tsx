@@ -1,5 +1,6 @@
 "use client";
 import { useQuestRaidEncounter } from "./hooks/useQuestRaidEncounter";
+import { useMaintenanceTestAccess } from "./hooks/useMaintenanceTestAccess";
 import { useBeginnerJourney } from "@/hooks/useBeginnerJourney";
 import { canClaimMission } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
@@ -499,6 +500,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     scoutResults, setScoutResults,
     scoutPresentationCategory, setScoutPresentationCategory
   } = gacha;
+
+  const maintenanceTestAccess = useMaintenanceTestAccess(session?.user?.id, isMaintenanceEnabled(featureOperatingStates));
 
   const shop = useShop();
 
@@ -4319,7 +4322,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     pvpNextRecoveryAt,
     pvpPoints, setPvpPoints,
     activeTab, setActiveTab,
-    maintenanceEnabled: isMaintenanceEnabled(featureOperatingStates),
+    maintenanceEnabled: isMaintenanceEnabled(featureOperatingStates) && !maintenanceTestAccess,
     showInboxPanel, setShowInboxPanel,
     showMissionPanel, setShowMissionPanel,
     showFriendPanel, setShowFriendPanel,
