@@ -147,6 +147,7 @@ export default function RankingTab() {
   const [contextError, setContextError] = useState(false);
   const [periodError, setPeriodError] = useState(false);
   const [selfStatus, setSelfStatus] = useState<string | null>(null);
+  const [upcomingPeriod, setUpcomingPeriod] = useState<{ starts_at: string; ends_at: string; status: string } | null>(null);
   const [periodBounds, setPeriodBounds] = useState<{ starts_at?: string; ends_at?: string; status?: string } | null>(null);
   const [rewardDialogOpen, setRewardDialogOpen] = useState(false);
   const [rewardMaster, setRewardMaster] = useState<RankingRewardMasterPayload | undefined>(undefined);
@@ -246,6 +247,17 @@ export default function RankingTab() {
         }
       }
 
+      // Upcoming dates are a separate read contract: never substitute them for
+      // the current season or attach its scores to an unstarted season.
+      let nextUpcomingPeriod: { starts_at: string; ends_at: string; status: string } | null = null;
+      if (activePeriod === "season") {
+        const upcoming = await supabase.rpc("get_upcoming_ranking_seasons_v1");
+        const rankingType = activeTab === "power" ? "POWER" : activeTab === "guild_power" ? "GUILD_POWER" : "PVP";
+        if (!upcoming.error && Array.isArray(upcoming.data)) {
+          nextUpcomingPeriod = upcoming.data.find((season: any) => season.ranking_type === rankingType) || null;
+        }
+      }
+
       const publicUserIds = [...new Set([...[...nextRows, ...nextNeighbors].map((row) => row.user_id).filter(Boolean), session?.user?.id].filter(Boolean))] as string[];
       const nextProfiles = await loadRankingProfiles<PublicProfile>(publicUserIds, async (ids) => {
         const result = await supabase.rpc("get_public_profiles", { p_user_ids: ids });
@@ -265,6 +277,7 @@ export default function RankingTab() {
       setPeriodError(nextPeriodError);
       setSelfStatus(nextSelfStatus);
       setPeriodBounds(nextBounds);
+      setUpcomingPeriod(nextUpcomingPeriod);
       setUpdatedAt(new Date().toISOString());
     } catch {
       if (requestId === requestVersion.current) setError(true);
@@ -398,6 +411,12 @@ export default function RankingTab() {
       <div className="ranking-period-row"><div role="group" aria-label="集計期間">{PERIOD_TABS.map((period) => <button key={period.id} type="button" className={activePeriod === period.id ? "is-active" : ""} onClick={() => setActivePeriod(period.id)}>{period.label}</button>)}</div><span>{periodLabel}・{updateLabel}</span><button type="button" className="ranking-reward-button" onClick={openRewardDialog}>報酬確認</button></div>
 
       <div className="ranking-rules"><span>{ruleLabel}</span><span>{periodText}</span></div>
+      {activePeriod === "season" && !loading && !error && upcomingPeriod && (
+        <div className="ranking-rules" role="status">
+          <span>次回シーズン開催予定（まだ集計は始まっていません）</span>
+          <span>{rankingPeriodText(upcomingPeriod, { preopen: false, daily: false, now: Date.now(), format: formatJstTimestamp })}</span>
+        </div>
+      )}
 
       {isPreopenGuildSeason && <section className={`ranking-guild-season-summary ${guildSeasonFinalized ? "is-finalized" : ""}`} aria-label="プレオープン限定シーズン情報">
         <div><strong>プレオープン限定シーズン</strong><span>{guildSeasonFinalized ? "順位確定" : "集計中"}</span></div>
