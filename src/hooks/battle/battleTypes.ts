@@ -42,6 +42,7 @@ export interface UseBattleOptions {
   setRaidTotalDamage: React.Dispatch<React.SetStateAction<number>>;
   setErrorMessage: (msg: string | null) => void;
   addGuildXpAndContributionByAction: (actionType: string) => Promise<void>;
+  setGlobalInteractionBlocking?: (blocking: boolean) => void;
   setConfirmDialogConfig?: React.Dispatch<React.SetStateAction<import("@/app/components/ui/ConfirmDialog").ConfirmDialogConfig | null>>;
   patrolNpcs?: any[];
   patrol?: any;

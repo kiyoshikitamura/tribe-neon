@@ -1,5 +1,11 @@
 # 個別企画仕様書(C)：ギルド抗争(GvG) ＆ 協力レイド ＆ PvP
 
+## レイドランキング廃止（2026-09-08・優先決定）
+
+Product Ownerの訂正と実装継続指示により、レイドの個人/Guild・日次/Seasonランキングおよび順位報酬の新規生成を廃止する。新Roomの貢献を既存ランキングに合算する案は撤回。Room内の参加者・貢献表示、討伐/救援成功報酬は別に扱う。PvP・総合力・Guild総合力等の他ランキングは維持する。
+
+過去の順位履歴・報酬台帳・発行済みPresentは保持する。下記の旧レイドランキング定義と矛盾する場合は本節を優先する。詳細は`raid_room_rescue_v1.md`。実装と実DBへの適用完了は区別する。
+
 ## M9-X Guild Human Response
 
 Guild HomeのWelcomeは設定可能なSystem/Welcome Cardとする。120文字以内の編集はMASTERのみが既存の認証済みRPCから行い、一般メンバーは読み取り表示のみとする。挨拶presetは明示送信前に自動投稿しない。Replyは1階層の`reply_to_message_id`で、Threadは追加しない。Human Response集計はSystem messageと自己返信を除外する。

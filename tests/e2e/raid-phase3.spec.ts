@@ -26,7 +26,7 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem("mock_db_user_main_formations", JSON.stringify(owned.map((entry: any, index: number) => ({ user_id: me, slot: index + 1, user_character_id: entry.id }))));
     localStorage.setItem("mock_db_user_power_rankings", JSON.stringify([{ user_id: me, total_power: 61096, rank_position: 4, updated_at: now }]));
     localStorage.setItem("mock_db_user_items", JSON.stringify([{ id: "raid-ticket", user_id: me, item_id: "RAID_POINT_TICKET", quantity: 2 }]));
-    localStorage.setItem("mock_db_raid_bosses", JSON.stringify([{ id: raidId, boss_master_id: raidVariant.id, boss_name: raidVariant.name, level: 30, current_hp: 25500000, max_hp: 34000000, base_id: raidTown, profile_type: "PARTY", status: "ACTIVE", expires_at: new Date(Date.now() + 20 * 3600_000).toISOString(), skill_loadout: [] }]));
+    localStorage.setItem("mock_db_raid_bosses", JSON.stringify([{ id: raidId, raid_day_key: now.slice(0, 10), boss_master_id: raidVariant.id, boss_name: raidVariant.name, level: 30, current_hp: 25500000, max_hp: 34000000, base_id: raidTown, profile_type: "PARTY", status: "ACTIVE", expires_at: new Date(Date.now() + 20 * 3600_000).toISOString(), skill_loadout: [] }]));
     localStorage.setItem("mock_db_raid_boss_master", JSON.stringify([{ id: raidVariant.id, boss_name: raidVariant.name, level: 30, max_hp: 34000000, atk: 8700, def: 7700, spd: 390, luk: 0, skills: [] }]));
     localStorage.setItem("mock_db_raid_damage_logs", JSON.stringify([
       { user_id: me, raid_boss_instance_id: raidId, raw_damage: 123456, created_at: now },
@@ -68,7 +68,9 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 412, height: 915 }
     await expect(topRoster.locator('[data-character-id="char_cecile_01"]')).toHaveCount(1);
     await expect(page.locator(".raid-hp-text")).toContainText("25,500,000 / 34,000,000");
     await expect(page.locator(".raid-status-grid")).toContainText("3 / 5");
-    await expect(page.locator(".raid-status-grid")).toContainText("4位");
+    await expect(page.locator(".raid-status-grid")).toContainText("CONTRIBUTION");
+    await expect(page.locator(".raid-status-grid")).toContainText("123,456");
+    await expect(page.locator(".raid-status-grid")).not.toContainText(/(?:\d+位|RANK)/);
     const topGeometry = await page.locator(".raid-view").evaluate((node) => ({ scrollWidth: node.scrollWidth, clientWidth: node.clientWidth }));
     expect(topGeometry.scrollWidth).toBeLessThanOrEqual(topGeometry.clientWidth + 1);
     const challenge = page.getByRole("button", { name: "挑戦する" });

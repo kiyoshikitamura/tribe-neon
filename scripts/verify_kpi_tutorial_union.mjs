@@ -8,10 +8,10 @@ const require = createRequire(import.meta.url);
 const cache = new Map();
 function load(file) {
   file=path.resolve(file); if(cache.has(file))return cache.get(file).exports;
-  const module={exports:{}}; cache.set(file,module);
+  const loadedModule={exports:{}}; cache.set(file,loadedModule);
   const js=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-  new Function('require','module','exports',js)((name)=>name.startsWith('@/')?load('src/'+name.slice(2)+'.ts'):require(name),module,module.exports);
-  return module.exports;
+  new Function('require','module','exports',js)((name)=>name.startsWith('@/')?load('src/'+name.slice(2)+'.ts'):require(name),loadedModule,loadedModule.exports);
+  return loadedModule.exports;
 }
 const api=load('src/app/api/admin/kpi/v2/_shared.ts');
 export class FixtureService {

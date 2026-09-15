@@ -1,4 +1,6 @@
 "use client";
+import RaidRescueLink from './raid/RaidRescueLink';
+import { getRaidRescueActivityId } from '../../domain/raidRoomRescue';
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useGame } from "../context/GameContext";
@@ -98,6 +100,7 @@ type HomeBanner = {
 };
 
 function activityDescription(activity: HomeActivity) {
+  if (activity.activity_type === "RAID_HELP_REQUEST") return "レイドの救援を依頼";
   if (activity.activity_type === "GUILD_CREATED") return "TRIBEを結成";
   if (activity.activity_type === "POWER_RANK_1") return "総戦力ランキング1位に到達";
   return "SSRを獲得";
@@ -620,6 +623,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
             />
             <div className="mypage-activity-log-detail">
               <strong>{activityDescription(activity)}</strong>
+              <RaidRescueLink rescueId={getRaidRescueActivityId(activity)} onOpen={() => setShowActivityLog(false)} />
               {activity.created_at && <time dateTime={activity.created_at}>{activityTimeLabel(activity.created_at)}</time>}
             </div>
           </article>)}

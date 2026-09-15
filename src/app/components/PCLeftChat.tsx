@@ -1,5 +1,6 @@
 "use client";
 
+import RaidRescueLink from './raid/RaidRescueLink';
 import React from "react";
 import { useGame } from "../context/GameContext";
 import "./PCLeftChat.css";
@@ -76,7 +77,7 @@ export default function PCLeftChat() {
                 <span className={`pc-msg-sender ${isSelf ? "self" : "other"}`}>
                   [{msg.author_name}]:
                 </span>
-                <span className="pc-msg-text">{msg.content}</span>
+                <span className="pc-msg-text">{msg.content}<RaidRescueLink rescueId={msg.raid_rescue_id} /></span>
               </div>
             );
           })
