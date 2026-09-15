@@ -48,6 +48,7 @@ export function previewBillingDiagnostics(code: BillingReadinessCode, requestOri
   return env.VERCEL_ENV === "preview"
     ? { diagnostics: { code, commitSha: /^[a-f0-9]{40}$/i.test(env.VERCEL_GIT_COMMIT_SHA ?? "") ? env.VERCEL_GIT_COMMIT_SHA : null,
       deploymentUrl: /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.vercel\.app$/i.test(env.VERCEL_URL ?? "") ? `https://${env.VERCEL_URL}` : null,
+      raidRoomUiEnabled: process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true",
       checks: sandboxEnvironmentChecks(env, requestOrigin) } }
     : {};
 }
