@@ -364,9 +364,10 @@ export default function PatrolTab() {
     setLastPatrolRewards(null);
   }, [lastPatrolRewards, setLastPatrolRewards, setShowPatrolRewardModal, tutorialBattleActive, tutorialStep]);
 
-  // The battle result is the single result surface for every victorious quest.
-  // Resolution already committed battle_resolved before replay starts, so do
-  // not wait on the eventually-refreshed activePatrols projection here.
+  // Settle both wins and defeats once: the server grants rewards only for a
+  // victory and releases a defeated dispatch without a reward modal. Resolution
+  // already committed battle_resolved before replay starts, so do not wait on
+  // the eventually-refreshed activePatrols projection here.
   React.useEffect(() => {
     if (battleState !== "RESULT" || showPatrolRewardModal || lastPatrolRewards) return;
     if (!settledPatrolEncounterId || autoRewardClaimRef.current === settledPatrolEncounterId) return;

@@ -398,12 +398,26 @@ export function usePatrol(
     if (!session || !targetPatrol) return false;
 
     if (!beginMutation()) return false;
-    playCyberSe("gacha");
     try {
       const res = await supabase.rpc("claim_patrol_rewards", { p_patrol_id: patrolId });
 
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
+      // A defeat still needs server settlement to release the dispatched
+      // character, but it is not a clear and must not become a reward surface.
+      // Use the RPC outcome rather than the potentially stale patrol projection.
+      if (res.data?.outcome === "DEFEAT") {
+        invalidatePatrolBootstrap();
+        setActivePatrols((current) => current.filter((entry) => entry.id !== patrolId));
+        setHasActivePatrolBattle((current) => targetPatrol.has_battle_event ? false : current);
+        setLastPatrolRewards(null);
+        setShowPatrolRewardModal(false);
+        await syncBootstrapData(session.user.id).catch((refreshError) => {
+          console.warn("Patrol post-defeat refresh failed:", refreshError);
+        });
+        return true;
+      }
+      playCyberSe("gacha");
       const awardedItems = Array.isArray(res.data?.items) ? res.data.items : [];
       const nextLevel = Number(res.data?.level);
       const nextXp = Number(res.data?.current_xp);
@@ -431,7 +445,7 @@ export function usePatrol(
         dropItemQty: Number(awardedItems[0]?.quantity || 0),
         gearDropped: false,
         hasBattle: Boolean(targetPatrol.has_battle_event),
-        battleVictory: targetPatrol.battle_result === "VICTORY",
+        battleVictory: res.data?.outcome === "VICTORY" || (res.data?.outcome == null && targetPatrol.battle_result === "VICTORY"),
         battleCashBonus: 0,
         battleXpBonus: 0,
         battleRewardItemName: "",

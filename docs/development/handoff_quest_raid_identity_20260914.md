@@ -197,3 +197,7 @@ Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の�
 ## 最新配信結果
 
 修正31b1cccの固定Preview URL、Git連携success、残件は `preview_delivery_result_20260915.md` を参照。これを旧URL未取得・公開Browser阻害の記録より優先する。Production未変更、適用済みMigration再適用なし。
+
+## 2026-09-15 Quest敗北修正追記
+
+`docs/development/quest_defeat_reward_fix_20260915.md`を参照。Preview migration `20260915090229_quest_victory_reward_authority`適用済み・再適用不要。今回のPreview記事のみ正本7.2へ訂正済み。過去の誤付与/誤クリアは未補正、Production未変更。

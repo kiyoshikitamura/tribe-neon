@@ -53,7 +53,7 @@ assert.match(
 );
 assert.match(
   patrolHook,
-  /if \(!options\?\.suppressResultModal\) setShowPatrolRewardModal\(true\);[\s\S]*?setActivePatrols\(\(current\) => current\.filter/,
+  /setLastPatrolRewards\(rewardSummary\);[\s\S]*?setActivePatrols\(\(current\) => current\.filter[\s\S]*?if \(!options\?\.suppressResultModal\) setShowPatrolRewardModal\(true\);/,
   "non-battle claims must preserve their reward modal while removing the completed Quest card",
 );
 assert.match(
@@ -73,7 +73,7 @@ assert.match(
 );
 assert.match(
   battle,
-  /const destination = battleModeResultDetail\?\.destination;[\s\S]*?setBattleState\(null\);[\s\S]*?if \(destination\) navigateTab\?\.\(destination\);/,
+  /const destination = [^\n]*battleModeResultDetail\?\.destination;[\s\S]*?setBattleState\(null\);[\s\S]*?if \(destination\) navigateTab\?\.\(destination\);/,
   "the result CTA must leave the battle and honor its configured destination",
 );
 
