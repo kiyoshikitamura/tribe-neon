@@ -191,15 +191,24 @@ export function useInventory(
         showActionError("アイテムを使用できませんでした", err);
       }
     } else if (itemId === "PVP_POINT_TICKET" || itemId === "RAID_POINT_TICKET") {
+      const ownerUserId = session.user.id;
+      const isCurrentOwner = () => activeInventoryUserIdRef.current === ownerUserId;
       try {
         const res = await supabase.rpc("use_action_resource_ticket", { p_item_id: itemId });
+        if (!isCurrentOwner()) return;
         if (res.error) throw res.error;
         if (res.data?.error) throw new Error(res.data.error);
-        await syncBootstrapData(session.user.id);
+        if (res.data?.status !== "success") throw new Error("回復結果を確認できませんでした。");
+        // A confirmed ticket use has already consumed the item. A later
+        // projection failure must not invite another use as a retry.
+        let projectionFailed = false;
+        try { await syncBootstrapData(ownerUserId); }
+        catch { projectionFailed = true; }
+        if (!isCurrentOwner()) return;
         const resourceName = itemId === "PVP_POINT_TICKET" ? "BP" : "レイドポイント";
-        setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: `${resourceName}が1回復しました。`, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
+        setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: `${resourceName}が1回復しました。${projectionFailed ? "画面の更新に失敗したため、再読み込みして所持数を確認してください。" : ""}`, confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });
       } catch (err: any) {
-        showActionError("アイテムを使用できませんでした", err);
+        if (isCurrentOwner()) showActionError("アイテムを使用できませんでした", err);
       }
     } else {
       setConfirmDialogConfig({ isOpen: true, title: "アイテム使用", message: "このアイテムは強化・限界突破画面で使用してください。", confirmText: "OK", cancelText: "", presentation: "canonical", onConfirm: () => setConfirmDialogConfig(null), onCancel: () => setConfirmDialogConfig(null) });

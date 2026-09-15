@@ -46,7 +46,9 @@ export function sandboxEnvironmentChecks(env: NodeJS.ProcessEnv = process.env, r
 export type BillingReadinessCode = "ENVIRONMENT_INVALID" | "CATALOG_QUERY_FAILED" | "CATALOG_MISMATCH" | "READY" | "SERVICE_FAILED";
 export function previewBillingDiagnostics(code: BillingReadinessCode, requestOrigin?: string, env: NodeJS.ProcessEnv = process.env) {
   return env.VERCEL_ENV === "preview"
-    ? { diagnostics: { code, commitSha: /^[a-f0-9]{40}$/i.test(env.VERCEL_GIT_COMMIT_SHA ?? "") ? env.VERCEL_GIT_COMMIT_SHA : null, checks: sandboxEnvironmentChecks(env, requestOrigin) } }
+    ? { diagnostics: { code, commitSha: /^[a-f0-9]{40}$/i.test(env.VERCEL_GIT_COMMIT_SHA ?? "") ? env.VERCEL_GIT_COMMIT_SHA : null,
+      deploymentUrl: /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.vercel\.app$/i.test(env.VERCEL_URL ?? "") ? `https://${env.VERCEL_URL}` : null,
+      checks: sandboxEnvironmentChecks(env, requestOrigin) } }
     : {};
 }
 

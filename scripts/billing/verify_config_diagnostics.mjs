@@ -25,3 +25,7 @@ console.log('PASS: config API 6 readiness branches, Preview-only diagnostics, Pr
 
 assert.equal(previewBillingDiagnostics('READY',undefined,{...sandbox,VERCEL_ENV:'preview',VERCEL_GIT_COMMIT_SHA:'a'.repeat(40)}).diagnostics.commitSha,'a'.repeat(40));
 assert.equal(previewBillingDiagnostics('READY',undefined,{...sandbox,VERCEL_ENV:'preview',VERCEL_GIT_COMMIT_SHA:'unexpected-value'}).diagnostics.commitSha,null);
+assert.equal(previewBillingDiagnostics('READY',undefined,{...sandbox,VERCEL_URL:'tribe-neon-build123-team.vercel.app'}).diagnostics.deploymentUrl,'https://tribe-neon-build123-team.vercel.app');
+for(const invalid of ['https://tribe-neon.vercel.app','secret@tribe-neon.vercel.app','tribe-neon.vercel.app/secret','tribe-neon.vercel.app?token=secret','tribe-neon.vercel.app.evil.example',undefined]) {
+ assert.equal(previewBillingDiagnostics('READY',undefined,{...sandbox,VERCEL_URL:invalid}).diagnostics.deploymentUrl,null);
+}
