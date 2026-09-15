@@ -23,7 +23,7 @@
   min-width: 0;
   min-height: 44px;
   padding: 3px 0 2px;
-  opacity: 0.42;
+  opacity: 1;
   transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
@@ -95,13 +95,13 @@
   min-height: 23px;
   object-fit: contain;
   flex-shrink: 0;
-  filter: grayscale(.7) brightness(.78);
+  filter: brightness(1.15);
 }
 .footer-label {
   max-width: 100%;
   overflow: hidden;
-  color: #87919e;
-  font-size: 9px;
+  color: #dce4ee;
+  font-size: 10px;
   font-weight: 800;
   line-height: 1;
   text-overflow: ellipsis;
@@ -109,3 +109,21 @@
 }
 .footer-item.active .footer-icon { filter:drop-shadow(0 0 6px rgba(0,240,255,.62)); }
 .footer-item.active .footer-label { color: var(--neon-cyan, #00f0ff); }
+
+/* ショップは通常時も見つけやすく、選択状態は他のメニューと共通にする。 */
+.footer-item--shop:not(.upcoming) {
+  border-radius: 6px;
+  background: rgba(244, 202, 112, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(244, 202, 112, 0.3);
+}
+.footer-item--shop:not(.upcoming):not(.active) .footer-label {
+  color: #f4d58a;
+}
+.footer-item--shop.active {
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(0, 240, 255, 0.4);
+}
+.footer-item:focus-visible {
+  outline: 2px solid var(--neon-cyan, #00f0ff);
+  outline-offset: -2px;
+}

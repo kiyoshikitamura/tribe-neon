@@ -55,7 +55,7 @@ export default function Footer() {
         return (
           <button
             key={item.id}
-            className={`footer-item active-scale-effect ${isActive ? "active" : ""} ${item.upcoming ? "upcoming" : ""}`}
+            className={`footer-item active-scale-effect ${item.id === "shop" ? "footer-item--shop" : ""} ${isActive ? "active" : ""} ${item.upcoming ? "upcoming" : ""}`}
             disabled={item.upcoming}
             aria-label={item.upcoming ? "ショップは準備中です" : item.label}
             onPointerEnter={item.id === "shop" ? warmShop : undefined}
