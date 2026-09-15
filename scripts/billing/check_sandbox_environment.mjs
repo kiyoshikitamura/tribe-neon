@@ -1,18 +1,8 @@
 /** Run in the Preview deployment's environment. Never print secret values. */
-import { billingConfig, PREVIEW_PROJECT_REF } from '../../src/server/billing/contracts.ts';
+import { billingConfig, sandboxEnvironmentChecks } from '../../src/server/billing/contracts.ts';
 import { catalogMatches } from '../../src/server/billing/catalog.ts';
 const env=process.env;
-const checks={
- mode_sandbox:(env.BILLING_MODE??'sandbox')==='sandbox',
- sandbox_enabled:env.BILLING_SANDBOX_ENABLED==='true',
- non_production_runtime:env.VERCEL_ENV!=='production',
- preview_database:env.NEXT_PUBLIC_SUPABASE_URL===`https://${PREVIEW_PROJECT_REF}.supabase.co`,
- stripe_test_key_present:!!env.STRIPE_SECRET_KEY?.startsWith('sk_test_'),
- webhook_signing_secret_present:!!env.STRIPE_WEBHOOK_SECRET?.startsWith('whsec_'),
- service_role_present:!!env.SUPABASE_SERVICE_ROLE_KEY,
- return_origin_valid:false,
-};
-try { const u=new URL(env.BILLING_RETURN_ORIGIN??''); checks.return_origin_valid=u.protocol==='https:'&&!u.username&&!u.password&&u.pathname==='/'&&!u.search&&!u.hash&&!['https://tribe-neon.com','https://www.tribe-neon.com'].includes(u.origin); } catch {}
+const checks=sandboxEnvironmentChecks(env);
 console.log(JSON.stringify({checks},null,2));
 let config;
 try { config=billingConfig(env); } catch { console.log('BILLING_CONFIG_INVALID'); process.exitCode=1; }

@@ -1,7 +1,7 @@
 # GAME03 / TRIBE NEON
 # 正式オープン統合リリース管理
 
-更新日：2026-09-14  
+更新日：2026-09-15
 ステータス：実装・Preview受入管理用  
 対象：正式オープン本体、Season切替、報酬付与、告知、Formal Open前正常化10項目
 
@@ -129,13 +129,13 @@ PREVIEW DB REF:
 
 #### New Season
 
-- 9/15：正式オープンとSeason間インターバル。新Season Competitionは未開始。
-- 開始：2026-09-16 00:00 JST
+- PvP／個人総合力／Guild総合力の3カテゴリを正式オープンと同時開始。
+- 開始：運用時に確定した `p_open_at`。固定9/16開始・インターバル案は後続承認で廃止。
 - 終了：2026-09-30 23:59:59 JST
 - 半開区間を使う場合の `ends_at`：2026-10-01 00:00:00 JST（2026-09-30 15:00:00 UTC）
 - DB時刻、UI表示、告知文を一致させる。
 - Raid Rankingを廃止方向から復活させない。新Season対象は既存Season Authorityに従う。
-- 9/16 00:00直後にNew Season ACTIVE、旧Season CLOSED、Ranking初期値、Guild Ranking、Season Mission、UI期間を自動確認する。
+- 正式オープンと同時の開始直後にNew Season ACTIVE、旧Season CLOSED、Ranking初期値、Guild Ranking、Season Mission、UI期間を自動確認する。
 
 ## 4. Formal Open前正常化10項目
 
@@ -342,7 +342,7 @@ Favorite / Profile LeaderとParty slot1を分離する。
 20. ゲーム内正式オープン告知公開
 21. メンテナンス解除
 22. X正式オープン告知
-23. 2026-09-16 00:00 JSTにNew Season自動開始
+23. 正式オープンと同時に3カテゴリのNew Season開始を確認（事前工程で開始済みの場合は再実行しない）
 24. New Season開始直後Smoke
 
 Production deployは、全BlockerがPASSし、Go判定が出た場合だけ実行する。
@@ -373,7 +373,7 @@ Production deployは、全BlockerがPASSし、Go判定が出た場合だけ実�
 ・ギルバト準備Missionの新規進捗終了
 
 達成済みで未受取のギルバト準備Mission報酬は、終了後30日間受け取れます。
-新Seasonは2026年9月16日 00:00より開始予定です。
+新Seasonは正式オープンと同時に開始予定です。
 
 ※内容・日時はRelease Gateおよび作業状況により変更となる場合があります。
 ```
@@ -387,7 +387,7 @@ TRIBE NEONは正式オープンしました。
 
 プレオープンSeasonは正式オープンに伴い終了しました。
 プレオープン総合力ランキング1位のTRIBEには、限定Guild Emblemを付与しました。
-新Seasonは2026年9月16日 00:00から2026年9月30日 23:59まで開催します。
+新Seasonは正式オープンから2026年9月30日 23:59まで開催します。
 ギルバト準備Missionの達成済み報酬は、終了後30日間受け取ることができます。
 
 新たに、Raid Encounter、Guild Emblem、専用Skill / Equipment、Packなどが利用できます。
@@ -410,7 +410,7 @@ TRIBE NEON正式オープン準備のため、2026年9月15日（火）[開始�
 TRIBE NEONは正式オープンしました。
 Raid Encounter、Guild Emblem、専用Skill / Equipment、Packなど新要素をお楽しみいただけます。
 プレオープン総合力Ranking 1位Guildには限定Guild Emblemを付与しました。
-新Seasonは9月16日00:00から9月30日まで開催します。
+新Seasonは正式オープンから9月30日まで開催します。
 ```
 
 ## 8. DB / UI / 運営 / 課金への影響

@@ -158,3 +158,10 @@ Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の�
 - 追加境界DB試験PASS：旧/新CASH、Master変更、Snapshot上書き拒否、再送、発見Raid基礎額、3%/5%未満・一致・端数切上げ、討伐戦の集計、late除外、Instance/Daily一回。試験は全ROLLBACK。
 - 既存DB回帰PASS：地元21course、Raid Instance/Daily/JST、Quest発見Raid、PvP3勝1敗/Point/Ranking/Inventory/故障rollback。表示検証・typecheck・webpack build PASS。mock buildは実機代替ではない。
 - 仕様判断3点は解消。残件は実機E2E、独立DBセッションの初回finalize同時競合、配信固定URL/接続DBの照合。Vercel参照403とローカル認証不足は継続。
+
+## 2026-09-15 親エージェントでの並走対応
+
+ユーザーが並走を明示承認。課金、Season、Preview受入、PvP競合の4担当で対応。成果・接続制約・最後のユーザー依頼は `parallel_preview_readiness_20260915.md` を正本とする。最新実機手順は `formal_open_preview_acceptance_20260915.md`。
+課金診断APIのPreview限定追加、Season runner実DB rollback試験、独立DB競合用script、旧9/16開始文言の修正を統合。親側でPreview月次cronをinactive登録済み。実Season切替・報酬配布・Production反映なし。
+
+追加適用済み: Repository20260915000741_monthly_power_rollover_definition.sql → Preview実version20260915000930。定義のみ、再適用禁止。旧月終了→次月2カテゴリ開始の実装・rollback試験完了。既存月次jobは新advance関数へ接続しinactive維持。実Season・Production変更なし。

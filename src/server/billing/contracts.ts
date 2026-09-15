@@ -19,6 +19,37 @@ export type BillingOrder = {
   product_snapshot: { title: string; items: { itemId: string; quantity: number }[] };
 };
 
+/** 診断用の真偽値のみ。値・URL・例外本文を返さない。 */
+export function sandboxEnvironmentChecks(env: NodeJS.ProcessEnv = process.env, requestOrigin?: string) {
+  let returnOriginValid = false;
+  let returnOriginMatchesRequest: boolean | null = null;
+  try {
+    const origin = new URL(env.BILLING_RETURN_ORIGIN ?? "");
+    returnOriginValid = origin.protocol === "https:" && !origin.username && !origin.password &&
+      origin.pathname === "/" && !origin.search && !origin.hash &&
+      !["https://tribe-neon.com", "https://www.tribe-neon.com"].includes(origin.origin);
+    if (requestOrigin) returnOriginMatchesRequest = origin.origin === requestOrigin;
+  } catch { /* missing or malformed origin */ }
+  return {
+    mode_sandbox: (env.BILLING_MODE ?? "sandbox") === "sandbox",
+    sandbox_enabled: env.BILLING_SANDBOX_ENABLED === "true",
+    non_production_runtime: env.VERCEL_ENV !== "production",
+    preview_database: env.NEXT_PUBLIC_SUPABASE_URL === `https://${PREVIEW_PROJECT_REF}.supabase.co`,
+    stripe_test_key_present: !!env.STRIPE_SECRET_KEY?.startsWith("sk_test_"),
+    webhook_signing_secret_present: !!env.STRIPE_WEBHOOK_SECRET?.startsWith("whsec_"),
+    service_role_present: !!env.SUPABASE_SERVICE_ROLE_KEY,
+    return_origin_valid: returnOriginValid,
+    return_origin_matches_request: returnOriginMatchesRequest,
+  };
+}
+
+export type BillingReadinessCode = "ENVIRONMENT_INVALID" | "CATALOG_QUERY_FAILED" | "CATALOG_MISMATCH" | "READY" | "SERVICE_FAILED";
+export function previewBillingDiagnostics(code: BillingReadinessCode, requestOrigin?: string, env: NodeJS.ProcessEnv = process.env) {
+  return env.VERCEL_ENV === "preview"
+    ? { diagnostics: { code, commitSha: /^[a-f0-9]{40}$/i.test(env.VERCEL_GIT_COMMIT_SHA ?? "") ? env.VERCEL_GIT_COMMIT_SHA : null, checks: sandboxEnvironmentChecks(env, requestOrigin) } }
+    : {};
+}
+
 /** mode未指定は従来Sandboxのみ。本番は明示設定が全て一致した時だけ有効。 */
 export function billingConfig(env: NodeJS.ProcessEnv = process.env) {
   const mode = env.BILLING_MODE ?? "sandbox";
