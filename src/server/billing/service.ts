@@ -11,7 +11,9 @@ export function billingService() {
   async function authenticatedUser(request: Request) {
     const match = /^Bearer (\S+)$/.exec(request.headers.get("authorization") ?? "");
     if (!match) throw new BillingError("ログインし直してください。", 401, "AUTH_REQUIRED");
-    const { data, error } = await db.auth.getUser(match[1]);
+    const accessToken = match?.[1];
+    if (!accessToken) throw new BillingError("ログインし直してください。", 401, "AUTH_REQUIRED");
+    const { data, error } = await db.auth.getUser(accessToken);
     if (error || !data.user) throw new BillingError("ログインし直してください。", 401, "AUTH_REQUIRED");
     return data.user.id;
   }
@@ -19,7 +21,9 @@ export function billingService() {
     const authRequired = (): never => { throw new BillingError("購入前にアカウント連携をお願いします。", 401, "PURCHASE_AUTH_REQUIRED"); };
     const match = /^Bearer (\S+)$/.exec(request.headers.get("authorization") ?? "");
     if (!match) authRequired();
-    const { data, error } = await db.auth.getUser(match[1]);
+    const accessToken = match?.[1];
+    if (!accessToken) authRequired();
+    const { data, error } = await db.auth.getUser(accessToken);
     if (error || !data.user) throw new BillingError("ログインし直してください。", 401, "AUTH_REQUIRED");
     const user = data.user;
     if (user.is_anonymous === true) authRequired();
