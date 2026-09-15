@@ -9,6 +9,8 @@ import { EXISTING_GOOGLE_LOGIN_INTENT_KEY } from "../context/hooks/useAuth";
 import ExternalBrowserGooglePrompt from "./ExternalBrowserGooglePrompt";
 import { commitAccountSwitchIdentityTransition, prepareAccountSwitchIdentityTransition, recordSameSubjectIdentityTransition } from "@/utils/kpiInstrumentation";
 
+import { clearGoogleReplacementIntent, saveGoogleReplacementIntent, saveReplacementGuestSession } from "@/utils/googleReplacementIntent";
+
 const AUTH_INTENT_KEY = "tribe_onboarding_auth_intent";
 const AUTH_INTENT_MAX_AGE_MS = 30 * 60 * 1000;
 
@@ -66,7 +68,7 @@ function hasExistingAccountOAuthCollision(): boolean {
   const query = new URLSearchParams(window.location.search);
   const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
   const code = query.get("error_code") || query.get("error") || hash.get("error_code") || hash.get("error");
-  return code === "identity_already_exists" || code === "user_already_exists";
+  return query.get("account_switch") === "google" || code === "identity_already_exists" || code === "user_already_exists";
 }
 
 function getGoogleLinkError(code?: string, fallback?: string) {
@@ -164,6 +166,7 @@ export default function AccountAuthenticationModal() {
     const query = new URLSearchParams(window.location.search);
     if (query.get("account_switch") === "google") {
       setAccountConflict({ method: "GOOGLE" });
+      setShowAccountAuthenticationModal(true);
       setError(null);
     }
     const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
@@ -313,8 +316,29 @@ export default function AccountAuthenticationModal() {
     && onboardingState?.is_anonymous;
 
   if ((!ownsAnonymousOnboardingState && !accountConflict && !googleIdentityMismatch && !emailCompletionAuthorityReady && !emailIdentityMismatch)
-    || (!isTutorialCompletion && !showAccountAuthenticationModal && !googleIdentityMismatch && !emailCompletionAuthorityReady && !emailIdentityMismatch)
+    || (!isTutorialCompletion && !showAccountAuthenticationModal && !accountConflict && !error && !googleIdentityMismatch && !emailCompletionAuthorityReady && !emailIdentityMismatch)
     || (showTitleView && hiddenForTitle)) return null;
+
+  const replaceWithCurrentData = async () => {
+    if (!session?.user?.is_anonymous || !beginWorking()) return;
+    setError(null);
+    try {
+      window.localStorage.removeItem(AUTH_INTENT_KEY);
+      window.localStorage.removeItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY);
+      saveReplacementGuestSession(session);
+      saveGoogleReplacementIntent({ method: "GOOGLE_REPLACE", userId: session.user.id, startedAt: Date.now(), phase: "VERIFY" });
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: getOAuthCallbackUrl(), queryParams: { prompt: "select_account" } },
+      });
+      if (oauthError) throw oauthError;
+      if (usingMockSupabase) window.location.assign(`${getOAuthCallbackUrl()}?code=mock-google-replace`);
+    } catch {
+      clearGoogleReplacementIntent();
+      setError("Googleアカウントの確認を開始できませんでした。現在のデータは保持されています。");
+      endWorking();
+    }
+  };
 
   const continueWithoutAuthentication = async () => {
     if (!session?.user?.id || !session.user.is_anonymous || !isTutorialCompletion || !beginWorking()) return;
@@ -487,7 +511,7 @@ export default function AccountAuthenticationModal() {
         <div className="modal-desc text-left mb-3">
           <strong>
             {accountConflict.method === "GOOGLE"
-              ? "注意：Google認証後に、TRIBE NEONのゲームデータがあるか確認します。"
+              ? "このGoogleアカウントは別のゲームデータに連携済みです。現在の未認証データへの連携は完了していません。"
               : "注意：このメールアドレスには、すでにTRIBE NEONのゲームデータがあります。"}
           </strong>
           <br /><br />
@@ -499,6 +523,9 @@ export default function AccountAuthenticationModal() {
         <button className="semantic-cta semantic-cta--danger width-100" onClick={() => void continueAccountSwitch()} disabled={working} aria-busy={working}>
           {working ? "切り替え中..." : "既存データへ切り替える"}
         </button>
+        {accountConflict.method === "GOOGLE" && process.env.NEXT_PUBLIC_GOOGLE_ACCOUNT_REPLACEMENT_ENABLED === "true" && process.env.NEXT_PUBLIC_APP_ENV === "preview" && process.env.NEXT_PUBLIC_SUPABASE_URL === "https://sufvuqdnqohpfzkwxohq.supabase.co" && Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) && <button className="semantic-cta semantic-cta--danger mt-2 width-100" onClick={() => void replaceWithCurrentData()} disabled={working}>
+          現在のデータで置き換える
+        </button>}
         <button className="semantic-cta semantic-cta--secondary mt-2 width-100" onClick={cancelAccountSwitch} disabled={working}>
           {accountConflict.method === "GOOGLE" ? "別のGoogleアカウントを選ぶ" : "別のメールアドレスを選ぶ"}
         </button>

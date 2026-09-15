@@ -226,3 +226,18 @@ test("pending Google authentication keeps the user id, callback origin, and clea
   expect(result.redirectTo).toBe(`${new URL(page.url()).origin}/auth/callback`);
   expect(result.progress).toMatchObject({ step_id: "AUTHENTICATION", authentication_pending: false });
 });
+
+
+test("deferred anonymous Google collision appears immediately without tapping the badge", async ({ page }) => {
+  await seedPlayer(page);
+  await page.addInitScript(() => {
+    const rows = JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]");
+    rows.forEach((row: { authentication_pending?: boolean }) => { row.authentication_pending = true; });
+    localStorage.setItem("mock_db_tutorial_progress", JSON.stringify(rows));
+  });
+  await page.goto("/?account_switch=google");
+  const dialog = page.getByRole("dialog", { name: "登録済みのGoogleアカウントが見つかりました" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("現在の未認証データへの連携は完了していません");
+  expect(await page.evaluate(() => localStorage.getItem("mock_auth_mode"))).toBe("ANONYMOUS");
+});

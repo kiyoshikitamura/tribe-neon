@@ -525,7 +525,7 @@ test("Google linking callback restores the anonymous player when Google returns 
   await page.goto("/auth/callback?code=mock-google-code");
 
   await expect(page).toHaveURL(/\/auth\/callback/);
-  await expect(page.getByText(/選択されたGoogleアカウントは別のユーザーに登録されています/)).toBeVisible();
+  await expect(page.getByRole("alertdialog", { name: "このGoogleアカウントは登録済みです" })).toBeVisible();
   await expect.poll(async () => page.evaluate(() => ({
     userId: localStorage.getItem("tribe_demo_uuid"),
     authMode: localStorage.getItem("mock_auth_mode"),
@@ -700,6 +700,10 @@ test("authentication and account warning screens can return to title without dis
 test("Google OAuth callback converts an existing-identity error into the collision dialog", async ({ page }) => {
   await seedCompletedAnonymous(page);
   await page.goto("/auth/callback?error=identity_already_exists&error_code=identity_already_exists&error_description=Identity%20is%20already%20linked%20to%20another%20user");
+  await expect(page.getByRole("alertdialog", { name: "このGoogleアカウントは登録済みです" })).toBeVisible();
+  await expect(page).toHaveURL(/\/auth\/callback/);
+  await expect(page.locator(".mypage-view")).toHaveCount(0);
+  await page.getByRole("link", { name: "使用するデータを選ぶ" }).click();
   await expect(page).toHaveURL(/account_switch=google/);
   await expect(page.getByRole("dialog", { name: "登録済みのGoogleアカウントが見つかりました" })).toBeVisible();
   await page.getByRole("button", { name: "別のGoogleアカウントを選ぶ" }).click();
