@@ -10,10 +10,6 @@ function unauthorized() {
 }
 
 export function proxy(request: NextRequest) {
-  // KPIは内部運営ツール。Previewでは受入を止めないためBasic認証を要求しない。
-  // Productionでは従来どおり環境変数によるBasic認証を必須とする。
-  if (process.env.VERCEL_ENV === "preview") return NextResponse.next();
-
   const expectedUser = process.env.KPI_BASIC_AUTH_USER;
   const expectedPassword = process.env.KPI_BASIC_AUTH_PASSWORD;
   if (!expectedUser || !expectedPassword) {
