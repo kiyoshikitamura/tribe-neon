@@ -39,7 +39,7 @@ import { ConfirmDialogConfig } from "@/app/components/ui/ConfirmDialog";
 import { useNavigation } from "./hooks/useNavigation";
 import { useProfileRequestState } from "./hooks/useProfileRequestState";
 import type { PublicUserProfileModel } from "@/app/components/profile/PublicUserProfile";
-import { EXISTING_GOOGLE_LOGIN_INTENT_KEY, useAuth } from "./hooks/useAuth";
+import { canInitializeMaintenanceGooglePlayer, EXISTING_GOOGLE_LOGIN_INTENT_KEY, useAuth } from "./hooks/useAuth";
 import { useNewsBadges } from "./hooks/useNewsBadges";
 import { useFriends } from "./hooks/useFriends";
 import { useChat } from "./hooks/useChat";
@@ -943,7 +943,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           }
         }
       }
-      if (!nextState.has_profile && !nextState.is_anonymous) {
+      const maintenanceGoogleSetup = await canInitializeMaintenanceGooglePlayer(nextState);
+      if (currentAuthUserIdRef.current && currentAuthUserIdRef.current !== userId) return;
+      if (!nextState.has_profile && !nextState.is_anonymous && !maintenanceGoogleSetup) {
         // Existing-account login is not a player-registration route. Keeping
         // this session would expose SetupView, whose RPC correctly rejects it.
         await supabase.auth.signOut();
@@ -956,7 +958,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       setOnboardingState(nextState);
-      setIsSetupRequired(nextState.is_anonymous && !nextState.has_profile);
+      setIsSetupRequired(!nextState.has_profile && (nextState.is_anonymous || maintenanceGoogleSetup));
+      if (maintenanceGoogleSetup && hasValidExistingGoogleLoginIntent()) {
+        window.localStorage.removeItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY);
+        setShowTitleView(false);
+      }
       // Checkout return resumes only a server-authorized game session.
       // The query selects presentation; it never authorizes or grants an order.
       if (nextState.gameplay_authorized && new URLSearchParams(window.location.search).has("billing_order")) {
@@ -2286,7 +2292,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // name, so public.users, wallet and power projections do not exist yet.
       // Resume that pre-profile lifecycle directly into SetupView instead of
       // treating the intentionally absent profile as a broken save.
-      if (state.is_anonymous && !state.has_profile) {
+      const maintenanceGoogleSetup = await canInitializeMaintenanceGooglePlayer(state);
+      if (currentAuthUserIdRef.current && currentAuthUserIdRef.current !== userId) return false;
+      if (!state.has_profile && (state.is_anonymous || maintenanceGoogleSetup)) {
         setOnboardingState(state);
         setIsSetupRequired(true);
         setShowTitleView(false);

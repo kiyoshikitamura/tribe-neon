@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const { PGlite } = await import(process.env.PGLITE_MODULE || '@electric-sql/pglite');
+const db = new PGlite();
+const qa='11111111-1111-4111-8111-111111111111', other='22222222-2222-4222-8222-222222222222';
+await db.exec(`create role anon; create role authenticated; create schema auth; create schema private;
+create table auth.users(id uuid primary key,is_anonymous boolean,email_confirmed_at timestamptz);
+create table auth.identities(user_id uuid,provider text);
+insert into auth.users values('${qa}',false,now()),('${other}',false,now());
+insert into auth.identities values('${qa}','google'),('${other}','google');
+create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
+create function auth.jwt() returns jsonb language sql stable as $$select jsonb_build_object('is_anonymous',coalesce(nullif(current_setting('request.jwt.claim.is_anonymous',true),''),'false')::boolean)$$;
+create table public.feature_operating_states(feature_key text,state text);
+insert into public.feature_operating_states values('MAINTENANCE','MAINTENANCE');
+create function public.operations_feature_state(text) returns text language sql stable as $$select state from public.feature_operating_states where feature_key=$1$$;
+create table public.operations_maintenance_testers(user_id uuid,expires_at timestamptz);
+insert into public.operations_maintenance_testers values('${qa}',now()+interval '1 hour');
+create function public.is_operations_maintenance_tester() returns boolean language sql stable as $$select exists(select 1 from public.operations_maintenance_testers where user_id=auth.uid() and expires_at>now())$$;
+create table public.users(id uuid primary key,username text,current_base_id text,favorite_character_id text);
+create table private.initial_equipment_receipts(user_id uuid primary key);
+create table public.tutorial_progress(user_id uuid primary key,step_id text);
+`);
+const source=fs.readFileSync('supabase/migrations/20260910071913_p0_restore_accepted_tutorial_state_machine.sql','utf8');
+await db.exec(source.match(/create or replace function public.initialize_current_player\(p_username text\)[\s\S]*?\$\$;/)[0]);
+const candidate=fs.readFileSync('supabase/operations/maintenance_google_tutorial_candidate_20260915.sql','utf8');
+await db.exec(candidate); await db.exec(candidate); // idempotent patch preserves initializer.
+async function identity(uid,anonymous=false) {await db.query("select set_config('request.jwt.claim.sub',$1,false),set_config('request.jwt.claim.is_anonymous',$2,false)",[uid,String(anonymous)]);}
+async function allowed(expected){assert.equal((await db.query('select public.can_initialize_maintenance_google_player() allowed')).rows[0].allowed,expected);}
+await identity(other); await allowed(false);
+await assert.rejects(()=>db.query("select public.initialize_current_player('other')"),/Anonymous onboarding/);
+await identity(qa); await allowed(true);
+assert.equal((await db.query("select public.initialize_current_player('QA') result")).rows[0].result.tutorial_step,'WORLD_INTRO');
+assert.equal((await db.query("select public.initialize_current_player('QA') result")).rows[0].result.status,'already_initialized');
+assert.equal((await db.query('select count(*)::int n from private.initial_equipment_receipts')).rows[0].n,1);
+await db.exec("update public.operations_maintenance_testers set expires_at=now()-interval '1 minute'"); await allowed(false);
+await assert.rejects(()=>db.query("select public.initialize_current_player('QA')"),/Anonymous onboarding/);
+await db.exec("update public.operations_maintenance_testers set expires_at=now()+interval '1 hour'; update public.feature_operating_states set state='CLOSED'"); await allowed(false);
+await db.exec("update public.feature_operating_states set state='MAINTENANCE'");
+await db.exec(`insert into auth.identities values('${qa}','email')`); await allowed(false);
+await db.exec("delete from auth.identities where provider='email'; update auth.users set email_confirmed_at=null"); await allowed(false);
+await identity(other,true);
+assert.equal((await db.query("select public.initialize_current_player('Anon') result")).rows[0].result.status,'success');
+assert.equal((await db.query('select count(*)::int n from public.users')).rows[0].n,2);
+console.log('PASS: maintenance Google initialization, retry, other UID, expiry, maintenance off, mixed identity, unverified identity, anonymous compatibility');
+await db.close();

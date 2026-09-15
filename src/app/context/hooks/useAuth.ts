@@ -21,6 +21,18 @@ export type OnboardingState = {
   gameplay_authorized: boolean;
 };
 
+// UI routing only. Registration is independently authorized again in the DB.
+// No browser flag or email comparison can enable the maintenance exception.
+export async function canInitializeMaintenanceGooglePlayer(state: OnboardingState): Promise<boolean> {
+  if (state.has_profile || state.is_anonymous || state.auth_method !== "GOOGLE" || !state.identity_integrity_valid) return false;
+  try {
+    const { data, error } = await supabase.rpc("can_initialize_maintenance_google_player");
+    return !error && data === true;
+  } catch {
+    return false;
+  }
+}
+
 export function useAuth(
   playCyberSe: (type: string) => void,
   stopCyberBgm: () => void,
@@ -263,11 +275,11 @@ export function useAuth(
       // between the name screen and the world-introduction overlay.
       setOnboardingState({
         user_id: session.user.id,
-        is_anonymous: true,
+        is_anonymous: session.user.is_anonymous === true,
         has_profile: true,
         tutorial_step: tutorialStep,
         authentication_pending: false,
-        auth_method: null,
+        auth_method: onboardingState?.auth_method ?? null,
         is_legacy_authenticated: false,
         identity_integrity_valid: true,
         gameplay_authorized: false,
