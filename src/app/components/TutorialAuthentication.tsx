@@ -184,6 +184,8 @@ export default function AccountAuthenticationModal() {
   };
 
   const returnToTitle = () => {
+    window.localStorage.removeItem(AUTH_INTENT_KEY);
+    window.localStorage.removeItem(EMAIL_ONBOARDING_INTENT_KEY);
     window.localStorage.removeItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY);
     clearAccountSwitchQuery();
     setAccountConflict(null);
@@ -457,6 +459,7 @@ export default function AccountAuthenticationModal() {
     setNotice(null);
     playCyberSe("click");
     const intent: AuthenticationIntent = { method: "GOOGLE", userId: session.user.id, startedAt: Date.now() };
+    window.localStorage.removeItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY);
     window.localStorage.setItem(AUTH_INTENT_KEY, JSON.stringify(intent));
     const { data: linkData, error: linkError } = await supabase.auth.linkIdentity({
       provider: "google",

@@ -129,6 +129,8 @@ export function useAuth(
     }
     if (!beginAuthAction()) return;
     try {
+      // Explicit title login starts a different operation from guest linking.
+      window.localStorage.removeItem("tribe_onboarding_auth_intent");
       // OAuth redirects reload the application. Keep a short-lived marker so
       // an authorized returning player can skip the title after the callback.
       localStorage.setItem(EXISTING_GOOGLE_LOGIN_INTENT_KEY, JSON.stringify({

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { discardAnonymousAccountForSwitch, supabase } from "@/utils/supabase";
+import { acceptOAuthReturn } from "@/utils/oauthReturnSession";
 import { consumeRememberedOAuthReturnTo, getOAuthReturnUrl, getOAuthCallbackUrl } from "@/utils/browserDetection";
 import { commitAccountSwitchIdentityTransition, prepareAccountSwitchIdentityTransition, recordSameSubjectIdentityTransition } from "@/utils/kpiInstrumentation";
 
@@ -226,7 +227,7 @@ export default function AuthCallbackPage() {
           await restoreGuest(replacementGuest);
           return;
         }
-        const exchange = code ? await withAuthCallbackTimeout(supabase.auth.exchangeCodeForSession(code)) : await withAuthCallbackTimeout(supabase.auth.getSession());
+        const exchange = await withAuthCallbackTimeout(acceptOAuthReturn(supabase.auth, callbackUrl.toString()));
         if (exchange.error || !exchange.data.session) throw new Error("Google認証を確認できませんでした。データの選択をやり直してください。");
         const prepared = await replacementRequest(replacementGuest, { phase: "prepare", googleAccessToken: exchange.data.session.access_token });
         const guest = await restoreGuest(replacementGuest);
@@ -248,12 +249,16 @@ export default function AuthCallbackPage() {
           returnToApp("google");
           return;
         }
-        setError(oauthError);
+        window.localStorage.removeItem(ONBOARDING_AUTH_INTENT_KEY);
+        window.localStorage.removeItem("tribe_existing_google_login_intent");
+        setError(oauthError === "OAuth state has expired"
+          ? "Google認証の有効期限が切れました。ゲームへ戻り、もう一度Google連携を開始してください。"
+          : oauthError);
         return;
       }
 
       const code = callbackUrl.searchParams.get("code");
-      if (code) {
+      if (code || callbackHash.has("access_token") || callbackHash.has("refresh_token")) {
         // linkIdentity can return a session for an already-linked Google
         // account. Preserve the anonymous tutorial session in memory so that
         // this collision can be presented as an explicit choice instead of
@@ -278,7 +283,7 @@ export default function AuthCallbackPage() {
           return;
         }
         const { data: exchangeData, error: exchangeError } = await withAuthCallbackTimeout(
-          supabase.auth.exchangeCodeForSession(code),
+          acceptOAuthReturn(supabase.auth, callbackUrl.toString()),
         );
         if (exchangeError) {
           setError(exchangeError.message);

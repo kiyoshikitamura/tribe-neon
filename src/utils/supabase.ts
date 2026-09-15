@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { MockSupabaseClient } from "./mock/MockSupabaseClient";
 import { isValidSupabaseUrl } from "./supabaseUrl";
+import { shouldAutoDetectAuthReturn } from "./oauthReturnSession";
 
 const appEnvironment = process.env.NEXT_PUBLIC_APP_ENV?.trim().toLowerCase() || "development";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || "";
@@ -30,7 +31,9 @@ export const usingMockSupabase = forceMock;
 
 export const supabase = (forceMock
   ? (new MockSupabaseClient() as any)
-  : createClient(supabaseUrl, supabaseAnonKey)) as SupabaseClient<any, "public", any>;
+  : createClient(supabaseUrl, supabaseAnonKey, {
+    auth: { detectSessionInUrl: shouldAutoDetectAuthReturn(typeof window === "undefined" ? undefined : window.location.href) },
+  })) as SupabaseClient<any, "public", any>;
 
 export async function discardAnonymousAccountForSwitch(anonymousSession: { access_token: string; refresh_token: string; user: { id: string } }) {
   if (forceMock) {
