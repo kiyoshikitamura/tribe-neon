@@ -6,7 +6,13 @@ export type SpecialGachaItem = {
   item_id: string; item_type: "CHARACTER" | "SKILL" | "EQUIPMENT";
   name: string; rarity: "R" | "SR" | "SSR"; is_exclusive: boolean; probability: number;
 };
-export type SpecialGacha = { id: SpecialGachaId; name: string; cost_diamond: number; items: SpecialGachaItem[] };
+export type SpecialGacha = { id: SpecialGachaId; name: string; cost_diamond: number; pity_points?: number; items: SpecialGachaItem[] };
+export const SPECIAL_GACHA_COPY: Record<SpecialGachaId, { title: string; description: string }> = {
+  CHAR_JUSTICE_EVIL_SPECIAL: { title: "正義・悪ガチャ", description: "正義と悪属性のキャラクターのみ出現！" },
+  CHAR_ORDER_CHAOS_SPECIAL: { title: "秩序・混沌ガチャ", description: "秩序と混沌属性のキャラクターのみ出現！" },
+  SKILL_SPECIAL: { title: "スペシャルスキルガチャ", description: "SSRとSRキャラクター専用スキル入り！" },
+  EQUIP_SPECIAL: { title: "スペシャル装備ガチャ", description: "SSRキャラクター専用装備入り！" },
+};
 export type SpecialGachaCatalog = { available: boolean; pity_points: number; pity_cost: number; gachas: SpecialGacha[] };
 export function isSpecialGachaId(id: string): id is SpecialGachaId {
   return (SPECIAL_GACHA_IDS as readonly string[]).includes(id);

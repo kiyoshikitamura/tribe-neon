@@ -3822,12 +3822,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleExchangePityReward = async (rewardType: "CHARACTER" | "SKILL" | "EQUIPMENT", rewardId: string, requestId: string): Promise<boolean> => {
+  const handleExchangePityReward = async (rewardType: "CHARACTER" | "SKILL" | "EQUIPMENT", rewardId: string, requestId: string, gachaId: string): Promise<boolean> => {
     if (!session) return false;
 
     setUpgradeLoading(true);
     try {
       const { data: pityResult, error: pityError } = await supabase.rpc("exchange_special_gacha_reward", {
+        p_gacha_id: gachaId,
         p_request_id: requestId,
         p_reward_type: rewardType,
         p_reward_id: rewardId

@@ -1,5 +1,8 @@
 .special-gacha-offer { display: grid; gap: 14px; padding: 14px; }
 .special-gacha-product { display: grid; gap: 5px; }
+.special-gacha-product-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.special-gacha-product-header p { min-width: 0; margin: 0; font-size: 12px; line-height: 1.5; }
+.special-gacha-product-header .special-gacha-pity { flex: 0 0 auto; flex-direction: column; align-items: center; gap: 2px; padding: 6px 8px; font-size: 11px; }
 .special-gacha-product > .semantic-cta { min-height: 52px; font-size: 15px; }
 .special-gacha-product > .gacha-rate-link { justify-self: end; }
 .special-gacha-pity { display: flex; justify-content: space-between; gap: 8px; min-height: 46px; padding: 12px; border: 1px solid #9e8761; border-radius: 6px; background: #25202a; color: #ecd5a7; }
