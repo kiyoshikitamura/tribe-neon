@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import ts from 'typescript';
+const out = {};
+new Function('exports', ts.transpileModule(fs.readFileSync('src/app/lib/tutorialCompletionState.ts', 'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(out);
+const check = out.canLeaveTutorialRuleGuide;
+const google = {user_id:'qa',has_profile:true,is_anonymous:false,identity_integrity_valid:true,tutorial_step:'COMPLETE',authentication_pending:false,gameplay_authorized:false,auth_method:'GOOGLE'};
+assert.equal(check(google,'qa',false),true);
+for (const patch of [{user_id:'other'},{identity_integrity_valid:false},{has_profile:false},{is_anonymous:true},{auth_method:'EMAIL'},{tutorial_step:'RULE_GUIDE'},{tutorial_step:'AUTHENTICATION'}]) assert.equal(check({...google,...patch},'qa',false),false);
+assert.equal(check({...google,tutorial_step:'AUTHENTICATION',gameplay_authorized:true},'qa',false),true);
+const anon = {...google,is_anonymous:true,auth_method:null,authentication_pending:true,gameplay_authorized:true};
+assert.equal(check(anon,'qa',true),true);
+assert.equal(check({...anon,authentication_pending:false},'qa',true),false);
+assert.equal(check({...anon,gameplay_authorized:false},'qa',true),false);
+assert.equal(check(null,'qa',false),false);
+console.log('PASS: Google completion transition, finalized retry, anonymous path, identity mismatch and incomplete state rejection');

@@ -7,6 +7,7 @@ import { getTutorialCompletionAssetStatus, preloadTutorialCompletionAssets } fro
 import CharacterPresentation from "./character/CharacterPresentation";
 import TypewriterText from "./tutorial/TypewriterText";
 import "./TutorialRuleGuide.css";
+import { canLeaveTutorialRuleGuide } from "../lib/tutorialCompletionState";
 
 const AGEHA_END_MESSAGE = "これで基本はバッチリ！\nあとは街に出て、好きに遊んでみて。";
 
@@ -59,23 +60,10 @@ export default function TutorialRuleGuide() {
         // 通信失敗時も完了済みかを読み直す。未完了なら下の検証で遷移を止める。
       }
       const { data: authoritativeState, error: stateError } = await supabase.rpc("get_current_onboarding_state");
-      const completionState = authoritativeState as {
-        tutorial_step?: string;
-        authentication_pending?: boolean;
-        gameplay_authorized?: boolean;
-      } | null;
-      const validAnonymousCompletion = Boolean(
-        completionState
-        && completionState.tutorial_step === "COMPLETE"
-        && completionState.authentication_pending === true
-        && completionState.gameplay_authorized === true,
-      );
-      const validAuthenticatedCompletion = Boolean(
-        completionState
-        && completionState.tutorial_step === "COMPLETE"
-        && completionState.gameplay_authorized === true,
-      );
-      if (stateError || !completionState || (isAnonymous ? !validAnonymousCompletion : !validAuthenticatedCompletion)) {
+      const completionState = authoritativeState;
+      // COMPLETE is persisted before Google identity finalization. Hand that
+      // state to AccountAuthenticationModal; it invokes the existing guarded RPC.
+      if (stateError || !canLeaveTutorialRuleGuide(completionState, onboardingState?.user_id, isAnonymous)) {
         if (mountedRef.current) setError("完了状態を確認できませんでした。通信状態を確認して、もう一度お試しください。");
         return;
       }
