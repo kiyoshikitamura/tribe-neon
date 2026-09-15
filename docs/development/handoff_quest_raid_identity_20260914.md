@@ -189,3 +189,7 @@ Questの確率、高難度Contribution、CASH切替境界、Raid数値調整の�
 最新の依頼残件：上記4項目のPreview課金設定、QAログインと本人実機受入、技術競合試験用Preview PostgreSQL接続の安全な設定、正式OPEN/操作停止/Mission Claim起算日時。Production反映は別承認。
 
 確認範囲：preview_database=trueは配信サーバーのDB URL設定一致を示す。今回は環境検証で停止しており、config経由のDB照会成功・ServiceRoleの有効性までは証明していない。バッグの修正もbootstrap内部で握りつぶされる取得失敗は検出範囲外。
+
+## 最新配信結果
+
+修正31b1cccの固定Preview URL、Git連携success、残件は `preview_delivery_result_20260915.md` を参照。これを旧URL未取得・公開Browser阻害の記録より優先する。Production未変更、適用済みMigration再適用なし。
