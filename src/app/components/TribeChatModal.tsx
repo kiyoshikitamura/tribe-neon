@@ -1,6 +1,7 @@
 import RaidRescueLink from './raid/RaidRescueLink';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useGame } from "../context/GameContext";
 import FullScreenPanel from "./ui/FullScreenPanel";
 import SubTabNav from "./ui/SubTabNav";
@@ -143,7 +144,7 @@ export default function TribeChatModal() {
     setShowTribeChatPanel(false);
   };
 
-  return (
+  return createPortal(
     <FullScreenPanel title={chatChannel === "GUILD" ? `${userGuild?.name || "ギルド"} チャット` : "チャット"} onClose={handleClose} className="tribe-chat-panel">
       <div className="tribe-modal-container-inner flex-col">
         {/* チャンネルタブ (全体 / ギルド / DM) */}
@@ -345,6 +346,7 @@ export default function TribeChatModal() {
           </span>
         </div>}
       </div>
-    </FullScreenPanel>
+    </FullScreenPanel>,
+    document.body
   );
 }

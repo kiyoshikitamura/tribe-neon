@@ -320,6 +320,9 @@ export default function CommonModals() {
           onRetry={() => void fetchPlayerDetail(activePlayerDetail.id)}
           onGuild={(guildId) => fetchGuildDetail(guildId)}
           onDm={(userId) => {
+            // Close the source panel before opening its recipient thread.
+            navigateTab("bbs");
+            setActiveGuildDetail(null);
             setDmRecipientId(userId);
             setActivePlayerDetail(null);
             setChatChannel("DM");
