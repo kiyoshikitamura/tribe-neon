@@ -265,7 +265,7 @@ test("tutorial gacha failure overlays the intact offer and remains retryable", a
 
   await expect(page.getByText("ガチャの実行に失敗しました。通信状態を確認して、もう一度お試しください。")).toBeVisible();
   await expect(page.locator(".tutorial-gacha-page")).toBeVisible();
-  await expect(page.locator(".gacha-presentation-stage, .tutorial-gacha-reveal")).toHaveCount(0);
+  await expect(page.locator(".gacha-presentation-stage, .cg-reveal")).toHaveCount(0);
   await page.getByRole("dialog", { name: "エラー" }).getByRole("button", { name: "閉じる" }).last().click();
   await expect(page.getByRole("button", { name: "無料10連を引く" })).toBeEnabled();
 });

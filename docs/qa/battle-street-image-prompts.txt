@@ -1,0 +1,7 @@
+Built-in image generation tool. Final asset paths:
+public/effects/battle-v3/street-impact.webp
+public/effects/battle-v3/street-support.webp
+
+Use case: stylized-concept. Asset type: transparent battle VFX sprite for modern Japanese street fighting mobile game TRIBE NEON. One compact asymmetric physical impact burst: sharp ivory dry-brush scrapes, a few tiny steel chips, charcoal gritty dust specks, short directional motion scratches. Screen-printed manga street poster texture, restrained and punchy. Centered square sprite with generous genuinely transparent empty margins. No characters, no scenery, no text, no circle, no magic aura, no glowing energy, no flames, no fantasy, no cyberpunk. Pale neutral ivory/gray so game can tint it. Crisp readable at 110 pixels. Real transparent alpha background.
+
+Use case: stylized-concept. Asset type: transparent support battle effect texture for modern Japanese street game. One short diagonal swipe of desaturated pale mint spray paint, dry roller ink streaks and sparse paint droplets, rough street stencil texture. Asymmetric horizontal composition across middle third, plenty of genuinely transparent margin, fine broken edges. Graphic tactile ink on transparent background, no solid background. No symbols, no text, no people, no shield, no medical cross, no aura, no ring, no fantasy or magic or glow. Readable small 100px, premium restrained street poster design.

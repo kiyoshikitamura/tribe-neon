@@ -1,0 +1,7 @@
+@font-face{font-family:TNZero;src:url("/fonts/gacha-comparison/zero.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:TNTorono;src:url("/fonts/gacha-comparison/torono.woff2") format("woff2");font-weight:400;font-display:block}
+[data-qa-font="zero"]{--qa-font:TNZero}
+[data-qa-font="tetsubin"]{--qa-font:TNTetsubin}
+[data-qa-font="torono"]{--qa-font:TNTorono}
+[data-qa-font] .cg-shell .cg-city-scene>span,[data-qa-font] .cg-shell .cg-reveal h2,[data-qa-font] .cg-shell .cg-summary h2{font-family:var(--qa-font),sans-serif;font-weight:400;font-synthesis:none;letter-spacing:.04em}
+[data-qa-font][data-qa-font-scope="all"] .cg-shell .cg-reveal blockquote{font-family:var(--qa-font),sans-serif;font-weight:400;font-synthesis:none}

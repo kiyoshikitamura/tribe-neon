@@ -42,6 +42,7 @@ jobs:
       - run: npm run verify:character-ssr-candidates
       - run: npm run verify:character-ssr-candidate-db-migration
       - run: npm run verify:ssr-gacha-quotes
+      - run: npm run verify:character-gacha-quotes
       - run: npm run verify:gacha-character-town-backgrounds
       - run: npm run verify:battle-mvp-result
       - run: npm run verify:battle-presentation

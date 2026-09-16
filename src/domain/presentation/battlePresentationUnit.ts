@@ -75,14 +75,16 @@ export function battlePresentationTier(isSkill: boolean, actorRarity: unknown): 
   return rarity === "SSR" ? "SSR" : rarity === "SR" ? "SR" : "STANDARD";
 }
 
-export function battlePresentationBudget(tier: BattlePresentationTier, speed: number): number {
+export function battlePresentationBudget(tier: BattlePresentationTier, speed: number, street = false): number {
+  if (street) return battlePresentationImpactAt(speed, tier, true) + Math.max(900, 1150 / Math.max(1, speed));
   // 2x now tracks the former 1x recognition budget. 1x deliberately has
   // roughly twice that room so a human can read the whole fixed field.
   if (speed > 1) return tier === "NORMAL" ? 720 : tier === "STANDARD" ? 950 : 1200;
   return tier === "NORMAL" ? 1440 : tier === "STANDARD" ? 1900 : 2400;
 }
 
-export function battlePresentationImpactAt(speed: number, tier: BattlePresentationTier = "NORMAL"): number {
+export function battlePresentationImpactAt(speed: number, tier: BattlePresentationTier = "NORMAL", street = false): number {
+  if (street) return tier === "NORMAL" ? Math.max(160, 320 / Math.max(1, speed)) : Math.max(tier === "SSR" ? 1200 : 800, (tier === "SSR" ? 1500 : tier === "SR" ? 1000 : 850) / Math.max(1, speed));
   // Preserve a readable Actor/Cut-in beat before Impact. The former shared
   // 120ms boundary made skills resolve almost immediately, leaving only a
   // long post-impact hold and breaking the accepted battle rhythm.
