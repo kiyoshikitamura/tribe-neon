@@ -125,3 +125,79 @@
 .quest-v2-area-enemy{margin:6px 0 0;font-size:12px;color:#e4d5bb}
 
 .quest-v2-town-list button:disabled { filter: grayscale(.8); opacity: .48; cursor: not-allowed; }
+
+/* Keep encounter guidance below the full enemy row, not inside the VS column. */
+.quest-v2-battle-ready .tutorial-wire-encounter > p {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  color: #d6e0e8;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.quest-v2-state-surface .quest-v2-expected-cash {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: 4px 0;
+  color: #e8dcc3;
+  font-family: TNStreetBattle, 'Hiragino Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Reward names stay accessible through the item's label; show icon + count. */
+.quest-v2-rewards .quest-v2-reward-item {
+  grid-template-columns: 28px minmax(0, 1fr);
+  grid-template-rows: auto;
+  column-gap: 6px;
+  min-height: 42px;
+}
+.quest-v2-rewards .quest-v2-reward-item > img,
+.quest-v2-rewards .quest-v2-reward-item > b {
+  grid-column: 1;
+  grid-row: 1;
+}
+.quest-v2-rewards .quest-v2-reward-item > strong {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.quest-v2-enemy-preview.is-cleared { position: relative; }
+.quest-v2-enemy-preview.is-cleared .character-presentation {
+  filter: grayscale(.7);
+  opacity: .45;
+}
+.quest-v2-enemy-preview.is-cleared article > strong { opacity: .6; }
+.quest-v2-enemy-preview .quest-v2-cleared-label {
+  position: absolute;
+  z-index: 2;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: calc(100% - 16px);
+  padding: 7px 16px;
+  border: 1px solid #c6ae76;
+  border-radius: 4px;
+  background: rgba(20, 22, 26, .94);
+  color: #eedbad;
+  font-family: TNStreetBattle, 'Hiragino Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+}
