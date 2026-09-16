@@ -46,6 +46,14 @@ export default function CharacterParty({game,characters,onBack}: {game:any;chara
       <div className="character-party-leader"><small>リーダー</small>{card(game.identityLeaderCharacterId,0, characters.length?()=>setView("LEADER"):undefined)}</div>
       <div className="character-party-members">{Array.from({length:5},(_,i)=><div key={i}><small>{i===0?"先頭":"枠"+(i+1)}</small>{card(saved[i],i)}</div>)}</div>
       {!saved.length&&<p>パーティは未編成です。</p>}
+      <OutlawButton variant="primary" fullWidth disabled={pending || game.upgradeLoading || saved.length !== 5} onClick={() => void perform(async () => {
+        const targets = saved.map(id => characters.find(character => character.character_id === id)).filter(Boolean)
+          .map(character => ({ characterDbId: character.id, masterCharId: character.character_id }));
+        if (targets.length !== 5) return false;
+        const result = await game.handleAutoEquipComposite(targets, { mainFormation: true });
+        return result.complete;
+      })}>出撃メンバー5人に一括推奨装着</OutlawButton>
+      <p>スキル・装備を5人へまとめて配分します。現在の装着内容は変更されます。</p>
       <OutlawButton variant="primary" fullWidth disabled={pending} onClick={()=>{setDraft(Array.from({length:5},(_,i)=>saved[i]||""));setView("MEMBERS");setAttribute("ALL");setRarity("ALL");}}>メンバー変更</OutlawButton>
       <OutlawButton disabled={pending || !characters.length} onClick={()=>setView("LEADER")}>リーダー変更</OutlawButton>
       <OutlawButton disabled={pending || !saved.length} onClick={()=>setView("FRONT")}>先頭変更</OutlawButton>

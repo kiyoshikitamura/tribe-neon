@@ -31,7 +31,10 @@ export default function RaidTab() {
   } = useGame();
   const roomUiEnabled = process.env.NEXT_PUBLIC_RAID_ROOM_UI_ENABLED === "true";
   const presentOwnerRef = React.useRef(session?.user?.id);
-  React.useLayoutEffect(() => { presentOwnerRef.current = session?.user?.id; }, [session?.user?.id]);
+  React.useLayoutEffect(() => {
+    presentOwnerRef.current = session?.user?.id;
+    return () => { presentOwnerRef.current = undefined; };
+  }, [session?.user?.id]);
   const openRescuePresents = async () => {
     const userId = session?.user?.id;
     if (!userId) throw new Error("ログインを確認してください。");
@@ -61,6 +64,13 @@ export default function RaidTab() {
   const [dialog, setDialog] = React.useState<RaidDialog>(null);
   const [recoveryLoading, setRecoveryLoading] = React.useState(false);
   const recoveryInFlightRef = React.useRef(false);
+  const pendingRoomBriefingRef = React.useRef<RaidRoomBriefing | null>(null);
+  React.useEffect(() => () => { pendingRoomBriefingRef.current = null; }, [session?.user?.id]);
+  const closeRecovery = () => {
+    if (recoveryInFlightRef.current) return;
+    pendingRoomBriefingRef.current = null;
+    setDialog(null);
+  };
   const [recoveryRevision, setRecoveryRevision] = React.useState(0);
   const [raidTicketQuantity, setRaidTicketQuantity] = React.useState(0);
   const [battleBackgroundLoading, setBattleBackgroundLoading] = React.useState(false);
@@ -168,9 +178,16 @@ export default function RaidTab() {
       setDialog(null);
       setRecoveryRevision(value => value + 1);
       await syncBootstrapData(userId);
-      if (presentOwnerRef.current === userId) await loadRaidTop();
+      if (presentOwnerRef.current === userId) {
+        await loadRaidTop();
+        if (presentOwnerRef.current !== userId) return;
+        const pendingBriefing = pendingRoomBriefingRef.current;
+        pendingRoomBriefingRef.current = null;
+        if (pendingBriefing) await openRoomBriefing(pendingBriefing);
+      }
     } catch {
-      if (!recovered && presentOwnerRef.current === userId) setDialog("recovery-error");
+      pendingRoomBriefingRef.current = null;
+      if (presentOwnerRef.current === userId) setDialog(recovered ? "battle-background-error" : "recovery-error");
     } finally {
       recoveryInFlightRef.current = false;
       setRecoveryLoading(false);
@@ -199,7 +216,11 @@ export default function RaidTab() {
   const openRoomBriefing = async (briefing: RaidRoomBriefing) => {
     const background = await preloadAsset({ src: getCanonicalBattleBackground(briefing.baseId || "") || "/bg/bg_street_shinjuku.jpg", fallbackSrc: "/bg/bg_street_shinjuku.jpg", required: true });
     if (!background.resolvedSrc) throw new Error("戦場の背景を取得できませんでした。");
-    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" }, checkRoomEntryResource);
+    await prepareRaidRoomBattle(briefing, { opponentLabel: briefing.bossName || "レイド", backgroundPath: background.resolvedSrc, backgroundLabel: getCanonicalBattleAreaName(briefing.baseId || "") || "夜の街" }, async () => {
+      const ready = await checkRoomEntryResource();
+      if (!ready && presentOwnerRef.current === session?.user?.id) pendingRoomBriefingRef.current = briefing;
+      return ready;
+    });
   };
 
   return <>
@@ -229,10 +250,10 @@ export default function RaidTab() {
       </>)}
     </HubPage>
     {dialog === "shortage" && <CanonicalDialog title="RPが不足しています" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }, { label: "回復する", semantic: "primary", onClick: () => setDialog("recovery") }]}>挑戦にはRPが1必要です。{`\n`}レイドチケットで1回復できます。</CanonicalDialog>}
-    {dialog === "recovery" && <CanonicalDialog title="レイドチケットで回復しますか？" onClose={() => !recoveryInFlightRef.current && setDialog(null)} actions={[
-      { label: "閉じる", semantic: "secondary", onClick: () => setDialog(null), disabled: recoveryLoading },
-      { label: recoveryLoading ? "回復中…" : "回復する", semantic: "primary", onClick: () => recoverRaidPoint(), disabled: recoveryLoading || raidTicketQuantity <= 0 },
-    ]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>1枚使用してRPを1回復します。</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
+    {dialog === "recovery" && <CanonicalDialog title={pendingRoomBriefingRef.current ? "チケットを使って挑戦しますか？" : "レイドチケットで回復しますか？"} onClose={closeRecovery} actions={[
+      { label: "閉じる", semantic: "secondary", onClick: closeRecovery, disabled: recoveryLoading },
+      { label: recoveryLoading ? "準備中…" : pendingRoomBriefingRef.current ? "チケット1枚を使って挑戦" : "回復する", semantic: "primary", onClick: () => recoverRaidPoint(), disabled: recoveryLoading || raidTicketQuantity <= 0 },
+    ]}><div className="raid-recovery-copy"><img src="/items/raid_point_ticket.png" alt="" /><strong>レイドチケット</strong><span>所持 ×{raidTicketQuantity}</span><span>{pendingRoomBriefingRef.current ? "1枚でRPを1回復し、このレイドの出撃準備へ進みます。" : "1枚使用してRPを1回復します。"}</span><span>RP　{raidPoints} / 5 → {Math.min(5, raidPoints + 1)} / 5</span>{raidTicketQuantity === 0 && <em>レイドチケットを所持していません。</em>}</div></CanonicalDialog>}
     {dialog === "recovery-error" && <CanonicalDialog title="RPの回復結果を確認してください" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>回復結果を確認できませんでした。RPと所持枚数を確認するため、閉じて出撃準備を押し直してください。</CanonicalDialog>}
     {dialog === "battle-background-error" && <CanonicalDialog title="戦場を準備できませんでした" onClose={() => setDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDialog(null) }]}>通信状態を確認して、もう一度お試しください。</CanonicalDialog>}
     <GlobalInteractionBlocker isBlocking={battleBackgroundLoading} />

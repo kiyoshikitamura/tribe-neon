@@ -148,6 +148,12 @@ export default function PvpTab() {
   }, [firstPvpPending, pvpOpponents, totalPower]);
   const rewardLabel = (result: "VICTORY" | "DEFEAT") => pvpRewardLabel(matchRewards?.[result]);
 
+  const recoveryRemainingMs = pvpNextRecoveryAt ? Date.parse(pvpNextRecoveryAt) - clock : NaN;
+  const recoveryMessage = pvpPoints >= 5 ? "BPは満タンです。"
+    : Number.isFinite(recoveryRemainingMs) && recoveryRemainingMs > 0
+      ? `あと${Math.ceil(recoveryRemainingMs / 60000)}分でBPが1回復します。`
+      : "回復状況を確認中です。";
+
   const recoveryCountdown = React.useMemo(() => {
     if (pvpPoints >= 5 || !pvpNextRecoveryAt) return null;
     const remaining = Math.max(0, new Date(pvpNextRecoveryAt).getTime() - clock);
@@ -309,12 +315,12 @@ export default function PvpTab() {
     {bpDialog === "shortage" && <CanonicalDialog title="BPが不足しています" onClose={() => setBpDialog(null)} actions={[
       { label: "閉じる", semantic: "secondary", onClick: () => setBpDialog(null) },
       { label: "回復する", semantic: "primary", onClick: () => setBpDialog("recovery") },
-    ]}>対戦にはBPが1必要です。{`\n`}ファイトチケットで回復できます。</CanonicalDialog>}
+    ]}>対戦にはBPが1必要です。{`\n`}ファイトチケットで回復できます。{`\n`}{recoveryMessage}</CanonicalDialog>}
     {bpDialog === "recovery" && <CanonicalDialog title="BP回復" onClose={() => setBpDialog(null)} actions={pvpTicketQuantity > 0 ? [
       { label: "キャンセル", semantic: "secondary", onClick: () => setBpDialog(null) },
       { label: "1枚使用", semantic: "primary", onClick: async () => { await handleUseItem("PVP_POINT_TICKET"); setBpDialog(null); } },
     ] : [{ label: "閉じる", semantic: "secondary", onClick: () => setBpDialog(null) }]}>
-      <div className="pvp-bp-recovery-copy"><strong>ファイトチケット</strong><span>所持 ×{pvpTicketQuantity}</span><span>BP　{pvpPoints} / 5 → {Math.min(5, pvpPoints + 1)} / 5</span>{pvpTicketQuantity === 0 && <em>ファイトチケットを所持していません。</em>}</div>
+      <div className="pvp-bp-recovery-copy"><span>{recoveryMessage}</span><strong>ファイトチケット</strong><span>所持 ×{pvpTicketQuantity}</span><span>BP　{pvpPoints} / 5 → {Math.min(5, pvpPoints + 1)} / 5</span>{pvpTicketQuantity === 0 && <em>ファイトチケットを所持していません。</em>}</div>
     </CanonicalDialog>}
     </>
   );
