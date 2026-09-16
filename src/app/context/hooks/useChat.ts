@@ -95,6 +95,27 @@ export function useChat(
     void refreshBbsUnreadCounts();
   }, [refreshBbsUnreadCounts]);
 
+  // Keep the footer current even when the BBS view is not mounted.
+  useEffect(() => {
+    if (!currentUserId) return;
+    const refresh = () => { void refreshBbsUnreadCounts(); };
+    const channel = supabase
+      .channel(`bbs_unread_${currentUserId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "bbs_threads" }, refresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "bbs_posts" }, refresh)
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") refresh();
+      });
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      void supabase.removeChannel(channel);
+    };
+  }, [currentUserId, refreshBbsUnreadCounts]);
+
   const refreshChatUnreadCounts = useCallback(async () => {
     if (!session?.user?.id) {
       setChatUnreadCounts({ GLOBAL: 0, GUILD: 0 });
@@ -129,16 +150,16 @@ export function useChat(
   }, [refreshChatUnreadCounts]);
 
   // The visible chat feed owns its Realtime subscription outside this hook.
-  // While DM is selected that feed intentionally unsubscribes, so keep Guild
+  // While DM is selected that feed intentionally unsubscribes, so keep chat
   // unread notification authority live without fetching or exposing messages.
   useEffect(() => {
-    if (!currentUserId || !userGuildMember?.guild_id || chatChannel !== "DM") return;
+    if (!currentUserId || chatChannel !== "DM") return;
 
     const channel = supabase
-      .channel(`guild_chat_unread_${currentUserId}`)
+      .channel(`chat_unread_${currentUserId}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "board_posts", filter: "target_type=eq.GUILD" },
+        { event: "INSERT", schema: "public", table: "board_posts" },
         () => { void refreshChatUnreadCounts(); }
       )
       .subscribe((status) => {

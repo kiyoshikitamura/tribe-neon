@@ -17,13 +17,17 @@ export default function Footer() {
     dailyFreeGachaReady,
     chatUnreadCounts,
     dmUnreadTotal,
+    bbsUnreadTotal,
     setChatChannel,
     setDmRecipientId,
     setShowTribeChatPanel,
     featureOperatingStates,
   } = useGame();
   const hasFreeGacha = dailyFreeGachaReady && Object.values(dailyFreeGachaFlags).some(Boolean);
-  const communityUnreadCount = Number(chatUnreadCounts?.GUILD || 0) + Number(dmUnreadTotal || 0);
+  const communityUnreadCount = Number(chatUnreadCounts?.GLOBAL || 0)
+    + Number(chatUnreadCounts?.GUILD || 0)
+    + Number(dmUnreadTotal || 0)
+    + Number(bbsUnreadTotal || 0);
   const shopOpen = isFeatureOpen("SHOP", featureOperatingStates);
   const hasDailyShopNotice = useDailyShopBadge(session?.user?.id, shopOpen, activeTab);
   const warmShop = () => {
