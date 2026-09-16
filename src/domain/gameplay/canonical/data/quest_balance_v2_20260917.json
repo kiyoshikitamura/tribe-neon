@@ -1,0 +1,1149 @@
+{
+  "version": "2026-08-30",
+  "revision": "QUEST_BALANCE_V2_20260917",
+  "dropStatus": "PREVIEW_CANDIDATE",
+  "normalRewardTiming": "EXPLORATION_COMPLETE",
+  "firstClearRewardTiming": "BOSS_VICTORY",
+  "stages": [
+    {
+      "questId": "q_shinjuku_1",
+      "stageOrder": 1,
+      "townId": "shinjuku",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 30,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shinjuku_2",
+      "stageOrder": 2,
+      "townId": "shinjuku",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 110,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shinjuku_3",
+      "stageOrder": 3,
+      "townId": "shinjuku",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 250,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shibuya_1",
+      "stageOrder": 4,
+      "townId": "shibuya",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 35,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 200
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shibuya_2",
+      "stageOrder": 5,
+      "townId": "shibuya",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 125,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 600
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shibuya_3",
+      "stageOrder": 6,
+      "townId": "shibuya",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 280,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1600
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_ikebukuro_1",
+      "stageOrder": 7,
+      "townId": "ikebukuro",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 40,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_ikebukuro_2",
+      "stageOrder": 8,
+      "townId": "ikebukuro",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 140,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_ikebukuro_3",
+      "stageOrder": 9,
+      "townId": "ikebukuro",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 310,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 4,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 4,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_roppongi_1",
+      "stageOrder": 10,
+      "townId": "roppongi",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 45,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_roppongi_2",
+      "stageOrder": 11,
+      "townId": "roppongi",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 155,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 800
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 100
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_roppongi_3",
+      "stageOrder": 12,
+      "townId": "roppongi",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 340,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1800
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 5,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 5,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_akihabara_1",
+      "stageOrder": 13,
+      "townId": "akihabara",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 50,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_akihabara_2",
+      "stageOrder": 14,
+      "townId": "akihabara",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 170,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 100
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 100
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_akihabara_3",
+      "stageOrder": 15,
+      "townId": "akihabara",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 370,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 600
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 6,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 6,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_kawasaki_1",
+      "stageOrder": 16,
+      "townId": "kawasaki",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 55,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_kawasaki_2",
+      "stageOrder": 17,
+      "townId": "kawasaki",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 185,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 100
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 800
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_kawasaki_3",
+      "stageOrder": 18,
+      "townId": "kawasaki",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 400,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1800
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 8,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 8,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_yokohama_1",
+      "stageOrder": 19,
+      "townId": "yokohama",
+      "ap": 3,
+      "durationSec": 300,
+      "userExp": 60,
+      "cash": 300,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_S",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "NORMAL_GACHA_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_yokohama_2",
+      "stageOrder": 20,
+      "townId": "yokohama",
+      "ap": 10,
+      "durationSec": 3600,
+      "userExp": 200,
+      "cash": 600,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 300
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 100
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_yokohama_3",
+      "stageOrder": 21,
+      "townId": "yokohama",
+      "ap": 20,
+      "durationSec": 10800,
+      "userExp": 450,
+      "cash": 1000,
+      "firstClearCash": 0,
+      "firstClearUserExp": 0,
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_L",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 1,
+          "probabilityBp": 1200
+        },
+        {
+          "itemId": "NORMAL_GACHA_TICKET_RANDOM",
+          "quantity": 1,
+          "probabilityBp": 300
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "SPECIAL_TICKET_CHARACTER",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_SKILL",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SPECIAL_TICKET_EQUIPMENT",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "SKILL_MANUAL",
+          "quantity": 10,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_LB_PART",
+          "quantity": 10,
+          "probabilityBp": 10000
+        }
+      ]
+    }
+  ]
+}

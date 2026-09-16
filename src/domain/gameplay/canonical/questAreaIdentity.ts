@@ -1,10 +1,10 @@
-/** Approved area intent. Reward bias activation waits for the reviewed probability master. */
+/** Quest 21 Stage Balance Master v2 の街ごとの周回目的。 */
 export const QUEST_AREA_IDENTITIES = {
   shinjuku: { enemy: "攻撃型の敵が多い", reward: "キャラクター育成素材 UP" },
   shibuya: { enemy: "素早い敵が多い", reward: "スキル素材 UP" },
   ikebukuro: { enemy: "防御・HP型の敵が多い", reward: "装備育成素材 UP" },
-  roppongi: { enemy: "スキルとバランスを重視した敵", reward: "スキル指南書 UP" },
-  akihabara: { enemy: "特殊タイプの敵が多い", reward: "ガチャチケット UP" },
+  roppongi: { enemy: "スキル型の敵が多い", reward: "スキル指南書 UP" },
+  akihabara: { enemy: "妨害・特殊型の敵が多い", reward: "ガチャチケット UP" },
   kawasaki: { enemy: "高火力の敵が多い", reward: "改造パーツ UP" },
   yokohama: { enemy: "バランス・耐久型の敵が多い", reward: "キャラ・装備素材 バランス" },
 } as const;

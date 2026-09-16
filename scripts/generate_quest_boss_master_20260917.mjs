@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const source=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+const chars=JSON.parse(fs.readFileSync(path.join(root,'src/domain/gameplay/canonical/data/characters_20260821.json'),'utf8')).characters;
+const skills=JSON.parse(fs.readFileSync(path.join(root,'src/domain/gameplay/canonical/data/skills_20260821.json'),'utf8')).skills;
+const towns=['shinjuku','shibuya','ikebukuro','roppongi','akihabara','kawasaki','yokohama'];
+const stages=source.boss21.map(b=>{
+ const questId=`q_${towns[Math.floor((b.Stage-1)/3)]}_${(b.Stage-1)%3+1}`;
+ const rows=source.boss_members105.filter(m=>m.Stage===b.Stage).sort((a,z)=>a.Slot-z.Slot);
+ if(rows.length!==5||rows.some((r,i)=>r.Slot!==i+1))throw Error(`Invalid slots ${questId}`);
+ const members=rows.map(r=>{
+  const c=chars.find(c=>c.character_id===r['Character ID']); const s=skills.find(s=>s.skill_id===r['Skill ID']);
+  if(!c||!s)throw Error(`Unknown ID ${JSON.stringify(r)}`);
+  if(s.exclusive_character_id&&s.exclusive_character_id!==c.character_id)throw Error('Exclusive skill mismatch');
+  for(const k of ['HP','ATK','DEF','SPD','Level'])if(!Number.isSafeInteger(r[k])||r[k]<=0)throw Error(`Invalid ${k}`);
+  return {id:`enemy_${questId}_${r.Slot}`,characterId:c.character_id,name:c.name,team:'ENEMY',alignment:c.attribute,level:r.Level,awakeningLevel:0,rarity:c.rarity,stats:{hp:r.HP,atk:r.ATK,def:r.DEF,spd:r.SPD,luk:0},equipment:[],equippedSkillRefs:[s.skill_id],skills:[{id:s.skill_id,name:s.name,activationType:s.activation_type,cooldown:s.cooldown,availableFromRound:s.available_from_round,target:s.target,effects:s.effects,exclusiveCharacterId:s.exclusive_character_id,skillPlusVal:0}]};
+ });
+ if(members.reduce((n,m)=>n+m.stats.hp+m.stats.atk+m.stats.def,0)!==b['Recommended Power'])throw Error(`Power mismatch ${questId}`);
+ return {questId,stageOrder:b.Stage,recommendedPower:b['Recommended Power'],designTactic:b.Tactic,counterHint:b.Counter,enemyTactic:'BALANCED',members};
+});
+if(stages.length!==21)throw Error('21 bosses required');
+const data={revision:'QUEST_BOSS_20260917',source:source.meta.sources.find(s=>s.filename.includes('Enemy')),defaults:{luk:0,awakeningLevel:0,skillPlusVal:0,enemyTactic:'BALANCED',note:'既存Quest規約を維持。designTacticは指定stats/skill構成の設計ラベルで、追加AI補正は行わない。'},stages};
+fs.writeFileSync(path.join(root,'src/domain/gameplay/canonical/data/quest_bosses_20260917.json'),JSON.stringify(data,null,2)+'\n');
+const quote=s=>"'"+s.replaceAll("'","''")+"'";
+let sql=`-- 指定105行の固定編成。ステータス倍率/装備加算を行わない。\nbegin;\nalter table public.canonical_quest_master add column if not exists progression_boss_members jsonb, add column if not exists progression_recommended_power integer, add column if not exists progression_boss_design_tactic text, add column if not exists progression_strategy_hint text;\n`;
+for(const s of stages)sql+=`update public.canonical_quest_master set progression_boss_members=${quote(JSON.stringify(s.members))}::jsonb,progression_recommended_power=${s.recommendedPower},progression_boss_design_tactic=${quote(s.designTactic)},progression_strategy_hint=${quote(s.counterHint)} where version='2026-08-30' and quest_id=${quote(s.questId)};\n`;
+sql+=fs.readFileSync(path.join(root,'scripts/quest_boss_snapshot_20260917.sql'),'utf8');
+sql+='\ncommit;\n';
+fs.writeFileSync(path.resolve(root,process.argv[3]),sql);
+console.log('Validated 21 bosses / 105 slots; canonical IDs, exact powers and explicit stats.');

@@ -119,6 +119,11 @@
 .quest-v2-speed-actions .outlaw-button{font-size:12px}
 
 .quest-v2-town-copy{display:flex;flex-direction:column;gap:5px;padding:12px 0;min-width:0}
+.quest-v2-town-copy>.quest-v2-reward-identity{color:#ead39d;font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.quest-v2-town-copy>.quest-v2-enemy-identity{color:#a6adb6;font-size:11px;line-height:1.4}
+.quest-v2-boss-guidance{display:grid;gap:6px;padding:10px;border-left:2px solid #b8a16a;background:#b8a16a0d;color:#d9d6ce;font-size:12px;min-width:0}
+.quest-v2-boss-guidance strong{font-size:16px;color:#ead39d}
+.quest-v2-boss-guidance p{margin:0;line-height:1.6;overflow-wrap:anywhere}
 .quest-v2-town-copy>small{font-size:12px;color:#ddd3c1;line-height:1.4}
 .quest-v2-town-rewards{display:flex;flex-wrap:wrap;align-items:center;gap:4px}.quest-v2-town-reward{position:relative;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}.quest-v2-town-reward>img{width:28px;height:28px;object-fit:contain}.quest-v2-town-reward.is-random{width:42px}.quest-v2-town-reward.is-random>img+img{margin-left:-21px}
 .quest-v2-town-list>button>img{height:100%;min-height:110px}

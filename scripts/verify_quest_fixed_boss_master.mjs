@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import path from 'node:path';
+const require=createRequire(path.join(process.env.DB_TEST_RUNTIME_DIR||'/tmp/quest-db-tests','package.json'));
+const {PGlite}=require('@electric-sql/pglite');
+const db=new PGlite();
+const master=JSON.parse(readFileSync(new URL('../src/domain/gameplay/canonical/data/quest_bosses_20260917.json',import.meta.url)));
+const skills=JSON.parse(readFileSync(new URL('../src/domain/gameplay/canonical/data/skills_20260821.json',import.meta.url))).skills;
+await db.exec(`create role anon;create role authenticated;
+create table canonical_quest_master(version text,quest_id text,progression_boss_members jsonb,progression_recommended_power int,progression_boss_design_tactic text);
+create table canonical_skill_master(version text,skill_id text,display_name text,activation_type text,cooldown int,available_from_round int,target text,effects jsonb,exclusive_character_id text);
+`);
+for(const s of skills)await db.query('insert into canonical_skill_master values($1,$2,$3,$4,$5,$6,$7,$8,$9)',['2026-08-21',s.skill_id,s.name,s.activation_type,s.cooldown,s.available_from_round,s.target,JSON.stringify(s.effects),s.exclusive_character_id]);
+for(const s of master.stages)await db.query('insert into canonical_quest_master values($1,$2,$3,$4,$5)',['2026-08-30',s.questId,JSON.stringify(s.members),s.recommendedPower,s.designTactic]);
+const sql=readFileSync(new URL('./quest_boss_snapshot_20260917.sql',import.meta.url),'utf8');
+await db.exec(sql.slice(sql.indexOf('create or replace function public.quest_progression_enemy_snapshot_v1'),sql.indexOf('create or replace function public.on_canonical_patrol_snapshot')));
+for(const s of master.stages){
+ const {rows}=await db.query('select quest_progression_enemy_snapshot_v1($1,$2) snapshot',[JSON.stringify({members:[{stats:{hp:999999}}],progressionBalanceVersion:'2026-09-16'}),s.questId]);
+ const snap=rows[0].snapshot;
+ assert.deepEqual(snap.members,s.members);
+ assert.equal(snap.enemyTactic,'BALANCED');
+ assert.equal(snap.progressionBalanceVersion,'2026-09-17');
+ const repeat=await db.query('select quest_progression_enemy_snapshot_v1($1,$2) snapshot',[JSON.stringify(snap),s.questId]);
+ assert.deepEqual(repeat.rows[0].snapshot,snap);
+}
+const denied=await db.query("select has_function_privilege('authenticated','quest_progression_enemy_snapshot_v1(jsonb,text)','EXECUTE') allowed");
+assert.equal(denied.rows[0].allowed,false);
+await db.close();
+console.log('PASS: 21 fixed boss snapshots / 105 exact stats + canonical skills, old snapshot replacement without double scaling, stable retries, internal-only execute.');

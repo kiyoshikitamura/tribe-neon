@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useGame } from "@/app/context/GameContext";
 import { CHARACTERS_MASTER } from "@/utils/game_constants";
 import { CANONICAL_QUEST_ENEMY_POOLS } from "@/domain/gameplay/canonical/quests";
-import { questAreaRewardItemIds } from "@/domain/gameplay/canonical/questAreaIdentity";
+import { questAreaIdentity, questAreaRewardItemIds } from "@/domain/gameplay/canonical/questAreaIdentity";
 import { canonicalItemName } from "@/domain/gameplay/canonical/items";
 import { getCharacterLocationBackground, isCharacterHometown } from "@/utils/characterVisualAssets";
 import CharacterPresentation from "../character/CharacterPresentation";
@@ -16,6 +16,7 @@ import { questProgressState, sortQuestProgress, initialQuestCourseId, questCours
 import { getJstDateString } from "@/utils/jst_date";
 import "./QuestPresentationV2.css";
 import QuestTownStory from "./QuestTownStory";
+import RewardIcon from "./QuestRewardIcon";
 
 const TOWNS = [
   ["shinjuku", "新宿"], ["shibuya", "渋谷"], ["ikebukuro", "池袋"], ["roppongi", "六本木"], ["akihabara", "秋葉原"], ["kawasaki", "川崎"], ["yokohama", "横浜"],
@@ -28,10 +29,6 @@ function difficulty(value: string) {
 function clock(seconds: unknown) {
   const value = Math.max(0, Math.floor(Number(seconds) || 0));
   return `${Math.floor(value / 60).toString().padStart(2, "0")}:${(value % 60).toString().padStart(2, "0")}`;
-}
-
-function RewardIcon({ itemId, label, quantity }: { itemId: string; label: string; quantity: number }) {
-  return <span className="quest-v2-reward-item" aria-label={`${label} × ${Number(quantity || 0).toLocaleString()}`} title={label}>{itemId === "CASH" ? <img src="/ui/icon_cash.png" alt="" /> : itemId === "PLAYER_XP" ? <b>XP</b> : <CanonicalItemIcon itemId={itemId} alt="" />}<strong>× {Number(quantity || 0).toLocaleString()}</strong></span>;
 }
 
 export default function QuestPresentationV2() {
@@ -59,7 +56,11 @@ export default function QuestPresentationV2() {
   const selectionVisible = showSelection;
   const activeCourse = (game.patrolCourses || []).find((course: any) => course.id === game.selectedCourse);
   const activeCoursePatrol = activePatrols.find((patrol: any) => patrol.courseId === activeCourse?.id);
-  const enemyCandidates = CANONICAL_QUEST_ENEMY_POOLS.entries.filter((entry) => entry.areaId === String(activeCourse?.town_id || "").toUpperCase() && entry.difficulty === activeCourse?.level_type).map((entry) => CHARACTERS_MASTER.find((master) => master.id === entry.characterId)).filter(Boolean);
+  const fixedBossMembers = activeCourse?.progression_boss_members;
+  const enemyCandidates = (Array.isArray(fixedBossMembers) && fixedBossMembers.length > 0
+    ? fixedBossMembers
+    : CANONICAL_QUEST_ENEMY_POOLS.entries.filter((entry) => entry.areaId === String(activeCourse?.town_id || "").toUpperCase() && entry.difficulty === activeCourse?.level_type))
+    .map((entry: { characterId: string }) => CHARACTERS_MASTER.find((master) => master.id === entry.characterId)).filter(Boolean);
   const townName = TOWNS.find(([id]) => id === game.selectedTown)?.[1] || "街";
   const bgImage = `/bg/bg_street_${game.selectedTown}.jpg`;
   const detailCourse = (game.patrolCourses || []).find((course: any) => course.id === selectedPatrol?.courseId);
@@ -194,7 +195,7 @@ export default function QuestPresentationV2() {
         {Array.from({ length: Math.max(0, visibleSlots - activePatrols.length) }, (_, index) => <button className="quest-v2-empty-slot" key={index} disabled={!hasExplorableCourse} onClick={startSelection}><span className="quest-v2-slot-number">{String(activePatrols.length + index + 1).padStart(2, "0")}</span><strong>未探索<small>{hasExplorableCourse ? "探索先を選ぶ" : "ステージ突破で次の探索先が開放"}</small></strong><span className="quest-v2-slot-plus" aria-hidden="true">＋</span></button>)}
       </section>}
       {selectionVisible && <>
-      {selectionStep === "DESTINATION" ? <section className="quest-v2-town-list" aria-label="街を選ぶ">{TOWNS.map(([id, label]) => <button key={id} disabled={!questCoursesForTown(game.patrolCourses || [], id).some((course: any) => course.is_unlocked !== false)} onClick={() => { game.setSelectedTown(id); game.setSelectedCourse(initialQuestCourseId(game.patrolCourses || [], id)); game.setSelectedPatrolMember(null); setSelectionStep("REVIEW"); game.playCyberSe("click"); }}><img src={`/bg/bg_street_${id}.jpg`} alt="" /><span className="quest-v2-town-copy"><strong>{label}</strong>{!questCoursesForTown(game.patrolCourses || [], id).some((course: any) => course.is_unlocked !== false) && <small>前の街の上級クリアで開放</small>}<span className="quest-v2-town-rewards" aria-label="主な報酬">{questAreaRewardItemIds(game.patrolCourses || [], id).map(itemId => <span key={itemId} className={itemId === "NORMAL_GACHA_TICKET_RANDOM" ? "quest-v2-town-reward is-random" : "quest-v2-town-reward"} role="img" aria-label={canonicalItemName(itemId)} title={canonicalItemName(itemId)}>{(itemId === "NORMAL_GACHA_TICKET_RANDOM" ? ["NORMAL_GACHA_TICKET_CHARACTER", "NORMAL_GACHA_TICKET_SKILL", "NORMAL_GACHA_TICKET_EQUIPMENT"] : [itemId]).map(iconId => <CanonicalItemIcon key={iconId} itemId={iconId} alt="" />)}</span>)}</span></span><span className="quest-v2-town-arrow" aria-hidden="true">›</span></button>)}</section> : <>
+      {selectionStep === "DESTINATION" ? <section className="quest-v2-town-list" aria-label="街を選ぶ">{TOWNS.map(([id, label]) => <button key={id} disabled={!questCoursesForTown(game.patrolCourses || [], id).some((course: any) => course.is_unlocked !== false)} onClick={() => { game.setSelectedTown(id); game.setSelectedCourse(initialQuestCourseId(game.patrolCourses || [], id)); game.setSelectedPatrolMember(null); setSelectionStep("REVIEW"); game.playCyberSe("click"); }}><img src={`/bg/bg_street_${id}.jpg`} alt="" /><span className="quest-v2-town-copy"><strong>{label}</strong><b className="quest-v2-reward-identity">{questAreaIdentity(id)?.reward}</b><small className="quest-v2-enemy-identity">{questAreaIdentity(id)?.enemy}</small>{!questCoursesForTown(game.patrolCourses || [], id).some((course: any) => course.is_unlocked !== false) && <small>前の街の上級クリアで開放</small>}<span className="quest-v2-town-rewards" aria-label="主な報酬">{questAreaRewardItemIds(game.patrolCourses || [], id).map(itemId => <span key={itemId} className={itemId === "NORMAL_GACHA_TICKET_RANDOM" ? "quest-v2-town-reward is-random" : "quest-v2-town-reward"} role="img" aria-label={canonicalItemName(itemId)} title={canonicalItemName(itemId)}>{(itemId === "NORMAL_GACHA_TICKET_RANDOM" ? ["NORMAL_GACHA_TICKET_CHARACTER", "NORMAL_GACHA_TICKET_SKILL", "NORMAL_GACHA_TICKET_EQUIPMENT"] : [itemId]).map(iconId => <CanonicalItemIcon key={iconId} itemId={iconId} alt="" />)}</span>)}</span></span><span className="quest-v2-town-arrow" aria-hidden="true">›</span></button>)}</section> : <>
         <section className="quest-v2-identity" style={{ backgroundImage: `url(${bgImage})` }}><div><strong>{townName}</strong><small>空き枠 {Math.max(0, visibleSlots - occupiedCount)}</small></div></section>
         {selectionStep === "REVIEW" && <>
           <button className="quest-v2-back" onClick={() => setSelectionStep("DESTINATION")}>街を選び直す</button>
@@ -207,6 +208,7 @@ export default function QuestPresentationV2() {
         {selectionStep === "REVIEW" && <>
 
         <section className={`quest-v2-enemy-preview${activeCoursePatrol || activeCourse.is_first_cleared ? " is-cleared" : ""}`} aria-label="出現エネミー"><h3 className="quest-v2-section-title">出現エネミー{(activeCoursePatrol || activeCourse.is_first_cleared) && <span className="quest-v2-cleared-label">{activeCoursePatrol ? (Number(activeCoursePatrol.secondsLeft) > 0 ? "探索中" : questProgressState(activeCoursePatrol) === "BATTLE" ? "ボス挑戦可能" : "探索完了") : "クリア済"}</span>}</h3><div>{enemyCandidates.map((master: any) => <article key={master.id}><CharacterPresentation src={master.img?.startsWith("/characters/") ? master.img : `/characters/${String(master.img || "").replace(/^\//, "")}`} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" metadata={false} /><strong>{master.jpName}</strong></article>)}</div>{enemyCandidates.length === 0 && <p role="status">出現情報を確認中</p>}</section>
+        {Number(activeCourse.progression_recommended_power) > 0 && <div className="quest-v2-boss-guidance"><span>推奨総合力 <strong>{Number(activeCourse.progression_recommended_power).toLocaleString()}</strong></span>{activeCourse.progression_strategy_hint && <p>{activeCourse.progression_strategy_hint}</p>}</div>}
         <h3 className="quest-v2-section-title">報酬</h3>
         <div className="quest-v2-metrics"><span><small>所要時間</small><strong>{clock(activeCourse.duration_seconds)}</strong></span><span><small>エナジー</small><strong>{activeCourse.cost_vitality}</strong></span>{Number(activeCourse.recommended_level) > 0 && <span><small>推奨レベル</small><strong>Lv {activeCourse.recommended_level}</strong></span>}</div>
         <div className="quest-v2-rewards" aria-label="確定報酬">{Number(activeCourse.reward_xp || 0) > 0 && <RewardIcon itemId="PLAYER_XP" label="プレイヤー経験値" quantity={Number(activeCourse.reward_xp)} />}{Number(activeCourse.reward_cash || 0) > 0 && <RewardIcon itemId="CASH" label="CASH" quantity={Number(activeCourse.reward_cash)} />}{guaranteedRewards(activeCourse.reward_items).map((item: any) => <RewardIcon key={item.item_id} itemId={String(item.item_id || "")} label={canonicalItemName(String(item.item_id || ""))} quantity={Number(item.quantity || 0)} />)}</div>

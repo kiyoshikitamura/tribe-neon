@@ -1,0 +1,5 @@
+.quest-reward-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
+.quest-reward-icon{display:flex;align-items:center;gap:5px;min-width:0;padding:7px;border:1px solid #ffffff1f;border-radius:4px;background:#070c13;text-align:left}
+.quest-reward-icon>img{width:28px;height:28px;object-fit:contain;flex-shrink:0}
+.quest-reward-icon>b{display:grid;place-items:center;width:28px;height:28px;border:1px solid #65c4cc;border-radius:50%;color:#65c4cc;font-size:9px;flex-shrink:0}
+.quest-reward-icon>strong{font-size:11px;white-space:nowrap;color:#ece9e1}
