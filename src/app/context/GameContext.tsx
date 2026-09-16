@@ -4293,7 +4293,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const { beginnerJourney, refreshBeginnerJourney } = useBeginnerJourney(session?.user?.id,
     Boolean(onboardingState?.gameplay_authorized), missions);
-  const { questGuide, refreshQuestGuide, advanceQuestGuide, markQuestStorySeen } = useQuestProgressionGuide(
+  const { questGuide, questGuideReady, refreshQuestGuide, advanceQuestGuide, markQuestStorySeen } = useQuestProgressionGuide(
     session?.user?.id, Boolean(onboardingState?.gameplay_authorized),
     `${activeTab}:${battle.battleState}:${onboardingState?.tutorial_step ?? ""}`,
   );
@@ -4350,7 +4350,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     [activeTab, battle.battleState, scoutAnimationState, showMissionPanel, confirmDialogConfig, refreshBeginnerJourney]);
 
   const value = {
-    questGuide, refreshQuestGuide, advanceQuestGuide, markQuestStorySeen,
+    questGuide, questGuideReady, refreshQuestGuide, advanceQuestGuide, markQuestStorySeen,
     rankingMissionRewardOrigin, setRankingMissionRewardOrigin,
     questRaidEncounter, questEncounterDismissedVisit, setQuestEncounterDismissedVisit, openQuestEncounterRaid,
     beginnerJourney, refreshBeginnerJourney, beginnerMissionTargetIds, openBeginnerMissionReward, clearBeginnerMissionTarget,
