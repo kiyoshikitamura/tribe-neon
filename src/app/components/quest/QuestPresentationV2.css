@@ -125,6 +125,8 @@
 .quest-v2-area-enemy{margin:6px 0 0;font-size:12px;color:#e4d5bb}
 
 .quest-v2-town-list button:disabled { filter: grayscale(.8); opacity: .48; cursor: not-allowed; }
+.quest-v2-empty-slot:disabled { opacity: .5; cursor: not-allowed; }
+.quest-v2-slot-note { margin: 0 0 10px; color: #a8b1ba; font-size: 11px; line-height: 1.5; }
 
 /* Keep encounter guidance below the full enemy row, not inside the VS column. */
 .quest-v2-battle-ready .tutorial-wire-encounter > p {
