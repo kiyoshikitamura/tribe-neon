@@ -2221,7 +2221,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
       out_diamonds: Number(user.neon_diamonds || user.diamonds || 0),
       raid_first_entry_free: !Boolean(user.raid_free_entry_consumed),
       vitality_next_recovery_at: vitality.value < CANONICAL_ACTION_RESOURCES.resources.VITALITY.naturalMax ? new Date(vitality.lastRecoveredAtMs + 360_000).toISOString() : null,
-      pvp_next_recovery_at: pvp.value < 5 ? new Date(pvp.lastRecoveredAtMs + 7_200_000).toISOString() : null,
+      pvp_next_recovery_at: pvp.value < 5 ? new Date(pvp.lastRecoveredAtMs + 600_000).toISOString() : null,
       raid_next_recovery_at: raid.value < 5 ? new Date(raid.lastRecoveredAtMs + 7_200_000).toISOString() : null,
     }, error: null };
   }

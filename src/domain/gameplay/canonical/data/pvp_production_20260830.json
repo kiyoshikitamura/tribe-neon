@@ -2,7 +2,7 @@
   "version": "2026-08-30",
   "status": "PRODUCTION_FROZEN",
   "pointMax": 5,
-  "recoverySeconds": 7200,
+  "recoverySeconds": 600,
   "battleCost": 1,
   "preopenPointTicketShop": false,
   "modes": {

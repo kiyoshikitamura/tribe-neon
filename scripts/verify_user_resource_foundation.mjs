@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { applyFrozenUserXp, canUseActionResourceTicket, canUseEnergyDrink, recoverCanonicalResource } from "../src/domain/gameplay/canonical/action_resources.ts";
 
 const levels = JSON.parse(await readFile("src/domain/gameplay/canonical/data/user_level_progression_20260822.json", "utf8"));
-const resources = JSON.parse(await readFile("src/domain/gameplay/canonical/data/action_resources_20260914.json", "utf8"));
+const resources = JSON.parse(await readFile("src/domain/gameplay/canonical/data/action_resources_20260916.json", "utf8"));
 const activation = JSON.parse(await readFile("src/domain/gameplay/canonical/data/activation_budget_20260822.json", "utf8"));
 assert.equal(levels.levels.length, 100);
 assert.deepEqual(levels.levels.slice(0, 7).map((row) => row.requiredExp), [100, 150, 200, 250, 300, 350, 400]);
@@ -22,7 +22,7 @@ assert.equal(resources.resources.VITALITY.naturalMax, 50);
 assert.equal(resources.resources.VITALITY.hardCap, 500);
 assert.equal(resources.resources.VITALITY.recoveryIntervalSeconds, 360);
 assert.equal(resources.resources.PVP_POINT.naturalMax, 5);
-assert.equal(resources.resources.PVP_POINT.recoveryIntervalSeconds, 7200);
+assert.equal(resources.resources.PVP_POINT.recoveryIntervalSeconds, 600);
 assert.equal(resources.resources.PVP_POINT.practiceCost, 0);
 assert.equal(resources.resources.RAID_POINT.naturalMax, 5);
 assert.equal(resources.resources.RAID_POINT.recoveryIntervalSeconds, 7200);
@@ -59,3 +59,7 @@ console.log(JSON.stringify({
   activationBudget: 1750,
   authorityGaps: [...levels.authorityGaps, ...resources.authorityGaps],
 }, null, 2));
+
+for (const [elapsed, expected] of [[599000,0],[600000,1],[1200000,2],[3000000,5],[3600000,5]]) {
+  assert.equal(recoverCanonicalResource(0, 0, elapsed, "PVP_POINT").value, expected);
+}
