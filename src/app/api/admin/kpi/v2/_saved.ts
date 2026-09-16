@@ -44,6 +44,8 @@ async function readBillingOverview(period: "daily" | "monthly", from: string, to
     .select("user_id,amount_jpy,granted_at")
     .eq("status", "GRANTED")
     .eq("billing_mode", "live")
+    // ユーザー確認済みの実機決済テスト。注文・付与は保持し、課金KPIだけ除外する。
+    .neq("user_id", "fac21f4a-095b-4732-aa09-f02fe9be0481")
     .not("granted_at", "is", null)
     .gte("granted_at", jstStartUtc(from))
     .lt("granted_at", jstStartUtc(endExclusive));
