@@ -36,7 +36,7 @@ begin
  r:=public.create_patrol_battle_replay(pid);
  if (r->>'replay_session_id')::uuid=rid then raise exception 'Retry reused old replay';end if;
  if r#>>'{enemy_snapshot,0,stats,hp}'<>'5700' then raise exception 'Retry missed new easy master';end if;
- if r->'enemy_snapshot'<>(select progression_boss_members from public.canonical_quest_master where version='2026-08-30' and quest_id='q_shinjuku_1') then raise exception 'Retry enemy differs from new master';end if;
+ if r->'enemy_snapshot'<>(public.quest_progression_enemy_snapshot_v1(null,'q_shinjuku_1')->'members') then raise exception 'Retry enemy differs from new master';end if;
  if (select enemy_snapshot from public.battle_replay_sessions where id=rid)<>enemy_before then raise exception 'Historical replay was rewritten';end if;
  if (select vitality from public.users where id=uid)<>ap_before then raise exception 'Retry consumed AP';end if;
  if (select expires_at from public.user_patrols where id=pid)<>expires_before then raise exception 'Retry added exploration wait';end if;
