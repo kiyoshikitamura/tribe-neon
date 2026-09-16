@@ -12,6 +12,7 @@ export interface QuestRaidEncounter {
   bonusUserXp?: number;
   bonusItems: { itemId: string; quantity: number }[];
   acknowledged: boolean;
+  participated?: boolean;
   expiresAt: string | null;
   ended: boolean;
 }
@@ -30,13 +31,13 @@ export function parseQuestRaidEncounter(value: unknown): QuestRaidEncounter {
     bonusItems:Array.isArray(v.bonusItems)?v.bonusItems.map((item: {itemId: unknown;quantity: unknown})=>{
       if(typeof item.itemId!=='string'||!Number.isSafeInteger(item.quantity)||Number(item.quantity)<=0)throw new Error('報酬情報を確認できませんでした。');
       return {itemId:item.itemId,quantity:Number(item.quantity)};
-    }):[],acknowledged:v.acknowledged===true,expiresAt:typeof v.expiresAt==='string'?v.expiresAt:null,ended:v.ended===true,
+    }):[],acknowledged:v.acknowledged===true,participated:v.participated===true,expiresAt:typeof v.expiresAt==='string'?v.expiresAt:null,ended:v.ended===true,
   };
 }
 export function isEncounterPresentationSafe(state: {battle: unknown;gacha: unknown;dialog: unknown;mission: boolean;patrolReward: boolean;blocked: boolean}) {
   return !state.battle&&!state.gacha&&!state.dialog&&!state.mission&&!state.patrolReward&&!state.blocked;
 }
 export function revisitableQuestEncounters(entries: readonly QuestRaidEncounter[], now: number) {
-  return entries.filter(entry => entry.status === 'CREATED' && entry.acknowledged && entry.roomId && !entry.ended
+  return entries.filter(entry => entry.status === 'CREATED' && entry.acknowledged && !entry.participated && entry.roomId && !entry.ended
     && (!entry.expiresAt || Date.parse(entry.expiresAt) > now));
 }

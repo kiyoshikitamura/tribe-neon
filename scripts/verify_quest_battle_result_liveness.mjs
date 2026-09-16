@@ -53,7 +53,7 @@ assert.match(
 );
 assert.match(
   patrolHook,
-  /setLastPatrolRewards\(rewardSummary\);[\s\S]*?setActivePatrols\(\(current\) => current\.filter[\s\S]*?if \(!options\?\.suppressResultModal\) setShowPatrolRewardModal\(true\);/,
+  /setLastPatrolRewards\(rewardSummary\);\s*if \(!options\?\.suppressResultModal\) setShowPatrolRewardModal\(true\);[\s\S]*?setActivePatrols\(\(current\) => current\.filter/,
   "non-battle claims must preserve their reward modal while removing the completed Quest card",
 );
 assert.match(

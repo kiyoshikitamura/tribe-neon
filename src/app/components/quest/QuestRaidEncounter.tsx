@@ -17,13 +17,18 @@ export default function QuestRaidEncounter() {
   globalInteractionBlocking,setGlobalInteractionBlocking,onboardingState,session}=useGame();
  const [shown,setShown]=useState<Encounter|null>(null);
  const [busy,setBusy]=useState(false);const [error,setError]=useState<string|null>(null);
+ const refreshEncounters = questRaidEncounter.refresh;
+ useEffect(()=>{
+  if (onboardingState?.gameplay_authorized && ['home','patrol','quest','raid'].includes(activeTab)
+    && (!battleState || battleState === 'PLAYING')) void refreshEncounters();
+ },[activeTab,battleState,onboardingState?.gameplay_authorized,refreshEncounters]);
  const safe=isEncounterPresentationSafe({battle:battleState,gacha:scoutAnimationState,dialog:confirmDialogConfig,mission:showMissionPanel,patrolReward:showPatrolRewardModal,blocked:globalInteractionBlocking});
  useEffect(()=>{setShown(null);setError(null);},[session?.user?.id]);
  useEffect(()=>{
-  if(shown||!safe||hasPresentedDialog()||questEncounterDismissedVisit||!onboardingState?.gameplay_authorized||!['home','patrol','quest','raid'].includes(activeTab))return;
-  const next=questRaidEncounter.entries.find((e:Encounter)=>!e.acknowledged);
+  if(shown||questRaidEncounter.resolving||!safe||hasPresentedDialog()||questEncounterDismissedVisit||!onboardingState?.gameplay_authorized||!['home','patrol','quest','raid'].includes(activeTab))return;
+  const next=questRaidEncounter.entries.find((e:Encounter)=>!e.acknowledged&&!e.participated);
   if(next)setShown(next);
- },[shown,safe,activeTab,questRaidEncounter.entries,questEncounterDismissedVisit,onboardingState?.gameplay_authorized]);
+ },[shown,safe,activeTab,questRaidEncounter.resolving,questRaidEncounter.entries,questEncounterDismissedVisit,onboardingState?.gameplay_authorized]);
  async function proceed(entry:Encounter,raid:boolean){
   if(busy)return;setBusy(true);setGlobalInteractionBlocking(true);setError(null);
   try{
@@ -39,7 +44,7 @@ export default function QuestRaidEncounter() {
  const master=shown?CHARACTERS_MASTER.find(c=>c.id===shown.leaderId):null;
  const ended=shown&&(shown.ended||Boolean(shown.expiresAt&&Date.parse(shown.expiresAt)<=Date.now()));
  return <>
-  {!shown&&!battleState&&['raid','patrol','quest'].includes(activeTab)&&revisitable.length>0&&<section className="quest-encounter-revisit" aria-label="発見した強敵">{revisitable.map((e:Encounter)=><div key={e.patrolId}><span>{towns[e.areaId]} ／ {e.difficulty&&grades[e.difficulty]}</span><strong>{e.bossName}</strong><span className="quest-encounter-bonus">{e.bonusCash !== undefined ? `撃破で追加CASH ${e.bonusCash.toLocaleString()} / EXP ${e.bonusUserXp ?? 0}` : '撃破ボーナス'}</span><OutlawButton onClick={()=>proceed(e,true)} disabled={busy}>挑む</OutlawButton></div>)}</section>}
+  {!shown&&!battleState&&!questRaidEncounter.resolving&&['raid','patrol','quest'].includes(activeTab)&&revisitable.length>0&&<section className="quest-encounter-revisit" aria-label="発見した強敵">{revisitable.map((e:Encounter)=><div key={e.patrolId}><span>{towns[e.areaId]} ／ {e.difficulty&&grades[e.difficulty]}</span><strong>{e.bossName}</strong><span className="quest-encounter-bonus">{e.bonusCash !== undefined ? `撃破で追加CASH ${e.bonusCash.toLocaleString()} / EXP ${e.bonusUserXp ?? 0}` : '撃破ボーナス'}</span><OutlawButton onClick={()=>proceed(e,true)} disabled={busy}>挑む</OutlawButton></div>)}</section>}
   {!shown&&!battleState&&activeTab==='raid'&&questRaidEncounter.error&&<div role="alert">{questRaidEncounter.error}<OutlawButton onClick={()=>questRaidEncounter.refresh()}>再試行</OutlawButton></div>}
   {shown&&<FullScreenPanel className="quest-encounter-panel" onClose={()=>{void proceed(shown,false);}} showCloseButton={false} closeDisabled={busy}>
    <div className="quest-encounter-scene" style={{backgroundImage:`linear-gradient(0deg,#0b1019,transparent),url('/bg/bg_street_${towns[shown.areaId]?shown.areaId:'shinjuku'}.jpg')`}}>

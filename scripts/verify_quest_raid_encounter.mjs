@@ -11,3 +11,12 @@ const base={battle:null,gacha:null,dialog:null,mission:false,patrolReward:false,
 assert.equal(safe(base),true);
 for(const key of Object.keys(base))assert.equal(safe({...base,[key]:true}),false,key);
 console.log('PASS: Encounter protocol and Battle/Gacha/Result/Mission interaction exclusion');
+
+const {revisitableQuestEncounters:revisit}=exports;
+const later=parse({...result,acknowledged:true,participated:false});
+assert.equal(revisit([later],Date.now()).length,1,'あとで選択・未参加は入口を保持');
+assert.equal(revisit([parse({...later,participated:true})],Date.now()).length,0,'参加済みは再訪バナー非表示');
+assert.equal(revisit([parse({...later,ended:true})],Date.now()).length,0,'終了レイドは非表示');
+assert.equal(revisit([parse({...later,status:'DRAWN',roomId:null})],Date.now()).length,0,'作成失敗は参加済み扱いにしない');
+assert.equal(parse({...result}).participated,false,'旧レスポンスは未参加として保持');
+console.log('PASS: Quest raid revisit keeps Later and suppresses participated/ended entries');

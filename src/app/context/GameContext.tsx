@@ -478,9 +478,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [questEncounterDismissedVisit, setQuestEncounterDismissedVisit] = useState(false);
   useEffect(() => { setQuestEncounterDismissedVisit(false); }, [activeTab, session?.user?.id]);
   const openQuestEncounterRaid = async (roomId: string) => {
-    if (!session?.user?.id) return;
+    const owner = session?.user?.id;
+    if (!owner) throw new Error("ログインを確認してください。");
     const response = await supabase.rpc("get_raid_room_v1", { p_room_id: roomId });
-    if (response.error) throw new Error("レイドを開けませんでした。もう一度お試しください。");
+    if (response.error || response.data?.roomId !== roomId || currentAuthUserIdRef.current !== owner) throw new Error("レイドを開けませんでした。もう一度お試しください。");
     setRaidRescueTarget(null);
     setRaidRoomReturnTarget({userId: session.user.id, roomId});
     setRaidTopRefreshRevision(value => value + 1);

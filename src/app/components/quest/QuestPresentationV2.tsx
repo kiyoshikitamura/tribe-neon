@@ -67,12 +67,12 @@ export default function QuestPresentationV2() {
   const guaranteedRewards = (items: any[] = []) => items.filter((item) => Number(item.probability_bp ?? 10000) >= 10000);
 
   useEffect(() => {
-    if (selectedPatrolId && !activePatrols.some((patrol: any) => patrol.id === selectedPatrolId)) {
+    if (!game.showPatrolRewardModal && selectedPatrolId && !activePatrols.some((patrol: any) => patrol.id === selectedPatrolId)) {
       setSelectedPatrolId(null);
       setSelectionStep("DESTINATION");
       setShowSelection(true);
     }
-  }, [activePatrols, selectedPatrolId]);
+  }, [activePatrols, selectedPatrolId, game.showPatrolRewardModal]);
 
   useEffect(() => { contentRef.current?.scrollIntoView({ block: "start" }); }, [showSelection, selectionStep, selectedPatrolId]);
   useEffect(() => { setShowSelection(true); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); }, [game.session?.user?.id]);
