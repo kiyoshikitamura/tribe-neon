@@ -311,6 +311,7 @@ function AppContent() {
         footer={isMandatoryTutorial || Boolean(battleState) ? null : <Footer />}
         overlays={(
           <>
+            <QuestProgressionGuide />
             {/* Layer 3: コンパクトモーダル */}
             <CommonModals />
             <MoveBaseModal />
@@ -356,7 +357,6 @@ function AppContent() {
           </>
         )}
       >
-        <QuestProgressionGuide />
         <QuestRaidEncounter />
         {!deferHomePrompts && <BeginnerMissionRewardCta />}
         {activeTab === "home" && <HomeTab />}

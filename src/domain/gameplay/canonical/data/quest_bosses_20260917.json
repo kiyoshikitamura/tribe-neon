@@ -15,7 +15,7 @@
     {
       "questId": "q_shinjuku_1",
       "stageOrder": 1,
-      "recommendedPower": 60000,
+      "recommendedPower": 36000,
       "designTactic": "BURST_ATK",
       "counterHint": "DEF・耐久",
       "enemyTactic": "BALANCED",
@@ -30,9 +30,9 @@
           "awakeningLevel": 0,
           "rarity": "SSR",
           "stats": {
-            "hp": 9504,
-            "atk": 2376,
-            "def": 1320,
+            "hp": 5700,
+            "atk": 1430,
+            "def": 790,
             "spd": 110,
             "luk": 0
           },
@@ -66,9 +66,9 @@
           "awakeningLevel": 0,
           "rarity": "SR",
           "stats": {
-            "hp": 8640,
-            "atk": 2160,
-            "def": 1200,
+            "hp": 5180,
+            "atk": 1300,
+            "def": 720,
             "spd": 108,
             "luk": 0
           },
@@ -102,9 +102,9 @@
           "awakeningLevel": 0,
           "rarity": "SR",
           "stats": {
-            "hp": 8467,
-            "atk": 2117,
-            "def": 1176,
+            "hp": 5080,
+            "atk": 1270,
+            "def": 710,
             "spd": 106,
             "luk": 0
           },
@@ -138,9 +138,9 @@
           "awakeningLevel": 0,
           "rarity": "R",
           "stats": {
-            "hp": 8294,
-            "atk": 2074,
-            "def": 1152,
+            "hp": 4980,
+            "atk": 1240,
+            "def": 690,
             "spd": 104,
             "luk": 0
           },
@@ -174,9 +174,9 @@
           "awakeningLevel": 0,
           "rarity": "SR",
           "stats": {
-            "hp": 8294,
-            "atk": 2074,
-            "def": 1152,
+            "hp": 4980,
+            "atk": 1240,
+            "def": 690,
             "spd": 102,
             "luk": 0
           },
@@ -4069,6 +4069,15 @@
           ]
         }
       ]
+    }
+  ],
+  "overrides": [
+    {
+      "revision": "SHINJUKU_EASY_INTRO_R1",
+      "questId": "q_shinjuku_1",
+      "reason": "実機敗北を受けたユーザー指示。新宿初級だけ弱体化。",
+      "hpAtkDefMultiplier": 0.6,
+      "roundingUnit": 10
     }
   ]
 }
