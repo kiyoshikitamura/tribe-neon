@@ -1,0 +1,55 @@
+{
+  "environment": "preview",
+  "projectRef": null,
+  "version": 1,
+  "difficulties": [
+    {
+      "id": "beginner",
+      "rescue": {
+        "minimumBattles": null,
+        "minimumContributionDamage": null,
+        "items": []
+      },
+      "clear": {
+        "minimumContributionDamage": null,
+        "items": []
+      }
+    },
+    {
+      "id": "intermediate",
+      "rescue": {
+        "minimumBattles": null,
+        "minimumContributionDamage": null,
+        "items": []
+      },
+      "clear": {
+        "minimumContributionDamage": null,
+        "items": []
+      }
+    },
+    {
+      "id": "advanced",
+      "rescue": {
+        "minimumBattles": null,
+        "minimumContributionDamage": null,
+        "items": []
+      },
+      "clear": {
+        "minimumContributionDamage": null,
+        "items": []
+      }
+    },
+    {
+      "id": "expert",
+      "rescue": {
+        "minimumBattles": null,
+        "minimumContributionDamage": null,
+        "items": []
+      },
+      "clear": {
+        "minimumContributionDamage": null,
+        "items": []
+      }
+    }
+  ]
+}

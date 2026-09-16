@@ -22,9 +22,8 @@ import {
 } from "@/domain/ranking/preopenGuildPowerSeason";
 import "./ranking/RankingRewardButton.css";
 import "./RankingTab.css";
-import "./RaidRankingMetric.css";
 
-type RankingCategory = "power" | "guild_power" | "pvp" | "raid";
+type RankingCategory = "power" | "guild_power" | "pvp";
 type RankingPeriod = "daily" | "season";
 
 type PublicProfile = {
@@ -40,7 +39,6 @@ const RANKING_TABS = [
   { id: "power", label: "総合力" },
   { id: "guild_power", label: "ギルド" },
   { id: "pvp", label: "バトル" },
-  { id: "raid", label: "レイド" },
 ] as const;
 
 const PERIOD_TABS = [
@@ -145,6 +143,7 @@ export default function RankingTab() {
     setProfiles({});
     setSelfRank(null);
     setGuildSeason(null);
+    if (rankingActiveTab === "raid") { setLoading(false); return; }
 
     try {
       let nextRows: any[] = [];
@@ -177,23 +176,6 @@ export default function RankingTab() {
         const { data, error: rpcError } = await supabase.rpc("get_public_pvp_rankings", { p_daily: activePeriod === "daily", p_limit: 100, p_offset: 0 });
         if (rpcError) throw rpcError;
         nextRows = Array.isArray(data) ? data : [];
-      } else if (activePeriod === "daily") {
-        const { data: raids, error: raidError } = await supabase.rpc("get_active_raids");
-        if (raidError) throw raidError;
-        const activeRaid = Array.isArray(raids) ? raids[0] : null;
-        if (activeRaid?.id) {
-          const { data, error: rpcError } = await supabase.rpc("get_raid_rankings", { p_instance_id: activeRaid.id });
-          if (rpcError) throw rpcError;
-          nextRows = Array.isArray(data?.individual) ? data.individual : [];
-          nextGuildRows = Array.isArray(data?.guild) ? data.guild : [];
-          nextSelfRank = data?.selfRank || null;
-        }
-      } else {
-        const { data, error: rpcError } = await supabase.rpc("get_raid_season_rankings", { p_limit: 100, p_offset: 0 });
-        if (rpcError) throw rpcError;
-        nextRows = Array.isArray(data?.individual) ? data.individual : Array.isArray(data?.personal) ? data.personal : [];
-        nextGuildRows = Array.isArray(data?.guild) ? data.guild : [];
-        nextSelfRank = data?.selfRank || null;
       }
 
       const publicUserIds = [...new Set([...nextRows.map((row) => row.user_id).filter(Boolean), session?.user?.id].filter(Boolean))] as string[];
@@ -215,8 +197,14 @@ export default function RankingTab() {
     } finally {
       if (requestId === requestVersion.current) setLoading(false);
     }
-  }, [activePeriod, activeTab, session]);
+  }, [activePeriod, activeTab, rankingActiveTab, session]);
 
+  useEffect(() => {
+    if (rankingActiveTab === "raid") {
+      setRankingActiveTab("power");
+      setActiveTab("raid");
+    }
+  }, [rankingActiveTab, setRankingActiveTab, setActiveTab]);
   useEffect(() => { void loadRanking(); }, [loadRanking]);
   useEffect(() => {
     const userId = session?.user?.id;
@@ -267,11 +255,11 @@ export default function RankingTab() {
       return Number(activePeriod === "daily" ? currentGuildRow?.daily_power : currentGuildRow?.current_power ?? currentGuildRow?.guild_power ?? currentGuildRow?.score ?? 0).toLocaleString();
     }
     if (activeTab === "pvp") return activePeriod === "daily" ? `${Number(currentRow?.daily_wins || 0).toLocaleString()}勝` : `${Number(currentRow?.rank_points || 0).toLocaleString()} RATE`;
-    return Number(currentRow?.contribution ?? selfRank?.contribution ?? 0).toLocaleString();
+    return "0";
   }, [activePeriod, activeTab, currentGuildId, currentGuildRow, currentRow, currentUser?.total_power, selfRank]);
 
   const activeCategoryLabel = RANKING_TABS.find((tab) => tab.id === activeTab)?.label || "総合力";
-  const metricLabel = activeTab === "power" ? "総合力" : activeTab === "guild_power" ? "ギルド総合力" : activeTab === "pvp" ? "RATE" : "累計ダメージ";
+  const metricLabel = activeTab === "power" ? "総合力" : activeTab === "guild_power" ? "ギルド総合力" : "RATE";
   const periodLabel = activePeriod === "daily" ? "デイリー" : "シーズン";
   const isGuildSeasonTab = activeTab === "guild_power" && activePeriod === "season";
   const isPreopenGuildSeason = isGuildSeasonTab && isPreopenGuildPowerSeasonContext(guildSeason);
@@ -347,11 +335,10 @@ export default function RankingTab() {
             : <div className="ranking-list">{rows.length > 0 ? rows.map((row) => {
               const profile = profiles[row.user_id];
               const rank = validRank(row.rank_position);
-              const metric = activeTab === "power" ? Number(row.current_power || 0).toLocaleString() : activeTab === "pvp" ? activePeriod === "daily" ? `${Number(row.daily_wins || 0)}勝` : Number(row.rank_points || 0).toLocaleString() : Number(row.contribution || row.damage_dealt || 0).toLocaleString();
-              return <article key={row.user_id} className={`ranking-user-row ${row.user_id === currentUserId ? "is-current" : ""}`}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><div className="ranking-user-main"><UserIdentityRow userName={profile?.username || row.username || "プレイヤー"} guildName={profile?.guild_name || row.guild_name} leaderCharacterId={profile?.favorite_character_id} onOpen={() => openPlayer(row.user_id)} variant="compact" /><RankingDeck characterIds={profile?.main_formation_character_ids} /></div><span className={`ranking-metric ${activeTab === "raid" ? "is-raid-metric" : ""}`}>{metric}<small>{activeTab === "power" ? "総合力" : activeTab === "pvp" ? activePeriod === "daily" ? "WIN" : "RATE" : "ダメージ"}</small></span></article>;
+              const metric = activeTab === "power" ? Number(row.current_power || 0).toLocaleString() : activePeriod === "daily" ? `${Number(row.daily_wins || 0)}勝` : Number(row.rank_points || 0).toLocaleString();
+              return <article key={row.user_id} className={`ranking-user-row ${row.user_id === currentUserId ? "is-current" : ""}`}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><div className="ranking-user-main"><UserIdentityRow userName={profile?.username || row.username || "プレイヤー"} guildName={profile?.guild_name || row.guild_name} leaderCharacterId={profile?.favorite_character_id} onOpen={() => openPlayer(row.user_id)} variant="compact" /><RankingDeck characterIds={profile?.main_formation_character_ids} /></div><span className="ranking-metric">{metric}<small>{activeTab === "power" ? "総合力" : activePeriod === "daily" ? "WIN" : "RATE"}</small></span></article>;
             }) : <div className="ranking-empty">まだランキングデータがありません</div>}</div>}
 
-      {activeTab === "raid" && guildRows.length > 0 && <section className="ranking-raid-guilds"><div className="ranking-list-heading"><strong>ギルドランキング</strong><span>{periodLabel}</span></div>{guildRows.slice(0, 3).map((row) => { const rank = validRank(row.rank_position); return <button type="button" key={row.guild_id} className="ranking-guild-row" onClick={() => openGuild(row.guild_id)}><span className={`ranking-position is-${rank || "out"}`}><RankPresentation rank={rank} /></span><span className="ranking-guild-identity"><strong>{row.guild_name || "ギルド"}</strong><small>{Number(row.participant_count || 0)} MEMBERS</small></span><span className="ranking-metric is-raid-metric">{Number(row.contribution || 0).toLocaleString()}<small>ダメージ</small></span></button>; })}</section>}
       {activationMilestones.has("first_pvp") && !activationMilestones.has("first_raid") && isRaidActive ? <OutlawButton variant="primary" fullWidth className="ranking-return-cta" onClick={() => setActiveTab("raid")}>次はレイドへ挑戦</OutlawButton>
         : activationMilestones.has("first_pvp") && !userGuildMember ? <OutlawButton variant="primary" fullWidth className="ranking-return-cta" onClick={() => setActiveTab("guild")}>おすすめTRIBEを見る</OutlawButton>
           : activationMilestones.has("first_pvp") && userGuildMember && !activationMilestones.has("guild_activation") ? <OutlawButton variant="primary" fullWidth className="ranking-return-cta" onClick={() => setActiveTab("guild")}>所属TRIBEへ</OutlawButton>
