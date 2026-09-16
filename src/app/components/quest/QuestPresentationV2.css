@@ -123,3 +123,5 @@
 .quest-v2-town-rewards{display:flex;flex-wrap:wrap;align-items:center;gap:4px}.quest-v2-town-reward{position:relative;display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center}.quest-v2-town-reward>img{width:28px;height:28px;object-fit:contain}.quest-v2-town-reward.is-random{width:42px}.quest-v2-town-reward.is-random>img+img{margin-left:-21px}
 .quest-v2-town-list>button>img{height:100%;min-height:110px}
 .quest-v2-area-enemy{margin:6px 0 0;font-size:12px;color:#e4d5bb}
+
+.quest-v2-town-list button:disabled { filter: grayscale(.8); opacity: .48; cursor: not-allowed; }

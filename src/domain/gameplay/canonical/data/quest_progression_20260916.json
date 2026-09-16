@@ -1,0 +1,933 @@
+{
+  "version": "2026-08-30",
+  "revision": "QUEST_PROGRESSION_20260916_PROVISIONAL",
+  "isProvisional": true,
+  "normalRewardTiming": "EXPLORATION_COMPLETE",
+  "firstClearRewardTiming": "BOSS_VICTORY",
+  "stages": [
+    {
+      "questId": "q_shinjuku_1",
+      "stageOrder": 1,
+      "townId": "shinjuku",
+      "previousQuestId": null,
+      "ap": 3,
+      "durationSec": 60,
+      "userExp": 100,
+      "cash": 300,
+      "firstClearUserExp": 100,
+      "firstClearCash": 300,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 1200,
+        "atk": 180,
+        "def": 60,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shinjuku_2",
+      "stageOrder": 2,
+      "townId": "shinjuku",
+      "previousQuestId": "q_shinjuku_1",
+      "ap": 4,
+      "durationSec": 120,
+      "userExp": 150,
+      "cash": 400,
+      "firstClearUserExp": 125,
+      "firstClearCash": 350,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 2000,
+        "atk": 250,
+        "def": 85,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shinjuku_3",
+      "stageOrder": 3,
+      "townId": "shinjuku",
+      "previousQuestId": "q_shinjuku_2",
+      "ap": 5,
+      "durationSec": 180,
+      "userExp": 200,
+      "cash": 500,
+      "firstClearUserExp": 150,
+      "firstClearCash": 400,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 2800,
+        "atk": 320,
+        "def": 110,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shibuya_1",
+      "stageOrder": 4,
+      "townId": "shibuya",
+      "previousQuestId": "q_shinjuku_3",
+      "ap": 6,
+      "durationSec": 240,
+      "userExp": 250,
+      "cash": 600,
+      "firstClearUserExp": 175,
+      "firstClearCash": 450,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 3600,
+        "atk": 390,
+        "def": 135,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shibuya_2",
+      "stageOrder": 5,
+      "townId": "shibuya",
+      "previousQuestId": "q_shibuya_1",
+      "ap": 7,
+      "durationSec": 300,
+      "userExp": 300,
+      "cash": 700,
+      "firstClearUserExp": 200,
+      "firstClearCash": 500,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 4400,
+        "atk": 460,
+        "def": 160,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_shibuya_3",
+      "stageOrder": 6,
+      "townId": "shibuya",
+      "previousQuestId": "q_shibuya_2",
+      "ap": 8,
+      "durationSec": 360,
+      "userExp": 350,
+      "cash": 800,
+      "firstClearUserExp": 225,
+      "firstClearCash": 550,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 5200,
+        "atk": 530,
+        "def": 185,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_ikebukuro_1",
+      "stageOrder": 7,
+      "townId": "ikebukuro",
+      "previousQuestId": "q_shibuya_3",
+      "ap": 9,
+      "durationSec": 420,
+      "userExp": 400,
+      "cash": 900,
+      "firstClearUserExp": 250,
+      "firstClearCash": 600,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 6000,
+        "atk": 600,
+        "def": 210,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 1,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_ikebukuro_2",
+      "stageOrder": 8,
+      "townId": "ikebukuro",
+      "previousQuestId": "q_ikebukuro_1",
+      "ap": 10,
+      "durationSec": 480,
+      "userExp": 450,
+      "cash": 1000,
+      "firstClearUserExp": 275,
+      "firstClearCash": 650,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 6800,
+        "atk": 670,
+        "def": 235,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_ikebukuro_3",
+      "stageOrder": 9,
+      "townId": "ikebukuro",
+      "previousQuestId": "q_ikebukuro_2",
+      "ap": 11,
+      "durationSec": 540,
+      "userExp": 500,
+      "cash": 1100,
+      "firstClearUserExp": 300,
+      "firstClearCash": 700,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 7600,
+        "atk": 740,
+        "def": 260,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_roppongi_1",
+      "stageOrder": 10,
+      "townId": "roppongi",
+      "previousQuestId": "q_ikebukuro_3",
+      "ap": 12,
+      "durationSec": 600,
+      "userExp": 550,
+      "cash": 1200,
+      "firstClearUserExp": 325,
+      "firstClearCash": 750,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 8400,
+        "atk": 810,
+        "def": 285,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 4,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 4,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_roppongi_2",
+      "stageOrder": 11,
+      "townId": "roppongi",
+      "previousQuestId": "q_roppongi_1",
+      "ap": 13,
+      "durationSec": 660,
+      "userExp": 600,
+      "cash": 1300,
+      "firstClearUserExp": 350,
+      "firstClearCash": 800,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 9200,
+        "atk": 880,
+        "def": 310,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 4,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 4,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_roppongi_3",
+      "stageOrder": 12,
+      "townId": "roppongi",
+      "previousQuestId": "q_roppongi_2",
+      "ap": 14,
+      "durationSec": 720,
+      "userExp": 650,
+      "cash": 1400,
+      "firstClearUserExp": 375,
+      "firstClearCash": 850,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 10000,
+        "atk": 950,
+        "def": 335,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 4,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 4,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_akihabara_1",
+      "stageOrder": 13,
+      "townId": "akihabara",
+      "previousQuestId": "q_roppongi_3",
+      "ap": 15,
+      "durationSec": 780,
+      "userExp": 700,
+      "cash": 1500,
+      "firstClearUserExp": 400,
+      "firstClearCash": 900,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 10800,
+        "atk": 1020,
+        "def": 360,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 5,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 5,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_akihabara_2",
+      "stageOrder": 14,
+      "townId": "akihabara",
+      "previousQuestId": "q_akihabara_1",
+      "ap": 16,
+      "durationSec": 840,
+      "userExp": 750,
+      "cash": 1600,
+      "firstClearUserExp": 425,
+      "firstClearCash": 950,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 11600,
+        "atk": 1090,
+        "def": 385,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 2,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 5,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 5,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_akihabara_3",
+      "stageOrder": 15,
+      "townId": "akihabara",
+      "previousQuestId": "q_akihabara_2",
+      "ap": 17,
+      "durationSec": 900,
+      "userExp": 800,
+      "cash": 1700,
+      "firstClearUserExp": 450,
+      "firstClearCash": 1000,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 12400,
+        "atk": 1160,
+        "def": 410,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 5,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 5,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_kawasaki_1",
+      "stageOrder": 16,
+      "townId": "kawasaki",
+      "previousQuestId": "q_akihabara_3",
+      "ap": 18,
+      "durationSec": 960,
+      "userExp": 850,
+      "cash": 1800,
+      "firstClearUserExp": 475,
+      "firstClearCash": 1050,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 13200,
+        "atk": 1230,
+        "def": 435,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 6,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 6,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_kawasaki_2",
+      "stageOrder": 17,
+      "townId": "kawasaki",
+      "previousQuestId": "q_kawasaki_1",
+      "ap": 19,
+      "durationSec": 1020,
+      "userExp": 900,
+      "cash": 1900,
+      "firstClearUserExp": 500,
+      "firstClearCash": 1100,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 14000,
+        "atk": 1300,
+        "def": 460,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 6,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 6,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_kawasaki_3",
+      "stageOrder": 18,
+      "townId": "kawasaki",
+      "previousQuestId": "q_kawasaki_2",
+      "ap": 20,
+      "durationSec": 1080,
+      "userExp": 950,
+      "cash": 2000,
+      "firstClearUserExp": 525,
+      "firstClearCash": 1150,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 14800,
+        "atk": 1370,
+        "def": 485,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 6,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 6,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_yokohama_1",
+      "stageOrder": 19,
+      "townId": "yokohama",
+      "previousQuestId": "q_kawasaki_3",
+      "ap": 21,
+      "durationSec": 1140,
+      "userExp": 1000,
+      "cash": 2100,
+      "firstClearUserExp": 550,
+      "firstClearCash": 1200,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 15600,
+        "atk": 1440,
+        "def": 510,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 7,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 7,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_yokohama_2",
+      "stageOrder": 20,
+      "townId": "yokohama",
+      "previousQuestId": "q_yokohama_1",
+      "ap": 22,
+      "durationSec": 1200,
+      "userExp": 1050,
+      "cash": 2200,
+      "firstClearUserExp": 575,
+      "firstClearCash": 1250,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 16400,
+        "atk": 1510,
+        "def": 535,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 7,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 7,
+          "probabilityBp": 10000
+        }
+      ]
+    },
+    {
+      "questId": "q_yokohama_3",
+      "stageOrder": 21,
+      "townId": "yokohama",
+      "previousQuestId": "q_yokohama_2",
+      "ap": 23,
+      "durationSec": 1260,
+      "userExp": 1100,
+      "cash": 2300,
+      "firstClearUserExp": 600,
+      "firstClearCash": 1300,
+      "bossStatMultiplierBp": 10000,
+      "bossStats": {
+        "hp": 17200,
+        "atk": 1580,
+        "def": 560,
+        "spd": 60,
+        "luk": 0
+      },
+      "normalRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 3,
+          "probabilityBp": 10000
+        }
+      ],
+      "firstClearRewards": [
+        {
+          "itemId": "CHAR_EXP_M",
+          "quantity": 7,
+          "probabilityBp": 10000
+        },
+        {
+          "itemId": "EQUIP_EXP_M",
+          "quantity": 7,
+          "probabilityBp": 10000
+        }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,7 @@ const CANONICAL_REWARD_ALIAS_NAMES: Record<string, string> = {
 };
 
 export function canonicalItemName(itemId: string): string {
+  if (itemId === "PLAYER_XP") return "プレイヤー経験値";
   if (itemId === "CASH") return "CASH";
   if (itemId === "DIAMOND") return "ダイヤ";
   return CANONICAL_ITEM_BY_ID.get(itemId)?.name ?? CANONICAL_REWARD_ALIAS_NAMES[itemId] ?? itemId;

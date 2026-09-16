@@ -108,6 +108,7 @@ export default function CharacterTab() {
   const [characterSetupResult, setCharacterSetupResult] = useState<any>(null);
   const formationSubmittingRef = useRef(false);
   const tutorialFormationPreparedRef = useRef(false);
+  const questGuide = (useGame() as any).questGuide;
   const isTutorialStep = onboardingState?.tutorial_step === "AUTO_FORMATION";
   const isTutorialFormation = isTutorialStep && formationEditMode;
   const tutorialSkillMasters = useMemo(
@@ -131,17 +132,17 @@ export default function CharacterTab() {
   }, [session?.user?.id, ownedSkillMasterIds.join("|")]);
 
   useEffect(() => {
-    if (!session?.user?.id || !onboardingState?.gameplay_authorized || isTutorialStep) {
+    if (!session?.user?.id || !onboardingState?.gameplay_authorized || isTutorialStep || questGuide) {
       setCharacterSetupDialogOpen(false);
       return;
     }
     let active = true;
     void supabase.rpc("get_character_setup_dialog_state").then(({ data, error }) => {
       if (!active || error) return;
-      setCharacterSetupDialogOpen(data?.eligible === true && data?.consumed !== true);
+      setCharacterSetupDialogOpen(data?.eligible === true && data?.consumed !== true && !questGuide);
     });
     return () => { active = false; };
-  }, [isTutorialStep, onboardingState?.gameplay_authorized, session?.user?.id]);
+  }, [isTutorialStep, onboardingState?.gameplay_authorized, session?.user?.id, questGuide]);
 
   const completeCharacterSetupDialog = async (action: "AUTO_SETUP" | "LATER") => {
     if (characterSetupPending || !session?.user?.id) return;

@@ -236,7 +236,7 @@ export function useInventory(
   const refreshPresentClaimState = async (owner: string, isCurrent: () => boolean) => {
     const generation = beginUserItemsProjectionRequest(owner);
     const [wallet, items, inbox, equipment] = await Promise.all([
-      supabase.from("users").select("cash,neon_diamonds").eq("id", owner).single(),
+      supabase.from("users").select("cash,neon_diamonds,level,xp,vitality").eq("id", owner).single(),
       supabase.from("user_items").select("*").eq("user_id", owner),
       supabase.from("presents").select("*").eq("user_id", owner).order("sent_at", { ascending: false }),
       supabase.from("user_equipments").select("*").eq("user_id", owner).order("created_at", { ascending: false }),
@@ -249,6 +249,8 @@ export function useInventory(
     if (!wallet.data) throw new Error("Present wallet projection unavailable");
     setCash(Number(wallet.data.cash));
     setDiamonds(Number(wallet.data.neon_diamonds));
+    onMissionPlayerProgress?.(Number(wallet.data.level), Number(wallet.data.xp));
+    setVitality(Number(wallet.data.vitality));
     projectUserItems(items.data || [], owner, generation);
     onPresentEquipmentProjection?.(equipment.data || [], owner);
     const rows = inbox.data || [];

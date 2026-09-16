@@ -11,6 +11,7 @@ import { battleDisplayText } from "@/domain/presentation/battleTerminology";
 import "./InboxPanel.css";
 
 function PresentRewardIcon({ itemId }: { itemId: string }) {
+  if (itemId === "PLAYER_XP") return <span className="inbox-present-reward-icon" aria-label="プレイヤー経験値">XP</span>;
   if (itemId === "CASH") return <img src="/ui/icon_cash.png" alt="" className="inbox-present-reward-icon" />;
   if (itemId === "DIA" || itemId === "DIAMOND") return <img src="/ui/icon_dia.png" alt="" className="inbox-present-reward-icon" />;
   return <CanonicalItemIcon itemId={itemId} alt="" className="inbox-present-reward-icon" />;

@@ -394,11 +394,14 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     raidRoomActivityTracker, isRaidActive);
   const raidAvailability = qaState?.raidAvailability ?? observedRaidAvailability;
 
-  const primaryCta = useMemo(() => qaState ? resolveHomeInitialCta({
+  const legacyPrimaryCta = useMemo(() => qaState ? resolveHomeInitialCta({
     ready: qaState.ctaAuthorityReady !== false, tutorialStep: onboardingState?.tutorial_step,
     gameplayAuthorized: onboardingState?.gameplay_authorized, milestones: funnelMilestones, raidAvailability,
   }) : nextBeginnerAction(beginnerJourney, raidAvailability),
   [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones]);
+
+  const questGuide = (useGame() as any).questGuide;
+  const primaryCta = questGuide ? { key: 'quest_progression', title: 'クエストを進めよう', tab: 'patrol', action: undefined, disabled: false } : legacyPrimaryCta;
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;

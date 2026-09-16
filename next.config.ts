@@ -8,11 +8,15 @@ const kpiDashboardHosts = [
 // This dedicated acceptance branch uses the already-enabled Preview Room API.
 // Keep Production and other Preview branches on their existing deployment flags.
 const raidAcceptancePreview = process.env.VERCEL_ENV === "preview"
-  && process.env.VERCEL_GIT_COMMIT_REF === "codex/formal-open-integration-preview-20260914"
+  && ["codex/formal-open-integration-preview-20260914", "feat/quest-progression-20260916"].includes(process.env.VERCEL_GIT_COMMIT_REF || "")
   && process.env.NEXT_PUBLIC_SUPABASE_URL === "https://sufvuqdnqohpfzkwxohq.supabase.co";
+const questAcceptancePreview = raidAcceptancePreview
+  && process.env.VERCEL_GIT_COMMIT_REF === "feat/quest-progression-20260916";
 
 const nextConfig: NextConfig = {
-  ...(raidAcceptancePreview ? { env: { NEXT_PUBLIC_RAID_ROOM_UI_ENABLED: "true" } } : {}),
+  ...(raidAcceptancePreview ? { env: { NEXT_PUBLIC_RAID_ROOM_UI_ENABLED: "true",
+    ...(questAcceptancePreview ? { NEXT_PUBLIC_QUEST_PREVIEW_CONTENT: "true" } : {}),
+  } } : {}),
   // Visual acceptance screenshots must represent the release canvas rather
   // than the Next.js development toolbar badge.
   devIndicators: false,

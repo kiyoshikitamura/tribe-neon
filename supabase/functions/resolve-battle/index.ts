@@ -43,11 +43,16 @@ Deno.serve(async (request) => {
   const finalizePatrol = async (winner: "PLAYER" | "ENEMY") => {
     if (session.battle_mode !== "QUEST" || !session.source_reference_id) return null;
     const { data: patrol, error: patrolError } = await admin.from("user_patrols")
-      .select("id, course_id, quest_id, battle_resolved")
+      .select("id, course_id, quest_id, battle_resolved, progression_kind")
       .eq("id", session.source_reference_id)
       .eq("user_id", user.id)
       .maybeSingle();
     if (patrolError || !patrol) return patrolError?.message ?? "Patrol was not found";
+
+    if (patrol.progression_kind && patrol.progression_kind !== "LEGACY") {
+      const { error: finalizeError } = await admin.rpc("finalize_quest_progression_battle_v1", { p_replay_id: session.id });
+      return finalizeError?.message ?? null;
+    }
 
     // Tutorial defeat is retryable without another dispatch/AP payment.
     let retryableTutorialDefeat = false;

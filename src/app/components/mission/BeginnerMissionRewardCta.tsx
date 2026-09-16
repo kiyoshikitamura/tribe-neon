@@ -12,6 +12,8 @@ export default function BeginnerMissionRewardCta() {
     scoutAnimationState, showMissionPanel, confirmDialogConfig, globalInteractionBlocking,
     showPatrolRewardModal, onboardingState, setConfirmDialogConfig, session,
     showLoginBonusModal, showAccountAuthenticationModal } = useGame();
+  const questGuideStep = (useGame() as any).questGuide?.step;
+  const progressionGuideActive = ['QUEST_ENTRY', 'GACHA', 'LOADOUT', 'RETRY'].includes(questGuideStep);
   const presentedDialog = usePresentedDialog();
   const announced = useRef(new Set<string>());
   const owner = session?.user?.id;
@@ -19,7 +21,7 @@ export default function BeginnerMissionRewardCta() {
   const key = `${owner}:${activeTab}:${ids.join(',')}`;
   const experienceComplete = canPromptBeginnerReward(beginnerJourney, activeTab);
   useEffect(() => {
-    if (questRaidEncounter.resolving || questRaidEncounter.entries.some((e:QuestRaidEncounter)=>!e.acknowledged) || questEncounterDismissedVisit || !owner || !onboardingState?.gameplay_authorized || (activeTab === 'home' || activeTab === 'character' || activeTab === 'ranking') || battleState || scoutAnimationState
+    if (progressionGuideActive || questRaidEncounter.resolving || questRaidEncounter.entries.some((e:QuestRaidEncounter)=>!e.acknowledged) || questEncounterDismissedVisit || !owner || !onboardingState?.gameplay_authorized || (activeTab === 'home' || activeTab === 'character' || activeTab === 'ranking') || battleState || scoutAnimationState
       || showMissionPanel || confirmDialogConfig || globalInteractionBlocking || showPatrolRewardModal
       || showLoginBonusModal || showAccountAuthenticationModal || presentedDialog || hasPresentedDialog()
       || !experienceComplete || !ids.length || announced.current.has(key)) return;
@@ -39,7 +41,7 @@ export default function BeginnerMissionRewardCta() {
         if (!await openBeginnerMissionReward(ids)) throw new Error("ミッションを開けませんでした。もう一度お試しください。");
       },
     });
-  }, [questRaidEncounter.resolving, questRaidEncounter.entries, questEncounterDismissedVisit, owner, onboardingState?.gameplay_authorized, activeTab, battleState, scoutAnimationState,
+  }, [progressionGuideActive, questRaidEncounter.resolving, questRaidEncounter.entries, questEncounterDismissedVisit, owner, onboardingState?.gameplay_authorized, activeTab, battleState, scoutAnimationState,
     showMissionPanel, confirmDialogConfig, globalInteractionBlocking, showPatrolRewardModal,
     showLoginBonusModal, showAccountAuthenticationModal, presentedDialog, experienceComplete, ids, key,
     openBeginnerMissionReward, setConfirmDialogConfig]);

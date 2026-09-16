@@ -347,7 +347,8 @@ async function runBattleStart(context: BattleStartContext,
     const staleRoomUser = () => Boolean(roomBriefing && roomUserRef.current !== startingRoomUserId);
     if (staleRoomUser()) return;
     const savedRoomReceipt = roomBriefing ? roomAttemptRef.current?.savedReceipt() : null;
-    if (mode === "PATROL" && patrolIdOverride && patrolIdOverride === settledPatrolEncounterId) return;
+    if (mode === "PATROL" && patrolIdOverride && patrolIdOverride === settledPatrolEncounterId
+      && patrol?.battle_result !== "DEFEAT") return;
     setTutorialBattleActive(mode === "PATROL" && tutorialStep === "TUTORIAL_BATTLE");
     if (mode === "PATROL") activePatrolEncounterIdRef.current = patrolIdOverride || patrol?.id || null;
     const tutorialBattleRequestId = mode === "PATROL"

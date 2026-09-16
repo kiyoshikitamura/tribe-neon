@@ -1,0 +1,4 @@
+.quest-progression-guide { position: relative; margin: 8px 12px; padding: 12px; background: #17191f; border: 1px solid #777983; border-radius: 12px; }
+.quest-progression-guide p { font-size: 12px; line-height: 1.6; }
+.quest-progression-guide > button { width: 100%; }
+.quest-town-story .quest-town-story-portrait { height: 220px; }

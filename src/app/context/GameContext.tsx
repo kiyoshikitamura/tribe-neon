@@ -2,6 +2,7 @@
 import { useQuestRaidEncounter } from "./hooks/useQuestRaidEncounter";
 import { useMaintenanceTestAccess } from "./hooks/useMaintenanceTestAccess";
 import { useBeginnerJourney } from "@/hooks/useBeginnerJourney";
+import { useQuestProgressionGuide } from "@/hooks/useQuestProgressionGuide";
 import { canClaimMission } from "@/domain/mission/availability";
 import { useMissionClock } from "@/hooks/useMissionClock";
 
@@ -1797,14 +1798,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         setPatrolCourses(questsData.map((quest: any) => {
           const canonical: any = canonicalByQuest.get(quest.id);
           const progression: any = progressionByQuest.get(quest.id);
-          const rewardPoolItems = poolRows.filter((item: any) => item.reward_pool_id === canonical?.reward_pool_id);
-          const firstClearItems = poolRows.filter((item: any) => item.reward_pool_id === canonical?.first_clear_reward_pool_id);
+          const progressEnabled = progression?.progression_enabled === true;
+          const normalPool = progressEnabled ? canonical?.progression_reward_pool_id ?? canonical?.reward_pool_id : canonical?.reward_pool_id;
+          const firstPool = progressEnabled ? canonical?.progression_first_clear_reward_pool_id ?? canonical?.first_clear_reward_pool_id : canonical?.first_clear_reward_pool_id;
+          const rewardPoolItems = poolRows.filter((item: any) => item.reward_pool_id === normalPool);
+          const firstClearItems = poolRows.filter((item: any) => item.reward_pool_id === firstPool);
           return {
             ...quest,
-            reward_cash: canonical?.cash_reward ?? canonicalQuestById(quest.id)?.cashReward ?? quest.cash_reward ?? quest.reward_cash ?? 0,
-            reward_xp: canonical?.user_exp ?? quest.exp_reward ?? quest.reward_xp ?? 0,
+            cost_vitality: progressEnabled ? canonical?.progression_vitality_cost ?? quest.cost_vitality : quest.cost_vitality,
+            duration_seconds: progressEnabled ? canonical?.progression_duration_sec ?? quest.duration_seconds : quest.duration_seconds,
+            reward_cash: (progressEnabled ? canonical?.progression_cash_reward : undefined) ?? canonical?.cash_reward ?? canonicalQuestById(quest.id)?.cashReward ?? quest.cash_reward ?? quest.reward_cash ?? 0,
+            reward_xp: (progressEnabled ? canonical?.progression_user_exp : undefined) ?? canonical?.user_exp ?? quest.exp_reward ?? quest.reward_xp ?? 0,
             reward_items: rewardPoolItems,
-            first_clear_user_exp: canonical?.first_clear_user_exp ?? 0,
+            first_clear_user_exp: (progressEnabled ? canonical?.progression_first_clear_user_exp : undefined) ?? canonical?.first_clear_user_exp ?? 0,
+            first_clear_cash_reward: progressEnabled ? canonical?.progression_first_clear_cash_reward ?? 0 : 0,
+            normal_reward_timing: progressEnabled ? canonical?.progression_normal_reward_timing : null,
             first_clear_items: firstClearItems,
             reward_item_id: rewardPoolItems[0]?.item_id ?? null,
             reward_item_chance: Number(rewardPoolItems[0]?.probability_bp ?? 0) / 100,
@@ -1812,6 +1820,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             is_unlocked: progression?.is_unlocked ?? (typeof canonical?.unlock_condition === "object" ? canonical.unlock_condition.type === "OPEN" : canonical?.unlock_condition === "OPEN"),
             unlock_condition: progression?.unlock_condition ?? canonical?.unlock_condition ?? "OPEN",
             is_first_cleared: progression?.is_first_cleared ?? false,
+            progression_enabled: progression?.progression_enabled ?? false,
+            stage_order: progression?.stage_order ?? null,
+            boss_patrol_id: progression?.boss_patrol_id ?? null,
+            boss_ready: progression?.boss_ready ?? false,
+            last_battle_result: progression?.last_battle_result ?? null,
             enemy_tactic: progression?.enemy_tactic ?? null,
             enemy_member_count: progression?.enemy_member_count ?? 0,
             enemy_members: progression?.enemy_members ?? [],
@@ -1850,7 +1863,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const { data: userPatrols } = await supabase.from("user_patrols").select("*").eq("user_id", userId);
       
       if (userPatrols && patrolRevisionAtStart === patrolStateRevisionRef.current) {
-        const active = userPatrols.filter((p: any) => p.status !== "COMPLETED");
+        const active = userPatrols.filter((p: any) => p.status === "ONGOING" || p.status === "CLAIMABLE");
         const formattedPatrols = active.map((p: any) => {
           const expiresAt = new Date(p.expires_at).getTime();
           const startedAt = new Date(p.started_at).getTime();
@@ -1872,6 +1885,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             encounterSnapshot: p.encounter_snapshot,
             hometownBonusSnapshot: p.hometown_bonus_snapshot,
             baseCashSnapshot: p.base_cash_snapshot,
+            progression_kind: p.progression_kind ?? "LEGACY",
+            progressionKind: p.progression_kind ?? "LEGACY",
+            active_replay_id: p.active_replay_id ?? null,
             started_at: p.started_at,
             expires_at: p.expires_at
           };
@@ -4277,6 +4293,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const { beginnerJourney, refreshBeginnerJourney } = useBeginnerJourney(session?.user?.id,
     Boolean(onboardingState?.gameplay_authorized), missions);
+  const { questGuide, refreshQuestGuide, advanceQuestGuide, markQuestStorySeen } = useQuestProgressionGuide(
+    session?.user?.id, Boolean(onboardingState?.gameplay_authorized),
+    `${activeTab}:${battle.battleState}:${onboardingState?.tutorial_step ?? ""}`,
+  );
   const [beginnerMissionTargetIds, setBeginnerMissionTargetIds] = useState<string[]>([]);
   const beginnerRewardGeneration = useRef(0);
   const beginnerRewardOpening = useRef(false);
@@ -4330,6 +4350,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     [activeTab, battle.battleState, scoutAnimationState, showMissionPanel, confirmDialogConfig, refreshBeginnerJourney]);
 
   const value = {
+    questGuide, refreshQuestGuide, advanceQuestGuide, markQuestStorySeen,
     rankingMissionRewardOrigin, setRankingMissionRewardOrigin,
     questRaidEncounter, questEncounterDismissedVisit, setQuestEncounterDismissedVisit, openQuestEncounterRaid,
     beginnerJourney, refreshBeginnerJourney, beginnerMissionTargetIds, openBeginnerMissionReward, clearBeginnerMissionTarget,

@@ -36,6 +36,7 @@ export function usePatrol(
     secondsTotal: number;
     secondsLeft: number;
     status: "ONGOING" | "CLAIMABLE" | "COMPLETED";
+    progressionKind?: "LEGACY" | "TUTORIAL" | "FIRST_CLEAR" | "REPEAT";
     has_battle_event?: boolean;
     battle_resolved?: boolean;
     battle_result?: "VICTORY" | "DEFEAT" | null;
@@ -124,7 +125,9 @@ export function usePatrol(
       return false;
     }
 
-    if (activePatrols.length >= 5) {
+    const occupiesExplorationSlot = (patrol: typeof activePatrols[number]) =>
+      !(patrol.progressionKind === "FIRST_CLEAR" && patrol.secondsLeft <= 0);
+    if (activePatrols.filter(occupiesExplorationSlot).length >= 5) {
       setErrorMessage("出撃枠が上限（5枠）に達しています。");
       return false;
     }
@@ -132,7 +135,7 @@ export function usePatrol(
     const selectedOwnedCharacterId = getUserCharactersDbList().find(
       (ownedCharacter) => ownedCharacter.character_id === selectedPatrolMember
     )?.id ?? null;
-    if (activePatrols.some(p => p.characterId === selectedPatrolMember && p.status !== "COMPLETED")) {
+    if (activePatrols.some(p => p.characterId === selectedPatrolMember && p.status !== "COMPLETED" && occupiesExplorationSlot(p))) {
       if (!beginMutation()) return false;
       try {
         if (await recoverCommittedTutorialDispatch(course.id, selectedPatrolMember, selectedOwnedCharacterId)) return true;
@@ -200,6 +203,7 @@ export function usePatrol(
         secondsLeft: Number(res.data.duration_seconds ?? course.duration_seconds),
         status: "ONGOING" as const,
         has_battle_event: res.data.has_battle,
+        progressionKind: res.data.progression_kind,
         battle_resolved: false,
         battle_result: null,
         encounterSnapshot,
@@ -403,6 +407,14 @@ export function usePatrol(
 
       if (res.error) throw res.error;
       if (res.data?.error) throw new Error(res.data.error);
+      if (res.data?.retryable === true) {
+        invalidatePatrolBootstrap();
+        setHasActivePatrolBattle(false);
+        setLastPatrolRewards(null);
+        setShowPatrolRewardModal(false);
+        await syncBootstrapData(session.user.id);
+        return true;
+      }
       // A defeat still needs server settlement to release the dispatched
       // character, but it is not a clear and must not become a reward surface.
       // Use the RPC outcome rather than the potentially stale patrol projection.

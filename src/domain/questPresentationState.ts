@@ -1,11 +1,12 @@
 export type QuestProgress = {
   id: string; status: string; secondsLeft?: number; has_battle_event?: boolean;
-  battle_resolved?: boolean; started_at?: string;
+  battle_resolved?: boolean; started_at?: string; progressionKind?: string; progression_kind?: string; battle_result?: string | null;
 };
 export function questProgressState(patrol: QuestProgress): 'REWARD' | 'BATTLE' | 'WAITING' | 'UNKNOWN' {
   if (patrol.status === 'COMPLETED') return 'UNKNOWN';
   if (!Number.isFinite(patrol.secondsLeft)) return 'UNKNOWN';
   if (Number(patrol.secondsLeft) > 0) return 'WAITING';
+  if ((patrol.progressionKind || patrol.progression_kind) === 'FIRST_CLEAR' && patrol.battle_result === 'DEFEAT') return 'BATTLE';
   if (patrol.has_battle_event === true && patrol.battle_resolved === false) return 'BATTLE';
   if (patrol.battle_resolved === true || patrol.has_battle_event === false) return 'REWARD';
   return 'UNKNOWN';

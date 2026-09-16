@@ -41,6 +41,7 @@ import PageShell from "./components/ui/PageShell";
 import TitleView from "./components/TitleView";
 import TitleLegalFooter from "./components/TitleLegalFooter";
 import MoveBaseModal from "./components/MoveBaseModal";
+import QuestProgressionGuide from "./components/quest/QuestProgressionGuide";
 import TutorialWorldIntro from "./components/TutorialWorldIntro";
 import TutorialRuleGuide from "./components/TutorialRuleGuide";
 import AccountAuthenticationModal from "./components/TutorialAuthentication";
@@ -351,6 +352,7 @@ function AppContent() {
           </>
         )}
       >
+        <QuestProgressionGuide />
         <QuestRaidEncounter />
         <BeginnerMissionRewardCta />
         {activeTab === "home" && <HomeTab />}
