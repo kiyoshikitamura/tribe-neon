@@ -154,7 +154,8 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     featureOperatingStates,
     fetchPlayerDetail,
     setErrorMessage,
-    setGuideGachaCategory
+    setGuideGachaCategory,
+    patrolCourses,
   } = useGame();
 
   const equippedTitleName = ownedTitles.find((title: { id: string }) => title.id === titleEquipped)?.name || titleEquipped;
@@ -397,11 +398,14 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const legacyPrimaryCta = useMemo(() => qaState ? resolveHomeInitialCta({
     ready: qaState.ctaAuthorityReady !== false, tutorialStep: onboardingState?.tutorial_step,
     gameplayAuthorized: onboardingState?.gameplay_authorized, milestones: funnelMilestones, raidAvailability,
+    shinjukuIntermediateFirstClear: patrolCourses?.some((course: any) => course.id === "q_shinjuku_2" && course.is_first_cleared),
   }) : nextBeginnerAction(beginnerJourney, raidAvailability),
-  [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones]);
+  [beginnerJourney, raidAvailability, qaState, onboardingState, funnelMilestones, patrolCourses]);
 
   const questGuide = (useGame() as any).questGuide;
-  const primaryCta = questGuide ? { key: 'quest_progression', title: 'クエストを進めよう', tab: 'patrol', action: undefined, disabled: false } : legacyPrimaryCta;
+  const primaryCta = questGuide?.step !== "DONE"
+    ? { key: 'quest_progression', title: 'クエストを進めよう', tab: 'patrol', action: undefined, disabled: false }
+    : legacyPrimaryCta;
 
   useEffect(() => {
     if (!session?.user?.id || !primaryCta || lastCtaImpression.current === primaryCta.key) return;
@@ -755,6 +759,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
 
         {primaryCta && <button className="mypage-primary-cta semantic-cta semantic-cta--primary active-scale-effect" onClick={() => void openPrimaryCta()} disabled={activationHandoffPending || primaryCta.disabled} aria-busy={activationHandoffPending}>
           <strong>{activationHandoffPending ? "確認中…" : `ミッション：${primaryCta.title}`}</strong>
+          {"message" in primaryCta && primaryCta.message && <small>{primaryCta.message}</small>}
           <b aria-hidden="true">›</b>
         </button>}
 

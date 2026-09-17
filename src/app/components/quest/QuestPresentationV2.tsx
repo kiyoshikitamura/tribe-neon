@@ -63,6 +63,7 @@ export default function QuestPresentationV2() {
   const townName = TOWNS.find(([id]) => id === game.selectedTown)?.[1] || "街";
   const bgImage = `/bg/bg_street_${game.selectedTown}.jpg`;
   const detailCourse = (game.patrolCourses || []).find((course: any) => course.id === selectedPatrol?.courseId);
+  const selectedTownHasUpperClear = (game.patrolCourses || []).some((course: any) => course.town_id === game.selectedTown && course.level_type === "HARD" && course.is_first_cleared);
   const stateBgImage = `/bg/bg_street_${detailCourse?.town_id || game.selectedTown}.jpg`;
   const guaranteedRewards = (items: any[] = []) => items.filter((item) => Number(item.probability_bp ?? 10000) >= 10000);
 
@@ -175,7 +176,7 @@ export default function QuestPresentationV2() {
   };
 
   return <HubPage className="patrol-container quest-v2-shell" title="クエスト" hideVisualHeader>
-    <QuestTownStory townId={selectionVisible && selectionStep !== "DESTINATION" && activeCourse?.is_unlocked !== false ? game.selectedTown : null} />
+    <QuestTownStory townId={selectionVisible && ((selectionStep !== "DESTINATION" && activeCourse?.is_unlocked !== false) || selectedTownHasUpperClear) ? game.selectedTown : null} phase={selectedTownHasUpperClear ? "CLEAR" : "START"} />
     <div ref={contentRef} className="quest-v2-content" style={{ "--quest-state-background": `url(${stateBgImage})` } as React.CSSProperties}>
       {(selectionVisible || selectedPatrol) && <button className="quest-v2-back" onClick={returnToList}>探索一覧へ</button>}
       {!selectionVisible && !selectedPatrol && <section className="quest-v2-overview" aria-label="探索状況">

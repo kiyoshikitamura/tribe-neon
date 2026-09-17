@@ -1,6 +1,7 @@
 export type HomeInitialCta = Readonly<{
   key: string;
   title: string;
+  message?: string;
   tab?: string;
   action?: "mission_handoff";
   disabled?: boolean;
@@ -13,6 +14,7 @@ export function resolveHomeInitialCta(input: {
   gameplayAuthorized?: boolean;
   milestones: ReadonlySet<string>;
   raidAvailability: "active" | "inactive" | "unknown";
+  shinjukuIntermediateFirstClear?: boolean;
 }): HomeInitialCta | null {
   if (!input.ready) return null;
   const { tutorialStep, milestones } = input;
@@ -33,6 +35,10 @@ export function resolveHomeInitialCta(input: {
     return { key: "first_main_loadout", title: "装備を整えよう", tab: "character" };
   }
   if (!milestones.has("post_tutorial_quest")) return { key: "post_tutorial_quest", title: "クエストでCASHを集めよう", tab: "patrol" };
+  if (input.shinjukuIntermediateFirstClear && !milestones.has("first_pvp")) return {
+    key: "first_pvp", title: "バトルに参加してみよう",
+    message: "他のプレイヤーの編成と戦ってみましょう。勝敗に応じて報酬を獲得できます。", tab: "pvp",
+  };
   if (!milestones.has("first_pvp")) return { key: "first_pvp", title: "最初のバトルへ挑戦", tab: "pvp" };
   if ((milestones.has("first_raid") || input.raidAvailability === "inactive")
     && !milestones.has("post_tutorial_guild_view") && !milestones.has("guild_detail_view")) {

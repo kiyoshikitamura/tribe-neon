@@ -1,26 +1,37 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGame } from '@/app/context/GameContext';
-import { QUEST_TOWN_STORIES, type QuestProgressionGuide } from '@/domain/quest/progressionGuide';
+import { QUEST_TOWN_STORIES, type QuestProgressionGuide, type QuestStoryPhase } from '@/domain/quest/progressionGuide';
 import CharacterPresentation from '../character/CharacterPresentation';
-import CanonicalDialog from '../ui/CanonicalDialog';
-import './QuestProgressionGuide.css';
+import TypewriterText from '../tutorial/TypewriterText';
+import '../TutorialWorldIntro.css';
 
-export default function QuestTownStory({ townId }: { townId: string | null }) {
+export default function QuestTownStory({ townId, phase = 'START' }: { townId: string | null; phase?: QuestStoryPhase }) {
   const game = useGame() as any;
   const guide = game.questGuide as QuestProgressionGuide | null;
-  const [position, setPosition] = useState({ town: '', line: 0 });
-  const story = QUEST_TOWN_STORIES.find(entry => entry.townId === townId);
-  // 仮会話はPreviewのみ。正式台詞が未登録でも進行を妨げない。
-  if (!story || !guide || guide.seen_story_towns.includes(story.townId) || game.battleState
-    || (story.provisional && process.env.NEXT_PUBLIC_QUEST_PREVIEW_CONTENT !== 'true')) return null;
-  const line = position.town === townId ? position.line : 0;
+  const owner = game.session?.user?.id || 'guest';
+  const eventKey = townId ? `${townId}:${phase}` : '';
+  const [line, setLine] = useState(0);
+  const [seen, setSeen] = useState<string[]>([]);
+  useEffect(() => {
+    if (!townId || typeof window === 'undefined') return;
+    try { setSeen(JSON.parse(window.localStorage.getItem(`tribe-quest-story:${owner}`) || '[]')); } catch { setSeen([]); }
+  }, [owner, townId]);
+  const story = useMemo(() => QUEST_TOWN_STORIES.find(entry => entry.townId === townId && entry.phase === phase), [townId, phase]);
+  if (!story || !guide || !eventKey || seen.includes(eventKey) || game.battleState || !game.onboardingState?.gameplay_authorized) return null;
+  const hasNext = line + 1 < story.lines.length;
   const finish = async () => {
-    try { await game.markQuestStorySeen(story.townId); }
-    catch { game.setErrorMessage('会話の状態を保存できませんでした。もう一度お試しください。'); }
+    const nextSeen = [...new Set([...seen, eventKey])];
+    setSeen(nextSeen);
+    window.localStorage.setItem(`tribe-quest-story:${owner}`, JSON.stringify(nextSeen));
+    try { await game.markQuestStorySeen(story.townId); } catch { /* local event receipt remains available */ }
   };
-  return <CanonicalDialog title={story.speaker} onClose={finish} actions={[
-    { label: line + 1 < story.lines.length ? '次へ' : '探索へ', semantic: 'primary', onClick: () => line + 1 < story.lines.length ? setPosition({ town: story.townId, line: line + 1 }) : finish() },
-    { label: 'スキップ', semantic: 'secondary', onClick: finish },
-  ]}><div className="quest-town-story"><CharacterPresentation src={story.image} alt={story.speaker} variant="dialogue-bust" className="quest-town-story-portrait" /><p>{story.lines[line]}</p></div></CanonicalDialog>;
+  return <div className="tutorial-world" role="dialog" aria-modal="true" aria-label={`${story.speaker}の会話`}>
+    <div className="tutorial-world-content" style={{ backgroundImage: `url('/bg/bg_street_${story.townId}.jpg')` }}>
+      <div className="tutorial-world-shade" />
+      <div className="tutorial-world-ageha" aria-hidden="true"><CharacterPresentation src={story.image} alt="" variant="dialogue-bust" /></div>
+      <div className="tutorial-world-dialogue"><strong>{story.speaker}</strong><TypewriterText key={`${eventKey}:${line}`} text={story.lines[line]} speedMs={34} /></div>
+      <button className="semantic-cta semantic-cta--primary tutorial-world-next-cta" onClick={() => hasNext ? setLine(value => value + 1) : void finish()}>{hasNext ? '次へ' : phase === 'START' ? '探索へ' : '次へ'}</button>
+    </div>
+  </div>;
 }

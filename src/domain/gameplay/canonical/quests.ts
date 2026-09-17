@@ -1,6 +1,7 @@
 import questData from "./data/quests_20260830.json" with { type: "json" };
 import enemyPoolData from "./data/quest_enemy_pools_20260830.json" with { type: "json" };
 import encounterData from "./data/quest_encounters_20260917.json" with { type: "json" };
+import { CANONICAL_CHARACTERS } from "./masters.ts";
 
 export type CanonicalQuestDifficulty = "EASY" | "NORMAL" | "HARD";
 
@@ -50,18 +51,22 @@ export function generateCanonicalQuestEncounter(
     const entries = enemyPoolData.entries.filter((entry) => entry.areaId === quest.townId.toUpperCase() && entry.difficulty === quest.difficulty);
     const base = enemyPoolData.contract.baseStats[quest.difficulty];
     const area = enemyPoolData.areaModifiers[quest.townId.toUpperCase() as keyof typeof enemyPoolData.areaModifiers];
+    const balanceOverride = (fixedEncounter as any).balanceOverride;
+    const scale = (value: number, basis: string) => Math.round(value * Number(balanceOverride?.[basis] ?? 10000) / 10000);
     const members = fixedEncounter.members.map((member) => {
       const entry = entries.find((candidate) => candidate.characterId === member.characterId);
-      if (!entry) throw new Error(`Canonical Quest fixed encounter references unknown enemy: ${member.characterId}`);
-      const growth = enemyPoolData.growthModifiers[entry.growthPattern as keyof typeof enemyPoolData.growthModifiers];
+      const character = CANONICAL_CHARACTERS.find((candidate) => candidate.character_id === member.characterId);
+      if (!character) throw new Error(`Canonical Quest fixed encounter references unknown enemy: ${member.characterId}`);
+      const growthPattern = entry?.growthPattern ?? character.growth_pattern;
+      const growth = enemyPoolData.growthModifiers[growthPattern as keyof typeof enemyPoolData.growthModifiers];
       return {
         ...member,
-        rarity: entry.rarity,
-        growthPattern: entry.growthPattern,
+        rarity: entry?.rarity ?? character.rarity,
+        growthPattern,
         stats: {
-          hp: Math.round(base.hp * area.hp * growth.hp),
-          atk: Math.round(base.atk * area.atk * growth.atk),
-          def: Math.round(base.def * area.def * growth.def),
+          hp: scale(Math.round(base.hp * area.hp * growth.hp), "hpBp"),
+          atk: scale(Math.round(base.atk * area.atk * growth.atk), "atkBp"),
+          def: scale(Math.round(base.def * area.def * growth.def), "defBp"),
           spd: Math.round((base.spdMin + 0.5 * (base.spdMax - base.spdMin)) * area.spd * growth.spd),
           luk: 0,
         },
