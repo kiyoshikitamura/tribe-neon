@@ -203,3 +203,11 @@
   text-align: center;
   pointer-events: none;
 }
+
+/* Keep the quest action above the long enemy / character lists. */
+.quest-v2-primary-action { display: grid; gap: 8px; min-width: 0; }
+.quest-v2-primary-action .outlaw-button { min-height: 48px; height: auto; padding: 12px 10px; }
+.quest-v2-dispatch-cta .outlaw-button-inner { white-space: normal; line-height: 1.5; font-size: 14px; letter-spacing: 0; }
+.quest-v2-primary-action .quest-v2-dispatch-cta:disabled { background: #414750; border-color: #78818d; color: #f3f5f7; opacity: 1; filter: none; text-shadow: none; }
+.quest-v2-primary-action .quest-v2-dispatch-cta:disabled .outlaw-button-inner { color: inherit; opacity: 1; }
+.quest-v2-primary-action .quest-v2-dispatch-reason { margin: 0; }
