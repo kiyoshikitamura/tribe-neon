@@ -52,6 +52,7 @@ import HomeResumeShell from "./components/HomeResumeShell";
 import BillingStatusDialog from "./components/BillingStatusDialog";
 import { LoginBonusModal } from "./components/LoginBonusModal";
 import RankingRewardNotificationController from "./components/ranking/RankingRewardNotificationController";
+import ShinjukuPromotionDialog from "./components/promotion/ShinjukuPromotionDialog";
 import PrepMissionEventDialogController from "./components/mission/PrepMissionEventDialogController";
 import { markHomeReloadStage, readHomeResumeSnapshot } from "./lib/homeResumePresentation";
 import { initializeAcquisitionAttribution } from "@/utils/acquisitionAttribution";
@@ -342,6 +343,7 @@ function AppContent() {
             {/* Layer 6: 最上位の共通ダイアログとブロッカー */}
             {!deferHomePrompts && <PrepMissionEventDialogController />}
             {!deferHomePrompts && <RankingRewardNotificationController />}
+            {!deferHomePrompts && <ShinjukuPromotionDialog />}
             {billingOrderId !== null && onboardingState?.gameplay_authorized && <BillingStatusDialog
               key={`${session.user.id}:${billingOrderId}`}
               orderId={billingOrderId}

@@ -1,0 +1,38 @@
+begin;
+create temp table promotion_test_results(test text,pass boolean);
+do $$
+declare u uuid; v uuid:=gen_random_uuid(); v2 uuid:=gen_random_uuid(); r jsonb; t jsonb;
+begin
+ insert into public.users(username) values('QA案内検証') returning id into u;
+ insert into auth.users(id) values(u);
+ perform set_config('request.jwt.claim.sub',u::text,true);
+ insert into promotion_test_results values('uncleared excluded',public.promotion_dialog('claim',v) is null);
+ insert into public.user_quest_first_clears(user_id,quest_id) values(u,'q_shinjuku_3');
+ r:=public.promotion_dialog('claim',v);
+ insert into promotion_test_results values('existing clear / pack priority',r->>'promotion_id'='beginner_pack');
+ insert into promotion_test_results values('second device excluded',public.promotion_dialog('claim',v2) is null);
+ perform public.promotion_dialog('release',v,(r->>'id')::uuid);
+ r:=public.promotion_dialog('claim',v2);
+ insert into promotion_test_results values('failed image retry',r->>'promotion_id'='beginner_pack');
+ perform public.promotion_dialog('view',v2,(r->>'id')::uuid);
+ perform public.promotion_dialog('view',v2,(r->>'id')::uuid);
+ perform public.promotion_dialog('later',v2,(r->>'id')::uuid);
+ insert into promotion_test_results values('same visit excluded',public.promotion_dialog('claim',v2) is null);
+ v:=gen_random_uuid();r:=public.promotion_dialog('claim',v);
+ insert into promotion_test_results values('next visit tribe',r->>'promotion_id'='tribe_join');
+ perform public.promotion_dialog('view',v,(r->>'id')::uuid);
+ perform public.promotion_dialog('primary_cta',v,(r->>'id')::uuid);
+ insert into promotion_test_results values('daily excluded',public.promotion_dialog('claim',gen_random_uuid()) is null);
+ insert into promotion_test_results select 'view records exactly two',count(*)=2 from public.user_promotion_presentations where user_id=u and viewed_at is not null;
+ update public.user_promotion_presentations set period_key=((clock_timestamp() at time zone 'Asia/Tokyo')::date-1)::text where user_id=u and promotion_id='tribe_join';
+ v:=gen_random_uuid();r:=public.promotion_dialog('claim',v);
+ insert into promotion_test_results values('next JST day eligible',r->>'promotion_id'='tribe_join');
+ perform public.promotion_dialog('release',v,(r->>'id')::uuid);
+ update public.users set guild_id=(select id from public.guilds limit 1) where id=u;
+ insert into promotion_test_results values('guild member excluded',public.promotion_dialog('claim',gen_random_uuid()) is null);
+ delete from public.user_promotion_presentations where user_id=u;
+ insert into public.user_shop_purchases(user_id,product_id,purchase_count) values(u,'beginner_pack_01',1);
+ insert into promotion_test_results values('purchased and guild excluded',public.promotion_dialog('claim',gen_random_uuid()) is null);
+end $$;
+select * from promotion_test_results;
+rollback;
