@@ -4,7 +4,7 @@ export type QuestGuideAction = 'ENTER_QUEST' | 'OPEN_LOADOUT' | 'APPLY_LOADOUT' 
 export type QuestStoryPhase = 'START' | 'CLEAR';
 export type QuestTownStoryData = { townId: string; speaker: string; image: string; lines: string[]; phase: QuestStoryPhase; presentation: { scale: number; positionX: number; positionY: number } };
 const story = (townId: string, speaker: string, image: string, start: string[], clear: string[]): QuestTownStoryData[] => {
-  const presentation = { scale: 1.12, positionX: 50, positionY: 10 };
+  const presentation = { scale: 1.12, positionX: 50, positionY: 0 };
   return [
   { townId, speaker, image, phase: 'START', lines: start, presentation }, { townId, speaker, image, phase: 'CLEAR', lines: clear, presentation },
   ];

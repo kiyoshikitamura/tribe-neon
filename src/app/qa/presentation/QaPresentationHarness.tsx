@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import "./GachaFontComparison.css";
 import { flushSync } from "react-dom";
 import BattleMatchupPresentation from "@/app/components/battle/BattleMatchupPresentation";
@@ -30,6 +30,7 @@ import { getCharacterBaseStats } from "@/utils/stats_calculator";
 import { getCharacterLocationBackground } from "@/utils/characterVisualAssets";
 import { waitForBrowserPaint } from "@/domain/presentation/browserPaint";
 import { CHARACTERS_MASTER, getCharacterTransparentImg } from "@/utils/game_constants";
+import { QUEST_TOWN_STORIES } from "@/domain/quest/progressionGuide";
 import { supabase } from "@/utils/supabase";
 import "@/app/components/SetupView.css";
 import "@/app/components/TutorialWorldIntro.css";
@@ -161,6 +162,19 @@ function SimpleFixture({ kind }: { kind: QaPresentationScenarioId }) {
   if (kind === "formation") return <section className="qa-card"><span>FORMATION</span><h2>現在の編成</h2><div className="qa-formation">{playerParty.map((entry) => <CharacterPresentation key={entry.id} src={getCharacterTransparentImg(findCharacter(entry.name).name)} alt={entry.name} variant="thumbnail" />)}</div><button>編成を保存</button></section>;
   if (kind === "quest-encounter") return <section className="qa-card"><span>QUEST ENCOUNTER</span><h2>新宿・初級</h2><p>敵 3人 / 推奨Lv.5 / EASY</p><button>新宿へ派遣する</button></section>;
   return null;
+}
+
+function TownStoryVisualFixture() {
+  const townId = typeof window === "undefined" ? "shinjuku" : new URLSearchParams(window.location.search).get("town") || "shinjuku";
+  const story = QUEST_TOWN_STORIES.find((entry) => entry.townId === townId && entry.phase === "START") || QUEST_TOWN_STORIES[0];
+  return <div className="tutorial-world quest-town-story-world" role="dialog" aria-label={`${story.speaker}の会話`} data-town-story-visual={story.townId}>
+    <div className="tutorial-world-content" style={{ backgroundImage: `url('/bg/bg_street_${story.townId}.jpg')` }}>
+      <div className="tutorial-world-shade" />
+      <div className="tutorial-world-ageha" aria-hidden="true" style={{ '--story-scale': story.presentation.scale, '--story-position-x': `${story.presentation.positionX}%`, '--story-position-y': `${story.presentation.positionY}%` } as CSSProperties}><CharacterPresentation src={story.image} alt="" variant="dialogue-bust" /></div>
+      <div className="tutorial-world-dialogue"><strong>{story.speaker}</strong><span>{story.lines[0]}</span></div>
+      <button className="semantic-cta semantic-cta--primary tutorial-world-next-cta">次へ</button>
+    </div>
+  </div>;
 }
 
 function SharedSkillFixture() {
@@ -646,6 +660,7 @@ function Scenario({ id }: { id: QaPresentationScenarioId }) {
   if (id === "gacha-standard-reveal" || id === "gacha-page") return <SimpleFixture kind={id} />;
   if (id === "name-input-error") return <NameRetryFixture />;
   if (id === "world-introduction") return <SimpleFixture kind={id} />;
+  if (id === "town-story") return <TownStoryVisualFixture />;
   return <BattleMatchupPresentation playerLeader={playerParty[0]} opponentLeader={enemyParty[0]} context={{ mode: "PATROL", opponentLabel: "新宿・初級", encounterLabel: "新宿・初級", opponentLeaderCharacterId: enemyParty[0].characterId, opponentLeaderName: enemyParty[0].name }} imageFor={(id) => { const master: any = CHARACTERS_MASTER.find((entry: any) => entry.id === id); return master ? getCharacterTransparentImg(master.name) : undefined; }} />;
 }
 
