@@ -3,7 +3,7 @@ export type QuestProgress = {
   battle_resolved?: boolean; started_at?: string; progressionKind?: string; progression_kind?: string; battle_result?: string | null;
 };
 export function questProgressState(patrol: QuestProgress): 'REWARD' | 'BATTLE' | 'WAITING' | 'UNKNOWN' {
-  if (patrol.status === 'COMPLETED') return 'UNKNOWN';
+  if (patrol.status === 'COMPLETED' || patrol.status === 'MIGRATED') return 'UNKNOWN';
   if (!Number.isFinite(patrol.secondsLeft)) return 'UNKNOWN';
   if (Number(patrol.secondsLeft) > 0) return 'WAITING';
   if ((patrol.progressionKind || patrol.progression_kind) === 'FIRST_CLEAR' && patrol.battle_result === 'DEFEAT') return 'BATTLE';
@@ -13,7 +13,7 @@ export function questProgressState(patrol: QuestProgress): 'REWARD' | 'BATTLE' |
 }
 export function sortQuestProgress<T extends QuestProgress>(patrols: T[]): T[] {
   const priority = { REWARD: 0, BATTLE: 1, WAITING: 2, UNKNOWN: 3 };
-  return patrols.filter(p => p.status !== 'COMPLETED').slice().sort((a, b) =>
+  return patrols.filter(p => p.status !== 'COMPLETED' && p.status !== 'MIGRATED').slice().sort((a, b) =>
     priority[questProgressState(a)] - priority[questProgressState(b)]
     || (Date.parse(a.started_at || '') || 0) - (Date.parse(b.started_at || '') || 0)
     || a.id.localeCompare(b.id));
