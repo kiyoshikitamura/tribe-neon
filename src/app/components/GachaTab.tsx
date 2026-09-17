@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useGame } from "../context/GameContext";
 import TutorialNavigator from "./TutorialNavigator";
 import CanonicalDialog from "./ui/CanonicalDialog";
+import GuideDialog from "./ui/GuideDialog";
 import { useImmediateActionLock } from "@/hooks/useImmediateActionLock";
 import { resolveAvailableGachaCreative, type CanonicalGachaId } from "@/domain/presentation/production_creatives";
 import "./GachaTab.css";
@@ -22,11 +23,12 @@ const CATEGORY_META: Readonly<Record<GachaCategory, { label: string; prefix: "CH
 };
 
 export default function GachaTab() {
-  const { handleScout, handleExchangePityReward, gachaMasters, gachaRarityRates, dailyFreeGachaFlags, dailyFreeGachaReady, refreshDailyFreeGachaAuthority, userItems, cash, diamonds, upgradeLoading, onboardingState, playSe, guideGachaCategory } = useGame();
+  const { handleScout, handleExchangePityReward, gachaMasters, gachaRarityRates, dailyFreeGachaFlags, dailyFreeGachaReady, refreshDailyFreeGachaAuthority, userItems, cash, diamonds, upgradeLoading, onboardingState, playSe, guideGachaCategory, questGuide, scoutAnimationState } = useGame();
   const isTutorialScout = onboardingState?.tutorial_step === "FREE_GACHA";
   const [activeCategory, setActiveCategory] = useState<GachaCategory>("CHARACTER");
   const [activeSurface, setActiveSurface] = useState<GachaSurface>("NORMAL");
   const [showRates, setShowRates] = useState(false);
+  const [dismissedGuide, setDismissedGuide] = useState<string | null>(null);
   const [freeRates, setFreeRates] = useState<DailyFreeRate[]>([]);
   const [freeRatesStatus, setFreeRatesStatus] = useState<"loading" | "ready" | "error">("loading");
   const [freeRatesRetry, setFreeRatesRetry] = useState(0);
@@ -114,9 +116,12 @@ export default function GachaTab() {
   return (
     <fieldset className="view-container relative gacha-view-root gacha-action-fieldset" disabled={pending} aria-busy={pending}>
       <div className="gacha-scroll-shell">
-        {guideGachaCategory && <p className="gacha-guide-target" role="status">
-          初心者ガイド：{guideGachaCategory === "SKILL" ? "スキル" : "装備"}の無料10連を引こう
-        </p>}
+        {guideGachaCategory && questGuide?.step !== 'GACHA' && dismissedGuide !== guideGachaCategory && <GuideDialog
+          key={guideGachaCategory} title="初心者ガイド" blocked={Boolean(scoutAnimationState) || pending || showRates}
+          message={`${guideGachaCategory === "SKILL" ? "スキル" : "装備"}の無料10連を引こう。`}
+          onClose={() => setDismissedGuide(guideGachaCategory)}
+          actions={[{ label: 'ガチャへ', semantic: 'primary', onClick: () => setDismissedGuide(guideGachaCategory) }]}
+        />}
         <section className="gacha-product-banner" aria-label={`${meta.label}${activeSurface === "NORMAL" ? "ノーマル" : "スペシャル"}ガチャ`}>
           {creative ? <Image src={creative.assetPath} alt="" width={creative.width} height={creative.height} unoptimized priority sizes="(max-width: 430px) 100vw, 430px" /> : <div className="gacha-banner-fallback">{meta.label}ガチャ</div>}
         </section>
