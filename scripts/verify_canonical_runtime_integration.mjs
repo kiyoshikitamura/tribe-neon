@@ -56,7 +56,7 @@ for (const file of runtimeFiles) {
 const stats = source("src/utils/stats_calculator.ts");
 assert.match(stats, /canonicalCharacterStats/);
 assert.match(stats, /canonicalEquipmentFlatStat/);
-assert.ok(!/random_options|rarity|growth|ap_/i.test(stats));
+assert.ok(!/random_options|rarity|ap_/i.test(stats));
 
 const clientAdapter = source("src/hooks/battle/deterministicBattleAdapter.ts");
 assert.match(clientAdapter, /CANONICAL_SKILLS/);
@@ -80,7 +80,7 @@ assert.match(characterUi, /CANONICAL_EQUIPMENT_VIEW/);
 assert.match(characterUi, /canonicalSkillSlotCount/);
 assert.ok(!/AP-1|synergy-ap-reduced|SKILL_COOLDOWN_BY_RARITY/.test(characterUi));
 const gachaUi = source("src/app/components/GachaTab.tsx");
-assert.match(gachaUi, /handleScout\(normalGachaId, count, currency\)/);
+assert.match(gachaUi, /handleScout\([^)]*normalGachaId, count, currency/);
 assert.match(gachaUi, /gachaMasters\?\.find/);
 
 const allProductionSources = [

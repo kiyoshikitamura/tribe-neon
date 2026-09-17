@@ -9,6 +9,7 @@ import {
 } from "./canonical_effects.ts";
 
 export type BattleTactic = "ATTACK_PRIORITY" | "HEAL_PRIORITY" | "SKILL_PRIORITY" | "BALANCED" | "WEAKNESS_FOCUS";
+export type BattleAiPolicy = "LEGACY" | "CONTEXTUAL_ENEMY";
 export type BattleTeam = "PLAYER" | "ENEMY";
 export type Alignment = "JUSTICE" | "EVIL" | "ORDER" | "CHAOS";
 export type ActivationType = "ACTIVE" | "BATTLE_START" | "ON_DAMAGE_TAKEN";
@@ -67,7 +68,7 @@ export interface BattleReplayEvent {
 }
 
 export interface DeterministicBattleInput {
-  seed: number; tactic: BattleTactic; enemyTactic?: BattleTactic; maxRounds: number; player: BattleUnitInput[]; enemy: BattleUnitInput[];
+  seed: number; tactic: BattleTactic; enemyTactic?: BattleTactic; aiPolicy?: BattleAiPolicy; maxRounds: number; player: BattleUnitInput[]; enemy: BattleUnitInput[];
 }
 
 type ModifierInstance = { type: "BUFF" | "DEBUFF"; stat: CanonicalStat; magnitudeBp: number; remainingDuration: number; appliedAction: number; applicationSequence: number };
@@ -198,6 +199,24 @@ function selectEnemy(actor: BattleUnit, enemies: BattleUnit[], tactic: BattleTac
 
 const selectAlly = (allies: BattleUnit[]) => alive(allies).slice().sort((a, b) => hpBp(a) - hpBp(b) || a.id.localeCompare(b.id))[0];
 
+function skillTargets(actor: BattleUnit, skill: ReturnType<typeof normalizeSkill>, allies: BattleUnit[], foes: BattleUnit[]): BattleUnit[] {
+  if (skill.target === "SELF") return [actor];
+  if (skill.target === "ALLY_ALL") return alive(allies);
+  if (skill.target === "ALLY_SINGLE") return [selectAlly(allies)];
+  if (skill.target === "ENEMY_ALL") return alive(foes);
+  return [selectEnemy(actor, foes, "ATTACK_PRIORITY")];
+}
+
+function hasUsefulSupport(skill: ReturnType<typeof normalizeSkill>, targets: BattleUnit[]): boolean {
+  return skill.effects.some((effect) => {
+    if (effect.type === "BUFF") return targets.some((target) => strongestModifier(target, effect.stat as CanonicalStat) < 10000 + Number(effect.magnitudeBp ?? 0));
+    if (effect.type === "DEBUFF") return targets.some((target) => strongestModifier(target, effect.stat as CanonicalStat) > 10000 - Number(effect.magnitudeBp ?? 0));
+    if (effect.type === "POISON" || effect.type === "BLEED") return true;
+    if (STATUS_TYPES.has(effect.type)) return targets.some((target) => !hasStatus(target, effect.type as CanonicalStatus));
+    return effect.type === "SHIELD" || effect.type === "COUNTER" || effect.type === "REGEN" || effect.type === "REMOVE_STATUS";
+  });
+}
+
 type SkillUtility = { useful: number; redundant: number; total: number; missingHpBp: number };
 
 function supportSkillUtility(actor: BattleUnit, allies: BattleUnit[], foes: BattleUnit[], tactic: BattleTactic, skill: NormalizedSkill): SkillUtility {
@@ -276,11 +295,29 @@ function attackPrioritySupportScore(actor: BattleUnit, allies: BattleUnit[], foe
   return score > basicAttackThreshold ? score : 0;
 }
 
-function chooseSkill(actor: BattleUnit, allies: BattleUnit[], foes: BattleUnit[], tactic: BattleTactic, round: number): ReturnType<typeof normalizeSkill> | undefined {
+function chooseSkill(actor: BattleUnit, allies: BattleUnit[], foes: BattleUnit[], tactic: BattleTactic, round: number, contextual: boolean): ReturnType<typeof normalizeSkill> | undefined {
   if (hasStatus(actor, "SILENCE")) return undefined;
   const active = (actor.skills as ReturnType<typeof normalizeSkill>[]).filter((skill) => skill.activationType === "ACTIVE" && round >= skill.availableFromRound && round >= (actor.nextAvailableRound[skill.id] ?? skill.availableFromRound));
   const damage = active.filter((skill) => skill.effects.some((effect) => effect.type === "DAMAGE"));
   const heal = active.filter((skill) => skill.effects.some((effect) => effect.type === "HEAL"));
+  if (!contextual) {
+    const strongestLegacy = (skills: typeof active) => skills.slice().sort((a, b) => Math.max(0, ...b.effects.map((effect) => Number(effect.powerBp ?? 0))) - Math.max(0, ...a.effects.map((effect) => Number(effect.powerBp ?? 0))) || a.id.localeCompare(b.id))[0];
+    const needsHealLegacy = hpBp(selectAlly(allies)) < 7000;
+    if (tactic === "HEAL_PRIORITY" && needsHealLegacy && heal.length) return strongestLegacy(heal);
+    if (tactic === "SKILL_PRIORITY") return strongestLegacy(active);
+    if ((tactic === "ATTACK_PRIORITY" || tactic === "WEAKNESS_FOCUS") && damage.length) return strongestLegacy(damage);
+    if (tactic === "BALANCED" && needsHealLegacy && heal.length) return strongestLegacy(heal);
+    return strongestLegacy(damage) ?? strongestLegacy(active);
+  }
+  const usefulHeal = heal.filter((skill) => {
+    const targets = skillTargets(actor, skill, allies, foes);
+    return targets.some((target) => hpBp(target) < 5000) || (skill.target === "ALLY_ALL" && targets.filter((target) => hpBp(target) < 7000).length >= 2);
+  });
+  const useful = active.filter((skill) => {
+    const targets = skillTargets(actor, skill, allies, foes);
+    const isPureSupport = !skill.effects.some((effect) => effect.type === "DAMAGE");
+    return !isPureSupport || hasUsefulSupport(skill, targets);
+  });
   const strongest = (skills: typeof active) => skills.slice().sort((a, b) => Math.max(0, ...b.effects.map((effect) => Number(effect.powerBp ?? 0))) - Math.max(0, ...a.effects.map((effect) => Number(effect.powerBp ?? 0))) || a.id.localeCompare(b.id))[0];
   const needsHeal = hpBp(selectAlly(allies)) < 7000;
   if (tactic === "HEAL_PRIORITY" && needsHeal && heal.length) return strongest(heal);
@@ -505,7 +542,8 @@ export function resolveCanonicalBattle(input: DeterministicBattleInput): Determi
       else {
         const allies = actor.team === "PLAYER" ? players : enemies; const foes = actor.team === "PLAYER" ? enemies : players;
         const activeTactic = actor.team === "ENEMY" ? (input.enemyTactic ?? input.tactic) : input.tactic;
-        const skill = chooseSkill(actor, allies, foes, activeTactic, round);
+        const contextualEnemy = actor.team === "ENEMY" && input.aiPolicy === "CONTEXTUAL_ENEMY";
+        const skill = chooseSkill(actor, allies, foes, activeTactic, round, contextualEnemy);
         const chosen = skill ?? normalizeSkill({ id: "BASIC_ATTACK", name: "通常攻撃", activationType: "ACTIVE", target: "ENEMY_SINGLE", cooldown: 0, availableFromRound: 1, effects: [`DAMAGE ${DAMAGE_CONTRACT.NORMAL_ATTACK_POWER_BP / 100}% ATK`] });
         const targets = actionTargets(actor, chosen, allies, foes, activeTactic);
         emit(events, round, "ACTION", { actorId: actor.id, skillId: chosen.id, target: chosen.target }); executeEffects(actor, targets, chosen, context);

@@ -8,7 +8,7 @@ import OutlawButton from '../ui/OutlawButton';
 import { hasPresentedDialog } from '../ui/dialogPresence';
 import './QuestRaidEncounter.css';
 const towns:Record<string,string>={shinjuku:'新宿',shibuya:'渋谷',ikebukuro:'池袋',roppongi:'六本木',akihabara:'秋葉原',kawasaki:'川崎',yokohama:'横浜'};
-const grades={beginner:'初級',intermediate:'中級',advanced:'上級'};
+const grades={beginner:'初級',intermediate:'中級',advanced:'上級',expert:'超級'};
 const paint=()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
 
 export default function QuestRaidEncounter() {

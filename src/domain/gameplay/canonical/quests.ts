@@ -1,5 +1,6 @@
 import questData from "./data/quests_20260830.json" with { type: "json" };
 import enemyPoolData from "./data/quest_enemy_pools_20260830.json" with { type: "json" };
+import encounterData from "./data/quest_encounters_20260917.json" with { type: "json" };
 
 export type CanonicalQuestDifficulty = "EASY" | "NORMAL" | "HARD";
 
@@ -18,7 +19,7 @@ const difficultyContracts = questData.difficultyContracts as Record<CanonicalQue
 export const CANONICAL_QUEST_TOWNS = questData.towns;
 export const CANONICAL_QUEST_REWARD_POOLS = questData.rewardPools;
 export const CANONICAL_QUEST_AUTHORITY_GAPS = questData.unresolvedContracts;
-export const CANONICAL_QUEST_ENCOUNTERS = [] as const;
+export const CANONICAL_QUEST_ENCOUNTERS = encounterData.encounters;
 export const CANONICAL_QUEST_ENEMY_POOLS = enemyPoolData;
 
 type QuestPoolEntry = (typeof enemyPoolData.entries)[number];
@@ -44,6 +45,31 @@ export function generateCanonicalQuestEncounter(
 ) {
   const quest = canonicalQuestById(questId);
   if (!quest) throw new Error(`Unknown Canonical Quest: ${questId}`);
+  const fixedEncounter = CANONICAL_QUEST_ENCOUNTERS.find((entry) => entry.townId === quest.townId && entry.difficulty === quest.difficulty);
+  if (fixedEncounter) {
+    const entries = enemyPoolData.entries.filter((entry) => entry.areaId === quest.townId.toUpperCase() && entry.difficulty === quest.difficulty);
+    const base = enemyPoolData.contract.baseStats[quest.difficulty];
+    const area = enemyPoolData.areaModifiers[quest.townId.toUpperCase() as keyof typeof enemyPoolData.areaModifiers];
+    const members = fixedEncounter.members.map((member) => {
+      const entry = entries.find((candidate) => candidate.characterId === member.characterId);
+      if (!entry) throw new Error(`Canonical Quest fixed encounter references unknown enemy: ${member.characterId}`);
+      const growth = enemyPoolData.growthModifiers[entry.growthPattern as keyof typeof enemyPoolData.growthModifiers];
+      return {
+        ...member,
+        rarity: entry.rarity,
+        growthPattern: entry.growthPattern,
+        stats: {
+          hp: Math.round(base.hp * area.hp * growth.hp),
+          atk: Math.round(base.atk * area.atk * growth.atk),
+          def: Math.round(base.def * area.def * growth.def),
+          spd: Math.round((base.spdMin + 0.5 * (base.spdMax - base.spdMin)) * area.spd * growth.spd),
+          luk: 0,
+        },
+      };
+    });
+    const signature = members.map((member) => member.characterId).sort().join("|");
+    return { ...fixedEncounter, questId: quest.questId, encounterId: `encounter_${quest.questId}_${signature}`, partySignature: signature, members };
+  }
   const build = () => {
     const entries = enemyPoolData.entries.filter((entry) => entry.areaId === quest.townId.toUpperCase() && entry.difficulty === quest.difficulty);
     const used = new Set<string>();

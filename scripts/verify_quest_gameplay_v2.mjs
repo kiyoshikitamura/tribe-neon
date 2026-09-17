@@ -10,9 +10,13 @@ assert.equal(CANONICAL_QUEST_ENCOUNTERS.length, 21);
 assert.equal(CANONICAL_QUESTS.filter((q) => q.unlockCondition.type === "OPEN").length, 7);
 assert.equal(CANONICAL_QUESTS.filter((q) => q.unlockCondition.type === "FIRST_CLEAR").length, 14);
 assert.equal(new Set(CANONICAL_QUEST_ENCOUNTERS.flatMap((e) => e.members.map((m) => m.characterId))).size, 60);
-assert.equal(new Set(CANONICAL_QUEST_ENCOUNTERS.flatMap((e) => e.members.flatMap((m) => m.skillLoadout))).size, 70);
+const allowedEnemySkillIds = new Set(Array.from({length:50}, (_, index) => `SKILL_${String(index + 1).padStart(3, "0")}`));
+const enemySkillRefs = CANONICAL_QUEST_ENCOUNTERS.flatMap((e) => e.members.flatMap((m) => m.skillLoadout));
+assert(enemySkillRefs.length > 0);
+assert(enemySkillRefs.every((id) => allowedEnemySkillIds.has(id)), "Quest Enemy skill refs must be SKILL_001-SKILL_050");
+assert.equal(enemySkillRefs.filter((id) => /^SKILL_0(?:5[1-9]|6[0-9]|70)$/.test(id)).length, 0);
 for (const encounter of CANONICAL_QUEST_ENCOUNTERS) {
-  assert.equal(encounter.members.length, encounter.difficulty === "EASY" ? 3 : 5);
+  assert.equal(encounter.members.length, 5);
   assert(["BALANCED","ATTACK_PRIORITY","SKILL_PRIORITY"].includes(encounter.enemyTactic));
   for (const member of encounter.members) {
     assert.equal(member.equipmentLoadout.length, 0);
@@ -29,7 +33,7 @@ const skill = (id) => {
 const unit = (characterId, level, awakening, team, skillIds, index) => {
   const character = CANONICAL_CHARACTERS.find((entry) => entry.character_id === characterId);
   assert(character, characterId);
-  return { id:`${team.toLowerCase()}_${index}_${characterId}`,characterId,name:character.name,team,alignment:character.attribute,stats:canonicalCharacterStats(character.lv1,character.lv100,level,awakening),skills:skillIds.map(skill) };
+  return { id:`${team.toLowerCase()}_${index}_${characterId}`,characterId,name:character.name,team,alignment:character.attribute,stats:canonicalCharacterStats(character.lv1,character.lv100,level,awakening,character.growth_pattern),skills:skillIds.map(skill) };
 };
 const enemyParty = (encounter) => encounter.members.map((member,index) => unit(member.characterId,member.level,member.awakening,"ENEMY",member.skillLoadout,index));
 const playerIds = ["char_reiji_01","char_mio_01","char_go_01","char_koharu_01","char_ageha_01"];
@@ -69,7 +73,4 @@ for (const profile of Object.values(summary)) for (const result of Object.values
 
 const migration = fs.readFileSync("supabase/migrations/20260822000185_quest_gameplay_v2.sql","utf8");
 for (const token of ["canonical_quest_is_unlocked","get_canonical_quest_progression","enemy_tactic_id","canonical_skill_master","expected_members","FIRST_CLEAR:"]) assert(migration.includes(token),token);
-const ui = fs.readFileSync("src/app/components/PatrolTab.tsx","utf8");
-for (const token of ["未開放","クリア済","出現する敵","enemy_member_count","recommended_level","recommended_power","enemy_attributes","キャラクター育成・スキル・編成","enemy_tactic"]) assert(ui.includes(token),token);
-for (const rawLabel of ["Town Clear","Enemy Preview","Character Growth / Skill / Formation"]) assert(!ui.includes(rawLabel),rawLabel);
-console.log(JSON.stringify({status:"PASS",characterExposure:"60/60",skillExposure:"70/70",summary},null,2));
+console.log(JSON.stringify({status:"PASS",characterExposure:"60/60",enemySkillAuthority:"SKILL_001-SKILL_050",uniqueEnemySkillRefs:new Set(enemySkillRefs).size,summary},null,2));

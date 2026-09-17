@@ -1,0 +1,693 @@
+{
+  "version": "2026-09-17",
+  "authority": "GAME03_Quest_Raid_Skill_Battle_Master_20260917.md",
+  "profiles": [
+    {
+      "profileId": "raid_shinjuku_beginner",
+      "townId": "shinjuku",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_008"
+        ],
+        [
+          "SKILL_011"
+        ],
+        [
+          "SKILL_019"
+        ],
+        [
+          "SKILL_012"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_shinjuku_intermediate",
+      "townId": "shinjuku",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_009",
+          "SKILL_011"
+        ],
+        [
+          "SKILL_017",
+          "SKILL_019"
+        ],
+        [
+          "SKILL_011"
+        ],
+        [
+          "SKILL_012"
+        ],
+        [
+          "SKILL_035"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_shinjuku_advanced",
+      "townId": "shinjuku",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_026",
+          "SKILL_021"
+        ],
+        [
+          "SKILL_035",
+          "SKILL_019"
+        ],
+        [
+          "SKILL_027"
+        ],
+        [
+          "SKILL_037"
+        ],
+        [
+          "SKILL_041",
+          "SKILL_036"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_shinjuku_expert",
+      "townId": "shinjuku",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_041",
+          "SKILL_036"
+        ],
+        [
+          "SKILL_026",
+          "SKILL_044"
+        ],
+        [
+          "SKILL_035",
+          "SKILL_042"
+        ],
+        [
+          "SKILL_043"
+        ],
+        [
+          "SKILL_025",
+          "SKILL_050"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    },
+    {
+      "profileId": "raid_shibuya_beginner",
+      "townId": "shibuya",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_004"
+        ],
+        [
+          "SKILL_008"
+        ],
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_019"
+        ],
+        [
+          "SKILL_012"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_shibuya_intermediate",
+      "townId": "shibuya",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_020",
+          "SKILL_019"
+        ],
+        [
+          "SKILL_033",
+          "SKILL_008"
+        ],
+        [
+          "SKILL_030"
+        ],
+        [
+          "SKILL_011"
+        ],
+        [
+          "SKILL_034"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_shibuya_advanced",
+      "townId": "shibuya",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_033",
+          "SKILL_042"
+        ],
+        [
+          "SKILL_020",
+          "SKILL_037"
+        ],
+        [
+          "SKILL_030"
+        ],
+        [
+          "SKILL_049"
+        ],
+        [
+          "SKILL_021"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_shibuya_expert",
+      "townId": "shibuya",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_033",
+          "SKILL_042"
+        ],
+        [
+          "SKILL_020",
+          "SKILL_036"
+        ],
+        [
+          "SKILL_030",
+          "SKILL_034"
+        ],
+        [
+          "SKILL_049",
+          "SKILL_037"
+        ],
+        [
+          "SKILL_025",
+          "SKILL_021"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    },
+    {
+      "profileId": "raid_ikebukuro_beginner",
+      "townId": "ikebukuro",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_006"
+        ],
+        [
+          "SKILL_002"
+        ],
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_008"
+        ],
+        [
+          "SKILL_003"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_ikebukuro_intermediate",
+      "townId": "ikebukuro",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_024"
+        ],
+        [
+          "SKILL_016"
+        ],
+        [
+          "SKILL_023"
+        ],
+        [
+          "SKILL_028"
+        ],
+        [
+          "SKILL_006",
+          "SKILL_019"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_ikebukuro_advanced",
+      "townId": "ikebukuro",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_047"
+        ],
+        [
+          "SKILL_024"
+        ],
+        [
+          "SKILL_039"
+        ],
+        [
+          "SKILL_038"
+        ],
+        [
+          "SKILL_028",
+          "SKILL_050"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_ikebukuro_expert",
+      "townId": "ikebukuro",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_047",
+          "SKILL_039"
+        ],
+        [
+          "SKILL_024",
+          "SKILL_038"
+        ],
+        [
+          "SKILL_023"
+        ],
+        [
+          "SKILL_015",
+          "SKILL_050"
+        ],
+        [
+          "SKILL_025",
+          "SKILL_028"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    },
+    {
+      "profileId": "raid_roppongi_beginner",
+      "townId": "roppongi",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_009"
+        ],
+        [
+          "SKILL_007"
+        ],
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_003"
+        ],
+        [
+          "SKILL_011"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_roppongi_intermediate",
+      "townId": "roppongi",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_026"
+        ],
+        [
+          "SKILL_025"
+        ],
+        [
+          "SKILL_015"
+        ],
+        [
+          "SKILL_023"
+        ],
+        [
+          "SKILL_019"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_roppongi_advanced",
+      "townId": "roppongi",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_041"
+        ],
+        [
+          "SKILL_025"
+        ],
+        [
+          "SKILL_015",
+          "SKILL_042"
+        ],
+        [
+          "SKILL_039"
+        ],
+        [
+          "SKILL_037"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_roppongi_expert",
+      "townId": "roppongi",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_041",
+          "SKILL_042"
+        ],
+        [
+          "SKILL_025",
+          "SKILL_043"
+        ],
+        [
+          "SKILL_015",
+          "SKILL_050"
+        ],
+        [
+          "SKILL_039"
+        ],
+        [
+          "SKILL_047",
+          "SKILL_037"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    },
+    {
+      "profileId": "raid_akihabara_beginner",
+      "townId": "akihabara",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_005"
+        ],
+        [
+          "SKILL_010"
+        ],
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_018"
+        ],
+        [
+          "SKILL_008"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_akihabara_intermediate",
+      "townId": "akihabara",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_032"
+        ],
+        [
+          "SKILL_034"
+        ],
+        [
+          "SKILL_030"
+        ],
+        [
+          "SKILL_018"
+        ],
+        [
+          "SKILL_029"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_akihabara_advanced",
+      "townId": "akihabara",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_040"
+        ],
+        [
+          "SKILL_049"
+        ],
+        [
+          "SKILL_030"
+        ],
+        [
+          "SKILL_046"
+        ],
+        [
+          "SKILL_018",
+          "SKILL_042"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_akihabara_expert",
+      "townId": "akihabara",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_040",
+          "SKILL_046"
+        ],
+        [
+          "SKILL_049"
+        ],
+        [
+          "SKILL_030",
+          "SKILL_042"
+        ],
+        [
+          "SKILL_018",
+          "SKILL_032"
+        ],
+        [
+          "SKILL_025",
+          "SKILL_039"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    },
+    {
+      "profileId": "raid_kawasaki_beginner",
+      "townId": "kawasaki",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_009"
+        ],
+        [
+          "SKILL_011"
+        ],
+        [
+          "SKILL_019"
+        ],
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_012"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_kawasaki_intermediate",
+      "townId": "kawasaki",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_026"
+        ],
+        [
+          "SKILL_035",
+          "SKILL_021"
+        ],
+        [
+          "SKILL_027"
+        ],
+        [
+          "SKILL_022"
+        ],
+        [
+          "SKILL_019"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_kawasaki_advanced",
+      "townId": "kawasaki",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_041"
+        ],
+        [
+          "SKILL_036"
+        ],
+        [
+          "SKILL_044"
+        ],
+        [
+          "SKILL_043"
+        ],
+        [
+          "SKILL_042"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_kawasaki_expert",
+      "townId": "kawasaki",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_041",
+          "SKILL_036"
+        ],
+        [
+          "SKILL_035",
+          "SKILL_044"
+        ],
+        [
+          "SKILL_042",
+          "SKILL_021"
+        ],
+        [
+          "SKILL_043"
+        ],
+        [
+          "SKILL_025",
+          "SKILL_037"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    },
+    {
+      "profileId": "raid_yokohama_beginner",
+      "townId": "yokohama",
+      "difficulty": "BEGINNER",
+      "skillLoadout": [
+        [
+          "SKILL_006"
+        ],
+        [
+          "SKILL_003"
+        ],
+        [
+          "SKILL_001"
+        ],
+        [
+          "SKILL_008"
+        ],
+        [
+          "SKILL_013"
+        ]
+      ],
+      "encounterTier": "BEGINNER"
+    },
+    {
+      "profileId": "raid_yokohama_intermediate",
+      "townId": "yokohama",
+      "difficulty": "INTERMEDIATE",
+      "skillLoadout": [
+        [
+          "SKILL_024"
+        ],
+        [
+          "SKILL_023"
+        ],
+        [
+          "SKILL_029"
+        ],
+        [
+          "SKILL_028"
+        ],
+        [
+          "SKILL_016"
+        ]
+      ],
+      "encounterTier": "INTERMEDIATE"
+    },
+    {
+      "profileId": "raid_yokohama_advanced",
+      "townId": "yokohama",
+      "difficulty": "ADVANCED",
+      "skillLoadout": [
+        [
+          "SKILL_047"
+        ],
+        [
+          "SKILL_039"
+        ],
+        [
+          "SKILL_048"
+        ],
+        [
+          "SKILL_025"
+        ],
+        [
+          "SKILL_050"
+        ]
+      ],
+      "encounterTier": "ADVANCED"
+    },
+    {
+      "profileId": "raid_yokohama_expert",
+      "townId": "yokohama",
+      "difficulty": "EXPERT",
+      "skillLoadout": [
+        [
+          "SKILL_047",
+          "SKILL_039"
+        ],
+        [
+          "SKILL_024",
+          "SKILL_048"
+        ],
+        [
+          "SKILL_025"
+        ],
+        [
+          "SKILL_015",
+          "SKILL_050"
+        ],
+        [
+          "SKILL_041",
+          "SKILL_037"
+        ]
+      ],
+      "encounterTier": "EXPERT"
+    }
+  ]
+}
