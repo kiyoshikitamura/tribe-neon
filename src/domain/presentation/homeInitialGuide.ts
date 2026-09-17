@@ -62,6 +62,7 @@ export function describeHomeActivity(type?: string | null): string {
     case "RAID_BOSS_DEFEATED": return "レイドボスを撃破";
     case "GUILD_CREATED": return "TRIBEを結成";
     case "POWER_RANK_1": return "総戦力ランキング1位に到達";
+    case "PVP_DAILY_RANK_1": return "デイリーバトルランキング1位に到達";
     case "SSR_CHARACTER": case "SSR_SKILL": case "SSR_EQUIPMENT": return "SSRを獲得";
     default: return "アクティビティを更新";
   }

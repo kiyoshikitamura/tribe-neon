@@ -108,6 +108,7 @@ type HomeBanner = {
 };
 
 function activityDescription(activity: HomeActivity) {
+  if (activity.activity_type === "SYSTEM_NEWS") return String((activity.display_payload as { title?: string } | undefined)?.title || "運営からのお知らせ");
   return describeHomeActivity(activity.activity_type);
 }
 
@@ -129,6 +130,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     unreadMissionsCount,
     guildChats,
     chatUnreadCounts,
+    setShowInboxPanel, setInboxPanelTab,
     setShowMissionPanel,
     setMissionTab,
     setShowLoginBonusModal,
@@ -552,7 +554,9 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const latestRescueId = latestActivity ? getRaidRescueActivityId(latestActivity) : null;
 
   const handleLatestActivityTap = () => {
-    if (latestRescueId) {
+    if (latestActivity?.activity_type === "SYSTEM_NEWS") {
+      setInboxPanelTab("news"); setShowInboxPanel(true);
+    } else if (latestRescueId) {
       openRaidRescue(latestRescueId);
     } else {
       setShowActivityLog(true);
@@ -641,6 +645,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
             />
             <div className="mypage-activity-log-detail">
               <strong>{activityDescription(activity)}</strong>
+              {activity.activity_type === "SYSTEM_NEWS" && <button type="button" onClick={() => { setShowActivityLog(false); setInboxPanelTab("news"); setShowInboxPanel(true); }}>お知らせを見る</button>}
               <RaidRescueLink rescueId={getRaidRescueActivityId(activity)} entry={rescueCards.byId.get(getRaidRescueActivityId(activity) ?? "")} status={rescueCards.statusFor(getRaidRescueActivityId(activity))} source="activity" onOpen={() => setShowActivityLog(false)} />
               {activity.created_at && <time dateTime={activity.created_at}>{activityTimeLabel(activity.created_at)}</time>}
             </div>
