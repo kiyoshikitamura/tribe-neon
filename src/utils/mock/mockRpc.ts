@@ -122,7 +122,7 @@ const missionClaimKey = (userId: string, missionId: string, cycleDate?: string |
 const canonicalQuestEnemySnapshot = (questId: string, encounterOverride?: ReturnType<typeof generateCanonicalQuestEncounter>) => {
   const encounter = encounterOverride ?? (canonicalQuestById(questId) ? generateCanonicalQuestEncounter(questId) : null);
   if (!encounter) return null;
-  return encounter.members.map((member) => {
+  const members = encounter.members.map((member) => {
     const character = CANONICAL_CHARACTERS.find((entry) => entry.character_id === member.characterId);
     if (!character) throw new Error(`Canonical Quest encounter references unknown Character: ${member.characterId}`);
     const stats = member.stats;
@@ -144,6 +144,25 @@ const canonicalQuestEnemySnapshot = (questId: string, encounterOverride?: Return
       }),
     };
   });
+  if (questId !== "q_shinjuku_2") return members;
+
+  // The q_shinjuku_2 Preview contract is a 60,000 Enemy Power snapshot.
+  // Keep SPD/LUK and the fixed Skill Loadout unchanged; only the three power
+  // contributing stats are proportionally normalized for this one Stage.
+  const power = members.reduce((sum, member) => sum + member.stats.hp + member.stats.atk + member.stats.def, 0);
+  const scaled = members.map((member) => ({
+    ...member,
+    stats: {
+      ...member.stats,
+      hp: Math.max(10, Math.round(member.stats.hp * 60000 / power / 10) * 10),
+      atk: Math.max(10, Math.round(member.stats.atk * 60000 / power / 10) * 10),
+      def: Math.max(10, Math.round(member.stats.def * 60000 / power / 10) * 10),
+    },
+  }));
+  const scaledPower = scaled.reduce((sum, member) => sum + member.stats.hp + member.stats.atk + member.stats.def, 0);
+  const last = scaled[scaled.length - 1];
+  last.stats.def = Math.max(10, last.stats.def + (60000 - scaledPower));
+  return scaled;
 };
 
 const achievedFunnelTriggers = (client: any, userId: string): Set<string> => new Set(
