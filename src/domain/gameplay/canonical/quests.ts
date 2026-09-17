@@ -127,7 +127,7 @@ export const CANONICAL_QUESTS = questData.quests.map((quest) => {
     ...contract,
     rewardPoolId: quest.rewardPoolId,
     firstClearRewardPoolId: null,
-    recommendedPower: quest.questId === "q_shinjuku_2" ? 60000 : null,
+    recommendedPower: quest.questId === "q_shinjuku_2" ? 50000 : null,
     enemyPoolKey: quest.enemyPoolKey,
     unlockCondition: quest.unlockCondition,
     isProductionEnabled: quest.isProductionEnabled,

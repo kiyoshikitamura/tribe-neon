@@ -1830,7 +1830,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             enemy_member_count: progression?.enemy_member_count ?? 0,
             enemy_members: progression?.enemy_members ?? [],
             recommended_level: progression?.recommended_level ?? null,
-            recommended_power: quest.id === "q_shinjuku_2" ? 60000 : progression?.recommended_power ?? canonicalQuestById(quest.id)?.recommendedPower ?? null,
+            recommended_power: progression?.recommended_power ?? canonicalQuestById(quest.id)?.recommendedPower ?? null,
             enemy_attributes: progression?.enemy_attributes ?? [],
           };
         }));
