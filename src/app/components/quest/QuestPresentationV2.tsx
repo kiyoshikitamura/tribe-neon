@@ -60,6 +60,23 @@ export default function QuestPresentationV2() {
   const activeCourse = (game.patrolCourses || []).find((course: any) => course.id === game.selectedCourse);
   const activeCoursePatrol = activePatrols.find((patrol: any) => patrol.courseId === activeCourse?.id);
   const enemyCandidates = CANONICAL_QUEST_ENEMY_POOLS.entries.filter((entry) => entry.areaId === String(activeCourse?.town_id || "").toUpperCase() && entry.difficulty === activeCourse?.level_type).map((entry) => CHARACTERS_MASTER.find((master) => master.id === entry.characterId)).filter(Boolean);
+  const energyShortfall = Boolean(activeCourse && Number(game.vitality) < Number(activeCourse.cost_vitality));
+  const energyDrinkCount = Math.max(0, Number(game.energyDrinks || 0));
+  const confirmEnergyRecovery = () => {
+    const owner = userRef.current;
+    if (!owner || game.itemUseLoading || energyDrinkCount < 1) return;
+    game.setConfirmDialogConfig({
+      isOpen: true, title: "エナジー回復", presentation: "canonical",
+      message: `エナジードリンクを1個使って、エナジーを50回復します。\n所持数：${energyDrinkCount}個`,
+      confirmText: "1個使って回復", cancelText: "キャンセル",
+      onCancel: () => game.setConfirmDialogConfig(null),
+      onConfirm: async () => {
+        if (!mountedRef.current || userRef.current !== owner || game.itemUseLoading) return;
+        game.setConfirmDialogConfig(null);
+        await game.handleUseItem("ENERGY_DRINK");
+      },
+    });
+  };
   const townName = TOWNS.find(([id]) => id === game.selectedTown)?.[1] || "街";
   const bgImage = `/bg/bg_street_${game.selectedTown}.jpg`;
   const detailCourse = (game.patrolCourses || []).find((course: any) => course.id === selectedPatrol?.courseId);
@@ -204,7 +221,15 @@ export default function QuestPresentationV2() {
       </>}
 
       {activeCourse && selectionStep === "REVIEW" && <div className="quest-v2-primary-action">{activeCoursePatrol && !activeCourse.is_first_cleared ? <OutlawButton variant="primary" fullWidth onClick={() => openPatrol(activeCoursePatrol.id)}>進行状況を確認</OutlawButton> : activeCourse.boss_ready && activeCourse.boss_patrol_id ? <OutlawButton variant="primary" fullWidth onClick={() => openPatrol(activeCourse.boss_patrol_id)}>ボスに再挑戦</OutlawButton> : <OutlawButton variant="primary" fullWidth disabled={occupiedCount >= 5 || activeCourse.is_unlocked === false || (!activeCourse.is_first_cleared && activePatrols.some((patrol: any) => patrol.courseId === activeCourse.id))} onClick={() => setSelectionStep("CHARACTER")}>キャラクターを選ぶ</OutlawButton>}</div>}
-      {activeCourse && selectionStep === "CHARACTER" && <div className="quest-v2-primary-action"><OutlawButton className="quest-v2-dispatch-cta" variant="primary" fullWidth disabled={game.dispatchLoading || activeCourse.is_unlocked === false || !game.selectedCourse || !game.selectedPatrolMember || occupiedCount >= 5 || occupiedPatrols.some((p: any) => p.characterId === game.selectedPatrolMember) || Number(game.vitality) < Number(activeCourse.cost_vitality)} isLoading={game.dispatchLoading || pendingAction === "DISPATCH"} loadingLabel="探索準備中…" onClick={() => { setPendingAction("DISPATCH"); void guarded(async () => { const owner = userRef.current; const patrolId = await game.handleStartPatrol(); if (typeof patrolId === "string" && mountedRef.current && userRef.current === owner) { setSelectedPatrolId(patrolId); setShowSelection(false); } }); }}>{game.selectedPatrolMember ? `${townName}を探索する` : "探索するキャラクターを選んでください"}</OutlawButton>{(occupiedCount >= 5 || Number(game.vitality) < Number(activeCourse.cost_vitality)) && <p className="quest-v2-dispatch-reason" role="status">{occupiedCount >= 5 ? "探索枠がいっぱいです" : "エナジーが不足しています"}</p>}</div>}
+      {activeCourse && selectionStep === "CHARACTER" && <div className="quest-v2-primary-action"><OutlawButton className="quest-v2-dispatch-cta" variant="primary" fullWidth disabled={game.dispatchLoading || game.itemUseLoading || activeCourse.is_unlocked === false || !game.selectedCourse || !game.selectedPatrolMember || occupiedCount >= 5 || occupiedPatrols.some((p: any) => p.characterId === game.selectedPatrolMember) || Number(game.vitality) < Number(activeCourse.cost_vitality)} isLoading={game.dispatchLoading || pendingAction === "DISPATCH"} loadingLabel="探索準備中…" onClick={() => { setPendingAction("DISPATCH"); void guarded(async () => { const owner = userRef.current; const patrolId = await game.handleStartPatrol(); if (typeof patrolId === "string" && mountedRef.current && userRef.current === owner) { setSelectedPatrolId(patrolId); setShowSelection(false); } }); }}>{game.selectedPatrolMember ? `${townName}を探索する` : "探索するキャラクターを選んでください"}</OutlawButton>{occupiedCount >= 5 && <p className="quest-v2-dispatch-reason" role="status">探索枠がいっぱいです</p>}</div>}
+
+      {activeCourse && selectionStep !== "DESTINATION" && energyShortfall && !activeCoursePatrol && <section className="quest-v2-energy-recovery" aria-label="エナジー回復">
+        <p>エナジーが不足しています（現在 {Number(game.vitality)} / 必要 {Number(activeCourse.cost_vitality)}）。</p>
+        {energyDrinkCount > 0 ? <>
+          <OutlawButton variant="secondary" fullWidth disabled={game.dispatchLoading || game.itemUseLoading} isLoading={game.itemUseLoading} loadingLabel="回復中…" onClick={confirmEnergyRecovery}>エナジードリンクで50回復</OutlawButton>
+          <small>所持数：{energyDrinkCount}個。回復後、この画面から探索を開始できます。</small>
+        </> : <small>エナジードリンクの所持数は0個です。エナジーの自然回復をお待ちください。</small>}
+      </section>}
 
       {activeCourse && selectionStep !== "DESTINATION" && <section className="quest-v2-brief">
         <header><strong>{activeCourse.name} / {difficulty(activeCourse.level_type)}</strong>{selectionStep === "CHARACTER" && <button className="quest-v2-back" onClick={() => setSelectionStep("REVIEW")}>戻る</button>}</header>
@@ -220,7 +245,7 @@ export default function QuestPresentationV2() {
         {selectionStep === "CHARACTER" && <><h3 className="quest-v2-section-title">探索キャラクター</h3>
         <p className="quest-v2-hometown-note">地元一致：CASH +10% / ドロップ率 +2%ポイント</p>
         <div className="quest-v2-character-grid">{(game.userCharactersDbList || []).map((record: any) => { const master = CHARACTERS_MASTER.find((entry: any) => entry.id === record.character_id); if (!master) return null; const patrol = occupiedPatrols.find((entry: any) => entry.characterId === record.character_id); const deployed = Boolean(patrol); return <button key={record.id} className={`${game.selectedPatrolMember === record.character_id && !deployed ? "selected" : ""} ${deployed ? "deployed" : ""}`} aria-label={deployed ? `${master.jpName} 探索中のクエストを確認` : `${master.jpName} Lv.${Number(record.level || 1)}`} onClick={() => deployed ? openPatrol(patrol.id) : game.togglePatrolMemberSelection(record.character_id)}><span className="quest-v2-character-visual"><CharacterPresentation src={master.img?.startsWith("/characters/") ? master.img : `/characters/${String(master.img || "").replace(/^\//, "")}`} alt={master.jpName} variant="thumbnail" rarity={master.rarity} backgroundSrc={getCharacterLocationBackground(master.homeTown)} frameKind="character" rarityBadge attribute={master.alignment} attributeBadge metadata={false} />{deployed && <b>探索中</b>}</span><strong>{master.jpName}</strong><span>{deployed ? "進行状況を確認" : `Lv.${Number(record.level || 1)}`}</span>{isCharacterHometown(master.homeTown, activeCourse.town_id) && <em>地元一致</em>}</button>; })}</div>
-        
+
         </>}
       </section>}</>}
 

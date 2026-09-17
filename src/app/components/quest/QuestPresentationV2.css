@@ -211,3 +211,8 @@
 .quest-v2-primary-action .quest-v2-dispatch-cta:disabled { background: #414750; border-color: #78818d; color: #f3f5f7; opacity: 1; filter: none; text-shadow: none; }
 .quest-v2-primary-action .quest-v2-dispatch-cta:disabled .outlaw-button-inner { color: inherit; opacity: 1; }
 .quest-v2-primary-action .quest-v2-dispatch-reason { margin: 0; }
+
+.quest-v2-energy-recovery { display: grid; gap: 8px; padding: 12px; border: 1px solid #8c7949; border-radius: 7px; background: #191b20; }
+.quest-v2-energy-recovery p { margin: 0; color: #f1d594; font-size: 13px; line-height: 1.6; }
+.quest-v2-energy-recovery small { color: #d6dce3; font-size: 12px; line-height: 1.6; }
+.quest-v2-energy-recovery .outlaw-button-inner { white-space: normal; }
