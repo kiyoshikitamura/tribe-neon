@@ -52,7 +52,7 @@ export function generateCanonicalQuestEncounter(
     const base = enemyPoolData.contract.baseStats[quest.difficulty];
     const area = enemyPoolData.areaModifiers[quest.townId.toUpperCase() as keyof typeof enemyPoolData.areaModifiers];
     const balanceOverride = (fixedEncounter as any).balanceOverride;
-    const scale = (value: number, basis: string) => Math.round(value * Number(balanceOverride?.[basis] ?? 10000) / 10000);
+    const scale = (value: number, basis: string) => Math.round((value * Number(balanceOverride?.[basis] ?? 10000) / 10000) / 10) * 10;
     const members = fixedEncounter.members.map((member) => {
       const entry = entries.find((candidate) => candidate.characterId === member.characterId);
       const character = CANONICAL_CHARACTERS.find((candidate) => candidate.character_id === member.characterId);

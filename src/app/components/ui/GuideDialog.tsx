@@ -3,7 +3,6 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import CanonicalDialog, { type CanonicalDialogAction } from './CanonicalDialog';
 import { hasPresentedDialog, usePresentedDialog } from './dialogPresence';
-import TutorialNavigator from '../TutorialNavigator';
 
 /** Beginners' prompts share one presentation and wait for receipts/animations. */
 export default function GuideDialog({ title, message, children, actions, onClose, blocked = false }: {
@@ -24,7 +23,7 @@ export default function GuideDialog({ title, message, children, actions, onClose
   }, [admitted, blocked, presented]);
   if (blocked || !admitted) return null;
   return createPortal(<CanonicalDialog title={title} onClose={onClose} actions={actions}>
-    <TutorialNavigator message={message} />
+    <div className="guide-dialog-message">{message}</div>
     {children}
   </CanonicalDialog>, document.body);
 }

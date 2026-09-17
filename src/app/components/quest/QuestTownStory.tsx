@@ -26,7 +26,7 @@ export default function QuestTownStory({ townId, phase = 'START' }: { townId: st
     window.localStorage.setItem(`tribe-quest-story:${owner}`, JSON.stringify(nextSeen));
     try { await game.markQuestStorySeen(story.townId); } catch { /* local event receipt remains available */ }
   };
-  return <div className="tutorial-world" role="dialog" aria-modal="true" aria-label={`${story.speaker}の会話`}>
+  return <div className="tutorial-world quest-town-story-world" role="dialog" aria-modal="true" aria-label={`${story.speaker}の会話`}>
     <div className="tutorial-world-content" style={{ backgroundImage: `url('/bg/bg_street_${story.townId}.jpg')` }}>
       <div className="tutorial-world-shade" />
       <div className="tutorial-world-ageha" aria-hidden="true"><CharacterPresentation src={story.image} alt="" variant="dialogue-bust" /></div>

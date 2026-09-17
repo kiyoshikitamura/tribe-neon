@@ -56,9 +56,8 @@ export default function QuestProgressionGuide() {
       message={category ? `${label}の無料10連を引こう。獲得した装備とスキルで戦力を整えましょう。` : '出撃する5人の装備とスキルを整えましょう。'}
       actions={category ? [
         {label:`${label}ガチャへ`,semantic:'primary',onClick:()=>{game.setGuideGachaCategory(category);game.navigateTab('gacha');close();}},
-        {label:'持ち物で進める',disabled:pending,onClick:()=>act('OPEN_LOADOUT','character')},
       ] : [{label:'キャラへ',semantic:'primary',disabled:pending,onClick:()=>act('OPEN_LOADOUT','character')}]}
-    ><p>購入せずに、持っている装備とスキルで進められます。</p></GuideDialog>;
+    />;
   }
   if (guide.step === 'LOADOUT' && game.activeTab !== 'character') return null;
   if (guide.step === 'LOADOUT') return <GuideDialog key={key} blocked={blocked} title="初心者ガイド" onClose={close}

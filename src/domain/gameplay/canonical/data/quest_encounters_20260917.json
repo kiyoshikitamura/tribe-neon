@@ -144,7 +144,7 @@
         }
       ],
       "normalAttackPowerBp": 8000,
-      "balanceOverride": { "hpBp": 7000, "atkBp": 7000, "defBp": 7000 },
+      "balanceOverride": { "hpBp": 5600, "atkBp": 5600, "defBp": 5600 },
       "tuningStatus": "P0_TUNABLE",
       "isProductionEnabled": true
     },
