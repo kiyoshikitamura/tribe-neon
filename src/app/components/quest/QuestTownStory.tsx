@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useGame } from '@/app/context/GameContext';
 import { QUEST_TOWN_STORIES, type QuestProgressionGuide, type QuestStoryPhase } from '@/domain/quest/progressionGuide';
 import CharacterPresentation from '../character/CharacterPresentation';
@@ -29,7 +29,7 @@ export default function QuestTownStory({ townId, phase = 'START' }: { townId: st
   return <div className="tutorial-world quest-town-story-world" role="dialog" aria-modal="true" aria-label={`${story.speaker}の会話`}>
     <div className="tutorial-world-content" style={{ backgroundImage: `url('/bg/bg_street_${story.townId}.jpg')` }}>
       <div className="tutorial-world-shade" />
-      <div className="tutorial-world-ageha" aria-hidden="true"><CharacterPresentation src={story.image} alt="" variant="dialogue-bust" /></div>
+      <div className="tutorial-world-ageha" aria-hidden="true" style={{ '--story-scale': story.presentation.scale, '--story-position-x': `${story.presentation.positionX}%`, '--story-position-y': `${story.presentation.positionY}%` } as CSSProperties}><CharacterPresentation src={story.image} alt="" variant="dialogue-bust" /></div>
       <div className="tutorial-world-dialogue"><strong>{story.speaker}</strong><TypewriterText key={`${eventKey}:${line}`} text={story.lines[line]} speedMs={34} /></div>
       <button className="semantic-cta semantic-cta--primary tutorial-world-next-cta" onClick={() => hasNext ? setLine(value => value + 1) : void finish()}>{hasNext ? '次へ' : phase === 'START' ? '探索へ' : '次へ'}</button>
     </div>

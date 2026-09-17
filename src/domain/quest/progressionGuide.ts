@@ -2,10 +2,13 @@ export type QuestGuideStep = 'QUEST_ENTRY' | 'PLAY' | 'GACHA' | 'LOADOUT' | 'RET
 export type QuestProgressionGuide = { step: QuestGuideStep; seen_story_towns: string[] };
 export type QuestGuideAction = 'ENTER_QUEST' | 'OPEN_LOADOUT' | 'APPLY_LOADOUT' | 'RETURN_QUEST';
 export type QuestStoryPhase = 'START' | 'CLEAR';
-export type QuestTownStoryData = { townId: string; speaker: string; image: string; lines: string[]; phase: QuestStoryPhase };
-const story = (townId: string, speaker: string, image: string, start: string[], clear: string[]): QuestTownStoryData[] => [
-  { townId, speaker, image, phase: 'START', lines: start }, { townId, speaker, image, phase: 'CLEAR', lines: clear },
-];
+export type QuestTownStoryData = { townId: string; speaker: string; image: string; lines: string[]; phase: QuestStoryPhase; presentation: { scale: number; positionX: number; positionY: number } };
+const story = (townId: string, speaker: string, image: string, start: string[], clear: string[]): QuestTownStoryData[] => {
+  const presentation = { scale: 1.12, positionX: 50, positionY: 10 };
+  return [
+  { townId, speaker, image, phase: 'START', lines: start, presentation }, { townId, speaker, image, phase: 'CLEAR', lines: clear, presentation },
+  ];
+};
 export const QUEST_TOWN_STORIES: QuestTownStoryData[] = [
   ...story('shinjuku', 'レイジ', '/characters/reiji_transparent_asset.png', ['……見ない顔だな。','ここじゃ、突っ立ってるだけでも目ぇ付けられるぞ。','やる気があるなら止めねえ。','まず新宿で、どこまでやれるか見せてみろ。'], ['……やるじゃねえか。','最初よりは、だいぶマシになったな。','だが、新宿抜けたくらいで強くなった気になるなよ。','次は渋谷だ。あっちはあっちで、面倒なのがいる。']),
   ...story('shibuya', 'アゲハ', '/characters/ageha_transparent_asset.png', ['遅い遅い。もう来ないかと思ったじゃん。','新宿抜けたんでしょ？ じゃ、初心者扱いは今日で終わりね。','渋谷はノリ悪いヤツから置いてかれるよ。','ほら、行こ。考えるのは走りながらでいいって。'], ['やるじゃん！','でもさ、勢いだけで勝てるのって、この辺までかも。','次の池袋、しぶといの多いから。','力押ししてると、たぶん泣くよ？']),
