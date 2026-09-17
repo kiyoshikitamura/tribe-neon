@@ -26,7 +26,7 @@ export default function PromotionHarness() {
   setReady(true);
   return ()=>{supabase.rpc=original;};
  },[]);
- const game={session:{user:{id:'qa-promotions'}},activeTab:tab,onboardingState:{gameplay_authorized:true},loginBonusCheckComplete:true,prepMissionDialogCheckComplete:true,rankingRewardNotificationCheckComplete:true,navigateTab:setTab};
+ const game={session:{user:{id:'qa-promotions'}},activeTab:tab,onboardingState:{gameplay_authorized:true},loginBonusCheckComplete:true,prepMissionDialogCheckComplete:true,rankingRewardNotificationCheckComplete:true,navigateTab:setTab,playCyberSe:()=>undefined};
  return <GameContext.Provider value={game as any}><div className="app-container"><h1>Promotion QA</h1>
  <p data-testid="current-tab">{tab}</p><button onClick={()=>setTab('home')}>マイページ</button><button onClick={()=>setTab('patrol')}>クエスト</button>
  <button onClick={()=>setBlocked(true)}>通知を表示</button>

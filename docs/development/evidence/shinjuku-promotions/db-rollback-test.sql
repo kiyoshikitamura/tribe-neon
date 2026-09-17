@@ -11,7 +11,7 @@ begin
  r:=public.promotion_dialog('claim',v);
  insert into promotion_test_results values('existing clear / pack priority',r->>'promotion_id'='beginner_pack');
  insert into promotion_test_results values('second device excluded',public.promotion_dialog('claim',v2) is null);
- perform public.promotion_dialog('release',v,(r->>'id')::uuid);
+ perform public.promotion_dialog('later',v,(r->>'id')::uuid);
  r:=public.promotion_dialog('claim',v2);
  insert into promotion_test_results values('failed image retry',r->>'promotion_id'='beginner_pack');
  perform public.promotion_dialog('view',v2,(r->>'id')::uuid);

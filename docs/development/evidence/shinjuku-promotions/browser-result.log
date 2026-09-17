@@ -1,0 +1,13 @@
+pack {
+  width: 247,
+  height: 371,
+  naturalWidth: 860,
+  naturalHeight: 1292,
+  fit: 'contain'
+}
+events beginner_pack:view
+beginner_pack:later
+tribe_join:view
+tribe_join:primary_cta
+320x568 image failure close PASS
+errors []

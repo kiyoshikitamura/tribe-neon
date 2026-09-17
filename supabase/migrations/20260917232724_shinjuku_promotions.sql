@@ -41,7 +41,7 @@ begin
   else return null; end if;
   insert into public.user_promotion_presentations(user_id,promotion_id,period_key,visit_id,lease_until)
   values(u,promo,period,p_visit_id,now_at+interval '90 seconds')
-  on conflict(user_id,promotion_id,period_key) do update set id=gen_random_uuid(),visit_id=excluded.visit_id,lease_until=excluded.lease_until
+  on conflict(user_id,promotion_id,period_key) do update set id=gen_random_uuid(),visit_id=excluded.visit_id,lease_until=excluded.lease_until,action=null,action_at=null
   where user_promotion_presentations.viewed_at is null returning * into r;
   if r.id is null then return null; end if;
   return jsonb_build_object('id',r.id,'promotion_id',r.promotion_id,'period_key',r.period_key);
