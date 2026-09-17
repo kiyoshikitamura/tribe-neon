@@ -56,6 +56,7 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
   const memberList = participants.status === "success" ? participants.data?.filter(entry => entry.roomId === room.roomId) ?? [] : [];
   const faces = memberList.slice(0, 5);
   const me = currentUserId ? memberList.find(entry => entry.player.userId === currentUserId) : undefined;
+  const battleLimitReached = me?.finalizedBattles.status === "available" && me.finalizedBattles.value >= 3;
   const leaderUrl = (userId: string, priorUrl?: string | null) => {
     if (details && Object.prototype.hasOwnProperty.call(details.leaderCharacterIds, userId)) {
       const character = CHARACTERS_MASTER.find(entry => entry.id === details.leaderCharacterIds[userId]);
@@ -105,7 +106,7 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
     {!isJoined && <p className="raid-detail__hint">参加者の詳細は参戦後に確認できます。</p>}
     {isJoined && <OutlawCard className="raid-detail__contribution"><SectionHeader title="あなたの貢献" />{participants.status === "loading" ? <Spinner /> : <><div className="raid-detail__contribution-values"><div><span>貢献ダメージ</span><strong>{me?.appliedDamage.status === "available" ? number(me.appliedDamage.value) : "未確認"}</strong></div><div><span>戦闘回数</span><strong>{me?.finalizedBattles.status === "available" ? `${number(me.finalizedBattles.value)}戦` : "未確認"}</strong></div></div>{participants.status === "error" && <p className="raid-detail__notice" role="alert">貢献情報を取得できませんでした。</p>}</>}</OutlawCard>}
     <QuestRaidBonus roomId={room.roomId} />
-    <div className="raid-detail__action">{action}</div>
+    <div className="raid-detail__action">{battleLimitReached ? <div className="raid-detail__notice" role="status"><strong>挑戦回数の上限です</strong><p>このレイドでは3回の挑戦が完了しています。別のレイドに挑戦するか、救援に参加してください。</p></div> : action}</div>
     {rescue && rescueOpen && createPortal(<CanonicalDialog title="救援" onClose={() => setRescueOpen(false)} actions={[{label:"閉じる",semantic:"secondary",onClick:()=>setRescueOpen(false)}]}>{rescue}</CanonicalDialog>, document.body)}
   </div>;
 }
