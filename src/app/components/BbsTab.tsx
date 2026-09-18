@@ -371,6 +371,17 @@ export default function BbsTab({ embedded = false }: { embedded?: boolean } = {}
               {embedded ? "攻略" : "攻略＆雑談"}
             </button>
           </div>
+          {embedded && (
+            <button
+              className="bbs-embedded-create-btn active-scale-effect"
+              onClick={() => {
+                playCyberSe("click");
+                setShowCreateModal(true);
+              }}
+            >
+              新規スレッド
+            </button>
+          )}
 
           {/* スレッド一覧 */}
           <div className="bbs-threads-list scroll-container">
