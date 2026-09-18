@@ -17,7 +17,6 @@ import { resolveHomeCharacterDialogueLines } from "@/domain/presentation/homeCha
 import { isDestinationAvailable } from "@/domain/operations/operations";
 import { resolvePresentableAssetUrl } from "@/utils/assetPresentation";
 import { getJstDateString } from "@/utils/jst_date";
-import { questProgressState } from "@/domain/questPresentationState";
 import { normalizeRecentActivities, RECENT_ACTIVITY_WINDOW_MS } from "@/domain/social/recentActivity";
 import { bindCurrentAcquisitionJourney, confirmCanonicalFirstMyPage } from "@/utils/kpiInstrumentation";
 import CharacterPresentation from "./character/CharacterPresentation";
@@ -159,7 +158,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     setErrorMessage,
     setGuideGachaCategory,
     patrolCourses,
-    activePatrols,
   } = useGame();
 
   const equippedTitleName = ownedTitles.find((title: { id: string }) => title.id === titleEquipped)?.name || titleEquipped;
@@ -575,9 +573,11 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const homeEventState = isRaidActive ? "raid" : "calm";
   // Only display facts with established authority. Quest/BP initial values are
   // not read-ready projections, so they intentionally have no guessed status.
-  const questActionableCount = (activePatrols || []).filter((patrol: any) => {
-    const state = questProgressState(patrol);
-    return state === "REWARD" || state === "BATTLE";
+  const questActionableCount = ((useGame() as any).activePatrols || []).filter((patrol: any) => {
+    if (!Number.isFinite(patrol.secondsLeft) || Number(patrol.secondsLeft) > 0) return false;
+    if ((patrol.progressionKind || patrol.progression_kind) === "FIRST_CLEAR" && patrol.battle_result === "DEFEAT") return true;
+    if (patrol.has_battle_event === true && patrol.battle_resolved === false) return true;
+    return patrol.battle_resolved === true || patrol.has_battle_event === false;
   }).length;
   const actionStatus: Partial<Record<string, string>> = {
     ...(raidAvailability === "active" ? { raid: "開催中" } : raidAvailability === "inactive" ? { raid: "開催待ち" } : {}),
