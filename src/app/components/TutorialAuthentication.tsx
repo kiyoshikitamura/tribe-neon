@@ -93,6 +93,8 @@ export default function AccountAuthenticationModal() {
     showAccountAuthenticationModal,
     setShowAccountAuthenticationModal,
     setShowAuthenticationReminder,
+    syncBootstrapData,
+    setConfirmDialogConfig,
   } = useGame();
   const step = onboardingState?.tutorial_step ?? null;
   const isTutorialCompletion = step === "COMPLETE" && !onboardingState?.authentication_pending;
@@ -127,7 +129,7 @@ export default function AccountAuthenticationModal() {
         return false;
       }
     }
-    const { error: progressError } = await supabase.rpc("complete_tutorial_authentication", {
+    const { data: completion, error: progressError } = await supabase.rpc("complete_tutorial_authentication_with_reward", {
       p_auth_method: method
     });
     if (progressError) {
@@ -138,6 +140,17 @@ export default function AccountAuthenticationModal() {
     if (currentSession.session?.access_token) void recordSameSubjectIdentityTransition(currentSession.session.access_token);
     if (method === "GOOGLE") window.localStorage.removeItem(AUTH_INTENT_KEY);
     if (method === "EMAIL") window.localStorage.removeItem(EMAIL_ONBOARDING_INTENT_KEY);
+
+    const rewardGranted = completion?.reward_granted === true;
+    if (rewardGranted && session?.user?.id) {
+      try {
+        await syncBootstrapData(session.user.id);
+      } catch {
+        // The grant is already committed server-side. A later bootstrap/reload
+        // will reconcile the wallet even if this immediate refresh is interrupted.
+      }
+    }
+
     setNotice(null);
     setOnboardingState((current: any) => current ? {
       ...current,
@@ -152,8 +165,23 @@ export default function AccountAuthenticationModal() {
     setShowAccountAuthenticationModal(false);
     setShowAuthenticationReminder(false);
     navigateTab("home");
+
+    if (rewardGranted) {
+      const closeRewardNotice = () => setConfirmDialogConfig(null);
+      setConfirmDialogConfig({
+        isOpen: true,
+        dialogId: Date.now(),
+        title: "アカウント連携特典",
+        message: "ダイヤ300個を獲得しました",
+        confirmText: "OK",
+        cancelText: "",
+        presentation: "canonical",
+        onConfirm: closeRewardNotice,
+        onCancel: closeRewardNotice,
+      });
+    }
     return true;
-  }, [navigateTab, session?.user?.id, setOnboardingState, setShowAccountAuthenticationModal, setShowAuthenticationReminder]);
+  }, [navigateTab, session, setConfirmDialogConfig, setOnboardingState, setShowAccountAuthenticationModal, setShowAuthenticationReminder, syncBootstrapData]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
