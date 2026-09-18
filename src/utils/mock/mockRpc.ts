@@ -1825,7 +1825,47 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     };
   }
 
-  if (funcName === "complete_tutorial_authentication") {
+  if (funcName === "get_account_authentication_badge_state") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const authMode = typeof window === "undefined" ? null : localStorage.getItem("mock_auth_mode");
+    const progress = client.getStorage("tutorial_progress") || [];
+    const entry = progress.find((value: any) => value.user_id === userId);
+    const methods = client.getStorage("user_account_auth_methods") || [];
+    const today = jstCycleDate();
+    const views = client.getStorage("account_authentication_badge_views") || [];
+    const pending = Boolean(userId
+      && authMode === "ANONYMOUS"
+      && entry?.step_id === "COMPLETE"
+      && entry?.authentication_pending === true
+      && !methods.some((value: any) => value.user_id === userId));
+    return {
+      data: { visible: pending && !views.some((row: any) => row.user_id === userId && row.jst_date === today), jst_date: today },
+      error: null,
+    };
+  }
+
+  if (funcName === "mark_account_authentication_badge_viewed") {
+    const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
+    const authMode = typeof window === "undefined" ? null : localStorage.getItem("mock_auth_mode");
+    const progress = client.getStorage("tutorial_progress") || [];
+    const entry = progress.find((value: any) => value.user_id === userId);
+    const methods = client.getStorage("user_account_auth_methods") || [];
+    const today = jstCycleDate();
+    const pending = Boolean(userId
+      && authMode === "ANONYMOUS"
+      && entry?.step_id === "COMPLETE"
+      && entry?.authentication_pending === true
+      && !methods.some((value: any) => value.user_id === userId));
+    if (!pending) return { data: { recorded: false, jst_date: today }, error: null };
+    const views = client.getStorage("account_authentication_badge_views") || [];
+    if (!views.some((row: any) => row.user_id === userId && row.jst_date === today)) {
+      views.push({ user_id: userId, jst_date: today, viewed_at: new Date().toISOString() });
+      client.setStorage("account_authentication_badge_views", views);
+    }
+    return { data: { recorded: true, jst_date: today }, error: null };
+  }
+
+  if (funcName === "complete_tutorial_authentication" || funcName === "complete_tutorial_authentication_with_reward") {
     const userId = typeof window === "undefined" ? null : localStorage.getItem("tribe_demo_uuid");
     const progress = client.getStorage("tutorial_progress") || [];
     const entry = progress.find((value: any) => value.user_id === userId);
@@ -1835,6 +1875,7 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const supportedProviders = new Set((overriddenProviders || (authMode === "ANONYMOUS" || !authMode ? [] : [authMode.toLowerCase()]))
       .filter((provider) => provider === "email" || provider === "google"));
     const requestedProvider = requestedMethod.toLowerCase();
+    const withReward = funcName === "complete_tutorial_authentication_with_reward";
     if (!userId || authMode === "ANONYMOUS") {
       return { data: null, error: { message: "Verified authentication identity is required" } };
     }
@@ -1845,16 +1886,45 @@ export async function executeMockRpc(client: any, funcName: string, params: any)
     const methods = client.getStorage("user_account_auth_methods") || [];
     const existingMethod = methods.find((value: any) => value.user_id === userId);
     if (existingMethod?.auth_method === requestedMethod && entry?.step_id === "AUTHENTICATION") {
-      return { data: "AUTHENTICATION", error: null };
+      return {
+        data: withReward ? { tutorial_step: "AUTHENTICATION", reward_granted: false, reward_amount: 300 } : "AUTHENTICATION",
+        error: null,
+      };
     }
     if (!entry || entry.step_id !== "COMPLETE") return { data: null, error: { message: "Tutorial completion is required" } };
     if (existingMethod && existingMethod.auth_method !== requestedMethod) return { data: null, error: { message: "A different authentication method is already linked" } };
-    if (!existingMethod) methods.push({ user_id: userId, auth_method: requestedMethod });
+    if (!existingMethod) methods.push({ user_id: userId, auth_method: requestedMethod, authenticated_at: new Date().toISOString() });
     entry.step_id = "AUTHENTICATION";
     entry.authentication_pending = false;
     client.setStorage("tutorial_progress", progress);
     client.setStorage("user_account_auth_methods", methods);
-    return { data: "AUTHENTICATION", error: null };
+
+    const grants = client.getStorage("account_authentication_reward_grants") || [];
+    let rewardGranted = false;
+    if (!grants.some((row: any) => row.user_id === userId)) {
+      grants.push({
+        user_id: userId,
+        reward_key: "ACCOUNT_AUTHENTICATION_20260918",
+        delivery_method: "DIRECT",
+        quantity: 300,
+        granted_at: new Date().toISOString(),
+      });
+      client.setStorage("account_authentication_reward_grants", grants);
+      const users = client.getStorage("users") || [];
+      const user = users.find((row: any) => row.id === userId);
+      if (user) {
+        user.neon_diamonds = Number(user.neon_diamonds || 0) + 300;
+        client.setStorage("users", users);
+        rewardGranted = true;
+      }
+    }
+
+    return {
+      data: withReward
+        ? { tutorial_step: "AUTHENTICATION", reward_granted: rewardGranted, reward_amount: 300, delivery_method: rewardGranted ? "DIRECT" : null }
+        : "AUTHENTICATION",
+      error: null,
+    };
   }
 
   if (funcName === "defer_tutorial_authentication") {
