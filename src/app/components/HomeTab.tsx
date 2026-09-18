@@ -5,7 +5,8 @@ import { useRaidGuideAvailability } from "@/hooks/useRaidGuideAvailability";
 import RaidRescueLink from './raid/RaidRescueLink';
 import QuestEncounterHomeReturn from './quest/QuestEncounterHomeReturn';
 import { useRaidRescueCards } from './raid/useRaidRescueCards';
-import { getRaidRescueActivityId } from '../../domain/raidRoomRescue';
+import { getRaidActivityRoomId, getRaidRescueActivityId } from '../../domain/raidRoomRescue';
+import { getRaidDifficultyLabel } from '../../domain/raidRoomPresentation';
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useGame } from "../context/GameContext";
@@ -109,7 +110,18 @@ type HomeBanner = {
 };
 
 function activityDescription(activity: HomeActivity) {
-  if (activity.activity_type === "SYSTEM_NEWS") return String((activity.display_payload as { title?: string } | undefined)?.title || "運営からのお知らせ");
+  const payload = activity.display_payload && typeof activity.display_payload === "object" ? activity.display_payload as Record<string, unknown> : {};
+  if (activity.activity_type === "SYSTEM_NEWS") return String(payload.title || "運営からのお知らせ");
+  if (activity.activity_type === "SSR_CHARACTER" || activity.activity_type === "SSR_SKILL" || activity.activity_type === "SSR_EQUIPMENT") {
+    const name = typeof payload.item_name === "string" && payload.item_name.trim() ? payload.item_name.trim() : null;
+    if (!name) return "SSRを獲得";
+    const kind = activity.activity_type === "SSR_CHARACTER" ? "キャラ" : activity.activity_type === "SSR_SKILL" ? "スキル" : "装備";
+    return `SSR${kind}「${name}」を獲得`;
+  }
+  if (activity.activity_type === "RAID_BOSS_DEFEATED") {
+    const difficulty = typeof payload.difficulty_id === "string" ? payload.difficulty_id : null;
+    return difficulty ? `【${getRaidDifficultyLabel(difficulty as any)}】レイドボスを撃破` : "レイドボスを撃破";
+  }
   return describeHomeActivity(activity.activity_type);
 }
 
@@ -142,6 +154,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     navigateTab,
     playCyberSe,
     openRaidRescue,
+    openQuestEncounterRaid,
     selectedBgMode,
     titleEquipped,
     ownedTitles,
@@ -552,12 +565,15 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const latestActivity = visibleSocialActivities[0];
   const activityText = latestActivity ? activityDescription(latestActivity) : null;
   const latestRescueId = latestActivity ? getRaidRescueActivityId(latestActivity) : null;
+  const latestRaidRoomId = latestActivity ? getRaidActivityRoomId(latestActivity) : null;
 
   const handleLatestActivityTap = () => {
     if (latestActivity?.activity_type === "SYSTEM_NEWS") {
       setInboxPanelTab("news"); setShowInboxPanel(true);
     } else if (latestRescueId) {
       openRaidRescue(latestRescueId);
+    } else if (latestActivity?.activity_type === "RAID_BOSS_DEFEATED" && latestRaidRoomId) {
+      void openQuestEncounterRaid(latestRaidRoomId).catch(() => setErrorMessage("レイド結果を開けませんでした。"));
     } else {
       setShowActivityLog(true);
     }
@@ -653,6 +669,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
               <strong>{activityDescription(activity)}</strong>
               {activity.activity_type === "SYSTEM_NEWS" && <button type="button" onClick={() => { setShowActivityLog(false); setInboxPanelTab("news"); setShowInboxPanel(true); }}>お知らせを見る</button>}
               <RaidRescueLink rescueId={getRaidRescueActivityId(activity)} entry={rescueCards.byId.get(getRaidRescueActivityId(activity) ?? "")} status={rescueCards.statusFor(getRaidRescueActivityId(activity))} source="activity" onOpen={() => setShowActivityLog(false)} />
+              {activity.activity_type === "RAID_BOSS_DEFEATED" && getRaidActivityRoomId(activity) && <button type="button" onClick={() => { const roomId=getRaidActivityRoomId(activity); if (!roomId) return; setShowActivityLog(false); void openQuestEncounterRaid(roomId).catch(() => setErrorMessage("レイド結果を開けませんでした。")); }}>結果を見る</button>}
               {activity.created_at && <time dateTime={activity.created_at}>{activityTimeLabel(activity.created_at)}</time>}
             </div>
           </article>)}

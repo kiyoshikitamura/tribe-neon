@@ -1169,3 +1169,8 @@
 
 /* 初心者案内は短い文言を1行で表示。報酬案内との二重表示をしない。 */
 .mypage-primary-cta strong { font-size: clamp(12px, 3.3vw, 14px); white-space: nowrap; }
+
+/* 2026-09-18 Activity detail: ticker stays one line; log preserves the complete message. */
+.mypage-live-ticker-text{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mypage-activity-log-row:not(:has(.raid-rescue-link)){grid-template-columns:minmax(0,1fr) minmax(110px,48%)}
+.mypage-activity-log-detail strong{max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:normal}

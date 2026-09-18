@@ -70,3 +70,15 @@ export function getRaidRescueActivityId(value: unknown): string | null {
   const rescueId = (payload as Record<string, unknown>).rescueId;
   return typeof rescueId === 'string' && rescueId.trim() ? rescueId : null;
 }
+
+/** Activity payload room reference. Uses the exact recorded Room; never resolves by area/boss. */
+export function getRaidActivityRoomId(value: unknown): string | null {
+  if (!value || typeof value !== 'object') return null;
+  const event = value as Record<string, unknown>;
+  if (event.activity_type !== 'RAID_HELP_REQUEST' && event.activity_type !== 'RAID_BOSS_DEFEATED') return null;
+  const payload = event.display_payload;
+  if (!payload || typeof payload !== 'object') return null;
+  const data = payload as Record<string, unknown>;
+  const roomId = data.room_id ?? data.roomId;
+  return typeof roomId === 'string' && roomId.trim() ? roomId : null;
+}

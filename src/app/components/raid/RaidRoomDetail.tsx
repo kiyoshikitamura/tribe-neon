@@ -119,9 +119,8 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
       <h3>最終貢献</h3>
       {participants.status === "loading" && <p>集計中です。</p>}
       {participants.status === "error" && <p role="alert">最終貢献を取得できませんでした。更新してください。</p>}
-      {participants.status === "success" && <div className="raid-detail__final-list">{finalRows.map(({participant,damage,rank,share})=><div key={participant.player.userId} className={participant.player.userId===currentUserId?"is-self":""}><strong>{rank}位</strong><span><VerifiedUserName userId={participant.player.userId} name={participant.player.name} />{participant.player.userId===currentUserId?"・あなた":""}</span><span>{number(damage)} / {share.toFixed(1)}%</span><span>{participant.finalizedBattles.status==="available"?`${number(participant.finalizedBattles.value)}戦`:"戦数未確認"}</span></div>)}</div>}
-      <h3>獲得報酬</h3>
-      {finalRewards ?? <p>報酬情報を確認できません。</p>}
+      {participants.status === "success" && <div className="raid-detail__final-list">{finalRows.map(({participant,damage,rank,share})=>{const icon=participant.player.leaderIconUrl.status==="available"?participant.player.leaderIconUrl.value:null;return <div key={participant.player.userId} className={participant.player.userId===currentUserId?"is-self":""}>{icon?<span className="raid-detail__final-avatar"><Portrait url={resolve(icon)} name={participant.player.name}/></span>:<span className="raid-detail__final-avatar" aria-hidden="true"/>}<strong>{rank}位</strong><span><VerifiedUserName userId={participant.player.userId} name={participant.player.name} />{participant.player.userId===currentUserId?"・あなた":""}</span><span>{number(damage)} / {share.toFixed(1)}%</span><span>{participant.finalizedBattles.status==="available"?`${number(participant.finalizedBattles.value)}戦`:"戦数未確認"}</span><span className="raid-detail__final-bar" aria-hidden="true"><i style={{width:`${share}%`}}/></span></div>})}</div>}
+      {isJoined && <><h3>獲得報酬</h3>{finalRewards ?? <p>報酬情報を確認できません。</p>}</>}
     </OutlawCard>}
     <QuestRaidBonus roomId={room.roomId} />
     <div className="raid-detail__action">{battleLimitReached ? <div className="raid-detail__notice" role="status"><strong>挑戦回数の上限です</strong><p>このレイドでは3回の挑戦が完了しています。別のレイドに挑戦するか、救援に参加してください。</p></div> : action}</div>
