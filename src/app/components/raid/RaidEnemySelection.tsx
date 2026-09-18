@@ -11,7 +11,7 @@ import SubTabNav from "../ui/SubTabNav";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import { SkillIcon } from "../skill/SkillPresentation";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
-import { RAID_BACKGROUND_FALLBACK,RAID_PERSON_FALLBACK,useRaidPageAssets,RaidPageSpinner } from "./raidPagePresentation";
+import { RAID_BACKGROUND_FALLBACK,RAID_PERSON_FALLBACK,useRaidPageAssets,RaidPagePortrait,RaidPageSpinner } from "./raidPagePresentation";
 import "./RaidEnemySelection.css";
 import RaidStrategySummary from "./RaidStrategySummary";
 import RaidRewardComparison from "./RaidRewardComparison";
@@ -48,10 +48,9 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
      {enemy.roster.map((member,index)=>{
       const skills=profile.skillsByCharacterId[member.id]??[];
       return <article key={member.id} className="raid-enemy-selection__member">
-       <img src={assets.resolve(member.imageUrl)} alt=""/>
+       <RaidPagePortrait src={assets.resolve(member.imageUrl)} name={member.name}/>
        <strong>{member.name}</strong>
        <div className="raid-enemy-selection__loadout">
-        <span className="raid-enemy-selection__loadout-label">スキル</span>
         <div>{skills.map(skill=>{const master=CANONICAL_SKILL_VIEW.find(entry=>entry.id===skill.id);return master?<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}><SkillIcon skill={master}/></span>:<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}>S</span>;})}</div>
        </div>
       </article>;
