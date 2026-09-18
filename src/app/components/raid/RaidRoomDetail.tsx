@@ -16,6 +16,7 @@ import OutlawButton from "../ui/OutlawButton";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import OutlawCard from "../ui/OutlawCard";
 import SectionHeader from "../ui/SectionHeader";
+import VerifiedUserName from "../profile/VerifiedUserName";
 import "./RaidRoomDetail.css";
 
 export interface RaidRoomDetailProps {
@@ -118,7 +119,7 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
       <h3>最終貢献</h3>
       {participants.status === "loading" && <p>集計中です。</p>}
       {participants.status === "error" && <p role="alert">最終貢献を取得できませんでした。更新してください。</p>}
-      {participants.status === "success" && <div className="raid-detail__final-list">{finalRows.map(({participant,damage,rank,share})=><div key={participant.player.userId} className={participant.player.userId===currentUserId?"is-self":""}><strong>{rank}位</strong><span>{participant.player.name}{participant.player.userId===currentUserId?"・あなた":""}</span><span>{number(damage)} / {share.toFixed(1)}%</span><span>{participant.finalizedBattles.status==="available"?`${number(participant.finalizedBattles.value)}戦`:"戦数未確認"}</span></div>)}</div>}
+      {participants.status === "success" && <div className="raid-detail__final-list">{finalRows.map(({participant,damage,rank,share})=><div key={participant.player.userId} className={participant.player.userId===currentUserId?"is-self":""}><strong>{rank}位</strong><span><VerifiedUserName userId={participant.player.userId} name={participant.player.name} />{participant.player.userId===currentUserId?"・あなた":""}</span><span>{number(damage)} / {share.toFixed(1)}%</span><span>{participant.finalizedBattles.status==="available"?`${number(participant.finalizedBattles.value)}戦`:"戦数未確認"}</span></div>)}</div>}
       <h3>獲得報酬</h3>
       {finalRewards ?? <p>報酬情報を確認できません。</p>}
     </OutlawCard>}
