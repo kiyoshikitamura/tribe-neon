@@ -165,7 +165,7 @@ export default function TribeChatModal() {
           tabs={[
             { id: "GLOBAL", label: `全体${chatUnreadCounts?.GLOBAL ? ` (${chatUnreadCounts.GLOBAL})` : ""}` },
             { id: "GUILD", label: `ギルド${chatUnreadCounts?.GUILD ? ` (${chatUnreadCounts.GUILD})` : ""}`, disabled: !userGuild },
-            { id: "DM", label: `個人(DM)${dmUnreadTotal ? ` (${dmUnreadTotal})` : ""}` }
+            { id: "DM", label: `DM${dmUnreadTotal ? ` (${dmUnreadTotal})` : ""}` }
           ]}
           activeTabId={chatChannel}
           onSelect={(id) => {
