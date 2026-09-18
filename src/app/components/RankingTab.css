@@ -12,3 +12,8 @@
 .ranking-current{padding:12px 10px;min-height:78px}
 .ranking-category-nav .sub-tab-item{min-height:44px;font-size:13px}
 .ranking-list-heading{padding:8px 0}
+
+.ranking-rotation-banner{display:flex;align-items:center;gap:6px;width:100%;padding:0 2px 3px}
+.ranking-rotation-card{position:relative;flex:1;height:54px;padding:0;border:0;border-radius:8px;overflow:hidden;background:transparent;cursor:pointer}
+.ranking-rotation-card img{display:block;width:100%;height:100%;object-fit:cover}
+.ranking-rotation-arrow{display:flex;flex:0 0 24px;width:24px;height:54px;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.15);border-radius:4px;background:rgba(11,15,25,.8);color:#fff;font-size:16px;cursor:pointer}
