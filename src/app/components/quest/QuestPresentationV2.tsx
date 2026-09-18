@@ -14,6 +14,7 @@ import CanonicalDialog from "../ui/CanonicalDialog";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import { questProgressState, sortQuestProgress, initialQuestCourseId, questCoursesForTown } from "@/domain/questPresentationState";
 import { getJstDateString } from "@/utils/jst_date";
+import { supabase } from "@/utils/supabase";
 import "./QuestPresentationV2.css";
 import QuestTownStory from "./QuestTownStory";
 
