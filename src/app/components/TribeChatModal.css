@@ -251,3 +251,7 @@
 .tribe-msg-reply-source{margin:0 0 4px;padding:5px 7px;border-left:2px solid var(--color-cyan,#00f4ff);background:rgba(0,244,255,.06);font-size:10px;color:rgba(255,255,255,.6)}
 .tribe-msg-reply{margin-top:3px;border:0;background:transparent;color:var(--color-cyan,#00f4ff);font-size:11px;padding:4px 0}.tribe-reply-composer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;padding:8px 10px;border-left:3px solid var(--color-cyan,#00f4ff);background:rgba(255,255,255,.05)}.tribe-reply-composer div{min-width:0}.tribe-reply-composer b,.tribe-reply-composer span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tribe-reply-composer b{font-size:10px;color:var(--color-cyan,#00f4ff)}.tribe-reply-composer span{font-size:11px;color:rgba(255,255,255,.7)}.tribe-reply-composer button{border:0;background:transparent;color:#fff;font-size:20px}
 .tribe-chat-action-status { display: block; min-height: 16px; margin-top: 4px; color: var(--ui-text-secondary); font-size: 10px; text-align: right; }
+
+.tribe-community-mode-nav{flex:0 0 auto;margin-bottom:10px}
+.tribe-community-mode-nav .sub-tab-item{min-height:42px;font-size:13px}
+.tribe-community-bbs{display:flex;min-height:0;flex:1;overflow:hidden}
