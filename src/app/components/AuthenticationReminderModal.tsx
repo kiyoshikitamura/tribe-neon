@@ -32,13 +32,13 @@ export default function AuthenticationReminderModal() {
   };
 
   return <CanonicalDialog
-    title="ゲームデータを保護"
+    title="アカウント連携でダイヤ300個プレゼント"
     ariaLabel="アカウント認証のご案内"
     actions={[
-      { label: "閉じる", semantic: "secondary", onClick: close },
-      { label: "今すぐ認証", semantic: "primary", onClick: authenticateNow },
+      { label: "あとで", semantic: "secondary", onClick: close },
+      { label: "認証する", semantic: "primary", onClick: authenticateNow },
     ]}
   >
-    アカウント認証をすると、ゲームデータを安全に保護し、別の端末へ引き継げます。
+    アカウント連携をすると、ゲームデータを安全に保護し、無償ダイヤ300個を受け取れます。特典は1ゲームアカウントにつき1回限りです。
   </CanonicalDialog>;
 }
