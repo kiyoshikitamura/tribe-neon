@@ -9,6 +9,7 @@ import OutlawButton from "./ui/OutlawButton";
 import UserIdentityRow from "./profile/UserIdentityRow";
 import { supabase } from "@/utils/supabase";
 import { buildDirectMessageConversations } from "../context/hooks/directMessageConversations";
+import BbsTab from "./BbsTab";
 import "./TribeChatModal.css";
 
 export default function TribeChatModal() {
@@ -40,10 +41,10 @@ export default function TribeChatModal() {
     dmUnreadTotal,
     handleSendDirectMessage,
     fetchPlayerDetail,
-    navigateTab,
   } = useGame();
 
   const [localDmText, setLocalDmText] = useState("");
+  const [communityMode, setCommunityMode] = useState<"CHAT" | "BBS">("CHAT");
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const safeDirectMessages = directMessages || [];
   const safeGuildChats = guildChats || [];
@@ -146,8 +147,19 @@ export default function TribeChatModal() {
   };
 
   return createPortal(
-    <FullScreenPanel title={chatChannel === "GUILD" ? `${userGuild?.name || "ギルド"} チャット` : "チャット"} onClose={handleClose} className="tribe-chat-panel">
+    <FullScreenPanel title="コミュニティ" onClose={handleClose} className="tribe-chat-panel">
       <div className="tribe-modal-container-inner flex-col">
+        <SubTabNav
+          tabs={[
+            { id: "CHAT", label: "チャット" },
+            { id: "BBS", label: "BBS" },
+          ]}
+          activeTabId={communityMode}
+          onSelect={(id) => setCommunityMode(id as "CHAT" | "BBS")}
+          className="tribe-community-mode-nav mb-3"
+        />
+
+        {communityMode === "CHAT" ? <>
         {/* チャンネルタブ (全体 / ギルド / DM) */}
         <SubTabNav
           tabs={[
@@ -165,21 +177,6 @@ export default function TribeChatModal() {
           }}
           className="mb-3"
         />
-        <div className="tribe-community-secondary-nav">
-          <OutlawButton
-            variant="ghost"
-            className="tribe-bbs-link"
-            onClick={() => {
-              setDmRecipientId(null);
-              setLocalDmText("");
-              setShowTribeChatPanel(false);
-              navigateTab("bbs");
-            }}
-          >
-            BBSを開く
-          </OutlawButton>
-        </div>
-
         {chatChannel === "DM" && dmRecipientId && (
           <div className="tribe-dm-thread-header">
             <OutlawButton variant="ghost" className="tribe-dm-back" onClick={() => {
@@ -346,6 +343,7 @@ export default function TribeChatModal() {
             {chatSending ? "メッセージを送信しています" : chatCooldown > 0 ? `次の送信まで${chatCooldown}秒` : ""}
           </span>
         </div>}
+        </> : <div className="tribe-community-bbs"><BbsTab embedded /></div>}
       </div>
     </FullScreenPanel>,
     document.body
