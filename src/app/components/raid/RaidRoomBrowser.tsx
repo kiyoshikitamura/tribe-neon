@@ -171,6 +171,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
         currentUserId={currentUserId} now={now} busy={busy}
         onParticipants={() => setDialog('participants')} onRewards={() => setDialog('rewards')} onEnemyInfo={() => setEnemyOpen(true)}
         rescue={renderRescue?.(room, busy || !!lifecycle?.blockJoin)}
+        finalRewards={room.state.status === 'available' && room.state.value !== 'active' && renderRewards ? renderRewards(room.roomId, () => undefined, display.data ?? undefined) : undefined}
         action={<>
           {snapshot.canRegister ? <>
           {snapshot.briefing.status === "loading" && <Spinner />}
