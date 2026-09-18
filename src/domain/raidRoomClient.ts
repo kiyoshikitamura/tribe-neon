@@ -123,23 +123,27 @@ export function createRaidRoomController(transport: RaidRoomTransport): RaidRoom
         return briefing;
       } catch { if (current()) update({ briefing: failure() }); return null; }
     })();
+    const roomRequest = (async (): Promise<RaidRoomDto | null> => {
+      try {
+        const room = await transport.getRoom(roomId);
+        if (room.roomId !== roomId) throw new Error('Room mismatch');
+        if (current()) update({ room: success(room) });
+        return room;
+      } catch {
+        if (current()) update({ room: failure() });
+        return null;
+      }
+    })();
     await Promise.all([
       briefingRequest,
-      (async () => {
-        try {
-          const room = await transport.getRoom(roomId);
-          if (room.roomId !== roomId) throw new Error('Room mismatch');
-          if (current()) update({ room: success(room) });
-        } catch {
-          if (current()) update({ room: failure() });
-        }
-      })(),
+      roomRequest,
       (async () => {
         try {
           if (transport.getBriefing) {
-            const briefing = await briefingRequest;
+            const [briefing, loadedRoom] = await Promise.all([briefingRequest, roomRequest]);
             if (!current()) return;
-            if (briefing?.membershipStatus !== 'joined') { update({ participants: idle() }); return; }
+            const ended = loadedRoom?.state.status === 'available' && loadedRoom.state.value !== 'active';
+            if (briefing?.membershipStatus !== 'joined' && !ended) { update({ participants: idle() }); return; }
           }
           const participants = await transport.listParticipants(roomId);
           if (participants.some((entry) => entry.roomId !== roomId)) throw new Error('Room mismatch');
