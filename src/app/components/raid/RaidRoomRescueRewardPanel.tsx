@@ -5,13 +5,6 @@ import type { RaidRewardPlan } from '../../../domain/raidRoomDisplay';
 import { RaidRewardPlanItems, RaidIssuedRewardItems } from './RaidRewardItems';
 import OutlawButton from '../ui/OutlawButton';
 
-const labels: Record<RaidRoomRescueReward['status'], string> = {
-  not_eligible: '救援報酬の条件をまだ満たしていません。',
-  unconfigured: '救援報酬は準備中です。',
-  pending: '救援成功。報酬の送付待ちです。',
-  issued: '救援報酬を獲得しました。',
-};
-
 export default function RaidRoomRescueRewardPanel({ client, roomId, onOpenPresents, onDirectReward, plan }: {
   client: RaidRoomRescueRewardClient; roomId: string; onOpenPresents?: () => void | Promise<void>; onDirectReward?: () => Promise<void>; plan?: RaidRewardPlan;
 }) {
@@ -21,7 +14,6 @@ export default function RaidRoomRescueRewardPanel({ client, roomId, onOpenPresen
   const [opening, setOpening] = useState(false);
   const [openError, setOpenError] = useState(false);
   const openingRef = useRef(false);
-  const [revision, setRevision] = useState(0);
   useEffect(() => {
     let current = true;
     setBusy(true); setError(false); setReward(null);
@@ -33,7 +25,7 @@ export default function RaidRoomRescueRewardPanel({ client, roomId, onOpenPresen
       .catch(() => { if (current) setError(true); })
       .finally(() => { if (current) setBusy(false); });
     return () => { current = false; };
-  }, [client, roomId, revision, onDirectReward]);
+  }, [client, roomId, onDirectReward]);
   const openPresents = async () => {
     if (!onOpenPresents || openingRef.current) return;
     openingRef.current = true; setOpening(true); setOpenError(false);
