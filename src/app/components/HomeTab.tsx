@@ -754,7 +754,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
               <button
                 key={action.id}
                 className={`circle-menu-btn ${action.id} active-scale-effect${highlighted ? " recommended" : ""}`}
-                aria-label={action.id === "quest" && questActionableCount > 0 ? `${action.label}、確認待ち${questActionableCount}件` : status ? `${action.label}、${status}` : action.label}
+                aria-label={action.destination === "patrol" && questActionableCount > 0 ? `${action.label}、確認待ち${questActionableCount}件` : status ? `${action.label}、${status}` : action.label}
                 data-action-slot={action.id}
                 data-asset-delivery={action.deliveryStatus.toLowerCase()}
                 data-recommended={highlighted ? "true" : undefined}
@@ -763,7 +763,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
                 <img src={action.assetPath} alt="" className="circle-menu-img" aria-hidden="true" />
                 <span className="circle-menu-label"><strong>{action.label}</strong></span>
                 <span className="circle-menu-status">{status || ""}</span>
-                {action.id === "quest" && questActionableCount > 0 && <span className="circle-menu-alert-badge" aria-hidden="true">{questActionableCount}</span>}
+                {action.destination === "patrol" && questActionableCount > 0 && <span className="circle-menu-alert-badge" aria-hidden="true">{questActionableCount}</span>}
               </button>
             );
           })}
