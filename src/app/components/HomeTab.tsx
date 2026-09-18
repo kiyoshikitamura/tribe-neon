@@ -22,6 +22,7 @@ import { bindCurrentAcquisitionJourney, confirmCanonicalFirstMyPage } from "@/ut
 import CharacterPresentation from "./character/CharacterPresentation";
 import UserIdentityRow from "./profile/UserIdentityRow";
 import CanonicalDialog from "./ui/CanonicalDialog";
+import AccountAuthenticationStatus from "./account-auth/AccountAuthenticationStatus";
 import {
   markHomeReloadStage,
   readHomeResumeSnapshot,
@@ -134,7 +135,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     setShowMissionPanel,
     setMissionTab,
     setShowLoginBonusModal,
-    setShowAccountAuthenticationModal,
     setShowMoveBaseModal,
     setShowTribeChatPanel,
     setChatChannel,
@@ -573,6 +573,12 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const homeEventState = isRaidActive ? "raid" : "calm";
   // Only display facts with established authority. Quest/BP initial values are
   // not read-ready projections, so they intentionally have no guessed status.
+  const questActionableCount = ((useGame() as any).activePatrols || []).filter((patrol: any) => {
+    if (!Number.isFinite(patrol.secondsLeft) || Number(patrol.secondsLeft) > 0) return false;
+    if ((patrol.progressionKind || patrol.progression_kind) === "FIRST_CLEAR" && patrol.battle_result === "DEFEAT") return true;
+    if (patrol.has_battle_event === true && patrol.battle_resolved === false) return true;
+    return patrol.battle_resolved === true || patrol.has_battle_event === false;
+  }).length;
   const actionStatus: Partial<Record<string, string>> = {
     ...(raidAvailability === "active" ? { raid: "開催中" } : raidAvailability === "inactive" ? { raid: "開催待ち" } : {}),
     ...(guildMembershipAuthorityReady ? { guild: userGuildMember?.guild_id ? "所属中" : "加入する" } : {}),
@@ -677,18 +683,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           <span>{baseName}</span><small>{currentBase.file.toUpperCase()}</small><b aria-hidden="true">›</b>
         </button>
 
-        {session?.user?.is_anonymous === true
-          && onboardingState?.user_id === session.user.id
-          && onboardingState?.is_anonymous
-          && onboardingState?.authentication_pending && <button
-          type="button"
-          className="mypage-authentication-status active-scale-effect"
-          onClick={() => { setShowAccountAuthenticationModal(true); playCyberSe("click"); }}
-          aria-label="未認証：アカウント認証を開く"
-        >
-          <span className="mypage-authentication-lock" aria-hidden="true"><i /><b /></span>
-          <small>未認証</small>
-        </button>}
+        <AccountAuthenticationStatus />
 
         <div className="mypage-sub-icons-left">
           {miniNavigationItems.map((item) => (
@@ -748,7 +743,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
               <button
                 key={action.id}
                 className={`circle-menu-btn ${action.id} active-scale-effect${highlighted ? " recommended" : ""}`}
-                aria-label={status ? `${action.label}、${status}` : action.label}
+                aria-label={action.destination === "patrol" && questActionableCount > 0 ? `${action.label}、確認待ち${questActionableCount}件` : status ? `${action.label}、${status}` : action.label}
                 data-action-slot={action.id}
                 data-asset-delivery={action.deliveryStatus.toLowerCase()}
                 data-recommended={highlighted ? "true" : undefined}
@@ -757,6 +752,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
                 <img src={action.assetPath} alt="" className="circle-menu-img" aria-hidden="true" />
                 <span className="circle-menu-label"><strong>{action.label}</strong></span>
                 <span className="circle-menu-status">{status || ""}</span>
+                {action.destination === "patrol" && questActionableCount > 0 && <span className="circle-menu-alert-badge" aria-hidden="true">{questActionableCount}</span>}
               </button>
             );
           })}
