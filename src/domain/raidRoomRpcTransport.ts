@@ -112,6 +112,7 @@ function participant(value: unknown): RaidParticipantDto {
     battleGuildSnapshot: observed(entry.battleGuildSnapshot, nullable(guild)),
     finalizedBattles: observed(entry.finalizedBattles, integer),
     rawDamage: observed(entry.rawDamage, integer), appliedDamage: observed(entry.appliedDamage, integer),
+    viaRescue: typeof entry.viaRescue === 'boolean' ? entry.viaRescue : false,
   };
 }
 function reward(value: unknown): RaidRewardDto {
