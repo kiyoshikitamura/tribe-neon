@@ -17,6 +17,7 @@ import { SkillDetailDialog } from "./skill/SkillPresentation";
 import type { SkillCardMaster } from "@/utils/skills_master_data";
 import CanonicalDialog from "./ui/CanonicalDialog";
 import PvpBattleRewards, { pvpRewardLabel, type PvpMatchRewards } from "./pvp/PvpBattleRewards";
+import VerifiedUserName from "./profile/VerifiedUserName";
 
 const tacticNames: { [key: string]: string } = {
   ATTACK_PRIORITY: "攻撃優先",
@@ -244,7 +245,7 @@ export default function PvpTab() {
         </section>
         {pvpSubView === "opponents" && <>
           <PvpBattleRewards rewards={matchRewards} />
-          <BattleHero player={{ name: username || "—", leaderName: playerLeaderMaster?.jpName || "リーダー", rate: displayedPvpRate, image: playerLeaderMaster ? getCharacterTransparentImg(playerLeaderMaster.name) : undefined, power: Number(totalPower || 0) }} rival={rivals.find((rival: { id: string }) => rival.id === heroOpponent?.opponent_user_id)} background={pvpBackgroundPath} attempts={pvpPoints} recovery={recoveryCountdown} busy={battleLoading || opponentsLoading} onStart={handleStartSelectedRival} onRecover={openBpRecoveryDialog} onPlayerDeck={() => setDeckDialog("my")} onRivalDeck={() => setDeckDialog("rival")} />
+          <BattleHero player={{ id: session?.user?.id, name: username || "—", leaderName: playerLeaderMaster?.jpName || "リーダー", rate: displayedPvpRate, image: playerLeaderMaster ? getCharacterTransparentImg(playerLeaderMaster.name) : undefined, power: Number(totalPower || 0) }} rival={rivals.find((rival: { id: string }) => rival.id === heroOpponent?.opponent_user_id)} background={pvpBackgroundPath} attempts={pvpPoints} recovery={recoveryCountdown} busy={battleLoading || opponentsLoading} onStart={handleStartSelectedRival} onRecover={openBpRecoveryDialog} onPlayerDeck={() => setDeckDialog("my")} onRivalDeck={() => setDeckDialog("rival")} />
           <RivalSelector rivals={rivals} selectedId={heroOpponent?.opponent_user_id} busy={battleLoading || opponentsLoading} onSelect={setSelectedRivalId} onRefresh={handleRefreshOpponents} emptyTitle={firstPvpPending ? "勝てる相手を探しています" : "対戦相手が見つかりません"} emptyMessage={firstPvpPending ? "更新して格下の相手を再検索してください。" : "時間を置いて更新してください。"} />
           <BattleRankingSummary rate={displayedPvpRate} rank={ownPvpStanding?.rankPosition} onOpen={handleNavigateToRanking} />
         </>}
@@ -269,7 +270,7 @@ export default function PvpTab() {
               <div className="list-container flex flex-col gap-2">
                 {[...pvpRankings].sort((a,b) => b.daily_wins - a.daily_wins).map((item, idx) => (
                   <OutlawCard key={item.user_id} className="flex justify-between items-center py-2 px-3">
-                    <div className="font-bold">{idx+1}位. {item.users?.username || "NPC"}</div>
+                    <div className="font-bold">{idx+1}位. <VerifiedUserName userId={item.user_id} name={item.users?.username || "NPC"} /></div>
                     <div className="text-neon-cyan">勝利数: {item.daily_wins}回</div>
                   </OutlawCard>
                 ))}
@@ -281,7 +282,7 @@ export default function PvpTab() {
                 <div className="list-container flex flex-col gap-2">
                   {[...pvpRankings].sort((a,b) => b.rank_points - a.rank_points).map((item, idx) => (
                     <OutlawCard key={item.user_id} className="flex justify-between items-center py-2 px-3">
-                      <div className="font-bold">{idx+1}位. {item.users?.username || "NPC"}</div>
+                      <div className="font-bold">{idx+1}位. <VerifiedUserName userId={item.user_id} name={item.users?.username || "NPC"} /></div>
                       <div className="text-neon-cyan">{item.rank_points} pt</div>
                     </OutlawCard>
                   ))}
@@ -296,7 +297,7 @@ export default function PvpTab() {
     </HubPage>
     {deckDialog && <CanonicalDialog title={deckDialog === "my" ? "MY DECK" : "RIVAL DECK"} onClose={() => setDeckDialog(null)} actions={[{ label: "閉じる", semantic: "secondary", onClick: () => setDeckDialog(null) }]}>
       <div className="battle-top-deck-dialog">
-        <div className="battle-top-deck-summary"><strong>{deckDialog === "my" ? username || "—" : heroOpponent?.opponent_username || "—"}</strong><span>RATE {deckDialog === "my" ? displayedPvpRate.toLocaleString() : Number(heroOpponent?.opponent_points || 0).toLocaleString()}</span><span>総合力 {Number(deckDialog === "my" ? totalPower : heroOpponent?.opponent_power || 0).toLocaleString()}</span></div>
+        <div className="battle-top-deck-summary"><strong><VerifiedUserName userId={deckDialog === "my" ? session?.user?.id : heroOpponent?.opponent_user_id} name={deckDialog === "my" ? username || "—" : heroOpponent?.opponent_username || "—"} /></strong><span>RATE {deckDialog === "my" ? displayedPvpRate.toLocaleString() : Number(heroOpponent?.opponent_points || 0).toLocaleString()}</span><span>総合力 {Number(deckDialog === "my" ? totalPower : heroOpponent?.opponent_power || 0).toLocaleString()}</span></div>
         {deckDialog === "my" ? <>        <section className="pvp-my-deck" aria-label="自分のデッキ">
           <div className="pvp-section-heading"><strong>MY DECK</strong><span>総合力 {Number(totalPower || 0).toLocaleString()}</span></div>
           <PvpDeckPresentation ariaLabel="自分の出撃メンバー" showSkills onSkillSelect={setSelectedSkill} members={myDeckCharacters.map(({ ownedId, owned, master }: any) => {
