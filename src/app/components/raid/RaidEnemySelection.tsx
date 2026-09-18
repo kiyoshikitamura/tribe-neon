@@ -46,7 +46,6 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
     <div className="raid-enemy-selection__hp"><span>敵HP</span><strong>{profile.maxHp.toLocaleString('ja-JP')}</strong></div>
     <div className="raid-enemy-selection__members" aria-label="敵5人の編成">
      {enemy.roster.map((member,index)=>{
-      const detail=profile.members.find(row=>row.characterId===member.id);
       const skills=profile.skillsByCharacterId[member.id]??[];
       return <article key={member.id} className="raid-enemy-selection__member">
        <img src={assets.resolve(member.imageUrl)} alt=""/>
