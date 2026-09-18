@@ -3,6 +3,7 @@
 import React from "react";
 import CharacterPresentation from "../character/CharacterPresentation";
 import OutlawButton from "../ui/OutlawButton";
+import VerifiedUserName from "../profile/VerifiedUserName";
 import ScreenState from "../ui/ScreenState";
 import { useScreenReadiness } from "../../hooks/useScreenReadiness";
 import { evictImageFromCache } from "../../lib/screenAssets";
@@ -21,7 +22,7 @@ export type BattleTopRival = {
 };
 
 type HeroProps = {
-  player: { name: string; leaderName: string; image?: string; power: number; rate: number };
+  player: { id?: string; name: string; leaderName: string; image?: string; power: number; rate: number };
   rival?: BattleTopRival;
   background?: string;
   attempts: number;
@@ -67,8 +68,8 @@ function BattleHeroContent({ player, rival, background, attempts, recovery, busy
     </div>
     <div className="battle-top-deck-links"><button type="button" onClick={onPlayerDeck} disabled={busy}>デッキを見る</button><button type="button" onClick={onRivalDeck} disabled={!rival || busy}>デッキを見る</button></div>
     <div className="battle-top-comparison">
-      <div className="is-player"><span className="battle-top-username">{player.name}</span><span className="battle-top-rate">RATE {player.rate.toLocaleString()}</span><strong>{player.power.toLocaleString()}</strong><small>総合力</small></div>
-      <div className="is-rival"><span className="battle-top-username">{rival?.name || "—"}</span><span className="battle-top-rate">RATE {rival?.rate?.toLocaleString() ?? "—"}</span><strong>{rival ? rival.power.toLocaleString() : "—"}</strong><small>総合力</small></div>
+      <div className="is-player"><span className="battle-top-username"><VerifiedUserName userId={player.id} name={player.name} /></span><span className="battle-top-rate">RATE {player.rate.toLocaleString()}</span><strong>{player.power.toLocaleString()}</strong><small>総合力</small></div>
+      <div className="is-rival"><span className="battle-top-username">{rival ? <VerifiedUserName userId={rival.id} name={rival.name} /> : "—"}</span><span className="battle-top-rate">RATE {rival?.rate?.toLocaleString() ?? "—"}</span><strong>{rival ? rival.power.toLocaleString() : "—"}</strong><small>総合力</small></div>
     </div>
     <OutlawButton className="battle-top-start" variant="primary" fullWidth disabled={!ready || busy} onClick={onStart}>対戦する</OutlawButton>
     <div className="battle-top-attempts"><span>残り挑戦回数 <strong>{attempts} / 5</strong></span>{attempts < 5 && <button type="button" onClick={onRecover}>BP回復</button>}</div>
@@ -87,7 +88,7 @@ export function RivalSelector({ rivals, selectedId, busy, onSelect, onRefresh, e
     <div className="battle-top-rivals custom-scrollbar">
       {rivals.map(rival => <button type="button" key={rival.id} className="battle-top-rival" aria-pressed={rival.id === selectedId} disabled={busy} onClick={() => onSelect(rival.id)} data-opponent-user-id={rival.id}>
         <CharacterPresentation src={rival.image} alt={rival.leaderName} variant="full-body" metadata={false} />
-        <span className="battle-top-rival-name">{rival.name}</span>
+        <span className="battle-top-rival-name"><VerifiedUserName userId={rival.id} name={rival.name} /></span>
         <span className="battle-top-rate">RATE {rival.rate?.toLocaleString() ?? "—"}</span>
         <strong>{rival.power.toLocaleString()}</strong>
         <small>総合力<span>{rival.id === selectedId ? "選択中" : ""}</span></small>
