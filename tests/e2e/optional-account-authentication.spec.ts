@@ -74,7 +74,7 @@ test("anonymous COMPLETE can defer authentication and receives ordered exactly-o
 
   const reminder = page.getByRole("dialog", { name: "アカウント認証のご案内" });
   await expect(reminder).toBeVisible();
-  await reminder.getByRole("button", { name: "今すぐ認証" }).click();
+  await reminder.getByRole("button", { name: "認証する" }).click();
   await page.getByRole("button", { name: "閉じる" }).click();
   await expect(page.getByRole("button", { name: "未認証：アカウント認証を開く" })).toBeVisible();
 
@@ -110,7 +110,7 @@ test("an open provider processes the next Login Bonus after the JST date changes
   await loginBonus.getByRole("button", { name: "閉じる" }).click();
   const reminder = page.getByRole("dialog", { name: "アカウント認証のご案内" });
   await expect(reminder).toBeVisible();
-  await reminder.getByRole("button", { name: "閉じる" }).click();
+  await reminder.getByRole("button", { name: "あとで" }).click();
   await expect(reminder).toHaveCount(0);
 
   await page.getByRole("button", { name: "ガチャ", exact: true }).click();
@@ -138,12 +138,18 @@ test("pending icon reuses the authentication modal, preserves collisions, and di
 
   const icon = page.getByRole("button", { name: "未認証：アカウント認証を開く" });
   await expect(icon).toBeVisible();
+  await expect(icon.getByLabel("本日の未確認特典")).toBeVisible();
   await icon.click();
+  const promotion = page.getByRole("dialog", { name: "アカウント認証のご案内" });
+  await expect(promotion).toContainText("アカウント連携でダイヤ300個プレゼント");
+  await expect(icon.getByLabel("本日の未確認特典")).toHaveCount(0);
+  await promotion.getByRole("button", { name: "認証する" }).click();
   await expect(page.getByRole("button", { name: "閉じる" })).toBeVisible();
   await page.getByRole("button", { name: "閉じる" }).click();
 
   await page.evaluate(() => localStorage.setItem("mock_google_identity_collision", "true"));
   await icon.click();
+  await page.getByRole("dialog", { name: "アカウント認証のご案内" }).getByRole("button", { name: "認証する" }).click();
   await page.getByRole("button", { name: "Googleアカウントを連携" }).click();
   await expect(page.getByText("登録済みのGoogleアカウントが見つかりました")).toBeVisible();
   const collisionState = await page.evaluate((userId) => ({
@@ -159,8 +165,22 @@ test("pending icon reuses the authentication modal, preserves collisions, and di
   await page.getByRole("button", { name: "メールアカウントを連携" }).click();
   await expect(icon).toHaveCount(0);
   await expect(page.getByRole("dialog", { name: "アカウント認証のご案内" })).toHaveCount(0);
-  const authenticatedProgress = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0]);
-  expect(authenticatedProgress).toMatchObject({ step_id: "AUTHENTICATION", authentication_pending: false });
+  await expect(page.getByText("ダイヤ300個を獲得しました")).toBeVisible();
+  const authenticated = await page.evaluate(() => ({
+    progress: JSON.parse(localStorage.getItem("mock_db_tutorial_progress") || "[]")[0],
+    user: JSON.parse(localStorage.getItem("mock_db_users") || "[]")[0],
+    grants: JSON.parse(localStorage.getItem("mock_db_account_authentication_reward_grants") || "[]"),
+  }));
+  expect(authenticated.progress).toMatchObject({ step_id: "AUTHENTICATION", authentication_pending: false });
+  expect(authenticated.user.neon_diamonds).toBe(300);
+  expect(authenticated.grants).toHaveLength(1);
+  await page.getByRole("button", { name: "OK" }).click();
+  await page.reload();
+  const afterReload = await page.evaluate(() => ({
+    diamonds: JSON.parse(localStorage.getItem("mock_db_users") || "[]")[0]?.neon_diamonds,
+    grants: JSON.parse(localStorage.getItem("mock_db_account_authentication_reward_grants") || "[]").length,
+  }));
+  expect(afterReload).toEqual({ diamonds: 300, grants: 1 });
 });
 
 test("existing authenticated player never receives pending authentication UI", async ({ page }) => {
@@ -215,6 +235,7 @@ test("pending Google authentication keeps the user id, callback origin, and clea
 
   const icon = page.getByRole("button", { name: "未認証：アカウント認証を開く" });
   await icon.click();
+  await page.getByRole("dialog", { name: "アカウント認証のご案内" }).getByRole("button", { name: "認証する" }).click();
   await page.getByRole("button", { name: "Googleアカウントを連携" }).click();
   await expect(icon).toHaveCount(0);
   const result = await page.evaluate(() => ({
@@ -240,4 +261,32 @@ test("deferred anonymous Google collision appears immediately without tapping th
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText("現在の未認証データへの連携は完了していません");
   expect(await page.evaluate(() => localStorage.getItem("mock_auth_mode"))).toBe("ANONYMOUS");
+});
+
+
+test("authentication badge view is stored per user and resets on the next JST date", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-09-18T14:59:00Z"));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await seedPlayer(page);
+  await page.addInitScript((userId) => {
+    localStorage.setItem("mock_db_tutorial_progress", JSON.stringify([{
+      user_id: userId, step_id: "COMPLETE", authentication_pending: true,
+    }]));
+  }, anonymousUserId);
+  await enterFromTitle(page, "続きから");
+
+  const icon = page.getByRole("button", { name: "未認証：アカウント認証を開く" });
+  await expect(icon.getByLabel("本日の未確認特典")).toBeVisible();
+  await icon.click();
+  await page.getByRole("dialog", { name: "アカウント認証のご案内" }).getByRole("button", { name: "あとで" }).click();
+  await expect(icon.getByLabel("本日の未確認特典")).toHaveCount(0);
+
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("mock_db_account_authentication_badge_views") || "[]"));
+  expect(stored).toHaveLength(1);
+
+  await page.clock.setFixedTime(new Date("2026-09-18T15:01:00Z"));
+  await page.reload();
+  await page.getByRole("button", { name: "TAP TO START" }).click();
+  await page.getByRole("button", { name: "続きから" }).click();
+  await expect(icon.getByLabel("本日の未確認特典")).toBeVisible();
 });
