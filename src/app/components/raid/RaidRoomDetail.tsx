@@ -31,6 +31,7 @@ export interface RaidRoomDetailProps {
   onEnemyInfo: () => void;
   action: ReactNode;
   rescue?: ReactNode;
+  finalRewards?: ReactNode;
 }
 
 const PERSON_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' fill='%23151d2a'/%3E%3Ccircle cx='64' cy='43' r='18' fill='%23697482'/%3E%3Cpath d='M24 118V98a40 40 0 0 1 80 0v20' fill='%23697482'/%3E%3C/svg%3E";
@@ -44,7 +45,7 @@ function Portrait({ url, name }: { url: string; name: string }) {
   return <span className="raid-detail__portrait"><img src={url} alt={name} style={style} /></span>;
 }
 
-export default function RaidRoomDetail({ room, briefing, display, participants, currentUserId, now, busy, onParticipants, onRewards, onEnemyInfo, action, rescue }: RaidRoomDetailProps) {
+export default function RaidRoomDetail({ room, briefing, display, participants, currentUserId, now, busy, onParticipants, onRewards, onEnemyInfo, action, rescue, finalRewards }: RaidRoomDetailProps) {
   const [rescueOpen, setRescueOpen] = useState(false);
   const details = display.status === "success" && display.data?.roomId === room.roomId ? display.data : null;
   const brief = briefing.status === "success" && briefing.data?.roomId === room.roomId ? briefing.data : null;
@@ -88,6 +89,11 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
   const percent = hp ? Math.max(0, Math.min(100, hp.current / hp.max * 100)) : null;
   const guild = details?.ownerGuild.status === "available" ? details.ownerGuild.value?.name ?? "Guild未所属" : "Guild未確認";
   const expires = room.expiresAt.status === "available" ? Date.parse(room.expiresAt.value) : NaN;
+  const endedState = room.state.status === "available" && room.state.value !== "active" ? room.state.value : null;
+  const finalParticipants = [...memberList].sort((a,b)=>(b.appliedDamage.status==="available"?b.appliedDamage.value:-1)-(a.appliedDamage.status==="available"?a.appliedDamage.value:-1));
+  const finalTotal = finalParticipants.reduce((sum,p)=>sum+(p.appliedDamage.status==="available"?p.appliedDamage.value:0),0);
+  let lastDamage:number|null=null,lastRank=0;
+  const finalRows=finalParticipants.map((participant,index)=>{const damage=participant.appliedDamage.status==="available"?participant.appliedDamage.value:0;if(lastDamage===null||damage!==lastDamage)lastRank=index+1;lastDamage=damage;return {participant,damage,rank:lastRank,share:finalTotal>0?damage/finalTotal*100:0};});
   return <div className="raid-detail" data-testid="raid-room-detail">
     <section className="raid-detail__hero" aria-label="対戦する敵">
       {enemy && <><img className="raid-detail__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-detail__enemy" src={resolve(enemy.leaderImageUrl)} alt="" /></>}
@@ -105,6 +111,17 @@ export default function RaidRoomDetail({ room, briefing, display, participants, 
     <nav className="raid-detail__entrances" aria-label="レイドの詳細情報">{ENTRANCES.map(entry => <OutlawButton key={entry.id} loadingLabel="" disabled={busy || (entry.id === "participants" && !isJoined)} aria-label={entry.label === "参加者" ? "参加者一覧" : entry.label} onClick={entry.id === "participants" ? onParticipants : entry.id === "rewards" ? onRewards : onEnemyInfo}><img src={resolve(entry.icon)} alt="" /><span>{entry.label}</span></OutlawButton>)}{rescue && <OutlawButton loadingLabel="" disabled={busy} aria-label="救援" onClick={() => setRescueOpen(true)}><img src={resolve("/ui/icon_friends.png")} alt="" /><span>救援</span></OutlawButton>}</nav>
     {!isJoined && <p className="raid-detail__hint">参加者の詳細は参戦後に確認できます。</p>}
     {isJoined && <OutlawCard className="raid-detail__contribution"><SectionHeader title="あなたの貢献" />{participants.status === "loading" ? <Spinner /> : <><div className="raid-detail__contribution-values"><div><span>貢献ダメージ</span><strong>{me?.appliedDamage.status === "available" ? number(me.appliedDamage.value) : "未確認"}</strong></div><div><span>戦闘回数</span><strong>{me?.finalizedBattles.status === "available" ? `${number(me.finalizedBattles.value)}戦` : "未確認"}</strong></div></div>{participants.status === "error" && <p className="raid-detail__notice" role="alert">貢献情報を取得できませんでした。</p>}</>}</OutlawCard>}
+    {endedState && <OutlawCard className="raid-detail__final" aria-label="レイド最終結果">
+      <SectionHeader title={endedState === "cleared" ? "撃破成功" : "時間切れ"} />
+      <p className="raid-detail__final-enemy">{enemy?.areaName ?? "エリア未確認"} / {getRaidDifficultyLabel(room.difficultyId)} / {enemy?.bossName ?? brief?.bossName ?? "敵情報未確認"}</p>
+      <div className="raid-detail__final-achievement">{endedState === "cleared" ? <strong>討伐完了</strong> : hp ? <><strong>{Number(((hp.max-hp.current)/hp.max*100).toFixed(1))}%削減</strong><span>残HP {number(hp.current)} / {number(hp.max)}</span></> : <strong>最終HP集計済み・値未確認</strong>}</div>
+      <h3>最終貢献</h3>
+      {participants.status === "loading" && <p>集計中です。</p>}
+      {participants.status === "error" && <p role="alert">最終貢献を取得できませんでした。更新してください。</p>}
+      {participants.status === "success" && <div className="raid-detail__final-list">{finalRows.map(({participant,damage,rank,share})=><div key={participant.player.userId} className={participant.player.userId===currentUserId?"is-self":""}><strong>{rank}位</strong><span>{participant.player.name}{participant.player.userId===currentUserId?"・あなた":""}</span><span>{number(damage)} / {share.toFixed(1)}%</span><span>{participant.finalizedBattles.status==="available"?`${number(participant.finalizedBattles.value)}戦`:"戦数未確認"}</span></div>)}</div>}
+      <h3>獲得報酬</h3>
+      {finalRewards ?? <p>報酬情報を確認できません。</p>}
+    </OutlawCard>}
     <QuestRaidBonus roomId={room.roomId} />
     <div className="raid-detail__action">{battleLimitReached ? <div className="raid-detail__notice" role="status"><strong>挑戦回数の上限です</strong><p>このレイドでは3回の挑戦が完了しています。別のレイドに挑戦するか、救援に参加してください。</p></div> : action}</div>
     {rescue && rescueOpen && createPortal(<CanonicalDialog title="救援" onClose={() => setRescueOpen(false)} actions={[{label:"閉じる",semantic:"secondary",onClick:()=>setRescueOpen(false)}]}>{rescue}</CanonicalDialog>, document.body)}
