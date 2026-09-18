@@ -306,7 +306,7 @@ export function usePatrol(
     return owner.promise;
   };
 
-  const handleInstantComplete = async (currency: "CASH" | "DIAMOND" | "FREE_TUTORIAL" | "FREE_PREOPEN", patrolId: string) => {
+  const handleInstantComplete = async (currency: "CASH" | "DIAMOND" | "FREE_TUTORIAL" | "FREE_PREOPEN" | "FREE_FIRST_CLEAR", patrolId: string) => {
     const targetPatrol = activePatrols.find(p => p.id === patrolId);
     if (!session || !targetPatrol) return false;
     if (!beginMutation()) return false;
@@ -343,11 +343,13 @@ export function usePatrol(
             ? "時短機能のサーバー設定が未反映です。運営へお問い合わせください。"
             : normalizedDetail.includes("daily cash instant completion limit reached")
               ? "本日のCASH時短は3回使用済みです。ダイヤ時短は引き続き利用できます。"
-              : normalizedDetail.includes("cash insufficient")
-                ? "CASHが不足しています。"
-                : normalizedDetail.includes("diamond insufficient")
-                  ? "ダイヤが不足しています。"
-                  : detail
+              : normalizedDetail.includes("first clear free instant completion unavailable")
+                ? "このステージは初回クリア済みです。クリア状態を再取得してください。"
+                : normalizedDetail.includes("cash insufficient")
+                  ? "CASHが不足しています。"
+                  : normalizedDetail.includes("diamond insufficient")
+                    ? "ダイヤが不足しています。"
+                    : detail
         );
         return false;
       }
