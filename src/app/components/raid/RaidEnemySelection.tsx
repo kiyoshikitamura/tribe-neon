@@ -48,7 +48,7 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
      {enemy.roster.map((member,index)=>{
       const skills=profile.skillsByCharacterId[member.id]??[];
       return <article key={member.id} className="raid-enemy-selection__member">
-       <RaidPagePortrait src={assets.resolve(member.imageUrl)} name={member.name}/>
+       <div className="raid-enemy-selection__portrait"><RaidPagePortrait src={assets.resolve(member.imageUrl)} name={member.name}/></div>
        <strong>{member.name}</strong>
        <div className="raid-enemy-selection__loadout">
         <div>{skills.map(skill=>{const master=CANONICAL_SKILL_VIEW.find(entry=>entry.id===skill.id);return master?<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}><SkillIcon skill={master}/></span>:<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}>S</span>;})}</div>
