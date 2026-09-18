@@ -1,4 +1,4 @@
-.raid-top__banner{display:block;width:100%;height:auto;aspect-ratio:1160/480;object-fit:cover;margin:0 0 18px;background:var(--ui-bg-raised)}
+.raid-top__banner{display:block;width:100%;height:auto;object-fit:cover;margin:0 0 18px;background:var(--ui-bg-raised)}
 .raid-top__reward-action{padding-top:2px}
 .raid-top { width: 100%; min-width: 0; padding: 4px 0 24px; color: var(--ui-text-primary); }
 .raid-top *, .raid-top *::before, .raid-top *::after { box-sizing: border-box; }
