@@ -20,6 +20,7 @@ import { rankingNearbyOffset, rankingSelfStatusText } from "@/domain/ranking/ran
 import { rankingPeriodText } from "@/domain/ranking/rankingPeriodPresentation";
 import RankingRewardDialog from "./ranking/RankingRewardDialog";
 import type { RankingRewardMasterPayload } from "@/domain/ranking/rankingRewardPresentation";
+import { resolveAvailableMyPageCreatives } from "@/domain/presentation/production_creatives";
 import {
   isPreopenGuildPowerSeasonContext,
   normalizeGuildRankingPayload,
@@ -50,6 +51,8 @@ const PERIOD_TABS = [
   { id: "daily", label: "デイリー" },
   { id: "season", label: "シーズン" },
 ] as const;
+
+const RANKING_ROTATION_BANNERS = resolveAvailableMyPageCreatives() || [];
 
 const validRank = (value: unknown) => {
   const rank = Number(value);
@@ -105,6 +108,10 @@ export default function RankingTab() {
     rankingActiveTab,
     setRankingActiveTab,
     setActiveTab,
+    navigateTab,
+    setShowTribeChatPanel,
+    setChatChannel,
+    setDmRecipientId,
     isRaidActive,
     beginnerJourney, refreshBeginnerJourney, openBeginnerMissionReward, rankingMissionRewardOrigin,
   } = useGame();
@@ -133,6 +140,7 @@ export default function RankingTab() {
     try { await openBeginnerMissionReward(journeyRewardIds); } finally { setRewardOpening(false); }
   };
   const [activePeriod, setActivePeriod] = useState<RankingPeriod>("season");
+  const [promotionIndex, setPromotionIndex] = useState(0);
   const [rows, setRows] = useState<any[]>([]);
   const [guildRows, setGuildRows] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<Record<string, PublicProfile>>({});
@@ -294,6 +302,11 @@ export default function RankingTab() {
   }, [rankingActiveTab, setRankingActiveTab, setActiveTab]);
   useEffect(() => { void loadRanking(); }, [loadRanking]);
   useEffect(() => {
+    if (RANKING_ROTATION_BANNERS.length < 2) return;
+    const timer = window.setInterval(() => setPromotionIndex((index) => (index + 1) % RANKING_ROTATION_BANNERS.length), 4000);
+    return () => window.clearInterval(timer);
+  }, []);
+  useEffect(() => {
     const userId = session?.user?.id;
     if (!userId) return;
     let cancelled = false;
@@ -403,9 +416,27 @@ export default function RankingTab() {
     setRewardDialogOpen(true);
     loadRewardMaster();
   };
+  const openPromotionBanner = (destination: string | null) => {
+    if (!destination) return;
+    playCyberSe("click");
+    if (destination === "community") {
+      setDmRecipientId(null);
+      setChatChannel("GLOBAL");
+      setShowTribeChatPanel(true);
+      return;
+    }
+    navigateTab(destination);
+  };
 
   return (
     <HubPage className="ranking-tab-view" title="ランキング" hideVisualHeader status={readiness.status} onRetry={readiness.retry}>
+      {RANKING_ROTATION_BANNERS.length > 0 && <div className="ranking-rotation-banner" aria-label="ローテーションバナー">
+        <button type="button" className="ranking-rotation-arrow" aria-label="前のバナー" onClick={() => setPromotionIndex((promotionIndex - 1 + RANKING_ROTATION_BANNERS.length) % RANKING_ROTATION_BANNERS.length)}>‹</button>
+        <button type="button" className="ranking-rotation-card" onClick={() => openPromotionBanner(RANKING_ROTATION_BANNERS[promotionIndex].destination)} aria-label="プロモーションを開く">
+          <img src={RANKING_ROTATION_BANNERS[promotionIndex].assetPath} alt="" />
+        </button>
+        <button type="button" className="ranking-rotation-arrow" aria-label="次のバナー" onClick={() => setPromotionIndex((promotionIndex + 1) % RANKING_ROTATION_BANNERS.length)}>›</button>
+      </div>}
       <div className="ranking-context"><div><small>RANKING</small><strong>{activeCategoryLabel}</strong></div><button type="button" onClick={() => void loadRanking()} disabled={loading}>更新</button></div>
       <SubTabNav className="ranking-category-nav" tabs={[...RANKING_TABS]} activeTabId={activeTab} onSelect={(tabId) => setRankingActiveTab(tabId)} />
       <div className="ranking-period-row"><div role="group" aria-label="集計期間">{PERIOD_TABS.map((period) => <button key={period.id} type="button" className={activePeriod === period.id ? "is-active" : ""} onClick={() => setActivePeriod(period.id)}>{period.label}</button>)}</div><span>{periodLabel}・{updateLabel}</span><button type="button" className="ranking-reward-button" onClick={openRewardDialog}>報酬確認</button></div>
