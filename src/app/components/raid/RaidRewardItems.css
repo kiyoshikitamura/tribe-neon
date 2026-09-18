@@ -16,3 +16,7 @@
 
 .raid-reward-items ul.raid-reward-items__plan{display:flex;flex-wrap:wrap;gap:8px}
 .raid-reward-items__plan li{padding:4px 6px}
+
+.raid-reward-progress{display:grid;gap:6px;margin:10px 0}
+.raid-reward-progress p{display:flex;justify-content:space-between;gap:12px;margin:0;padding:8px 10px;border:1px solid var(--ui-border);background:var(--ui-bg-surface);font-size:12px}
+.raid-reward-progress strong{font-size:12px}.raid-reward-progress span{text-align:right;font-variant-numeric:tabular-nums;color:var(--ui-text-secondary)}
