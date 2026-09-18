@@ -181,7 +181,7 @@ export default function AccountAuthenticationModal() {
       });
     }
     return true;
-  }, [navigateTab, session?.user?.id, setConfirmDialogConfig, setOnboardingState, setShowAccountAuthenticationModal, setShowAuthenticationReminder, syncBootstrapData]);
+  }, [navigateTab, session, setConfirmDialogConfig, setOnboardingState, setShowAccountAuthenticationModal, setShowAuthenticationReminder, syncBootstrapData]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
