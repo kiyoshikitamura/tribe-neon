@@ -140,7 +140,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
         onSelectDifficulty={id => { setDifficulty(id); controller.resetCreateRequest(); }}
         onConfirm={async () => { const created = await controller.createRoom(difficulty, variantId); if (created) setCreateOpen(false); }}
         onCancel={() => { setCreateOpen(false); setInfoVariant(null); }} onRetry={() => void controller.loadBossChoices()}
-        onEnemyInfo={id => { setInfoVariant(id); setEnemyOpen(true); }} busy={busy} canConfirm={snapshot.canCreate} error={snapshot.createError}
+        onEnemyInfo={id => { setInfoVariant(id); setEnemyOpen(true); }} busy={busy} canConfirm={snapshot.canCreate && enemyInfo.status === 'success'} error={snapshot.createError} enemyInfo={enemyInfo}
         skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data?.variantId === variantId ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }}
         rewardPlan={{ ...enemyInfo, data: enemyInfo.data?.clearPlan ?? null }} resolveRewardName={resolveRewardName} />}
       {!createOpen && <>
