@@ -88,6 +88,7 @@ export interface RaidParticipantDto {
   readonly finalizedBattles: RaidObserved<number>;
   readonly rawDamage: RaidObserved<number>;
   readonly appliedDamage: RaidObserved<number>;
+  readonly viaRescue: boolean;
 }
 
 export interface RaidRescueDto {
