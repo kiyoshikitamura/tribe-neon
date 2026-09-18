@@ -94,14 +94,6 @@ export default function QuestPresentationV2() {
   }, [activePatrols, selectedPatrolId, game.showPatrolRewardModal]);
 
   useEffect(() => { contentRef.current?.scrollIntoView({ block: "start" }); }, [showSelection, selectionStep, selectedPatrolId]);
-  useEffect(() => {
-    setShowSelection(true);
-    setSelectedPatrolId(null);
-    setSelectionStep("DESTINATION");
-    setFirstClearAuthority({ status: "LOADING", cleared: new Set() });
-    if (game.session?.user?.id) void refreshFirstClearAuthority();
-  }, [game.session?.user?.id, refreshFirstClearAuthority]);
-
   const [today, setToday] = useState(() => getJstDateString());
   const [firstClearAuthority, setFirstClearAuthority] = useState<{ status: "LOADING" | "READY" | "ERROR"; cleared: Set<string> }>({ status: "LOADING", cleared: new Set() });
   const refreshFirstClearAuthority = React.useCallback(async () => {
@@ -120,6 +112,14 @@ export default function QuestPresentationV2() {
     });
     return true;
   }, []);
+  useEffect(() => {
+    setShowSelection(true);
+    setSelectedPatrolId(null);
+    setSelectionStep("DESTINATION");
+    setFirstClearAuthority({ status: "LOADING", cleared: new Set() });
+    if (game.session?.user?.id) void refreshFirstClearAuthority();
+  }, [game.session?.user?.id, refreshFirstClearAuthority]);
+
   useEffect(() => {
     const refresh = () => {
       setToday(getJstDateString());
