@@ -50,6 +50,10 @@ export default function QuestPresentationV2() {
   const [selectionStep, setSelectionStep] = useState<"DESTINATION" | "REVIEW" | "CHARACTER">("DESTINATION");
   const [selectedPatrolId, setSelectedPatrolId] = useState<string | null>(null);
   const activePatrols = sortQuestProgress<any>(game.activePatrols || []);
+  const actionableQuestCount = activePatrols.filter((patrol: any) => {
+    const state = questProgressState(patrol);
+    return state === "REWARD" || state === "BATTLE";
+  }).length;
   const occupiedPatrols = activePatrols.filter((patrol: any) => !((patrol.progressionKind || patrol.progression_kind) === "FIRST_CLEAR" && Number(patrol.secondsLeft) <= 0));
   const occupiedCount = occupiedPatrols.length;
   const clearedCount = (game.patrolCourses || []).filter((course: any) => course.is_first_cleared).length;
@@ -240,7 +244,7 @@ export default function QuestPresentationV2() {
   return <HubPage className="patrol-container quest-v2-shell" title="クエスト" hideVisualHeader>
     <QuestTownStory townId={selectionVisible && ((selectionStep !== "DESTINATION" && activeCourse?.is_unlocked !== false) || selectedTownHasUpperClear) ? game.selectedTown : null} phase={selectedTownHasUpperClear ? "CLEAR" : "START"} />
     <div ref={contentRef} className="quest-v2-content" style={{ "--quest-state-background": `url(${stateBgImage})` } as React.CSSProperties}>
-      {(selectionVisible || selectedPatrol) && <button className="quest-v2-back" onClick={returnToList}>探索一覧へ</button>}
+      {(selectionVisible || selectedPatrol) && <button className="quest-v2-back quest-v2-list-button" aria-label={actionableQuestCount > 0 ? `探索一覧へ、確認待ち${actionableQuestCount}件` : "探索一覧へ"} onClick={returnToList}>探索一覧へ{actionableQuestCount > 0 && <span className="quest-v2-action-badge" aria-hidden="true">{actionableQuestCount}</span>}</button>}
       {!selectionVisible && !selectedPatrol && <section className="quest-v2-overview" aria-label="探索状況">
         <header className="quest-v2-page-hero"><img src="/promotion/mypage_banner_quest.webp" alt="クエスト" /><p>街を攻略し、次のステージへ。</p></header><div className="quest-v2-overview-heading"><span>探索枠 {occupiedCount} / {visibleSlots}</span><span>クリア {clearedCount} / 21</span></div><p className="quest-v2-slot-note">初回クリアごとに表示枠が1つ増えます（最大5枠）。</p>
         {activePatrols.map((patrol: any) => {
