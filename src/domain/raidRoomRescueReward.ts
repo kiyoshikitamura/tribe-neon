@@ -4,6 +4,7 @@ export interface RaidRoomRescueReward {
   roomId: string;
   status: 'not_eligible' | 'unconfigured' | 'pending' | 'issued';
   rescueGate: { status: 'unknown' | 'not_succeeded' | 'succeeded'; minimumBattles: number | null; minimumContributionDamage: number | null };
+  progress?: { viaRescue: boolean; finalizedBattles: number; contributionDamage: number };
   issuedAt: string | null;
   expiresAt: string | null;
   items: { itemId: string; quantity: number; presentId: string | null; delivery?: 'DIRECT' | 'PRESENT'; presentStatus: string | null; claimedAt: string | null; expiresAt: string | null }[];
@@ -45,7 +46,12 @@ export function createRaidRoomRescueRewardClient(client: RaidRoomRpcClient) {
       const issuedAt = date(r.issuedAt), expiresAt = date(r.expiresAt);
       if (r.status === 'issued' && (!issuedAt || items.length === 0 || (items.some(item => item.delivery !== 'DIRECT') && !expiresAt))) throw new Error('Incomplete rescue reward receipt');
       if (r.status !== 'issued' && items.length !== 0) throw new Error('Unexpected rescue reward receipt');
-      return { roomId, status: r.status as RaidRoomRescueReward['status'], issuedAt, expiresAt, items,
+      const statusResponse = await client.rpc('get_raid_room_rescue_status_v1', { p_room_id: text(roomId) });
+      if (statusResponse.error != null) throw new Error('救援進捗を確認できませんでした。');
+      const sr = object(statusResponse.data);
+      if (sr.roomId !== roomId || typeof sr.viaRescue !== 'boolean') throw new Error('Invalid rescue progress');
+      const progress = { viaRescue: sr.viaRescue, finalizedBattles: number(sr.finalizedBattles), contributionDamage: number(sr.contributionDamage) };
+      return { roomId, status: r.status as RaidRoomRescueReward['status'], issuedAt, expiresAt, items, progress,
         rescueGate: { status: gate.status as RaidRoomRescueReward['rescueGate']['status'], minimumBattles: gate.minimumBattles === null ? null : number(gate.minimumBattles), minimumContributionDamage: gate.minimumContributionDamage === null ? null : number(gate.minimumContributionDamage) } };
     },
   };

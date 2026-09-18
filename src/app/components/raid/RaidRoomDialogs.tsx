@@ -41,6 +41,10 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
   const key = `${currentUserId ?? ''}:${roomId ?? ''}:${kind ?? ''}`;
   const activeKey = useRef(key);
   const visible = !!kind && !!roomId && !openingProfile && !profileOpen;
+  const rankedParticipants = participants.status === 'success' ? [...(participants.data ?? [])].sort((a,b) => (b.appliedDamage.status === 'available' ? b.appliedDamage.value : -1) - (a.appliedDamage.status === 'available' ? a.appliedDamage.value : -1)) : [];
+  const totalDamage = rankedParticipants.reduce((sum,p) => sum + (p.appliedDamage.status === 'available' ? p.appliedDamage.value : 0), 0);
+  let previousDamage: number | null = null, previousRank = 0;
+  const participantRows = rankedParticipants.map((participant,index) => { const damage = participant.appliedDamage.status === 'available' ? participant.appliedDamage.value : 0; if (previousDamage === null || damage !== previousDamage) previousRank = index + 1; previousDamage = damage; return { participant, damage, rank: previousRank, share: totalDamage > 0 ? damage / totalDamage * 100 : 0 }; });
   useLayoutEffect(() => {
     if (activeKey.current !== key) { activeKey.current = key; request.current++; scroll.current = { key, top: 0, player: '' }; }
     if (!visible) return;
@@ -68,12 +72,12 @@ export default function RaidRoomDialogs({ kind, roomId, ownerUserId, currentUser
         {participants.status === 'idle' && <p>参加者情報は未取得です。</p>}
         {participants.status === 'error' && <p role="alert">参加者を取得できませんでした。</p>}
         {(participants.status === 'error' || participants.status === 'idle') && <OutlawButton loadingLabel="" onClick={onRefresh}>再取得</OutlawButton>}
-        {participants.status === 'success' && <ul className="raid-room-dialogs__participants">{participants.data?.map(participant => <li key={participant.player.userId}>
+        {participants.status === 'success' && <ul className="raid-room-dialogs__participants">{participantRows.map(({participant,damage,rank,share}) => <li key={participant.player.userId} className={participant.player.userId === currentUserId ? 'is-self' : ''}>
           <button type="button" className="raid-room-dialogs__person" disabled={!onOpenProfile} data-profile-user={participant.player.userId} onClick={() => void openProfile(participant.player.userId)} aria-label={`${participant.player.name}のプロフィール`}>
             <span className="raid-room-dialogs__person-head"><span className="raid-room-dialogs__avatar">{participant.player.leaderIconUrl.status === 'available' && participant.player.leaderIconUrl.value && <ParticipantPortrait url={participant.player.leaderIconUrl.value} />}</span>
-            <span className="raid-room-dialogs__identity"><strong>{participant.player.name}</strong><span>{participant.player.userId === ownerUserId ? '挑戦者' : '参加者'}{participant.player.userId === currentUserId ? '・あなた' : ''}</span><span>{participant.currentGuild.status === 'available' ? participant.currentGuild.value ? <GuildIdentity guildId={participant.currentGuild.value.guildId} name={participant.currentGuild.value.name} /> : "Guild未所属" : 'Guild未取得'}</span></span>
+            <span className="raid-room-dialogs__rank">{rank}位</span><span className="raid-room-dialogs__identity"><strong>{participant.player.name}</strong><span>{participant.player.userId === ownerUserId ? '挑戦者' : participant.viaRescue ? '救援参加者' : '通常参加'}{participant.player.userId === currentUserId ? '・あなた' : ''}</span><span>{participant.currentGuild.status === 'available' ? participant.currentGuild.value ? <GuildIdentity guildId={participant.currentGuild.value.guildId} name={participant.currentGuild.value.name} /> : "Guild未所属" : 'Guild未取得'}</span></span>
             <span className="raid-room-dialogs__chevron" aria-hidden="true">›</span>
-            </span><span className="raid-room-dialogs__contribution"><span>貢献 {participant.appliedDamage.status === 'available' ? participant.appliedDamage.value.toLocaleString('ja-JP') : '未取得'}</span><span>{participant.finalizedBattles.status === 'available' ? `${participant.finalizedBattles.value.toLocaleString('ja-JP')}戦` : '戦数未取得'}</span></span>
+            </span><span className="raid-room-dialogs__contribution"><span>貢献 {participant.appliedDamage.status === 'available' ? damage.toLocaleString('ja-JP') : '未取得'}（{share.toFixed(1)}%）</span><span>{participant.finalizedBattles.status === 'available' ? `${participant.finalizedBattles.value.toLocaleString('ja-JP')}戦` : '戦数未取得'}</span></span><span className="raid-room-dialogs__bar" aria-hidden="true"><i style={{width:`${share}%`}} /></span>
           </button>
         </li>)}</ul>}
         {participants.status === 'success' && participants.data?.length === 0 && <p>参加者はいません。</p>}

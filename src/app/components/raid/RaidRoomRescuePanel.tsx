@@ -71,9 +71,9 @@ function RescuePanel({ client, roomId, userId, disabled = false, setInteractionB
   return <OutlawCard className="raid-rescue-panel"><section aria-label="救援"><header className="raid-rescue-panel__heading"><img src="/ui/icon_friends.png" alt="" /><h3>{status?.isOwner ? '仲間に救援を求める' : '救援状況'}</h3></header>
     {busy && <span className="spinner" role="status" aria-label="通信中" />}
     {status?.isOwner && <>
-      <dl className="raid-rescue-panel__channels"><div><dt>全体アクティビティ</dt><dd>{status.activityCount} / {status.maxPerChannel}<small>残り{status.maxPerChannel - status.activityCount}回</small></dd></div><div><dt>所属Guild</dt><dd>{status.guildCount} / {status.maxPerChannel}<small>残り{status.maxPerChannel - status.guildCount}回</small></dd></div></dl>
-      <p className="raid-room-muted">全体アクティビティと依頼時の所属Guildへ送信します。未所属の場合は全体のみです。公開先ごとに3回までです。</p>
-      {!pendingId && (!status.requestEnabled || disabled) && <p className="raid-room-muted">現在は新しい救援を依頼できません。</p>}
+      <dl className="raid-rescue-panel__channels"><div><dt>全体</dt><dd>残り{Math.max(0,status.maxPerChannel-status.activityCount)}回</dd></div><div><dt>所属TRIBE</dt><dd>残り{Math.max(0,status.maxPerChannel-status.guildCount)}回</dd></div></dl>
+      <p className="raid-room-muted">所属TRIBEがない場合は全体のみに送信します。</p>
+      {!pendingId && (!status.requestEnabled || disabled) && <p className="raid-room-muted">{status.activityCount >= status.maxPerChannel && status.guildCount >= status.maxPerChannel ? '救援依頼の送信上限に達しています。' : '現在は新しい救援を依頼できません。'}</p>}
       {!pendingId && <OutlawButton loadingLabel="" disabled={busy || disabled || !userId || !status.requestEnabled} aria-label="救援を依頼" onClick={request}>救援を依頼</OutlawButton>}
     </>}
     {pendingId && <>
@@ -84,6 +84,6 @@ function RescuePanel({ client, roomId, userId, disabled = false, setInteractionB
     {status?.viaRescue && <p className="raid-rescue-panel__contribution">救援参加：{status.finalizedBattles.toLocaleString('ja-JP')}戦 ・ 貢献ダメージ {status.contributionDamage.toLocaleString('ja-JP')}</p>}
     {sent && <p role="status">救援依頼を送信しました。</p>}
     {error && <p role="alert">救援情報または保存情報を確認できませんでした。再度お試しください。</p>}
-    <OutlawButton loadingLabel="" disabled={busy} aria-label="救援情報を更新" onClick={refresh}>救援情報を更新</OutlawButton>
+    <OutlawButton loadingLabel="" variant="secondary" disabled={busy} aria-label="救援情報を更新" onClick={refresh}>更新</OutlawButton>
   </section></OutlawCard>;
 }

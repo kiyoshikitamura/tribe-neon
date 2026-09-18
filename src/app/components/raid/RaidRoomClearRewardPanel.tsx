@@ -5,13 +5,6 @@ import type { RaidRewardPlan } from '../../../domain/raidRoomDisplay';
 import { RaidRewardPlanItems, RaidIssuedRewardItems } from './RaidRewardItems';
 import OutlawButton from '../ui/OutlawButton';
 
-const labels: Record<RaidRoomClearReward['status'], string> = {
-  not_eligible: '討伐報酬の条件をまだ満たしていません。',
-  unconfigured: '討伐報酬は準備中です。',
-  pending: '討伐報酬の送付待ちです。',
-  issued: '討伐報酬を獲得しました。',
-};
-
 export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpenPresents, onDirectReward, plan }: {
   client: RaidRoomClearRewardClient; roomId: string; userId?: string; onOpenPresents?: () => void | Promise<void>; onDirectReward?: () => Promise<void>; plan?: RaidRewardPlan;
 }) {
@@ -25,7 +18,6 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
   const identityRef = useRef(identity);
   useLayoutEffect(() => { identityRef.current = identity; }, [identity]);
   const [rewardIdentity, setRewardIdentity] = useState(identity);
-  const [revision, setRevision] = useState(0);
   useEffect(() => {
     let current = true;
     setBusy(true); setError(false); setReward(null); setRewardIdentity(identity); setOpenError(false); setOpening(false); openingRef.current = false;
@@ -37,7 +29,7 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
       .catch(() => { if (current) setError(true); })
       .finally(() => { if (current) setBusy(false); });
     return () => { current = false; };
-  }, [client, roomId, userId, revision, onDirectReward]);
+  }, [client, roomId, userId, onDirectReward]);
   const openPresents = async () => {
     if (!onOpenPresents || openingRef.current) return;
     const openedIdentity = identity;
@@ -52,11 +44,11 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
     {openError && <p role="alert">プレゼントBOXを取得できませんでした。もう一度お試しください。</p>}
     {error && <p role="alert">討伐報酬を取得できませんでした。再度お試しください。</p>}
     {reward && rewardIdentity === identity && <>
-      <p role="status">{reward.status === 'issued' && reward.items.some(item => item.delivery !== 'DIRECT') ? '以前の報酬はプレゼントBOXで確認できます。' : labels[reward.status]}</p>
-      {reward.clearGate.minimumContributionDamage !== null && <p>開催中の累積貢献ダメージが{reward.clearGate.minimumContributionDamage.toLocaleString('ja-JP')}{reward.clearGate.comparison === 'GTE' ? '以上で、1戦以上参加して' : 'を超え、'}ボスを撃破すると対象です。</p>}
-      <p>対象の貢献ダメージ：{reward.clearGate.contributionDamage.toLocaleString('ja-JP')}</p>
-      <p className="raid-room-muted">レイド終了後に確定した戦闘は討伐報酬の貢献に含みません。</p>
-      <p className="raid-room-muted">討伐報酬は1人につきレイドごとに1回。条件達成時に所持資産へ反映されます。</p>
+      <div className="raid-reward-progress" aria-label="討伐報酬条件">
+        {reward.clearGate.minimumContributionDamage !== null && <p><strong>{reward.clearGate.contributionDamage >= reward.clearGate.minimumContributionDamage ? '✓' : '—'} 貢献ダメージ</strong><span>{reward.clearGate.contributionDamage.toLocaleString('ja-JP')} / {reward.clearGate.minimumContributionDamage.toLocaleString('ja-JP')}</span></p>}
+        <p><strong>{reward.clearGate.cleared ? '✓' : '—'} ボス撃破</strong><span>{reward.clearGate.cleared ? '達成' : '撃破待ち'}</span></p>
+        <p><strong>報酬付与</strong><span>{reward.status === 'issued' ? '獲得済み' : reward.status === 'pending' ? '付与待ち' : '未獲得'}</span></p>
+      </div>
       <RaidIssuedRewardItems items={reward.items} />
       {reward.dailyBonus && <section aria-label="1日1回撃破ボーナス">
         <h4>1日1回撃破ボーナス</h4>
@@ -64,6 +56,5 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
       </section>}
       {reward.status === 'issued' && reward.items.some(item => item.delivery !== 'DIRECT') && onOpenPresents && <OutlawButton loadingLabel="" disabled={opening} onClick={openPresents}>プレゼントBOXへ</OutlawButton>}
     </>}
-    <OutlawButton loadingLabel="" disabled={busy || opening} onClick={() => setRevision(value => value + 1)}>報酬情報を更新</OutlawButton>
   </div>;
 }

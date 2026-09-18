@@ -22,3 +22,8 @@
 
 
 .raid-room-dialogs .canonical-dialog-close{width:44px;height:44px;flex-basis:44px}
+
+.raid-room-dialogs__participants>li.is-self{background:rgba(255,255,255,.05);margin-inline:-8px;padding-inline:8px;border-radius:8px}
+.raid-room-dialogs__rank{flex:0 0 34px;font-size:13px;font-weight:800;text-align:center}
+.raid-room-dialogs__bar{display:block;width:calc(100% - 58px);height:5px;margin:6px 0 0 58px;background:var(--ui-bg-root);border-radius:3px;overflow:hidden}
+.raid-room-dialogs__bar>i{display:block;height:100%;background:var(--ui-combat);border-radius:3px}

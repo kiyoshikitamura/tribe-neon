@@ -30,7 +30,6 @@ export function RaidRewardItem({ itemId, quantity }: { itemId: string; quantity:
 export function RaidRewardPlanItems({ plan }: { plan?: RaidRewardPlan }) {
   return <section className="raid-reward-items" aria-label="報酬の予定内容"><h4>条件達成時の報酬</h4>
     {!plan ? <p>予定内容は未取得です。</p> : plan.status === 'unconfigured' ? <p>報酬内容は準備中です。</p> : <>
-      <p className="raid-reward-items__note">条件達成後、所持資産へ反映されます。</p>
       <ul className="raid-reward-items__plan">{plan.items.map((item, index) => <li key={`${item.itemId}:${index}`}><RaidRewardItem {...item} /></li>)}</ul>
     </>}
   </section>;

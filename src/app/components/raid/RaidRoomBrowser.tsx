@@ -140,7 +140,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
         onSelectDifficulty={id => { setDifficulty(id); controller.resetCreateRequest(); }}
         onConfirm={async () => { const created = await controller.createRoom(difficulty, variantId); if (created) setCreateOpen(false); }}
         onCancel={() => { setCreateOpen(false); setInfoVariant(null); }} onRetry={() => void controller.loadBossChoices()}
-        onEnemyInfo={id => { setInfoVariant(id); setEnemyOpen(true); }} busy={busy} canConfirm={snapshot.canCreate} error={snapshot.createError}
+        onEnemyInfo={id => { setInfoVariant(id); setEnemyOpen(true); }} busy={busy} canConfirm={snapshot.canCreate && enemyInfo.status === 'success'} error={snapshot.createError} enemyInfo={enemyInfo}
         skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data?.variantId === variantId ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }}
         rewardPlan={{ ...enemyInfo, data: enemyInfo.data?.clearPlan ?? null }} resolveRewardName={resolveRewardName} />}
       {!createOpen && <>
@@ -171,6 +171,7 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
         currentUserId={currentUserId} now={now} busy={busy}
         onParticipants={() => setDialog('participants')} onRewards={() => setDialog('rewards')} onEnemyInfo={() => setEnemyOpen(true)}
         rescue={renderRescue?.(room, busy || !!lifecycle?.blockJoin)}
+        finalRewards={room.state.status === 'available' && room.state.value !== 'active' && renderRewards ? renderRewards(room.roomId, () => undefined, display.data ?? undefined) : undefined}
         action={<>
           {snapshot.canRegister ? <>
           {snapshot.briefing.status === "loading" && <Spinner />}
@@ -205,7 +206,8 @@ export default function RaidRoomBrowser({ controller, onBattleReady, onBriefingR
       renderRewards={renderRewards ? (id, close) => renderRewards(id, close, display.data ?? undefined) : undefined} />
     {enemyOpen && typeof document !== 'undefined' && createPortal(<div className="raid-room-dialogs">
       <CanonicalDialog title="敵情報" onClose={() => setEnemyOpen(false)} actions={[{ label: '閉じる', onClick: () => setEnemyOpen(false) }]}>
-        {activeVariant ? <><RaidEnemyRoster bossMasterId={activeVariant} memberCharacterIds={enemyInfo.status === 'success' && enemyInfo.data?.variantId === activeVariant ? enemyInfo.data.memberCharacterIds ?? null : null} presentation="detail" skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }} />
+        {activeVariant ? <><RaidEnemyRoster bossMasterId={activeVariant} memberCharacterIds={enemyInfo.status === 'success' && enemyInfo.data?.variantId === activeVariant ? enemyInfo.data.memberCharacterIds ?? null : null} presentation="detail" skillsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data ? { status: 'available', value: enemyInfo.data.skillsByCharacterId } : { status: 'unknown' }}
+          detailsByCharacterId={enemyInfo.status === 'success' && enemyInfo.data ? Object.fromEntries(enemyInfo.data.members.map(member => [member.characterId, member])) : undefined} />
           {enemyInfo.status === 'loading' && <Spinner />}{enemyInfo.status === 'error' && <p role="alert">使用スキルを取得できませんでした。</p>}</> : <p>敵情報を取得できませんでした。戦況を更新してください。</p>}
       </CanonicalDialog>
     </div>, document.body)}

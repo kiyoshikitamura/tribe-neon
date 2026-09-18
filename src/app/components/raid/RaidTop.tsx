@@ -10,6 +10,8 @@ import OutlawButton from "../ui/OutlawButton";
 import UserAvatar from "../profile/UserAvatar";
 import GuildIdentity from "../profile/GuildIdentity";
 import OutlawCard from "../ui/OutlawCard";
+import CanonicalDialog from "../ui/CanonicalDialog";
+import { createPortal } from "react-dom";
 import SectionHeader from "../ui/SectionHeader";
 import "./RaidTop.css";
 import RaidStrategySummary from "./RaidStrategySummary";
@@ -56,10 +58,12 @@ function ResourceNotice({ resource, onRefresh, unavailable, disabled }: { resour
   return <div className="raid-top__notice" role={resource.status === "error" ? "alert" : "status"}><p>{resource.status === "error" ? "取得できませんでした" : unavailable}</p>{resource.status === "error" && <OutlawButton loadingLabel="" onClick={onRefresh} disabled={disabled}>再試行</OutlawButton>}</div>;
 }
 
-export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onRefresh, disabled }: RaidTopProps) {
+export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onRefresh, disabled }: RaidTopProps) {
   const [rescueChoice, setRescueChoice] = useState({key:"", index:0});
   const [now, setNow] = useState<number | null>(null);
   const [retry, setRetry] = useState(0);
+  const [rewardOpen, setRewardOpen] = useState(false);
+  const [rescueListOpen, setRescueListOpen] = useState(false);
   const manifest = useMemo(() => {
     const urls = new Set<string>();
     const backgrounds = new Set<string>();
@@ -91,15 +95,16 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
   const participating = data.participating.status === "ready" ? data.participating.data : [];
   const rescues = data.rescues.status === "ready" ? data.rescues.data : [];
   const showParticipating = data.participating.status !== "ready" || participating.length > 0;
-  const showRescues = data.rescues.status !== "ready" || rescues.length > 0;
+  const showRescues = true;
   const rescueKey = rescues.map(entry => `${entry.room.roomId}:${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`).join("|");
   useEffect(() => { setRescueChoice({key:rescueKey,index:Math.floor(Math.random()*Math.max(1,rescues.length))}); }, [rescueKey, rescues.length]);
-  const shownRescues = rescues.length ? [rescues[rescueChoice.key===rescueKey ? Math.min(rescueChoice.index,rescues.length-1) : 0]] : [];
+  const shownRescues = rescueListOpen ? rescues : rescues.length ? [rescues[rescueChoice.key===rescueKey ? Math.min(rescueChoice.index,rescues.length-1) : 0]] : [];
   const resolve: ImageResolver = url => assets?.results.find(result => result.requestedSrc === url)?.resolvedSrc ?? FALLBACK;
   if ([data.participating, data.rescues, data.dailyTargets].some(resource => resource.status === "loading") || assets?.key !== assetKey) return <Spinner />;
   if (assets.results.some(result => result.status === "failed")) return <div className="raid-top__notice" role="alert"><p>画像を取得できませんでした</p><OutlawButton loadingLabel="" onClick={() => { setAssets(null); setRetry(value => value + 1); }}>再試行</OutlawButton></div>;
   return <div className="raid-top" data-testid="raid-top">
-    {showParticipating && <section aria-label="参戦中" className="raid-top__section"><SectionHeader title="参戦中" />
+    {!rescueListOpen && <img className="raid-top__banner" src="/promotion/mypage_banner_raid_update_1200x200.jpg" alt="レイドバトル" />}
+    {!rescueListOpen && showParticipating && <section aria-label="参戦中" className="raid-top__section"><SectionHeader title="参戦中" />
       <ResourceNotice resource={data.participating} onRefresh={onRefresh} disabled={disabled} unavailable="参戦情報は現在確認できません" />
       <div className="raid-top__joined-list">{participating.map(entry => <OutlawCard key={entry.room.roomId} className="raid-top__joined">
         <div className="raid-top__joined-visual">{entry.enemy.status === "available" && <img src={resolve(entry.enemy.value.leaderImageUrl)} alt="" />}</div>
@@ -107,9 +112,10 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
         <OutlawButton className="raid-top__continue" loadingLabel="" onClick={() => onOpenRoom(entry.room.roomId)} disabled={disabled}>続きへ</OutlawButton>
       </OutlawCard>)}</div>
     </section>}
-    {showRescues && <section aria-label="救援依頼" className="raid-top__section"><div className="raid-top__section-row"><SectionHeader title="救援依頼" subTitle="ほかの挑戦者に加勢する" /></div>
+    {showRescues && <section aria-label={rescueListOpen ? "救援一覧" : "救援依頼"} className="raid-top__section"><div className="raid-top__section-row"><SectionHeader title={rescueListOpen ? "救援一覧" : "救援依頼"} subTitle={rescueListOpen ? undefined : "ほかの挑戦者に加勢する"} /><OutlawButton loadingLabel="" disabled={disabled} onClick={() => setRescueListOpen(value => !value)}>{rescueListOpen ? "トップへ" : "もっと見る"}</OutlawButton></div>
       <ResourceNotice resource={data.rescues} onRefresh={onRefresh} disabled={disabled} unavailable="救援情報は現在確認できません" />
       <div className="raid-top__rescue-track">
+        {rescues.length === 0 && data.rescues.status === "ready" && <p className="raid-top__muted">現在表示できる救援依頼はありません。</p>}
         {shownRescues.map(entry => <OutlawCard key={`${entry.room.roomId}-${entry.rescue.status === "available" ? entry.rescue.value.rescueId : "unknown"}`} className="raid-top__rescue">
           <div className="raid-top__requester-art">{entry.room.owner.status === "available" && entry.room.owner.value.leaderIconUrl.status === "available" && entry.room.owner.value.leaderIconUrl.value ? <img src={resolve(entry.room.owner.value.leaderIconUrl.value)} alt="" /> : <PersonIcon resolve={resolve} />}</div><Owner entry={entry} resolve={resolve} />
           <div className="raid-top__rescue-visual">{entry.enemy.status === "available" && <><img className="raid-top__background" src={resolve(entry.enemy.value.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(entry.enemy.value.leaderImageUrl)} alt="" /></>}<div className="raid-top__enemy-caption"><span>{getRaidDifficultyLabel(entry.room.difficultyId)}{entry.enemy.status === "available" && ` / ${entry.enemy.value.areaName}`}</span><h3>{entry.enemy.status === "available" ? entry.enemy.value.bossName : "敵情報未確認"}</h3></div></div>
@@ -117,12 +123,12 @@ export default function RaidTop({ data, onOpenRoom, onChooseEnemy, onBrowse, onR
         </OutlawCard>)}
       </div>
     </section>}
-    <section aria-label="今日の強敵" className="raid-top__section"><SectionHeader title="今日の強敵" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
+    {!rescueListOpen && <section aria-label="今日の強敵" className="raid-top__section"><SectionHeader title="今日の強敵" subTitle={data.dailyTargets.status === "ready" ? "本日の2エリア" : undefined} />
       <ResourceNotice resource={data.dailyTargets} onRefresh={onRefresh} disabled={disabled} unavailable="本日の対象エリアは未確認です" />
       {data.dailyTargets.status === "ready" && <div className="raid-top__targets">{data.dailyTargets.data.targets.map(enemy => <OutlawCard key={enemy.variantId} className="raid-top__target"><div className="raid-top__target-visual"><img className="raid-top__background" src={resolve(enemy.backgroundUrl)} alt="" /><img className="raid-top__leader" src={resolve(enemy.leaderImageUrl)} alt="" /><div className="raid-top__enemy-caption"><span>{enemy.areaName}</span><h3>{enemy.bossName}</h3></div></div><div className="raid-top__target-body"><RaidStrategySummary areaId={enemy.baseId} /><OutlawButton loadingLabel="" fullWidth disabled={disabled || !data.canCreate} onClick={() => onChooseEnemy(enemy)}>この敵に挑む</OutlawButton></div></OutlawCard>)}</div>}
       {data.dailyTargets.status === "ready" && !data.canCreate && <p className="raid-top__muted">現在、新たな挑戦は受け付けていません</p>}
-    </section>
-    <RaidRewardComparison />
-    <section aria-label="開催中のレイドを探す" className="raid-top__section raid-top__browse"><OutlawButton loadingLabel="" fullWidth onClick={onBrowse} disabled={disabled}><span className="raid-top__browse-copy"><strong>開催中のレイドを探す</strong><small>ほかの挑戦者に加勢する</small></span><span aria-hidden="true">›</span></OutlawButton></section>
+    </section>}
+    {!rescueListOpen && <section className="raid-top__section raid-top__reward-action"><OutlawButton loadingLabel="" fullWidth onClick={() => setRewardOpen(true)} disabled={disabled}>報酬を確認</OutlawButton></section>}
+    {rewardOpen && typeof document !== "undefined" && createPortal(<div className="raid-room-dialogs"><CanonicalDialog title="レイド報酬" onClose={() => setRewardOpen(false)} actions={[{label:"閉じる",onClick:()=>setRewardOpen(false)}]}><RaidRewardComparison /></CanonicalDialog></div>, document.body)}
   </div>;
 }

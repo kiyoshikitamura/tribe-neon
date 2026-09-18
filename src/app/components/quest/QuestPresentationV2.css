@@ -216,3 +216,6 @@
 .quest-v2-energy-recovery p { margin: 0; color: #f1d594; font-size: 13px; line-height: 1.6; }
 .quest-v2-energy-recovery small { color: #d6dce3; font-size: 12px; line-height: 1.6; }
 .quest-v2-energy-recovery .outlaw-button-inner { white-space: normal; }
+
+.quest-v2-list-button{position:relative;overflow:visible}
+.quest-v2-action-badge{position:absolute;top:-7px;right:-8px;z-index:2;display:grid;place-items:center;min-width:17px;height:17px;padding:0 4px;box-sizing:border-box;border:1.5px solid #fff;border-radius:10px;background:#ff3366;color:#fff;box-shadow:0 0 9px rgba(255,51,102,.72);font-size:8px;font-weight:900;line-height:1;pointer-events:none}
