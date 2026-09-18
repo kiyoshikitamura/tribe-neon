@@ -74,7 +74,7 @@ export default function Header() {
             title={visibleTitle}
             leaderCharacterId={identityLeaderCharacterId || null}
             identityReady={identityLeaderAuthorityReady}
-            verified={isVerifiedAccount}
+            verified={isVerifiedAccount ? true : undefined}
             onOpen={session?.user?.id ? () => void fetchPlayerDetail(session.user.id) : undefined}
           />
         </div>
