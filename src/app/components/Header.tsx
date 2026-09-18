@@ -68,6 +68,7 @@ export default function Header() {
         <div className="header-mobile-user">
           <UserIdentityRow
             variant="compact"
+            userId={session?.user?.id}
             userName={username || "プレイヤー名"}
             guildName={userGuild?.name} guildId={userGuild?.id}
             title={visibleTitle}
