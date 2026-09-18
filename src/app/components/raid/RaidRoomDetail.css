@@ -61,6 +61,10 @@
 .raid-detail__final-achievement strong{font-size:18px}.raid-detail__final-achievement span{font-size:11px;color:var(--ui-text-secondary)}
 .raid-detail__final h3{font-size:13px;margin:14px 0 8px}
 .raid-detail__final-list{display:grid;gap:5px}
-.raid-detail__final-list>div{display:grid;grid-template-columns:34px minmax(0,1fr) auto auto;gap:6px;align-items:center;padding:7px 8px;border-bottom:1px solid var(--ui-border);font-size:11px;font-variant-numeric:tabular-nums}
+.raid-detail__final-list>div{display:grid;grid-template-columns:30px 34px minmax(0,1fr) auto auto;gap:6px;align-items:center;padding:7px 8px;border-bottom:1px solid var(--ui-border);font-size:11px;font-variant-numeric:tabular-nums}
 .raid-detail__final-list>div.is-self{background:rgba(255,255,255,.05);border-radius:6px}
-.raid-detail__final-list>div span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.raid-detail__final-list>div>span:nth-of-type(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.raid-detail__final-avatar{display:block;width:28px;height:28px;overflow:hidden;border-radius:50%;background:var(--ui-bg-raised)}
+.raid-detail__final-avatar .raid-detail__portrait{width:100%;height:100%}
+.raid-detail__final-bar{grid-column:3/-1;display:block;height:5px;overflow:hidden;border-radius:3px;background:var(--ui-bg-root)}
+.raid-detail__final-bar>i{display:block;height:100%;border-radius:3px;background:var(--ui-combat)}
