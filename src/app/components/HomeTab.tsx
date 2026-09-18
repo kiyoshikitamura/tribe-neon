@@ -135,7 +135,6 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     setShowMissionPanel,
     setMissionTab,
     setShowLoginBonusModal,
-    setShowAccountAuthenticationModal,
     setShowMoveBaseModal,
     setShowTribeChatPanel,
     setChatChannel,
