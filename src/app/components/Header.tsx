@@ -20,6 +20,7 @@ export default function Header() {
     userGuild,
     userTitle,
     session,
+    onboardingState,
     identityLeaderCharacterId,
     identityLeaderAuthorityReady,
     fetchPlayerDetail,
@@ -48,6 +49,12 @@ export default function Header() {
   const visibleTitle = userTitle && !["称号なし", "No Title", "title_none", "半グレの首領"].includes(userTitle)
     ? userTitle
     : null;
+  const isVerifiedAccount = session?.user?.is_anonymous === false
+    && onboardingState?.user_id === session.user.id
+    && onboardingState?.tutorial_step === "AUTHENTICATION"
+    && onboardingState?.identity_integrity_valid === true
+    && Boolean(onboardingState?.auth_method);
+
   const runMenuAction = (action: () => void) => {
     setMenuOpen(false);
     action();
@@ -66,6 +73,7 @@ export default function Header() {
             title={visibleTitle}
             leaderCharacterId={identityLeaderCharacterId || null}
             identityReady={identityLeaderAuthorityReady}
+            verified={isVerifiedAccount}
             onOpen={session?.user?.id ? () => void fetchPlayerDetail(session.user.id) : undefined}
           />
         </div>
