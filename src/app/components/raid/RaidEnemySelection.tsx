@@ -10,6 +10,8 @@ import OutlawButton from "../ui/OutlawButton";
 import SubTabNav from "../ui/SubTabNav";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import CanonicalDialog from "../ui/CanonicalDialog";
+import { SkillIcon } from "../skill/SkillPresentation";
+import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
 import { RAID_BACKGROUND_FALLBACK,RAID_PERSON_FALLBACK,useRaidPageAssets,RaidPageSpinner } from "./raidPagePresentation";
 import "./RaidEnemySelection.css";
 import RaidStrategySummary from "./RaidStrategySummary";
@@ -55,7 +57,7 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
         <span className="raid-enemy-selection__loadout-label">装備</span>
         <div>{detail?.equipmentIds.map(id=><CanonicalItemIcon key={id} itemId={id} className="raid-enemy-selection__loadout-icon"/>)}</div>
         <span className="raid-enemy-selection__loadout-label">スキル</span>
-        <div>{skills.map(skill=><span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}>S</span>)}</div>
+        <div>{skills.map(skill=>{const master=CANONICAL_SKILL_VIEW.find(entry=>entry.id===skill.id);return master?<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}><SkillIcon skill={master}/></span>:<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}>S</span>;})}</div>
        </div>
       </article>;
      })}
