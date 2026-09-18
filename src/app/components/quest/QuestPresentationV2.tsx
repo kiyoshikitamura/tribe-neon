@@ -14,6 +14,7 @@ import CanonicalDialog from "../ui/CanonicalDialog";
 import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import { questProgressState, sortQuestProgress, initialQuestCourseId, questCoursesForTown } from "@/domain/questPresentationState";
 import { getJstDateString } from "@/utils/jst_date";
+import { supabase } from "@/utils/supabase";
 import "./QuestPresentationV2.css";
 import QuestTownStory from "./QuestTownStory";
 
@@ -49,6 +50,10 @@ export default function QuestPresentationV2() {
   const [selectionStep, setSelectionStep] = useState<"DESTINATION" | "REVIEW" | "CHARACTER">("DESTINATION");
   const [selectedPatrolId, setSelectedPatrolId] = useState<string | null>(null);
   const activePatrols = sortQuestProgress<any>(game.activePatrols || []);
+  const actionableQuestCount = activePatrols.filter((patrol: any) => {
+    const state = questProgressState(patrol);
+    return state === "REWARD" || state === "BATTLE";
+  }).length;
   const occupiedPatrols = activePatrols.filter((patrol: any) => !((patrol.progressionKind || patrol.progression_kind) === "FIRST_CLEAR" && Number(patrol.secondsLeft) <= 0));
   const occupiedCount = occupiedPatrols.length;
   const clearedCount = (game.patrolCourses || []).filter((course: any) => course.is_first_cleared).length;
@@ -93,9 +98,32 @@ export default function QuestPresentationV2() {
   }, [activePatrols, selectedPatrolId, game.showPatrolRewardModal]);
 
   useEffect(() => { contentRef.current?.scrollIntoView({ block: "start" }); }, [showSelection, selectionStep, selectedPatrolId]);
-  useEffect(() => { setShowSelection(true); setSelectedPatrolId(null); setSelectionStep("DESTINATION"); }, [game.session?.user?.id]);
-
   const [today, setToday] = useState(() => getJstDateString());
+  const [firstClearAuthority, setFirstClearAuthority] = useState<{ status: "LOADING" | "READY" | "ERROR"; cleared: Set<string> }>({ status: "LOADING", cleared: new Set() });
+  const refreshFirstClearAuthority = React.useCallback(async () => {
+    const owner = userRef.current;
+    if (!owner) return false;
+    setFirstClearAuthority((current) => ({ ...current, status: "LOADING" }));
+    const { data, error } = await supabase.rpc("get_canonical_quest_progression");
+    if (!mountedRef.current || userRef.current !== owner) return false;
+    if (error || !Array.isArray(data)) {
+      setFirstClearAuthority({ status: "ERROR", cleared: new Set() });
+      return false;
+    }
+    setFirstClearAuthority({
+      status: "READY",
+      cleared: new Set(data.filter((row: any) => row?.is_first_cleared === true).map((row: any) => String(row.quest_id))),
+    });
+    return true;
+  }, []);
+  useEffect(() => {
+    setShowSelection(true);
+    setSelectedPatrolId(null);
+    setSelectionStep("DESTINATION");
+    setFirstClearAuthority({ status: "LOADING", cleared: new Set() });
+    if (game.session?.user?.id) void refreshFirstClearAuthority();
+  }, [game.session?.user?.id, refreshFirstClearAuthority]);
+
   useEffect(() => {
     const refresh = () => {
       setToday(getJstDateString());
@@ -112,12 +140,33 @@ export default function QuestPresentationV2() {
   const skipsReady = game.questSkipsAuthorityReady === true;
   const freeRemaining = skipsReady ? Math.max(0, 5 - (game.dailyCashSkipsResetDate === today ? Number(game.dailyCashSkips) : 0)) : null;
   const paidRemaining = skipsReady ? Math.max(0, 10 - (game.dailyCashSkipsResetDate === today ? Number(game.dailyPaidSkips) : 0)) : null;
-  const shorten = async (currency: "FREE_PREOPEN" | "DIAMOND", patrolId: string) => {
+  const shorten = async (currency: "FREE_PREOPEN" | "FREE_FIRST_CLEAR" | "DIAMOND", patrolId: string) => {
     setPendingAction("SHORTEN");
     return await guarded(async () => {
       const success = await game.handleInstantComplete(currency, patrolId);
-      if (!success && mountedRef.current && game.session?.user?.id === userRef.current) await game.syncBootstrapData(game.session.user.id);
+      if (!success && mountedRef.current && game.session?.user?.id === userRef.current) {
+        await Promise.allSettled([game.syncBootstrapData(game.session.user.id), refreshFirstClearAuthority()]);
+      } else if (success && currency === "FREE_FIRST_CLEAR") {
+        await refreshFirstClearAuthority();
+      }
       return success;
+    });
+  };
+  const confirmFirstClearShorten = (patrolId: string) => {
+    const owner = game.session?.user?.id;
+    game.setConfirmDialogConfig({
+      isOpen: true,
+      title: "無料で時短",
+      message: "初回クリアまで無料で時短できます。探索の残り時間を0にして、バトル開始へ進みます。",
+      confirmText: "無料で時短",
+      cancelText: "戻る",
+      onCancel: () => game.setConfirmDialogConfig(null),
+      onConfirm: async () => {
+        if (!mountedRef.current || !owner || userRef.current !== owner) return;
+        const success = await shorten("FREE_FIRST_CLEAR", patrolId);
+        if (!success) return;
+        if (mountedRef.current && userRef.current === owner) game.setConfirmDialogConfig(null);
+      },
     });
   };
   const confirmPaidShorten = (patrolId: string) => {
@@ -195,7 +244,7 @@ export default function QuestPresentationV2() {
   return <HubPage className="patrol-container quest-v2-shell" title="クエスト" hideVisualHeader>
     <QuestTownStory townId={selectionVisible && ((selectionStep !== "DESTINATION" && activeCourse?.is_unlocked !== false) || selectedTownHasUpperClear) ? game.selectedTown : null} phase={selectedTownHasUpperClear ? "CLEAR" : "START"} />
     <div ref={contentRef} className="quest-v2-content" style={{ "--quest-state-background": `url(${stateBgImage})` } as React.CSSProperties}>
-      {(selectionVisible || selectedPatrol) && <button className="quest-v2-back" onClick={returnToList}>探索一覧へ</button>}
+      {(selectionVisible || selectedPatrol) && <button className="quest-v2-back quest-v2-list-button" aria-label={actionableQuestCount > 0 ? `探索一覧へ、確認待ち${actionableQuestCount}件` : "探索一覧へ"} onClick={returnToList}>探索一覧へ{actionableQuestCount > 0 && <span className="quest-v2-action-badge" aria-hidden="true">{actionableQuestCount}</span>}</button>}
       {!selectionVisible && !selectedPatrol && <section className="quest-v2-overview" aria-label="探索状況">
         <header className="quest-v2-page-hero"><img src="/promotion/mypage_banner_quest.webp" alt="クエスト" /><p>街を攻略し、次のステージへ。</p></header><div className="quest-v2-overview-heading"><span>探索枠 {occupiedCount} / {visibleSlots}</span><span>クリア {clearedCount} / 21</span></div><p className="quest-v2-slot-note">初回クリアごとに表示枠が1つ増えます（最大5枠）。</p>
         {activePatrols.map((patrol: any) => {
@@ -288,7 +337,7 @@ export default function QuestPresentationV2() {
         </section>;
         if (complete) return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="RESULT_READY" key={patrol.id}><header className="tutorial-wire-complete"><h2>クエスト完了</h2><small>QUEST COMPLETE</small></header>{character && <div className="tutorial-wire-return-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong><OutlawButton variant="primary" fullWidth isLoading={pendingAction === "CLAIM"} onClick={() => { setPendingAction("CLAIM"); void guarded(() => game.handleClaimRewards(patrol.id)); }}>報酬を受け取る</OutlawButton><OutlawButton className="quest-v2-selection-return" fullWidth onClick={startSelection}>街一覧へ</OutlawButton></section>;
         if (progressState === "UNKNOWN") return <section key={patrol.id} role="status">探索状況を確認中…</section>;
-        return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="PROGRESS" key={patrol.id}><header className="tutorial-wire-progress-title"><span>{patrolTownName}を探索中</span><small>{difficulty(course?.level_type || "")}</small></header>{character && <div className="tutorial-wire-progress-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong>{isCharacterHometown(character?.homeTown, course?.town_id) && <p className="quest-v2-hometown-note">{patrol.hometownBonusSnapshot?.matched ? <>地元ボーナス発生中<br />CASH +{Number(patrol.hometownBonusSnapshot.cash).toLocaleString()} / ドロップ率 +{Number(patrol.hometownBonusSnapshot.drop_bonus_bp) / 100}ポイント</> : "地元一致"}</p>}{Number.isFinite(patrol.baseCashSnapshot) && <p className="quest-v2-expected-cash">獲得予定CASH：{(Number(patrol.baseCashSnapshot) + Number(patrol.hometownBonusSnapshot?.cash || 0)).toLocaleString()}</p>}<div className="tutorial-wire-time">残り時間 <b>{clock(patrol.secondsLeft)}</b></div><div className="tutorial-wire-progress"><i style={{ width: `${progress}%` }} /></div><div className="quest-v2-speed-actions"><OutlawButton disabled={game.dispatchLoading || !skipsReady || freeRemaining === 0} onClick={() => void shorten("FREE_PREOPEN", patrol.id)}>無料時短 {freeRemaining === null ? "残数確認中" : `${freeRemaining}/5`}</OutlawButton><OutlawButton variant="primary" disabled={game.dispatchLoading || !skipsReady || paidRemaining === 0} onClick={() => confirmPaidShorten(patrol.id)}>30ダイア / 回 {paidRemaining === null ? "残数確認中" : `${paidRemaining}/10`}</OutlawButton></div><OutlawButton className="quest-v2-selection-return" fullWidth onClick={startSelection}>街一覧へ</OutlawButton></section>;
+        return <section className="tutorial-quest-wire quest-v2-state-surface" data-quest-state="PROGRESS" key={patrol.id}><header className="tutorial-wire-progress-title"><span>{patrolTownName}を探索中</span><small>{difficulty(course?.level_type || "")}</small></header>{character && <div className="tutorial-wire-progress-character"><CharacterPresentation src={character.img?.startsWith("/characters/") ? character.img : `/characters/${String(character.img || "").replace(/^\//, "")}`} alt={character.jpName} variant="quest" rarity={character.rarity} backgroundSrc={getCharacterLocationBackground(character.homeTown)} frameKind="character" metadata={false} /></div>}<strong className="tutorial-wire-course">{course?.name || "クエスト"}</strong>{isCharacterHometown(character?.homeTown, course?.town_id) && <p className="quest-v2-hometown-note">{patrol.hometownBonusSnapshot?.matched ? <>地元ボーナス発生中<br />CASH +{Number(patrol.hometownBonusSnapshot.cash).toLocaleString()} / ドロップ率 +{Number(patrol.hometownBonusSnapshot.drop_bonus_bp) / 100}ポイント</> : "地元一致"}</p>}{Number.isFinite(patrol.baseCashSnapshot) && <p className="quest-v2-expected-cash">獲得予定CASH：{(Number(patrol.baseCashSnapshot) + Number(patrol.hometownBonusSnapshot?.cash || 0)).toLocaleString()}</p>}<div className="tutorial-wire-time">残り時間 <b>{clock(patrol.secondsLeft)}</b></div><div className="tutorial-wire-progress"><i style={{ width: `${progress}%` }} /></div>{firstClearAuthority.status === "ERROR" ? <div className="quest-v2-speed-actions"><OutlawButton disabled={game.dispatchLoading} onClick={() => void refreshFirstClearAuthority()}>クリア状態を再取得</OutlawButton></div> : firstClearAuthority.status !== "READY" ? <div className="quest-v2-speed-actions"><OutlawButton disabled>クリア状態を確認中…</OutlawButton></div> : !firstClearAuthority.cleared.has(String(patrol.courseId)) ? <div className="quest-v2-speed-actions"><OutlawButton variant="primary" disabled={game.dispatchLoading} onClick={() => confirmFirstClearShorten(patrol.id)}>無料で時短</OutlawButton></div> : <div className="quest-v2-speed-actions"><OutlawButton disabled={game.dispatchLoading || !skipsReady || freeRemaining === 0} onClick={() => void shorten("FREE_PREOPEN", patrol.id)}>無料時短 {freeRemaining === null ? "残数確認中" : `${freeRemaining}/5`}</OutlawButton><OutlawButton variant="primary" disabled={game.dispatchLoading || !skipsReady || paidRemaining === 0} onClick={() => confirmPaidShorten(patrol.id)}>30ダイア / 回 {paidRemaining === null ? "残数確認中" : `${paidRemaining}/10`}</OutlawButton></div>}<OutlawButton className="quest-v2-selection-return" fullWidth onClick={startSelection}>街一覧へ</OutlawButton></section>;
       })}</div>}
     </div>
 
