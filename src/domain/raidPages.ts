@@ -6,7 +6,7 @@ import { parseRaidTopSnapshot } from './raidTopData';
 import { resolveRaidTopEnemy } from './raidTopAssets';
 
 export interface RaidListPage { entries: readonly RaidTopEntry[]; nextOffset: number | null }
-export interface RaidEnemyInfo { variantId: string; memberCharacterIds?: readonly string[]; skillsByCharacterId: Readonly<Record<string, readonly { id: string; name: string }[]>>; clearPlan: RaidRewardPlan; rescuePlan: RaidRewardPlan }
+export interface RaidEnemyInfo { variantId: string; maxHp: number; memberCharacterIds?: readonly string[]; skillsByCharacterId: Readonly<Record<string, readonly { id: string; name: string }[]>>; members: readonly { characterId: string; hp: number; atk: number; def: number; equipmentIds: readonly string[] }[]; clearPlan: RaidRewardPlan; rescuePlan: RaidRewardPlan }
 export type RaidListLoader = (difficulty: RaidDifficultyId, offset: number) => Promise<RaidListPage>;
 export type RaidEnemyLoader = (variant: string, difficulty: RaidDifficultyId) => Promise<RaidEnemyInfo>;
 function record(value: unknown): Record<string, unknown> { if (!value || typeof value !== 'object' || Array.isArray(value)) throw Error('Invalid raid page'); return value as Record<string, unknown>; }
@@ -37,10 +37,13 @@ export async function loadRaidEnemyInfo(client: RaidRoomRpcClient, variant: stri
   const memberCharacterIds = data.memberCharacterIds.map(text);
   const enemy = resolveRaidTopEnemy(variant, memberCharacterIds);
   if (!enemy) throw Error('Raid roster mismatch');
+  if (typeof data.maxHp !== 'number' || !Number.isSafeInteger(data.maxHp) || data.maxHp <= 0 || !Array.isArray(data.members)) throw Error('Invalid raid profile');
+  const rawMembers = data.members.map(value => { const member=record(value), stats=record(member.baseStats); if (!Array.isArray(member.equipmentIds)) throw Error('Invalid raid equipment'); return { characterId:text(member.characterId), hp:Number(stats.hp), atk:Number(stats.atk), def:Number(stats.def), equipmentIds:member.equipmentIds.map(text) }; });
+  if (rawMembers.length !== 5 || rawMembers.some(member => !Number.isSafeInteger(member.hp) || !Number.isSafeInteger(member.atk) || !Number.isSafeInteger(member.def))) throw Error('Invalid raid profile');
   const raw = record(data.skillsByCharacterId);
   const skillsByCharacterId: Record<string, { id: string; name: string }[]> = {};
   for (const member of enemy.roster) { const skills = raw[member.id]; if (!Array.isArray(skills)) throw Error('Invalid raid skills'); skillsByCharacterId[member.id] = skills.map(value => { const skill = record(value); return { id: text(skill.id), name: text(skill.name) }; }); }
-  return { variantId: variant, memberCharacterIds, skillsByCharacterId, clearPlan: plan(data.clearPlan), rescuePlan: plan(data.rescuePlan) };
+  return { variantId: variant, maxHp: data.maxHp, memberCharacterIds, skillsByCharacterId, members: rawMembers, clearPlan: plan(data.clearPlan), rescuePlan: plan(data.rescuePlan) };
 }
 export async function loadRaidRescueCards(client: RaidRoomRpcClient, ids: readonly string[]): Promise<readonly RaidTopEntry[]> {
   if (ids.length > 50) throw Error('Too many rescue cards');
