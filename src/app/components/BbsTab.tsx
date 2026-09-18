@@ -7,7 +7,7 @@ import UserIdentityRow from "./profile/UserIdentityRow";
 import CanonicalDialog from "./ui/CanonicalDialog";
 import "./BbsTab.css";
 
-export default function BbsTab() {
+export default function BbsTab({ embedded = false }: { embedded?: boolean } = {}) {
   const {
     session,
     bbsThreads,
@@ -249,9 +249,9 @@ export default function BbsTab() {
   };
 
   return (
-    <div className="bbs-view-container">
+    <div className={`bbs-view-container${embedded ? " is-embedded" : ""}`}>
       {/* ヘッダー */}
-      <div className="bbs-header-panel">
+      {!embedded && <div className="bbs-header-panel">
         <div className="bbs-header-left">
           <span className="bbs-header-tag">BBS COMMUNICATION</span>
           <h2 className="bbs-header-title">
@@ -279,7 +279,7 @@ export default function BbsTab() {
             新規スレッド
           </button>
         )}
-      </div>
+      </div>}
 
       {/* スレッド詳細表示 */}
       {bbsActiveThread ? (
@@ -359,7 +359,7 @@ export default function BbsTab() {
                 playCyberSe("click");
               }}
             >
-              ギルドメンバー募集
+              {embedded ? "募集" : "ギルドメンバー募集"}
             </button>
             <button
               className={`bbs-category-tab active-scale-effect ${activeCategory === "STRATEGY_CHAT" ? "active" : ""}`}
@@ -368,7 +368,7 @@ export default function BbsTab() {
                 playCyberSe("click");
               }}
             >
-              攻略＆雑談
+              {embedded ? "攻略" : "攻略＆雑談"}
             </button>
           </div>
 
