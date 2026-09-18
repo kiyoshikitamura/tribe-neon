@@ -418,6 +418,7 @@ export default function GuildTab() {
                     className="guild-member-row"
                   >
                     <UserIdentityRow
+                      userId={m.user_id}
                       userName={m.users?.username || "プレイヤー"}
                       guildName={userGuild.name} guildId={userGuild.id}
                       title={isMe ? "あなた" : undefined}
