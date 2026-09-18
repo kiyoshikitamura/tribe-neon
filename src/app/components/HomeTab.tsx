@@ -22,6 +22,7 @@ import { bindCurrentAcquisitionJourney, confirmCanonicalFirstMyPage } from "@/ut
 import CharacterPresentation from "./character/CharacterPresentation";
 import UserIdentityRow from "./profile/UserIdentityRow";
 import CanonicalDialog from "./ui/CanonicalDialog";
+import AccountAuthenticationStatus from "./account-auth/AccountAuthenticationStatus";
 import {
   markHomeReloadStage,
   readHomeResumeSnapshot,
@@ -677,18 +678,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
           <span>{baseName}</span><small>{currentBase.file.toUpperCase()}</small><b aria-hidden="true">›</b>
         </button>
 
-        {session?.user?.is_anonymous === true
-          && onboardingState?.user_id === session.user.id
-          && onboardingState?.is_anonymous
-          && onboardingState?.authentication_pending && <button
-          type="button"
-          className="mypage-authentication-status active-scale-effect"
-          onClick={() => { setShowAccountAuthenticationModal(true); playCyberSe("click"); }}
-          aria-label="未認証：アカウント認証を開く"
-        >
-          <span className="mypage-authentication-lock" aria-hidden="true"><i /><b /></span>
-          <small>未認証</small>
-        </button>}
+        <AccountAuthenticationStatus />
 
         <div className="mypage-sub-icons-left">
           {miniNavigationItems.map((item) => (
