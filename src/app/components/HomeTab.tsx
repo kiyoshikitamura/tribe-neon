@@ -17,6 +17,7 @@ import { resolveHomeCharacterDialogueLines } from "@/domain/presentation/homeCha
 import { isDestinationAvailable } from "@/domain/operations/operations";
 import { resolvePresentableAssetUrl } from "@/utils/assetPresentation";
 import { getJstDateString } from "@/utils/jst_date";
+import { questProgressState } from "@/domain/questPresentationState";
 import { normalizeRecentActivities, RECENT_ACTIVITY_WINDOW_MS } from "@/domain/social/recentActivity";
 import { bindCurrentAcquisitionJourney, confirmCanonicalFirstMyPage } from "@/utils/kpiInstrumentation";
 import CharacterPresentation from "./character/CharacterPresentation";
@@ -158,6 +159,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
     setErrorMessage,
     setGuideGachaCategory,
     patrolCourses,
+    activePatrols,
   } = useGame();
 
   const equippedTitleName = ownedTitles.find((title: { id: string }) => title.id === titleEquipped)?.name || titleEquipped;
@@ -573,6 +575,10 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
   const homeEventState = isRaidActive ? "raid" : "calm";
   // Only display facts with established authority. Quest/BP initial values are
   // not read-ready projections, so they intentionally have no guessed status.
+  const questActionableCount = (activePatrols || []).filter((patrol: any) => {
+    const state = questProgressState(patrol);
+    return state === "REWARD" || state === "BATTLE";
+  }).length;
   const actionStatus: Partial<Record<string, string>> = {
     ...(raidAvailability === "active" ? { raid: "開催中" } : raidAvailability === "inactive" ? { raid: "開催待ち" } : {}),
     ...(guildMembershipAuthorityReady ? { guild: userGuildMember?.guild_id ? "所属中" : "加入する" } : {}),
@@ -748,7 +754,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
               <button
                 key={action.id}
                 className={`circle-menu-btn ${action.id} active-scale-effect${highlighted ? " recommended" : ""}`}
-                aria-label={status ? `${action.label}、${status}` : action.label}
+                aria-label={action.id === "quest" && questActionableCount > 0 ? `${action.label}、確認待ち${questActionableCount}件` : status ? `${action.label}、${status}` : action.label}
                 data-action-slot={action.id}
                 data-asset-delivery={action.deliveryStatus.toLowerCase()}
                 data-recommended={highlighted ? "true" : undefined}
@@ -757,6 +763,7 @@ function MainMyPage({ qaState }: { qaState?: HomeTabQaState }) {
                 <img src={action.assetPath} alt="" className="circle-menu-img" aria-hidden="true" />
                 <span className="circle-menu-label"><strong>{action.label}</strong></span>
                 <span className="circle-menu-status">{status || ""}</span>
+                {action.id === "quest" && questActionableCount > 0 && <span className="circle-menu-alert-badge" aria-hidden="true">{questActionableCount}</span>}
               </button>
             );
           })}
