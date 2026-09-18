@@ -8,7 +8,6 @@ import { getRaidParticipationRequirement } from "@/domain/raidRoomPresentation";
 import SectionHeader from "../ui/SectionHeader";
 import OutlawButton from "../ui/OutlawButton";
 import SubTabNav from "../ui/SubTabNav";
-import CanonicalItemIcon from "../ui/CanonicalItemIcon";
 import CanonicalDialog from "../ui/CanonicalDialog";
 import { SkillIcon } from "../skill/SkillPresentation";
 import { CANONICAL_SKILL_VIEW } from "@/utils/skills_master_data";
@@ -36,7 +35,6 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
  const loadingProfile=enemyInfo?.status==='loading'||enemyInfo?.status==='idle';
  const profile=enemyInfo?.status==='success'?enemyInfo.data:null;
  return <section className="raid-enemy-selection raid-enemy-selection--fixed" aria-label="街別レイド挑戦">
-  <OutlawButton loadingLabel="" fullWidth disabled={busy} onClick={onCancel}>トップへ戻る</OutlawButton>
   {choices.status==='error'||assets.failed?<div role="alert"><p>挑戦先を取得できませんでした。</p><OutlawButton loadingLabel="" disabled={busy} onClick={assets.failed?assets.retry:onRetry}>再試行</OutlawButton></div>:!selectedChoice||!enemy?<p>選択した街の敵情報を取得できませんでした。</p>:<>
    <div className="raid-enemy-selection__selected-hero"><img src={assets.resolve(enemy.backgroundUrl)} alt=""/><div><span>{enemy.areaName}</span><h2>{enemy.bossName}</h2></div></div>
    <h3>難易度</h3>
@@ -54,8 +52,6 @@ export default function RaidEnemySelection({choices,selectedVariantId,memberChar
        <img src={assets.resolve(member.imageUrl)} alt=""/>
        <strong>{member.name}</strong>
        <div className="raid-enemy-selection__loadout">
-        <span className="raid-enemy-selection__loadout-label">装備</span>
-        <div>{detail?.equipmentIds.map(id=><CanonicalItemIcon key={id} itemId={id} className="raid-enemy-selection__loadout-icon"/>)}</div>
         <span className="raid-enemy-selection__loadout-label">スキル</span>
         <div>{skills.map(skill=>{const master=CANONICAL_SKILL_VIEW.find(entry=>entry.id===skill.id);return master?<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}><SkillIcon skill={master}/></span>:<span key={skill.id} className="raid-enemy-selection__skill-icon" title={skill.name}>S</span>;})}</div>
        </div>
