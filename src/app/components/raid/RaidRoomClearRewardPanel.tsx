@@ -5,13 +5,6 @@ import type { RaidRewardPlan } from '../../../domain/raidRoomDisplay';
 import { RaidRewardPlanItems, RaidIssuedRewardItems } from './RaidRewardItems';
 import OutlawButton from '../ui/OutlawButton';
 
-const labels: Record<RaidRoomClearReward['status'], string> = {
-  not_eligible: '討伐報酬の条件をまだ満たしていません。',
-  unconfigured: '討伐報酬は準備中です。',
-  pending: '討伐報酬の送付待ちです。',
-  issued: '討伐報酬を獲得しました。',
-};
-
 export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpenPresents, onDirectReward, plan }: {
   client: RaidRoomClearRewardClient; roomId: string; userId?: string; onOpenPresents?: () => void | Promise<void>; onDirectReward?: () => Promise<void>; plan?: RaidRewardPlan;
 }) {
@@ -25,7 +18,6 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
   const identityRef = useRef(identity);
   useLayoutEffect(() => { identityRef.current = identity; }, [identity]);
   const [rewardIdentity, setRewardIdentity] = useState(identity);
-  const [revision, setRevision] = useState(0);
   useEffect(() => {
     let current = true;
     setBusy(true); setError(false); setReward(null); setRewardIdentity(identity); setOpenError(false); setOpening(false); openingRef.current = false;
@@ -37,7 +29,7 @@ export default function RaidRoomClearRewardPanel({ client, roomId, userId, onOpe
       .catch(() => { if (current) setError(true); })
       .finally(() => { if (current) setBusy(false); });
     return () => { current = false; };
-  }, [client, roomId, userId, revision, onDirectReward]);
+  }, [client, roomId, userId, onDirectReward]);
   const openPresents = async () => {
     if (!onOpenPresents || openingRef.current) return;
     const openedIdentity = identity;
