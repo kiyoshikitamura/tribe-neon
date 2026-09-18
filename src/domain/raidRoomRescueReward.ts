@@ -4,7 +4,7 @@ export interface RaidRoomRescueReward {
   roomId: string;
   status: 'not_eligible' | 'unconfigured' | 'pending' | 'issued';
   rescueGate: { status: 'unknown' | 'not_succeeded' | 'succeeded'; minimumBattles: number | null; minimumContributionDamage: number | null };
-  progress: { viaRescue: boolean; finalizedBattles: number; contributionDamage: number };
+  progress?: { viaRescue: boolean; finalizedBattles: number; contributionDamage: number };
   issuedAt: string | null;
   expiresAt: string | null;
   items: { itemId: string; quantity: number; presentId: string | null; delivery?: 'DIRECT' | 'PRESENT'; presentStatus: string | null; claimedAt: string | null; expiresAt: string | null }[];
