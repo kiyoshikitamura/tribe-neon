@@ -18,8 +18,10 @@ const [
 ]);
 
 assert.match(footer, /item\.id === "bbs"[\s\S]*setChatChannel\("GLOBAL"\)[\s\S]*setShowTribeChatPanel\(true\)/);
-assert.match(chatModal, /BBSを開く/);
-assert.match(chatModal, /navigateTab\("bbs"\)/);
+assert.match(chatModal, /label: "チャット"/);
+assert.match(chatModal, /label: "BBS"/);
+assert.match(chatModal, /<BbsTab embedded \/>/);
+assert.doesNotMatch(chatModal, /BBSを開く/);
 
 assert.match(footer, /Number\(chatUnreadCounts\?\.GUILD \|\| 0\) \+ Number\(dmUnreadTotal \|\| 0\)/);
 assert.doesNotMatch(footer, /communityUnreadCount[\s\S]{0,120}GLOBAL/);
